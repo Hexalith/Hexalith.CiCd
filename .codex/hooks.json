@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /home/administrator/projects/hexalith/cicd/.bmad-loop/bmad_loop_hook.py SessionStart"
+            "command": "/home/administrator/.local/bin/bmad-loop relay SessionStart"
           }
         ]
       }
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /home/administrator/projects/hexalith/cicd/.bmad-loop/bmad_loop_hook.py Stop"
+            "command": "/home/administrator/.local/bin/bmad-loop relay Stop"
           }
         ]
       }
