@@ -46,7 +46,7 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 | `dependabot.yml` | Covers Builds' own paths | Excludes the frozen paths until the final deletion; CiCd agents close Dependabot PRs that touch frozen files |
 | Dapr pins | `HexalithDaprRuntimeVersion` 1.18.7 and `HexalithDaprCliVersion` 1.18.2 in `Props/Directory.Packages.props` (*checked*) | The one pin each, bumped to 1.19.1 in story 2-5 |
 | Package catalog | `Props/Directory.Packages.props` has Works- and Folders-specific conditions (*checked*) | Product build data, outside the module-agnostic rule (AD-2) |
-| Rulesets | `main` requires a pull request and status checks. No `v*` tag ruleset (*checked*). | Set to exactly the AD-21 rulesets, `main` and `v*` tags |
+| Rulesets | Since story 1 (2026-11-09): `Protect main` blocks only deletion and force-push, with no bypass. `v tags` blocks update and deletion of `v*`. The 15 `v*` tags without a release are deleted (*checked*). Before that, `main` required a pull request and status checks, and there was no `v*` ruleset. | Done: exactly the AD-21 rulesets, `main` and `v*` tags. `v*` creation stays open (`enforcement.md`, Accepted residuals). |
 | Immutable releases | Off (*checked*) | On before the first rewritten release |
 
 ## Versioning drift
@@ -74,15 +74,19 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 ## Settings that block onboarding (*checked*)
 
 - **Rulesets:** EventStore and Platform, like Builds, require a pull request and status checks on `main`. Platform also has tag rulesets, including tag-creation authorization. Delivery and the release can't push until these are cut back (AD-21).
-- **Org-wide Apps:** `claude`, `chatgpt-codex-connector`, `cursor`, and `semgrep-app` are installed on all repositories, with Contents, Workflows, and Actions write. Branch evidence (2026-11-08):
+- **Org-wide Apps:** before story 1, `claude`, `chatgpt-codex-connector`, `cursor`, and `semgrep-app` were installed on all repositories, with Contents, Workflows, and Actions write. Since 2026-11-09, `claude`, `cursor` and `semgrep-app` are uninstalled, and `chatgpt-codex-connector` is installed on EventStore only. The CiCd App `hexalith-cicd` is installed on Builds and CiCd only (*checked*). Branch evidence (2026-11-08):
   - `codex/*`: 42 PRs on 9 repos, the last on EventStore on 2026-10-09.
   - `claude/*`: last on 2026-01-10. Builds has 4 Claude-on-the-web PRs, the last on 2026-01-04. CiCd has none from any App.
   - `cursor/*`: one PR, on 2026-02-26.
   - Semgrep: no PRs, and no Semgrep check on Builds' `main`.
 
   Hence the SPEC's installation scope. Local Claude Code sessions use the maintainer's tokens, not the App.
-- **Org settings:** default workflow permission `read`; fork-PR approval only for first-time contributors (to become all external contributors); all actions allowed. Artifact and log retention is 30 days (to become 90). The legacy org secrets `NUGET_API_KEY`, `HEXALITH_ZOT_*`, `AZURE_*`, and `SONAR_TOKEN` are visible to all repositories. They get restricted to the repos that still read them, never CiCd or Builds.
-- **Rulesets and immutable releases elsewhere:** CiCd has no rulesets. Immutable releases are off on Builds, CiCd, and Parties.
+- **Org settings:** before story 1, the default workflow permission was `read`, fork-PR approval applied only to first-time contributors, all actions were allowed, artifact and log retention was 30 days, and the legacy org secrets `NUGET_API_KEY`, `HEXALITH_ZOT_*`, `AZURE_*`, and `SONAR_TOKEN` were visible to all repositories. Since 2026-11-09:
+  - fork-PR approval covers all external contributors, and retention is 90 days;
+  - each legacy secret is restricted to the public repos that read it (story 1, step 8 table), never CiCd or Builds;
+  - `HEXALITH_NUGET_USER` exists, selected: Builds;
+  - push protection is on for CiCd, Builds and all 17 modules (*checked*).
+- **Rulesets and immutable releases elsewhere:** since 2026-11-09, CiCd has exactly `main` (deletion and force-push) and `delivered` (`delivered/**`, with the App as the only bypass), plus the `cicd-app` environment (*checked*). Immutable releases are off on Builds, CiCd, and Parties.
 - **Audit already failing:** ChatBot, Platform, Parties, FrontComposer, and McpCli set `TreatWarningsAsErrors` without exempting NU190x, so vulnerable packages already fail their CI. CI's audit-off flag removes that. Waivers move to Builds during migration.
 - **Audit bypasses** (reproduced with SDK 10.0.403):
   - A module `NoWarn` for NU1903, `NuGetAuditLevel=critical`, or `NuGetAuditSuppress` each defeat the release audit gate. So do `MSBuildWarningsAsMessages`, `TreatAsLocalProperty` on `NuGetAudit`, a `NoWarn` attribute on a `PackageReference`, `-nowarn` in a `Directory.Build.rsp`, `auditSources` in a `nuget.config`, an obfuscated `NoWarn`, and `NuGetAuditSuppress` in an imported `build.xml`.

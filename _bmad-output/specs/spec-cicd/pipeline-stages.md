@@ -26,7 +26,17 @@ Edge cases become knobs in the setup file or custom actions:
 - **Order rule:** cheapest and most likely to fail first. Whenever a stage is added, review the order with the run-history method in `baseline-and-targets.md`.
 - **Test stages:** test projects are the solution's projects with `IsTestProject=true`. A name ending in `IntegrationTests`, `Integration.Tests`, or `AppHost.Tests`, or containing `E2E`, goes to stage 4. Everything else goes to stage 3. The setup file can only move a project to stage 4 or hand it to an enabled hook or job. There is never a plain skip (AD-13).
 - **`solution: none`:** stage 1 only.
-- **Submodules:** only Builds is checked out. Today `initialize-build` clones every declared submodule, 2–17 per module. If a package-mode build turns out to read more, a `submodules` knob is added (spine, Deferred).
+- **Submodules:** CI checks out Builds plus the submodules listed in the module's `submodules` knob, which story 2-3 adds (spine, Deferred). Today `initialize-build` clones every declared submodule, 2–17 per module.
+  - Story 1 found, by static reading on 2026-11-08, that a package-mode build or its tests read sibling submodules in 8 modules. They do it through ungated AppHost or test-host references, sibling sources compiled with no condition, root `.slnx` files that list sibling projects, or tests that read sibling files:
+    - ChatBot: EventStore, Platform, Tenants, Parties, Projects, Memories, Commons, FrontComposer, Timesheets.
+    - Commons: PolymorphicSerializations (root `.slnx`; `Commons.Standalone.slnx` is clean).
+    - Folders: Platform (`AppHost.csproj:33-34`), plus 5 more in the root `.slnx`.
+    - Parties: EventStore (test hosts, tests).
+    - Platform (stale checkout): EventStore, Memories.
+    - Projects: EventStore, Tenants.
+    - Tenants: Platform (`AppHost.csproj:34-35`), EventStore (tests), plus `.slnx` siblings.
+    - Works: Platform, Parties (`IntegrationTests.csproj:37-63`).
+  - The other 9 (AI.Tools, Agents, Conversations, EventStore, FrontComposer, McpCli, Memories, PolymorphicSerializations, Timesheets) are clean: their sibling references are gated by `'$(UseHexalithProjectReferences)' == 'true'` or by per-dependency `*FromSource` switches.
 - **SDK:** comes from `global.json`.
 
 ## Hook points

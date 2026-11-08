@@ -114,7 +114,10 @@ Hoisting is an ordinary change made by an agent in this repository:
 
 These gaps are known and accepted under the careless-agent model:
 - Org owners and agents in this repository can reach the App key through a push to `main`.
-- Builds `v*` tag creation is unrestricted until story 1 checks whether a ruleset can restrict it.
+- Builds `v*` tag creation stays unrestricted. The Builds `v*` ruleset blocks only update and deletion. A ruleset can't restrict creation to GitHub Actions and the App, because GitHub doesn't accept GitHub Actions as a bypass actor. Story 1's probe on CiCd, 2026-11-08:
+  - Without a bypass, a creation rule on `probe-*` refused `GITHUB_TOKEN` both through REST `POST git/refs` (422) and through `git push` (GH013). This was run 42526410704.
+  - Adding `Integration` 15368 (GitHub Actions) as a bypass actor was rejected with 422: "Actor GitHub Actions integration must be part of the ruleset source or owner organization".
+  - An installed App is accepted as a bypass actor (CiCd's `delivered/**` ruleset). Restricting `v*` creation would therefore mean the release creates tags with an App token instead of `GITHUB_TOKEN`, which the spine doesn't do.
 - An obfuscated `NoWarn`, or an MSBuild import through a computed path, escapes the text-based audit lint.
 - Completing a draft doesn't re-run the audit.
 - The registry pull pair is readable by every CI step and by Dependabot runs.
