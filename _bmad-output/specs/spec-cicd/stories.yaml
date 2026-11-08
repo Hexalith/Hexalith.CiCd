@@ -4,106 +4,277 @@
     Meet the one-time org settings and the CiCd and Builds preconditions
     (AD-7, AD-19, AD-21): the App and this repo's cicd-app environment,
     rulesets on main, v* tags and delivered/**, the agent-App installation
-    scope, the HEXALITH_* org secrets and variables with a pull-only Zot
-    account, restricted legacy org secrets, 90-day retention, push protection,
-    and Builds' nuget.org policy for builds-release.yml with environment
-    production, scoped to Hexalith.Builds*. Check whether a package-mode build
-    reads any submodule besides Builds, and whether a ruleset can restrict v*
-    tag creation to GitHub Actions and the App, and record both answers in the
-    spec.
+    scope, the CiCd-agent token that stories 2 to 9 run under, the HEXALITH_*
+    org secrets and variables with a pull-only Zot account, restricted legacy
+    org secrets, 90-day retention, push protection, and Builds' nuget.org
+    policy for builds-release.yml with environment production, scoped to
+    Hexalith.Builds*. Check whether a package-mode build reads any submodule
+    besides Builds, and whether a ruleset can restrict v* tag creation to
+    GitHub Actions and the App, and record both answers in the spec.
   done_checkpoint: true
   invoke_dev_with: >-
     Draft the checklist and verify through the API what the App's permissions
     allow; the maintainer creates the App and changes org and repository
     settings. CiCd and Builds keep exactly the org owners as collaborators, no
     deploy keys, and no write installation except the App. Keep Builds' NuGet
-    publishing working across the rename in story 2.
-- id: "2"
-  title: "Builds rename, then the minimal reusable CI workflow"
+    publishing working across the rename in story 2-1. From story 2-1 on,
+    agent sessions use the CiCd-agent token, never the maintainer's personal
+    gh login.
+- id: "2-1"
+  title: "Rename Builds' own workflows"
   description: >-
-    First rename Builds' own ci.yml and build-release.yml to builds-ci.yml and
+    Rename Builds' own ci.yml and build-release.yml to builds-ci.yml and
     builds-release.yml (AD-19, AD-20): repoint their hard-coded identities,
-    delete the tests that assert their text and repoint the rest, drop the
-    dependency-review call, delete eventstore-maintenance-publisher.yml, and
-    exclude the frozen paths from Builds' dependabot.yml. Then write the
-    reusable ci.yml with its Windows outputs, schemas/hexalith.ci.v1.json and
-    its loader, Builds' own hexalith-ci.json without buildsTag, the test
-    classifier, environment setup with the Dapr pins at 1.19.1, the hook
-    points, and the prepare composite, with builds-ci.yml linting, checking
-    the public API, and running the reusable CI against Builds and
-    Samples/Hexalith.Sample/ plus one Windows job (CAP-1, CAP-2, CAP-5,
-    CAP-15; AD-1, AD-4, AD-12 to AD-14).
+    including the green-CI check, delete the tests that assert their text and
+    repoint the rest, drop the dependency-review call, delete
+    eventstore-maintenance-publisher.yml, and exclude the frozen paths from
+    Builds' dependabot.yml. Builds' CI stays green and its NuGet publishing
+    keeps working through story 1's policy on builds-release.yml (CAP-15).
   invoke_dev_with: >-
     Work in references/Hexalith.Builds; commit and push there. Frozen files
     stay unchanged except tests (AD-20), including the composites modules call
     directly: initialize-dotnet, initialize-build, create-release, and verify.
-    Verify $/ first and apply the AD-9 fallback if it fails; add the
-    submodules knob if story 1 found a build that reads more submodules.
-- id: "3"
-  title: "Reusable release workflow in Builds, with nightly CodeQL"
+- id: "2-2"
+  title: "Builds' own quality checks"
   description: >-
-    Write the reusable release.yml (resolve, codeql, nightly-hook, version,
-    build, draft, and outcome jobs), the marked-draft state machine that
-    creates the draft only after the build artifact and completes reruns from
-    it, the audit gate, the release-outcome schema, and the publish composite
-    that ends ready when GitHub refuses GITHUB_TOKEN, then rewrite
-    builds-release.yml onto it with its publish job in hexalith-release; the
-    same change removes the G-4/G-6 jobs and tests, the build-and-test
-    aggregator, and the codeql.yml call from builds-ci.yml, and classifies the
-    Props/ catalog validators (CAP-12, CAP-14, CAP-15; AD-11, AD-16, AD-17,
-    AD-19, AD-20). Run the spike on OCI containers and NuGet/login in the
-    remote composite and decide provenance, then re-check AD-19's release
-    preconditions (no orphan v* tag, exact kill switch, immutable releases,
-    90-day retention, policy on hexalith-release) and dispatch the first
-    Builds release by hand to seed builds-version.
+    Make builds-ci.yml run actionlint and zizmor with their committed configs
+    and the ignores in the spine's Action references convention, the Python
+    tests on 3.12 and on the runner's python3, and the public-API check
+    against the last release tag (CAP-15; AD-10, AD-11). No Builds test
+    asserts workflow text.
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. Frozen files
+    stay unchanged except tests (AD-20), including the composites modules call
+    directly: initialize-dotnet, initialize-build, create-release, and verify.
+- id: "2-3"
+  title: "CI config contract"
+  description: >-
+    Add schemas/hexalith.ci.v1.json with every knob and its default, its
+    stdlib loader in Github/lib/, and Builds' own hand-written
+    hexalith-ci.json without buildsTag, with builds-ci.yml running the loader
+    and the schema over the same valid and invalid fixtures (CAP-1; AD-1,
+    AD-3, AD-4, AD-19).
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. Frozen files
+    stay unchanged except tests (AD-20), including the composites modules call
+    directly: initialize-dotnet, initialize-build, create-release, and verify.
+    Add the submodules knob if story 1 found a package-mode build that reads
+    more submodules (spine Deferred).
+- id: "2-4"
+  title: "Fail-fast CI: build and unit tests"
+  description: >-
+    Write the reusable ci.yml through stage 3: a Release package-mode build
+    without audit, then the shared test classifier and unit tests project by
+    project, stopping at the first failing project, run by builds-ci.yml
+    against Builds itself (CAP-1, CAP-2; AD-9, AD-12, AD-13). The classifier
+    and build flags are scripts that check.py (story 6) reuses.
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. Frozen files
+    stay unchanged except tests (AD-20), including the composites modules call
+    directly: initialize-dotnet, initialize-build, create-release, and verify.
+    Verify $/ first and apply the AD-9 fallback if it fails (spine Deferred).
+    Stage 1, the guard, arrives in 5-1; keep its slot first in the job.
+- id: "2-5"
+  title: "Stage 4: environment setup and hook points"
+  description: >-
+    Add the one environment-setup composite (Dapr at the Builds Props/ pins,
+    bumped to 1.19.1; browsers; the registry pull login; each as enabled),
+    then the after-unit-tests hook, integration tests project by project, and
+    the after-integration-tests hook, so an enabled hook reuses the job's
+    build and environment (CAP-2, CAP-5; AD-12, AD-14). Linux prepare (2-6)
+    reuses this composite.
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. Frozen files
+    stay unchanged except tests (AD-20), including the composites modules call
+    directly: initialize-dotnet, initialize-build, create-release, and verify.
+- id: "2-6"
+  title: "Sample module self-test and the Windows job"
+  description: >-
+    Add Samples/Hexalith.Sample/, importing Builds through the module MSBuild
+    files, with its hook and job actions in Builds' root .github/actions/; a
+    second builds-ci.yml call of the reusable ci.yml with the test-only
+    module-root input; the ci.yml outputs that Windows prepare uses; the
+    prepare composite; and one Windows job shaped like a rendered one (CAP-5,
+    CAP-15; AD-12, AD-19). A Builds change that breaks the sample's CI fails
+    Builds' CI.
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. Frozen files
+    stay unchanged except tests (AD-20), including the composites modules call
+    directly: initialize-dotnet, initialize-build, create-release, and verify.
+- id: "3-1"
+  title: "Spike: OCI containers and NuGet/login in the publish composite"
+  description: >-
+    Prove that containers built once as OCI archives can be pushed from a
+    remote publish composite and that NuGet/login works inside it, or apply
+    the spine's Deferred fallback (NuGet/login in the caller's publish job,
+    its key passed as a composite input), and decide whether publish adds
+    build provenance (AD-17, spine Deferred). Record the answers so the spine
+    and the spec are updated before 3-2 builds on them.
+  spec_checkpoint: true
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there.
+- id: "3-2"
+  title: "Release gate jobs and the outcome"
+  description: >-
+    Write the reusable release.yml's resolve job (release SHA and mode, kill
+    switch, green CI), the codeql matrix and nightly-hook jobs at github.sha,
+    the release-outcome schema and the final outcome job, so a red main fails
+    with "main is red, nothing released", a false kill switch ends "publishing
+    disabled", and an open high or critical alert blocks the release (CAP-12,
+    CAP-14; AD-16, AD-17, AD-18). The drift check joins resolve in 5-1.
   spec_checkpoint: true
   invoke_dev_with: >-
     Work in references/Hexalith.Builds; commit and push there. resolve runs
-    stdlib only with contents: write and actions: read; the draft carries the
-    five hexalith-release trailers and accepts only a one-step version
-    increment; publish refuses a v<version> tag that points elsewhere (AD-16,
-    AD-17). If the bootstrap run ends ready, the maintainer publishes its
-    draft by hand after publish-ready's checks (AD-19).
-- id: "4"
-  title: "Setup files, rendering, and the perimeter"
+    stdlib only with contents: write and actions: read (AD-16, AD-17).
+    nightly-hook uses 2-6's prepare.
+- id: "3-3"
+  title: "Create mode: version, audited build, marked draft"
   description: >-
-    Write the setup-file handling, templates, and render.py in this repo,
-    rendering every owned file (callers with the hexalith-release publish job
-    and Windows jobs fed by the ci job's outputs, a complete hexalith-ci.json
-    validated as rendered, and each rendered/<Repo>.perimeter.json), plus
-    schemas/hexalith.perimeter.v1.json, its loader, and the perimeter library
-    in Builds that guard, restore, and delivery share (CAP-4; AD-3 to AD-5).
-    Add deliver.yml with its validate job only, made of the global checks as
-    one script the nightly bump reuses, the anonymous per-module checks, and a
-    JSON verdict output, and decide the Dependabot ecosystems, schedule, and
-    who merges module Dependabot PRs.
+    Add the version job (commit-analyzer and release-notes-generator under the
+    module and Builds release rules), the build that packs once with the audit
+    gate and uploads the release artifact, and the draft job that creates the
+    marked draft only after the artifact, or refuses when main's workflows
+    changed during the run (CAP-12, CAP-14; AD-16, AD-17). No releasable
+    commit ends "nothing to release", and a vulnerable package or an audit
+    that can't run blocks the release.
   spec_checkpoint: true
   invoke_dev_with: >-
-    Perimeter schema, loader, and library in references/Hexalith.Builds;
-    setup/, templates/, rendered/, tools/, and deliver.yml's validate job in
-    this repo. The library reads paths from git and writes only to the index
-    (AD-4). Ship the perimeter schema, loader, and library in a Builds
-    release, and move builds-version to it, before the validate job checks
-    perimeters.
-- id: "5"
-  title: "Guard and restore in Builds"
+    Work in references/Hexalith.Builds; commit and push there. The draft
+    carries the five hexalith-release trailers and accepts only a one-step
+    version increment (AD-17).
+- id: "3-4"
+  title: "The publish composite"
+  description: >-
+    Write the publish composite: it checks the artifact, logs in with
+    NuGet/login, pushes the packages with --skip-duplicate and the containers
+    by version tag, then publishes the draft with the tag created last, or
+    ends ready when GITHUB_TOKEN can't publish it, and writes the outcome
+    (CAP-12, CAP-13; AD-17). It follows 3-1's answers on containers, login and
+    provenance.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. publish refuses
+    a v<version> tag that points elsewhere (AD-17).
+- id: "3-5"
+  title: "Complete mode: reruns finish from the original artifact"
+  description: >-
+    Make a rerun complete a marked draft from the release artifact of the run
+    that created it, without rebuilding or re-checking, and delete a stale
+    draft whose artifact is gone only when none of its packages or images was
+    published (CAP-12; AD-16, AD-17). A version is never republished from
+    different content.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there.
+- id: "3-6"
+  title: "Rewrite builds-release.yml onto the shared release"
+  description: >-
+    Rewrite builds-release.yml to call the reusable release with ci-workflow
+    builds-ci.yml and release-rules builds, its publish job in
+    hexalith-release via $/Github/publish (CAP-15; AD-19). The same change
+    removes the G-4/G-6 jobs and tests, the build-and-test aggregator and the
+    codeql.yml call from builds-ci.yml, and classifies the Props/ catalog
+    validators (AD-11, AD-20, gate-classification.md).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. The maintainer
+    switches Builds' nuget.org policy from environment production to
+    hexalith-release in the same window (AD-19).
+- id: "3-7"
+  title: "Bootstrap the first Builds release"
+  description: >-
+    Re-check AD-19's release preconditions right before the dispatch (no
+    orphan v* tag, exact kill switch, immutable releases, 90-day retention,
+    policy on hexalith-release), dispatch the first release of the new
+    pipeline by hand, and seed this repo's builds-version with its tag
+    (CAP-15; AD-19).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    The dispatch comes from an interactive CiCd session; builds-version is
+    committed in this repo. If the bootstrap run ends ready, the maintainer
+    publishes its draft by hand after publish-ready's checks (AD-19).
+- id: "4-1"
+  title: "Perimeter contract and library in Builds"
+  description: >-
+    Add schemas/hexalith.perimeter.v1.json, its stdlib loader, and the one
+    perimeter library that the guard, restore and delivery share, covering
+    every AD-4 entry kind, with fixtures in builds-ci.yml (CAP-4, CAP-8;
+    AD-4). Ship them in a hand-dispatched Builds release and move this repo's
+    builds-version to that tag.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. The library
+    reads paths from git and writes only to the index (AD-4). The release is
+    dispatched from an interactive CiCd session (CAP-15).
+- id: "4-2"
+  title: "Setup files and the render"
+  description: >-
+    Write the setup-file handling, templates and render.py in this repo,
+    rendering every owned file and each rendered/<Repo>.perimeter.json from
+    setup/, templates/ and Builds at builds-version: callers with the
+    hexalith-release publish job and Windows jobs fed by the ci job's outputs,
+    a complete hexalith-ci.json validated as rendered, and dependabot.yml
+    (CAP-4; AD-3, AD-5, AD-10). Decide the Dependabot ecosystems, schedule,
+    and who merges module Dependabot PRs.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in this repo: setup/, templates/, rendered/, tools/. render.py
+    declares PEP 723 dependencies locked with uv lock --script (AD-11). Test
+    with fixture setup files; real ones arrive at onboarding. The
+    instruction-block and deny-entry texts arrive in 10-2; render placeholders
+    until then.
+- id: "4-3"
+  title: "Delivery's validate job"
+  description: >-
+    Add deliver.yml with its validate job only: the global checks as one
+    script the nightly bump reuses, the anonymous per-module checks, and one
+    JSON verdict output, on push to main, pull_request, hourly at minute 47
+    and by hand (CAP-4; AD-3, AD-6). It holds no secret.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in this repo. The validate job checks perimeters only once
+    builds-version names 4-1's tag.
+- id: "5-1"
+  title: "Guard drift detection and the release drift check"
   description: >-
     Build the guard as stage 1 of the shared CI: it reads its module's
-    delivered/<Repo> ref, checks the perimeter, enabled actions, custom
-    actions (composite only, uses: limited to .github/actions/ or full-SHA
-    third-party actions, the deny list), the audit lint, and commitlint with
-    today's Builds limits plus the skip-marker rule, and fails with the
-    ownership message, including when the ref or perimeter is missing (CAP-8,
-    CAP-9, CAP-14; AD-4, AD-8). Add the restore job and the release's drift
-    check against delivered-sha (AD-17), and run Builds' own guard only in
-    builds-ci.yml's Samples/Hexalith.Sample/ call, deleting
-    commitlint-caller.yml in that change (AD-19, AD-20).
+    delivered/<Repo> by anonymous sparse clone, compares the AD-4 perimeter
+    and the enabled actions before parsing anything, and fails with the
+    ownership message, including when the ref or perimeter is missing; in
+    Builds it runs only in builds-ci.yml's Samples/Hexalith.Sample/ call,
+    through expected-source (CAP-8; AD-4, AD-8, AD-19). Add the same
+    comparison to the release's resolve job as the drift check against
+    delivered-sha (AD-17).
   spec_checkpoint: true
   invoke_dev_with: >-
-    Work in references/Hexalith.Builds; commit and push there. Use story 4's
+    Work in references/Hexalith.Builds; commit and push there. Use 4-1's
     perimeter library and loader; Builds' self-test uses the fixture tree in
-    Samples/Hexalith.Sample/ (AD-19). Delete commitlint-caller.yml only after
-    story 1's ruleset cut.
+    Samples/Hexalith.Sample/ (AD-19).
+- id: "5-2"
+  title: "Guard lints and commitlint"
+  description: >-
+    Add the guard's custom-action lint (composite only, uses: limited to
+    .github/actions/ or full-SHA third-party actions, the deny list), the
+    audit lint, and commitlint with today's Builds limits plus the skip-marker
+    rule, run inside the guard composite (CAP-9, CAP-14; AD-8,
+    enforcement.md). The same change deletes commitlint-caller.yml (AD-20).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there. Delete
+    commitlint-caller.yml only after story 1's ruleset cut.
+- id: "5-3"
+  title: "Restore job"
+  description: >-
+    Add the restore job: on a push to main with drift it recomputes the
+    expected state from delivered/<Repo>, writes it in one commit under the
+    AD-8 conditions (never workflows, the lockstep set only at the running
+    tag, hexalith-ci.json only once the workflows match), stops on a
+    non-fast-forward, and dispatches CI on main (CAP-8; AD-8). It never runs
+    with module-root.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in references/Hexalith.Builds; commit and push there.
 - id: "6"
   title: "Local check command"
   description: >-
@@ -131,23 +302,35 @@
     module, Builds, or an agent session; the deliver job runs only stdlib
     Python, git, and SHA-pinned actions (AD-7). Delivery starts only once
     builds-version ships the perimeter schema and library.
-- id: "8"
-  title: "Nightly release scheduler"
+- id: "8-1"
+  title: "Nightly releases"
   description: >-
-    Add nightly.yml at 02:17 UTC as the AD-18 jobs: dispatch (after any
-    running delivery, only adopted modules whose callers match
-    delivered/<Repo>, plus builds-release.yml), wait at most 5 hours,
-    publish-ready (publish ready drafts with the App and write the verdicts),
-    bump to the newest acceptable tag with no secrets on the tip of CiCd main,
-    bump-push with GITHUB_TOKEN and the tag-substitution check, delivery-wait
-    over delivery.json and module CI, and keepalive (CAP-6, CAP-13, CAP-15;
-    AD-18). Check that a GITHUB_TOKEN push of nested rendered workflows is
-    accepted, and otherwise move bump-push to an App token (spine Deferred).
+    Add nightly.yml at 02:17 UTC with the dispatch job (after any running
+    delivery; only adopted modules whose callers match delivered/<Repo>, plus
+    builds-release.yml), the wait job (at most 5 hours), and publish-ready,
+    which publishes ready drafts with the App and writes the verdicts and
+    summary (CAP-13, CAP-15; AD-18).
   spec_checkpoint: true
   invoke_dev_with: >-
     Work in this repo. App jobs run in cicd-app, mint their own tokens, and
     re-mint before 50 minutes; every job stays under 6 hours. Story 9 puts the
-    scan between publish-ready and bump.
+    scan between publish-ready and the bump.
+- id: "8-2"
+  title: "Nightly Builds bump"
+  description: >-
+    Add the bump job (newest acceptable tag in the current major not in
+    builds-skip, re-rendered on the tip of CiCd main with no secrets),
+    bump-push with GITHUB_TOKEN and the tag-substitution check, delivery-wait
+    over delivery.json and module CI, and keepalive, with a test that a
+    rollback (an older builds-version plus builds-skip) is not undone by the
+    next bump (CAP-6; AD-10, AD-18). Check that a GITHUB_TOKEN push of nested
+    rendered workflows is accepted, and otherwise move bump-push to an App
+    token (the spine's story-8 check).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in this repo. App jobs run in cicd-app, mint their own tokens, and
+    re-mint before 50 minutes; every job stays under 6 hours. Story 9 puts the
+    scan between publish-ready and the bump.
 - id: "9"
   title: "Nightly cross-module duplicate scan"
   description: >-
@@ -157,17 +340,26 @@
     two or more modules, without blocking the bump (CAP-9, enforcement.md).
     Tune the threshold, including the early noise from Memories' and Tenants'
     Python tooling.
-- id: "10"
-  title: "Agent guardrails"
+- id: "10-1"
+  title: "Module-agent token"
   description: >-
-    Write the CI/CD-ownership block text in this repo's templates (including
-    the check.py, no YAML-asserting tests, and no skip-marker rules), make
-    AI.Tools' shared guide link to it and drop the release-on-merge line, and
-    set up the module-agent and CiCd-agent tokens with the AD-7 permissions
-    (CAP-7, CAP-11). Add the gate rule to this repo's AGENTS.md
-    (gate-classification.md), and check whether a module-agent token can push
-    a branch created after a delivery and use a PR's Update branch, recording
-    any restriction in the block.
+    Set up the module-agent token with the AD-7 permissions and confirm that
+    GitHub refuses its pushes that change workflow files and its workflow
+    dispatches (CAP-7). Check whether it can push a branch created after a
+    delivery and use a PR's Update branch, and record the answers for 10-2's
+    block (the spine's story-10 checks).
+  invoke_dev_with: >-
+    The maintainer creates the token; the agent verifies the refusals with it
+    on a managed module, changing no owned file.
+- id: "10-2"
+  title: "Agent instructions and deny entries"
+  description: >-
+    Write the CI/CD-ownership block text and the .claude/settings.json
+    deny-entry list in this repo's templates (run check.py before pushing, no
+    YAML-asserting tests, no skip markers, plus any restriction 10-1 found),
+    make AI.Tools' shared guide link to the block and drop the
+    release-on-merge line, and add the gate rule to this repo's AGENTS.md
+    (CAP-11; enforcement.md, gate-classification.md).
   invoke_dev_with: >-
     AI.Tools' guide: module-agent token. Templates and AGENTS.md: this repo.
 - id: "11"
@@ -487,19 +679,26 @@
     adoption, the maintainer turns on immutable releases, deletes the other
     nuget.org policies, and removes the repo from the legacy org secrets, the
     NUGET_API_KEY scope, and the legacy Zot push.
-- id: "27"
-  title: "Delete legacy Builds CI/CD, rewrite the standard, and re-measure"
+- id: "27-1"
+  title: "Delete legacy Builds CI/CD"
   description: >-
     Once all 17 modules are adopted, delete everything in Builds outside the
     AD-20 end state (.github/workflows/ keeps only ci.yml, release.yml,
     builds-ci.yml, builds-release.yml, and ci-cd-standards.md; Github/ and
     Tools/ keep only what those and check.py use; the root package.json loses
-    its legacy release configuration), remove the frozen-path exclusions from
-    dependabot.yml and the zizmor config, and decide the fate of the HXP301
-    candidate gate (CAP-16; AD-20). Then rewrite ci-cd-standards.md to match
-    this spec and re-measure every target in baseline-and-targets.md with the
-    baseline method.
+    its legacy release configuration), and remove the frozen-path exclusions
+    from dependabot.yml and the zizmor config (CAP-1, CAP-16; AD-20). Decide
+    the fate of the HXP301 candidate gate.
   invoke_dev_with: >-
     Work in references/Hexalith.Builds; commit and push there. The 14
     unmanaged repos that run Github/package-release@main break on their next
     push (module-inventory.md); tell the maintainer before deleting.
+- id: "27-2"
+  title: "Rewrite the standard and re-measure"
+  description: >-
+    Rewrite ci-cd-standards.md to match this spec, then re-measure every
+    target in baseline-and-targets.md with the baseline method (CAP-16,
+    Success signal).
+  invoke_dev_with: >-
+    The standard: references/Hexalith.Builds, commit and push there. The
+    measurement: gh run list over each repo's last 200 runs.
