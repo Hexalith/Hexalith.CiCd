@@ -1,6 +1,6 @@
-# Module inventory (2026-11-07)
+# Module inventory (2026-11-07, Builds re-checked 2026-11-08)
 
-Current state of Builds and of the 17 modules, as input to migration (CAP-16). Facts marked *checked* were confirmed during architecture on 2026-11-07.
+Current state of Builds and of the 17 modules, as input to migration (CAP-16). Facts marked *checked* were confirmed during architecture on 2026-11-07 or 2026-11-08.
 
 ## Managed repositories
 
@@ -22,17 +22,24 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 
 ## Hexalith.Builds today
 
+"Final deletion" is the AD-20 legacy deletion, run after all 17 modules are adopted. It leaves only the end state in CAP-16.
+
 | Item | State | Fate |
 |---|---|---|
-| `domain-ci.yml` (v1) | 1,507 lines, legacy, many caller hooks | Frozen, then deleted once its last caller has moved (AD-20) |
-| `domain-ci-v2.yml` (v2) | 762 lines, strict, manifest-driven. Used by EventStore and Parties only. Rejects caller hooks; needs the module CLI tool pin and registry secrets everywhere. | Frozen, then deleted once its last caller has moved |
-| `domain-release.yml` | 2,058 lines | Frozen, then replaced by the one release workflow |
-| Thin gates: `codeql`, `dependency-review`, `commitlint` | — | Frozen, then deleted. CodeQL moves into the release, commitlint into the guard, and dependency review is dropped. |
-| Builds' own `ci.yml` and `build-release.yml` | — | Replaced together by `builds-ci.yml` and `builds-release.yml`, before the reusable `ci.yml` lands |
-| Composites under `Github/` | `initialize-build`, `initialize-dotnet`, `dapr-init`, `prepare-domain-release`, `prepare-module-build`, `create-release`, `publish-containers`, `governed-provenance` | Frozen while legacy callers remain. New code goes in new composites. `prepare-domain-release` is deleted. |
-| Legacy actions | `verify`, `unit-tests`, `package-release`, `publish-azure-container-app`, `publish-container-to-registry` | Delete |
-| `eventstore-maintenance-publisher.yml` | One-off; triggers on branch `fix/eventstore-maintenance-publication` | Delete |
-| `ci-cd-standards.md` | Lives in `.github/workflows/` | Rewritten to match this spec once the legacy files are gone (story 27) |
+| `domain-ci.yml` (v1) | 1,507 lines, legacy, many caller hooks | Frozen, then final deletion (AD-20) |
+| `domain-ci-v2.yml` (v2) | 762 lines, strict, manifest-driven. Used by EventStore and Parties only. Rejects caller hooks; needs the module CLI tool pin and registry secrets everywhere. | Frozen, then final deletion |
+| `domain-release.yml` | 2,058 lines | Frozen, then final deletion; replaced by the one release workflow |
+| Thin gates: `codeql`, `dependency-review`, `commitlint` | Builds' own `ci.yml` calls `codeql.yml` and `dependency-review.yml` (*checked*) | Frozen, then final deletion. `builds-ci.yml` drops the `dependency-review.yml` call at the rename and the `codeql.yml` call at the `builds-release.yml` rewrite. CodeQL moves into the release, commitlint into the guard, and dependency review is dropped. |
+| Builds' own `ci.yml` and `build-release.yml` | Legacy release tooling hard-codes their names: `Tools/G4PackageQualification.functions.ps1`, `verify-g4-release-source.sh`, `archive-g4-qualification-evidence.py`. About 20 tests read them by name, some inside frozen composites (*checked*). | Renamed to `builds-ci.yml` and `builds-release.yml` before the reusable `ci.yml` lands. The rename repoints those identities and tests. The G-4 qualification jobs leave `builds-ci.yml` at the `builds-release.yml` rewrite. |
+| `commitlint-caller.yml` | Builds-only push and PR commitlint. It calls the frozen `commitlint.yml`, and its check is required by Builds' ruleset until the story-1 cut (*checked*). | Deleted in the change that makes the guard's commitlint run in `builds-ci.yml` |
+| `candidate-policy.yml` | Legacy governed-provenance workflow; no managed module calls it. The `hexalith-module` CLI's candidate gate (HXP301) is enrolled against it at a pinned SHA (*checked*). | Final deletion. Story 27 decides whether HXP301 retires with it. |
+| `eventstore-maintenance-publisher.yml` | One-off with no caller; its trigger branch `fix/eventstore-maintenance-publication` is deleted, and it names a module (*checked*) | Deleted at the rename |
+| `domain-ci.md`, `domain-ci-v2.md`, `domain-release.md` | Docs in `.github/workflows/` | Final deletion |
+| `ci-cd-standards.md` | Lives in `.github/workflows/` | Kept, and rewritten to match this spec once the legacy files are gone (story 27) |
+| `Github/` | 17 entries: `commitlint`, `create-release`, `dapr-init`, `governed-provenance`, `initialize-build`, `initialize-dotnet`, `package-release`, `prepare-domain-release`, `prepare-module-build`, `publish-azure-container-app`, `publish-container-to-registry`, `publish-containers`, `run-module-integration`, `scripts`, `split-publication`, `unit-tests`, `verify`. Modules call some directly: `initialize-build` 30 times (21 at `@main`), `initialize-dotnet` 21 (18 at `@main`), `prepare-domain-release` 7, `dapr-init` 6, `create-release` and `prepare-module-build` once each, `verify@main` once (*checked*). | Frozen until all 17 modules are adopted, including direct uses. Then final deletion of everything the new pipeline doesn't use. New code goes in new composites. |
+| `Tools/` | About 50 legacy G4/G6 and package-audit scripts, plus about 13 PowerShell `Props/` catalog validators (about 4,000 lines) that Builds' `ci.yml` runs (*checked*) | Legacy scripts: final deletion. Catalog validators: classified with the gate rule at the `builds-release.yml` rewrite (`gate-classification.md`). |
+| Root `package.json` | Carries the legacy release configuration | Final deletion removes it |
+| `schemas/` | 16 files named `hexalith.<name>.v<N>.json`; several ship in product CLIs (`hexalith-module`, Evidence.Cli) (*checked*) | Kept. New schemas follow the convention (spine, Consistency Conventions). |
 | Release cadence | semantic-release, exact tags only. Latest v4.44.11. 44 tags in the last month, no floating major tag. No consumer references a tag; they use `@main` or raw SHAs. | Exact-tag references, at most one release a night |
 | Audit settings | `Hexalith.Build.props` line 33 sets `WarningsNotAsErrors` for NU1901–1904, so vulnerable packages don't fail builds today (*checked*) | The release build overrides it for NU1903 and NU1904 |
 | Package catalog | `Props/Directory.Packages.props` has Works- and Folders-specific conditions (*checked*) | Product build data, outside the module-agnostic rule (AD-2) |
@@ -64,7 +71,12 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 - **Rulesets:** EventStore and Platform, like Builds, require a pull request and status checks on `main`. Platform also has tag rulesets, including tag-creation authorization. Delivery and the release can't push until these are cut back (AD-21).
 - **Org-wide Apps:** `claude`, `chatgpt-codex-connector`, `cursor`, and `semgrep-app` hold Workflows write access on every repository.
 - **Audit already failing:** ChatBot, Platform, Parties, FrontComposer, and McpCli set `TreatWarningsAsErrors` without exempting NU190x, so vulnerable packages already fail their CI. CI's audit-off flag removes that. Waivers move to Builds during migration.
-- **Audit bypasses:** a module `NoWarn` for NU1903, `NuGetAuditLevel=critical`, or `NuGetAuditSuppress` each defeat the release audit gate (measured with SDK 10.0.403). The guard rejects them.
+- **Audit bypasses:** a module `NoWarn` for NU1903, `NuGetAuditLevel=critical`, or `NuGetAuditSuppress` each defeat the release audit gate (measured with SDK 10.0.403). The guard rejects `NoWarn` and `NuGetAuditSuppress`. The release build's `-p:NuGetAuditLevel=low` overrides a module's audit level.
+
+## Callers outside the managed modules (*checked*)
+
+- 14 unmanaged public repos run `Github/package-release@main` on push: Applications, ChatClient, Documents, Domains, EventStores, GitStorage, IdentityStores, KeyValueStorages, MyNewModule, MyNewPackage, NetAspire, Security, Streams, and Security_OLD. One of them also runs `Github/publish-container-to-registry@main`. None is archived; their last pushes were between January and April 2026.
+- They are not waited for. The final deletion breaks their next push. The maintainer may archive them at any time (AD-20).
 
 ## Baseline gaps
 

@@ -15,7 +15,10 @@ How CI/CD changes made outside this repository are blocked and undone, and how c
 
 The guard is owned by Builds. It runs first in every CI run and takes seconds.
 
-1. It reads the module's expected owned state from this repository's `delivered` branch, by shallow git clone. That branch holds only renders that passed validation. This repository is public, so no token is needed, and module agents can't change it.
+1. It reads the module's expected owned state from that module's own branch in this repository, `delivered/<Repo>`, by shallow sparse git clone. This repository is public, so no token is needed.
+   - Delivery advances the branch only when the module passes its own checks, so it holds that module's last accepted render. A skipped module keeps its previous branch.
+   - A ruleset on `delivered/**` blocks deletion and force-push and lets only the App update these branches.
+   - A missing branch or perimeter fails the guard.
 2. It compares the module with the expected state (perimeter in SPEC Constraints, entry kinds in AD-4). It also checks that:
    - every enabled hook and job action exists;
    - the custom actions avoid the deny list below;
@@ -24,7 +27,10 @@ The guard is owned by Builds. It runs first in every CI run and takes seconds.
 3. **On a PR or a push to another branch:** it fails with the diff and the message "CI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline."
 4. **On a push to `main`:** it fails the same way. A separate restore job then:
    - writes the expected state in one commit, skipping `.github/workflows/**`, which `GITHUB_TOKEN` can't write;
+   - also skips the Builds gitlink, its `.gitmodules` section, and `hexalith-ci.json` while the delivered Builds tag differs from the tag of the running workflow, so restore never splits the lockstep set;
    - dispatches CI on `main`, so the restored files are tested right away.
+
+   What restore skips waits for the next delivery, at most one hour later.
 5. **On `workflow_dispatch`:** it checks, and never restores.
 
 It restores the files instead of running `git revert`, because an agent's commit usually mixes product changes with the CI/CD edit.
@@ -34,7 +40,7 @@ The release re-runs the same check on its release SHA, so a drifted caller can't
 Known effects:
 - A module whose workflow files were edited stays red until the next delivery, within an hour.
 - The restore commit can race the agent's next push. The agent then pulls and rebases as usual. If the restore loses the race, it stops, and the newer commit's own CI takes over.
-- After a change here, `delivered` moves before delivery reaches the modules. A module CI run in that window sees drift: it restores the files it can reach, and is red once for workflow files.
+- After a change here, a module's `delivered/<Repo>` moves before delivery reaches the module. A module CI run in that window sees drift: it restores the files it can reach, and is red once for workflow files.
 
 ## Layer 3: delivery
 
@@ -85,6 +91,7 @@ Hoisting is an ordinary change made by an agent in this repository:
   - Don't edit workflows, CI config, or the Builds pointer.
   - When CI fails, fix the product.
   - When CI itself is wrong, report it rather than work around it.
+  - Run `python3 references/Hexalith.Builds/check.py` before you push.
 - `Hexalith.AI.Tools/hexalith-llm-instructions.md` links to the block and drops the line that says releases happen on merge.
 - The `bmad-testarch-ci` skill ("Scaffold CI/CD quality pipeline"), installed in 14 modules, is a must-be-absent path. Delivery deletes it, and the guard flags it if it comes back.
 

@@ -45,6 +45,7 @@ These gates failed in the sample but have no explicit verdict in the source. App
   - "Platform R1–R11 parity and rollback"
 - Parties: "Finalize exact CI owner", "Require the owning integration job to pass"
 - FrontComposer: "Gate 2b: Infrastructure governance", "Coverage Summary", "Quarantine Summary"
+- Builds: the `Props/` catalog validators in `Tools/`, about 13 PowerShell scripts (about 4,000 lines) that Builds' `ci.yml` runs today. They check the package catalog, so they are product checks (AD-11). Each is classified in the change that rewrites `builds-release.yml`. Kept ones go on running in `builds-ci.yml`, in their current language.
 
 ## Why gates can't come back
 

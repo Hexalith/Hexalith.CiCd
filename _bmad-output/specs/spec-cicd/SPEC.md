@@ -23,7 +23,7 @@ sources:
 - Module agents: a short pipeline whose failures point at the product.
 - Agents in this repository: one view across every module.
 
-The architecture spine (first companion) decides how each capability is built, in AD-1 to AD-21.
+The architecture spine (first companion) decides how each capability is built, in AD-1 to AD-21. Where this spec and an AD conflict on how, build to the AD and raise an update.
 
 ## Capabilities
 
@@ -46,7 +46,7 @@ The architecture spine (first companion) decides how each capability is built, i
     - Re-rendering from unchanged setup files produces no diff.
     - Enabling a custom action needs only a setup-file change here.
     - Owned files reach a module only through delivery, as one `build(cicd): …` commit, and only when there is a diff. The restore job (CAP-8) is the one exception.
-    - A module that fails its own checks is skipped and reported, and the other modules are still delivered.
+    - A module that fails its own checks is skipped and reported, and the other modules are still delivered. The skipped module's guard, restore and release keep enforcing its last accepted render, so the rejected render never turns it red.
     - A repository is onboarded when the maintainer preconditions are met (AD-21) and it is added here as a submodule with its setup file. It then comes under delivery, the guard, the scheduler, and the duplicate scan.
 - **CAP-5** Custom actions at hook points
   - **intent:** A module's custom actions in `.github/actions/**` run at named hook points inside the shared CI job and reuse its build and environment. An action that needs another operating system gets its own rendered job.
@@ -71,8 +71,8 @@ The architecture spine (first companion) decides how each capability is built, i
   - **intent:** CI/CD changes made outside this repository fail on PRs and are undone on `main`.
   - **success:**
     - A PR that changes an owned file fails with the diff and the ownership message.
-    - A push to `main` that changes an owned file fails with the same message. A restore commit repairs everything except `.github/workflows/**` and starts a new CI run.
-    - No such change persists beyond the next CI run. Changes to `.github/workflows/**` don't persist beyond the next delivery, within 1 h.
+    - A push to `main` that changes an owned file fails with the same message. A restore commit repairs it and starts a new CI run. Restore skips `.github/workflows/**` and, while the delivered Builds tag differs from the running one, the Builds gitlink, its `.gitmodules` section, and `hexalith-ci.json`.
+    - No such change persists beyond the next CI run. What restore skips doesn't persist beyond the next delivery, within 1 h.
     - A release run on a commit whose owned files differ from the delivered state fails.
 - **CAP-9** Module-specific custom actions
   - **intent:** Custom actions contain no generic building blocks and no code shared with another module. Shared code moves to Builds.
@@ -120,21 +120,20 @@ The architecture spine (first companion) decides how each capability is built, i
   - **success:**
     - A Builds change that breaks the sample module's CI fails Builds' CI.
     - No Builds test asserts workflow text.
-    - After the first release, which is dispatched by hand, Builds releases at most once a night.
+    - After the first release, which is dispatched by hand, the only unattended Builds release is the nightly one. Any other dispatch comes from an interactive CiCd session.
 - **CAP-16** Migration
   - **intent:** All 17 modules move onto the shared pipelines, simplest first, and the legacy CI/CD in Builds is deleted.
   - **success:**
     - Each module is adopted by one delivery commit. It is done when its CI is green and its next nightly release succeeds or reports nothing to release.
     - All 17 modules are managed from here.
-    - The following are deleted:
-      - `domain-ci.yml`, `domain-ci-v2.yml`, and `domain-release.yml`
-      - the `prepare-domain-release` composite
-      - the legacy actions
-      - `eventstore-maintenance-publisher.yml`
+    - Builds then holds only the AD-20 end state:
+      - `.github/workflows/` holds only `ci.yml`, `release.yml`, `builds-ci.yml`, `builds-release.yml`, and `ci-cd-standards.md`;
+      - `Github/` and `Tools/` hold only what those workflows and `check.py` use;
+      - the root `package.json` carries no legacy release configuration.
 
 ## Constraints
 
-- Builds holds all shared CI/CD code and is changed only by agents in this repository. Builds is the runtime, not a managed module: it has no setup file and is never rendered, delivered to, guarded, bumped, or duplicate-scanned (AD-19).
+- Builds holds all shared CI/CD code and is changed only by agents in this repository. Builds is the runtime, not a managed module: it has no setup file and is never rendered, delivered to, bumped, duplicate-scanned, or guarded against a delivered ref. In Builds, the guard runs only against the sample module's fixture perimeter (AD-19).
 - Everything a module's CI and release depend on is committed in the module. Builds contains no module names or module-specific conditions (AD-1, AD-2).
 - Delivery is the only writer of owned files into modules. The guard's restore job is the one exception (AD-6, AD-8).
 - In each module, this repository owns (AD-4):
@@ -145,7 +144,7 @@ The architecture spine (first companion) decides how each capability is built, i
   - the marked CI/CD block in `AGENTS.md`, `CLAUDE.md`, and `.github/copilot-instructions.md`
 
   The following must be absent from modules: semantic-release and commitlint config and dependencies, the commitlint `.husky` hook line, and `bmad-testarch-ci`. That tooling exists only in Builds. `.github/actions/**` is module-owned: it is linted and scanned, but never restored.
-- GitHub Free has no org rulesets, no required workflows, and no push rulesets that restrict workflow paths on public repos. Enforcement is token scoping, the guard, and hourly delivery, nothing else (`enforcement.md`). Org-wide agent Apps (`claude`, `chatgpt-codex-connector`, `cursor`) keep Workflows write access that the org can't remove. Only the guard and delivery cover them.
+- GitHub Free has no org rulesets, no required workflows, and no push rulesets that restrict workflow paths on public repos. Enforcement is token scoping, the guard, and hourly delivery, nothing else (`enforcement.md`). Org-wide agent Apps (`claude`, `chatgpt-codex-connector`, `cursor`) keep Workflows write access that the org can't remove. Only the guard, the release drift check, and hourly delivery cover them.
 - Agents push directly to `main`. Human review, CODEOWNERS, and required-status-check rulesets are not enforcement layers. The design assumes careless agents, not malicious ones.
 - `uses:` can't be an expression, so Builds calls custom actions only at fixed, named hook points.
 - CI is one job, run in a fixed order: cheapest and most likely to fail first (`pipeline-stages.md`). A separate job is allowed only for one of these (AD-8, AD-12):
@@ -159,11 +158,11 @@ The architecture spine (first companion) decides how each capability is built, i
   - Dependency review is dropped. NuGet audit runs only in the release build.
   - Known exception: a module with a `nightly` hook compiles twice a night.
 - A gate exists only if it checks the product: compilation, tests, security and dependency scans, commit format, or package publishing (`gate-classification.md`).
-- Builds is referenced by exact release tag, and its releases are immutable. The callers, `hexalith-ci.json`, and the submodule move together. The automatic bump runs at most once a night, within the current major, and skips the tags in `builds-skip`. Adopting a new major or rolling back is a commit in this repository, at any time (AD-10).
+- Builds is referenced by exact release tag, and its `v*` tags can't be moved or deleted (the AD-21 tag ruleset, applied to Builds by AD-19). The callers, `hexalith-ci.json`, and the submodule move together. The automatic bump runs at most once a night, within the current major, and skips the tags in `builds-skip`. Adopting a new major or rolling back is a commit in this repository, at any time (AD-10).
 - Builds releases on every commit type except `docs`, `test`, and `style`, so a central package change in `Props/Directory.Packages.props` always reaches the modules through the next bump.
 - Each module releases independently. Dependency bumps are non-releasable `build(deps)` commits that ship with the module's next releasable change. A `fix(deps)` commit forces a release. There is no release cascade.
 - A release starts only from `workflow_dispatch`, never on a push. The scheduler dispatches it nightly, and module agents can't. Every release step is safe to rerun. `HEXALITH_RELEASE_PUBLISH_ENABLED` stays as a per-repository kill switch, and its value must be exactly `true` or `false`.
-- Every Builds file that modules call today stays unchanged until the last caller has moved. New pipeline code goes in new files (AD-20).
+- Every Builds file that a managed module uses today, directly or through a Builds workflow, stays unchanged until all 17 modules are adopted. Callers outside them are not waited for. New pipeline code goes in new files, and a Builds-only workflow is deleted in the change that ships its replacement (AD-20).
 - Claude Code deny rules go in each module's `.claude/settings.json`, never in machine-wide managed settings: a deny there would also block agents here from editing Builds.
 - Credentials (AD-7):
   - One org GitHub App delivers and dispatches. Its private key exists only as a secret in this repository. Each job mints a short-lived token scoped to what it needs.
@@ -175,7 +174,7 @@ The architecture spine (first companion) decides how each capability is built, i
 
 ## Non-goals
 
-- The other public Hexalith repositories (about 43); only the 18 in `references/` are managed.
+- The other public Hexalith repositories (about 43); only the 18 in `references/` are managed. The final legacy deletion doesn't wait for them, and breaks the 14 that still run `Github/package-release@main` (`module-inventory.md`).
 - Upgrading the GitHub plan to get org-wide rulesets or required workflows.
 - Changes to product test suites, beyond how CI runs them.
 - Unifying .NET SDK versions: each module's `global.json` stays module-owned, and CI/CD never rewrites it.
@@ -189,7 +188,7 @@ The architecture spine (first companion) decides how each capability is built, i
 
 ## Success signal
 
-- Each morning, every module with releasable changes and no blocking finding has a new release, started by the scheduler with nobody touching it. A red CI run in any module means the product is broken. Any CI/CD edit made outside this repository has already been undone, and an edit to a workflow file is undone within an hour.
+- Each morning, every module with releasable changes and no blocking finding has a new release, started by the scheduler with nobody touching it. A red CI run in any module means the product is broken. Any CI/CD edit made outside this repository has already been undone. An edit that restore can't reach, such as a workflow file or the Builds pin while a bump is being delivered, is undone within an hour.
 - The numeric targets, such as main CI success ≥ 95% in every repository and p90 ≤ 10 min, are in `baseline-and-targets.md`, measured the same way as the 2026-11-07 baseline.
 
 ## Assumptions
@@ -197,4 +196,4 @@ The architecture spine (first companion) decides how each capability is built, i
 - The rules of the current `ci-cd-standards.md` that this spec doesn't override carry over: SDK from `global.json`, explicit secrets (never `secrets: inherit`), and tests per project. The standard is rewritten to match this spec, with exact tags, nightly dispatch, and one CI and one release pattern.
 - For the p90 target, a "standard module" is one whose CI runs only shared stages and fixed-point hooks, with no job on another runner.
 - Success rates are re-measured with the baseline method (`baseline-and-targets.md`).
-- Builds' thin `codeql.yml`, `commitlint.yml`, and `dependency-review.yml` are legacy files, deleted with the rest in the final cleanup. The spine freezes them as legacy, CodeQL moves into the release, and commitlint moves into the guard.
+- CAP-13's "made by a run in its own Actions tab" assumes that story 3's spike shows `GITHUB_TOKEN` can publish a draft behind `main`. If it can't, the spine's Deferred fallback applies: `nightly.yml` publishes ready drafts with the App. That amends CAP-13 success 1 and 2 and the baseline Releases row, and the amendment is decided at story 8's spec checkpoint.

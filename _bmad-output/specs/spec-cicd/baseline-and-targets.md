@@ -18,7 +18,7 @@ The success targets, the 2026-11-07 baseline they are measured from, and the mea
 | Builds version spread across modules | 7–946 commits behind | all on the same version within one night of a Builds release, except a new major or a tag in `builds-skip` |
 | Local workflow YAML in modules | 218–3,116 lines | only the rendered `ci.yml` and `release.yml` |
 | Custom-action code common to two or more modules | not measured | none |
-| CI/CD changes from outside this repo that persist | frequent: 84 workflow commits in Tenants since 2026-10-01 | none; the next CI run undoes each one, and the next delivery (≤ 1 h) undoes workflow-file edits |
+| CI/CD changes from outside this repo that persist | frequent: 84 workflow commits in Tenants since 2026-10-01 | none; the next CI run undoes each one. The next delivery (≤ 1 h) undoes what restore skips: workflow-file edits, and the Builds pin, its `.gitmodules` section, and `hexalith-ci.json` while the delivered Builds tag differs from the running one |
 | Releases | dispatched by hand | every module with releasable changes and no blocking finding is released overnight by its own run; a failure shows as a failed run in that repo and turns this repo's nightly run red |
 
 ## Run-history baseline

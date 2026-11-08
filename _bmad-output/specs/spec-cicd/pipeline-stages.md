@@ -48,14 +48,14 @@ Edge cases become knobs in the setup file or custom actions:
 
 1. At 02:17 UTC, `nightly.yml` in this repository dispatches Builds' `builds-release.yml` and the `release.yml` of every adopted module, all at once. Anything beyond the Free plan's 20 concurrent jobs waits in GitHub's queue.
 2. Each module's release run (AD-16, AD-17):
-   1. Resolves the release SHA once and checks its owned files against the delivered state. Drift fails red.
+   1. Resolves the release SHA once and checks its owned files against the module's `delivered/<Repo>` branch. Drift fails red.
    2. Runs CodeQL (`build-mode: none`) and the `nightly` hook, whatever the kill switch says. An open high or critical alert from this analysis, or a failing hook, blocks the release.
    3. Applies the kill switch: `false` succeeds with "publishing disabled", and any value other than `true` fails.
    4. If CI on that SHA isn't green, fails red: "main is red, nothing released".
    5. If no releasable commit exists since the last tag, succeeds: "nothing to release". Otherwise creates a marked draft release with the next version.
    6. Builds and packs once with the real version. Packages with a high or critical vulnerability fail the build.
    7. The caller's `publish` job pushes the NuGet packages (Trusted Publishing, `--skip-duplicate`) and the containers (by version tag). It then publishes the draft, which creates the tag last.
-3. `nightly.yml` waits for every run, writes a pass/fail summary with links, runs the duplicate scan, and bumps Builds (below). It fails if any release, the scan, or the bump's delivery failed.
+3. `nightly.yml` waits for every run, for at most 5 hours. A run still going at that point, or one without a readable outcome, counts as failed. It writes a pass/fail summary with links, runs the duplicate scan, and then bumps Builds (below), whatever the results. It fails if any release, the scan, or the bump's delivery failed.
 
 - **Reruns:** a marked draft is completed with its own version and SHA, so rerunning a failed release completes it. The release never commits to `main`.
 - **What runs twice:** one compile per released module per night, plus one more for a module with a `nightly` hook.
@@ -64,9 +64,9 @@ Edge cases become knobs in the setup file or custom actions:
 ## Builds version bump
 
 - Modules reference Builds by an exact release tag, never by `@main` or a raw SHA. The tag appears in the callers, in `hexalith-ci.json`, and as the submodule pointer.
-- After every nightly release has finished, `nightly.yml` moves `builds-version` to the newest tag in the current major that isn't in `builds-skip`. It re-renders and commits `build(cicd): bump Builds to vX.Y.Z`, and delivery ships it to every module. `build(cicd)` is not releasable.
-- A new major is adopted with one commit here that changes `builds-version` and the templates together.
-- A rollback sets `builds-version` to the older tag and adds the bad tag to `builds-skip`.
+- After the wait and the duplicate scan, `nightly.yml` moves `builds-version` to the newest tag in the current major that isn't in `builds-skip`. It re-renders and commits `build(cicd): bump Builds to vX.Y.Z`, and delivery ships it to every module. `build(cicd)` is not releasable.
+- A new major is adopted with one commit here that changes `builds-version`, `templates/`, and `setup/` together.
+- A rollback sets `builds-version` to the older tag, adds the bad tag to `builds-skip`, and removes setup keys that the older schema lacks. A rollback across a major reverts that major's adoption commit.
 
 ## Release propagation
 
@@ -77,9 +77,11 @@ Edge cases become knobs in the setup file or custom actions:
 
 ## Builds' own CI and release
 
-- `builds-ci.yml` runs `actionlint`, `zizmor`, and the Python tests on its scripts. It also runs the reusable `ci.yml` against Builds itself and against the sample module in `Samples/`, using test-only inputs that module callers never set.
+- `builds-ci.yml` runs `actionlint`, `zizmor`, and the Python tests on its scripts. It also runs the reusable `ci.yml` twice:
+  - against Builds itself, for the build and test stages;
+  - against the sample module in `Samples/`, using test-only inputs that module callers never set. Only this call runs the guard, against the sample's fixture perimeter, and its commitlint covers Builds' own commits.
 - Tests that assert workflow text are dropped.
-- `builds-release.yml` mirrors a module's `release.yml`. `nightly.yml` dispatches it, so Builds releases at most once a night. For comparison, it released 44 times last month.
+- `builds-release.yml` mirrors a module's `release.yml`, without the drift check. `nightly.yml` dispatches it, so the only unattended Builds release is the nightly one; other dispatches come from interactive CiCd sessions. For comparison, it released 44 times last month.
 - The first release from the new pipeline is dispatched by hand, and its tag seeds `builds-version`.
 
 ## Dependency review
