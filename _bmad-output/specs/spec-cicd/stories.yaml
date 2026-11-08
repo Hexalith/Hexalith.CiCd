@@ -1,78 +1,109 @@
 - id: "1"
   title: "Maintainer preconditions and remaining checks"
   description: >-
-    Create the org GitHub App with the AD-7 permissions, install it on Builds
-    and this repo, store its key and ID here, and meet Builds' preconditions
-    (AD-19) and this repo's (AD-21: rulesets on main and delivered/**),
-    including a nuget.org policy for builds-release.yml. Check whether a package-mode build
-    reads any submodule besides Builds, and record the answer in the spec.
+    Meet the one-time org settings and the CiCd and Builds preconditions
+    (AD-7, AD-19, AD-21): the App and this repo's cicd-app environment,
+    rulesets on main, v* tags and delivered/**, the agent-App installation
+    scope, the HEXALITH_* org secrets and variables with a pull-only Zot
+    account, restricted legacy org secrets, 90-day retention, push protection,
+    and Builds' nuget.org policy for builds-release.yml with environment
+    production, scoped to Hexalith.Builds*. Check whether a package-mode build
+    reads any submodule besides Builds, and whether a ruleset can restrict v*
+    tag creation to GitHub Actions and the App, and record both answers in the
+    spec.
   done_checkpoint: true
   invoke_dev_with: >-
     Draft the checklist and verify through the API what the App's permissions
-    allow; the maintainer creates the App and changes repository settings.
-    Keep Builds' NuGet publishing working across the rename in story 2.
+    allow; the maintainer creates the App and changes org and repository
+    settings. CiCd and Builds keep exactly the org owners as collaborators, no
+    deploy keys, and no write installation except the App. Keep Builds' NuGet
+    publishing working across the rename in story 2.
 - id: "2"
   title: "Builds rename, then the minimal reusable CI workflow"
   description: >-
     First rename Builds' own ci.yml and build-release.yml to builds-ci.yml and
-    builds-release.yml (AD-19, AD-20): repoint their hard-coded identities and
-    the tests that read them, drop the dependency-review call, and delete
-    eventstore-maintenance-publisher.yml. Then write the reusable ci.yml,
-    schemas/hexalith.ci.v1.json and its loader, Builds' own hexalith-ci.json
-    without buildsTag, the test classifier, environment setup, the hook
-    points, and the prepare composite, with builds-ci.yml linting and running
-    the reusable CI against Builds and Samples/ (CAP-1, CAP-2, CAP-5, CAP-15;
-    AD-1, AD-4, AD-12 to AD-14).
+    builds-release.yml (AD-19, AD-20): repoint their hard-coded identities,
+    delete the tests that assert their text and repoint the rest, drop the
+    dependency-review call, delete eventstore-maintenance-publisher.yml, and
+    exclude the frozen paths from Builds' dependabot.yml. Then write the
+    reusable ci.yml with its Windows outputs, schemas/hexalith.ci.v1.json and
+    its loader, Builds' own hexalith-ci.json without buildsTag, the test
+    classifier, environment setup with the Dapr pins at 1.19.1, the hook
+    points, and the prepare composite, with builds-ci.yml linting, checking
+    the public API, and running the reusable CI against Builds and
+    Samples/Hexalith.Sample/ plus one Windows job (CAP-1, CAP-2, CAP-5,
+    CAP-15; AD-1, AD-4, AD-12 to AD-14).
   invoke_dev_with: >-
     Work in references/Hexalith.Builds; commit and push there. Frozen files
-    stay unchanged (AD-20), including the composites modules call directly:
-    initialize-dotnet, initialize-build, create-release, and verify.
+    stay unchanged except tests (AD-20), including the composites modules call
+    directly: initialize-dotnet, initialize-build, create-release, and verify.
+    Verify $/ first and apply the AD-9 fallback if it fails; add the
+    submodules knob if story 1 found a build that reads more submodules.
 - id: "3"
   title: "Reusable release workflow in Builds, with nightly CodeQL"
   description: >-
-    Write the reusable release.yml with its codeql and nightly-hook jobs, the
-    draft-release state machine, the audit gate, the release-outcome schema,
-    and the publish composite, then rewrite builds-release.yml onto it; the
-    same change removes the G-4 jobs and the codeql.yml call from
-    builds-ci.yml and classifies the Props/ catalog validators with the gate
-    rule (CAP-12, CAP-14, CAP-15; AD-11, AD-16, AD-17, AD-19, AD-20). Run the
-    two Deferred spikes (publishing a draft behind main;
-    OCI containers and NuGet/login in the remote composite), then dispatch the
-    first Builds release by hand to seed builds-version.
+    Write the reusable release.yml (resolve, codeql, nightly-hook, version,
+    build, draft, and outcome jobs), the marked-draft state machine that
+    creates the draft only after the build artifact and completes reruns from
+    it, the audit gate, the release-outcome schema, and the publish composite
+    that ends ready when GitHub refuses GITHUB_TOKEN, then rewrite
+    builds-release.yml onto it with its publish job in hexalith-release; the
+    same change removes the G-4/G-6 jobs and tests, the build-and-test
+    aggregator, and the codeql.yml call from builds-ci.yml, and classifies the
+    Props/ catalog validators (CAP-12, CAP-14, CAP-15; AD-11, AD-16, AD-17,
+    AD-19, AD-20). Run the spike on OCI containers and NuGet/login in the
+    remote composite and decide provenance, then re-check AD-19's release
+    preconditions (no orphan v* tag, exact kill switch, immutable releases,
+    90-day retention, policy on hexalith-release) and dispatch the first
+    Builds release by hand to seed builds-version.
   spec_checkpoint: true
   invoke_dev_with: >-
-    Work in references/Hexalith.Builds; commit and push there.
+    Work in references/Hexalith.Builds; commit and push there. resolve runs
+    stdlib only with contents: write and actions: read; the draft carries the
+    five hexalith-release trailers and accepts only a one-step version
+    increment; publish refuses a v<version> tag that points elsewhere (AD-16,
+    AD-17). If the bootstrap run ends ready, the maintainer publishes its
+    draft by hand after publish-ready's checks (AD-19).
 - id: "4"
   title: "Setup files, rendering, and the perimeter"
   description: >-
     Write the setup-file handling, templates, and render.py in this repo,
-    rendering every owned file, a complete hexalith-ci.json validated as
-    rendered, and each rendered/<Repo>.perimeter.json, plus
+    rendering every owned file (callers with the hexalith-release publish job
+    and Windows jobs fed by the ci job's outputs, a complete hexalith-ci.json
+    validated as rendered, and each rendered/<Repo>.perimeter.json), plus
     schemas/hexalith.perimeter.v1.json, its loader, and the perimeter library
-    in Builds that guard, restore, and delivery share (CAP-4; AD-3 to AD-5). Add deliver.yml with its validate
-    job only: the global checks and the per-module checks.
+    in Builds that guard, restore, and delivery share (CAP-4; AD-3 to AD-5).
+    Add deliver.yml with its validate job only, made of the global checks as
+    one script the nightly bump reuses, the anonymous per-module checks, and a
+    JSON verdict output, and decide the Dependabot ecosystems, schedule, and
+    who merges module Dependabot PRs.
   spec_checkpoint: true
   invoke_dev_with: >-
-    Perimeter schema and library in references/Hexalith.Builds; setup/,
-    templates/, rendered/, tools/, and deliver.yml's validate job in this
-    repo. Ship the library in a Builds release before story 7 uses it.
+    Perimeter schema, loader, and library in references/Hexalith.Builds;
+    setup/, templates/, rendered/, tools/, and deliver.yml's validate job in
+    this repo. The library reads paths from git and writes only to the index
+    (AD-4). Ship the perimeter schema, loader, and library in a Builds
+    release, and move builds-version to it, before the validate job checks
+    perimeters.
 - id: "5"
   title: "Guard and restore in Builds"
   description: >-
     Build the guard as stage 1 of the shared CI: it reads its module's
-    delivered/<Repo> ref, checks the perimeter, enabled actions, the
-    custom-action deny list, NU1903/NU1904 waivers, and commitlint, and fails
-    with the ownership message, including when the ref or perimeter is
-    missing (CAP-8, CAP-9, CAP-14; AD-4, AD-8). Add the restore job and the
-    release's drift check (AD-17 step 1), and run Builds' own guard only in
-    builds-ci.yml's Samples/ call, deleting commitlint-caller.yml in that
-    change (AD-19, AD-20).
+    delivered/<Repo> ref, checks the perimeter, enabled actions, custom
+    actions (composite only, uses: limited to .github/actions/ or full-SHA
+    third-party actions, the deny list), the audit lint, and commitlint with
+    today's Builds limits plus the skip-marker rule, and fails with the
+    ownership message, including when the ref or perimeter is missing (CAP-8,
+    CAP-9, CAP-14; AD-4, AD-8). Add the restore job and the release's drift
+    check against delivered-sha (AD-17), and run Builds' own guard only in
+    builds-ci.yml's Samples/Hexalith.Sample/ call, deleting
+    commitlint-caller.yml in that change (AD-19, AD-20).
   spec_checkpoint: true
   invoke_dev_with: >-
     Work in references/Hexalith.Builds; commit and push there. Use story 4's
-    perimeter library and loader; Builds' self-test uses a fixture perimeter
-    in Samples/ (AD-19). Delete commitlint-caller.yml only after story 1's
-    ruleset cut.
+    perimeter library and loader; Builds' self-test uses the fixture tree in
+    Samples/Hexalith.Sample/ (AD-19). Delete commitlint-caller.yml only after
+    story 1's ruleset cut.
 - id: "6"
   title: "Local check command"
   description: >-
@@ -85,46 +116,58 @@
 - id: "7"
   title: "Delivery: the single write path into modules"
   description: >-
-    Add the deliver job to deliver.yml: after validation, advance each
-    passing module's delivered/<Repo> ref, apply its perimeter with Builds'
-    library, and push one build(cicd) commit with an App token when there is
-    a diff, on push, hourly at minute 47, and by hand (CAP-4, CAP-6, CAP-8;
-    AD-6, AD-7). A module that fails its own checks keeps its previous ref
-    and is skipped and reported while the others are delivered; the 26-hour
+    Add the deliver job to deliver.yml, in environment cicd-app: after
+    validation it runs the App per-module checks, advances each passing
+    module's delivered/<Repo> ref only forward, then re-applies the render at
+    every existing ref with Builds' library, even when the global checks fail,
+    and pushes one build(cicd) commit with an App token when there is a diff,
+    on push, hourly at minute 47, and by hand (CAP-4, CAP-6, CAP-8; AD-6,
+    AD-7). Runs on main are never cancelled, each run uploads delivery.json, a
+    skipped module keeps its previous ref and is reported, and the 26-hour
     nightly freshness check applies only once nightly.yml has run.
   spec_checkpoint: true
   invoke_dev_with: >-
-    Work in this repo. The App key stays a secret here and never enters a
-    module, Builds, or an agent session.
+    Work in this repo. The App key stays in cicd-app and never enters a
+    module, Builds, or an agent session; the deliver job runs only stdlib
+    Python, git, and SHA-pinned actions (AD-7). Delivery starts only once
+    builds-version ships the perimeter schema and library.
 - id: "8"
   title: "Nightly release scheduler"
   description: >-
-    Add nightly.yml: at 02:17 UTC it dispatches builds-release.yml and every
-    adopted module's release.yml at once, waits at most 5 hours, summarizes
-    the outcomes, then bumps builds-version whatever the results (story 9
-    puts the scan before it) and waits for that delivery (CAP-6, CAP-13,
-    CAP-15; AD-18). Include the keepalive and the enable-API calls, verify
-    whether bot commits count as activity for the 60-day schedule disable,
-    and, if story 3's spike confirmed the GITHUB_TOKEN refusal, publish ready
-    drafts with the App before the bump (spine Deferred; amends CAP-13,
-    decided at this story's spec checkpoint).
+    Add nightly.yml at 02:17 UTC as the AD-18 jobs: dispatch (after any
+    running delivery, only adopted modules whose callers match
+    delivered/<Repo>, plus builds-release.yml), wait at most 5 hours,
+    publish-ready (publish ready drafts with the App and write the verdicts),
+    bump to the newest acceptable tag with no secrets on the tip of CiCd main,
+    bump-push with GITHUB_TOKEN and the tag-substitution check, delivery-wait
+    over delivery.json and module CI, and keepalive (CAP-6, CAP-13, CAP-15;
+    AD-18). Check that a GITHUB_TOKEN push of nested rendered workflows is
+    accepted, and otherwise move bump-push to an App token (spine Deferred).
   spec_checkpoint: true
+  invoke_dev_with: >-
+    Work in this repo. App jobs run in cicd-app, mint their own tokens, and
+    re-mint before 50 minutes; every job stays under 6 hours. Story 9 puts the
+    scan between publish-ready and bump.
 - id: "9"
   title: "Nightly cross-module duplicate scan"
   description: >-
-    Add the scan to nightly.yml: it reads each module's live main and fails,
-    naming the code, when a fragment appears in the custom actions or called
-    scripts of two or more modules, without blocking the bump (CAP-9,
-    enforcement.md). Tune the threshold, including the early noise from
-    Memories' and Tenants' Python tooling.
+    Add the scan to nightly.yml after publish-ready: it reads each module's
+    live main with this repo's committed jscpd config and fails, naming the
+    code, when a fragment appears in the custom actions or called scripts of
+    two or more modules, without blocking the bump (CAP-9, enforcement.md).
+    Tune the threshold, including the early noise from Memories' and Tenants'
+    Python tooling.
 - id: "10"
   title: "Agent guardrails"
   description: >-
-    Write the CI/CD-ownership block text in this repo's templates, make
+    Write the CI/CD-ownership block text in this repo's templates (including
+    the check.py, no YAML-asserting tests, and no skip-marker rules), make
     AI.Tools' shared guide link to it and drop the release-on-merge line, and
     set up the module-agent and CiCd-agent tokens with the AD-7 permissions
     (CAP-7, CAP-11). Add the gate rule to this repo's AGENTS.md
-    (gate-classification.md).
+    (gate-classification.md), and check whether a module-agent token can push
+    a branch created after a delivery and use a PR's Update branch, recording
+    any restriction in the block.
   invoke_dev_with: >-
     AI.Tools' guide: module-agent token. Templates and AGENTS.md: this repo.
 - id: "11"
@@ -136,23 +179,37 @@
   spec_checkpoint: true
   done_checkpoint: true
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Commons and
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Commons and
     references/Hexalith.PolymorphicSerializations with the module-agent token;
-    never edit owned files there. Waivers move into Builds' Props/. Then
+    never edit owned files there. A CiCd agent adds the waivers to Builds'
+    Props/, and adoption waits for a builds-version that contains them. Then
     commit submodule + setup file + render here; delivery adopts the module.
+    Right after adoption, the maintainer turns on immutable releases, deletes
+    the other nuget.org policies, and removes the repo from the legacy org
+    secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "12"
   title: "Migrate AI.Tools"
   description: >-
     Bring AI.Tools under management (CAP-16). It has no workflows today, so
     this is onboarding only: setup file, rendered files, and baseline.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.AI.Tools with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.AI.Tools with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "13"
   title: "Migrate Works"
   description: >-
@@ -160,22 +217,36 @@
     with the rule in gate-classification.md (CAP-10, CAP-16). Its replaced
     setup steps are listed in module-inventory.md.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Works with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Works with the module-agent token;
+    never edit owned files there. A CiCd agent adds the waivers to Builds'
+    Props/, and adoption waits for a builds-version that contains them. Then
+    commit submodule + setup file + render here; delivery adopts the module.
+    Right after adoption, the maintainer turns on immutable releases, deletes
+    the other nuget.org policies, and removes the repo from the legacy org
+    secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "14"
   title: "Migrate Agents"
   description: >-
     Move Agents onto the shared pipelines, deleting the pinned-source gate and
     classifying "Enforce package test floors" (CAP-10, CAP-16).
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Agents with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Agents with the module-agent token;
+    never edit owned files there. A CiCd agent adds the waivers to Builds'
+    Props/, and adoption waits for a builds-version that contains them. Then
+    commit submodule + setup file + render here; delivery adopts the module.
+    Right after adoption, the maintainer turns on immutable releases, deletes
+    the other nuget.org policies, and removes the repo from the legacy org
+    secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "15"
   title: "Migrate McpCli"
   description: >-
@@ -185,48 +256,78 @@
     confirm whether they need anything beyond the runner's Docker.
   done_checkpoint: true
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.McpCli with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.McpCli with the module-agent token;
+    never edit owned files there. A CiCd agent adds the waivers to Builds'
+    Props/, and adoption waits for a builds-version that contains them. Then
+    commit submodule + setup file + render here; delivery adopts the module.
+    Right after adoption, the maintainer turns on immutable releases, deletes
+    the other nuget.org policies, and removes the repo from the legacy org
+    secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "16"
   title: "Migrate Conversations"
   description: >-
-    Move Conversations onto the shared pipelines (CAP-16). It is the first repo
-    whose custom action needs a rendered job on another OS (Windows).
+    Move Conversations onto the shared pipelines (CAP-16). It is the first
+    repo whose custom action needs a rendered job on another OS (Windows), fed
+    by the ci job's outputs and with no environment setup.
   done_checkpoint: true
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Conversations with the module-agent token; never
-    edit owned files there. Waivers move into Builds' Props/. Then commit
-    submodule + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Conversations with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "17"
   title: "Migrate Folders"
   description: >-
     Move Folders onto the shared pipelines. Its kept product checks become the
     first custom actions (end-to-end and accessibility as hooks with the
-    browsers knob, contract-spine, and nightly-drift as the nightly hook), and
-    its 27 YAML-asserting tests are deleted (CAP-10, CAP-16).
+    browsers knob, contract-spine, and nightly-drift as the nightly hook), its
+    drift and policy lanes are classified with the gate rule, and its 27
+    YAML-asserting tests are deleted (CAP-10, CAP-16).
   done_checkpoint: true
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Folders with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Folders with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "18"
   title: "Migrate Projects"
   description: >-
     Move Projects onto the shared pipelines, deleting its workflow-policy gate
     and story-named jobs and adding Dependabot (CAP-10, CAP-16).
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Projects with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Projects with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "19"
   title: "Migrate ChatBot"
   description: >-
@@ -234,24 +335,40 @@
     delete its evidence gates and story-named jobs, and add the missing
     baseline (CAP-10, CAP-16).
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.ChatBot with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.ChatBot with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "20"
   title: "Migrate EventStore"
   description: >-
     Move EventStore off domain-ci v2, keeping its payload-protection and Dapr
     broker tests as custom actions and deleting its 13 YAML-asserting tests
     (CAP-10, CAP-16). Add hook secrets for its Azure-backed tests as a minor
-    Builds API change, passed explicitly by name (AD-14).
+    Builds API change, passed explicitly by name, and decide where they go:
+    the CI job, where every step can read them, or a dedicated job, which
+    needs a spec update to the one-CI-job constraint and CAP-5 (AD-14).
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.EventStore with the module-agent token; never
-    edit owned files there. Waivers move into Builds' Props/. Then commit
-    submodule + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.EventStore with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "21"
   title: "Migrate Parties"
   description: >-
@@ -259,11 +376,18 @@
     and the story-named jobs, and classifying its two CI-owner gates (CAP-10,
     CAP-16). It has 11 YAML-asserting tests to delete.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Parties with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Parties with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "22"
   title: "Migrate Memories"
   description: >-
@@ -271,11 +395,18 @@
     its 11 YAML-asserting tests (CAP-10, CAP-16). Its Python tooling under
     tests/ is classified with the gate rule.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Memories with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Memories with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "23"
   title: "Migrate Tenants"
   description: >-
@@ -283,25 +414,40 @@
     YAML-asserting tests (CAP-10, CAP-16). Its Python tooling under tests/ is
     classified with the gate rule.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.Tenants with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Tenants with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "24"
   title: "Migrate FrontComposer"
   description: >-
     Move FrontComposer onto the shared pipelines, keeping its browser
-    regression tests as a custom action and deleting the flaky-test
-    governance, the quarantine run, the IDE parity check, and 13
-    YAML-asserting tests (CAP-10, CAP-16). SDK versions hard-coded in its
-    workflows go with them; global.json stays module-owned.
+    regression tests as a custom action, deleting the flaky-test governance,
+    the quarantine run, the IDE parity check, and 13 YAML-asserting tests, and
+    classifying Gate 2b, Coverage Summary, and Quarantine Summary (CAP-10,
+    CAP-16). SDK versions hard-coded in its workflows go with them;
+    global.json stays module-owned.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first. Product-side changes
-    (custom actions, gate-rule deletions, removing module NuGet audit waivers)
-    go in references/Hexalith.FrontComposer with the module-agent token; never
-    edit owned files there. Waivers move into Builds' Props/. Then commit
-    submodule + setup file + render here; delivery adopts the module.
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.FrontComposer with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "25"
   title: "Migrate Timesheets"
   description: >-
@@ -309,11 +455,18 @@
     stale, so read its current workflows from GitHub first.
   invoke_dev_with: >-
     Update the submodule pointer first; the local checkout is stale. Check the
-    AD-21 maintainer preconditions. Product-side changes (custom actions,
-    gate-rule deletions, removing module NuGet audit waivers) go in
+    AD-21 maintainer preconditions, including the hexalith-release environment
+    with this module's own Zot push identity and a nuget.org policy scoped to
+    its package IDs, added beside the existing one. Product-side changes
+    (custom actions, gate-rule deletions, deleting module NuGet audit waivers
+    and a tool-only root package.json, its lockfile and .husky/) go in
     references/Hexalith.Timesheets with the module-agent token; never edit
-    owned files there. Waivers move into Builds' Props/. Then commit submodule
-    + setup file + render here; delivery adopts the module.
+    owned files there. A CiCd agent adds the waivers to Builds' Props/, and
+    adoption waits for a builds-version that contains them. Then commit
+    submodule + setup file + render here; delivery adopts the module. Right
+    after adoption, the maintainer turns on immutable releases, deletes the
+    other nuget.org policies, and removes the repo from the legacy org
+    secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "26"
   title: "Migrate Platform"
   description: >-
@@ -322,20 +475,28 @@
     GitHub first.
   invoke_dev_with: >-
     Update the submodule pointer first; the local checkout is stale. Check the
-    AD-21 maintainer preconditions. Product-side changes (custom actions,
-    gate-rule deletions, removing module NuGet audit waivers) go in
+    AD-21 maintainer preconditions, including the hexalith-release environment
+    with this module's own Zot push identity and a nuget.org policy scoped to
+    its package IDs, added beside the existing one. Product-side changes
+    (custom actions, gate-rule deletions, deleting module NuGet audit waivers
+    and a tool-only root package.json, its lockfile and .husky/) go in
     references/Hexalith.Platform with the module-agent token; never edit owned
-    files there. Waivers move into Builds' Props/. Then commit submodule +
-    setup file + render here; delivery adopts the module.
+    files there. A CiCd agent adds the waivers to Builds' Props/, and adoption
+    waits for a builds-version that contains them. Then commit submodule +
+    setup file + render here; delivery adopts the module. Right after
+    adoption, the maintainer turns on immutable releases, deletes the other
+    nuget.org policies, and removes the repo from the legacy org secrets, the
+    NUGET_API_KEY scope, and the legacy Zot push.
 - id: "27"
   title: "Delete legacy Builds CI/CD, rewrite the standard, and re-measure"
   description: >-
     Once all 17 modules are adopted, delete everything in Builds outside the
-    AD-20 end state: .github/workflows/ keeps only ci.yml, release.yml,
-    builds-ci.yml, builds-release.yml, and ci-cd-standards.md, Github/ and
-    Tools/ keep only what those and check.py use, the root package.json loses
-    its legacy release configuration, and the fate of the HXP301 candidate
-    gate is decided (CAP-16; AD-20). Then rewrite ci-cd-standards.md to match
+    AD-20 end state (.github/workflows/ keeps only ci.yml, release.yml,
+    builds-ci.yml, builds-release.yml, and ci-cd-standards.md; Github/ and
+    Tools/ keep only what those and check.py use; the root package.json loses
+    its legacy release configuration), remove the frozen-path exclusions from
+    dependabot.yml and the zizmor config, and decide the fate of the HXP301
+    candidate gate (CAP-16; AD-20). Then rewrite ci-cd-standards.md to match
     this spec and re-measure every target in baseline-and-targets.md with the
     baseline method.
   invoke_dev_with: >-

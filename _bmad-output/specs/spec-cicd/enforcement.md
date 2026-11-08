@@ -1,15 +1,18 @@
 # Enforcement
 
-How CI/CD changes made outside this repository are blocked and undone, and how custom actions are kept module-specific. Serves CAP-7, 8, 9, and 11. The mechanics are in the architecture spine (AD-4, AD-6 to AD-8, AD-14).
+How CI/CD changes made outside this repository are blocked and undone, and how custom actions are kept module-specific. Serves CAP-7, 8, 9, 11, and 14. The mechanics are in the architecture spine (AD-4, AD-6 to AD-8, AD-14).
 
 ## Layer 1: token scoping
 
-- Module agents use a fine-grained token, limited to the module repositories, as their git and `gh` credential. It has Contents and Pull requests write access, and no Workflows, Administration, Actions, Variables, or Secrets write access. So GitHub rejects any push that touches `.github/workflows/**`, and any workflow dispatch.
+- Module agents use a fine-grained token, limited to the module repositories, as their git and `gh` credential. It has Contents and Pull requests write access, and no Workflows, Administration, Actions, Variables, or Secrets write access. So GitHub rejects any push that touches `.github/workflows/**`, and any workflow dispatch. Module agents start each branch from the current `main`.
 - Agents working in this repository use a second token, scoped to Builds and this repository only, in interactive sessions.
 - Agent sessions never run with the maintainer's personal `gh` login, which has the `workflow` scope.
+- Credentials that write are held in two GitHub environments, each usable from `main` only, with no required reviewers and no wait timer:
+  - `cicd-app`, in this repository: the App key and client ID. It is used only by the delivery job and nightly's App jobs.
+  - `hexalith-release`, in each managed repository: that module's own Zot push identity, which can push only that module's images and is distinct from the legacy `HEXALITH_ZOT_*`. The module's nuget.org Trusted Publishing policy names this environment and is scoped to the module's package-ID prefix.
 - Limits:
   - This layer doesn't cover owned files outside `.github/workflows/`. Layer 2 covers them.
-  - Org-wide agent Apps (`claude`, `chatgpt-codex-connector`, `cursor`) hold Workflows write access on every repository, and the org can't remove it. Only layers 2 and 3 cover them. `semgrep-app` is uninstalled from the managed repositories if Semgrep is unused.
+  - `claude`, `cursor`, and `semgrep-app` are installed on no managed repository. `chatgpt-codex-connector` is installed only on the modules that use it, never on this repository or Builds. There it holds Workflows write access that the org can't remove, and it can publish its own module through an edited workflow on `main`. This is accepted, limited to that module by the per-module publish credentials. Only layers 2 and 3 and nightly's pre-dispatch check cover it.
 
 ## Layer 2: the guard
 
@@ -17,20 +20,21 @@ The guard is owned by Builds. It runs first in every CI run and takes seconds.
 
 1. It reads the module's expected owned state from that module's own branch in this repository, `delivered/<Repo>`, by shallow sparse git clone. This repository is public, so no token is needed.
    - Delivery advances the branch only when the module passes its own checks, so it holds that module's last accepted render. A skipped module keeps its previous branch.
-   - A ruleset on `delivered/**` blocks deletion and force-push and lets only the App update these branches.
+   - A ruleset on `delivered/**` restricts creation, updates, and deletion and blocks force-push. The App is its only bypass actor, so only delivery moves these branches.
    - A missing branch or perimeter fails the guard.
 2. It compares the module with the expected state (perimeter in SPEC Constraints, entry kinds in AD-4). It also checks that:
    - every enabled hook and job action exists;
-   - the custom actions avoid the deny list below;
-   - no module MSBuild file waives NU1903 or NU1904 (`NoWarn`, `NuGetAuditSuppress`);
-   - commit messages pass commitlint.
-3. **On a PR or a push to another branch:** it fails with the diff and the message "CI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline."
+   - every custom action (`action.yml` or `action.yaml` under `.github/actions/**`) is composite. Each `uses:` names another directory under `.github/actions/`, or a third-party action at a full commit SHA, never Builds. Each action avoids the deny list below;
+   - no module file waives or bypasses the release audit. This covers every MSBuild project file whatever its extension, plus `*.rsp` and NuGet config files. The lint rejects `NoWarn` for NU1900, NU1903, NU1904, or NU1905, `NuGetAuditSuppress`, `MSBuildWarningsAsMessages`, `TreatAsLocalProperty` on a `NuGetAudit*` property, and `auditSources`. It also rejects the test-filter properties `TestingPlatformCommandLineArguments` and `VSTestTestCaseFilter`;
+   - commit messages pass commitlint, which also rejects `[skip ci]`-family markers and `skip-checks` trailers.
+3. **On a PR:** it fails with the diff and the message "CI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline." Module CI runs on pushes to `main` only, so branch pushes aren't judged.
 4. **On a push to `main`:** it fails the same way. A separate restore job then:
+   - runs only Builds code at the workflow's own commit, and recomputes the expected state from `delivered/<Repo>`, taking nothing from the CI job except its drift flag;
    - writes the expected state in one commit, skipping `.github/workflows/**`, which `GITHUB_TOKEN` can't write;
-   - also skips the Builds gitlink, its `.gitmodules` section, and `hexalith-ci.json` while the delivered Builds tag differs from the tag of the running workflow, so restore never splits the lockstep set;
+   - also skips the Builds gitlink and its `.gitmodules` section while the delivered Builds tag differs from the tag of the running workflow, so restore never splits the lockstep set. It writes `hexalith-ci.json` only when the tags match and the module's workflows already equal the delivered render;
    - dispatches CI on `main`, so the restored files are tested right away.
 
-   What restore skips waits for the next delivery, at most one hour later.
+   What restore skips waits for the next delivery, at most one hour later. Every delivery run re-applies every delivered module.
 5. **On `workflow_dispatch`:** it checks, and never restores.
 
 It restores the files instead of running `git revert`, because an agent's commit usually mixes product changes with the CI/CD edit.
@@ -44,15 +48,18 @@ Known effects:
 
 ## Layer 3: delivery
 
-- `deliver.yml` in this repository is the only writer of owned files into modules (AD-6). It runs on every push to `main` here and hourly at minute 47. It can also be started by hand.
-- Each run re-applies the full expected state, so it also repairs drift that the restore job skips.
-- It pushes with a token minted from the org GitHub App, whose key never leaves this repository.
+- `deliver.yml` in this repository is the only writer of owned files into modules (AD-6). It runs on every push to `main` here and hourly at minute 47. It can also be started by hand. Its runs on `main` are never cancelled.
+- Each run first advances `delivered/<Repo>` for every module that passes all its checks. A branch only moves forward. A module whose branch would move backwards is reported as "superseded by `<sha>`".
+- It then re-applies the render at `delivered/<Repo>` to every module that has the branch, passing or not, so it also repairs drift that the restore job skips. When the global checks fail, it advances nothing but still re-applies.
+- Before using Builds at a branch's `builds-version`, it confirms that the tag is acceptable (SPEC Constraints).
+- It pushes with a token minted from the org GitHub App, whose key never leaves this repository's `cicd-app` environment.
+- Nightly's pre-dispatch check adds one more repair point. A module whose live `ci.yml` or `release.yml` differs from `delivered/<Repo>` is not released, and the nightly run fails.
 
 ## Not used
 
-- Rulesets with required status checks, because they block direct pushes. Existing ones are cut back during onboarding (AD-21):
+- Rulesets with required status checks, because they block direct pushes. During onboarding, rulesets are set to exactly these, created where missing and cut back where stricter (AD-21):
   - On `main`, rulesets block only deletion and force-push.
-  - On `v*` tags, rulesets block only update and deletion.
+  - On `v*` tags, rulesets block only update and deletion. Leftover drafts and tags are deleted before the tag ruleset is set. An orphan tag found later is deleted with the ruleset briefly disabled.
 - CODEOWNERS, required review, and the required-reviewer rule, because agents can bypass review.
 - Copilot coding agent's "Approve and run workflows" gate. It is on by default and is not part of this design.
 
@@ -72,7 +79,7 @@ The list is maintained by hand, and occasional false positives are accepted.
 
 ## Nightly duplicate scan (this repository)
 
-- A copy-paste detector, `jscpd`, scans every module's custom actions and the scripts they call. It covers YAML, shell, PowerShell, and Python. It reads each module's current `main`, never this repository's submodule checkouts.
+- A copy-paste detector, `jscpd`, scans every module's custom actions and the scripts they call. It covers YAML, shell, PowerShell, and Python. It reads each module's current `main`, never this repository's submodule checkouts. It uses this repository's committed config, never one from the scanned module.
 - It runs inside `nightly.yml`. A fragment found in two or more modules fails the nightly run and names the code to move. It never blocks the Builds bump.
 - The detection threshold needs tuning. Expect early noise from the Python tooling in Memories and Tenants until the gate rule removes it.
 - The scan misses the same logic written differently. Agent review covers that, but runs only when a new custom action is enabled or the scan flags something.
@@ -92,6 +99,7 @@ Hoisting is an ordinary change made by an agent in this repository:
   - When CI fails, fix the product.
   - When CI itself is wrong, report it rather than work around it.
   - Run `python3 references/Hexalith.Builds/check.py` before you push.
+  - Don't write tests that assert workflow YAML, and don't use skip markers such as `[skip ci]`.
 - `Hexalith.AI.Tools/hexalith-llm-instructions.md` links to the block and drops the line that says releases happen on merge.
 - The `bmad-testarch-ci` skill ("Scaffold CI/CD quality pipeline"), installed in 14 modules, is a must-be-absent path. Delivery deletes it, and the guard flags it if it comes back.
 
@@ -101,3 +109,15 @@ Hoisting is an ordinary change made by an agent in this repository:
 - The file exists in 15 modules, in 12 different versions. The entries are merged in, and every other key, including the allow list, stays module-owned.
 - These rules never go in machine-wide managed settings: no allow rule can override a deny, so agents here couldn't edit Builds.
 - For agents other than Claude Code, the rules are only instructions. Layers 1 to 3 are the real enforcement.
+
+## Accepted residuals
+
+These gaps are known and accepted under the careless-agent model:
+- Org owners and agents in this repository can reach the App key through a push to `main`.
+- Builds `v*` tag creation is unrestricted until story 1 checks whether a ruleset can restrict it.
+- An obfuscated `NoWarn`, or an MSBuild import through a computed path, escapes the text-based audit lint.
+- Completing a draft doesn't re-run the audit.
+- The registry pull pair is readable by every CI step and by Dependabot runs.
+- Custom-action SHA pins are checked by their text only.
+- `chatgpt-codex-connector` can publish its own module (Layer 1).
+- A module whose last CI run on `main` is older than the 90-day retention fails "main is red" until its next commit. Bumps arrive nearly every night.

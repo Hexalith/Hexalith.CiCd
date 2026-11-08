@@ -2,7 +2,7 @@
 title: "Product Brief: Hexalith.CiCd"
 status: final
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Product Brief: Hexalith.CiCd
@@ -97,7 +97,7 @@ Addendum section F gives the options behind each choice below, with their pros a
 | Local workflow YAML in modules | 218–3,116 lines | only the generated caller |
 | Custom-action code common to two or more modules | not measured | none |
 | CI/CD changes from outside this repository that persist | frequent: 84 workflow commits in Tenants since 2026-10-01 | none; the next CI run undoes each one |
-| Releases | dispatched by hand | every module with releasable changes is released overnight by its own run; a failure shows as a failed run in that repository |
+| Releases | dispatched by hand | every module with releasable changes is released overnight: its own run pushes the packages and containers, and the GitHub release is published by that run or, when GitHub refuses that run's token, by this repository's nightly run; a failure shows as a failed run in that repository |
 
 ## Scope
 

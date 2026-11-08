@@ -1,4 +1,4 @@
-# Module inventory (2026-11-07, Builds re-checked 2026-11-08)
+# Module inventory (2026-11-07; Builds and org settings re-checked 2026-11-08)
 
 Current state of Builds and of the 17 modules, as input to migration (CAP-16). Facts marked *checked* were confirmed during architecture on 2026-11-07 or 2026-11-08.
 
@@ -30,7 +30,7 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 | `domain-ci-v2.yml` (v2) | 762 lines, strict, manifest-driven. Used by EventStore and Parties only. Rejects caller hooks; needs the module CLI tool pin and registry secrets everywhere. | Frozen, then final deletion |
 | `domain-release.yml` | 2,058 lines | Frozen, then final deletion; replaced by the one release workflow |
 | Thin gates: `codeql`, `dependency-review`, `commitlint` | Builds' own `ci.yml` calls `codeql.yml` and `dependency-review.yml` (*checked*) | Frozen, then final deletion. `builds-ci.yml` drops the `dependency-review.yml` call at the rename and the `codeql.yml` call at the `builds-release.yml` rewrite. CodeQL moves into the release, commitlint into the guard, and dependency review is dropped. |
-| Builds' own `ci.yml` and `build-release.yml` | Legacy release tooling hard-codes their names: `Tools/G4PackageQualification.functions.ps1`, `verify-g4-release-source.sh`, `archive-g4-qualification-evidence.py`. About 20 tests read them by name, some inside frozen composites (*checked*). | Renamed to `builds-ci.yml` and `builds-release.yml` before the reusable `ci.yml` lands. The rename repoints those identities and tests. The G-4 qualification jobs leave `builds-ci.yml` at the `builds-release.yml` rewrite. |
+| Builds' own `ci.yml` and `build-release.yml` | Legacy release tooling hard-codes their names: `Tools/G4PackageQualification.functions.ps1`, `verify-g4-release-source.sh`, `archive-g4-qualification-evidence.py`. About 20 tests read them by name, some inside frozen composites. `Tools/test-self-ci.py` asserts their text, as do tests in the frozen `Github/prepare-module-build/tests` and `Github/publish-containers/tests` (*checked*). `ci.yml`'s `build-and-test` aggregator ("Require every validation job to pass") needs the catalog, contracts, .NET, and Python jobs; the Python job also runs G-4 and G-6 evidence tests. | Renamed to `builds-ci.yml` and `builds-release.yml` before the reusable `ci.yml` lands. The rename deletes the tests that assert their text and repoints the rest. The G-4/G-6 jobs and tests and the aggregator leave `builds-ci.yml` at the `builds-release.yml` rewrite. |
 | `commitlint-caller.yml` | Builds-only push and PR commitlint. It calls the frozen `commitlint.yml`, and its check is required by Builds' ruleset until the story-1 cut (*checked*). | Deleted in the change that makes the guard's commitlint run in `builds-ci.yml` |
 | `candidate-policy.yml` | Legacy governed-provenance workflow; no managed module calls it. The `hexalith-module` CLI's candidate gate (HXP301) is enrolled against it at a pinned SHA (*checked*). | Final deletion. Story 27 decides whether HXP301 retires with it. |
 | `eventstore-maintenance-publisher.yml` | One-off with no caller; its trigger branch `fix/eventstore-maintenance-publication` is deleted, and it names a module (*checked*) | Deleted at the rename |
@@ -38,12 +38,16 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 | `ci-cd-standards.md` | Lives in `.github/workflows/` | Kept, and rewritten to match this spec once the legacy files are gone (story 27) |
 | `Github/` | 17 entries: `commitlint`, `create-release`, `dapr-init`, `governed-provenance`, `initialize-build`, `initialize-dotnet`, `package-release`, `prepare-domain-release`, `prepare-module-build`, `publish-azure-container-app`, `publish-container-to-registry`, `publish-containers`, `run-module-integration`, `scripts`, `split-publication`, `unit-tests`, `verify`. Modules call some directly: `initialize-build` 30 times (21 at `@main`), `initialize-dotnet` 21 (18 at `@main`), `prepare-domain-release` 7, `dapr-init` 6, `create-release` and `prepare-module-build` once each, `verify@main` once (*checked*). | Frozen until all 17 modules are adopted, including direct uses. Then final deletion of everything the new pipeline doesn't use. New code goes in new composites. |
 | `Tools/` | About 50 legacy G4/G6 and package-audit scripts, plus about 13 PowerShell `Props/` catalog validators (about 4,000 lines) that Builds' `ci.yml` runs (*checked*) | Legacy scripts: final deletion. Catalog validators: classified with the gate rule at the `builds-release.yml` rewrite (`gate-classification.md`). |
-| Root `package.json` | Carries the legacy release configuration | Final deletion removes it |
+| Root `package.json` | Carries the legacy release configuration | Final deletion removes that configuration |
 | `schemas/` | 16 files named `hexalith.<name>.v<N>.json`; several ship in product CLIs (`hexalith-module`, Evidence.Cli) (*checked*) | Kept. New schemas follow the convention (spine, Consistency Conventions). |
-| Release cadence | semantic-release, exact tags only. Latest v4.44.11. 44 tags in the last month, no floating major tag. No consumer references a tag; they use `@main` or raw SHAs. | Exact-tag references, at most one release a night |
-| Audit settings | `Hexalith.Build.props` line 33 sets `WarningsNotAsErrors` for NU1901–1904, so vulnerable packages don't fail builds today (*checked*) | The release build overrides it for NU1903 and NU1904 |
+| Release cadence | semantic-release, exact tags only. Latest v4.44.11. 44 tags in the last month, no floating major tag. No consumer references a tag; they use `@main` or raw SHAs. | Exact-tag references; the only unattended release is the nightly one |
+| Audit settings | `Hexalith.Build.props` line 33 sets `WarningsNotAsErrors` for NU1901–1904, so vulnerable packages don't fail builds today (*checked*) | The release build overrides it for NU1900, NU1903, NU1904, and NU1905 |
+| Commitlint config | `commitlint.config.mjs`: header and body lines at most 200, footer lines at most 100 (config-conventional), merge commits linted (`defaultIgnores: false`) (*checked*) | Kept as is, plus one rule rejecting skip markers |
+| `dependabot.yml` | Covers Builds' own paths | Excludes the frozen paths until the final deletion; CiCd agents close Dependabot PRs that touch frozen files |
+| Dapr pins | `HexalithDaprRuntimeVersion` 1.18.7 and `HexalithDaprCliVersion` 1.18.2 in `Props/Directory.Packages.props` (*checked*) | The one pin each, bumped to 1.19.1 in story 2 |
 | Package catalog | `Props/Directory.Packages.props` has Works- and Folders-specific conditions (*checked*) | Product build data, outside the module-agnostic rule (AD-2) |
-| Rulesets | `main` requires a pull request and status checks (*checked*) | Cut back as in AD-21 |
+| Rulesets | `main` requires a pull request and status checks. No `v*` tag ruleset (*checked*). | Set to exactly the AD-21 rulesets, `main` and `v*` tags |
+| Immutable releases | Off (*checked*) | On before the first rewritten release |
 
 ## Versioning drift
 
@@ -63,15 +67,29 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 
 - ChatBot runs its full release on every push: 88 runs, 100% failed.
 - Recovery workflows: three copies of `recover-partial-release.yml`.
-- 14 module releases use the `production` GitHub environment (*checked*). The new release uses no environment, so their nuget.org Trusted Publishing policies are recreated without one (AD-21).
+- 14 module releases use the `production` GitHub environment (*checked*). The new publish job runs in each repo's `hexalith-release` environment. At onboarding, a nuget.org policy naming it and scoped to the module's package IDs is added beside the existing one. Right after adoption, every other policy is deleted (AD-21).
+- Legacy releases are mostly authored by `github-actions[bot]`, some by the maintainer: Parties 2 of 13 recent, Agents 1 of 3 (*checked*).
 - NuGet authentication is split between an API key and OIDC. Every module moves to Trusted Publishing.
 
 ## Settings that block onboarding (*checked*)
 
 - **Rulesets:** EventStore and Platform, like Builds, require a pull request and status checks on `main`. Platform also has tag rulesets, including tag-creation authorization. Delivery and the release can't push until these are cut back (AD-21).
-- **Org-wide Apps:** `claude`, `chatgpt-codex-connector`, `cursor`, and `semgrep-app` hold Workflows write access on every repository.
+- **Org-wide Apps:** `claude`, `chatgpt-codex-connector`, `cursor`, and `semgrep-app` are installed on all repositories, with Contents, Workflows, and Actions write. Branch evidence (2026-11-08):
+  - `codex/*`: 42 PRs on 9 repos, the last on EventStore on 2026-10-09.
+  - `claude/*`: last on 2026-01-10. Builds has 4 Claude-on-the-web PRs, the last on 2026-01-04. CiCd has none from any App.
+  - `cursor/*`: one PR, on 2026-02-26.
+  - Semgrep: no PRs, and no Semgrep check on Builds' `main`.
+
+  Hence the SPEC's installation scope. Local Claude Code sessions use the maintainer's tokens, not the App.
+- **Org settings:** default workflow permission `read`; fork-PR approval only for first-time contributors (to become all external contributors); all actions allowed. Artifact and log retention is 30 days (to become 90). The legacy org secrets `NUGET_API_KEY`, `HEXALITH_ZOT_*`, `AZURE_*`, and `SONAR_TOKEN` are visible to all repositories. They get restricted to the repos that still read them, never CiCd or Builds.
+- **Rulesets and immutable releases elsewhere:** CiCd has no rulesets. Immutable releases are off on Builds, CiCd, and Parties.
 - **Audit already failing:** ChatBot, Platform, Parties, FrontComposer, and McpCli set `TreatWarningsAsErrors` without exempting NU190x, so vulnerable packages already fail their CI. CI's audit-off flag removes that. Waivers move to Builds during migration.
-- **Audit bypasses:** a module `NoWarn` for NU1903, `NuGetAuditLevel=critical`, or `NuGetAuditSuppress` each defeat the release audit gate (measured with SDK 10.0.403). The guard rejects `NoWarn` and `NuGetAuditSuppress`. The release build's `-p:NuGetAuditLevel=low` overrides a module's audit level.
+- **Audit bypasses** (reproduced with SDK 10.0.403):
+  - A module `NoWarn` for NU1903, `NuGetAuditLevel=critical`, or `NuGetAuditSuppress` each defeat the release audit gate. So do `MSBuildWarningsAsMessages`, `TreatAsLocalProperty` on `NuGetAudit`, a `NoWarn` attribute on a `PackageReference`, `-nowarn` in a `Directory.Build.rsp`, `auditSources` in a `nuget.config`, an obfuscated `NoWarn`, and `NuGetAuditSuppress` in an imported `build.xml`.
+  - The release's `-noAutoResponse` and Builds' nuget.org-only restore config remove the `rsp` and `nuget.config` paths.
+  - The release's `-p:NuGetAuditLevel=low` overrides a module's audit level.
+  - The guard's audit lint rejects the rest, except the obfuscated `NoWarn`, which is accepted (`enforcement.md`).
+- **Files the perimeter adds to the must-be-absent list:** no module tracks a `Directory.Build.rsp` or a `.commitlintrc*` today.
 
 ## Callers outside the managed modules (*checked*)
 
@@ -91,7 +109,7 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 The shared pipeline replaces all of these, except the SDK version, which stays module-owned.
 - **Workflow volume:** 2 to 13 workflow files per repository, 218 to 3,116 lines in total.
 - **SDK:** FrontComposer hard-codes the SDK version in 10 places. `global.json` pins are split between 10.0.401, .402, and .403.
-- **Dapr:** runtime pins vary from 1.18.2 to 1.18.7, even within one repository. Builds' props pin the Dapr .NET SDK 1.19.0. The new pipeline uses one runtime pin in Builds, seeded at 1.19.1.
+- **Dapr:** runtime pins vary from 1.18.2 to 1.18.7, even within one repository. Builds' props pin the Dapr .NET SDK 1.19.0. The new pipeline uses one runtime pin and one CLI pin in Builds' `Props/`, both 1.19.1 (Builds table).
 - **Variables:** names differ from repository to repository. The new ones are all prefixed `HEXALITH_` (spine, Consistency Conventions).
 
 Setup and import steps that fail in the sample are replaced by the shared pipeline:
@@ -105,6 +123,8 @@ Late failures: "Fail on blocking test failures", an aggregate step at the end of
 ## Test projects (*checked*)
 
 Naming is mixed across modules: `*.Tests`, `IntegrationTests`, `Integration.Tests`, `AppHost.Tests`, `UI.E2E.Tests`, `LoadTests`, `Benchmarks`, and Works' `UnitTests`, `PropertyTests`, and `ArchitectureTests`. The stage rule in `pipeline-stages.md` sorts them; anything it misroutes is fixed through the setup file.
+
+16 of the 17 .NET repositories, and Builds, select Microsoft.Testing.Platform in `global.json`, so tests run with `dotnet test --project`.
 
 ## Dependency graph
 
