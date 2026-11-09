@@ -1,0 +1,12 @@
+[plugin]
+name = "direct-submodules"
+version = "1.0.0"
+api_version = 1
+description = "Initialize direct submodules in each bmad-loop worktree."
+
+[hooks.pre_worktree_setup]
+# Override recursive Git defaults and check out the superproject's pinned commits.
+cmd = "git -c submodule.recurse=false submodule update --init --checkout"
+timeout_sec = 600
+blocking = true
+fail_closed = true
