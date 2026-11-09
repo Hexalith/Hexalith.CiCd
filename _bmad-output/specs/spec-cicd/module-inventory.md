@@ -80,7 +80,7 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
   - `cursor/*`: one PR, on 2026-02-26.
   - Semgrep: no PRs, and no Semgrep check on Builds' `main`.
 
-  Hence the SPEC's installation scope. Since story 1 (2026-11-09), local Claude Code sessions in CiCd use the CiCd-agent token, through `GH_CONFIG_DIR`. The token expires on 2027-11-08 and must be renewed before then. Elsewhere they use the maintainer's tokens. None of them uses the App.
+  Hence the SPEC's installation scope. Since story 1 (2026-11-09), local Claude Code, Codex and Cursor agent sessions in CiCd use the CiCd-agent token, through `GH_CONFIG_DIR`. The wiring is local and untracked: `.claude/settings.local.json`, `.codex/config.toml` (`shell_environment_policy.set`), and a Cursor `preToolUse` hook in `.cursor/hooks.json` that prefixes each Shell command. The token expires on 2027-11-08 and must be renewed before then. Elsewhere they use the maintainer's tokens. None of them uses the App.
 - **Org settings:** before story 1, the default workflow permission was `read`, fork-PR approval applied only to first-time contributors, all actions were allowed, artifact and log retention was 30 days, and the legacy org secrets `NUGET_API_KEY`, `HEXALITH_ZOT_*`, `AZURE_*`, and `SONAR_TOKEN` were visible to all repositories. Since 2026-11-09:
   - fork-PR approval covers all external contributors, and retention is 90 days;
   - each legacy secret is restricted to the public repos that read it (story 1, step 8 table), never CiCd or Builds;
