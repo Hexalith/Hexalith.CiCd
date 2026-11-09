@@ -1,0 +1,7 @@
+# Project overrides for bmad-build-auto (merged over the skill's customize.toml).
+
+[workflow]
+
+persistent_facts = [
+  """Submodule stories. Hexalith.CiCd is a superproject; most stories work inside a direct submodule under references/ (for example references/Hexalith.Builds). bmad-loop verifies `baseline_revision` against the superproject repository, never against a submodule. When a story's work happens in a submodule: (1) stamp `baseline_revision` with the full superproject HEAD from `git -C {project-root} rev-parse HEAD`, never the submodule's HEAD; (2) also record the submodule path as `implementation_repository` and its full starting HEAD as `implementation_baseline_revision`; (3) build the review diff from the submodule's changes since `implementation_baseline_revision` plus the superproject's changes since `baseline_revision`, because the superproject diff only shows the submodule pointer; (4) after committing and pushing in the submodule, stage the updated submodule pointer in the superproject together with the story spec. Stories that work only in the superproject use the superproject HEAD as usual.""",
+]
