@@ -2,7 +2,7 @@
 title: 'Story 1: Maintainer preconditions and remaining checks'
 type: 'chore'
 created: '2026-11-08'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_commit: 'd4e4faa5d0c2e1470e8edb266a4231aa6fd46920'
 review_loop_iteration: 0
@@ -79,8 +79,8 @@ context:
 - [x] `[maintainer]` 3. Create CiCd rulesets `main` and `delivered/**`.
 - [x] `[maintainer]` 4. Builds: delete the 15 orphan tags, cut "Protect main", and add the `v*` ruleset.
 - [x] `[maintainer]` 5. Set `claude`, `cursor` and `semgrep-app` to no managed repo, and `chatgpt-codex-connector` to the modules you keep.
-- [ ] `[maintainer]` 6. Create the CiCd-agent token and wire it through `GH_CONFIG_DIR` (Decisions).
-- [ ] `[maintainer]` 7. Create a pull-only Zot account. Add Actions and Dependabot secrets `HEXALITH_REGISTRY_PULL_USERNAME` and `_PASSWORD` and variable `HEXALITH_NUGET_USER`, all with selected visibility: Builds.
+- [x] `[maintainer]` 6. Create the CiCd-agent token and wire it through `GH_CONFIG_DIR` (Decisions).
+- [x] `[maintainer]` 7. Create a pull-only Zot account. Add Actions and Dependabot secrets `HEXALITH_REGISTRY_PULL_USERNAME` and `_PASSWORD` and variable `HEXALITH_NUGET_USER`, all with selected visibility: Builds.
 - [x] `[maintainer]` 8. Restrict the legacy secrets to the reader list, never CiCd or Builds.
 - [x] `[maintainer]` 9. Set org retention to 90 days and fork approval to all external contributors, and turn on push protection for CiCd, Builds and all 17 modules.
 - [x] `[maintainer]` 10. On nuget.org, add the `Hexalith.Builds*` policy for `builds-release.yml` with environment `production`.
@@ -234,6 +234,61 @@ Probe rulesets, once steps 3 and 6 are done:
 - After run 1, PUT the same ruleset with `"bypass_actors":[{"actor_id":15368,"actor_type":"Integration","bypass_mode":"always"}]`. If the API rejects that, the rejection is itself the answer.
 - At the end: `gh api -X DELETE $R/Hexalith.CiCd/rulesets/<id>`.
 
+**Session 2026-11-09, closing verification** (implementation subagent, read-only, the CiCd-agent token only through `GH_CONFIG_DIR=~/.config/gh-cicd-agent`). It read the attended-session amendment as covering only that session, so it didn't use the maintainer's login. The maintainer then chose to have the org-level reads done with their login before wiring, which the Boundaries allow ("until the CiCd-agent token is wired"). See the next section.
+- **Read with the token; everything matches the Boundaries, no mismatch:**
+  - Rulesets, with no org rulesets above them:
+    - CiCd `main` (26812262): `~DEFAULT_BRANCH`, deletion and non_fast_forward, no bypass.
+    - CiCd `delivered` (26812547): `refs/heads/delivered/**`, creation, update, deletion and non_fast_forward, bypass `Integration` 5671811 `always` only.
+    - Builds `Protect main` (19196298): deletion and non_fast_forward, no bypass.
+    - Builds `v tags` (26812219): `refs/tags/v*`, update and deletion, no bypass.
+  - `cicd-app`: one protection rule, `branch_policy`, with the single policy `main` (65975204). No reviewers and no wait timer. Its `can_admins_bypass` is `true`, the default. The Boundaries don't cover it, and AD-7 already accepts that org owners can reach the key.
+  - Collaborators on CiCd and Builds: exactly `jpiquot` and `tinouit` (admin), with no direct collaborators.
+  - Builds tags: 196 `v*` tags and 196 published releases, with no tag missing a release and no drafts.
+  - Probe cleanup holds: CiCd has only branch `main`, no tags, and no `probe/*` or `probe-*` refs.
+  - Token expiry: the `GitHub-Authentication-Token-Expiration` header reads 2027-11-08 23:00 UTC, within 366 days. So expiry can be read from the API after all.
+  - AC-2, with `gh auth status` on `~/.config/gh-cicd-agent` and only the gh credential helper: `git push --dry-run` to CiCd answers "Everything up-to-date", and Commons is refused with 403 "Permission to Hexalith/Hexalith.Commons.git denied".
+- **Refused to the token** (403 "Resource not accessible by personal access token"). AD-7 scopes it this way on purpose:
+  - org installations and `GET /user/installations/{id}/repositories`, so the Verification gap above stays a maintainer attestation;
+  - org retention, fork approval and default workflow permission;
+  - org Actions and Dependabot secrets and variables, and Builds' view of them;
+  - repo retention;
+  - `security_and_analysis`, which comes back `null`;
+  - deploy keys;
+  - `cicd-app` secret and variable names.
+
+  These were re-read with the maintainer's login in the next section.
+- **Left open by the subagent, closed in the next section:** step 6's `.claude/settings.local.json`, step 7's Zot account and pull secrets, and the org-level readback.
+
+**Session 2026-11-09, step 7, full Verification and wiring** (agent; the maintainer said "do it" for step 7, see the Spec Change Log). Order: step 7, then every Verification command with the maintainer's `gh` login, then `settings.local.json` last.
+- **Step 7, Zot:** `registry.hexalith.com` is Zot in the maintainer's cluster (context `jpiquot@local`, namespace `registry-distribution`, deployment `distribution-registry`, 1 replica, `Recreate`). As Platform story 2-8 found, no kustomize source exists outside the cluster, so the live objects are the source.
+  - `ci-reader` was already a read-only principal, but its password exists only in the EventStore and Parties repo secrets `HEXALITH_CI_REGISTRY_*` (Platform 2-8). Reusing it would mean rotating it under them, so a new principal was added: `hexalith-registry-pull`.
+  - The `distribution-registry-htpasswd` row was appended with bcrypt cost 12, leaving the existing rows byte-identical (resourceVersion before: 40163865).
+  - `distribution-registry-config` gained one `**` policy, `{"users":["hexalith-registry-pull"],"actions":["read"]}`, and nothing else changed (resourceVersion before: 40164036; new `config.json` sha256 `df5db0abf661fee334b1adce4cd50d47010a4ee4a04a367e3710212e664a5155`).
+  - The config is mounted with `subPath`, so Zot was restarted by a pod-template annotation patch (before: 40164447; `restartedAt` 2026-11-09T00:42:47+01:00, `hexalith.com/registry-pull-config-sha256`). There had been no write calls in the 2 h before. The new pod was ready within a minute.
+  - Registry checks with the new account: `GET /v2/` 200, `eventstore` tags 200, `HEAD` of manifest `3.130.1` 200, blob upload `POST` 403, manifest `DELETE` 403. Anonymous access gets 401 and a wrong password gets 401. **Pull-only is verified by the agent through the registry API**, not attested.
+  - The password (48 hex characters) was generated locally and piped through stdin into `gh secret set`. It was never printed, and the local files were shredded.
+  - GitHub: Actions and Dependabot secrets `HEXALITH_REGISTRY_PULL_USERNAME` and `_PASSWORD` are each `selected` on `Hexalith.Builds` only (2026-11-08T23:43Z). `HEXALITH_NUGET_USER` is `selected` on `Hexalith.Builds`.
+- **Full Verification, maintainer's login: no mismatch.**
+  - Installations: `hexalith-cicd` (179966090) is `selected`, with exactly actions, contents and workflows write; administration and security_events read; and metadata read.
+    - The other `selected` installations are `chatgpt-codex-connector` (writer) and `travis-ci` (contents read).
+    - `codacy-production`, `codecov` and `sonarqubecloud` are on all repos, with no contents, workflows or single_file write.
+    - `GET /user/installations/{id}/repositories` is refused to the gh OAuth token too ("must authenticate with … a personal access token"), so the repository lists stay an attestation.
+  - Rulesets: exactly the four in the Boundaries, as the subagent read them. Org rulesets return 403 "Upgrade to GitHub Team", so none exist on the Free plan.
+  - `cicd-app`: `branch_policy` with `main` only. It holds secret `HEXALITH_CICD_APP_PRIVATE_KEY` and variable `HEXALITH_CICD_APP_CLIENT_ID`.
+  - Org Actions: retention 90 days, and CiCd and Builds read 90 as well. Fork approval is `all_external_contributors` and the default permission is `read`. `can_approve_pull_request_reviews` is `true`, which is outside the checklist and left alone.
+  - Secrets: the legacy secrets are all `selected`, and neither CiCd nor Builds is on any list. The counts match step 8: `NUGET_API_KEY` 24, `HEXALITH_ZOT_*` 4 each, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID` 6 each, `AZURE_APPLICATIONID` and `AZURE_APPLICATIONSECRET` 7 each, `SONAR_TOKEN` 7. `AZURE_REGISTRY` and `HEXALITH_ZOT_REGISTRY` stay variables visible to all repos.
+  - Push protection is `enabled` on CiCd, Builds and all 17 modules.
+  - Deploy keys: none on CiCd or Builds, and no direct or outside collaborators.
+- **Step 6 wiring:** `.claude/settings.local.json` was created last, with `{"env":{"GH_CONFIG_DIR":"/home/administrator/.config/gh-cicd-agent"}}`. The global git ignore covers it (`~/.config/git/ignore:1`). For `https://github.com`, git uses only `gh auth git-credential`, because the credential manager is reset for that host.
+- **AC-2 in a new session:** a headless `claude -p` session was started in this repo after the file existed, with no `GH_CONFIG_DIR` in the parent environment.
+  - `printenv GH_CONFIG_DIR` gives `~/.config/gh-cicd-agent`, and `gh auth status` reads `~/.config/gh-cicd-agent/hosts.yml` with a `github_pat_` token.
+  - `git push --dry-run` to CiCd `HEAD:refs/heads/dry-run-probe` is accepted. The same to Commons is refused: 403 "Permission to Hexalith/Hexalith.Commons.git denied".
+- **AC-4, items the GitHub API can't read:**
+  - Zot pull-only: verified by the agent through the registry API, as above, 2026-11-09.
+  - Token expiry: 2027-11-08 23:00 UTC from the `GitHub-Authentication-Token-Expiration` header, read by the agent on 2026-11-09.
+  - nuget.org policy "Hexalith.Builds builds-release": seen Active in the attended browser session on 2026-11-09. **Maintainer-attested 2026-11-09** ("attest").
+  - App installation repository lists (`hexalith-cicd` on CiCd and Builds, `chatgpt-codex-connector` on EventStore, `travis-ci` on `Hexalith_old`): read from the settings pages in the attended session on 2026-11-09. **Maintainer-attested 2026-11-09** ("attest").
+
 ## Spec Change Log
 
 - **2026-11-08, maintainer renegotiation (not a review finding).**
@@ -257,7 +312,56 @@ Probe rulesets, once steps 3 and 6 are done:
   - Avoids: leaving story 1, and every story after it, blocked while the maintainer types API commands an agent can run identically.
   - KEEP: the Boundaries order, the exact AD-21 ruleset set, and the AD-7 token scope. Before deleting anything, the agent checks again that the 15 tags still have no release, and it records each tag's SHA in Implementation Notes so a tag can be recreated. From the moment `settings.local.json` exists, later sessions use only the CiCd-agent token.
 
+- **2026-11-09, maintainer renegotiation (not a review finding).**
+  - Trigger: when the agent handed step 7 back to the maintainer, the maintainer replied "do it".
+  - Amended: the Always rule "The maintainer makes every … Zot change", and the 2026-11-08 split that left step 7's Zot account and pull secrets with the maintainer.
+    - The agent made both itself:
+      - the Zot principal, through the maintainer's `kubectl` context, following Platform story 2-8's precedent;
+      - the four org secrets, with the maintainer's `gh` login.
+    - The maintainer also chose (option 1) that the closing Verification reads org-level settings with their login before `settings.local.json` is created.
+  - Avoids: holding story 1, the checkpoint later stories depend on, for a change the agent could make and verify end to end.
+  - KEEP: the existing registry principals, policies and settings unchanged. The other changes were guarded patches with a resourceVersion test, made after a quiet-write-window check. From the moment `settings.local.json` exists, later sessions use only the CiCd-agent token.
+
 ## Review Triage Log
+
+Review 2026-11-09, loop 0 (blind, edge-case, verification-gap). No intent_gap or bad_spec, so there was no loopback. Patches P1–P7 went to the implementation subagent; D1–D6 are in `_bmad-output/implementation-artifacts/deferred-work.md`.
+
+| # | Finding | Verdict | Route | Evidence |
+| --- | --- | --- | --- | --- |
+| VG-1 | `module-inventory.md:76` still says Builds, like EventStore and Platform, requires a PR and checks | medium | patch P1 | Line 76 reads "EventStore and Platform, like Builds, require …", which contradicts line 49 and the 2026-11-09 ruleset readback (`Protect main` has deletion and non_fast_forward only). |
+| VG-2 | Verification expects `cicd-app` to have "no protection rules" | low | reject | The fix edits this build's spec (Verification section). The readback itself checked `[branch_policy]`, `main` only, and no reviewers or timer. |
+| VG-3 | The Verification command list skips the `HEXALITH_NUGET_USER` variable | low | reject | The fix edits this build's spec. The variable was read: `selected`, `Hexalith.Builds`. |
+| BH-1 | The Change Log doesn't authorize the agent-driven browser steps, and the AD-7 waiver was for one session | low | patch P6 (memlog part); rest reject | The memlog's "by maintainer renegotiation … API and browser changes" over-attributes, because that entry gives the browser-only steps to the maintainer, so the memlog wording is corrected. Amending the Change Log or AD-7 waiver text would edit this build's spec; the 2026-11-09 entry records option 1 and "do it". |
+| BH-2 | AC-4 isn't met as written: Zot and expiry were agent-verified, and the installation lists aren't named in it | low | reject | The fix edits this build's spec. Zot pull-only (registry 403 on push and delete) and expiry (API header) are recorded with dates on stronger evidence than attestation. The two remaining items are maintainer-attested 2026-11-09. |
+| BH-3 | `module-inventory.md:76` "like Builds" is stale | medium | patch P1 | Same defect as VG-1. |
+| BH-4 | The `dependabot.yml` row promises CiCd agents close Dependabot PRs, but the token has no Pull requests write | medium | defer D2 | The row is pre-existing context restating AD-20. The AD-20/AD-7 conflict is a spine fix, and the intent says "Never … edit the adopted spine". |
+| BH-5 | *checked* overstates the installation-scope evidence | low | patch P2 | The header defines *checked* as 2026-11-07/08, but story 1's marks are 2026-11-09. The installation lists were read by the agent from the settings pages and then attested, so *checked* holds once the definition covers story 1. |
+| BH-6 | `stories.yaml` 2-3/2-4 weren't updated for the "yes" answer | medium | defer D1 | 2-3's "if story 1 found …" resolves from `pipeline-stages.md`. The remaining risk is 2-4 building to AD-12 l.323 ("Only the Builds submodule is checked out"), whose fix is the spine follow-up that the intent excludes. |
+| BH-7 | The spine follow-ups have no tracked owner | medium | defer D1, D2 | They are recorded only in the memlog event. Spine Deferred l.713/715 and AD-12 l.323 still read open, and the spine can't be edited here (intent Never). |
+| BH-8 | The submodule evidence is thin: unnamed `.slnx` siblings, no SHA, stale Platform and Timesheets | low | patch P3 (names); rest reject | The Folders and Tenants `.slnx` siblings can be named directly; both checkouts equal their remotes (e88c9400, d88aef6b). Timesheets is false: its checkout equals the remote f5bee2c9. Platform's staleness is already flagged in the text, and re-reading it is more than a direct correction. SHAs are low value, since onboarding re-reads each module. |
+| BH-9 | Knob versus gating was never decided; scope is "build" versus "build or its tests" | low | patch P4 (scope); rest false | Spine Deferred l.715 decides on the knob. `SPEC.md:162` says "package-mode build reads", while `pipeline-stages.md` counts tests too (Parties, Tenants, Works), so they are aligned. |
+| BH-10 | The `v*` residual names neither exposure nor compensation | low | patch P5 | The SPEC Constraints acceptable-tag rule (l.169) is the compensation and isn't referenced. The fix is a one-clause pointer. |
+| BH-11 | The App-token alternative was dismissed, and the conclusion generalizes from one call | false | reject | GitHub doesn't offer GitHub Actions (15368) as a ruleset bypass actor; the probe got 422. `enforcement.md` already names the App-token alternative, which is a spine change. |
+| BH-12 | Several Verification expectations are wrong or can't be run | low | reject | The fix edits this build's spec. The readback used the correct `Hexalith.`-prefixed paths and the Builds-only expectation. |
+| BH-13 | Verification lacks commands for items that were actually checked | low | reject | The fix edits this build's spec. Every such item's result is recorded in the Implementation Notes. |
+| BH-14 | The credentials have no lifecycle tracking | low | patch P7 (token expiry); rest reject | The expiry (2027-11-08) is missing beside the token in `module-inventory.md:83`. The rest:<br>• The App client secret was never stored, so nobody holds it.<br>• The legacy nuget.org `*` policy is deleted by AD-21 after adoption.<br>• `can_approve_pull_request_reviews` has no effect, because required review is Not used.<br>• Zot rotation has no trigger. |
+| BH-15 | The Zot change lives only in the cluster, and the story exposes registry internals | medium | defer D3 (no source); exposure false | There is no kustomize source; Platform 2-8 found the same (`externalKustomizeSourceLocated: false`), so this is pre-existing. The exposure is false: principal and object names aren't credentials, and the password is 192-bit random. |
+| BH-16 | "Later sessions use only the CiCd-agent token" overclaims | medium | defer D4 (kubectl/SSH); rest false | Agent sessions here still inherit the maintainer's cluster-admin `kubectl` context and SSH keys. That is pre-existing and outside AD-7's `gh` scope. Other CLIs and the machine-wide ignore are false: the Decision scopes the wiring to Claude Code sessions and says "globally git-ignored". |
+| BH-17 | Step 8 kept dead or third-party readers of legacy secrets | low | defer D5 | The reader list followed the spec's "repos that read them" rule and narrowed the access from `all`. The remaining reach is pre-existing. |
+| EC-1 | Folders and Tenants knob siblings are unnamed | low | patch P3 | Same defect as BH-8's naming part. |
+| EC-2 | Platform's list comes from a stale checkout | low | reject | Already flagged "(stale checkout)" in the text. The local checkout is e39a9a25 and the remote 7fbe852f, so re-reading is more than a direct correction, and onboarding re-reads Platform. |
+| EC-3 | `Memories.Web` FrontComposerFromSource defaults on `Exists()`, ignoring `UseHexalithProjectReferences=false` | low | defer D6 | `Memories.Web.csproj:10` and `Web.Tests.csproj:7` are confirmed. CI is unaffected: the packages are on nuget.org (4.7.6), so "clean" holds. The local-check divergence is pre-existing. |
+| EC-4 | Spine AD-12 still says only Builds is checked out, so ci.yml may ignore the knob | medium | defer D1 | Same root cause as BH-6 and BH-7. The fix is a spine and stories follow-up that the intent excludes. |
+| EC-5 | `module-inventory.md:76` "like Builds" | medium | patch P1 | Same defect as VG-1. |
+| EC-6 | The *checked* header covers 2026-11-07/08 only | low | patch P2 | Same defect as BH-5. |
+| EC-7 | The `dependabot.yml` row conflicts with the token's scope | medium | defer D2 | Same defect as BH-4. |
+| EC-8 | Worktrees, `GH_TOKEN` or SSH remotes would bypass `GH_CONFIG_DIR` | false | reject | Tested: a fresh `claude -p` session in a git worktree that has no `settings.local.json` still got `GH_CONFIG_DIR`. `GH_TOKEN` and `GITHUB_TOKEN` are unset, and origin uses HTTPS. |
+| EC-9 | Legacy-secret readers on non-default branches lose access | maybe-false | reject | If true, it is only low: a loud failure fixed by adding a repo to the list. Settling it needs a search of reader repos' non-default branches. The step 8 data already records "Not covered". |
+| EC-10 | Verification expects "no protection rules" for `cicd-app` | low | reject | Same as VG-2: the fix edits this build's spec. |
+| EC-11 | Builds `main` lost its gate until the guard lands | false | reject | `commitlint-caller.yml` and `ci.yml` still run on every push to Builds `main`. `enforcement.md` Not used drops required checks by design (AD-21). |
+| EC-12 | The frozen Intent misstates who made the changes | low | reject | The fix edits this build's (frozen) spec. The Change Log entries of 2026-11-08 and 2026-11-09 record the renegotiations. |
+| EC-13 | The memlog cites the Change Log for agent browser changes | low | patch P6 | Same defect as BH-1's memlog part. |
+| EC-14 | AC-4 is counted as met though two items aren't attested | low | reject | Same as BH-2. |
 
 ## Verification
 

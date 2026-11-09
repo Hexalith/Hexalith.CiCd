@@ -1,6 +1,6 @@
-# Module inventory (2026-11-07; Builds and org settings re-checked 2026-11-08)
+# Module inventory (2026-11-07; Builds and org settings re-checked 2026-11-08 and, by story 1, 2026-11-09)
 
-Current state of Builds and of the 17 modules, as input to migration (CAP-16). Facts marked *checked* were confirmed during architecture on 2026-11-07 or 2026-11-08.
+Current state of Builds and of the 17 modules, as input to migration (CAP-16). Facts marked *checked* were confirmed during architecture on 2026-11-07 or 2026-11-08, or by story 1's re-check on 2026-11-09.
 
 ## Managed repositories
 
@@ -73,18 +73,18 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
 
 ## Settings that block onboarding (*checked*)
 
-- **Rulesets:** EventStore and Platform, like Builds, require a pull request and status checks on `main`. Platform also has tag rulesets, including tag-creation authorization. Delivery and the release can't push until these are cut back (AD-21).
+- **Rulesets:** EventStore and Platform require a pull request and status checks on `main`. Builds did too, until story 1 cut it back (2026-11-09). Platform also has tag rulesets, including tag-creation authorization. Delivery and the release can't push until these are cut back (AD-21).
 - **Org-wide Apps:** before story 1, `claude`, `chatgpt-codex-connector`, `cursor`, and `semgrep-app` were installed on all repositories, with Contents, Workflows, and Actions write. Since 2026-11-09, `claude`, `cursor` and `semgrep-app` are uninstalled, and `chatgpt-codex-connector` is installed on EventStore only. The CiCd App `hexalith-cicd` is installed on Builds and CiCd only (*checked*). Branch evidence (2026-11-08):
   - `codex/*`: 42 PRs on 9 repos, the last on EventStore on 2026-10-09.
   - `claude/*`: last on 2026-01-10. Builds has 4 Claude-on-the-web PRs, the last on 2026-01-04. CiCd has none from any App.
   - `cursor/*`: one PR, on 2026-02-26.
   - Semgrep: no PRs, and no Semgrep check on Builds' `main`.
 
-  Hence the SPEC's installation scope. Local Claude Code sessions use the maintainer's tokens, not the App.
+  Hence the SPEC's installation scope. Since story 1 (2026-11-09), local Claude Code sessions in CiCd use the CiCd-agent token, through `GH_CONFIG_DIR`. The token expires on 2027-11-08 and must be renewed before then. Elsewhere they use the maintainer's tokens. None of them uses the App.
 - **Org settings:** before story 1, the default workflow permission was `read`, fork-PR approval applied only to first-time contributors, all actions were allowed, artifact and log retention was 30 days, and the legacy org secrets `NUGET_API_KEY`, `HEXALITH_ZOT_*`, `AZURE_*`, and `SONAR_TOKEN` were visible to all repositories. Since 2026-11-09:
   - fork-PR approval covers all external contributors, and retention is 90 days;
   - each legacy secret is restricted to the public repos that read it (story 1, step 8 table), never CiCd or Builds;
-  - `HEXALITH_NUGET_USER` exists, selected: Builds;
+  - `HEXALITH_NUGET_USER` exists, selected: Builds. The Actions and Dependabot secrets `HEXALITH_REGISTRY_PULL_USERNAME` and `_PASSWORD` exist, selected: Builds. They hold the pull-only Zot principal `hexalith-registry-pull`;
   - push protection is on for CiCd, Builds and all 17 modules (*checked*).
 - **Rulesets and immutable releases elsewhere:** since 2026-11-09, CiCd has exactly `main` (deletion and force-push) and `delivered` (`delivered/**`, with the App as the only bypass), plus the `cicd-app` environment (*checked*). Immutable releases are off on Builds, CiCd, and Parties.
 - **Audit already failing:** ChatBot, Platform, Parties, FrontComposer, and McpCli set `TreatWarningsAsErrors` without exempting NU190x, so vulnerable packages already fail their CI. CI's audit-off flag removes that. Waivers move to Builds during migration.

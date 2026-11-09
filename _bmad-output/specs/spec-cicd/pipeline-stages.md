@@ -30,11 +30,11 @@ Edge cases become knobs in the setup file or custom actions:
   - Story 1 found, by static reading on 2026-11-08, that a package-mode build or its tests read sibling submodules in 8 modules. They do it through ungated AppHost or test-host references, sibling sources compiled with no condition, root `.slnx` files that list sibling projects, or tests that read sibling files:
     - ChatBot: EventStore, Platform, Tenants, Parties, Projects, Memories, Commons, FrontComposer, Timesheets.
     - Commons: PolymorphicSerializations (root `.slnx`; `Commons.Standalone.slnx` is clean).
-    - Folders: Platform (`AppHost.csproj:33-34`), plus 5 more in the root `.slnx`.
+    - Folders: Platform (`AppHost.csproj:33-34`), plus Commons, EventStore, FrontComposer, Memories and Tenants in the root `Hexalith.Folders.slnx` (`Hexalith.Folders.CI.slnx` lists none).
     - Parties: EventStore (test hosts, tests).
     - Platform (stale checkout): EventStore, Memories.
     - Projects: EventStore, Tenants.
-    - Tenants: Platform (`AppHost.csproj:34-35`), EventStore (tests), plus `.slnx` siblings.
+    - Tenants: Platform (`AppHost.csproj:34-35`), EventStore (tests), plus Commons, EventStore, FrontComposer and Memories besides Builds in the root `Hexalith.Tenants.slnx` (`Hexalith.Tenants.Standalone.slnx` lists none).
     - Works: Platform, Parties (`IntegrationTests.csproj:37-63`).
   - The other 9 (AI.Tools, Agents, Conversations, EventStore, FrontComposer, McpCli, Memories, PolymorphicSerializations, Timesheets) are clean: their sibling references are gated by `'$(UseHexalithProjectReferences)' == 'true'` or by per-dependency `*FromSource` switches.
 - **SDK:** comes from `global.json`.

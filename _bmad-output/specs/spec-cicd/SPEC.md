@@ -159,7 +159,7 @@ The architecture spine (first companion) decides how each capability is built, i
   - the restore job, which isolates write permission from custom actions
 - Nothing runs twice:
   - CodeQL runs only in the nightly release.
-  - CI checks out Builds and only the other submodules that the module's package-mode build reads, as listed in its `submodules` knob (`pipeline-stages.md`).
+  - CI checks out Builds and only the other submodules that the module's package-mode build or its tests read, as listed in its `submodules` knob (`pipeline-stages.md`).
   - Commitlint runs inside the guard.
   - The release trusts green CI for the same SHA, skips the tests, and packs once.
   - Dependency review is dropped. NuGet audit runs only in the release build.
