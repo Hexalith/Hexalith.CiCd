@@ -98,6 +98,9 @@ Paths below are Builds-relative unless prefixed with CiCd. Three investigation a
 
 - 2026-11-10 implementation redispatch: the current user request authorizes runtime implementation, verification, and commit/push in Builds. References to "this invocation" and planning-only delivery describe the completed earlier planning invocation recorded below; that invocation has ended. Execute the unchecked runtime tasks on this dispatch. Preserve the intent-contract text, keep the canonical CiCd story and updated Builds pointer staged together, and do not commit/push CiCd. Baselines refreshed directly from current full repository HEADs before implementation.
 
+
+- Concurrent delivery observed during implementation: an external `/pushall` merged lifecycle work at `9f238f42fdb4fe0da40945663b92d9561a8acfd7` (other parent `4ce510b2b263f8e4ea469638a130f08776ba27a3`) and committed/pushed the then-present partial story implementation at `79eeccfd2f9482bb1f17729f880f03c25a1da2b3`. The original baselines remain recorded above. Preserve this history and unrelated lifecycle changes; frozen-file comparisons distinguish those external changes from this story.
+
 ## Review Triage Log
 
 ## Design Notes
