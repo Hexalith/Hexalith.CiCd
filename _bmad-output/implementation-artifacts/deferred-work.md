@@ -66,3 +66,11 @@ source_spec: `2-4-fail-fast-ci-build-and-unit-tests.md`
 severity: medium
 reason: The hosted probe (run 42615634829) and Builds' own calls are same-repository, so the caller and workflow commits coincide. Whether a module's cross-repository workflow_call resolves $/Github/ci-* to Hexalith.Builds at job.workflow_sha is documented but unverified. If it does not, every consumer's CI fails at preparation. Settle with the first module's hosted call of Hexalith/Hexalith.Builds/.github/workflows/ci.yml; if it fails, apply AD-9's pinned own-code checkout. (declared severity: medium (unverified))
 status: open
+
+### DW-7: Shared Linux restore/build passes a config-accepted leading-dash solution path to dotnet as a switch.
+origin: spec-deferred f53d0a644380
+location: references/Hexalith.Builds/Github/lib/ci_pipeline.py:282
+source_spec: `2-6-sample-module-self-test-and-the-windows-job.md`
+severity: low
+reason: ci_config.validate_config path() accepts a solution such as "-consumer.slnx", and ci_pipeline.restore_and_build passes prepared.document["solution"] unchanged to "dotnet restore"/"dotnet build". dotnet parses it as a switch and fails with MSB1001; the recovery pass reproduced this failure on the Windows path. The function predates story 2-6 and is unchanged by it, and shared CI calls it before any Linux prepare, so prepare exposes no new path. The smallest fix is passing str(prepared.root / solution), as the Windows prepare script now does.
+status: open
