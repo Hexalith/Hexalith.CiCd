@@ -2,12 +2,12 @@
 title: 'Create mode: version, audited build, marked draft'
 type: feature
 created: '2026-11-10'
-status: ready-for-dev
+status: in-progress
 review_loop_iteration: 0
 followup_review_recommended: false
-baseline_revision: f39f45c06b9ded0a473b96221c559e5443e41b1c
+baseline_revision: 98d1f96a2b9c7dc1badf6e0e9b6e37f493216591
 implementation_repository: references/Hexalith.Builds
-implementation_baseline_revision: fa5f48734ca44ce63b55fc645f53c9c6bdccaa1c
+implementation_baseline_revision: 4dbf9b80ea6875c8f66a9f6cb5861f4fbba2d0a1
 context:
   - '{project-root}/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md'
   - '{project-root}/references/Hexalith.Builds/docs/cicd-3-3-release-create-mode-plan.md'
@@ -95,6 +95,8 @@ Paths below are Builds-relative unless prefixed with CiCd. Three investigation a
 - Given disabled publishing, failed/cancelled gates, complete mode or dispatch/main movement, when Actions evaluates dependencies, then permissions/source identities and outcomes follow the boundaries above; no forbidden build or draft creation runs, and failures never authorize the publisher.
 
 ## Spec Change Log
+
+- 2026-11-10 implementation redispatch: the current user request authorizes runtime implementation, verification, and commit/push in Builds. References to "this invocation" and planning-only delivery describe the completed earlier planning invocation recorded below; that invocation has ended. Execute the unchecked runtime tasks on this dispatch. Preserve the intent-contract text, keep the canonical CiCd story and updated Builds pointer staged together, and do not commit/push CiCd. Baselines refreshed directly from current full repository HEADs before implementation.
 
 ## Review Triage Log
 
