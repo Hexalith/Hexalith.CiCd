@@ -298,6 +298,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - Third-party tools are called from scripts and pinned by version and integrity, in Builds or CiCd:
     - npm tools through a committed lockfile, `npm ci --ignore-scripts`, then `npm audit signatures`;
     - binaries that a Builds or CiCd script downloads itself, through a SHA-256 it checks before use. Tool-managed downloads (Playwright browsers, the Dapr runtime) are pinned by the tool's version.
+    - the OCI publisher runs the official Skopeo container distribution at the version/image digest and upstream source commit pinned in Builds `Tools/spikes/publish-tools.json`; it verifies the exact reported version/source before copy.
   - The parts of `prepare` that run on Windows (checkout, .NET setup, restore, build) contain no Python and read no JSON.
   - A workflow `run:` step only invokes a script, except for one-liners. Expressions never appear inside `run:`; values reach scripts through `env:`.
   - Custom actions are module-owned and not bound by this rule.
@@ -397,7 +398,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
     2. **`codeql`** (a matrix over the `codeql` languages) and **`nightly-hook`** (AD-18) run at `github.sha`, whatever the kill switch says. The jobs below run only when `resolve` succeeded with the kill switch `true`, and `codeql` and `nightly-hook` each succeeded or were skipped.
     3. **Create mode:**
        - `version` computes the next version with `@semantic-release/commit-analyzer` and `@semantic-release/release-notes-generator` over `<last v* tag reachable from the SHA>..<SHA>`; semantic-release core is not run. Nothing found: "nothing to release".
-       - `build` builds and packs once at the release SHA with `-warnaserror:NU1900;NU1903;NU1904;NU1905 -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low` and the restore settings of the SDK convention, and builds containers as OCI archives. An audit failure fails with "vX.Y.Z blocked by a vulnerable package". It uploads the artifact `release` (`packages/*.nupkg`, `containers/*.tar`, kept 90 days) and outputs only its artifact ID and digest.
+       - `build` builds and packs once at the release SHA with `-warnaserror:NU1900;NU1903;NU1904;NU1905 -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low` and the restore settings of the SDK convention, and builds containers once as uncompressed OCI archives (`containers/*.tar`), retaining the complete platform index and unchanged child manifests/configs/layers. With SDK 10.0.403, publish each platform once via single-RID SDK publication and assemble only the index packaging, avoiding its multi-RID colon-containing label truncation. An audit failure fails with "vX.Y.Z blocked by a vulnerable package". It uploads the artifact `release` (`packages/*.nupkg`, `containers/*.tar`, kept 90 days) and outputs only its artifact ID and digest.
        - `draft` (stdlib only, `contents: write`):
          - accepts `version` only if it is the last reachable `v*` tag with exactly one of major, minor or patch incremented (lower parts zeroed);
          - checks through the API that the artifact ID belongs to this run, is named `release` and has the digest `build` output;
@@ -410,11 +411,13 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        - Without the artifact, the draft is deleted only when none of its listed packages exists at its version on nuget.org and none of its listed container tags exists in the registry (any answer other than a definite not-found counts as existing); the run then ends `nothing`. Otherwise it fails with "draft vX.Y.Z cannot be completed: its build artifact is gone".
     5. `draft` outputs `publish`, `version`, `sha`, `last-tag`, `draft-id`, `artifact-id`, `artifact-digest` and `artifact-run`.
   - **`publish` composite.** It takes those outputs plus the NuGet user and the registry push pair. It runs only stdlib Python, `dotnet nuget push`, the container push tool and SHA-pinned actions, and never checks out the repo.
-    1. Download the artifact by ID from `artifact-run`, outside the working directory. Check its digest, each `.nupkg`'s version and repository commit against `version` and `sha`, that the draft is still marked, and that no tag `v<version>` exists or that it points at `sha`.
-    2. `NuGet/login` (Trusted Publishing).
+    1. Download the artifact by ID from `artifact-run`, outside the working directory. Check its digest, each `.nupkg`'s version and repository commit against `version` and `sha`, that the draft is still marked, that no tag `v<version>` exists or that it points at `sha`, and that each container's version tag is absent or already resolves to its archive's root index, so a conflicting image tag fails before any NuGet or registry write.
+    2. SHA-pinned `NuGet/login` v1.2.0 inside the remote composite (Trusted Publishing), under the caller's `hexalith-release` policy and `id-token: write`. The caller passes the NuGet user; no caller-login fallback or public `nuget-api-key` input is required (story 3-1 proved both placements).
     3. `dotnet nuget push --skip-duplicate`, from an empty directory, naming the source by its full URL.
-    4. Push the containers by version tag.
+    4. Push the original OCI archives by version tag with official Skopeo 1.22.3, `copy --all --preserve-digests`, through the AD-11 pinned distribution. Recheck the destination root immediately before copy; verify the remote root, platform manifests, configs and layers against the validated archive. Complete mode/retry consumes the original artifact without rebuilding or rewriting image content.
     5. If the release SHA's `.github/workflows/` equals `main`'s, publish the draft, setting `tag_name`, `target_commitish` and `draft: false` in one request. That creates `v<version>` last. Then check the returned release and that `v<version>` resolves to `sha`, or fail with "tag vX.Y.Z does not point at the built commit". Otherwise end `ready`: `GITHUB_TOKEN` can't publish it, and nightly's `publish-ready` does, with the same checks (AD-18). In complete mode after a bump, this is the normal path.
+  - **Signed build provenance is excluded (story 3-1).** `publish` adds neither `actions/attest-build-provenance` nor `attestations: write`. The inspected default SLSA generator binds source, builder and invocation to the current publisher's OIDC identity; after a bump, those differ from the original build for both package bytes and image digests. Signing downloaded subjects cannot establish their original build without independent producer-signed evidence, which the read-only build does not emit. OCI labels are metadata. A custom publish receipt is not adopted as build provenance.
+  - **Spike evidence:** [hosted run 42791957667](https://github.com/Hexalith/Hexalith.Builds/actions/runs/42791957667) at caller `515aaa3b0c5b668d86bdfed7065286a378052d62` resolved the no-checkout remote composite at `0705088e92d6703232e62dcbe44b3bf0a0980ee3`, published and replayed original artifact `13749161812` from run `42785806980`, with build skipped. Builds `docs/cicd-3-1-publish-composite-spike-results.md` retains all identities and the provenance source inspection.
   - **What is published:**
     - packages: the `IsPackable=true` projects in the solution;
     - containers: projects with `HexalithPublishContainer=true` that are not test projects.
@@ -625,6 +628,7 @@ sequenceDiagram
 | `actions/create-github-app-token` (`client-id` input) | v3.3.0 |
 | `github/codeql-action` | v4.39.3 |
 | `NuGet/login` | v1.2.0 |
+| Skopeo OCI archive publisher | official `quay.io/skopeo/stable:v1.22.3` at `sha256:2681eccb8b02c495b013c2669cbf7f41d5c0b0b0e644e7c69bd3ea9bcb20641f`; source `92397d5ba399784c6e2f9f229a4244b724743dba` |
 | Dapr runtime / CLI (one pin each in Builds `Props/`) | 1.19.1 / 1.19.1 |
 | GitHub Actions runner (`$/` support) | ≥ 2.336.0 |
 
@@ -708,8 +712,6 @@ Hexalith.<Module>/
 
 ## Deferred
 
-- **Story 3 spike: building containers once as OCI archives and pushing them from `publish`** (which names the container push tool), and running `NuGet/login` inside the remote `publish` composite (the top-level-job case is proven in Commons). If `NuGet/login` fails there, the caller's `publish` job runs it as its first step and passes the key to the composite as an input, which joins the composite interface (AD-10).
-- **Story 3: provenance.** Whether `publish` adds `actions/attest-build-provenance` for packages and containers (`attestations: write`), beside immutable releases.
 - **Story 1 check.** If a repo ruleset can restrict `v*` tag creation with GitHub Actions and the CiCd App as its only bypass actors, AD-21 adds that rule.
 - **Story 8 check.** A `GITHUB_TOKEN` push that changes only `rendered/<Repo>/.github/workflows/*.yml` is accepted. If it isn't, `bump-push` runs in `cicd-app` with an App token scoped to CiCd Contents and Workflows write (still stdlib only), and its push triggers `deliver.yml`, so the explicit dispatch is dropped.
 - **Submodules beyond Builds.** If story 1 finds a package-mode build that reads more, story 2 adds a `submodules` knob (minor Builds release), passed to Windows `prepare` as a `ci.yml` output (AD-12).
