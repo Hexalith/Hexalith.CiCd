@@ -194,3 +194,11 @@ source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: Upstream removed the attached refusal for owners requiring routing-catalog observations (NativeTestExecutor.cs:400 now refuses only on TestObservation/CandidatePolicy/hold mismatch). Unverified: settle it by checking whether attached children get write access to the owner's platform-components/<env>-catalog proofs, and whether SelectedRoutingCatalogSnapshot re-verifies those bytes against the owner capture after each attached child exits. (declared severity: medium (unverified))
 status: open
+
+### DW-23: Qualify out-of-band release mutation after final authenticated GET and before DELETE.
+origin: spec-deferred 18e5300409ca
+location: references/Hexalith.Builds/Github/lib/release_complete.py:192
+source_spec: `3-5-complete-mode-reruns-finish-from-the-original-artifact.md`
+severity: medium
+reason: The required immediate live revalidation and standard release concurrency are implemented. Actual GitHub behavior for an external editor/publisher in this remaining interval was not destructively qualified because retained story 3-4 resources must remain untouched. Settle with an authorized disposable two-actor experiment and a supported serialization or atomicity decision. Potential medium impact is unverified. (declared severity: medium (unverified))
+status: open
