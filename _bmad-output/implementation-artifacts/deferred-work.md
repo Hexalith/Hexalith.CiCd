@@ -106,3 +106,91 @@ source_spec: `3-3-create-mode-version-audited-build-marked-draft.md`
 severity: high
 reason: Real SDK 10.0.403 reproduction through release_build.build_release with the release flags and Newtonsoft.Json 9.0.1 (GHSA-5crp-9r3c-p9vr): `<NoWarn>$(NoWarn);NU1903</NoWarn>` in a module Directory.Build.targets, or `<PackageReference Include="Newtonsoft.Json" NoWarn="NU1903" />`, builds and packs with no "blocked by a vulnerable package" diagnostic. release.targets is imported through CustomAfterMicrosoftCommonTargets, before Directory.Build.targets, and rewrites only the NoWarn/WarningsNotAsErrors properties, not item metadata. Inherited Builds props exemptions (Hexalith.Build.props WarningsNotAsErrors NU1903;NU1904) and props-level module NoWarn are still blocked, for single-target and multi-target projects with TreatWarningsAsErrors true or unset. SPEC.md:120, enforcement.md and AD-8 assign rejection of module-file audit waivers (NoWarn under any parent or attribute, NuGetAuditSuppress, MSBuildWarningsAsMessages) to the guard audit lint, story 5-2 "Guard lints and commitlint", which
 status: open
+
+### DW-12: Repair the incoming upstream routing-snapshot descriptor fixture and its four failing cases.
+origin: spec-deferred 1be219f5eebc
+location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/SelectedRoutingCatalogSnapshotTests.cs:289
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: Upstream merge e588605ccf2c6577a2490e1a3fc512f8ffdc3960 introduced required ownerRunId/runId/role fields while SelectedRoutingCatalogSnapshotTests.CreateDescriptor still emits only environmentId. Reviewer executed the focused class: 34 tests, 4 failures, exit 2; negative controls also short-circuit. These C# changes were already on origin/main before resumed publisher changes.
+status: open
+
+### DW-13: Strengthen the upstream malformed explicit-port CLI tests so missing manifest errors cannot satisfy them.
+origin: spec-deferred 633fd01f9c74
+location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/StartupReadinessTests.cs:37
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: StartupReadinessTests uses --manifest unused and asserts only UsageOrManifest, the same exit code returned when manifest resolution fails. A valid manifest plus parse diagnostic and no-start observation would distinguish the intended refusal. This test was introduced by the preserved upstream merge, outside this story's changes.
+status: open
+
+### DW-14: Complete and retain focused .NET verification for the incoming endpoint and attached-routing changes.
+origin: spec-deferred 9b8d2c86e776
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/SelectedRoutingCatalogSnapshot.cs:83
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: Story 3-4's required Python/workflow/API checks do not execute the unrelated incoming C# changes. A reviewer ran the routing-snapshot class and found four failures; the upstream changes need their own focused verification and repair rather than silently attributing Python success to them.
+status: open
+
+### DW-15: Add independent attached-routing identity refusal cases for attached run, environment, role and hold bindings.
+origin: spec-deferred b0bd6a702108
+location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/NativeTestExecutorTests.cs:762
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: The incoming NativeTestExecutorTests attached-routing test varies ownerRunId only while SelectedRoutingCatalogSnapshot validates several independent identity fields. Exact owner/environment/role/hold substitutions would establish refusal for each newly introduced boundary.
+status: open
+
+### DW-16: Verify attached candidate-policy refusal independently of TestObservation.
+origin: spec-deferred 1499f0465ace
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/NativeTestExecutor.cs:400
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: Incoming NativeTestExecutor code refuses attachments when CandidatePolicy is populated, but no test supplies CandidatePolicy with absent TestObservation. Existing access-observation refusal does not isolate that branch.
+status: open
+
+### DW-17: Preserve the requested explicit endpoint in unmanaged occupied-port diagnostics.
+origin: spec-deferred fc4e7db0f6d6
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionPortAllocator.cs:184
+source_spec: `3-4-the-publish-composite.md`
+severity: low
+reason: Incoming AllocateOwned throws SocketException for an unmanaged occupied explicit port and CompositionEngine maps this to generic HXR020 text without the requested endpoint. The request remains available to the caller, so this is a diagnostic usability issue.
+status: open
+
+### DW-18: Move the upstream explicit-endpoint README section out of License and update the stale attached-routing and claim-retry text.
+origin: spec-deferred f697010b556c
+location: references/Hexalith.Builds/README.md:1399
+source_spec: `3-4-the-publish-composite.md`
+severity: low
+reason: Upstream commit bfda07ee appends "### Explicit endpoints and attached routing snapshots" (README.md:1399) after "## License" (README.md:1394), so it renders as a License subsection. README.md:641-643 still says owners requiring routing-catalog observations fail attached runs as startup-failure. README.md:752-754 still says every claim conflict retries up to 64 times, with no exception for explicit ports. Not changed by publisher work.
+status: open
+
+### DW-19: Test and explain the upstream refusal of explicit EventStore ports on attached suites.
+origin: spec-deferred b3ca79539e5e
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Module.Cli/ModuleCommandApplication.cs:450
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: ModuleCommandApplication refuses --attach-to combined with --eventstore-port through generic HXC001 "The command line is invalid." ModuleCommandExecutionService:119-122 throws for Down, runId or out-of-range ports. Searching test/ for eventstore-port/EventStorePort finds only StartupReadinessTests, none with --attach-to, and the guard message appears in no test. Removing either guard fails no test, although the README promises "Attachments cannot request owner ports". Arrived with upstream merge e588605c.
+status: open
+
+### DW-20: Make the explicit-port exclusion from independent allocation observable in a test.
+origin: spec-deferred fc5d41ad69ba
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionPortAllocator.cs:174
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: CompositionPortAllocator adds the requested port to the excluded set before Allocate, then overwrites EventStoreHttp. The existing distinctness test requests a port already handed out in-process, which _handedOut skips anyway. The other tests take OS-ephemeral ports outside the Linux candidate range. Deleting excluded.Add(requested) fails no test, even though an in-range request (such as the README's 18080) could then be given to a second endpoint. A deterministic test likely needs an injectable candidate source. Upstream change.
+status: open
+
+### DW-21: Remove the ephemeral-port reuse race from the upstream explicit-port tests.
+origin: spec-deferred 873dc1ab4adc
+location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/StartupReadinessTests.cs:66
+source_spec: `3-4-the-publish-composite.md`
+severity: low
+reason: StartupReadinessTests:66-69 binds an OS-assigned loopback port, stops the listener and then requests that port for the owner. CompositionResourceClaimStoreTests:67 reallocates the same way. Any parallel test or outbound connection can take the released port in between, which makes failures intermittent. Upstream test code.
+status: open
+
+### DW-22: Confirm whether attached children can rewrite the owner's routing-catalog proofs that later attachments capture.
+origin: spec-deferred d10c03683eda
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/NativeTestExecutor.cs:400
+source_spec: `3-4-the-publish-composite.md`
+severity: medium
+reason: Upstream removed the attached refusal for owners requiring routing-catalog observations (NativeTestExecutor.cs:400 now refuses only on TestObservation/CandidatePolicy/hold mismatch). Unverified: settle it by checking whether attached children get write access to the owner's platform-components/<env>-catalog proofs, and whether SelectedRoutingCatalogSnapshot re-verifies those bytes against the owner capture after each attached child exits. (declared severity: medium (unverified))
+status: open
