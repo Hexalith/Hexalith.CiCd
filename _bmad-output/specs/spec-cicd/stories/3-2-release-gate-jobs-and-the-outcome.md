@@ -216,6 +216,18 @@ No change to prepare is planned. It already supplies event-SHA checkout, SDK/bui
 
 ## Auto Run Result
 
+### Planning delivery — 2026-11-10
+
+Status at planning delivery: **ready-for-dev**. Halt after planning, as requested.
+
+- Planned exactly story 3-2 from its title/description and canonical epic companions. Three read-only investigation subagents completed before plan generation. No implementation or code-review step was entered.
+- User constraints are explicit: resolve is stdlib only with `contents: write` and `actions: read`; nightly-hook reuses 2-6's Linux prepare; 5-1 owns drift comparison. The plan also records the unique outcome writer and the truthful intermediate failure until downstream publication stages are installed.
+- Builds delivery: `docs/cicd-3-2-release-gates-plan.md` only, committed and pushed on `main` as `11f8534fc89a2c4a18a984307e927abb6d6c7ff3`. `git ls-remote origin refs/heads/main` returned that exact full revision, and Builds is clean with HEAD equal to origin/main.
+- Planning checks passed: both documents' YAML frontmatter, date, full starting revisions, local links and content hygiene; unique id-keyed story filename; all implementation tasks unchecked; exact documentation-only staged/committed scope; `git diff --check`. Commitlint 21.2.4 is both installed and lock-pinned and accepted the exact full stored message with zero problems/warnings. Validation evidence: `/tmp/cicd-3-2-planning-commitlint.log`.
+- No runtime file changed, so the frozen runtime and legacy workflows remain unchanged. No runtime tests, probe, security run, release dispatch, publishing or repository administration was performed. Hosted CI may start normally from the documentation push; it is not claimed as implementation acceptance.
+- CiCd write-back consists of this canonical ready-for-dev story and the updated Builds gitlink staged together. No CiCd commit or push is authorized by this invocation. Baselines retain the original full revisions above for the later implementation/review delta.
+- Remaining work: every unchecked implementation task, its runtime/hosted verification and later downstream integration. These are planned future work, not a completed implementation claim. The ready-for-development gate found no unresolved intent gap.
+
 ### Follow-up review result — 2026-11-10
 
 Status: **done**. Story 3-2's reusable release gates are implemented,
