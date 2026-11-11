@@ -2,14 +2,14 @@
 title: 'Complete mode: reruns finish from the original artifact'
 type: feature
 created: '2026-11-11'
-status: ready-for-dev
-baseline_revision: e6a0dc525a03174e389dce4213e63fee0b399064
+status: done
+baseline_revision: 46b86796840dfcd9165fe6c4c3d60408b2aec7f2
 implementation_repository: references/Hexalith.Builds
-implementation_baseline_revision: 329a4a23483fe1aa4710ebf82768b5a52b30fcd9
-implementation_integration_base_revision: e35dd39872baf071aec6a7be1b252b16f460e08c
-implementation_final_revision: dd68a5efbfaec13ef22ec06ad151b212eb16ea4f
+implementation_baseline_revision: a9f443f0bd482359731dcd54711e44fbd23d58fe
+implementation_integration_base_revision: 163f3d0deac6b0db5ec4bdfcc0934b12e6adb46a
+implementation_final_revision: d4f75283221fc11779416c5f2b531ea09f22582c
 review_loop_iteration: 0
-followup_review_recommended: true
+followup_review_recommended: false
 context: []
 warnings: [oversized]
 deferred:
@@ -100,13 +100,13 @@ All runtime paths below are Builds-relative. Three read-only investigation subag
 
 - [x] `Github/lib/release_draft.py`, minimal shared factoring in `release_state.py`/`release_publish.py` — strictly parse all five persisted trailers, share producer identity validation and add structured HTTP absence/status handling; preserve create/publisher rejection behavior and limits. Distinguish definitive resource absence/expiry from identity, digest and transport failures before any stale action.
 - [x] `Github/lib/release_complete.py` — authenticate the live selected draft, captured base ancestry, original caller/run/source, exact original artifact and bytes/inventory; return the unchanged eight-field handoff. Do not apply create-time strict-successor rules to an existing AD-16 draft or download another run's payload.
-- [ ] `Github/lib/release_complete.py`, `Github/lib/oci_publish.py` — amend the delivered gone-artifact decision forward: any listed NuGet package requires retention and failure regardless of anonymous lookup results or elapsed time. Automatic deletion requires an explicitly empty package inventory and definite absence of every listed container version. Registry HEAD uses broad manifest/index Accept and only its endpoint-bound pull pair; only authoritative 404 counts absent, and every uncertain result retains the draft. No additional credentials or quiet-period mechanism; empty authenticated inventories need no requests.
+- [x] `Github/lib/release_complete.py`, `Github/lib/oci_publish.py` — amend the delivered gone-artifact decision forward: any listed NuGet package requires retention and failure regardless of anonymous lookup results or elapsed time. Automatic deletion requires an explicitly empty package inventory and definite absence of every listed container version. Registry HEAD uses broad manifest/index Accept and only its endpoint-bound pull pair; only authoritative 404 counts absent, and every uncertain result retains the draft. No additional credentials or quiet-period mechanism; empty authenticated inventories need no requests.
 - [x] `Github/lib/release_complete.py`, `Github/lib/release_draft.py` — after the deletion preconditions in the intent contract hold, re-fetch/revalidate the unchanged marked draft and DELETE only its ID with HTTP 204 required. Emit `stale-draft-deleted` only after success. Otherwise use the exact gone-artifact diagnostic, retain the draft and fail; never create a replacement or touch refs.
 - [x] `Github/release-draft/action.yml`, `.github/workflows/release.yml` — dispatch compatible create/complete adapters, merge the existing outputs and new no-op output, admit skipped create-only prerequisites in complete mode, wire selected resolve identity and named pull secrets, preserve dispatch security and existing permissions/cache policy.
 - [x] `Github/lib/release_outcome.py`, `Github/lib/tests/test_release_outcome.py` — remove the recovery-not-installed skip exception and require draft-owned, mode-correct stale deletion evidence; preserve failed/cancelled precedence, identity-bound publisher ownership and existing outcome schema.
-- [ ] `Github/lib/tests/test_release_complete.py`, existing draft/state/publisher/adapter/OCI/outcome tests and `test/fixtures/release/` — exercise every matrix row through actual adapters, local HTTP, Git histories and workflow graph mappings. Trap forbidden build/CI/config/checkout/version calls, validate saved run/artifact/digest outputs and zero writes on invalid/uncertain cases. Include package-bearing refusal despite NuGet 404 or elapsed time, mixed inventories with absent images, permitted container-only/empty cleanup, unlisted NuGet presence, each producer mismatch, all five marker failures, expiry plus digest mismatch, metadata/archive disappearance, changed draft, DELETE failure, switch/gate failure and partial retry from usable original bytes through the existing publisher.
+- [x] `Github/lib/tests/test_release_complete.py`, existing draft/state/publisher/adapter/OCI/outcome tests and `test/fixtures/release/` — exercise every matrix row through actual adapters, local HTTP, Git histories and workflow graph mappings. Trap forbidden build/CI/config/checkout/version calls, validate saved run/artifact/digest outputs and zero writes on invalid/uncertain cases. Include package-bearing refusal despite NuGet 404 or elapsed time, mixed inventories with absent images, permitted container-only/empty cleanup, unlisted NuGet presence, each producer mismatch, all five marker failures, expiry plus digest mismatch, metadata/archive disappearance, changed draft, DELETE failure, switch/gate failure and partial retry from usable original bytes through the existing publisher.
 - [x] Temporary `.github/workflows/release-publish-probe.yml`, `Tools/ci/probe_release_complete.py`, `docs/cicd-3-5-release-complete-mode-results.md` — during implementation only, revalidate the retained 3-4 draft/run/artifact and exact caller path, then invoke the actual reusable graph without a publisher job. Capture all handoff outputs, skipped version/build and sole-writer handoff at a pinned full revision. Preserve the existing switch and resources; if enabled positive verification cannot run, record the exact blocker instead of changing settings or claiming it passed. Remove temporary controls after retaining sanitized evidence. Local HTTP controls establish destructive stale-deletion/error branches; no live stale-resource deletion is needed.
-- [ ] `Tools/ci/README.md`, `Github/publish/README.md`, `docs/cicd-3-5-release-complete-mode-results.md` — document completion, package-bearing retention, exact container absence rules, credential/outcome ownership and evidence limits; update only affected stale interface wording. On later implementation dispatch, run verification/review, commit/push Builds and stage its pushed gitlink with this canonical story. No CiCd commit/push.
+- [x] `Tools/ci/README.md`, `Github/publish/README.md`, `docs/cicd-3-5-release-complete-mode-results.md` — document completion, package-bearing retention, exact container absence rules, credential/outcome ownership and evidence limits; update only affected stale interface wording. On later implementation dispatch, run verification/review, commit/push Builds and stage its pushed gitlink with this canonical story. No CiCd commit/push.
 
 **Acceptance Criteria:**
 
@@ -121,6 +121,7 @@ All runtime paths below are Builds-relative. Three read-only investigation subag
 
 ## Spec Change Log
 
+- 2026-11-12 re-drive integration: the pre-push fetch found 23 upstream Builds commits through `163f3d0deac6b0db5ec4bdfcc0934b12e6adb46a`. A task-only stash, fast-forward and clean restore preserved them. Their existing workflow fixes resolve the baseline-confirmed lint/provenance failures; all 90 provenance tests and pinned online lint now pass. Fresh full-suite runs use the integrated tree. The original failed runs remain historical evidence; no frozen workflow was edited by this story.
 - 2026-11-11 escalation resolution (human approved): NuGet content 404 cannot prove absence during validation/indexing, so any package-bearing draft with unavailable original bytes is retained and fails; container-only and empty-inventory cleanup remain available under the existing checks. Amend the delivered recovery forward, preserving delivered and subsequent Builds commits; do not restore the saved patch. Reopened tasks cover the policy, behavioral controls and affected documentation. This resolution changes spec content only; implementation follows on re-drive. Evidence: [NuGet catalog delay](https://learn.microsoft.com/en-us/nuget/guides/api/query-for-all-published-packages#downloading-the-nupkg) and [validation/indexing guidance](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package#package-validation-and-indexing).
 - 2026-11-11 implementation dispatch: resumed the ready-for-dev plan under the new user instruction. Planning-only statements describe the completed earlier invocation recorded below; the runtime tasks and implementation verification now apply. Starting Builds revision is stamped in frontmatter; the prior planning revision was `fb027a87afcdf7661c8f80ade89231b7730b60d1`.
 
@@ -197,6 +198,27 @@ All runtime paths below are Builds-relative. Three read-only investigation subag
   - `[false]` `[reject]` Intent auditor: the hosted probe targeted the retained 3-4 resources — Preserve means do not mutate. `evidence/cicd-3-5/hosted-resource-readback.json` shows the draft, body, source and tag chain unchanged, with nothing published or deleted. The draft job was skipped.
   - `[false]` `[reject]` Intent auditor: `scope.json` evidence is not self-consistent — Same refutation as the blind hunter's `scope.json` row.
 
+### 2026-11-12 — Review pass
+- scope: forward re-drive. The runtime/document delta is Builds 163f3d0deac6b0db5ec4bdfcc0934b12e6adb46a plus the CiCd gitlink delta since `46b86796840dfcd9165fe6c4c3d60408b2aec7f2`; upstream-only commits are retained separately in the integration scope, and the claims file/deferred-work ledger are excluded. All four layers ran at the parent capability. Three launched together; the fourth was attempted in that wave, then launched immediately when a worker slot became available. No triage began before all four launched and reported. The edge-case and verification-gap layers reported zero findings.
+- verdicts: 15 findings — high 0, medium 0, low 11, false 3, maybe-false 1
+- outcome: nine new low finding rows corrected in eight patch groups; one low finding rejected; one carried delivery observation handled by normal finalization; three false readings rejected; one existing race deferral carried without duplication. No intent_gap or bad_spec.
+- findings:
+  - `[low]` `[patch]` Blind hunter: inherited lowercase proxies can defeat test network isolation — Filtered all inherited proxy variants before installing controlled subprocess values; the local fixture transport now disables proxies. All 22 recovery tests passed with adversarial inherited proxy variants.
+  - `[low]` `[patch]` Blind hunter: timestamp-only package expiry is not independently covered — Changed the old-expiry package-only, mixed HTTP and actual-adapter cases to expired=False with a past expires_at, retaining separate flag-expired controls.
+  - `[low]` `[reject]` Blind hunter: container-only cleanup lacks one fully composed adapter/graph case — The real Registry/main() control checks exact pull credentials and 404-only deletion; the actual workflow evaluator asserts the secret environment mapping, and reporter controls assert the sole nothing outcome. Composing another remote-registry transport into the isolated adapter fixture adds substantial test machinery for this rare path without exposing an unguarded runtime state.
+  - `[low]` `[patch]` Blind hunter: baseline records bind modified working-tree files — Separated observed working-tree hashes from the archive actually executed; recorded canonical archive tree/blob objects and the primary extracted inputs.
+  - `[low]` `[patch]` Blind hunter: initial 47-input comparison looks current after integration — Moved the assertion under an explicit initial comparison at a9f443f0bd482359731dcd54711e44fbd23d58fe, and linked the distinct integrated scope.
+  - `[low]` `[patch]` Blind hunter: integrated scope omits evidence additions — Separated the five implementation/document paths from an explicit evidence prefix and enumerated evidence paths before asserting the remaining tracked bytes equal upstream.
+  - `[low]` `[patch]` Blind hunter: covering-test detail is available only in temporary logs — Retained complete sanitized focused-release output with every covering test name and preserved its original raw hash. Grouped with the next row as the evidence-compression correction.
+  - `[low]` `[patch]` Blind hunter: compact full-suite output loses negative-fixture and group context — Expanded both integrated summaries with all 22 group results and the enclosing intentional failure/zero-test fixture context; synchronized summary hashes while preserving raw hashes. Same correction group as the preceding row.
+  - `[low]` `[patch]` Blind hunter: baseline reproduction wrappers are not retained — Stored exact wrapper contents and hashes plus instructions to replay them from the full recorded original revision with private scoped online authentication.
+  - `[low]` `[patch]` Blind hunter: integrated lint count remains 12 although the log says 10 — Corrected the integrated result to 10 exact frozen findings and zero new findings; historical pre-integration counts remain in their original context.
+  - `[false]` `[reject]` Intent auditor: planning-only wording conflicts with runtime changes — carried: the prior planning-only rows already establish that these instructions describe the completed earlier invocation. The intent explicitly requests a forward re-drive, and the existing Spec Change Log preserves that temporal scope.
+  - `[low]` `[patch]` Intent auditor: the review diff cannot establish commit/push or staged delivery — carried: the prior textual-delivery row is resolved through normal finalization, not another code patch. The canonical Auto Run Result records the actual full delivered revision and remote readback; CiCd only stages its story and pushed gitlink.
+  - `[false]` `[reject]` Intent auditor: the incremental library diff does not newly implement every orchestration boundary — The intent explicitly preserves the delivered recovery and calls for a forward correction. Existing reusable/action behavior remains present, with executed adapter, workflow-expression/reporter and publisher controls; it need not be newly rewritten in this delta.
+  - `[false]` `[reject]` Intent auditor: local execution does not demonstrate a positive hosted reusable release — carried: the prior hosted-surface rows already establish this boundary. The completed earlier hosted probe retains the exact invalid-switch blocker, and the task explicitly accepts recording that blocker. No new hosted success or publication is claimed.
+  - `[maybe-false]` `[defer]` Intent auditor: the external final-GET/DELETE interval remains unqualified — carried: this is the same previously logged race, already preserved in the single deferred list. An authorized disposable two-actor experiment and serialization/atomicity decision would settle it; no second deferred entry is added.
+
 ## Design Notes
 
 Availability and authenticity are separate decisions. An unavailable run/artifact can permit a destination-absence check; it never permits trusting unvalidated inventory or regenerating bytes. A mismatched API digest is a hard failure. Publisher remains a second independent authenticator after the reusable workflow handoff.
@@ -223,3 +245,34 @@ Run future commands from Builds; use the locked runner environment for PyYAML/js
 **Planning checks:** Parse both documents' frontmatter; verify current date and canonical full Git baselines, unique story match, source links, complete Given/When/Then acceptance and all unchecked implementation tasks. Inspect the documentation-only diff, validate the exact commit message, fetch/check divergence, push the companion and read back its full remote revision. Re-read the rendered workflow and this story for the ready gate, then record terminal status and stage the canonical story/gitlink in CiCd.
 
 
+
+## Auto Run Result
+
+Status: **done**. The forward package-retention re-drive is implemented, reviewed and verified. Final Git delivery is recorded below after commit/push readback.
+
+Unavailable original bytes now retain any draft with an authenticated listed NuGet package and fail with the exact gone-artifact diagnostic, without NuGet or registry lookup. Usable original bytes still authorize the same existing publication handoff. Package-empty container-only and empty inventories retain their conservative deletion checks. Delivered recovery and all 23 integrated upstream commits are preserved.
+
+Files changed:
+
+- [Recovery](../../../../references/Hexalith.Builds/Github/lib/release_complete.py) — immediate package-bearing refusal and removal of obsolete NuGet lookup code.
+- [Recovery controls](../../../../references/Hexalith.Builds/Github/lib/tests/test_release_complete.py) — package/mixed refusals, date-only expiry, exact registry pull credentials/statuses, offline adapter/reporter execution and independent proxy isolation.
+- [Publisher interface](../../../../references/Hexalith.Builds/Github/publish/README.md) and [CI interface](../../../../references/Hexalith.Builds/Tools/ci/README.md) — package retention, container-only absence rules and manual disposition boundary.
+- [Results](../../../../references/Hexalith.Builds/docs/cicd-3-5-release-complete-mode-results.md) and [verification records](../../../../references/Hexalith.Builds/evidence/cicd-3-5/package-retention-verification.json) — phase-specific source bindings, durable output, baseline reproduction, integrated scope and final passing gates.
+
+All four review layers completed. Fifteen observations: high 0, medium 0, low 11, false 3, maybe-false 1. Nine new low findings were corrected in eight groups; one carried delivery observation is handled by finalization. No new deferred item was added; the existing race was carried once without duplication. Rejections: the additional fully composed container fixture adds substantial machinery to already-covered execution seams; planning-only wording is historical; the preserved full orchestration need not be rewritten for this incremental fix; the existing hosted execution blocker is explicitly recorded rather than claimed as a pass. Every row and its evidence remain in the Review Triage Log.
+
+Patched entry counts: high 0, medium 0, low 8 (plus one carried low delivery observation, not a new code patch). `followup_review_recommended: false`; no new unverified risk arose from these low corrections.
+
+Final verification:
+
+- Focused stdlib commands: **182 release tests and 3 OCI publisher tests pass** on Python 3.14.4.
+- Both exact locked full-suite commands: **22/22 groups pass**, on Python 3.12.13 and uv-selected Python 3.13.13, with the existing scoped token supplied privately.
+- Pinned online actionlint/zizmor: **10 exact frozen findings, zero new findings**; committed-source API comparison: **2,565 entries, no removals**.
+- All **18 matrix rows** have executed passing tests. Source/evidence hashes, read-only intent, single existing deferred list, JSON/YAML parsing, whitespace and frozen-path preservation checks pass.
+- Exact commit message passed pinned commitlint 21.2.4 before use.
+
+The initial full/lint failures are retained as historical baseline evidence. Existing upstream fixes resolved them before the integrated and final passing runs; this story did not edit frozen workflow/audit configuration. The review diff separates the 23 upstream commits at the integration base from the five implementation/document paths and new evidence.
+
+Residual limits: the earlier positive hosted handoff remains unverified because the retained hosted probe observed an invalid switch; this re-drive performed no new hosted probe, setting change or release/package/image mutation. The previously deferred external final-GET/DELETE race remains unqualified. No different-content version replay is authorized.
+
+Delivery: committed and pushed Builds `main` at `d4f75283221fc11779416c5f2b531ea09f22582c`; `git ls-remote --heads origin main` read back that exact full revision. Builds is clean and the actual delivered commit also passed the committed-object API check (2,565 entries, no removals). This canonical story and the pushed Builds gitlink are staged in CiCd. No CiCd commit or push was made.
