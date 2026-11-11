@@ -2,10 +2,10 @@
 title: 'The publish composite'
 type: 'feature'
 created: '2026-11-11'
-status: 'blocked'
+status: ready-for-dev
 review_loop_iteration: 0
 followup_review_recommended: false
-baseline_revision: 0d29ed715475567155cee2d6f078b7a4bc5faa6a
+baseline_revision: 3979f302b6e3b096fef7c4bd190f4f3bb92266b8
 implementation_repository: references/Hexalith.Builds
 implementation_baseline_revision: a0b95ba2b8e0a94cdcd090c1d4ec44eabb9184e6
 context:
@@ -28,7 +28,9 @@ deferred: []
 
 **Always:** Work in `references/Hexalith.Builds`; runtime Python >=3.12 uses stdlib. Caller owns the `hexalith-release` environment and grants `contents: write`, `actions: read`, `id-token: write`. Accept `publish`, `version`, `sha`, `last-tag`, `draft-id`, `artifact-id`, `artifact-digest`, `artifact-run`, NuGet user and the registry push pair. Execute trusted action-path code; keep payload and empty execution directory outside `GITHUB_WORKSPACE`. Preserve original artifact SHA-256 and five draft trailers. Reject a conflicting Git version tag and every conflicting container version root before any NuGet/registry publication write. Use 3-1's pinned nested login and official Skopeo, verify complete remote OCI bytes. Every executed publisher path uploads one schema-valid outcome, including login/push failures.
 
-**Never:** Checkout/execute module source, load its configuration, restore/build/repack, recompute the captured last reachable tag, move/delete a tag, have release runtime commit to main, add signed provenance/attestations or a public NuGet API-key fallback. Preserve AD-20 frozen legacy runtime, npm release configuration, `builds-release.yml` and production callers. Complete-mode selection/recovery/deletion, scheduler/App publisher, caller rewrite, guard audit lint (5-2) and prior unrelated deferrals remain downstream. This invocation delivers planning only.
+**Never:** Checkout/execute module source, load its configuration, restore/build/repack, recompute the captured last reachable tag, move/delete a tag, have release runtime commit to main, add signed provenance/attestations or a public NuGet API-key fallback. Preserve AD-20 frozen legacy runtime, npm release configuration, `builds-release.yml` and production callers. Complete-mode selection/recovery/deletion, scheduler/App publisher, caller rewrite, guard audit lint (5-2) and prior unrelated deferrals remain downstream.
+
+**Implementation scope:** The planning checkpoint is complete. Subsequent implementation dispatches must implement and verify the existing Execution tasks, including the isolated hosted NuGet/OCI/GitHub publication probe, and commit/push the reviewed changes in `references/Hexalith.Builds`. Planning-only statements in the companion plan and historical Auto Run Result describe the completed planning delivery; this canonical contract governs subsequent implementation dispatches.
 
 ## I/O & Edge-Case Matrix
 
@@ -81,6 +83,8 @@ Paths below are relative to `references/Hexalith.Builds` unless specified.
 
 ## Spec Change Log
 
+- 2026-11-11: Human authorized implementation of the existing Execution tasks, tests and isolated hosted publication probe, followed by reviewed Builds commit/push. Clarified that planning-only scope belongs to the completed planning checkpoint, including companion plan and historical run-result statements. Existing publication requirements and downstream exclusions continue to apply.
+
 ## Review Triage Log
 
 ## Design Notes
@@ -91,7 +95,7 @@ Keep existing safe download limits and credential separation when factoring payl
 
 ## Verification
 
-Future implementation, from Builds root:
+Implementation verification, from Builds root:
 
 - `uv run --no-cache --with PyYAML==6.0.3 --with jsonschema==4.26.0 python -m unittest discover -s Github/lib/tests -p 'test_release_publish.py'` and the same command with `test_oci_publish.py` -- focused matrix/composite effects pass.
 - `uv run --no-cache --locked --script --python 3.12 Tools/ci/run_python_tests.py` and `uv run --no-cache --locked --script --python "$(command -v python3)" Tools/ci/run_python_tests.py` -- retained suites pass with documented tooling prerequisites.
@@ -99,49 +103,5 @@ Future implementation, from Builds root:
 - `uv run --no-cache --locked --script --python 3.12 Tools/ci/check_public_api.py` -- run against committed implementation; additions pass, no unintended removals.
 - Hosted probe -- inspect actual remote composite/job results, original downloaded artifact bytes, NuGet/OCI destinations, persisted draft/release and peeled tag, plus single downloaded outcome. Never substitute YAML text or helper-only assertions for these surfaces.
 
-Planning delivery checks frontmatter, both full baselines, existing code-map targets, unchecked runtime tasks, document-only scope and `git diff --check`. Validate the exact message with pinned commitlint, fetch/check divergence, commit/push only the Builds plan, verify its remote full SHA, then stage the canonical CiCd story with the updated Builds gitlink. Do not commit/push CiCd. Halt at `ready-for-dev`; no runtime implementation or live probe/publication in this invocation.
+Implementation delivery completes the existing Execution tasks and acceptance criteria, runs the implementation verification above, and checks `git diff --check`. Validate the exact commit message with pinned commitlint, fetch/check divergence, commit/push the reviewed Builds implementation, verify its remote full SHA, then stage the canonical CiCd story with the updated Builds gitlink. Do not commit/push CiCd. The planning-only halt at `ready-for-dev` applied to the completed planning delivery and does not apply to subsequent implementation dispatches.
 
-## Auto Run Result
-
-Status: ready-for-dev
-
-Halted after planning as requested. No blocking condition. Three investigation subagents examined implementation surfaces, all prior-story continuity sections, and the complete spec/companion contract; all finished before plan generation. The ready-for-development gate passed: actionable ordered paths, six Given/When/Then acceptance criteria at publication/composite surfaces, complete matrix and no unresolved intent/dependency gaps. The spec carries `oversized` because its contract exceeds the template target.
-
-Planning-only Builds commit: `891886ddc60a9924d053bb74bf6bcc73e101b2ce`, pushed to `origin/main` and independently confirmed by `git ls-remote --exit-code origin refs/heads/main`. Its only changed file is `docs/cicd-3-4-publish-composite-plan.md`. The Builds working tree is clean. Both baseline revisions above remain the full starting revisions obtained directly from Git.
-
-Validation: frontmatter/date/full-baseline checks, existing context/code-map paths and companion links, seven unchecked execution tasks, six Given/When/Then criteria, documentation-only staged scope and whitespace passed. Exact commit message `docs(ci): plan story 3-4 publish composite` passed `node node_modules/@commitlint/cli/cli.js --edit /tmp/cicd-3-4-plan-commit-message.txt --verbose` using pinned CLI 21.2.4: zero problems, zero warnings. Before push, remote divergence was one local planning commit and zero remote-only commits. Ordinary CiCd-agent profile was used.
-
-Canonical story and pushed Builds gitlink are staged together in CiCd; CiCd is not committed or pushed. Runtime implementation, tests, probes and publication were not executed. Resume from this ready-for-dev story to implement its unchecked tasks.
-
-
-### Implementation dispatch — 2026-11-11
-
-Status: blocked
-Blocking condition: handoff conflicts with spec
-
-The new folder+id dispatch resolved story 3-4 and routed its `ready-for-dev`
-status to step-03 implementation. The implementation handoff requires:
-
-> Read {spec_file} fully and implement it — the spec is the sole source of truth.
-
-The read-only intent contract instead states:
-
-> This invocation delivers planning only.
-
-The Verification section reinforces that restriction:
-
-> Halt at `ready-for-dev`; no runtime implementation or live probe/publication in this invocation.
-
-Step-03 explicitly requires a halt when the handoff conflicts with the spec;
-it also prohibits modifying the intent contract. The current user invocation
-requests the AD-17 publisher work and a commit/push in Builds, but does not
-explicitly revise these frozen planning-only passages. No implementation
-subagent was launched and no runtime implementation, tests, probe, commit or
-push was performed. The frozen contract and original planning evidence remain
-unchanged. Resolve the planning-only restriction and return the story to
-`ready-for-dev` before redispatching implementation.
-
-Observed full superproject HEAD: `0d29ed715475567155cee2d6f078b7a4bc5faa6a`.
-Observed full Builds HEAD: `891886ddc60a9924d053bb74bf6bcc73e101b2ce`.
-The existing staged planning spec and Builds gitlink were preserved; this halt
-updates only the canonical story's working-tree status and run-result details.
