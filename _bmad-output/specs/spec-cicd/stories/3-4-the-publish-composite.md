@@ -2,7 +2,7 @@
 title: 'The publish composite'
 type: 'feature'
 created: '2026-11-11'
-status: done
+status: in-review
 review_loop_iteration: 0
 followup_review_recommended: true
 baseline_revision: 1803c3418cd200fe8544164b25b8f5b522ba56f8
@@ -57,6 +57,41 @@ deferred:
     location: >-
       references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionPortAllocator.cs:184
     severity: low
+  - summary: >-
+      Move the upstream explicit-endpoint README section out of License and update the stale attached-routing and claim-retry text.
+    evidence: |-
+      Upstream commit bfda07ee appends "### Explicit endpoints and attached routing snapshots" (README.md:1399) after "## License" (README.md:1394), so it renders as a License subsection. README.md:641-643 still says owners requiring routing-catalog observations fail attached runs as startup-failure. README.md:752-754 still says every claim conflict retries up to 64 times, with no exception for explicit ports. Not changed by publisher work.
+    location: >-
+      references/Hexalith.Builds/README.md:1399
+    severity: low
+  - summary: >-
+      Test and explain the upstream refusal of explicit EventStore ports on attached suites.
+    evidence: |-
+      ModuleCommandApplication refuses --attach-to combined with --eventstore-port through generic HXC001 "The command line is invalid." ModuleCommandExecutionService:119-122 throws for Down, runId or out-of-range ports. Searching test/ for eventstore-port/EventStorePort finds only StartupReadinessTests, none with --attach-to, and the guard message appears in no test. Removing either guard fails no test, although the README promises "Attachments cannot request owner ports". Arrived with upstream merge e588605c.
+    location: >-
+      references/Hexalith.Builds/src/libraries/Hexalith.Builds.Module.Cli/ModuleCommandApplication.cs:450
+    severity: medium
+  - summary: >-
+      Make the explicit-port exclusion from independent allocation observable in a test.
+    evidence: |-
+      CompositionPortAllocator adds the requested port to the excluded set before Allocate, then overwrites EventStoreHttp. The existing distinctness test requests a port already handed out in-process, which _handedOut skips anyway. The other tests take OS-ephemeral ports outside the Linux candidate range. Deleting excluded.Add(requested) fails no test, even though an in-range request (such as the README's 18080) could then be given to a second endpoint. A deterministic test likely needs an injectable candidate source. Upstream change.
+    location: >-
+      references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionPortAllocator.cs:174
+    severity: medium
+  - summary: >-
+      Remove the ephemeral-port reuse race from the upstream explicit-port tests.
+    evidence: |-
+      StartupReadinessTests:66-69 binds an OS-assigned loopback port, stops the listener and then requests that port for the owner. CompositionResourceClaimStoreTests:67 reallocates the same way. Any parallel test or outbound connection can take the released port in between, which makes failures intermittent. Upstream test code.
+    location: >-
+      references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/StartupReadinessTests.cs:66
+    severity: low
+  - summary: >-
+      Confirm whether attached children can rewrite the owner's routing-catalog proofs that later attachments capture.
+    evidence: |-
+      Upstream removed the attached refusal for owners requiring routing-catalog observations (NativeTestExecutor.cs:400 now refuses only on TestObservation/CandidatePolicy/hold mismatch). Unverified: settle it by checking whether attached children get write access to the owner's platform-components/<env>-catalog proofs, and whether SelectedRoutingCatalogSnapshot re-verifies those bytes against the owner capture after each attached child exits.
+    location: >-
+      references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/NativeTestExecutor.cs:400
+    severity: medium (unverified)
 ---
 
 <intent-contract>
@@ -157,6 +192,52 @@ Paths below are relative to `references/Hexalith.Builds` unless specified.
   - `[false]` `[reject]` Intent auditor: unrelated C# changes exceed publisher intent — `git diff 967d3d058df27397da39011c95da0a7e45ebc24e e588605ccf2c6577a2490e1a3fc512f8ffdc3960` proves every listed C# change arrived on origin/main before resumed work; they were preserved by fast-forward. No publisher commit changes those C# files. Their genuine review issues are deferred above.
   - `[false]` `[reject]` Intent auditor: diff cannot prove commit/push — independent Git readback verifies the complete owning-repository HEAD on origin/main; canonical CiCd story/gitlink remain staged per the explicit delivery instruction.
 
+### 2026-11-11 — Review pass
+Follow-up pass over the superproject since `1803c3418cd200fe8544164b25b8f5b522ba56f8` plus Builds `967d3d058df27397da39011c95da0a7e45ebc24e..5050f01a74cd6ba22954030c852a097cffb2b5b8`. The story spec (claims file) and the orchestrator-owned deferred-work ledger were left out of the diff. Intent-auditor divergence (b) contained two separate claims, so it is logged as two findings.
+- verdicts: 41 findings — high 0, medium 10, low 16, false 14, maybe-false 1
+- findings:
+  - `[low]` `[patch]` Blind: the publisher README says authenticated handoffs report the built SHA/version, but the state-loss fallback reports the dispatch SHA with no version — fixed: `Github/publish/README.md` now documents the fallback (dispatch SHA, no version, `failed`).
+  - `[low]` `[reject]` Blind: the state-loss fallback keeps no copy of the authenticated release identity (grouped with Edge "fallback drops built SHA/version" and Intent (b1)) — confirmed: the fallback outcome carries `GITHUB_SHA` with no version. State loss inside the job's private `/tmp` directory is an abnormal fault, and the outcome is still `failed` and schema-valid. Carrying identity through additional step outputs would add plumbing to a rarely reached degraded path.
+  - `[low]` `[patch]` Blind: the fallback diagnostic hides whether state was missing, truncated or invalid, and no test asserts it — fixed: the diagnostic now names the exception class, and the actual composite asserts `FileNotFoundError`/`ReleaseError`/`OutcomeError` for the missing/truncated/invalid state cases.
+  - `[false]` `[reject]` Blind: `finally` deletes an unchecked `RELEASE_STATE` path — `RELEASE_STATE` comes only from the prepare step's own `outputs({"state": ...})`, which is the `mkdtemp` directory created outside the workspace. Deleting it is the intended private-payload cleanup, which the composite test asserts.
+  - `[medium]` `[patch]` Blind: the composite test discards `run_composite`'s result, so nothing proves failures still fail the job — confirmed: `run_composite` returns `None` when any step fails, and the result was ignored. Fixed: every scenario now asserts `(result is None) == (expected == "failed")`, which covers success, ready and failure paths.
+  - `[false]` `[reject]` Blind: state-fault coverage depends on the login hook, and the CI README overclaims "every failure/finalizer boundary" — the outcome phase reads state with the same code whenever the loss happened. The empty-inventory/login-skipped result combination is already covered by the `empty` scenario. No outcome-phase branch is left unexercised.
+  - `[low]` `[reject]` Blind: NuGet status classification depends on English CLI text — status lines are cosmetic, and the exit code alone controls publication. Hosted Ubuntu runners emit English. Pinning `DOTNET_CLI_UI_LANGUAGE` adds environment surface for a logging nuance (compare the prior pass's status-text rejection).
+  - `[low]` `[reject]` Blind: status lines do not name the package — carried: package identity in status lines was rejected earlier as cosmetic; the constant credential-free statuses are unchanged.
+  - `[low]` `[patch]` Blind: the results doc frontmatter `implementation_revision: e9741b56…` and its `hosted-publication-qualified` status overstate what the shipped controller qualified (grouped with Edge "status read as covering shipped finalizer") — fixed: the frontmatter now records `hosted_qualified_revision` `e9741b56…`, `finalizer_repair_revision` `3699c6d6…` and `finalizer_repair_verification: local-actual-composite-only`.
+  - `[medium]` `[patch]` Blind: the retained probe tag is the public-API baseline — carried: the prior pass added the comparison against genuine `v4.47.0`, and that is still retained.
+  - `[low]` `[patch]` Blind: the dedicated nuget.org Trusted Publishing policy stays live, and nothing records its cleanup (grouped with Blind "retained draft looks pending" and Intent (f)) — fixed: the results cleanup section now records the active policy (kept for reuse, as the story allows) and that the maintainer should remove it once re-qualification is no longer needed.
+  - `[low]` `[patch]` Blind: retained draft `441591623` still carries all five handoff trailers — confirmed. Publisher authentication binds to the producer's caller workflow path (`producer()`), so replay needs `release-publish-probe.yml` re-added on `main` before artifact expiry at 2027-02-09T11:16:45Z. Fixed with the grouped results-doc record: that replay path, and that cleanup should delete the draft together with `v4.47.1`.
+  - `[false]` `[reject]` Blind: hosted OCI publication leaves no trace and has no independent readback — `publish_oci` raises on any remote manifest/config/layer digest or size mismatch, so step success is the verification. `registry-verification.json` states exactly that evidence kind and claims no independent download.
+  - `[low]` `[defer]` Blind: upstream README explicit-endpoint section sits under License, and nearby text is stale (grouped with Verification-gap other finding) — confirmed at README.md:1394/1399, 641-643 and 752-754, all from upstream `bfda07ee`. Deferred.
+  - `[medium]` `[defer]` Blind: attachment requesting a port gets an opaque HXC001 refusal, with no test (grouped with Verification-gap "attached explicit port refusal untested") — confirmed at ModuleCommandApplication.cs:450 and ModuleCommandExecutionService.cs:119-122. No test combines `--attach-to` with a port. Upstream merge; deferred.
+  - `[false]` `[reject]` Blind: frozen-file and lint evidence cannot be reconciled — the two records state different scopes: all 215 baseline files, versus the 135 GitHub/workflow/pin files at `3699c6d6`. `Tools/ci/README.md` is a permitted story change outside the second scope. Identical lint-log hashes are expected when workflow inputs are unchanged. Durable excerpts were retained by the prior patch.
+  - `[false]` `[reject]` Blind: tag-ruleset cleanup reasoning conflicts with the earlier `v4.48.0` deletion — the results doc explicitly says that earlier deletion "overstepped resource-only authorization", that later guidance prohibited protection administration, and that it restored the exact policy. The two records are reconciled.
+  - `[medium]` `[defer]` Edge: routing descriptor fixture lacks the required owner fields — carried: already deferred, and still reads as described at the reviewed revision.
+  - `[false]` `[reject]` Edge: a state-write failure after a successful PATCH reports `failed` for a published release — reaching it needs a write failure in the job's own private `/tmp` directory, which was never shown to happen. The matrix explicitly accepts `failed` (never a false `published`) after partial side effects.
+  - `[low]` `[defer]` Edge: unmanaged occupied explicit port gives generic HXR020 — carried: already deferred upstream diagnostic.
+  - `[low]` `[defer]` Edge: explicit-port tests release an OS ephemeral port before reuse, so the test can race — confirmed at StartupReadinessTests.cs:66-69 and CompositionResourceClaimStoreTests.cs:67, in upstream test code. Deferred.
+  - `[low]` `[reject]` Edge: the state-loss fallback drops the validated SHA/version, contrary to the "replace with built SHA/version" task — grouped with Blind "fallback keeps no identity", same rejection.
+  - `[low]` `[patch]` Edge: `hosted-publication-qualified` is read as covering the never-hosted finalizer repair — grouped with Blind "frontmatter overstates", same frontmatter fix.
+  - `[maybe-false]` `[defer]` Edge: attached children may rewrite owner routing proofs that later attachments capture — upstream removal of the refusal at NativeTestExecutor.cs:400. To settle it, check attached children's write access to the owner's catalog proofs and whether those bytes are re-verified. Deferred as medium (unverified).
+  - `[medium]` `[defer]` Verification gap: the stale descriptor fixture makes the routing negative scenarios vacuous — carried: the existing deferral already records that the negative controls short-circuit.
+  - `[medium]` `[defer]` Verification gap: explicit-port parsing test cannot tell the port refusal from a missing manifest — carried: already deferred.
+  - `[medium]` `[defer]` Verification gap: no test of an attached suite requesting an explicit port — grouped with Blind "opaque HXC001 refusal", upstream; deferred.
+  - `[medium]` `[defer]` Verification gap: no test observes the explicit-port exclusion from independent allocation — trusted as filed: no current test can fail if `excluded.Add(requested)` is deleted. Upstream code; deferred as filed.
+  - `[medium]` `[defer]` Verification gap: attached routing identity checks are tested only with a foreign `ownerRunId` — carried: already deferred.
+  - `[medium]` `[defer]` Verification gap: attached HXT009 candidate-policy branch is never exercised — carried: already deferred.
+  - `[low]` `[defer]` Verification gap (other): README section rendered under License — grouped with Blind README finding; deferred.
+  - `[false]` `[reject]` Intent (a): the shipped controller `3699c6d6` was never hosted. The intent's hosted gates name remote invocation, NuGet publication and duplicate-safe retry. `action.yml`, `push_packages`, authentication and finalization are byte-identical to the hosted-qualified `e9741b56`. The repair changes only stdlib file persistence/fallback in the private directory, and that runs through real action mappings in the actual composite that AC-5 assigns to the finalizer. The residual risk stays recorded.
+  - `[low]` `[reject]` Intent (b1): a state-loss outcome identifies the dispatch commit, not the built one — grouped with Blind "fallback keeps no identity", same rejection.
+  - `[false]` `[reject]` Intent (b2): the repair does not cover a failure while writing the outcome itself — such a failure needs a `/tmp` write failure that was never shown to occur. It would fail loudly through `if-no-files-found: error`, never as a false success.
+  - `[false]` `[reject]` Intent (c): matrix rows are split between hosted and local surfaces — carried: the story requires those surfaces separately.
+  - `[false]` `[reject]` Intent (d): remote OCI verification is the controller's own check — the intent puts that verification on the publisher ("verify complete remote OCI bytes"), and the evidence states its kind exactly.
+  - `[false]` `[reject]` Intent (e): `ready` was forced by a workflow edit, and the retry did not use the App path — the matrix row's condition is exactly a workflow-tree difference. The App publisher is explicitly downstream.
+  - `[low]` `[patch]` Intent (f): the probe's effects last on the real repository's release line — grouped with Blind "Trusted Publishing policy" and "retained draft", same results-doc record.
+  - `[false]` `[reject]` Intent (g): the public nupkg SHA differs from the original — the intent preserves the original artifact SHA-256, which is verified. nuget.org always adds its repository signature, and all six original entries are proven unchanged.
+  - `[false]` `[reject]` Intent (h): the restored temporary caller was restructured — the intent requires the specified filename, environment and policy match, and those are kept. The composite independently authenticates all eight handoff fields, so the caller's plumbing does not weaken the evidence.
+  - `[false]` `[reject]` Intent (i): the pushed range includes the upstream merge and the 20 suite groups were assembled from separate runs — carried: the upstream C# scope was already established as outside publisher work, and the split run was disclosed.
+
 ## Design Notes
 
 Resumed implementation from Builds `967d3d058df27397da39011c95da0a7e45ebc24e`; the previously implemented publisher originated after story baseline `891886ddc60a9924d053bb74bf6bcc73e101b2ce`. The resumed diff retains that original implementation as context and completes the hosted NuGet gate.
@@ -181,43 +262,3 @@ Temporary controls are removed. No protection policy changed in resumed executio
 
 Implementation delivery completes the existing Execution tasks and acceptance criteria, runs the implementation verification above, and checks `git diff --check`. Validate the exact commit message with pinned commitlint, fetch/check divergence, commit/push the reviewed Builds implementation, verify its remote full SHA, then stage the canonical CiCd story with the updated Builds gitlink. Do not commit/push CiCd. The planning-only halt at `ready-for-dev` applied to the completed planning delivery and does not apply to subsequent implementation dispatches.
 
-## Auto Run Result
-
-Status: done
-
-Delivered the original-artifact publish composite and verified AD-17 through actual composite conflict controls. Resumed work completed dedicated-policy hosted NuGet/OCI publication, a duplicate-safe replay from the same original handoff, public package-byte/signature readback, and review hardening of the always-run outcome finalizer. The user-staged intent contract is preserved byte-for-byte.
-
-Files changed:
-- [Publisher](../../../../references/Hexalith.Builds/Github/lib/release_publish.py): credential-free package status messages, atomic state writes, failed-outcome recovery and private-payload cleanup when state is missing or invalid.
-- [Publisher tests](../../../../references/Hexalith.Builds/Github/lib/tests/test_release_publish.py): status redaction, interrupted-state preservation, and actual-composite missing/truncated/invalid state cases; existing live tag conflict controls retained.
-- [Publisher interface](../../../../references/Hexalith.Builds/Github/publish/README.md) and [CI guidance](../../../../references/Hexalith.Builds/Tools/ci/README.md): publication, retry, permissions, ownership and qualification evidence.
-- [Results](../../../../references/Hexalith.Builds/docs/cicd-3-4-publish-composite-results.md) and [verification records](../../../../references/Hexalith.Builds/evidence/cicd-3-4/trusted-publishing/verification.json): exact hosted source/run/artifact/release/tag identities, original bytes, public NuGet package/signature observations, durable verification excerpts, cleanup and upstream regression evidence.
-- Temporary caller/helper restored for qualification and removed; canonical CiCd story and Builds pointer staged only.
-
-Review: all four lenses completed, with 19 raw findings. Three patch entries were addressed (high 1, medium 1, low 1): recoverable finalizer state, genuine-product API comparison and durable verification output. Six grouped upstream items are recorded in the single frontmatter deferred list, including the incoming .NET fixture regression. Every raw finding has its own verdict/evidence row above.
-
-Rejected findings and reasons:
-- Cancellation runtime change: the failing fixture lacks required descriptor identity; valid descriptors still reach cancellable reads.
-- Incomplete cleanup claim: retained protected resources and their operational effect are explicitly disclosed; no deletion outside authorization is claimed.
-- Dynamic package log identity: cosmetic benefit does not justify dynamic output/escaping beyond constant credential-free statuses.
-- Misleading status classification: no pinned-tool response demonstrates the alleged error; missing stdout is already exercised, and status text does not control publication.
-- AD-17 test surface mismatch: the existing actual-composite conflict tests ran and passed; the tag guard already exists in live production code.
-- Missing hosted conflict invocation: local actual-composite negative controls and hosted publication/retry evidence satisfy their separate required surfaces.
-- Missing production caller integration: the invoked story explicitly leaves that integration downstream.
-- Additional C# scope: every listed C# change arrived in the preserved origin/main merge before resumed publisher work; publisher commits do not edit them.
-- Unproven push: independent origin/main readback matches the final full owning-repository revision below.
-
-Verification:
-- All nine I/O matrix rows have executed passing controls. Focused publisher 12/12 and OCI 3/3 pass, including actual composite AD-17 refusal with exact diagnostic, zero publication writes and one schema-valid failed outcome.
-- Initial authenticated complete suites passed 20/20 groups on Python 3.12.13 and runner 3.14.4. After the repair, complete reruns passed 19/20 groups each; the sole failure was the omitted authentication prerequisite of the online policy group. That entire group was rerun with privately supplied authentication and passed all 46 tests on each interpreter, verifying all 20 groups after repair without code changes between runs. Exact failure/recovery and durable excerpts are retained.
-- Authenticated workflow lint passes: 12 exact frozen findings, zero new. Final committed-source public API check passes: 2554 entries, no removals. Independent comparison with genuine product v4.47.0 confirms 2488 baseline entries, 66 additions, zero removals. Frozen GitHub/workflow/pin bytes and temporary-control removal are independently verified; whitespace checks pass.
-- Hosted producer 43010609603 built artifact 13850760915 once. Publisher 43010882516 ended ready; publisher 43011306951 reused its exact producer/artifact/digest/source/version, observed NuGet duplicate skipping, reverified OCI and ended published. Both outcome ZIPs validate independently. The public NuGet package preserves all six original entries and adds only a valid NuGet repository signature.
-
-Residual risks and recommendation:
-- Follow-up review recommended: true. The high finalizer repair has actual local composite fault coverage; hosted publication evidence pins the earlier controller, so abrupt interruption of the repaired controller on a hosted runner remains unverified.
-- Incoming upstream .NET routing class has four failures out of 34 tests, caused by missing owner fields in its fixture. Exact command/log and six upstream follow-ups are retained; the story does not claim a passing .NET suite.
-- Protected v4.47.1 remains reachable and can affect future version-base selection until authorized cleanup. Its identified release is retained as a draft after qualification; genuine product v4.47.0 is again latest. Original release body/source and tag target are preserved. No protection policy changed. Isolated package/image and evidence artifacts remain.
-
-Delivery:
-- Builds main committed and pushed: `5050f01a74cd6ba22954030c852a097cffb2b5b8`. Independent remote readback matches and the Builds working tree is clean.
-- The canonical CiCd story and updated Builds gitlink are staged, with no CiCd commit/push, following the explicit delivery instruction. This scope-specific instruction takes precedence over the workflow's generic all-working-copies commit/clean step.
