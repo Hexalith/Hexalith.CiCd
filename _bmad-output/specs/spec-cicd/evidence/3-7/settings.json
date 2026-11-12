@@ -1,0 +1,1451 @@
+{
+  "started_at": "2026-11-12T11:05:14Z",
+  "completed_at": "2026-11-12T11:05:18Z",
+  "requests": [
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "actions_variables=read",
+      "x-github-request-id": "C9B2:1A9177:C1C9B9F:122C9268:6AF59D6B",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/actions/variables#get-a-repository-variable"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "switch"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/immutable-releases",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "administration=read",
+      "x-github-request-id": "C962:811E4:C0D1E26:1211CDB7:6AF59D6B",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "immutable-releases"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/permissions/artifact-and-log-retention",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "administration=read",
+      "x-github-request-id": "C97A:811E4:C0D1E32:1211CDC2:6AF59D6B",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/actions/permissions#get-artifact-and-log-retention-settings-for-a-repository"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "retention"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "C96E:331561:C3E1EFE:1258E63D:6AF59D6B",
+      "data": {
+        "id": 26805500201,
+        "node_id": "EN_kwDOOMzNRc8AAAAGPbt5KQ",
+        "name": "hexalith-release",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/environments/hexalith-release",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/deployments/activity_log?environments_filter=hexalith-release",
+        "created_at": "2026-11-10T08:14:40Z",
+        "updated_at": "2026-11-10T08:14:40Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 71918817,
+            "node_id": "GA_kwDOOMzNRc4ESWTh",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "check": "environment"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release/deployment-branch-policies?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "C9B8:18CD24:C4A9851:1275B131:6AF59D6B",
+      "data": {
+        "total_count": 1,
+        "branch_policies": [
+          {
+            "id": 66158063,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjE1ODA2Mw==",
+            "name": "main",
+            "type": "branch"
+          }
+        ]
+      },
+      "check": "environment-branch-policies"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release/secrets?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "environments=read",
+      "x-github-request-id": "C98C:10E576:BBD60CE:119FFC20:6AF59D6B",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/reference/actions#list-environment-secrets"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "environment-secret-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/secrets?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "secrets=read",
+      "x-github-request-id": "C964:115F92:310508:568D99:6AF59D6C",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/actions/secrets#list-repository-secrets"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "repository-secret-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/variables?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "actions_variables=read",
+      "x-github-request-id": "C96C:12841E:31CCDE:5769FB:6AF59D6C",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/actions/variables#list-repository-variables"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "repository-variable-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/organization-secrets?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "secrets=read",
+      "x-github-request-id": "C982:27A047:319368:5723DD:6AF59D6C",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/actions/secrets#list-repository-organization-secrets"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "org-secret-access"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/organization-variables?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "actions_variables=read",
+      "x-github-request-id": "C990:811E4:C0D2278:1211D400:6AF59D6C",
+      "error": {
+        "message": "Resource not accessible by personal access token",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/actions/variables#list-repository-organization-variables"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)",
+      "check": "org-variable-access"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "metadata=read",
+      "x-github-request-id": "C98E:6416E:3273FB:580CF9:6AF59D6C",
+      "data": [
+        {
+          "id": 19196298,
+          "name": "Protect main",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Builds",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgEk6Yo",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/19196298"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Builds/rules/19196298"
+            }
+          },
+          "created_at": "2026-07-20T09:31:13.745+02:00",
+          "updated_at": "2026-11-08T21:25:52.675+01:00"
+        },
+        {
+          "id": 26812219,
+          "name": "v tags",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Builds",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgGZHzs",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/26812219"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Builds/rules/26812219"
+            }
+          },
+          "created_at": "2026-11-08T21:25:53.491+01:00",
+          "updated_at": "2026-11-11T11:03:40.459+01:00"
+        }
+      ],
+      "check": "rulesets"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:16Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets/19196298",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "metadata=read",
+      "x-github-request-id": "C99C:FFE5E:C7372FC:12AF2D95:6AF59D6C",
+      "data": {
+        "id": 19196298,
+        "name": "Protect main",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Builds",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "~DEFAULT_BRANCH"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgEk6Yo",
+        "created_at": "2026-07-20T09:31:13.745+02:00",
+        "updated_at": "2026-11-08T21:25:52.675+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/19196298"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Builds/rules/19196298"
+          }
+        }
+      },
+      "check": "main-ruleset"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets/26812219",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "metadata=read",
+      "x-github-request-id": "C99E:1702:9050FB2:D8AE2ED:6AF59D6C",
+      "data": {
+        "id": 26812219,
+        "name": "v tags",
+        "target": "tag",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Builds",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/tags/v*"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "update"
+          },
+          {
+            "type": "deletion"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgGZHzs",
+        "created_at": "2026-11-08T21:25:53.491+01:00",
+        "updated_at": "2026-11-11T11:03:40.459+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/26812219"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Builds/rules/26812219"
+          }
+        }
+      },
+      "check": "tag-ruleset"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/workflows/builds-ci.yml/runs?branch=main&head_sha=adfbf21896ef982ae9d1c3ee1db247e87bda22c0&per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "C9A8:1A9177:C1CA33A:122C9DB4:6AF59D6C",
+      "data": {
+        "total_count": 1,
+        "workflow_runs": [
+          {
+            "id": 43203712508,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-ci.yml",
+            "event": "push",
+            "head_branch": "main",
+            "head_sha": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+            "status": "in_progress",
+            "conclusion": null,
+            "created_at": "2026-11-12T10:49:14Z",
+            "updated_at": "2026-11-12T10:50:03Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43203712508"
+          }
+        ]
+      },
+      "check": "ci-current-source"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/workflows/builds-release.yml/runs?branch=main&event=workflow_dispatch&per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "C9B6:19CA00:BD63134:11C16F9B:6AF59D6C",
+      "data": {
+        "total_count": 12,
+        "workflow_runs": [
+          {
+            "id": 43199661851,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T10:21:37Z",
+            "updated_at": "2026-11-12T10:31:05Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43199661851"
+          },
+          {
+            "id": 43186506314,
+            "run_attempt": 2,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "1ecbcd6c6f61629086d019c37557d10d4247b0c3",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T08:52:19Z",
+            "updated_at": "2026-11-12T09:13:08Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43186506314"
+          },
+          {
+            "id": 43185380991,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "1ecbcd6c6f61629086d019c37557d10d4247b0c3",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-12T08:44:07Z",
+            "updated_at": "2026-11-12T08:48:59Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43185380991"
+          },
+          {
+            "id": 43149544453,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T03:38:19Z",
+            "updated_at": "2026-11-12T03:55:14Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43149544453"
+          },
+          {
+            "id": 43119860909,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "163f3d0deac6b0db5ec4bdfcc0934b12e6adb46a",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-11T23:26:40Z",
+            "updated_at": "2026-11-11T23:44:07Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43119860909"
+          },
+          {
+            "id": 43041560616,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "dd68a5efbfaec13ef22ec06ad151b212eb16ea4f",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-11T14:45:29Z",
+            "updated_at": "2026-11-11T15:17:38Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43041560616"
+          },
+          {
+            "id": 43034819726,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "e35dd39872baf071aec6a7be1b252b16f460e08c",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-11T14:03:34Z",
+            "updated_at": "2026-11-11T14:08:47Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43034819726"
+          },
+          {
+            "id": 42664680297,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "5ec1779040606be89306129a7d2b245258c9acd2",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-09T17:26:44Z",
+            "updated_at": "2026-11-09T17:51:16Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42664680297"
+          },
+          {
+            "id": 42654023394,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "9b9e03f69b77e4a8e64e4185a1df1cb4bc315ba4",
+            "status": "completed",
+            "conclusion": "cancelled",
+            "created_at": "2026-11-09T16:22:01Z",
+            "updated_at": "2026-11-09T16:23:20Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42654023394"
+          },
+          {
+            "id": 42653985043,
+            "run_attempt": 2,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "9b9e03f69b77e4a8e64e4185a1df1cb4bc315ba4",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-09T16:21:47Z",
+            "updated_at": "2026-11-09T16:41:50Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42653985043"
+          },
+          {
+            "id": 42641950035,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "a8a87160f2708322d5520742b9a0c3f93d23db78",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-09T15:10:27Z",
+            "updated_at": "2026-11-09T15:19:08Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42641950035"
+          },
+          {
+            "id": 42589089105,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "25de7a74d14d099faf7baea5da0cbb0b40264592",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-09T08:52:23Z",
+            "updated_at": "2026-11-09T09:10:06Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42589089105"
+          }
+        ]
+      },
+      "check": "release-dispatch-inventory"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C994:2A7AF3:317118:5713EB:6AF59D6C",
+      "data": {
+        "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+        "value": "true",
+        "created_at": "2026-11-12T07:27:38Z",
+        "updated_at": "2026-11-12T07:27:38Z"
+      },
+      "check": "switch"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/immutable-releases",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:16 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "repo",
+      "x-github-request-id": "C9A2:AF258:322B6F:57CC5F:6AF59D6C",
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      },
+      "check": "immutable-releases"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/permissions/artifact-and-log-retention",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C992:1702:90512A6:D8AE748:6AF59D6C",
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "check": "retention"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "CCFF:11DB65:BFE7AF6:11F7E5EF:6AF59D6C",
+      "data": {
+        "id": 26805500201,
+        "node_id": "EN_kwDOOMzNRc8AAAAGPbt5KQ",
+        "name": "hexalith-release",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/environments/hexalith-release",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/deployments/activity_log?environments_filter=hexalith-release",
+        "created_at": "2026-11-10T08:14:40Z",
+        "updated_at": "2026-11-10T08:14:40Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 71918817,
+            "node_id": "GA_kwDOOMzNRc4ESWTh",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "check": "environment"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release/deployment-branch-policies?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C966:11052D:C0517C8:1206C22A:6AF59D6C",
+      "data": {
+        "total_count": 1,
+        "branch_policies": [
+          {
+            "id": 66158063,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjE1ODA2Mw==",
+            "name": "main",
+            "type": "branch"
+          }
+        ]
+      },
+      "check": "environment-branch-policies"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release/secrets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C968:2F2F4F:C0CEA05:120F13B6:6AF59D6C",
+      "data": {
+        "total_count": 2,
+        "secrets": [
+          {
+            "name": "HEXALITH_REGISTRY_PUSH_PASSWORD",
+            "created_at": "2026-11-10T08:31:36Z",
+            "updated_at": "2026-11-10T08:31:36Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PUSH_USERNAME",
+            "created_at": "2026-11-10T08:31:35Z",
+            "updated_at": "2026-11-10T08:31:35Z"
+          }
+        ]
+      },
+      "check": "environment-secret-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/secrets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C970:1243E1:BDE2D3F:11CB6121:6AF59D6D",
+      "data": {
+        "total_count": 0,
+        "secrets": []
+      },
+      "check": "repository-secret-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/variables?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C9A0:1AEBED:309BCA:562D04:6AF59D6D",
+      "data": {
+        "total_count": 3,
+        "variables": [
+          {
+            "name": "HEXALITH_NUGET_USER",
+            "created_at": "2026-11-12T07:27:38Z",
+            "updated_at": "2026-11-12T07:27:38Z"
+          },
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "created_at": "2026-11-12T07:27:38Z",
+            "updated_at": "2026-11-12T07:27:38Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "created_at": "2026-09-25T11:45:53Z",
+            "updated_at": "2026-09-25T11:45:53Z"
+          }
+        ]
+      },
+      "check": "repository-variable-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/organization-secrets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C974:33CD3A:BF81E8F:11EA27AC:6AF59D6D",
+      "data": {
+        "total_count": 2,
+        "secrets": [
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "created_at": "2026-11-08T23:43:37Z",
+            "updated_at": "2026-11-08T23:43:37Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "created_at": "2026-11-08T23:43:36Z",
+            "updated_at": "2026-11-08T23:43:36Z"
+          }
+        ]
+      },
+      "check": "org-secret-access"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/organization-variables?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C996:32A51F:BC26F3C:119F8766:6AF59D6D",
+      "data": {
+        "total_count": 3,
+        "variables": [
+          {
+            "name": "AZURE_REGISTRY",
+            "created_at": "2023-11-17T15:55:06Z",
+            "updated_at": "2024-11-16T19:32:21Z"
+          },
+          {
+            "name": "HEXALITH_NUGET_USER",
+            "created_at": "2026-11-08T20:26:36Z",
+            "updated_at": "2026-11-08T20:26:36Z"
+          },
+          {
+            "name": "HEXALITH_ZOT_REGISTRY",
+            "created_at": "2026-07-08T14:37:51Z",
+            "updated_at": "2026-07-08T14:37:51Z"
+          }
+        ]
+      },
+      "check": "org-variable-access"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "repo",
+      "x-github-request-id": "C998:19C9DB:C0D9281:12104406:6AF59D6D",
+      "data": [
+        {
+          "id": 19196298,
+          "name": "Protect main",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Builds",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgEk6Yo",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/19196298"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Builds/rules/19196298"
+            }
+          },
+          "created_at": "2026-07-20T09:31:13.745+02:00",
+          "updated_at": "2026-11-08T21:25:52.675+01:00"
+        },
+        {
+          "id": 26812219,
+          "name": "v tags",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Builds",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgGZHzs",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/26812219"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Builds/rules/26812219"
+            }
+          },
+          "created_at": "2026-11-08T21:25:53.491+01:00",
+          "updated_at": "2026-11-11T11:03:40.459+01:00"
+        }
+      ],
+      "check": "rulesets"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets/19196298",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "repo",
+      "x-github-request-id": "C9A6:256DDA:BE5FD44:11D0B7AE:6AF59D6D",
+      "data": {
+        "id": 19196298,
+        "name": "Protect main",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Builds",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "~DEFAULT_BRANCH"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgEk6Yo",
+        "created_at": "2026-07-20T09:31:13.745+02:00",
+        "updated_at": "2026-11-08T21:25:52.675+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/19196298"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Builds/rules/19196298"
+          }
+        }
+      },
+      "check": "main-ruleset"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:17Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets/26812219",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "repo",
+      "x-github-request-id": "C9B0:27D556:3158D4:56EA25:6AF59D6D",
+      "data": {
+        "id": 26812219,
+        "name": "v tags",
+        "target": "tag",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Builds",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/tags/v*"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "update"
+          },
+          {
+            "type": "deletion"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgGZHzs",
+        "created_at": "2026-11-08T21:25:53.491+01:00",
+        "updated_at": "2026-11-11T11:03:40.459+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/26812219"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Builds/rules/26812219"
+          }
+        }
+      },
+      "check": "tag-ruleset"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:18Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/workflows/builds-ci.yml/runs?branch=main&head_sha=adfbf21896ef982ae9d1c3ee1db247e87bda22c0&per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C96A:6A4F7:3244E1:57DF38:6AF59D6D",
+      "data": {
+        "total_count": 1,
+        "workflow_runs": [
+          {
+            "id": 43203712508,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-ci.yml",
+            "event": "push",
+            "head_branch": "main",
+            "head_sha": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+            "status": "in_progress",
+            "conclusion": null,
+            "created_at": "2026-11-12T10:49:14Z",
+            "updated_at": "2026-11-12T10:50:03Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43203712508"
+          }
+        ]
+      },
+      "check": "ci-current-source"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:18Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/workflows/builds-release.yml/runs?branch=main&event=workflow_dispatch&per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:18 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "",
+      "x-github-request-id": "C976:12E9E7:31D41C:577AA2:6AF59D6D",
+      "data": {
+        "total_count": 12,
+        "workflow_runs": [
+          {
+            "id": 43199661851,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T10:21:37Z",
+            "updated_at": "2026-11-12T10:31:05Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43199661851"
+          },
+          {
+            "id": 43186506314,
+            "run_attempt": 2,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "1ecbcd6c6f61629086d019c37557d10d4247b0c3",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T08:52:19Z",
+            "updated_at": "2026-11-12T09:13:08Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43186506314"
+          },
+          {
+            "id": 43185380991,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "1ecbcd6c6f61629086d019c37557d10d4247b0c3",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-12T08:44:07Z",
+            "updated_at": "2026-11-12T08:48:59Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43185380991"
+          },
+          {
+            "id": 43149544453,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T03:38:19Z",
+            "updated_at": "2026-11-12T03:55:14Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43149544453"
+          },
+          {
+            "id": 43119860909,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "163f3d0deac6b0db5ec4bdfcc0934b12e6adb46a",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-11T23:26:40Z",
+            "updated_at": "2026-11-11T23:44:07Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43119860909"
+          },
+          {
+            "id": 43041560616,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "dd68a5efbfaec13ef22ec06ad151b212eb16ea4f",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-11T14:45:29Z",
+            "updated_at": "2026-11-11T15:17:38Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43041560616"
+          },
+          {
+            "id": 43034819726,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "e35dd39872baf071aec6a7be1b252b16f460e08c",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-11T14:03:34Z",
+            "updated_at": "2026-11-11T14:08:47Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43034819726"
+          },
+          {
+            "id": 42664680297,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "5ec1779040606be89306129a7d2b245258c9acd2",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-09T17:26:44Z",
+            "updated_at": "2026-11-09T17:51:16Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42664680297"
+          },
+          {
+            "id": 42654023394,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "9b9e03f69b77e4a8e64e4185a1df1cb4bc315ba4",
+            "status": "completed",
+            "conclusion": "cancelled",
+            "created_at": "2026-11-09T16:22:01Z",
+            "updated_at": "2026-11-09T16:23:20Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42654023394"
+          },
+          {
+            "id": 42653985043,
+            "run_attempt": 2,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "9b9e03f69b77e4a8e64e4185a1df1cb4bc315ba4",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-09T16:21:47Z",
+            "updated_at": "2026-11-09T16:41:50Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42653985043"
+          },
+          {
+            "id": 42641950035,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "a8a87160f2708322d5520742b9a0c3f93d23db78",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-11-09T15:10:27Z",
+            "updated_at": "2026-11-09T15:19:08Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42641950035"
+          },
+          {
+            "id": 42589089105,
+            "run_attempt": 1,
+            "path": ".github/workflows/builds-release.yml",
+            "event": "workflow_dispatch",
+            "head_branch": "main",
+            "head_sha": "25de7a74d14d099faf7baea5da0cbb0b40264592",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-09T08:52:23Z",
+            "updated_at": "2026-11-09T09:10:06Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/42589089105"
+          }
+        ]
+      },
+      "check": "release-dispatch-inventory"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:18Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/installations?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org, read:org, write:org",
+      "x-github-request-id": "C95D:349EA3:C3D072B:1258C4B4:6AF59D6D",
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            },
+            "suspended_at": null,
+            "created_at": "2022-11-27T11:12:52.000+01:00",
+            "updated_at": "2024-06-26T15:50:52.000+02:00"
+          },
+          {
+            "id": 31626264,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            },
+            "suspended_at": null,
+            "created_at": "2022-11-27T18:30:45.000+01:00",
+            "updated_at": "2026-11-07T09:22:24.000+01:00"
+          },
+          {
+            "id": 31641834,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            },
+            "suspended_at": null,
+            "created_at": "2022-11-28T08:16:43.000+01:00",
+            "updated_at": "2026-11-07T09:22:24.000+01:00"
+          },
+          {
+            "id": 77847816,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            },
+            "suspended_at": null,
+            "created_at": "2025-07-27T11:50:58.000+02:00",
+            "updated_at": "2026-11-09T00:01:51.000+01:00"
+          },
+          {
+            "id": 97329264,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            },
+            "suspended_at": null,
+            "created_at": "2025-11-30T17:31:00.000+01:00",
+            "updated_at": "2026-11-07T09:22:24.000+01:00"
+          },
+          {
+            "id": 179966090,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            },
+            "suspended_at": null,
+            "created_at": "2026-11-08T21:38:50.000+01:00",
+            "updated_at": "2026-11-08T21:38:52.000+01:00"
+          }
+        ]
+      },
+      "check": "org-installations"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:18Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:17 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "C95F:2F2F4F:C0CF3F3:120F2273:6AF59D6D",
+      "data": {
+        "total_count": 10,
+        "secrets": [
+          {
+            "name": "AZURE_APPLICATIONID",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories",
+            "created_at": "2024-05-10T11:49:54Z",
+            "updated_at": "2026-11-08T21:46:54Z"
+          },
+          {
+            "name": "AZURE_APPLICATIONSECRET",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories",
+            "created_at": "2024-05-10T11:52:00Z",
+            "updated_at": "2026-11-08T21:47:24Z"
+          },
+          {
+            "name": "AZURE_SUBSCRIPTION_ID",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories",
+            "created_at": "2024-11-16T19:45:07Z",
+            "updated_at": "2026-11-08T21:45:48Z"
+          },
+          {
+            "name": "AZURE_TENANT_ID",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories",
+            "created_at": "2024-11-16T19:44:21Z",
+            "updated_at": "2026-11-08T21:46:21Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+            "created_at": "2026-11-08T23:43:37Z",
+            "updated_at": "2026-11-08T23:43:37Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+            "created_at": "2026-11-08T23:43:36Z",
+            "updated_at": "2026-11-08T23:43:36Z"
+          },
+          {
+            "name": "HEXALITH_ZOT_API_KEY",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories",
+            "created_at": "2026-07-09T07:47:49Z",
+            "updated_at": "2026-11-08T21:45:17Z"
+          },
+          {
+            "name": "HEXALITH_ZOT_USERNAME",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories",
+            "created_at": "2026-07-08T14:34:13Z",
+            "updated_at": "2026-11-08T21:44:48Z"
+          },
+          {
+            "name": "NUGET_API_KEY",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories",
+            "created_at": "2022-11-21T07:33:02Z",
+            "updated_at": "2026-11-08T21:49:02Z"
+          },
+          {
+            "name": "SONAR_TOKEN",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories",
+            "created_at": "2024-05-12T16:40:50Z",
+            "updated_at": "2026-11-08T21:47:54Z"
+          }
+        ]
+      },
+      "check": "org-actions-secret-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:18Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:18 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "C961:17BB0C:C1AC8AA:12212275:6AF59D6D",
+      "data": {
+        "total_count": 2,
+        "secrets": [
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+            "created_at": "2026-11-08T23:43:39Z",
+            "updated_at": "2026-11-08T23:43:39Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+            "created_at": "2026-11-08T23:43:38Z",
+            "updated_at": "2026-11-08T23:43:38Z"
+          }
+        ]
+      },
+      "check": "org-dependabot-secret-names"
+    },
+    {
+      "timestamp": "2026-11-12T11:05:18Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/variables?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:05:18 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "C963:1A9177:C1CB415:122CB668:6AF59D6D",
+      "data": {
+        "total_count": 3,
+        "variables": [
+          {
+            "name": "AZURE_REGISTRY",
+            "visibility": "all",
+            "created_at": "2023-11-17T15:55:06Z",
+            "updated_at": "2024-11-16T19:32:21Z"
+          },
+          {
+            "name": "HEXALITH_NUGET_USER",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+            "created_at": "2026-11-08T20:26:36Z",
+            "updated_at": "2026-11-08T20:26:36Z"
+          },
+          {
+            "name": "HEXALITH_ZOT_REGISTRY",
+            "visibility": "all",
+            "created_at": "2026-07-08T14:37:51Z",
+            "updated_at": "2026-07-08T14:37:51Z"
+          }
+        ]
+      },
+      "check": "org-variable-names"
+    }
+  ]
+}

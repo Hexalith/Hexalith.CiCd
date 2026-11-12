@@ -1,0 +1,100 @@
+{
+  "requests": [
+    {
+      "timestamp": "2026-11-12T11:07:19Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43203712508",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:07:19 GMT",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "CCFF:12829:31C11F:578570:6AF59DE7",
+      "data": {
+        "id": 43203712508,
+        "run_attempt": 1,
+        "path": ".github/workflows/builds-ci.yml",
+        "event": "push",
+        "head_branch": "main",
+        "head_sha": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-12T10:49:14Z",
+        "updated_at": "2026-11-12T10:50:03Z",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43203712508"
+      }
+    },
+    {
+      "timestamp": "2026-11-12T11:07:20Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43203712508/jobs?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:07:20 GMT",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "CD20:BE4BD:301FCCCF:47F6A50C:6AF59DE7",
+      "data": {
+        "total_count": 7,
+        "jobs": [
+          {
+            "id": 131133415231,
+            "name": "Package catalog contracts",
+            "status": "in_progress",
+            "conclusion": null,
+            "started_at": "2026-11-12T10:49:18Z",
+            "completed_at": null
+          },
+          {
+            "id": 131133415521,
+            "name": "Workflow lint and public API",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-12T10:49:18Z",
+            "completed_at": "2026-11-12T10:49:37Z"
+          },
+          {
+            "id": 131133415692,
+            "name": "Python contract tests (3.12)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-12T10:49:18Z",
+            "completed_at": "2026-11-12T10:57:35Z"
+          },
+          {
+            "id": 131133415716,
+            "name": "Python contract tests (runner)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-12T10:49:18Z",
+            "completed_at": "2026-11-12T10:56:01Z"
+          },
+          {
+            "id": 131133415967,
+            "name": ".NET tests / Build and tests",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-12T10:49:18Z",
+            "completed_at": "2026-11-12T11:02:55Z"
+          },
+          {
+            "id": 131133416327,
+            "name": "Sample module / Build and tests",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-12T10:49:18Z",
+            "completed_at": "2026-11-12T10:49:58Z"
+          },
+          {
+            "id": 131133773026,
+            "name": "Sample Windows tests",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-12T10:50:02Z",
+            "completed_at": "2026-11-12T10:51:12Z"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "started_at": "2026-11-12T11:06:15Z",
+  "completed_at": "2026-11-12T11:06:19Z",
+  "requests": [
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:06:19 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "read:user, user",
+      "x-github-request-id": "CD49:138E23:316114:570D7D:6AF59DAA",
+      "error": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token"
+      },
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user",
+      "check": "app-selection"
+    },
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "user/installations/77847816/repositories?per_page=100",
+      "exit_code": 1,
+      "http_status": "HTTP/2.0 403 Forbidden",
+      "date": "Thu, 12 Nov 2026 11:06:19 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "read:user, user",
+      "x-github-request-id": "CD43:140046:313705:56DDF9:6AF59DAA",
+      "error": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "status": "403",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token"
+      },
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user",
+      "check": "connector-selection"
+    },
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:06:19 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "CCF6:1D5949:3272E0:582757:6AF59DAA",
+      "check": "actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME",
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          }
+        ]
+      },
+      "complete": true
+    },
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:06:19 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "CD4F:1A5902:33D939:599BAA:6AF59DAA",
+      "check": "actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD",
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          }
+        ]
+      },
+      "complete": true
+    },
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:06:19 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "C97C:12656A:316B4C:5730B8:6AF59DAA",
+      "check": "dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME",
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          }
+        ]
+      },
+      "complete": true
+    },
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:06:18 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "C978:14EF36:32E6AC:589C52:6AF59DAA",
+      "check": "dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD",
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          }
+        ]
+      },
+      "complete": true
+    },
+    {
+      "timestamp": "2026-11-12T11:06:19Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "date": "Thu, 12 Nov 2026 11:06:19 GMT",
+      "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+      "x-accepted-oauth-scopes": "admin:org",
+      "x-github-request-id": "C97E:18E36B:319D53:5743DF:6AF59DAB",
+      "check": "actions/variables/HEXALITH_NUGET_USER",
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          }
+        ]
+      },
+      "complete": true
+    }
+  ]
+}
