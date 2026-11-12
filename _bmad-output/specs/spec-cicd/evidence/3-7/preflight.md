@@ -1,5 +1,15 @@
 # Bootstrap preflight — 2026-11-12
 
+**Latest recheck: STOP before dispatch, 2026-11-12T13:36:20Z–13:36:30Z.**
+[Fresh gate verdicts and sanitized evidence](recheck-20261112T133620Z/preflight.md)
+confirm immutable releases remain disabled and both orphan tags remain.
+Current App/connector selections and NuGet/legacy/probe policy and credential
+disposition still lack completion proof. The required registry secret pair now
+exists with the approved separate account/authentication/zero-write-ACL proof,
+and exact-source CI is now successful. No release or version seed was created.
+
+## Earlier stopped assessment — 11:05 UTC
+
 **Verdict: STOP before dispatch.** Read-only observations were captured at
 2026-11-12T11:05:14Z–11:07:20Z. Immutable releases remain disabled, the
 environment lacks the push-secret names required by the unchanged caller, and

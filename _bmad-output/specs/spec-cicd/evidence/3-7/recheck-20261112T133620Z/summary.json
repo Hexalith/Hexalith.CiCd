@@ -1,0 +1,76 @@
+{
+  "evidence_directory": "_bmad-output/specs/spec-cicd/evidence/3-7/recheck-20261112T133620Z",
+  "started_at": "2026-11-12T13:36:20.893750+00:00",
+  "completed_at": "2026-11-12T13:36:30Z",
+  "immutable_releases": {
+    "enabled": false,
+    "enforced_by_owner": false
+  },
+  "environment_secrets": {
+    "total_count": 4,
+    "secrets": [
+      {
+        "name": "HEXALITH_REGISTRY_PASSWORD",
+        "created_at": "2026-11-12T12:58:37Z",
+        "updated_at": "2026-11-12T12:58:37Z"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PUSH_PASSWORD",
+        "created_at": "2026-11-10T08:31:36Z",
+        "updated_at": "2026-11-10T08:31:36Z"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PUSH_USERNAME",
+        "created_at": "2026-11-10T08:31:35Z",
+        "updated_at": "2026-11-10T08:31:35Z"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_USERNAME",
+        "created_at": "2026-11-12T12:58:36Z",
+        "updated_at": "2026-11-12T12:58:36Z"
+      }
+    ]
+  },
+  "tag_count": 205,
+  "published_release_count": 203,
+  "orphan_tags": [
+    "refs/tags/v4.46.0",
+    "refs/tags/v4.47.1"
+  ],
+  "ci": {
+    "id": 43203712508,
+    "head_sha": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "unreadable_selection_endpoints": [
+    "user/installations/179966090/repositories?per_page=100&page=1",
+    "user/installations/77847816/repositories?per_page=100&page=1"
+  ],
+  "drafts": [
+    {
+      "id": 441591623,
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/untagged-3c30f47f2e384072c3fe",
+      "tag_name": "v4.47.1",
+      "target_commitish": "75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+      "draft": true,
+      "prerelease": false,
+      "immutable": false,
+      "created_at": "2026-11-11T11:16:38Z",
+      "updated_at": "2026-11-12T08:52:41Z",
+      "published_at": "2026-11-11T11:22:37Z",
+      "author": {
+        "login": "github-actions[bot]",
+        "id": 41898282,
+        "type": "Bot"
+      },
+      "trailers": [
+        "hexalith-qualification-source: 75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+        "hexalith-release-run: 43010609603",
+        "hexalith-release-artifact: 13850760915 sha256:18db4ed7b07ffa3c5fd4496afce65dd50888705687d42695260e7573a7456d30",
+        "hexalith-release-packages: Hexalith.Builds.PublishProbe.20261111",
+        "hexalith-release-containers: cicd-publish-spike-3-1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "started_at": "2026-11-12T13:36:20.893750+00:00",
+  "completed_at": "2026-11-12T13:36:30Z",
+  "cicd": {
+    "branch": "main",
+    "head": "a60a60a08f46a0c02422a6d850b00bbd295ae694",
+    "remote_main": "a60a60a08f46a0c02422a6d850b00bbd295ae694",
+    "pinned_builds_gitlink": "160000 commit adfbf21896ef982ae9d1c3ee1db247e87bda22c0\treferences/Hexalith.Builds",
+    "seed_in_head_tree": "",
+    "seed_in_index": "",
+    "seed_on_disk": false,
+    "parent_captured_baseline_revision": "0b8123b504f8946371a4c0274998d6e9b17cd28a"
+  },
+  "builds": {
+    "branch": "main",
+    "head": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+    "remote_main": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+    "status": "",
+    "read_only_reference_files": {
+      ".github/workflows/builds-release.yml": {
+        "git_blob": "01978ac334a9292fef85a2b126c7a128a5ac8b08",
+        "working_sha256": "301cb3b2fa0d8bb78cb9ae6abbc2234c977fcdcdfa20abd23af16f427dddbf03"
+      },
+      ".github/workflows/builds-ci.yml": {
+        "git_blob": "9c6717cee1bd1a2bb648e5a9cf0d766eefe55467",
+        "working_sha256": "413e1f5ed0fefbad126f741637ff2078d7e213c3a9239fe396a77c1dc3bc1858"
+      },
+      "Github/lib/release_state.py": {
+        "git_blob": "107f9ee0ef4f1514175e4dd5e30facdf22dc1d4b",
+        "working_sha256": "0f827881e0ef5aa46d0f269cfa7ccfb9b74e2496345f491100adec7c5b29c070"
+      },
+      "Github/lib/release_draft.py": {
+        "git_blob": "b1cea80074d306a5838a618c2db5c175fed8d804",
+        "working_sha256": "e2e24b1af6193777044757af35046aa3c1bc7220a9a5649f707760dbe9abfad4"
+      },
+      "Github/lib/release_publish.py": {
+        "git_blob": "e04757f1fec71626f44e81ae07470d49946e6ef0",
+        "working_sha256": "211a8f423fa5c60f4053a98f47775aea0ddec3c5b274a58a6320b51f002c8513"
+      },
+      "Github/lib/release_outcome.py": {
+        "git_blob": "7fc4b0f7f72ea303431f19eec4e8d64e0d734738",
+        "working_sha256": "71821b5ff99c9ea33652a1fa1c80f6e011748094ba9e4f3690179d224702d168"
+      },
+      "Github/lib/release_complete.py": {
+        "git_blob": "f13a60ce95107531cdf3f52c2d939a345361c855",
+        "working_sha256": "5b116fb40eff9075309359f5722917ac6fcedc7895592ca16fa40a583fe56997"
+      },
+      "Github/lib/release_version.py": {
+        "git_blob": "e7a744844c0cc0d69c21cfd966e0c12777a253f7",
+        "working_sha256": "55389914aa8fdcab21c1ea2e8daee4dd0d34ec3ca2879d82109c7d195221d614"
+      },
+      "Github/publish/README.md": {
+        "git_blob": "c55a17b1aadbb06ef18d6ad03cfde9c053e42e2c",
+        "working_sha256": "43fe0a10836d3219fb0c10d04d41ae5047bf03987bb1e5cdf107e3d5adcf8d7c"
+      }
+    }
+  },
+  "story_3_6": {
+    "status": "done",
+    "checked_execution_tasks": 7,
+    "unchecked_execution_tasks": 0,
+    "canonical_story_sha256": "1f1aee43a9be2c99c7abbbead676e107dfd4bbef926458c5454d063c1f82d311",
+    "review_completion_sha256": "f37d3071af5430d0ce9b12edf6505bb62b2e9b14fdd0b82792ff117427f64709"
+  },
+  "registry_proof": {
+    "path": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/registry-prerequisite.json",
+    "sha256": "a51b26ba5bcce3bea1c66e32564e66da48cef004acb56af1fa8a5bac2c2eaebd",
+    "data": {
+      "story_key": "3-7",
+      "started_at": "2026-11-12T12:58:33.438558+00:00",
+      "principal": "hexalith-builds-publish",
+      "registry": "registry.hexalith.com",
+      "scope": "package-only bootstrap; zero registry write grants",
+      "status": "provisioned-and-verified",
+      "mutations": [
+        "Appended one dedicated bcrypt principal to distribution-registry-htpasswd; existing rows preserved.",
+        "Created environment secret HEXALITH_REGISTRY_USERNAME.",
+        "Created environment secret HEXALITH_REGISTRY_PASSWORD.",
+        "Restarted registry deployment to reload its account file; no ACL or image changes."
+      ],
+      "verification": {
+        "http_status": {
+          "authenticated_v2_get": 200,
+          "wrong_password_v2_get": 401,
+          "anonymous_v2_get": 401,
+          "spike_tags_read": 403,
+          "default_scope_create_invalid_digest": 403,
+          "spike_scope_create_invalid_digest": 403
+        },
+        "existing_password_rows_preserved": true,
+        "registry_acl_unchanged": true,
+        "registry_pod_spec_unchanged": true,
+        "registry_available_replicas": 1,
+        "existing_environment_secret_metadata_preserved": true,
+        "required_environment_secret_metadata": {
+          "HEXALITH_REGISTRY_PASSWORD": {
+            "name": "HEXALITH_REGISTRY_PASSWORD",
+            "created_at": "2026-11-12T12:58:37Z",
+            "updated_at": "2026-11-12T12:58:37Z"
+          },
+          "HEXALITH_REGISTRY_USERNAME": {
+            "name": "HEXALITH_REGISTRY_USERNAME",
+            "created_at": "2026-11-12T12:58:36Z",
+            "updated_at": "2026-11-12T12:58:36Z"
+          }
+        }
+      },
+      "kubernetes_server": "https://192.168.1.30:6443",
+      "github_profile": "/home/administrator/.config/gh",
+      "github_account": "jpiquot",
+      "github_repository": "Hexalith/Hexalith.Builds",
+      "effective_repository_actions": {
+        "**": [],
+        "cicd-publish-spike-3-1": []
+      },
+      "admin_actions": [],
+      "config_resource_version": "43593736",
+      "config_sha256": "a105af164d32eb3ad73984e0a627c3a443ff521fbce5f53a88dcadc06b254cc4",
+      "secret_resource_version_before": "43593735",
+      "bcrypt_cost": 12,
+      "secret_resource_version_after": "44669207",
+      "completed_at": "2026-11-12T12:59:11.157395+00:00",
+      "limits": [
+        "No release workflow dispatched, draft published, tag/ruleset changed, package/image published, feature code changed, tests run or commit made.",
+        "The account has no repository grants; future container publication requires explicit exact repository scope.",
+        "Other AD-19 prerequisites remain unresolved; this file is not a resolution marker."
+      ]
+    }
+  },
+  "operations_performed": {
+    "workflow_dispatch": 0,
+    "release_publication": 0,
+    "settings_mutations": 0,
+    "retained_resource_mutations": 0,
+    "seed_written": false,
+    "commits": 0
+  }
+}

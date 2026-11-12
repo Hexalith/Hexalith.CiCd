@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-11-12T13:36:21Z",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "GH_TOKEN_present": false,
+  "GITHUB_TOKEN_present": false,
+  "profiles": {
+    "cicd-agent": "/home/administrator/.config/gh-cicd-agent",
+    "maintainer-read-only": "/home/administrator/.config/gh"
+  },
+  "target_repository": "Hexalith/Hexalith.Builds",
+  "requests": [
+    {
+      "timestamp": "2026-11-12T13:36:21Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "user",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 13:36:21 GMT",
+        "x-accepted-github-permissions": "allows_permissionless_access=true",
+        "x-github-request-id": "FF22:100FEE:DDAB03B:14B31097:6AF5C0D4"
+      },
+      "stderr": "",
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "timestamp": "2026-11-12T13:36:21Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 13:36:21 GMT",
+        "x-accepted-github-permissions": "metadata=read",
+        "x-github-request-id": "FF2C:18CD24:E1B234B:151EACE2:6AF5C0D4"
+      },
+      "stderr": "",
+      "data": {
+        "full_name": "Hexalith/Hexalith.Builds",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-12T13:36:21Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "user",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 13:36:21 GMT",
+        "x-accepted-oauth-scopes": "",
+        "x-github-request-id": "FF18:19CA00:D90CA19:144B90A3:6AF5C0D4",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "stderr": "",
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "timestamp": "2026-11-12T13:36:21Z",
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds",
+      "exit_code": 0,
+      "http_status": "HTTP/2.0 200 OK",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 13:36:21 GMT",
+        "x-accepted-oauth-scopes": "repo",
+        "x-github-request-id": "FF28:32A51F:D7CF7DC:1427CD29:6AF5C0D4",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "stderr": "",
+      "data": {
+        "full_name": "Hexalith/Hexalith.Builds",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    }
+  ]
+}
