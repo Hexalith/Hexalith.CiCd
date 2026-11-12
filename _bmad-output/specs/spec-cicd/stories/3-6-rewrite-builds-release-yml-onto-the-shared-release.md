@@ -2,11 +2,12 @@
 title: 'Rewrite builds-release.yml onto the shared release'
 type: refactor
 created: '2026-11-11'
-status: in-progress
+status: in-review
 baseline_revision: 142690a268cec17275cccadc1132bb1f77eff7cd
 implementation_repository: references/Hexalith.Builds
 implementation_baseline_revision: aca0183fdeb4a7fcd02546ff8f082acbf73a0585
 implementation_integration_revision: 6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+implementation_latest_upstream_revision: 1ecbcd6c6f61629086d019c37557d10d4247b0c3
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
@@ -15,6 +16,8 @@ deferred: []
 ---
 
 # Rewrite builds-release.yml onto the shared release
+
+**Current execution scope (2026-11-12):** the user re-dispatched this ready-for-dev story for implementation, commit and push in Builds, with the maintainer coordinating the AD-19 policy switch. The read-only intent contract below retains the prior planning invocation's wording; its planning-only delivery/halt instructions are historical and superseded by this dispatch as recorded in the Spec Change Log. Implement and verify the execution checklist. Production bootstrap, publication and retained-resource/settings mutation remain outside this invocation.
 
 <intent-contract>
 
@@ -115,6 +118,10 @@ All implementation paths below are Builds-relative. Three investigation subagent
 - 2026-11-12 implementation dispatch: the user explicitly invoked `bmad-build-auto` for story 3-6 and instructed: "Work in references/Hexalith.Builds; commit and push there. The maintainer switches Builds' nuget.org policy from environment production to hexalith-release in the same window (AD-19)." This latest instruction supersedes the previous invocation's planning-only scope, unchecked-task requirement and ready-for-dev halt recorded in the historical intent contract. Implement the seven execution tasks and verify them now; commit and push the implementation in Builds. The maintainer owns the policy switch. Production bootstrap remains separate; no release dispatch, publication or retained-resource/settings mutation is authorized here. Stage the resulting story and pushed Builds gitlink in CiCd without committing/pushing CiCd. The intent contract is otherwise unchanged. The implementation baseline advances from the previous planning baseline `d4f75283221fc11779416c5f2b531ea09f22582c` to the clean starting Builds HEAD `aca0183fdeb4a7fcd02546ff8f082acbf73a0585`; the superproject baseline remains its current HEAD `142690a268cec17275cccadc1132bb1f77eff7cd`.
 
 - 2026-11-12 upstream integration: fetched eight concurrent Builds commits through `6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b`, fast-forwarded the clean base, and reapplied this story. The sole modify/delete conflict was `Tools/test_g6_current.py`; the story's explicit regression retirement wins while upstream G-6 runtime/policy and all product/catalog updates remain intact. Verification restarts on this combined tree. Compare frozen/pinned preservation against the integration revision, and separately identify upstream changes since the starting baseline.
+
+- 2026-11-12 integration repair: concurrent upstream `c48c20d0fb2e39ef53888e5061ee27c7b8410344` selected Commons `2.30.11` and PolymorphicSerializations `1.19.9` without refreshing its revision-bound audit, causing 15 deterministic audit errors at `42cfc1413927b5c55d27835a40bc07c9079f50d9`. Preserve those catalog versions. Refresh only the `hexalith-commons` and `hexalith-polymorphicserializations` audit families with the existing generator against committed declarations and real NuGet metadata, preserving all 156 other family/package rows. This derived audit repair adds `Tools/package-version-audit.json` to integration scope; no validator, SDK/catalog version, accepted-compatibility claim or legacy runtime is changed. Validate with the unchanged audit validator.
+
+- 2026-11-12 final upstream integration: fetched and preserved `cac8bf5ca50741f9ece4f75d9633292c78f58d6c`, which already repaired those same two audit families from committed source `c48c20d0fb2e39ef53888e5061ee27c7b8410344`. Retained the valid upstream audit bytes after independently reproducing and validating the targeted refresh. Also preserved upstream consumer-validator fixes `25a6b5a613aca2ee37ebec582f69ad01a3b99e36` and `1ecbcd6c6f61629086d019c37557d10d4247b0c3`. Only affected audit/consumer validation is repeated; this story's final own diff does not modify catalog versions, audit data or validator implementation.
 
 ## Review Triage Log
 
