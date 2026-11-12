@@ -1,12 +1,18 @@
 # Bootstrap preflight — 2026-11-12
 
-**Latest recheck: STOP before dispatch, 2026-11-12T13:36:20Z–13:36:30Z.**
-[Fresh gate verdicts and sanitized evidence](recheck-20261112T133620Z/preflight.md)
-confirm immutable releases remain disabled and both orphan tags remain.
-Current App/connector selections and NuGet/legacy/probe policy and credential
-disposition still lack completion proof. The required registry secret pair now
-exists with the approved separate account/authentication/zero-write-ACL proof,
-and exact-source CI is now successful. No release or version seed was created.
+**Latest recheck: STOP before dispatch, 2026-11-12T15:22:56Z–15:23:10Z.**
+[Fresh gate verdicts and sanitized evidence](recheck-20261112T152256Z/preflight.md)
+confirm immutable releases enabled, both orphan refs absent, the original tag
+protection restored and connector exclusion verified. Current CiCd App Builds
+selection and exclusive NuGet/legacy/spike/probe policy and credential disposition
+still lack completion proof. The required package-only registry pair and green
+exact-source CI pass. External immutable publication `v5.0.1` predates this
+assessment and is not adopted as its dispatch or seed. No release was dispatched
+or version seed created by this assessment.
+
+The [13:36 UTC stopped recheck](recheck-20261112T133620Z/preflight.md) and the
+[approved 14:01 UTC repair evidence](remediation-20261112T140005Z/github-prerequisites.json)
+remain preserved as historical observations.
 
 ## Earlier stopped assessment — 11:05 UTC
 
