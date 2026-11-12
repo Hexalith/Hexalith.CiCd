@@ -1,0 +1,1322 @@
+{
+  "captured_at": "2026-11-12T23:06:46.475096+00:00",
+  "run": {
+    "id": 43322385361,
+    "name": "CI",
+    "node_id": "WFR_kwLOOMzNRc8AAAAKFjcj0Q",
+    "head_branch": "main",
+    "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+    "path": ".github/workflows/builds-ci.yml",
+    "display_title": "fix(cicd): preserve Git perimeter matching semantics",
+    "run_number": 129,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "workflow_id": 411848291,
+    "check_suite_id": 117317071594,
+    "check_suite_node_id": "CS_kwDOOMzNRc8AAAAbUKRy6g",
+    "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+    "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+    "pull_requests": [],
+    "created_at": "2026-11-12T22:42:32Z",
+    "updated_at": "2026-11-12T23:01:59Z",
+    "actor": {
+      "login": "jpiquot",
+      "id": 6775094,
+      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpiquot",
+      "html_url": "https://github.com/jpiquot",
+      "followers_url": "https://api.github.com/users/jpiquot/followers",
+      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+      "repos_url": "https://api.github.com/users/jpiquot/repos",
+      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [
+      {
+        "path": "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+        "sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+        "ref": "refs/heads/main"
+      }
+    ],
+    "run_started_at": "2026-11-12T22:42:32Z",
+    "triggering_actor": {
+      "login": "jpiquot",
+      "id": 6775094,
+      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpiquot",
+      "html_url": "https://github.com/jpiquot",
+      "followers_url": "https://api.github.com/users/jpiquot/followers",
+      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+      "repos_url": "https://api.github.com/users/jpiquot/repos",
+      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361/jobs",
+    "logs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361/logs",
+    "check_suite_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-suites/117317071594",
+    "artifacts_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361/artifacts",
+    "cancel_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361/cancel",
+    "rerun_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/workflows/411848291",
+    "head_commit": {
+      "id": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "tree_id": "397a855c1acb779f1631835444c3b750ffd72f72",
+      "message": "fix(cicd): preserve Git perimeter matching semantics",
+      "timestamp": "2026-11-12T22:42:27Z",
+      "author": {
+        "name": "J\u00e9r\u00f4me Piquot",
+        "email": "jpiquot@itaneo.com"
+      },
+      "committer": {
+        "name": "J\u00e9r\u00f4me Piquot",
+        "email": "jpiquot@itaneo.com"
+      }
+    },
+    "repository": {
+      "id": 952945989,
+      "node_id": "R_kgDOOMzNRQ",
+      "name": "Hexalith.Builds",
+      "full_name": "Hexalith/Hexalith.Builds",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+      "description": "Common project for building Hexalith applications, modules and libraries",
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments"
+    },
+    "head_repository": {
+      "id": 952945989,
+      "node_id": "R_kgDOOMzNRQ",
+      "name": "Hexalith.Builds",
+      "full_name": "Hexalith/Hexalith.Builds",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+      "description": "Common project for building Hexalith applications, modules and libraries",
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments"
+    }
+  },
+  "jobs": [
+    {
+      "id": 131546096616,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMIj6A",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546096616",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546096616",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:42:33Z",
+      "started_at": "2026-11-12T22:42:36Z",
+      "completed_at": "2026-11-12T22:42:55Z",
+      "name": "Workflow lint and public API",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:37Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:44Z"
+        },
+        {
+          "name": "Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:42:44Z",
+          "completed_at": "2026-11-12T22:42:44Z"
+        },
+        {
+          "name": "Lint workflows and composite actions with online audits",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T22:42:44Z",
+          "completed_at": "2026-11-12T22:42:51Z"
+        },
+        {
+          "name": "Check public API against the reachable stable release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T22:42:51Z",
+          "completed_at": "2026-11-12T22:42:53Z"
+        },
+        {
+          "name": "Post Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-12T22:42:53Z",
+          "completed_at": "2026-11-12T22:42:53Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T22:42:53Z",
+          "completed_at": "2026-11-12T22:42:53Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-12T22:42:53Z",
+          "completed_at": "2026-11-12T22:42:53Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546096616",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081780,
+      "runner_name": "GitHub Actions 1000081780",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131546096907,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMIlCw",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546096907",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546096907",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:42:33Z",
+      "started_at": "2026-11-12T22:42:36Z",
+      "completed_at": "2026-11-12T23:01:58Z",
+      "name": "Package catalog contracts",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:42:36Z",
+          "completed_at": "2026-11-12T22:42:37Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:42Z"
+        },
+        {
+          "name": "Initialize .NET",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:42:42Z",
+          "completed_at": "2026-11-12T22:42:54Z"
+        },
+        {
+          "name": "Install .NET 10 targeting packs for offline catalog fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T22:42:54Z",
+          "completed_at": "2026-11-12T22:42:55Z"
+        },
+        {
+          "name": "Validate central package versions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T22:42:55Z",
+          "completed_at": "2026-11-12T22:43:01Z"
+        },
+        {
+          "name": "Test authoritative package catalog",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-12T22:43:01Z",
+          "completed_at": "2026-11-12T22:43:08Z"
+        },
+        {
+          "name": "Test logging generator selection",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-12T22:43:08Z",
+          "completed_at": "2026-11-12T22:43:11Z"
+        },
+        {
+          "name": "Test central package version validator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-12T22:43:11Z",
+          "completed_at": "2026-11-12T22:43:39Z"
+        },
+        {
+          "name": "Validate package version audit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-12T22:43:39Z",
+          "completed_at": "2026-11-12T22:44:13Z"
+        },
+        {
+          "name": "Test package version audit generator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T22:44:13Z",
+          "completed_at": "2026-11-12T22:44:57Z"
+        },
+        {
+          "name": "Test package version audit validator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-12T22:44:57Z",
+          "completed_at": "2026-11-12T22:53:43Z"
+        },
+        {
+          "name": "Validate Builds consumer package authority",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-12T22:53:43Z",
+          "completed_at": "2026-11-12T22:54:41Z"
+        },
+        {
+          "name": "Test consumer package authority validator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-12T22:54:41Z",
+          "completed_at": "2026-11-12T22:55:20Z"
+        },
+        {
+          "name": "Validate package version exception inventory",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-12T22:55:20Z",
+          "completed_at": "2026-11-12T22:55:21Z"
+        },
+        {
+          "name": "Test package version exception validator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-12T22:55:21Z",
+          "completed_at": "2026-11-12T22:56:31Z"
+        },
+        {
+          "name": "Validate Platform version catalog and hosting compatibility",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-12T22:56:31Z",
+          "completed_at": "2026-11-12T22:56:34Z"
+        },
+        {
+          "name": "Test Platform version catalog contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-12T22:56:34Z",
+          "completed_at": "2026-11-12T23:01:22Z"
+        },
+        {
+          "name": "Validate Dapr package versions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-12T23:01:22Z",
+          "completed_at": "2026-11-12T23:01:23Z"
+        },
+        {
+          "name": "Test Dapr package validator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-12T23:01:23Z",
+          "completed_at": "2026-11-12T23:01:56Z"
+        },
+        {
+          "name": "Post Install .NET 10 targeting packs for offline catalog fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 36,
+          "started_at": "2026-11-12T23:01:56Z",
+          "completed_at": "2026-11-12T23:01:57Z"
+        },
+        {
+          "name": "Post Initialize .NET",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37,
+          "started_at": "2026-11-12T23:01:57Z",
+          "completed_at": "2026-11-12T23:01:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38,
+          "started_at": "2026-11-12T23:01:57Z",
+          "completed_at": "2026-11-12T23:01:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39,
+          "started_at": "2026-11-12T23:01:57Z",
+          "completed_at": "2026-11-12T23:01:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546096907",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081781,
+      "runner_name": "GitHub Actions 1000081781",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131546096999,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMIlZw",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546096999",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546096999",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:42:33Z",
+      "started_at": "2026-11-12T22:42:36Z",
+      "completed_at": "2026-11-12T22:49:24Z",
+      "name": "Python contract tests (runner)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:42:36Z",
+          "completed_at": "2026-11-12T22:42:37Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:39Z"
+        },
+        {
+          "name": "Capture runner Python before setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:42:39Z",
+          "completed_at": "2026-11-12T22:42:39Z"
+        },
+        {
+          "name": "Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T22:42:39Z",
+          "completed_at": "2026-11-12T22:42:39Z"
+        },
+        {
+          "name": "Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T22:42:39Z",
+          "completed_at": "2026-11-12T22:42:42Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-12T22:42:42Z",
+          "completed_at": "2026-11-12T22:42:45Z"
+        },
+        {
+          "name": "Install Node.js dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-12T22:42:45Z",
+          "completed_at": "2026-11-12T22:42:49Z"
+        },
+        {
+          "name": "Verify npm dependency provenance and signatures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-12T22:42:49Z",
+          "completed_at": "2026-11-12T22:42:52Z"
+        },
+        {
+          "name": "Install integrity-checked CI tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-12T22:42:52Z",
+          "completed_at": "2026-11-12T22:42:55Z"
+        },
+        {
+          "name": "Run the shared Python suite and CI and perimeter contract validators",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T22:42:55Z",
+          "completed_at": "2026-11-12T22:49:22Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-12T22:49:22Z",
+          "completed_at": "2026-11-12T22:49:22Z"
+        },
+        {
+          "name": "Post Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-12T22:49:22Z",
+          "completed_at": "2026-11-12T22:49:22Z"
+        },
+        {
+          "name": "Post Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-12T22:49:22Z",
+          "completed_at": "2026-11-12T22:49:22Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-12T22:49:22Z",
+          "completed_at": "2026-11-12T22:49:22Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-12T22:49:22Z",
+          "completed_at": "2026-11-12T22:49:22Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546096999",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081782,
+      "runner_name": "GitHub Actions 1000081782",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131546097100,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMIlzA",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546097100",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546097100",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:42:33Z",
+      "started_at": "2026-11-12T22:42:36Z",
+      "completed_at": "2026-11-12T22:43:16Z",
+      "name": "Sample module / Build and tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:40Z"
+        },
+        {
+          "name": "Stage 1 reserved for guard and commit format",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:42:40Z",
+          "completed_at": "2026-11-12T22:42:40Z"
+        },
+        {
+          "name": "Checkout module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:42:40Z",
+          "completed_at": "2026-11-12T22:42:42Z"
+        },
+        {
+          "name": "Validate and prepare module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T22:42:42Z",
+          "completed_at": "2026-11-12T22:42:42Z"
+        },
+        {
+          "name": "Setup module SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T22:42:42Z",
+          "completed_at": "2026-11-12T22:42:49Z"
+        },
+        {
+          "name": "Stage 2 restore and Release build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-12T22:42:49Z",
+          "completed_at": "2026-11-12T22:43:00Z"
+        },
+        {
+          "name": "Stage 3 unit tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-12T22:43:00Z",
+          "completed_at": "2026-11-12T22:43:07Z"
+        },
+        {
+          "name": "Stage 4 environment setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-12T22:43:07Z",
+          "completed_at": "2026-11-12T22:43:08Z"
+        },
+        {
+          "name": "After unit tests hook",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-12T22:43:08Z",
+          "completed_at": "2026-11-12T22:43:09Z"
+        },
+        {
+          "name": "Stage 4 integration tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T22:43:09Z",
+          "completed_at": "2026-11-12T22:43:14Z"
+        },
+        {
+          "name": "After integration tests hook",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-12T22:43:14Z",
+          "completed_at": "2026-11-12T22:43:14Z"
+        },
+        {
+          "name": "Post Setup module SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-12T22:43:14Z",
+          "completed_at": "2026-11-12T22:43:14Z"
+        },
+        {
+          "name": "Post Checkout module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-11-12T22:43:14Z",
+          "completed_at": "2026-11-12T22:43:14Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-11-12T22:43:14Z",
+          "completed_at": "2026-11-12T22:43:14Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546097100",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081784,
+      "runner_name": "GitHub Actions 1000081784",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131546097229,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMImTQ",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546097229",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546097229",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:42:33Z",
+      "started_at": "2026-11-12T22:42:36Z",
+      "completed_at": "2026-11-12T22:57:34Z",
+      "name": ".NET tests / Build and tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:41Z"
+        },
+        {
+          "name": "Stage 1 reserved for guard and commit format",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:42:41Z",
+          "completed_at": "2026-11-12T22:42:41Z"
+        },
+        {
+          "name": "Checkout module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:42:41Z",
+          "completed_at": "2026-11-12T22:42:43Z"
+        },
+        {
+          "name": "Validate and prepare module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T22:42:43Z",
+          "completed_at": "2026-11-12T22:42:43Z"
+        },
+        {
+          "name": "Setup module SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T22:42:43Z",
+          "completed_at": "2026-11-12T22:42:44Z"
+        },
+        {
+          "name": "Stage 2 restore and Release build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-12T22:42:44Z",
+          "completed_at": "2026-11-12T22:45:06Z"
+        },
+        {
+          "name": "Stage 3 unit tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-12T22:45:06Z",
+          "completed_at": "2026-11-12T22:57:19Z"
+        },
+        {
+          "name": "Stage 4 environment setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-12T22:57:19Z",
+          "completed_at": "2026-11-12T22:57:19Z"
+        },
+        {
+          "name": "After unit tests hook",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-12T22:57:19Z",
+          "completed_at": "2026-11-12T22:57:19Z"
+        },
+        {
+          "name": "Stage 4 integration tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T22:57:19Z",
+          "completed_at": "2026-11-12T22:57:32Z"
+        },
+        {
+          "name": "After integration tests hook",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-12T22:57:32Z",
+          "completed_at": "2026-11-12T22:57:32Z"
+        },
+        {
+          "name": "Post Setup module SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-12T22:57:32Z",
+          "completed_at": "2026-11-12T22:57:32Z"
+        },
+        {
+          "name": "Post Checkout module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-11-12T22:57:32Z",
+          "completed_at": "2026-11-12T22:57:32Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-11-12T22:57:32Z",
+          "completed_at": "2026-11-12T22:57:32Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546097229",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081785,
+      "runner_name": "GitHub Actions 1000081785",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131546097341,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMImvQ",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546097341",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546097341",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:42:33Z",
+      "started_at": "2026-11-12T22:42:36Z",
+      "completed_at": "2026-11-12T22:50:45Z",
+      "name": "Python contract tests (3.12)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:37Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:42:37Z",
+          "completed_at": "2026-11-12T22:42:40Z"
+        },
+        {
+          "name": "Capture runner Python before setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:42:40Z",
+          "completed_at": "2026-11-12T22:42:40Z"
+        },
+        {
+          "name": "Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T22:42:40Z",
+          "completed_at": "2026-11-12T22:42:40Z"
+        },
+        {
+          "name": "Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T22:42:40Z",
+          "completed_at": "2026-11-12T22:42:50Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-12T22:42:50Z",
+          "completed_at": "2026-11-12T22:42:51Z"
+        },
+        {
+          "name": "Install Node.js dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-12T22:42:51Z",
+          "completed_at": "2026-11-12T22:42:56Z"
+        },
+        {
+          "name": "Verify npm dependency provenance and signatures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-12T22:42:56Z",
+          "completed_at": "2026-11-12T22:42:59Z"
+        },
+        {
+          "name": "Install integrity-checked CI tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-12T22:42:59Z",
+          "completed_at": "2026-11-12T22:43:01Z"
+        },
+        {
+          "name": "Run the shared Python suite and CI and perimeter contract validators",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T22:43:01Z",
+          "completed_at": "2026-11-12T22:50:42Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-12T22:50:42Z",
+          "completed_at": "2026-11-12T22:50:43Z"
+        },
+        {
+          "name": "Post Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-12T22:50:43Z",
+          "completed_at": "2026-11-12T22:50:43Z"
+        },
+        {
+          "name": "Post Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-12T22:50:43Z",
+          "completed_at": "2026-11-12T22:50:43Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-12T22:50:43Z",
+          "completed_at": "2026-11-12T22:50:43Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-12T22:50:43Z",
+          "completed_at": "2026-11-12T22:50:43Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546097341",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081783,
+      "runner_name": "GitHub Actions 1000081783",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131546471314,
+      "run_id": 43322385361,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43322385361",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAeoMfbkg",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131546471314",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361/job/131546471314",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T22:43:17Z",
+      "started_at": "2026-11-12T22:43:19Z",
+      "completed_at": "2026-11-12T22:44:25Z",
+      "name": "Sample Windows tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T22:43:20Z",
+          "completed_at": "2026-11-12T22:43:25Z"
+        },
+        {
+          "name": "Prepare module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T22:43:25Z",
+          "completed_at": "2026-11-12T22:44:17Z"
+        },
+        {
+          "name": "Run module action",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T22:44:17Z",
+          "completed_at": "2026-11-12T22:44:21Z"
+        },
+        {
+          "name": "Post Prepare module",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-12T22:44:21Z",
+          "completed_at": "2026-11-12T22:44:23Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-12T22:44:23Z",
+          "completed_at": "2026-11-12T22:44:23Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131546471314",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000081786,
+      "runner_name": "GitHub Actions 1000081786",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ],
+  "python_evidence": [
+    {
+      "id": 131546096999,
+      "name": "Python contract tests (runner)",
+      "log_endpoint": "repos/Hexalith/Hexalith.Builds/actions/jobs/131546096999/logs",
+      "raw_log_sha256": "0d8f5f058e60f1e6d93eb954aeaf28bdb87b8c327178f45b7e90878b8f4dada5",
+      "perimeter_and_suite_evidence": [
+        "2026-11-12T22:42:55.4572700Z Python suite: /tmp/.tmpE7NxQv/environments-v2/run-python-tests-757331707f4a72fc/bin/python (3.14.4), 14 groups",
+        "2026-11-12T22:45:30.8718007Z test_absent_glob_cannot_delete_a_compliant_whole_directory_member (test_perimeter.PerimeterTests.test_absent_glob_cannot_delete_a_compliant_whole_directory_member) ... ok",
+        "2026-11-12T22:45:31.0357269Z test_absent_missing_targets_pass_and_malformed_partials_recreate_only_owned_content (test_perimeter.PerimeterTests.test_absent_missing_targets_pass_and_malformed_partials_recreate_only_owned_content) ... ok",
+        "2026-11-12T22:45:31.2712555Z test_ad4_manifest_repairs_every_kind_preserving_foreign_content (test_perimeter.PerimeterTests.test_ad4_manifest_repairs_every_kind_preserving_foreign_content) ... ok",
+        "2026-11-12T22:45:31.3931086Z test_all_source_and_tag_and_selector_failures_preflight_before_mutation (test_perimeter.PerimeterTests.test_all_source_and_tag_and_selector_failures_preflight_before_mutation) ... ok",
+        "2026-11-12T22:45:31.4964149Z test_attributes_come_from_selected_index_not_head_or_dirty_worktree (test_perimeter.PerimeterTests.test_attributes_come_from_selected_index_not_head_or_dirty_worktree) ... ok",
+        "2026-11-12T22:45:31.5761049Z test_compliant_deep_json_is_not_serialized (test_perimeter.PerimeterTests.test_compliant_deep_json_is_not_serialized) ... ok",
+        "2026-11-12T22:45:31.6322556Z test_concurrent_staging_after_preflight_is_rejected_and_preserved (test_perimeter.PerimeterTests.test_concurrent_staging_after_preflight_is_rejected_and_preserved) ... ok",
+        "2026-11-12T22:45:31.7670851Z test_conflicting_ownership_and_file_directory_repairs_fail_atomically (test_perimeter.PerimeterTests.test_conflicting_ownership_and_file_directory_repairs_fail_atomically) ... ok",
+        "2026-11-12T22:45:31.8605919Z test_git_wildmatch_bounds_star_work_and_handles_deep_git_paths (test_perimeter.PerimeterTests.test_git_wildmatch_bounds_star_work_and_handles_deep_git_paths) ... ok",
+        "2026-11-12T22:45:31.9555714Z test_git_wildmatch_classes_question_and_zero_multiple_directory_double_star (test_perimeter.PerimeterTests.test_git_wildmatch_classes_question_and_zero_multiple_directory_double_star) ... ok",
+        "2026-11-12T22:45:32.0039891Z test_git_wildmatch_descending_ranges_keep_the_starting_endpoint (test_perimeter.PerimeterTests.test_git_wildmatch_descending_ranges_keep_the_starting_endpoint) ... ok",
+        "2026-11-12T22:45:32.1051927Z test_git_wildmatch_malformed_classes_never_remove_unmatched_paths (test_perimeter.PerimeterTests.test_git_wildmatch_malformed_classes_never_remove_unmatched_paths) ... ok",
+        "2026-11-12T22:45:32.2001558Z test_git_wildmatch_posix_opener_consumed_as_range_endpoint_is_literal (test_perimeter.PerimeterTests.test_git_wildmatch_posix_opener_consumed_as_range_endpoint_is_literal) ... ok",
+        "2026-11-12T22:45:32.2914650Z test_git_wildmatch_question_and_classes_count_utf8_path_bytes (test_perimeter.PerimeterTests.test_git_wildmatch_question_and_classes_count_utf8_path_bytes) ... ok",
+        "2026-11-12T22:45:32.7783192Z test_gitmodules_and_hooks_use_only_physical_lf_lines (test_perimeter.PerimeterTests.test_gitmodules_and_hooks_use_only_physical_lf_lines) ... ok",
+        "2026-11-12T22:45:33.0235752Z test_gitmodules_bom_and_cr_headers_cannot_hide_owned_sections (test_perimeter.PerimeterTests.test_gitmodules_bom_and_cr_headers_cannot_hide_owned_sections) ... ok",
+        "2026-11-12T22:45:33.1654812Z test_gitmodules_comment_backslash_cannot_hide_or_modify_foreign_sections (test_perimeter.PerimeterTests.test_gitmodules_comment_backslash_cannot_hide_or_modify_foreign_sections) ... ok",
+        "2026-11-12T22:45:33.2638795Z test_gitmodules_comments_only_file_retains_its_comments_when_section_is_added (test_perimeter.PerimeterTests.test_gitmodules_comments_only_file_retains_its_comments_when_section_is_added) ... ok",
+        "2026-11-12T22:45:33.3203451Z test_gitmodules_default_name_collision_fails_before_any_index_change (test_perimeter.PerimeterTests.test_gitmodules_default_name_collision_fails_before_any_index_change) ... ok",
+        "2026-11-12T22:45:33.4298584Z test_gitmodules_default_name_without_path_is_completed_preserving_foreign_keys (test_perimeter.PerimeterTests.test_gitmodules_default_name_without_path_is_completed_preserving_foreign_keys) ... ok",
+        "2026-11-12T22:45:33.5854712Z test_gitmodules_final_foreign_continuations_keep_their_parsed_values (test_perimeter.PerimeterTests.test_gitmodules_final_foreign_continuations_keep_their_parsed_values) ... ok",
+        "2026-11-12T22:45:33.7010956Z test_gitmodules_git_syntax_duplicate_sections_and_foreign_keys_survive (test_perimeter.PerimeterTests.test_gitmodules_git_syntax_duplicate_sections_and_foreign_keys_survive) ... ok",
+        "2026-11-12T22:45:33.8188519Z test_gitmodules_repeated_header_fragments_cannot_override_owned_fields (test_perimeter.PerimeterTests.test_gitmodules_repeated_header_fragments_cannot_override_owned_fields) ... ok",
+        "2026-11-12T22:45:33.8785506Z test_gitmodules_same_section_name_with_foreign_path_is_an_atomic_conflict (test_perimeter.PerimeterTests.test_gitmodules_same_section_name_with_foreign_path_is_an_atomic_conflict) ... ok",
+        "2026-11-12T22:45:33.9915790Z test_gitmodules_url_only_drift_is_observable_through_git (test_perimeter.PerimeterTests.test_gitmodules_url_only_drift_is_observable_through_git) ... ok",
+        "2026-11-12T22:45:34.0682378Z test_hash_filter_failure_and_index_lock_preserve_the_original_index (test_perimeter.PerimeterTests.test_hash_filter_failure_and_index_lock_preserve_the_original_index) ... ok",
+        "2026-11-12T22:45:34.1783135Z test_head_index_dirty_and_pinned_expected_tree_are_distinct (test_perimeter.PerimeterTests.test_head_index_dirty_and_pinned_expected_tree_are_distinct) ... ok",
+        "2026-11-12T22:45:34.2442250Z test_intent_to_add_empty_blob_cannot_report_compliance_or_be_applied (test_perimeter.PerimeterTests.test_intent_to_add_empty_blob_cannot_report_compliance_or_be_applied) ... ok",
+        "2026-11-12T22:45:34.3323731Z test_json_pointer_array_positions_preserve_foreign_array_members (test_perimeter.PerimeterTests.test_json_pointer_array_positions_preserve_foreign_array_members) ... ok",
+        "2026-11-12T22:45:34.4319834Z test_json_pointer_escapes_and_selector_slashes_are_key_data (test_perimeter.PerimeterTests.test_json_pointer_escapes_and_selector_slashes_are_key_data) ... ok",
+        "2026-11-12T22:45:34.5418345Z test_json_positive_and_absence_repairs_preserve_exact_foreign_number_tokens (test_perimeter.PerimeterTests.test_json_positive_and_absence_repairs_preserve_exact_foreign_number_tokens) ... ok",
+        "2026-11-12T22:45:34.6298450Z test_literal_special_paths_use_nul_delimited_deletions (test_perimeter.PerimeterTests.test_literal_special_paths_use_nul_delimited_deletions) ... ok",
+        "2026-11-12T22:45:34.6872692Z test_long_array_pointer_is_a_controlled_atomic_error (test_perimeter.PerimeterTests.test_long_array_pointer_is_a_controlled_atomic_error) ... ok",
+        "2026-11-12T22:45:34.7914813Z test_missing_positive_partial_files_are_created_and_disjoint_json_entries_compose (test_perimeter.PerimeterTests.test_missing_positive_partial_files_are_created_and_disjoint_json_entries_compose) ... ok",
+        "2026-11-12T22:45:34.9225405Z test_nonregular_absence_only_json_recreates_an_empty_object (test_perimeter.PerimeterTests.test_nonregular_absence_only_json_recreates_an_empty_object) ... ok",
+        "2026-11-12T22:45:35.0119342Z test_nonregular_partial_target_never_follows_links_and_uses_regular_mode (test_perimeter.PerimeterTests.test_nonregular_partial_target_never_follows_links_and_uses_regular_mode) ... ok",
+        "2026-11-12T22:45:35.1637829Z test_partial_repairs_preserve_foreign_crlf_bytes_with_text_conversion_disabled (test_perimeter.PerimeterTests.test_partial_repairs_preserve_foreign_crlf_bytes_with_text_conversion_disabled) ... ok",
+        "2026-11-12T22:45:35.2752170Z test_passing_partial_crlf_blobs_and_regular_modes_remain_identical (test_perimeter.PerimeterTests.test_passing_partial_crlf_blobs_and_regular_modes_remain_identical) ... ok",
+        "2026-11-12T22:45:35.3653674Z test_regular_partial_repair_preserves_executable_mode (test_perimeter.PerimeterTests.test_regular_partial_repair_preserves_executable_mode) ... ok",
+        "2026-11-12T22:45:35.4468190Z test_schema_valid_marker_body_with_nul_converges (test_perimeter.PerimeterTests.test_schema_valid_marker_body_with_nul_converges) ... ok",
+        "2026-11-12T22:45:35.5399331Z test_selected_index_and_entries_preserve_default_index_and_other_staging (test_perimeter.PerimeterTests.test_selected_index_and_entries_preserve_default_index_and_other_staging) ... ok",
+        "2026-11-12T22:45:35.6441979Z test_sparse_outside_cone_tracked_content_is_read_and_deleted_without_materializing (test_perimeter.PerimeterTests.test_sparse_outside_cone_tracked_content_is_read_and_deleted_without_materializing) ... ok",
+        "2026-11-12T22:45:35.7134805Z test_stale_alternate_index_intent_to_add_rejects_modified_or_deleted_same_path (test_perimeter.PerimeterTests.test_stale_alternate_index_intent_to_add_rejects_modified_or_deleted_same_path) ... ok",
+        "2026-11-12T22:45:35.7908332Z test_successful_filter_changing_only_foreign_marker_or_json_data_is_refused (test_perimeter.PerimeterTests.test_successful_filter_changing_only_foreign_marker_or_json_data_is_refused) ... ok",
+        "2026-11-12T22:45:35.8523783Z test_successful_filter_that_corrupts_owned_content_is_an_atomic_failure (test_perimeter.PerimeterTests.test_successful_filter_that_corrupts_owned_content_is_an_atomic_failure) ... ok",
+        "2026-11-12T22:45:35.9479827Z test_superset_adds_every_required_value_when_only_first_exists (test_perimeter.PerimeterTests.test_superset_adds_every_required_value_when_only_first_exists) ... ok",
+        "2026-11-12T22:45:36.0033465Z test_unmerged_index_rejected_without_any_changes (test_perimeter.PerimeterTests.test_unmerged_index_rejected_without_any_changes) ... ok",
+        "2026-11-12T22:45:36.1344952Z test_valid_marker_replaces_only_block_and_duplicate_markers_recreate (test_perimeter.PerimeterTests.test_valid_marker_replaces_only_block_and_duplicate_markers_recreate) ... ok",
+        "2026-11-12T22:45:36.2379812Z test_whole_directory_replaces_an_owned_non_directory_without_touching_it (test_perimeter.PerimeterTests.test_whole_directory_replaces_an_owned_non_directory_without_touching_it) ... ok",
+        "2026-11-12T22:45:36.3771775Z test_whole_restores_expected_mode_and_replaces_symlink_and_gitlink (test_perimeter.PerimeterTests.test_whole_restores_expected_mode_and_replaces_symlink_and_gitlink) ... ok",
+        "2026-11-12T22:45:36.4789209Z test_whole_symlink_target_bypasses_regular_file_clean_filters (test_perimeter.PerimeterTests.test_whole_symlink_target_bypasses_regular_file_clean_filters) ... ok",
+        "2026-11-12T22:45:36.4998124Z test_bytes_and_files_use_identical_strict_serialized_input (test_perimeter_config.PerimeterContractTests.test_bytes_and_files_use_identical_strict_serialized_input) ... ok",
+        "2026-11-12T22:45:36.5728988Z test_cli_is_isolated_and_stdlib_only_and_returns_controlled_errors (test_perimeter_config.PerimeterContractTests.test_cli_is_isolated_and_stdlib_only_and_returns_controlled_errors) ... ok",
+        "2026-11-12T22:45:36.5730448Z test_fixed_identity_kind_diagnostics_and_escaping (test_perimeter_config.PerimeterContractTests.test_fixed_identity_kind_diagnostics_and_escaping) ... ok",
+        "2026-11-12T22:45:36.5732033Z test_identity_comes_from_the_schema_beside_trusted_code (test_perimeter_config.PerimeterContractTests.test_identity_comes_from_the_schema_beside_trusted_code) ... ok",
+        "2026-11-12T22:45:36.5972484Z test_path_regex_is_ecmascript_compatible (test_perimeter_config.PerimeterContractTests.test_path_regex_is_ecmascript_compatible) ... ok",
+        "2026-11-12T22:45:36.6712302Z test_regex_compile_limits_have_controlled_isolated_cli_diagnostics (test_perimeter_config.PerimeterContractTests.test_regex_compile_limits_have_controlled_isolated_cli_diagnostics) ... ok",
+        "2026-11-12T22:45:36.7472574Z test_schema_and_loader_agree_for_the_shared_corpus (test_perimeter_config.PerimeterContractTests.test_schema_and_loader_agree_for_the_shared_corpus) ... ok",
+        "2026-11-12T22:49:21.9914434Z Python suite: 14/14 groups passed"
+      ]
+    },
+    {
+      "id": 131546097341,
+      "name": "Python contract tests (3.12)",
+      "log_endpoint": "repos/Hexalith/Hexalith.Builds/actions/jobs/131546097341/logs",
+      "raw_log_sha256": "5871047f493a9791a22c080ea824227c3518b02c1dd810882c9ca0b8b94e7e29",
+      "perimeter_and_suite_evidence": [
+        "2026-11-12T22:43:01.3567133Z Python suite: /tmp/.tmpL75C1R/environments-v2/run-python-tests-757331707f4a72fc/bin/python (3.12.16), 14 groups",
+        "2026-11-12T22:46:11.0464394Z test_absent_glob_cannot_delete_a_compliant_whole_directory_member (test_perimeter.PerimeterTests.test_absent_glob_cannot_delete_a_compliant_whole_directory_member) ... ok",
+        "2026-11-12T22:46:11.3391158Z test_absent_missing_targets_pass_and_malformed_partials_recreate_only_owned_content (test_perimeter.PerimeterTests.test_absent_missing_targets_pass_and_malformed_partials_recreate_only_owned_content) ... ok",
+        "2026-11-12T22:46:11.7493365Z test_ad4_manifest_repairs_every_kind_preserving_foreign_content (test_perimeter.PerimeterTests.test_ad4_manifest_repairs_every_kind_preserving_foreign_content) ... ok",
+        "2026-11-12T22:46:11.9904381Z test_all_source_and_tag_and_selector_failures_preflight_before_mutation (test_perimeter.PerimeterTests.test_all_source_and_tag_and_selector_failures_preflight_before_mutation) ... ok",
+        "2026-11-12T22:46:12.1583856Z test_attributes_come_from_selected_index_not_head_or_dirty_worktree (test_perimeter.PerimeterTests.test_attributes_come_from_selected_index_not_head_or_dirty_worktree) ... ok",
+        "2026-11-12T22:46:12.2937440Z test_compliant_deep_json_is_not_serialized (test_perimeter.PerimeterTests.test_compliant_deep_json_is_not_serialized) ... ok",
+        "2026-11-12T22:46:12.3962749Z test_concurrent_staging_after_preflight_is_rejected_and_preserved (test_perimeter.PerimeterTests.test_concurrent_staging_after_preflight_is_rejected_and_preserved) ... ok",
+        "2026-11-12T22:46:12.6463945Z test_conflicting_ownership_and_file_directory_repairs_fail_atomically (test_perimeter.PerimeterTests.test_conflicting_ownership_and_file_directory_repairs_fail_atomically) ... ok",
+        "2026-11-12T22:46:12.7929113Z test_git_wildmatch_bounds_star_work_and_handles_deep_git_paths (test_perimeter.PerimeterTests.test_git_wildmatch_bounds_star_work_and_handles_deep_git_paths) ... ok",
+        "2026-11-12T22:46:12.9587968Z test_git_wildmatch_classes_question_and_zero_multiple_directory_double_star (test_perimeter.PerimeterTests.test_git_wildmatch_classes_question_and_zero_multiple_directory_double_star) ... ok",
+        "2026-11-12T22:46:13.0354225Z test_git_wildmatch_descending_ranges_keep_the_starting_endpoint (test_perimeter.PerimeterTests.test_git_wildmatch_descending_ranges_keep_the_starting_endpoint) ... ok",
+        "2026-11-12T22:46:13.2174018Z test_git_wildmatch_malformed_classes_never_remove_unmatched_paths (test_perimeter.PerimeterTests.test_git_wildmatch_malformed_classes_never_remove_unmatched_paths) ... ok",
+        "2026-11-12T22:46:13.3757763Z test_git_wildmatch_posix_opener_consumed_as_range_endpoint_is_literal (test_perimeter.PerimeterTests.test_git_wildmatch_posix_opener_consumed_as_range_endpoint_is_literal) ... ok",
+        "2026-11-12T22:46:13.5227082Z test_git_wildmatch_question_and_classes_count_utf8_path_bytes (test_perimeter.PerimeterTests.test_git_wildmatch_question_and_classes_count_utf8_path_bytes) ... ok",
+        "2026-11-12T22:46:14.3928287Z test_gitmodules_and_hooks_use_only_physical_lf_lines (test_perimeter.PerimeterTests.test_gitmodules_and_hooks_use_only_physical_lf_lines) ... ok",
+        "2026-11-12T22:46:14.8233473Z test_gitmodules_bom_and_cr_headers_cannot_hide_owned_sections (test_perimeter.PerimeterTests.test_gitmodules_bom_and_cr_headers_cannot_hide_owned_sections) ... ok",
+        "2026-11-12T22:46:15.0111568Z test_gitmodules_comment_backslash_cannot_hide_or_modify_foreign_sections (test_perimeter.PerimeterTests.test_gitmodules_comment_backslash_cannot_hide_or_modify_foreign_sections) ... ok",
+        "2026-11-12T22:46:15.1765478Z test_gitmodules_comments_only_file_retains_its_comments_when_section_is_added (test_perimeter.PerimeterTests.test_gitmodules_comments_only_file_retains_its_comments_when_section_is_added) ... ok",
+        "2026-11-12T22:46:15.2754591Z test_gitmodules_default_name_collision_fails_before_any_index_change (test_perimeter.PerimeterTests.test_gitmodules_default_name_collision_fails_before_any_index_change) ... ok",
+        "2026-11-12T22:46:15.4530956Z test_gitmodules_default_name_without_path_is_completed_preserving_foreign_keys (test_perimeter.PerimeterTests.test_gitmodules_default_name_without_path_is_completed_preserving_foreign_keys) ... ok",
+        "2026-11-12T22:46:15.7002445Z test_gitmodules_final_foreign_continuations_keep_their_parsed_values (test_perimeter.PerimeterTests.test_gitmodules_final_foreign_continuations_keep_their_parsed_values) ... ok",
+        "2026-11-12T22:46:15.8909753Z test_gitmodules_git_syntax_duplicate_sections_and_foreign_keys_survive (test_perimeter.PerimeterTests.test_gitmodules_git_syntax_duplicate_sections_and_foreign_keys_survive) ... ok",
+        "2026-11-12T22:46:16.0926893Z test_gitmodules_repeated_header_fragments_cannot_override_owned_fields (test_perimeter.PerimeterTests.test_gitmodules_repeated_header_fragments_cannot_override_owned_fields) ... ok",
+        "2026-11-12T22:46:16.1916715Z test_gitmodules_same_section_name_with_foreign_path_is_an_atomic_conflict (test_perimeter.PerimeterTests.test_gitmodules_same_section_name_with_foreign_path_is_an_atomic_conflict) ... ok",
+        "2026-11-12T22:46:16.3813107Z test_gitmodules_url_only_drift_is_observable_through_git (test_perimeter.PerimeterTests.test_gitmodules_url_only_drift_is_observable_through_git) ... ok",
+        "2026-11-12T22:46:16.5034433Z test_hash_filter_failure_and_index_lock_preserve_the_original_index (test_perimeter.PerimeterTests.test_hash_filter_failure_and_index_lock_preserve_the_original_index) ... ok",
+        "2026-11-12T22:46:16.6790715Z test_head_index_dirty_and_pinned_expected_tree_are_distinct (test_perimeter.PerimeterTests.test_head_index_dirty_and_pinned_expected_tree_are_distinct) ... ok",
+        "2026-11-12T22:46:16.7819127Z test_intent_to_add_empty_blob_cannot_report_compliance_or_be_applied (test_perimeter.PerimeterTests.test_intent_to_add_empty_blob_cannot_report_compliance_or_be_applied) ... ok",
+        "2026-11-12T22:46:16.9299039Z test_json_pointer_array_positions_preserve_foreign_array_members (test_perimeter.PerimeterTests.test_json_pointer_array_positions_preserve_foreign_array_members) ... ok",
+        "2026-11-12T22:46:17.0990621Z test_json_pointer_escapes_and_selector_slashes_are_key_data (test_perimeter.PerimeterTests.test_json_pointer_escapes_and_selector_slashes_are_key_data) ... ok",
+        "2026-11-12T22:46:17.2787452Z test_json_positive_and_absence_repairs_preserve_exact_foreign_number_tokens (test_perimeter.PerimeterTests.test_json_positive_and_absence_repairs_preserve_exact_foreign_number_tokens) ... ok",
+        "2026-11-12T22:46:17.4232202Z test_literal_special_paths_use_nul_delimited_deletions (test_perimeter.PerimeterTests.test_literal_special_paths_use_nul_delimited_deletions) ... ok",
+        "2026-11-12T22:46:17.5162825Z test_long_array_pointer_is_a_controlled_atomic_error (test_perimeter.PerimeterTests.test_long_array_pointer_is_a_controlled_atomic_error) ... ok",
+        "2026-11-12T22:46:17.6927402Z test_missing_positive_partial_files_are_created_and_disjoint_json_entries_compose (test_perimeter.PerimeterTests.test_missing_positive_partial_files_are_created_and_disjoint_json_entries_compose) ... ok",
+        "2026-11-12T22:46:17.9168079Z test_nonregular_absence_only_json_recreates_an_empty_object (test_perimeter.PerimeterTests.test_nonregular_absence_only_json_recreates_an_empty_object) ... ok",
+        "2026-11-12T22:46:18.0661328Z test_nonregular_partial_target_never_follows_links_and_uses_regular_mode (test_perimeter.PerimeterTests.test_nonregular_partial_target_never_follows_links_and_uses_regular_mode) ... ok",
+        "2026-11-12T22:46:18.3136157Z test_partial_repairs_preserve_foreign_crlf_bytes_with_text_conversion_disabled (test_perimeter.PerimeterTests.test_partial_repairs_preserve_foreign_crlf_bytes_with_text_conversion_disabled) ... ok",
+        "2026-11-12T22:46:18.4995312Z test_passing_partial_crlf_blobs_and_regular_modes_remain_identical (test_perimeter.PerimeterTests.test_passing_partial_crlf_blobs_and_regular_modes_remain_identical) ... ok",
+        "2026-11-12T22:46:18.6453259Z test_regular_partial_repair_preserves_executable_mode (test_perimeter.PerimeterTests.test_regular_partial_repair_preserves_executable_mode) ... ok",
+        "2026-11-12T22:46:18.7816317Z test_schema_valid_marker_body_with_nul_converges (test_perimeter.PerimeterTests.test_schema_valid_marker_body_with_nul_converges) ... ok",
+        "2026-11-12T22:46:18.9377215Z test_selected_index_and_entries_preserve_default_index_and_other_staging (test_perimeter.PerimeterTests.test_selected_index_and_entries_preserve_default_index_and_other_staging) ... ok",
+        "2026-11-12T22:46:19.1030711Z test_sparse_outside_cone_tracked_content_is_read_and_deleted_without_materializing (test_perimeter.PerimeterTests.test_sparse_outside_cone_tracked_content_is_read_and_deleted_without_materializing) ... ok",
+        "2026-11-12T22:46:19.2197250Z test_stale_alternate_index_intent_to_add_rejects_modified_or_deleted_same_path (test_perimeter.PerimeterTests.test_stale_alternate_index_intent_to_add_rejects_modified_or_deleted_same_path) ... ok",
+        "2026-11-12T22:46:19.3533440Z test_successful_filter_changing_only_foreign_marker_or_json_data_is_refused (test_perimeter.PerimeterTests.test_successful_filter_changing_only_foreign_marker_or_json_data_is_refused) ... ok",
+        "2026-11-12T22:46:19.4635659Z test_successful_filter_that_corrupts_owned_content_is_an_atomic_failure (test_perimeter.PerimeterTests.test_successful_filter_that_corrupts_owned_content_is_an_atomic_failure) ... ok",
+        "2026-11-12T22:46:19.6229979Z test_superset_adds_every_required_value_when_only_first_exists (test_perimeter.PerimeterTests.test_superset_adds_every_required_value_when_only_first_exists) ... ok",
+        "2026-11-12T22:46:19.7096357Z test_unmerged_index_rejected_without_any_changes (test_perimeter.PerimeterTests.test_unmerged_index_rejected_without_any_changes) ... ok",
+        "2026-11-12T22:46:19.9348751Z test_valid_marker_replaces_only_block_and_duplicate_markers_recreate (test_perimeter.PerimeterTests.test_valid_marker_replaces_only_block_and_duplicate_markers_recreate) ... ok",
+        "2026-11-12T22:46:20.1054365Z test_whole_directory_replaces_an_owned_non_directory_without_touching_it (test_perimeter.PerimeterTests.test_whole_directory_replaces_an_owned_non_directory_without_touching_it) ... ok",
+        "2026-11-12T22:46:20.3396351Z test_whole_restores_expected_mode_and_replaces_symlink_and_gitlink (test_perimeter.PerimeterTests.test_whole_restores_expected_mode_and_replaces_symlink_and_gitlink) ... ok",
+        "2026-11-12T22:46:20.5087732Z test_whole_symlink_target_bypasses_regular_file_clean_filters (test_perimeter.PerimeterTests.test_whole_symlink_target_bypasses_regular_file_clean_filters) ... ok",
+        "2026-11-12T22:46:20.5144430Z test_bytes_and_files_use_identical_strict_serialized_input (test_perimeter_config.PerimeterContractTests.test_bytes_and_files_use_identical_strict_serialized_input) ... ok",
+        "2026-11-12T22:46:20.5951726Z test_cli_is_isolated_and_stdlib_only_and_returns_controlled_errors (test_perimeter_config.PerimeterContractTests.test_cli_is_isolated_and_stdlib_only_and_returns_controlled_errors) ... ok",
+        "2026-11-12T22:46:20.5954545Z test_fixed_identity_kind_diagnostics_and_escaping (test_perimeter_config.PerimeterContractTests.test_fixed_identity_kind_diagnostics_and_escaping) ... ok",
+        "2026-11-12T22:46:20.5959121Z test_identity_comes_from_the_schema_beside_trusted_code (test_perimeter_config.PerimeterContractTests.test_identity_comes_from_the_schema_beside_trusted_code) ... ok",
+        "2026-11-12T22:46:20.6297432Z test_path_regex_is_ecmascript_compatible (test_perimeter_config.PerimeterContractTests.test_path_regex_is_ecmascript_compatible) ... ok",
+        "2026-11-12T22:46:20.7193046Z test_regex_compile_limits_have_controlled_isolated_cli_diagnostics (test_perimeter_config.PerimeterContractTests.test_regex_compile_limits_have_controlled_isolated_cli_diagnostics) ... ok",
+        "2026-11-12T22:46:20.8662972Z test_schema_and_loader_agree_for_the_shared_corpus (test_perimeter_config.PerimeterContractTests.test_schema_and_loader_agree_for_the_shared_corpus) ... ok",
+        "2026-11-12T22:50:42.8233487Z Python suite: 14/14 groups passed"
+      ]
+    }
+  ],
+  "log_read_method": "Direct job-log API; gh run view combined cached Python 3.12 output omitted the final summary, so it was not used as the raw-log proof."
+}

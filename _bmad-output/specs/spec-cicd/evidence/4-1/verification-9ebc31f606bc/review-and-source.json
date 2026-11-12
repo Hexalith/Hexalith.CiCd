@@ -1,0 +1,46 @@
+{
+  "observed_at": "2026-11-12T22:46:43.629982+00:00",
+  "source": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+  "implementation_baseline": "3238aa2742dd69ec75144a6f523fd1f86c3f3174",
+  "cicd_baseline": "811b04fa570bf575d1cb42f8b661ea6c05c25f61",
+  "review_verdict_counts": {
+    "high": 2,
+    "medium": 7,
+    "low": 3,
+    "false": 2,
+    "maybe_false": 1
+  },
+  "review_total": 15,
+  "schema_cases": {
+    "valid": 27,
+    "invalid": 102
+  },
+  "differential_wildmatch": {
+    "patterns": 519,
+    "paths": 591,
+    "mismatches": 0
+  },
+  "commitlint": {
+    "version": "21.2.4",
+    "message": "fix(cicd): preserve Git perimeter matching semantics",
+    "command": [
+      "node_modules/.bin/commitlint",
+      "--edit",
+      "/tmp/cicd-4-1-resumed-message.txt",
+      "--verbose"
+    ],
+    "exit_code": 0,
+    "problems": 0,
+    "warnings": 0
+  },
+  "blob_ids": {
+    "Github/lib/perimeter.py": "544288a14265a784fb3a72fb1f98dfe2273c3f92",
+    "Github/lib/perimeter_config.py": "4ac121d62fcb4c26459459f9ad168fbcf897b1ad",
+    "Github/lib/tests/test_perimeter.py": "82d4ac9e72d628fd87a76c919b9ac954606fac6c",
+    "schemas/hexalith.perimeter.v1.json": "d9eebb1c52bd7ec7ae390e66dc8b44a7984ed41f"
+  },
+  "source_pushed": true,
+  "ruleset_bypass_warning": false,
+  "workflow_dispatch_count": 0,
+  "builds_version_before": "v5.0.1"
+}

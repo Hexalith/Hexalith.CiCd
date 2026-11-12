@@ -1,0 +1,168 @@
+{
+  "observed_at": "2026-11-12T23:13:41.877710+00:00",
+  "producer": {
+    "id": 43325614833,
+    "run_attempt": 1,
+    "path": ".github/workflows/builds-release.yml",
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+    "created_at": "2026-11-12T23:04:12Z",
+    "updated_at": "2026-11-12T23:12:35Z",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43325614833"
+  },
+  "jobs": [
+    {
+      "id": 131557205527,
+      "name": "release / Resolve release identity",
+      "conclusion": "success"
+    },
+    {
+      "id": 131557358569,
+      "name": "release / Release CodeQL (csharp)",
+      "conclusion": "success"
+    },
+    {
+      "id": 131557361834,
+      "name": "release / Prepare and run nightly hook",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 131559241307,
+      "name": "release / Compute release version",
+      "conclusion": "success"
+    },
+    {
+      "id": 131559468019,
+      "name": "release / Build audited release payload",
+      "conclusion": "success"
+    },
+    {
+      "id": 131560939463,
+      "name": "release / Authenticate original artifact and process marked draft",
+      "conclusion": "success"
+    },
+    {
+      "id": 131561100097,
+      "name": "release / Report release outcome",
+      "conclusion": "success"
+    },
+    {
+      "id": 131561162496,
+      "name": "publish",
+      "conclusion": "success"
+    }
+  ],
+  "outcome": {
+    "outcome": "published",
+    "schema": "hexalith.release-outcome.v1",
+    "sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+    "version": "5.1.0"
+  },
+  "outcome_artifact": {
+    "id": 13992897976,
+    "node_id": "MDg6QXJ0aWZhY3QxMzk5Mjg5Nzk3Ng==",
+    "name": "hexalith-release-outcome",
+    "size_in_bytes": 251,
+    "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13992897976",
+    "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13992897976/zip",
+    "expired": false,
+    "digest": "sha256:70278e0eccb1e2f247dd1d3103503110e0c961049f0ba55bf57879f89ffb7e3c",
+    "created_at": "2026-11-12T23:12:32Z",
+    "updated_at": "2026-11-12T23:12:32Z",
+    "expires_at": "2027-02-10T23:04:14Z",
+    "workflow_run": {
+      "id": 43325614833,
+      "repository_id": 952945989,
+      "head_repository_id": 952945989,
+      "head_branch": "main",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4"
+    }
+  },
+  "outcome_downloaded_digest": "sha256:70278e0eccb1e2f247dd1d3103503110e0c961049f0ba55bf57879f89ffb7e3c",
+  "original_artifact": {
+    "id": 13992553006,
+    "node_id": "MDg6QXJ0aWZhY3QxMzk5MjU1MzAwNg==",
+    "name": "release",
+    "size_in_bytes": 43936397,
+    "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13992553006",
+    "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13992553006/zip",
+    "expired": false,
+    "digest": "sha256:b582f9ea801ca3970a88c87eff98068bbb3eb9250a98615ea07195aefa7d3f6a",
+    "created_at": "2026-11-12T23:11:33Z",
+    "updated_at": "2026-11-12T23:11:33Z",
+    "expires_at": "2027-02-10T23:04:14Z",
+    "workflow_run": {
+      "id": 43325614833,
+      "repository_id": 952945989,
+      "head_repository_id": 952945989,
+      "head_branch": "main",
+      "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4"
+    }
+  },
+  "original_downloaded_digest": "sha256:b582f9ea801ca3970a88c87eff98068bbb3eb9250a98615ea07195aefa7d3f6a",
+  "manifest": {
+    "sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+    "version": "5.1.0",
+    "packages": [
+      {
+        "id": "Hexalith.Builds.Evidence.Cli",
+        "path": "packages/Hexalith.Builds.Evidence.Cli.5.1.0.nupkg"
+      },
+      {
+        "id": "Hexalith.Builds.Module.Cli",
+        "path": "packages/Hexalith.Builds.Module.Cli.5.1.0.nupkg"
+      }
+    ],
+    "containers": []
+  },
+  "archive_members": [
+    {
+      "path": "packages/Hexalith.Builds.Evidence.Cli.5.1.0.nupkg",
+      "size": 2894153,
+      "sha256": "76abd2fda2d4f4cc69c4aa8acff21e09620db6b62af3ca869fafb36e5a8862f1"
+    },
+    {
+      "path": "packages/Hexalith.Builds.Module.Cli.5.1.0.nupkg",
+      "size": 41041352,
+      "sha256": "0b40e9de9c0d25d9707d7353c754634211d666c9a269c491a32036f99fd82a61"
+    },
+    {
+      "path": "release-manifest.json",
+      "size": 360,
+      "sha256": "66b5da4b5b190d76c3b7ff5fea7cdec1c64cd337cef965b38a54f50a3cbda8b8"
+    }
+  ],
+  "inventory": {
+    "packages": [
+      "Hexalith.Builds.Evidence.Cli",
+      "Hexalith.Builds.Module.Cli"
+    ],
+    "containers": []
+  },
+  "release_id": 443617691,
+  "release_tag": "v5.1.0",
+  "release_author": "github-actions[bot]",
+  "release_published_at": "2026-11-12T23:12:31Z",
+  "release_immutable": true,
+  "dispatch_count": 1,
+  "manual_publications": 0,
+  "rebuilds": 0,
+  "peeled_tag": [
+    {
+      "sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+      "type": "commit",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4"
+    }
+  ],
+  "source_ancestor_of_main": true,
+  "observed_main": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+  "tag_contract_blobs": {
+    "schemas/hexalith.perimeter.v1.json": "d9eebb1c52bd7ec7ae390e66dc8b44a7984ed41f",
+    "Github/lib/perimeter_config.py": "4ac121d62fcb4c26459459f9ad168fbcf897b1ad",
+    "Github/lib/perimeter.py": "544288a14265a784fb3a72fb1f98dfe2273c3f92"
+  },
+  "verdict": "PASS acceptable published release"
+}

@@ -1,0 +1,123 @@
+{
+  "source": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+  "observed_at": "2026-11-12T22:50:35.623641+00:00",
+  "explanation": "The initial full processes loaded the pre-correction bracket matcher and passed 13/14 groups. Only that affected library group was rerun on the committed final source; both interpreters passed all 354 library tests. All 14 groups are covered by the combined evidence; this is not a claim that either initial full process returned success. Exact-source hosted CI separately executes all groups from one immutable checkout.",
+  "runs": {
+    "python312": {
+      "lane": "python312",
+      "command": [
+        "/tmp/hexalith-builds-ci-tools/uv",
+        "run",
+        "--no-cache",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "Tools/ci/run_python_tests.py"
+      ],
+      "started_at": "2026-11-12T22:36:57.154510+00:00",
+      "finished_at": "2026-11-12T22:44:47.225881+00:00",
+      "exit_code": 1,
+      "log": "/tmp/cicd-4-1-resumed-python312.log",
+      "log_sha256": "00f3691b2dc44caee8ce30b1dd89549f9e1a174cb3a31c89ba0d765ed574854f",
+      "log_tail": [
+        "ok",
+        "test_missing_required_group_refuses_partial_suite (test_python_runner.PythonRunnerTests.test_missing_required_group_refuses_partial_suite) ... ok",
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 46 tests in 8.793s",
+        "",
+        "OK",
+        "FAILED (1): /tmp/.tmpeV37Oo/environments-v2/run-python-tests-46c8ad21b249e504/bin/python -m unittest discover -s /home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/Github/lib/tests -v",
+        "Python suite: 13/14 groups passed"
+      ]
+    },
+    "runner": {
+      "lane": "runner",
+      "command": [
+        "/tmp/hexalith-builds-ci-tools/uv",
+        "run",
+        "--no-cache",
+        "--locked",
+        "--script",
+        "--python",
+        "/usr/bin/python3",
+        "Tools/ci/run_python_tests.py"
+      ],
+      "started_at": "2026-11-12T22:36:57.154755+00:00",
+      "finished_at": "2026-11-12T22:44:46.817916+00:00",
+      "exit_code": 1,
+      "log": "/tmp/cicd-4-1-resumed-runner.log",
+      "log_sha256": "d7351cf85b0dca2665c4e6726168b0775f083f81062f2c65f51aedc05cf605f3",
+      "log_tail": [
+        "ok",
+        "test_missing_required_group_refuses_partial_suite (test_python_runner.PythonRunnerTests.test_missing_required_group_refuses_partial_suite) ... ok",
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 46 tests in 7.349s",
+        "",
+        "OK",
+        "FAILED (1): /tmp/.tmp7eyYLm/environments-v2/run-python-tests-46c8ad21b249e504/bin/python -m unittest discover -s /home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/Github/lib/tests -v",
+        "Python suite: 13/14 groups passed"
+      ]
+    },
+    "lib312": {
+      "lane": "lib312",
+      "command": [
+        "/tmp/hexalith-builds-ci-tools/uv",
+        "run",
+        "--no-cache",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "/tmp/cicd-4-1-resumed-lib-tests.py"
+      ],
+      "started_at": "2026-11-12T22:45:39.324839+00:00",
+      "finished_at": "2026-11-12T22:49:21.254818+00:00",
+      "exit_code": 0,
+      "log": "/tmp/cicd-4-1-resumed-lib312.log",
+      "log_sha256": "173b69d5ea0d9f57425300ed0d3d2f60d4b5ad4b08c6afea4beb7ddad6077f81",
+      "log_tail": [
+        "test_no_version_tagless_or_at_base_has_explicit_noop (test_release_version.ReleaseVersionTests.test_no_version_tagless_or_at_base_has_explicit_noop) ... ok",
+        "test_non_utf8_legacy_commit_message_is_analyzed_instead_of_aborting (test_release_version.ReleaseVersionTests.test_non_utf8_legacy_commit_message_is_analyzed_instead_of_aborting) ... ok",
+        "test_plugins_are_isolated_without_core_or_product_configuration (test_release_version.ReleaseVersionTests.test_plugins_are_isolated_without_core_or_product_configuration) ... ok",
+        "test_stable_increment_resets_and_rejects_unexpected_plugin_results (test_release_version.ReleaseVersionTests.test_stable_increment_resets_and_rejects_unexpected_plugin_results) ... ok",
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 354 tests in 221.518s",
+        "",
+        "OK"
+      ]
+    },
+    "librunner": {
+      "lane": "librunner",
+      "command": [
+        "/tmp/hexalith-builds-ci-tools/uv",
+        "run",
+        "--no-cache",
+        "--locked",
+        "--script",
+        "--python",
+        "/usr/bin/python3",
+        "/tmp/cicd-4-1-resumed-lib-tests.py"
+      ],
+      "started_at": "2026-11-12T22:45:39.324515+00:00",
+      "finished_at": "2026-11-12T22:49:21.138086+00:00",
+      "exit_code": 0,
+      "log": "/tmp/cicd-4-1-resumed-librunner.log",
+      "log_sha256": "239f6f567c3950f196d9a0819cce61edc8954ab974f163ee7f77551d28247c9c",
+      "log_tail": [
+        "test_no_version_tagless_or_at_base_has_explicit_noop (test_release_version.ReleaseVersionTests.test_no_version_tagless_or_at_base_has_explicit_noop) ... ok",
+        "test_non_utf8_legacy_commit_message_is_analyzed_instead_of_aborting (test_release_version.ReleaseVersionTests.test_non_utf8_legacy_commit_message_is_analyzed_instead_of_aborting) ... ok",
+        "test_plugins_are_isolated_without_core_or_product_configuration (test_release_version.ReleaseVersionTests.test_plugins_are_isolated_without_core_or_product_configuration) ... ok",
+        "test_stable_increment_resets_and_rejects_unexpected_plugin_results (test_release_version.ReleaseVersionTests.test_stable_increment_resets_and_rejects_unexpected_plugin_results) ... ok",
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 354 tests in 221.402s",
+        "",
+        "OK"
+      ]
+    }
+  }
+}

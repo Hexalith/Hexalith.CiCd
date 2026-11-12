@@ -1,0 +1,116 @@
+{
+  "observed_at": "2026-11-12T23:03:02.749472+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "configmap": "distribution-registry-config",
+  "resourceVersion": "43593736",
+  "access_control": {
+    "repositories": {
+      "**": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          }
+        ]
+      },
+      "cicd-publish-spike-3-1": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "cicd-publish-spike-3-1"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      }
+    },
+    "adminPolicy": {
+      "users": [
+        "jpiquot",
+        "jpiquot@itaneo.com"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "scope": "Read-only ACL metadata; no fresh credential authentication or credential values read."
+}

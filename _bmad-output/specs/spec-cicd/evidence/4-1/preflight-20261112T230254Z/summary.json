@@ -1,0 +1,84 @@
+{
+  "evidence_directory": "/tmp/cicd-4-1-resumed-preflight-20261112T230254Z",
+  "started_at": "2026-11-12T23:02:54.082901+00:00",
+  "completed_at": "2026-11-12T23:04:06.848687Z",
+  "verdict": "PASS before one interactive story 4-1 release dispatch",
+  "immutable_releases": {
+    "enabled": true,
+    "enforced_by_owner": false
+  },
+  "environment_secrets": {
+    "total_count": 4,
+    "secrets": [
+      {
+        "name": "HEXALITH_REGISTRY_PASSWORD",
+        "created_at": "2026-11-12T12:58:37Z",
+        "updated_at": "2026-11-12T12:58:37Z"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PUSH_PASSWORD",
+        "created_at": "2026-11-10T08:31:36Z",
+        "updated_at": "2026-11-10T08:31:36Z"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PUSH_USERNAME",
+        "created_at": "2026-11-10T08:31:35Z",
+        "updated_at": "2026-11-10T08:31:35Z"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_USERNAME",
+        "created_at": "2026-11-12T12:58:36Z",
+        "updated_at": "2026-11-12T12:58:36Z"
+      }
+    ]
+  },
+  "tag_count": 204,
+  "published_release_count": 204,
+  "orphan_tags": [],
+  "ci": {
+    "id": 43322385361,
+    "head_sha": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-12T22:42:32Z",
+    "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43322385361"
+  },
+  "unreadable_selection_endpoints": [
+    "user/installations/179966090/repositories?per_page=100&page=1",
+    "user/installations/77847816/repositories?per_page=100&page=1",
+    "repos/Hexalith/Hexalith.Builds/installation"
+  ],
+  "drafts": [
+    {
+      "id": 441591623,
+      "tag_name": "v4.47.1",
+      "target_commitish": "75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+      "draft": true,
+      "prerelease": false,
+      "immutable": false,
+      "created_at": "2026-11-11T11:16:38Z",
+      "updated_at": "2026-11-12T08:52:41Z",
+      "published_at": "2026-11-11T11:22:37Z",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/untagged-3c30f47f2e384072c3fe",
+      "author": "github-actions[bot]",
+      "body_sha256": "a33f030d96ca5ff6a275267421ac52793e586d77dd9157db58a2c3a6a90d440e",
+      "trailers": [
+        "hexalith-qualification-source: 75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+        "hexalith-release-run: 43010609603",
+        "hexalith-release-artifact: 13850760915 sha256:18db4ed7b07ffa3c5fd4496afce65dd50888705687d42695260e7573a7456d30",
+        "hexalith-release-packages: Hexalith.Builds.PublishProbe.20261111",
+        "hexalith-release-containers: cicd-publish-spike-3-1"
+      ],
+      "assets": []
+    }
+  ],
+  "blocked_prerequisites": [],
+  "remote_builds_main": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+  "pinned_builds_source": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+  "no_release_execution": true,
+  "manual_ui_readbacks": {
+    "app": "2026-11-12T23:03:15.0995400Z",
+    "nuget": "2026-11-12T23:03:48.0722995Z",
+    "legacy_key": "2026-11-12T23:04:04.3708316Z"
+  }
+}

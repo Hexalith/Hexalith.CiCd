@@ -1,0 +1,23 @@
+{
+  "lane": "api",
+  "command": [
+    "/tmp/hexalith-builds-ci-tools/uv",
+    "run",
+    "--no-cache",
+    "--locked",
+    "--script",
+    "--python",
+    "3.12",
+    "Tools/ci/check_public_api.py"
+  ],
+  "started_at": "2026-11-12T22:42:36.126261+00:00",
+  "finished_at": "2026-11-12T22:42:36.896507+00:00",
+  "exit_code": 0,
+  "log": "/tmp/cicd-4-1-resumed-api.log",
+  "log_sha256": "c3f30d339a435f2c9a0b0add33bad834b2253019f2213725455056513a4a15da",
+  "log_tail": [
+    "Installed 1 package in 4ms",
+    "Public API baseline: v5.0.1 (3c2f5944aaa28dc7854a00a8a9df171aa810b0c7); checked revision: 9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+    "Public API compatible: 2579 entries; no removals"
+  ]
+}

@@ -215,3 +215,7 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/3-6-rewrite-builds-release-yml-onto-the-shared-release.md`
   summary: Diagnose the intermittent native descendant cleanup observation rather than treating a successful retry as proof of reliability.
   evidence: Review BH-10: hosted push run 43174705780 attempt 1, job 131036024414, failed ReviewDetachedNativeDescendantsAreVerifiedAsync(discoveryVerified: True) at NativeTestExecutorTests.cs:64 because StopObserved was false. Retry, focused 2/2 and full-class 62/62 passed without a code change. The sanitized failure excerpt is retained in Builds evidence/cicd-3-6/cleanup-first-attempt.log; causal attribution remains unverified, potential severity medium.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/4-1-perimeter-contract-and-library-in-builds.md`
+  summary: Verify and document the minimum Git capability required for snapshot-pinned perimeter attributes (medium, unverified).
+  evidence: Resumed review RB9 notes that old Git versions may ignore GIT_ATTR_SOURCE; no older binary was available to reproduce its exact behavior. Current hosted/local Git passes selected-index and dirty-worktree attribute controls. Settle this with a cross-version real-Git repair demonstrating whether an unsupported attribute source can affect hashing, then document or enforce the proven minimum without weakening index atomicity.

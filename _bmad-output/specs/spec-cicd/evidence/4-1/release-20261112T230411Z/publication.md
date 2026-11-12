@@ -1,0 +1,9 @@
+# Story 4-1 publication and acceptance
+
+[Release run 43325614833](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43325614833), attempt 1, succeeded from source `9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4`. Exactly one interactive dispatch followed the passing 39-check preflight and exact-source green CI. No manual publication, redispatch or rebuild occurred.
+
+The sole downloaded outcome is `published`, schema-valid, and matches that full source and version 5.1.0. Its original outcome ZIP digest matches GitHub metadata. The original `release` artifact was independently checked for producer/repository/workflow/manual-main/source identity, expiry, API and trailer digest agreement, downloaded bytes, exact archive membership and package identities. Downloaded digest: `sha256:b582f9ea801ca3970a88c87eff98068bbb3eb9250a98615ea07195aefa7d3f6a`. Its two packages are `Hexalith.Builds.Evidence.Cli` and `Hexalith.Builds.Module.Cli`; containers are empty, satisfying the approved package-only registry scope. Exact IDs/digests, archive-member hashes and the release manifest are retained in `release-verification.json`.
+
+[Published v5.1.0](https://github.com/Hexalith/Hexalith.Builds/releases/tag/v5.1.0), release 443617691, is immutable and authored by GitHub bot account 41898282. Both API peeling and local Git resolve its tag to the exact built commit above, an ancestor of Builds main. The public schema and both library blobs match that source. Only after these checks did this invocation write `v5.1.0` plus LF to CiCd builds-version.
+
+Raw outcome bytes are retained in `outcome.json`; the SHA-256 manifest binds all JSON records. The original ZIP bytes remain in the private task temporary directory, and GitHub retains the authenticated artifact under the verified 90-day policy. The qualification draft/artifact and prior publications are preserved; a final independent preservation readback follows in the same evidence directory.
