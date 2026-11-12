@@ -1,0 +1,1678 @@
+{
+  "observed_at": "2026-11-12T19:27:55.453923Z",
+  "requests": [
+    {
+      "observed_at": "2026-11-12T19:27:30.571255Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+      "data": {
+        "id": 43241459875,
+        "name": "Release",
+        "node_id": "WFR_kwLOOMzNRc8AAAAKEWRQow",
+        "head_branch": "main",
+        "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "path": ".github/workflows/builds-release.yml",
+        "display_title": "Release",
+        "run_number": 13,
+        "event": "workflow_dispatch",
+        "status": "completed",
+        "conclusion": "success",
+        "workflow_id": 411848293,
+        "check_suite_id": 117094944182,
+        "check_suite_node_id": "CS_kwDOOMzNRc8AAAAbQ2cNtg",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+        "pull_requests": [],
+        "created_at": "2026-11-12T14:50:56Z",
+        "updated_at": "2026-11-12T14:59:10Z",
+        "actor": {
+          "login": "jpiquot",
+          "id": 6775094,
+          "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+          "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/jpiquot",
+          "html_url": "https://github.com/jpiquot",
+          "followers_url": "https://api.github.com/users/jpiquot/followers",
+          "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+          "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+          "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+          "repos_url": "https://api.github.com/users/jpiquot/repos",
+          "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "run_attempt": 1,
+        "referenced_workflows": [
+          {
+            "path": "Hexalith/Hexalith.Builds/.github/workflows/release.yml@3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "ref": "refs/heads/main"
+          }
+        ],
+        "run_started_at": "2026-11-12T14:50:56Z",
+        "triggering_actor": {
+          "login": "jpiquot",
+          "id": 6775094,
+          "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+          "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/jpiquot",
+          "html_url": "https://github.com/jpiquot",
+          "followers_url": "https://api.github.com/users/jpiquot/followers",
+          "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+          "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+          "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+          "repos_url": "https://api.github.com/users/jpiquot/repos",
+          "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "jobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/jobs",
+        "logs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/logs",
+        "check_suite_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-suites/117094944182",
+        "artifacts_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/artifacts",
+        "cancel_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/cancel",
+        "rerun_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/rerun",
+        "previous_attempt_url": null,
+        "workflow_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/workflows/411848293",
+        "head_commit": {
+          "id": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "tree_id": "adde3a76dca54616215dcb088f03c7ed5b541088",
+          "message": "fix(runtime): retain transitive pins in isolated model builds\n\nThe production model skips the owner package wrapper when importing its\nauthenticated catalog. Preserve canonical transitive package pinning and\nrun all-dependency NuGet auditing at low severity in that real command.\n\nExercise source and package builds with a real two-version dependency\ngraph; the compiled model must execute the API from the central pin.",
+          "timestamp": "2026-11-12T14:23:26Z",
+          "author": {
+            "name": "J\u00e9r\u00f4me Piquot",
+            "email": "jpiquot@itaneo.com"
+          },
+          "committer": {
+            "name": "J\u00e9r\u00f4me Piquot",
+            "email": "jpiquot@itaneo.com"
+          }
+        },
+        "repository": {
+          "id": 952945989,
+          "node_id": "R_kgDOOMzNRQ",
+          "name": "Hexalith.Builds",
+          "full_name": "Hexalith/Hexalith.Builds",
+          "private": false,
+          "owner": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+          "description": "Common project for building Hexalith applications, modules and libraries",
+          "fork": false,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+          "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+          "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+          "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+          "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+          "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+          "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+          "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+          "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+          "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+          "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+          "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+          "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+          "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+          "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments"
+        },
+        "head_repository": {
+          "id": 952945989,
+          "node_id": "R_kgDOOMzNRQ",
+          "name": "Hexalith.Builds",
+          "full_name": "Hexalith/Hexalith.Builds",
+          "private": false,
+          "owner": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+          "description": "Common project for building Hexalith applications, modules and libraries",
+          "fork": false,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+          "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+          "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+          "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+          "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+          "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+          "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+          "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+          "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+          "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+          "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+          "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+          "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+          "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+          "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments"
+        }
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:31.621161Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/jobs?per_page=100&page=1",
+      "data": {
+        "total_count": 8,
+        "jobs": [
+          {
+            "id": 131262681354,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAej92RCg",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131262681354",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131262681354",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:50:58Z",
+            "started_at": "2026-11-12T14:51:00Z",
+            "completed_at": "2026-11-12T14:51:14Z",
+            "name": "release / Resolve release identity",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:51:01Z",
+                "completed_at": "2026-11-12T14:51:04Z"
+              },
+              {
+                "name": "Read dispatch settings and freeze release source",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:51:04Z",
+                "completed_at": "2026-11-12T14:51:13Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T14:51:13Z",
+                "completed_at": "2026-11-12T14:51:13Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131262681354",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081465,
+            "runner_name": "GitHub Actions 1000081465",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131262850503,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAej-Alxw",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131262850503",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131262850503",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:51:14Z",
+            "started_at": "2026-11-12T14:51:17Z",
+            "completed_at": "2026-11-12T14:54:24Z",
+            "name": "release / Release CodeQL (csharp)",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:51:18Z",
+                "completed_at": "2026-11-12T14:51:21Z"
+              },
+              {
+                "name": "Checkout dispatch source",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:51:21Z",
+                "completed_at": "2026-11-12T14:51:24Z"
+              },
+              {
+                "name": "Initialize release analysis",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T14:51:24Z",
+                "completed_at": "2026-11-12T14:51:34Z"
+              },
+              {
+                "name": "Analyze and wait for processing",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T14:51:34Z",
+                "completed_at": "2026-11-12T14:54:19Z"
+              },
+              {
+                "name": "Check processed release security findings",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-12T14:54:19Z",
+                "completed_at": "2026-11-12T14:54:20Z"
+              },
+              {
+                "name": "Post Analyze and wait for processing",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-11-12T14:54:20Z",
+                "completed_at": "2026-11-12T14:54:20Z"
+              },
+              {
+                "name": "Post Initialize release analysis",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-11-12T14:54:20Z",
+                "completed_at": "2026-11-12T14:54:21Z"
+              },
+              {
+                "name": "Post Checkout dispatch source",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 10,
+                "started_at": "2026-11-12T14:54:21Z",
+                "completed_at": "2026-11-12T14:54:21Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11,
+                "started_at": "2026-11-12T14:54:21Z",
+                "completed_at": "2026-11-12T14:54:21Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131262850503",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081466,
+            "runner_name": "GitHub Actions 1000081466",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131262853599,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAej-Ax3w",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131262853599",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131262853599",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-11-12T14:51:14Z",
+            "started_at": "2026-11-12T14:51:14Z",
+            "completed_at": "2026-11-12T14:51:14Z",
+            "name": "release / Prepare and run nightly hook",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131262853599",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          },
+          {
+            "id": 131264836472,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAej_5zeA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131264836472",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131264836472",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:54:24Z",
+            "started_at": "2026-11-12T14:54:27Z",
+            "completed_at": "2026-11-12T14:54:42Z",
+            "name": "release / Compute release version",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:54:28Z",
+                "completed_at": "2026-11-12T14:54:31Z"
+              },
+              {
+                "name": "Analyze the frozen release range",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:54:31Z",
+                "completed_at": "2026-11-12T14:54:41Z"
+              },
+              {
+                "name": "Post Analyze the frozen release range",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T14:54:41Z",
+                "completed_at": "2026-11-12T14:54:41Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-12T14:54:41Z",
+                "completed_at": "2026-11-12T14:54:41Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131264836472",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081467,
+            "runner_name": "GitHub Actions 1000081467",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131265018892,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAekAE8DA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131265018892",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131265018892",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:54:42Z",
+            "started_at": "2026-11-12T14:54:45Z",
+            "completed_at": "2026-11-12T14:57:57Z",
+            "name": "release / Build audited release payload",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:54:45Z",
+                "completed_at": "2026-11-12T14:54:49Z"
+              },
+              {
+                "name": "Build once and retain the original versioned payload",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:54:49Z",
+                "completed_at": "2026-11-12T14:57:09Z"
+              },
+              {
+                "name": "Post Build once and retain the original versioned payload",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T14:57:09Z",
+                "completed_at": "2026-11-12T14:57:09Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-12T14:57:09Z",
+                "completed_at": "2026-11-12T14:57:09Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131265018892",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081468,
+            "runner_name": "GitHub Actions 1000081468",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131267059592,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAekCBfiA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131267059592",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131267059592",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:58:00Z",
+            "started_at": "2026-11-12T14:58:04Z",
+            "completed_at": "2026-11-12T14:58:22Z",
+            "name": "release / Authenticate original artifact and process marked draft",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:58:05Z",
+                "completed_at": "2026-11-12T14:58:07Z"
+              },
+              {
+                "name": "Authenticate and create or complete the release draft",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:58:07Z",
+                "completed_at": "2026-11-12T14:58:20Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T14:58:20Z",
+                "completed_at": "2026-11-12T14:58:20Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131267059592",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081469,
+            "runner_name": "GitHub Actions 1000081469",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131267280736,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAekCO_YA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131267280736",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131267280736",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:58:22Z",
+            "started_at": "2026-11-12T14:58:25Z",
+            "completed_at": "2026-11-12T14:58:32Z",
+            "name": "release / Report release outcome",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:58:26Z",
+                "completed_at": "2026-11-12T14:58:29Z"
+              },
+              {
+                "name": "Decide outcome with failure precedence",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:58:29Z",
+                "completed_at": "2026-11-12T14:58:29Z"
+              },
+              {
+                "name": "Upload the sole reusable outcome",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 3,
+                "started_at": "2026-11-12T14:58:29Z",
+                "completed_at": "2026-11-12T14:58:29Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T14:58:29Z",
+                "completed_at": "2026-11-12T14:58:29Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131267280736",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081470,
+            "runner_name": "GitHub Actions 1000081470",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131267400748,
+            "run_id": 43241459875,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43241459875",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAekCWULA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131267400748",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43241459875/job/131267400748",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T14:58:34Z",
+            "started_at": "2026-11-12T14:58:39Z",
+            "completed_at": "2026-11-12T14:59:09Z",
+            "name": "publish",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T14:58:40Z",
+                "completed_at": "2026-11-12T14:58:44Z"
+              },
+              {
+                "name": "Publish authenticated original release",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T14:58:44Z",
+                "completed_at": "2026-11-12T14:59:08Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T14:59:08Z",
+                "completed_at": "2026-11-12T14:59:08Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131267400748",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081471,
+            "runner_name": "GitHub Actions 1000081471",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          }
+        ]
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:32.000801Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43241459875/artifacts?per_page=100&page=1",
+      "data": {
+        "total_count": 2,
+        "artifacts": [
+          {
+            "id": 13955866607,
+            "node_id": "MDg6QXJ0aWZhY3QxMzk1NTg2NjYwNw==",
+            "name": "hexalith-release-outcome",
+            "size_in_bytes": 250,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955866607",
+            "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955866607/zip",
+            "expired": false,
+            "digest": "sha256:ed1fc3dc8b14b10d2959e4df55906689eff570a0d408b149697a72a62a0fa5cb",
+            "created_at": "2026-11-12T14:59:08Z",
+            "updated_at": "2026-11-12T14:59:08Z",
+            "expires_at": "2027-02-10T14:50:57Z",
+            "workflow_run": {
+              "id": 43241459875,
+              "repository_id": 952945989,
+              "head_repository_id": 952945989,
+              "head_branch": "main",
+              "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+            }
+          },
+          {
+            "id": 13955511619,
+            "node_id": "MDg6QXJ0aWZhY3QxMzk1NTUxMTYxOQ==",
+            "name": "release",
+            "size_in_bytes": 43936350,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955511619",
+            "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955511619/zip",
+            "expired": false,
+            "digest": "sha256:4d9a9accaa4d65afb555e2573ec3a0812cdc8fc4c10ffcfa71de870672789861",
+            "created_at": "2026-11-12T14:57:09Z",
+            "updated_at": "2026-11-12T14:57:09Z",
+            "expires_at": "2027-02-10T14:50:57Z",
+            "workflow_run": {
+              "id": 43241459875,
+              "repository_id": 952945989,
+              "head_repository_id": 952945989,
+              "head_branch": "main",
+              "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:32.370757Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/artifacts/13955866607",
+      "data": {
+        "id": 13955866607,
+        "node_id": "MDg6QXJ0aWZhY3QxMzk1NTg2NjYwNw==",
+        "name": "hexalith-release-outcome",
+        "size_in_bytes": 250,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955866607",
+        "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955866607/zip",
+        "expired": false,
+        "digest": "sha256:ed1fc3dc8b14b10d2959e4df55906689eff570a0d408b149697a72a62a0fa5cb",
+        "created_at": "2026-11-12T14:59:08Z",
+        "updated_at": "2026-11-12T14:59:08Z",
+        "expires_at": "2027-02-10T14:50:57Z",
+        "workflow_run": {
+          "id": 43241459875,
+          "repository_id": 952945989,
+          "head_repository_id": 952945989,
+          "head_branch": "main",
+          "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+        }
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:33.612735Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/artifacts/13955511619",
+      "data": {
+        "id": 13955511619,
+        "node_id": "MDg6QXJ0aWZhY3QxMzk1NTUxMTYxOQ==",
+        "name": "release",
+        "size_in_bytes": 43936350,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955511619",
+        "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13955511619/zip",
+        "expired": false,
+        "digest": "sha256:4d9a9accaa4d65afb555e2573ec3a0812cdc8fc4c10ffcfa71de870672789861",
+        "created_at": "2026-11-12T14:57:09Z",
+        "updated_at": "2026-11-12T14:57:09Z",
+        "expires_at": "2027-02-10T14:50:57Z",
+        "workflow_run": {
+          "id": 43241459875,
+          "repository_id": 952945989,
+          "head_repository_id": 952945989,
+          "head_branch": "main",
+          "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+        }
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:52.600262Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/443097864",
+      "data": {
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/443097864",
+        "assets_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/443097864/assets",
+        "upload_url": "https://uploads.github.com/repos/Hexalith/Hexalith.Builds/releases/443097864/assets{?name,label}",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v5.0.1",
+        "id": 443097864,
+        "author": {
+          "login": "github-actions[bot]",
+          "id": 41898282,
+          "node_id": "MDM6Qm90NDE4OTgyODI=",
+          "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github-actions%5Bbot%5D",
+          "html_url": "https://github.com/apps/github-actions",
+          "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
+          "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
+          "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
+          "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
+          "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
+          "type": "Bot",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "node_id": "RE_kwDOOMzNRc4aaSMI",
+        "tag_name": "v5.0.1",
+        "target_commitish": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "name": "v5.0.1",
+        "draft": false,
+        "immutable": true,
+        "prerelease": false,
+        "created_at": "2026-11-12T14:23:26Z",
+        "updated_at": "2026-11-12T14:59:06Z",
+        "published_at": "2026-11-12T14:59:06Z",
+        "assets": [],
+        "tarball_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tarball/v5.0.1",
+        "zipball_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/zipball/v5.0.1",
+        "body": "## [5.0.1](https://github.com/Hexalith/Hexalith.Builds/compare/v5.0.0...v5.0.1) (2026-11-12)\n\n\n### Bug Fixes\n\n* **deps:** adopt published .NET 11 foundation packages ([dc24666](https://github.com/Hexalith/Hexalith.Builds/commit/dc24666f9f931bd101935cc13fce06199d177270))\n* **runtime:** retain transitive pins in isolated model builds ([3c2f594](https://github.com/Hexalith/Hexalith.Builds/commit/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7))\n\nhexalith-release: 3c2f5944aaa28dc7854a00a8a9df171aa810b0c7\nhexalith-release-run: 43241459875\nhexalith-release-artifact: 13955511619 sha256:4d9a9accaa4d65afb555e2573ec3a0812cdc8fc4c10ffcfa71de870672789861\nhexalith-release-packages: Hexalith.Builds.Evidence.Cli,Hexalith.Builds.Module.Cli\nhexalith-release-containers: \n"
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:52.991115Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/tags/v5.0.1",
+      "data": {
+        "ref": "refs/tags/v5.0.1",
+        "node_id": "REF_kwDOOMzNRbByZWZzL3RhZ3MvdjUuMC4x",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs/tags/v5.0.1",
+        "object": {
+          "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+        }
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:53.362368Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/heads/main",
+      "data": {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDOOMzNRa9yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs/heads/main",
+        "object": {
+          "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+        }
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:54.150163Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/compare/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "data": {
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/compare/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "permalink_url": "https://github.com/Hexalith/Hexalith.Builds/compare/Hexalith:3c2f594...Hexalith:3c2f594",
+        "diff_url": "https://github.com/Hexalith/Hexalith.Builds/compare/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7.diff",
+        "patch_url": "https://github.com/Hexalith/Hexalith.Builds/compare/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7.patch",
+        "base_commit": {
+          "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "node_id": "C_kwDOOMzNRdoAKDNjMmY1OTQ0YWFhMjhkYzc4NTRhMDBhOGE5ZGYxNzFhYTgxMGIwYzc",
+          "commit": {
+            "author": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T14:23:26Z"
+            },
+            "committer": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T14:23:26Z"
+            },
+            "message": "fix(runtime): retain transitive pins in isolated model builds\n\nThe production model skips the owner package wrapper when importing its\nauthenticated catalog. Preserve canonical transitive package pinning and\nrun all-dependency NuGet auditing at low severity in that real command.\n\nExercise source and package builds with a real two-version dependency\ngraph; the compiled model must execute the API from the central pin.",
+            "tree": {
+              "sha": "adde3a76dca54616215dcb088f03c7ed5b541088",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/adde3a76dca54616215dcb088f03c7ed5b541088"
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "comment_count": 0,
+            "verification": {
+              "verified": false,
+              "reason": "unsigned",
+              "signature": null,
+              "payload": null,
+              "verified_at": null
+            }
+          },
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/comments",
+          "author": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "committer": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "parents": [
+            {
+              "sha": "ab3ffac80b5671b196107adc15c54f0c8ea87280",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/ab3ffac80b5671b196107adc15c54f0c8ea87280",
+              "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/ab3ffac80b5671b196107adc15c54f0c8ea87280"
+            }
+          ]
+        },
+        "merge_base_commit": {
+          "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "node_id": "C_kwDOOMzNRdoAKDNjMmY1OTQ0YWFhMjhkYzc4NTRhMDBhOGE5ZGYxNzFhYTgxMGIwYzc",
+          "commit": {
+            "author": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T14:23:26Z"
+            },
+            "committer": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T14:23:26Z"
+            },
+            "message": "fix(runtime): retain transitive pins in isolated model builds\n\nThe production model skips the owner package wrapper when importing its\nauthenticated catalog. Preserve canonical transitive package pinning and\nrun all-dependency NuGet auditing at low severity in that real command.\n\nExercise source and package builds with a real two-version dependency\ngraph; the compiled model must execute the API from the central pin.",
+            "tree": {
+              "sha": "adde3a76dca54616215dcb088f03c7ed5b541088",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/adde3a76dca54616215dcb088f03c7ed5b541088"
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "comment_count": 0,
+            "verification": {
+              "verified": false,
+              "reason": "unsigned",
+              "signature": null,
+              "payload": null,
+              "verified_at": null
+            }
+          },
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/comments",
+          "author": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "committer": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "parents": [
+            {
+              "sha": "ab3ffac80b5671b196107adc15c54f0c8ea87280",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/ab3ffac80b5671b196107adc15c54f0c8ea87280",
+              "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/ab3ffac80b5671b196107adc15c54f0c8ea87280"
+            }
+          ]
+        },
+        "status": "identical",
+        "ahead_by": 0,
+        "behind_by": 0,
+        "total_commits": 0,
+        "commits": [],
+        "files": []
+      }
+    },
+    {
+      "observed_at": "2026-11-12T19:27:54.951710Z",
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/compare/v5.0.0...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "data": {
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/v5.0.0...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/compare/v5.0.0...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "permalink_url": "https://github.com/Hexalith/Hexalith.Builds/compare/Hexalith:9f5d751...Hexalith:3c2f594",
+        "diff_url": "https://github.com/Hexalith/Hexalith.Builds/compare/v5.0.0...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7.diff",
+        "patch_url": "https://github.com/Hexalith/Hexalith.Builds/compare/v5.0.0...3c2f5944aaa28dc7854a00a8a9df171aa810b0c7.patch",
+        "base_commit": {
+          "sha": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "node_id": "C_kwDOOMzNRdoAKDlmNWQ3NTFmN2FiMGI3YTYyMWRjZDE4YjU4OWJmMDYxZmFiYWM2ZWM",
+          "commit": {
+            "author": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T10:00:34Z"
+            },
+            "committer": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T10:00:34Z"
+            },
+            "message": "fix(ci): isolate tooling probes from PowerShell assemblies\n\nRun catalog, embedded-schema and Aspire-path reflection in a .NET 11\nfile-based app. Standalone PowerShell bundles framework assemblies that\ncannot be rehosted safely on .NET 11, unlike the local framework tool.\n\nPreserve every catalog assertion and packaged-loader check, with the\nexisting analyzers and warnings-as-errors applied to the new probe.",
+            "tree": {
+              "sha": "61a8a5d2a492c77018907a149adfd5facf8500cc",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/61a8a5d2a492c77018907a149adfd5facf8500cc"
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "comment_count": 0,
+            "verification": {
+              "verified": false,
+              "reason": "unsigned",
+              "signature": null,
+              "payload": null,
+              "verified_at": null
+            }
+          },
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec/comments",
+          "author": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "committer": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "parents": [
+            {
+              "sha": "76e5e94a791db56f392ffd53441b75c1446beea4",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/76e5e94a791db56f392ffd53441b75c1446beea4",
+              "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/76e5e94a791db56f392ffd53441b75c1446beea4"
+            }
+          ]
+        },
+        "merge_base_commit": {
+          "sha": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "node_id": "C_kwDOOMzNRdoAKDlmNWQ3NTFmN2FiMGI3YTYyMWRjZDE4YjU4OWJmMDYxZmFiYWM2ZWM",
+          "commit": {
+            "author": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T10:00:34Z"
+            },
+            "committer": {
+              "name": "J\u00e9r\u00f4me Piquot",
+              "email": "jpiquot@itaneo.com",
+              "date": "2026-11-12T10:00:34Z"
+            },
+            "message": "fix(ci): isolate tooling probes from PowerShell assemblies\n\nRun catalog, embedded-schema and Aspire-path reflection in a .NET 11\nfile-based app. Standalone PowerShell bundles framework assemblies that\ncannot be rehosted safely on .NET 11, unlike the local framework tool.\n\nPreserve every catalog assertion and packaged-loader check, with the\nexisting analyzers and warnings-as-errors applied to the new probe.",
+            "tree": {
+              "sha": "61a8a5d2a492c77018907a149adfd5facf8500cc",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/61a8a5d2a492c77018907a149adfd5facf8500cc"
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "comment_count": 0,
+            "verification": {
+              "verified": false,
+              "reason": "unsigned",
+              "signature": null,
+              "payload": null,
+              "verified_at": null
+            }
+          },
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec/comments",
+          "author": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "committer": {
+            "login": "jpiquot",
+            "id": 6775094,
+            "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/jpiquot",
+            "html_url": "https://github.com/jpiquot",
+            "followers_url": "https://api.github.com/users/jpiquot/followers",
+            "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+            "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+            "repos_url": "https://api.github.com/users/jpiquot/repos",
+            "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "parents": [
+            {
+              "sha": "76e5e94a791db56f392ffd53441b75c1446beea4",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/76e5e94a791db56f392ffd53441b75c1446beea4",
+              "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/76e5e94a791db56f392ffd53441b75c1446beea4"
+            }
+          ]
+        },
+        "status": "ahead",
+        "ahead_by": 4,
+        "behind_by": 0,
+        "total_commits": 4,
+        "commits": [
+          {
+            "sha": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+            "node_id": "C_kwDOOMzNRdoAKGFkZmJmMjE4OTZlZjk4MmFlOWQxYzNlZTFkYjI0N2U4N2JkYTIyYzA",
+            "commit": {
+              "author": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T10:48:15Z"
+              },
+              "committer": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T10:48:15Z"
+              },
+              "message": "docs(cicd): finalize shared release caller review evidence",
+              "tree": {
+                "sha": "b8b88c7dcb04771614abe18a88138e48aadfbaee",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/b8b88c7dcb04771614abe18a88138e48aadfbaee"
+              },
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+              "comment_count": 0,
+              "verification": {
+                "verified": false,
+                "reason": "unsigned",
+                "signature": null,
+                "payload": null,
+                "verified_at": null
+              }
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+            "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/adfbf21896ef982ae9d1c3ee1db247e87bda22c0/comments",
+            "author": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "committer": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "parents": [
+              {
+                "sha": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+                "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/9f5d751f7ab0b7a621dcd18b589bf061fabac6ec"
+              }
+            ]
+          },
+          {
+            "sha": "dc24666f9f931bd101935cc13fce06199d177270",
+            "node_id": "C_kwDOOMzNRdoAKGRjMjQ2NjZmOWY5MzFiZDEwMTkzNWNjMTNmY2UwNjE5OWQxNzcyNzA",
+            "commit": {
+              "author": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T13:52:54Z"
+              },
+              "committer": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T13:52:54Z"
+              },
+              "message": "fix(deps): adopt published .NET 11 foundation packages\n\nSelect Commons 3, PolymorphicSerializations 2, MediatR 15 and Swagger UI\n11.0.1 from their real stable publications. Retain the published SDK 4.2\nand Tenants 7.0.7 baseline until the dependent majors are qualified.",
+              "tree": {
+                "sha": "7b3615b101a23636e15cc01897437a73bd073a50",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/7b3615b101a23636e15cc01897437a73bd073a50"
+              },
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/dc24666f9f931bd101935cc13fce06199d177270",
+              "comment_count": 0,
+              "verification": {
+                "verified": false,
+                "reason": "unsigned",
+                "signature": null,
+                "payload": null,
+                "verified_at": null
+              }
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/dc24666f9f931bd101935cc13fce06199d177270",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/dc24666f9f931bd101935cc13fce06199d177270",
+            "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/dc24666f9f931bd101935cc13fce06199d177270/comments",
+            "author": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "committer": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "parents": [
+              {
+                "sha": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+                "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/adfbf21896ef982ae9d1c3ee1db247e87bda22c0"
+              }
+            ]
+          },
+          {
+            "sha": "ab3ffac80b5671b196107adc15c54f0c8ea87280",
+            "node_id": "C_kwDOOMzNRdoAKGFiM2ZmYWM4MGI1NjcxYjE5NjEwN2FkYzE1YzU0ZjBjOGVhODcyODA",
+            "commit": {
+              "author": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T13:55:24Z"
+              },
+              "committer": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T13:55:24Z"
+              },
+              "message": "build(deps): refresh the committed foundation package audit\n\nRecord live NuGet metadata for the four changed families against the\ncommitted catalog, preserving every other family and prior observation.",
+              "tree": {
+                "sha": "f846b67879234327d4d25428a88bab8f0cf03777",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/f846b67879234327d4d25428a88bab8f0cf03777"
+              },
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/ab3ffac80b5671b196107adc15c54f0c8ea87280",
+              "comment_count": 0,
+              "verification": {
+                "verified": false,
+                "reason": "unsigned",
+                "signature": null,
+                "payload": null,
+                "verified_at": null
+              }
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/ab3ffac80b5671b196107adc15c54f0c8ea87280",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/ab3ffac80b5671b196107adc15c54f0c8ea87280",
+            "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/ab3ffac80b5671b196107adc15c54f0c8ea87280/comments",
+            "author": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "committer": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "parents": [
+              {
+                "sha": "dc24666f9f931bd101935cc13fce06199d177270",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/dc24666f9f931bd101935cc13fce06199d177270",
+                "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/dc24666f9f931bd101935cc13fce06199d177270"
+              }
+            ]
+          },
+          {
+            "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "node_id": "C_kwDOOMzNRdoAKDNjMmY1OTQ0YWFhMjhkYzc4NTRhMDBhOGE5ZGYxNzFhYTgxMGIwYzc",
+            "commit": {
+              "author": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T14:23:26Z"
+              },
+              "committer": {
+                "name": "J\u00e9r\u00f4me Piquot",
+                "email": "jpiquot@itaneo.com",
+                "date": "2026-11-12T14:23:26Z"
+              },
+              "message": "fix(runtime): retain transitive pins in isolated model builds\n\nThe production model skips the owner package wrapper when importing its\nauthenticated catalog. Preserve canonical transitive package pinning and\nrun all-dependency NuGet auditing at low severity in that real command.\n\nExercise source and package builds with a real two-version dependency\ngraph; the compiled model must execute the API from the central pin.",
+              "tree": {
+                "sha": "adde3a76dca54616215dcb088f03c7ed5b541088",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees/adde3a76dca54616215dcb088f03c7ed5b541088"
+              },
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+              "comment_count": 0,
+              "verification": {
+                "verified": false,
+                "reason": "unsigned",
+                "signature": null,
+                "payload": null,
+                "verified_at": null
+              }
+            },
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/comments",
+            "author": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "committer": {
+              "login": "jpiquot",
+              "id": 6775094,
+              "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/jpiquot",
+              "html_url": "https://github.com/jpiquot",
+              "followers_url": "https://api.github.com/users/jpiquot/followers",
+              "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+              "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+              "repos_url": "https://api.github.com/users/jpiquot/repos",
+              "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "parents": [
+              {
+                "sha": "ab3ffac80b5671b196107adc15c54f0c8ea87280",
+                "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits/ab3ffac80b5671b196107adc15c54f0c8ea87280",
+                "html_url": "https://github.com/Hexalith/Hexalith.Builds/commit/ab3ffac80b5671b196107adc15c54f0c8ea87280"
+              }
+            ]
+          }
+        ],
+        "files": [
+          {
+            "sha": "bff475a0afa34bfdf774e21b226c05f788ae6bfe",
+            "filename": "Props/Directory.Packages.props",
+            "status": "modified",
+            "additions": 4,
+            "deletions": 4,
+            "changes": 8,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/Props%2FDirectory.Packages.props",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/Props%2FDirectory.Packages.props",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/Props%2FDirectory.Packages.props?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -10,9 +10,9 @@\n     <_HexalithNearestPackageOwner Condition=\"'$(_HexalithNearestPackageProps)' != ''\">$([System.IO.Path]::GetDirectoryName('$(_HexalithNearestPackageProps)'))</_HexalithNearestPackageOwner>\n     <_HexalithSelectedPackageProps Condition=\"'$(DirectoryPackagesPropsPath)' != ''\">$([MSBuild]::NormalizePath('$(DirectoryPackagesPropsPath)'))</_HexalithSelectedPackageProps>\n     <_HexalithWorksOwnsMSBuildPackageVersions Condition=\"'$(DirectoryPackagesPropsPath)' != '' and '$(_HexalithSelectedPackageProps)' == '$(_HexalithNearestPackageProps)' and Exists('$(_HexalithNearestPackageOwner)/Hexalith.Works.slnx')\">true</_HexalithWorksOwnsMSBuildPackageVersions>\n-    <HexalithCommonsVersion Condition=\"'$(HexalithCommonsVersion)' == ''\">2.30.11</HexalithCommonsVersion>\n+    <HexalithCommonsVersion Condition=\"'$(HexalithCommonsVersion)' == ''\">3.0.0</HexalithCommonsVersion>\n     <HexalithConversationsVersion Condition=\"'$(HexalithConversationsVersion)' == ''\">1.5.0</HexalithConversationsVersion>\n-    <HexalithPolymorphicSerializationsVersion Condition=\"'$(HexalithPolymorphicSerializationsVersion)' == ''\">1.19.9</HexalithPolymorphicSerializationsVersion>\n+    <HexalithPolymorphicSerializationsVersion Condition=\"'$(HexalithPolymorphicSerializationsVersion)' == ''\">2.0.0</HexalithPolymorphicSerializationsVersion>\n     <!-- Record the composed-host consumer while keeping one canonical SDK version authority. -->\n     <HexalithPlatformEventStoreHostCatalogView Condition=\"'$(MSBuildProjectName)' == 'Hexalith.Platform.EventStoreHost'\">true</HexalithPlatformEventStoreHostCatalogView>\n     <HexalithEventStoreVersion Condition=\"'$(HexalithEventStoreVersion)' == ''\">4.2.0</HexalithEventStoreVersion>\n@@ -219,7 +219,7 @@\n     <PackageVersion Include=\"Kreuzberg\" Version=\"4.10.4\" />\n     <PackageVersion Include=\"LibGit2Sharp\" Version=\"0.32.0\" />\n     <PackageVersion Include=\"MailKit\" Version=\"5.0.0\" />\n-    <PackageVersion Include=\"MediatR\" Version=\"14.3.0\" />\n+    <PackageVersion Include=\"MediatR\" Version=\"15.0.0\" />\n     <PackageVersion Include=\"MessagePack\" Version=\"3.1.12\" />\n     <!-- Authorization and SignalR align with the ASP.NET Core 11 host runtime. -->\n     <PackageVersion Include=\"Microsoft.AspNetCore.Authorization\" Version=\"11.0.0\" />\n@@ -358,7 +358,7 @@\n     <PackageVersion Include=\"SonarAnalyzer.CSharp\" Version=\"10.36.0.15337\" />\n     <PackageVersion Include=\"StyleCop.Analyzers\" Version=\"1.3.180\" />\n     <PackageVersion Include=\"Swashbuckle.AspNetCore\" Version=\"11.0.0\" />\n-    <PackageVersion Include=\"Swashbuckle.AspNetCore.SwaggerUI\" Version=\"11.0.0\" />\n+    <PackageVersion Include=\"Swashbuckle.AspNetCore.SwaggerUI\" Version=\"11.0.1\" />\n     <PackageVersion Include=\"System.Collections.Immutable\" Version=\"11.0.0\" />\n     <!-- Microsoft-supported CLI parser chosen per Hexalith.Memories ADR-7.1-008: recursive/global options, async handlers with CancellationToken, global-tool packaging. -->\n     <PackageVersion Include=\"System.CommandLine\" Version=\"3.0.0\" />"
+          },
+          {
+            "sha": "c5141e2effbbdc559b5216d90871e25bc2a4b079",
+            "filename": "Tools/package-version-audit.json",
+            "status": "modified",
+            "additions": 797,
+            "deletions": 108,
+            "changes": 905,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/Tools%2Fpackage-version-audit.json",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/Tools%2Fpackage-version-audit.json",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/Tools%2Fpackage-version-audit.json?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -1,21 +1,26 @@\n {\n   \"schemaVersion\": 2,\n-  \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+  \"generatedFromRevision\": \"dc24666f9f931bd101935cc13fce06199d177270\",\n   \"catalogPath\": \"Props/Directory.Packages.props\",\n-  \"catalogSha256\": \"c5eb5f44cf1e97fe4532ab764bc2c75e731d6ba98c27fbb57c197c93facb6bba\",\n-  \"catalogRawSha256\": \"f971b57ff9a4819eb7b11e90629dd75b272a7395720cb578ad3587e1fee594c8\",\n+  \"catalogSha256\": \"a42f6074098afe6642d86031cf0d9736948dc61d5c8bc0f3ce159b9f8b4952a8\",\n+  \"catalogRawSha256\": \"c55bf73782fa24478fab3a1c963f418cf90440a9532a15f96aee477fdb3b32ea\",\n   \"snapshot\": {\n-    \"mode\": \"complete\",\n-    \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+    \"mode\": \"incremental\",\n+    \"auditedAtUtc\": \"2026-11-12T13:53:34.8928388+00:00\",\n     \"refreshedFamilies\": [\n+      \"hexalith-commons\",\n+      \"hexalith-polymorphicserializations\",\n+      \"package:mediatr\",\n+      \"package:swashbuckle.aspnetcore.swaggerui\"\n+    ],\n+    \"preservedFamilies\": [\n       \"aspire\",\n       \"bunit-html\",\n       \"dapr\",\n       \"dotnet-10\",\n       \"fluent-ui\",\n       \"hexalith-applications\",\n       \"hexalith-chatbot\",\n-      \"hexalith-commons\",\n       \"hexalith-conversations\",\n       \"hexalith-documents\",\n       \"hexalith-domains\",\n@@ -28,7 +33,6 @@\n       \"hexalith-memories\",\n       \"hexalith-netaspire\",\n       \"hexalith-parties\",\n-      \"hexalith-polymorphicserializations\",\n       \"hexalith-projects\",\n       \"hexalith-security\",\n       \"hexalith-tenants\",\n@@ -94,7 +98,6 @@\n       \"package:kreuzberg\",\n       \"package:libgit2sharp\",\n       \"package:mailkit\",\n-      \"package:mediatr\",\n       \"package:messagepack\",\n       \"package:microsoft.azure.cosmos\",\n       \"package:microsoft.bot.builder\",\n@@ -151,7 +154,6 @@\n       \"package:stackexchange.redis\",\n       \"package:stylecop.analyzers\",\n       \"package:swashbuckle.aspnetcore\",\n-      \"package:swashbuckle.aspnetcore.swaggerui\",\n       \"package:system.commandline\",\n       \"package:system.componentmodel.annotations\",\n       \"package:system.diagnostics.diagnosticsource\",\n@@ -165,8 +167,7 @@\n       \"roslyn\",\n       \"verify\",\n       \"xunit\"\n-    ],\n-    \"preservedFamilies\": []\n+    ]\n   },\n   \"sources\": [\n     {\n@@ -181,7 +182,7 @@\n     \"fixture\": null,\n     \"fixtureSha256\": null,\n     \"fixtureMode\": null,\n-    \"repositoryRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+    \"repositoryRevision\": \"dc24666f9f931bd101935cc13fce06199d177270\",\n     \"sha256\": \"aff9f6a2f937cd22eb59a0e3ad5ac6dd02b4b2a1116f0eb91fdfdfb256f0e54a\",\n     \"entries\": [\n       {\n@@ -7046,11 +7047,11 @@\n       \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n       \"representativeConsumers\": [],\n       \"origin\": {\n-        \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n-        \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n-        \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+        \"auditedAtUtc\": \"2026-11-12T13:53:34.8928388+00:00\",\n+        \"generatedFromRevision\": \"dc24666f9f931bd101935cc13fce06199d177270\",\n+        \"familySelectionSha256\": \"31090790c196d00968f7b3e3057219520c320af10345002ca855765a5ff0f86e\",\n         \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n-        \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+        \"packageMetadataSha256\": \"949da8bff11368ba2a75270adfea26cd705943d5f47b484844be4446487bf451\",\n         \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n       },\n       \"historicalContext\": [\n@@ -7789,6 +7790,42 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-family-history.v2\",\n+          \"label\": \"Historical prior family observation; not current metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"packageIds\": [\n+            \"Hexalith.Commons\",\n+            \"Hexalith.Commons.Aspire\",\n+            \"Hexalith.Commons.Configurations\",\n+            \"Hexalith.Commons.Diagnostics\",\n+            \"Hexalith.Commons.Http\",\n+            \"Hexalith.Commons.Metadatas\",\n+            \"Hexalith.Commons.Publication\",\n+            \"Hexalith.Commons.Serialization\",\n+            \"Hexalith.Commons.ServiceDefaults\",\n+            \"Hexalith.Commons.StringEncoders\",\n+            \"Hexalith.Commons.TenantAccess\",\n+            \"Hexalith.Commons.UniqueIds\"\n+          ],\n+          \"rationale\": \"Retain the current audited family until current metadata and owned direct consumers complete compatibility acceptance.\",\n+          \"compatibilityEvidence\": \"Current NuGet metadata and owned direct-consumer discovery are recorded; historical claims are not current acceptance evidence.\",\n+          \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n+          \"representativeConsumers\": [],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -16417,11 +16454,11 @@\n       \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n       \"representativeConsumers\": [],\n       \"origin\": {\n-        \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n-        \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n-        \"familySelectionSha256\": \"5e635b4395358c1475ac2dab25d3a50bb262402d336401bdfa191d754bbc0bb1\",\n+        \"auditedAtUtc\": \"2026-11-12T13:53:34.8928388+00:00\",\n+        \"generatedFromRevision\": \"dc24666f9f931bd101935cc13fce06199d177270\",\n+        \"familySelectionSha256\": \"180b67815287027512ddb480b9a1d09e33f63c1655f16fa7c5dd8d4c48cdf65c\",\n         \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n-        \"packageMetadataSha256\": \"05deaea35ab5f95a02a17036cc0b7b9bf63ecae884191e1a7cf8d387d892cee8\",\n+        \"packageMetadataSha256\": \"052c5a024bb24ffbff4bb209ceae70813124957f41606ce3b0235488fd811b72\",\n         \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n       },\n       \"historicalContext\": [\n@@ -16951,6 +16988,32 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-family-history.v2\",\n+          \"label\": \"Historical prior family observation; not current metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"family\": \"hexalith-polymorphicserializations\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-polymorphicserializations\",\n+          \"packageIds\": [\n+            \"Hexalith.PolymorphicSerializations\",\n+            \"Hexalith.PolymorphicSerializations.CodeGenerators\"\n+          ],\n+          \"rationale\": \"Retain the current audited family until current metadata and owned direct consumers complete compatibility acceptance.\",\n+          \"compatibilityEvidence\": \"Current NuGet metadata and owned direct-consumer discovery are recorded; historical claims are not current acceptance evidence.\",\n+          \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n+          \"representativeConsumers\": [],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"5e635b4395358c1475ac2dab25d3a50bb262402d336401bdfa191d754bbc0bb1\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"05deaea35ab5f95a02a17036cc0b7b9bf63ecae884191e1a7cf8d387d892cee8\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -44515,11 +44578,11 @@\n       \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n       \"representativeConsumers\": [],\n       \"origin\": {\n-        \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n-        \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n-        \"familySelectionSha256\": \"e5f021a496eeb3a5fd2b4cbaedbbee3e00725b1749590784912634919fbe22df\",\n+        \"auditedAtUtc\": \"2026-11-12T13:53:34.8928388+00:00\",\n+        \"generatedFromRevision\": \"dc24666f9f931bd101935cc13fce06199d177270\",\n+        \"familySelectionSha256\": \"1b1d498a97a6b0f8c5444e791beb253dd106647f7d113de917fae904b8c31ed1\",\n         \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n-        \"packageMetadataSha256\": \"d59c519c928f2ffd235c6406964fba24ee90efbdbdf9518d69432041adced7b2\",\n+        \"packageMetadataSha256\": \"3b8045b27caeb560ec6ea7372be1a7f353df02f68def892c0ddfe298d5b81f8c\",\n         \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n       },\n       \"historicalContext\": [\n@@ -44881,6 +44944,31 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-family-history.v2\",\n+          \"label\": \"Historical prior family observation; not current metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"family\": \"package:mediatr\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"package:mediatr\",\n+          \"packageIds\": [\n+            \"MediatR\"\n+          ],\n+          \"rationale\": \"Retain the current audited family until current metadata and owned direct consumers complete compatibility acceptance.\",\n+          \"compatibilityEvidence\": \"Current NuGet metadata and owned direct-consumer discovery are recorded; historical claims are not current acceptance evidence.\",\n+          \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n+          \"representativeConsumers\": [],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e5f021a496eeb3a5fd2b4cbaedbbee3e00725b1749590784912634919fbe22df\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"d59c519c928f2ffd235c6406964fba24ee90efbdbdf9518d69432041adced7b2\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -68318,11 +68406,11 @@\n       \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n       \"representativeConsumers\": [],\n       \"origin\": {\n-        \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n-        \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n-        \"familySelectionSha256\": \"b9b35513294a9f128fc01b06b2cad807ee9a5f15327a068acc194d48234d687f\",\n+        \"auditedAtUtc\": \"2026-11-12T13:53:34.8928388+00:00\",\n+        \"generatedFromRevision\": \"dc24666f9f931bd101935cc13fce06199d177270\",\n+        \"familySelectionSha256\": \"2282b15e40fc869071f4a9992e9bd92dd9b82c72c6696594ab624f8314ba4256\",\n         \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n-        \"packageMetadataSha256\": \"2b83d3e6b1cefadb9bfae7fd347883cf16248c920bce48aec5798170ffc990e3\",\n+        \"packageMetadataSha256\": \"a1f875ec3489674358bc0c511fdc442e9a0012ec85fdda9a3b4c3f957c07a7e3\",\n         \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n       },\n       \"historicalContext\": [\n@@ -68784,6 +68872,31 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-family-history.v2\",\n+          \"label\": \"Historical prior family observation; not current metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"family\": \"package:swashbuckle.aspnetcore.swaggerui\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"package:swashbuckle.aspnetcore.swaggerui\",\n+          \"packageIds\": [\n+            \"Swashbuckle.AspNetCore.SwaggerUI\"\n+          ],\n+          \"rationale\": \"Retain the current audited family until current metadata and owned direct consumers complete compatibility acceptance.\",\n+          \"compatibilityEvidence\": \"Current NuGet metadata and owned direct-consumer discovery are recorded; historical claims are not current acceptance evidence.\",\n+          \"removalTrigger\": \"Accept only after current family compatibility, consumer evidence, and owner review pass against this exact audit provenance.\",\n+          \"representativeConsumers\": [],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"b9b35513294a9f128fc01b06b2cad807ee9a5f15327a068acc194d48234d687f\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"2b83d3e6b1cefadb9bfae7fd347883cf16248c920bce48aec5798170ffc990e3\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -119961,22 +120074,22 @@\n     },\n     {\n       \"id\": \"Hexalith.Commons\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -120653,27 +120766,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Aspire\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -121350,27 +121499,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Aspire\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Configurations\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -122047,27 +122232,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Configurations\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Diagnostics\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -122288,27 +122509,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Diagnostics\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Http\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -122985,27 +123242,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Http\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Metadatas\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -123682,27 +123975,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Metadatas\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Publication\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -123923,27 +124252,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Publication\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.Serialization\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -124200,27 +124565,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.Serialization\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.ServiceDefaults\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -124897,27 +125298,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.ServiceDefaults\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.StringEncoders\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -125594,27 +126031,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.StringEncoders\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.TenantAccess\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -125835,27 +126308,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.TenantAccess\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.Commons.UniqueIds\",\n-      \"auditedVersion\": \"2.30.11\",\n-      \"selectedVersion\": \"2.30.11\",\n-      \"latestStable\": \"2.30.11\",\n+      \"auditedVersion\": \"3.0.0\",\n+      \"selectedVersion\": \"3.0.0\",\n+      \"latestStable\": \"3.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-commons\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-commons\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=3.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"2.30.11\",\n+          \"latestStable\": \"3.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -126532,6 +127041,42 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.Commons.UniqueIds\",\n+          \"auditedVersion\": \"2.30.11\",\n+          \"selectedVersion\": \"2.30.11\",\n+          \"latestStable\": \"2.30.11\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-commons\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-commons\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.30.11, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"2.30.11\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e0d0802186fbb9f96d4f73601ece5796f5c4207237e0a29b00450b8b5ca5f909\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"af26c4b9ea299193a86216912cdd9fab477d1824a2cd466c5e500c36e93ea580\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -183043,22 +183588,22 @@\n     },\n     {\n       \"id\": \"Hexalith.PolymorphicSerializations\",\n-      \"auditedVersion\": \"1.19.9\",\n-      \"selectedVersion\": \"1.19.9\",\n-      \"latestStable\": \"1.19.9\",\n+      \"auditedVersion\": \"2.0.0\",\n+      \"selectedVersion\": \"2.0.0\",\n+      \"latestStable\": \"2.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-polymorphicserializations\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-polymorphicserializations\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=1.19.9, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"1.19.9\",\n+          \"latestStable\": \"2.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -183663,27 +184208,63 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.PolymorphicSerializations\",\n+          \"auditedVersion\": \"1.19.9\",\n+          \"selectedVersion\": \"1.19.9\",\n+          \"latestStable\": \"1.19.9\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-polymorphicserializations\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-polymorphicserializations\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=1.19.9, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"1.19.9\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"5e635b4395358c1475ac2dab25d3a50bb262402d336401bdfa191d754bbc0bb1\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"05deaea35ab5f95a02a17036cc0b7b9bf63ecae884191e1a7cf8d387d892cee8\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n     {\n       \"id\": \"Hexalith.PolymorphicSerializations.CodeGenerators\",\n-      \"auditedVersion\": \"1.19.9\",\n-      \"selectedVersion\": \"1.19.9\",\n-      \"latestStable\": \"1.19.9\",\n+      \"auditedVersion\": \"2.0.0\",\n+      \"selectedVersion\": \"2.0.0\",\n+      \"latestStable\": \"2.0.0\",\n       \"latestPrerelease\": null,\n       \"listingState\": \"listed\",\n       \"family\": \"hexalith-polymorphicserializations\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"hexalith-polymorphicserializations\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=1.19.9, prerelease=\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=2.0.0, prerelease=\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"1.19.9\",\n+          \"latestStable\": \"2.0.0\",\n           \"latestPrerelease\": null,\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -184288,6 +184869,42 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Hexalith.PolymorphicSerializations.CodeGenerators\",\n+          \"auditedVersion\": \"1.19.9\",\n+          \"selectedVersion\": \"1.19.9\",\n+          \"latestStable\": \"1.19.9\",\n+          \"latestPrerelease\": null,\n+          \"listingState\": \"listed\",\n+          \"family\": \"hexalith-polymorphicserializations\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"hexalith-polymorphicserializations\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=1.19.9, prerelease=\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"1.19.9\",\n+              \"latestPrerelease\": null,\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"5e635b4395358c1475ac2dab25d3a50bb262402d336401bdfa191d754bbc0bb1\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"05deaea35ab5f95a02a17036cc0b7b9bf63ecae884191e1a7cf8d387d892cee8\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -196280,22 +196897,22 @@\n     },\n     {\n       \"id\": \"MediatR\",\n-      \"auditedVersion\": \"14.3.0\",\n-      \"selectedVersion\": \"14.3.0\",\n-      \"latestStable\": \"14.3.0\",\n+      \"auditedVersion\": \"15.0.0\",\n+      \"selectedVersion\": \"15.0.0\",\n+      \"latestStable\": \"15.0.0\",\n       \"latestPrerelease\": \"14.0.0-beta-1\",\n       \"listingState\": \"listed\",\n       \"family\": \"package:mediatr\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"package:mediatr\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=14.3.0, prerelease=14.0.0-beta-1\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=15.0.0, prerelease=14.0.0-beta-1\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"14.3.0\",\n+          \"latestStable\": \"15.0.0\",\n           \"latestPrerelease\": \"14.0.0-beta-1\",\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -196700,6 +197317,42 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"MediatR\",\n+          \"auditedVersion\": \"14.3.0\",\n+          \"selectedVersion\": \"14.3.0\",\n+          \"latestStable\": \"14.3.0\",\n+          \"latestPrerelease\": \"14.0.0-beta-1\",\n+          \"listingState\": \"listed\",\n+          \"family\": \"package:mediatr\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"package:mediatr\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=14.3.0, prerelease=14.0.0-beta-1\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"14.3.0\",\n+              \"latestPrerelease\": \"14.0.0-beta-1\",\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"e5f021a496eeb3a5fd2b4cbaedbbee3e00725b1749590784912634919fbe22df\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"d59c519c928f2ffd235c6406964fba24ee90efbdbdf9518d69432041adced7b2\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },\n@@ -281282,22 +281935,22 @@\n     },\n     {\n       \"id\": \"Swashbuckle.AspNetCore.SwaggerUI\",\n-      \"auditedVersion\": \"11.0.0\",\n-      \"selectedVersion\": \"11.0.0\",\n-      \"latestStable\": \"11.0.0\",\n+      \"auditedVersion\": \"11.0.1\",\n+      \"selectedVersion\": \"11.0.1\",\n+      \"latestStable\": \"11.0.1\",\n       \"latestPrerelease\": \"6.6.0-preview.322\",\n       \"listingState\": \"listed\",\n       \"family\": \"package:swashbuckle.aspnetcore.swaggerui\",\n       \"disposition\": \"retained\",\n       \"rollbackGroup\": \"package:swashbuckle.aspnetcore.swaggerui\",\n       \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n-      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=11.0.0, prerelease=6.6.0-preview.322\",\n+      \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=11.0.1, prerelease=6.6.0-preview.322\",\n       \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n       \"sourceResults\": [\n         {\n           \"source\": \"https://api.nuget.org/v3/index.json\",\n           \"listingState\": \"listed\",\n-          \"latestStable\": \"11.0.0\",\n+          \"latestStable\": \"11.0.1\",\n           \"latestPrerelease\": \"6.6.0-preview.322\",\n           \"diagnostic\": \"Registration metadata resolved.\"\n         }\n@@ -281846,6 +282499,42 @@\n             \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n           },\n           \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n+        },\n+        {\n+          \"schema\": \"hexalith.package-audit-package-history.v2\",\n+          \"label\": \"Historical prior package observation; not current package metadata or acceptance evidence.\",\n+          \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+          \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+          \"id\": \"Swashbuckle.AspNetCore.SwaggerUI\",\n+          \"auditedVersion\": \"11.0.0\",\n+          \"selectedVersion\": \"11.0.0\",\n+          \"latestStable\": \"11.0.0\",\n+          \"latestPrerelease\": \"6.6.0-preview.322\",\n+          \"listingState\": \"listed\",\n+          \"family\": \"package:swashbuckle.aspnetcore.swaggerui\",\n+          \"disposition\": \"retained\",\n+          \"rollbackGroup\": \"package:swashbuckle.aspnetcore.swaggerui\",\n+          \"rationale\": \"Current pin is the latest listed stable release on the configured sources.\",\n+          \"evidence\": \"https://api.nuget.org/v3/index.json: state=listed, stable=11.0.0, prerelease=6.6.0-preview.322\",\n+          \"removalTrigger\": \"Re-run the live audit and accept a source-resolved candidate only after the family and representative consumers pass compatibility validation.\",\n+          \"sourceResults\": [\n+            {\n+              \"source\": \"https://api.nuget.org/v3/index.json\",\n+              \"listingState\": \"listed\",\n+              \"latestStable\": \"11.0.0\",\n+              \"latestPrerelease\": \"6.6.0-preview.322\",\n+              \"diagnostic\": \"Registration metadata resolved.\"\n+            }\n+          ],\n+          \"origin\": {\n+            \"auditedAtUtc\": \"2026-11-12T09:22:25.6534629+00:00\",\n+            \"generatedFromRevision\": \"20b8b80c9bd4418211f183528e2d200a27eccc29\",\n+            \"familySelectionSha256\": \"b9b35513294a9f128fc01b06b2cad807ee9a5f15327a068acc194d48234d687f\",\n+            \"sourceScopeSha256\": \"d4e87499724317c21e19499bcc6b057462117b9ed33b34b84c8dc5a1fa1321f2\",\n+            \"packageMetadataSha256\": \"2b83d3e6b1cefadb9bfae7fd347883cf16248c920bce48aec5798170ffc990e3\",\n+            \"consumerEvidenceSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n+          },\n+          \"supersededBecause\": \"Family-local catalog selection or observation evidence changed.\"\n         }\n       ]\n     },"
+          },
+          {
+            "sha": "af3a4150be855c88af809692ffaf45652cbcfd2d",
+            "filename": "docs/cicd-3-6-builds-shared-release-results.md",
+            "status": "modified",
+            "additions": 63,
+            "deletions": 5,
+            "changes": 68,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/docs%2Fcicd-3-6-builds-shared-release-results.md",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/docs%2Fcicd-3-6-builds-shared-release-results.md",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/docs%2Fcicd-3-6-builds-shared-release-results.md?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -3,9 +3,11 @@\n Story 3-6 implements the shared release caller and retires Builds' legacy\n qualification CI gates. Implementation starts from Builds\n `aca0183fdeb4a7fcd02546ff8f082acbf73a0585`; the enclosing CiCd baseline is\n-`22387551f497bfef53af37c0c35d86b0d40c8d3f`. Production bootstrap remains a\n+`142690a268cec17275cccadc1132bb1f77eff7cd`. Production bootstrap remains a\n separate operational step. No release dispatch, publication, retained-resource\n mutation, setting change or credential change was performed for this story.\n+The source-bound implementation checks below precede the separate upstream\n+.NET 11 migration recorded in Review completion.\n \n ## Implemented behavior\n \n@@ -156,7 +158,63 @@ are in [hosted-success.json](../evidence/cicd-3-6/hosted-success.json).\n Hosted publication remains outside this implementation; these checks do not\n establish production package, artifact, outcome or final-tag publication.\n \n-## AD-19 read-only preflight and bootstrap stops\n+## Review completion (2026-11-12)\n+\n+Three independent review layers examined the expanded recorded-baseline diff.\n+The reviewed implementation source is\n+`14bb22d9fb2124405ce23c22bd0d38ad55be7836`. Its own exact-source\n+[push run 43188274154](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43188274154)\n+succeeded on attempt 1, with all seven retained jobs green, including both\n+Python interpreters, all fifteen catalog checks and both sample platforms.\n+This closes the final-integration hosted-evidence gap; the earlier run above\n+remains evidence for the initial implementation and its failed-job retry.\n+Job identities and the review observations are retained in\n+[review-completion.json](../evidence/cicd-3-6/review-completion.json).\n+\n+Fresh checks at that reviewed source passed actionlint/authenticated zizmor\n+(zero new findings), the committed-object API check (2,565 entries, no removals),\n+35 release-outcome/caller tests and four runner process tests. The saved full\n+Python logs' hashes match their records and both report 14/14 groups passed.\n+All 118 protected files match the saved integrated-source comparison.\n+\n+The removed PowerShell wrappers for commitlint, container publishing and\n+governed provenance delegate to Python groups which the retained runner still\n+discovers; their underlying tests continue running. Frozen domain-workflow text\n+checks and the old package-publisher regression no longer run with the retired\n+legacy contracts job. Keeping their files pending final legacy cleanup does not\n+make them current gates.\n+\n+The review recorded four follow-ups in CiCd's deferred-work ledger: focused\n+real packaged-host extension-closure product verification, bounded consumer\n+evaluator execution/capture, central-evaluator descendant cleanup after parent\n+exit, and the intermittent native cleanup observation. The first three arise\n+from independent upstream tooling changes; the fourth predates this caller\n+rewrite. Retired G-4 qualification execution is not restored. The exact sanitized\n+[first-attempt failure excerpt](../evidence/cicd-3-6/cleanup-first-attempt.log)\n+remains inspectable; neither the successful retry nor focused passing cases\n+establish its root cause.\n+\n+Before committing these documentation/evidence corrections, the clean Builds\n+checkout fast-forwarded to independently published upstream\n+`9f5d751f7ab0b7a621dcd18b589bf061fabac6ec`, preserving its separate .NET 11\n+migration. Its [push run 43196500590](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43196500590)\n+also has all seven jobs green. That migration is outside this story's reviewed\n+implementation and the preservation comparison above. The review fixes change\n+only this report and its evidence; no runtime, catalog or SDK edits are made.\n+\n+## Historical AD-19 preflight and bootstrap stops (07:11\u201307:12 UTC)\n+\n+This section preserves the implementation-time snapshot, not current release\n+readiness. A read-only refresh during review found draft `441591623` externally\n+updated at `2026-11-12T08:52:41Z`: its production marker is absent and its\n+`hexalith-qualification-source:` marker is present. It is no longer a marked\n+production-draft blocker. Its resources remain retained; no archival, deletion,\n+publication or version reuse was performed or authorized by this review.\n+CiCd's canonical story\n+`_bmad-output/specs/spec-cicd/stories/3-7-bootstrap-the-first-builds-release.md`\n+records the later operational reconciliation and requires a fresh full preflight.\n+The old setting failures below remain historical observations; no current\n+setting is inferred from them.\n \n Read-only checks at `2026-11-12T07:11:18Z` and inventory at\n `2026-11-12T07:12:03Z` used the configured CiCd-agent profile\n@@ -173,7 +231,7 @@ bypass actors: Protect main (19196298) forbids deletion/non-fast-forward on the\n default branch; v tags (26812219) forbid update/deletion on `refs/tags/v*` and\n permit tag creation.\n \n-The marked probe draft remains an explicit stop: release ID `441591623`,\n+At the historical snapshot, the marked probe draft was an explicit stop: release ID `441591623`,\n `v4.47.1`, source `75e1d4a3809b30684e67c7e9b2c8043720b49c53`, package\n `Hexalith.Builds.PublishProbe.20261111`, container `cicd-publish-spike-3-1`.\n Its original [producer run 43010609603](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43010609603)\n@@ -209,8 +267,8 @@ All endpoint paths are relative to the GitHub API.\n | Organization variables and repository access | `orgs/Hexalith/actions/variables` | `organization_actions_variables=read` |\n | Organization pull-secret names and repository access | `orgs/Hexalith/actions/secrets` | `organization_secrets=read` |\n \n-No production bootstrap is permitted while the retained draft/tags or any\n-unverified AD-19 precondition remains. A later explicitly authorized bootstrap\n+The historical assessment did not authorize production bootstrap. A later\n+explicitly authorized bootstrap\n must repeat the complete preflight and record its exact source, original\n artifact, package publication, sole outcome and final tag; `ready` requires\n AD-18 checks and separate maintainer publication. No positive hosted production"
+          },
+          {
+            "sha": "8836eaf71c8ef0dfd06c53a991694531d70912d8",
+            "filename": "evidence/cicd-3-6/cleanup-first-attempt.log",
+            "status": "added",
+            "additions": 18,
+            "deletions": 0,
+            "changes": 18,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/evidence%2Fcicd-3-6%2Fcleanup-first-attempt.log",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/evidence%2Fcicd-3-6%2Fcleanup-first-attempt.log",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/evidence%2Fcicd-3-6%2Fcleanup-first-attempt.log?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -0,0 +1,18 @@\n+# Sanitized hosted test failure excerpt\n+# Run 43174705780, attempt 1, job 131036024414\n+# Source d8b2be323528e624316d4049b7c86d03ba0f74e0\n+# Root cause unproven; successful retry is recorded separately.\n+2026-11-12T07:31:29.8962019Z failed Hexalith.Builds.ModuleTool.Tests.NativeTestExecutorTests.ReviewDetachedNativeDescendantsAreVerifiedAsync(discoveryVerified: True) (460ms)\n+2026-11-12T07:31:29.9026693Z   from /home/runner/work/Hexalith.Builds/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/bin/Release/net10.0/Hexalith.Builds.Module.Tests.dll (net10.0|x64)\n+2026-11-12T07:31:29.9073113Z   Shouldly.ShouldAssertException : False\n+2026-11-12T07:31:29.9077871Z       should be\n+2026-11-12T07:31:29.9162579Z   True\n+2026-11-12T07:31:29.9172765Z       but was not\n+2026-11-12T07:31:29.9189114Z     at Hexalith.Builds.ModuleTool.Tests.NativeTestExecutorTests.ReviewDetachedNativeDescendantsAreVerifiedAsync(Boolean discoveryVerified) in /_/test/Hexalith.Builds.Module.Tests/NativeTestExecutorTests.cs:64\n+2026-11-12T07:31:29.9192088Z     at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\n+2026-11-12T07:31:29.9194806Z     at Hexalith.Builds.ModuleTool.Tests.NativeTestExecutorTests.ReviewDetachedNativeDescendantsAreVerifiedAsync(Boolean discoveryVerified) in /_/test/Hexalith.Builds.Module.Tests/NativeTestExecutorTests.cs:110\n+2026-11-12T07:31:29.9198154Z     at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\n+2026-11-12T07:31:29.9200537Z     at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)\n+2026-11-12T07:31:29.9202409Z     --- End of stack trace from previous location ---\n+2026-11-12T07:31:29.9203828Z     at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\n+2026-11-12T07:31:29.9205931Z     at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)"
+          },
+          {
+            "sha": "34f29af93515c038fca82aa7675d05503c5bbed1",
+            "filename": "evidence/cicd-3-6/review-completion.json",
+            "status": "added",
+            "additions": 141,
+            "deletions": 0,
+            "changes": 141,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/evidence%2Fcicd-3-6%2Freview-completion.json",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/evidence%2Fcicd-3-6%2Freview-completion.json",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/evidence%2Fcicd-3-6%2Freview-completion.json?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -0,0 +1,141 @@\n+{\n+  \"review_date\": \"2026-11-12\",\n+  \"reviewed_source\": \"14bb22d9fb2124405ce23c22bd0d38ad55be7836\",\n+  \"baseline_revision\": \"142690a268cec17275cccadc1132bb1f77eff7cd\",\n+  \"hosted_final_integrated_source\": {\n+    \"id\": 43188274154,\n+    \"head_sha\": \"14bb22d9fb2124405ce23c22bd0d38ad55be7836\",\n+    \"event\": \"push\",\n+    \"path\": \".github/workflows/builds-ci.yml\",\n+    \"head_branch\": \"main\",\n+    \"status\": \"completed\",\n+    \"conclusion\": \"success\",\n+    \"attempt\": 1,\n+    \"url\": \"https://github.com/Hexalith/Hexalith.Builds/actions/runs/43188274154\",\n+    \"jobs\": [\n+      {\n+        \"id\": 131080847627,\n+        \"name\": \"Workflow lint and public API\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131080847923,\n+        \"name\": \"Python contract tests (3.12)\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131080847992,\n+        \"name\": \"Sample module / Build and tests\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131080848064,\n+        \"name\": \"Package catalog contracts\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131080848161,\n+        \"name\": \".NET tests / Build and tests\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131080848168,\n+        \"name\": \"Python contract tests (runner)\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131081257879,\n+        \"name\": \"Sample Windows tests\",\n+        \"conclusion\": \"success\"\n+      }\n+    ]\n+  },\n+  \"fresh_local_checks\": {\n+    \"source\": \"14bb22d9fb2124405ce23c22bd0d38ad55be7836\",\n+    \"workflow_lint\": {\n+      \"exit_code\": 0,\n+      \"log\": \"/tmp/cicd-3-6-resumed-review-lint.log\",\n+      \"new_zizmor_findings\": 0\n+    },\n+    \"public_api\": {\n+      \"exit_code\": 0,\n+      \"entries\": 2565,\n+      \"removals\": 0,\n+      \"log\": \"/tmp/cicd-3-6-resumed-review-api.log\"\n+    },\n+    \"release_outcome\": {\n+      \"command\": \"python3 -m unittest discover -s Github/lib/tests -p test_release_outcome.py -v\",\n+      \"passed\": 35\n+    },\n+    \"python_runner\": {\n+      \"command\": \"python3 -m unittest discover -s Tools/ci/tests -p test_python_runner.py -v\",\n+      \"passed\": 4\n+    },\n+    \"recorded_full_python_log_hashes_verified\": true,\n+    \"recorded_full_python_groups_passed\": {\n+      \"python312\": \"14/14\",\n+      \"runner\": \"14/14\"\n+    },\n+    \"protected_files_verified\": 118,\n+    \"protected_file_mismatches\": 0\n+  },\n+  \"upstream_preserved_for_documentation_commit\": {\n+    \"source\": \"9f5d751f7ab0b7a621dcd18b589bf061fabac6ec\",\n+    \"scope\": \"Separate .NET 11 migration; outside the 3-6 implementation review.\",\n+    \"push_run\": 43196500590,\n+    \"jobs\": [\n+      {\n+        \"id\": 131108716325,\n+        \"name\": \"Python contract tests (runner)\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131108716784,\n+        \"name\": \"Sample module / Build and tests\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131108716798,\n+        \"name\": \"Python contract tests (3.12)\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131108717054,\n+        \"name\": \".NET tests / Build and tests\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131108717084,\n+        \"name\": \"Workflow lint and public API\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131108717214,\n+        \"name\": \"Package catalog contracts\",\n+        \"conclusion\": \"success\"\n+      },\n+      {\n+        \"id\": 131109114669,\n+        \"name\": \"Sample Windows tests\",\n+        \"conclusion\": \"success\"\n+      }\n+    ],\n+    \"runtime_changes_by_review_fix\": false\n+  },\n+  \"probe_marker_readback\": {\n+    \"id\": 441591623,\n+    \"tag_name\": \"v4.47.1\",\n+    \"draft\": true,\n+    \"updated_at\": \"2026-11-12T08:52:41Z\",\n+    \"production_marker\": false,\n+    \"qualification_marker\": true,\n+    \"mutation_performed_by_this_session\": false\n+  },\n+  \"followups\": [\n+    \"Real packaged CLI extension-closure product verification; G-4 qualification execution remains retired.\",\n+    \"Consumer evaluator process/drain deadlines and bounded channel storage.\",\n+    \"Central evaluator owned-descendant cleanup after parent exit.\",\n+    \"Intermittent native cleanup observation; sanitized failure excerpt retained.\"\n+  ],\n+  \"production_dispatch_or_mutation_performed\": false\n+}"
+          },
+          {
+            "sha": "14afcbf7373f316ba7ad727acf3cf8ffa09876c4",
+            "filename": "src/libraries/Hexalith.Builds.Tooling/Runtime/PlatformManifestCommand.cs",
+            "status": "modified",
+            "additions": 2,
+            "deletions": 1,
+            "changes": 3,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/src%2Flibraries%2FHexalith.Builds.Tooling%2FRuntime%2FPlatformManifestCommand.cs",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/src%2Flibraries%2FHexalith.Builds.Tooling%2FRuntime%2FPlatformManifestCommand.cs",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/src%2Flibraries%2FHexalith.Builds.Tooling%2FRuntime%2FPlatformManifestCommand.cs?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -92,7 +92,8 @@ public static async Task<string> BuildModelAsync(SourceMapping mapping, string w\n             \"--artifacts-path\", Path.Combine(workspace, \"build\", \"platform-model\"),\n             \"-p:BuildsToolingAssemblyPath=\" + typeof(PlatformManifestCommand).Assembly.Location,\n             \"-p:CopyLocalLockFileAssemblies=true\",\n-            \"-p:NuGetAudit=false\", \"-p:MinVerVersionOverride=1.0.0\", \"-nodeReuse:false\", \"-p:UseSharedCompilation=false\",\n+            \"-p:CentralPackageTransitivePinningEnabled=true\",\n+            \"-p:NuGetAudit=true\", \"-p:NuGetAuditMode=all\", \"-p:NuGetAuditLevel=low\", \"-p:MinVerVersionOverride=1.0.0\", \"-nodeReuse:false\", \"-p:UseSharedCompilation=false\",\n             \"-m:1\", \"-p:BuildInParallel=false\", \"-p:RestoreBuildInParallel=false\",\n             \"-p:AlternateCommonProps=\" + SourceMappingMaterializer.ModelCommonPropsPath(workspace),\n             .. (mapping.Mode == WorkspaceMode.Source ? PinnedSourceModelCatalogArguments(pinnedCatalog) : PinnedCatalogArguments(pinnedCatalog))"
+          },
+          {
+            "sha": "904810c13ae482ca7cb5616d6dc729b3f123204f",
+            "filename": "test/Hexalith.Builds.Module.Tests/Workspace/PlatformModelTransitivePinningTests.cs",
+            "status": "added",
+            "additions": 100,
+            "deletions": 0,
+            "changes": 100,
+            "blob_url": "https://github.com/Hexalith/Hexalith.Builds/blob/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/test%2FHexalith.Builds.Module.Tests%2FWorkspace%2FPlatformModelTransitivePinningTests.cs",
+            "raw_url": "https://github.com/Hexalith/Hexalith.Builds/raw/3c2f5944aaa28dc7854a00a8a9df171aa810b0c7/test%2FHexalith.Builds.Module.Tests%2FWorkspace%2FPlatformModelTransitivePinningTests.cs",
+            "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/test%2FHexalith.Builds.Module.Tests%2FWorkspace%2FPlatformModelTransitivePinningTests.cs?ref=3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "patch": "@@ -0,0 +1,100 @@\n+// <copyright file=\"PlatformModelTransitivePinningTests.cs\" company=\"ITANEO\">\n+// Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.\n+// Licensed under the MIT license. See LICENSE file in the project root for full license information.\n+// </copyright>\n+\n+namespace Hexalith.Builds.ModuleTool.Tests.Workspace;\n+\n+using System.Runtime.Loader;\n+using System.Text.Json;\n+\n+using Hexalith.Builds.Tooling.Runtime;\n+using Hexalith.Builds.Tooling.Workspace;\n+\n+using Shouldly;\n+\n+using Xunit;\n+\n+/// <summary>Exercises real transitive package selection after the production builder bypasses owner package props.</summary>\n+[Collection(nameof(PlatformManifestTestGrouping))]\n+public sealed class PlatformModelTransitivePinningTests\n+{\n+    /// <summary>The actual model builder restores and executes the centrally pinned transitive API.</summary>\n+    /// <param name=\"mode\">The selected source or package mode.</param>\n+    /// <returns>The actual restored package graph and execution assertions.</returns>\n+    [Theory]\n+    [InlineData(WorkspaceMode.Source)]\n+    [InlineData(WorkspaceMode.Package)]\n+    public async Task ModelBuildKeepsCentralTransitivePinsAndAuditsAsync(WorkspaceMode mode)\n+    {\n+        const string catalog = \"<Project><PropertyGroup><ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally></PropertyGroup><ItemGroup>\"\n+            + \"<PackageVersion Include=\\\"Hexalith.Dep\\\" Version=\\\"1.0.0\\\" />\"\n+            + \"<PackageVersion Include=\\\"Local.Parent\\\" Version=\\\"1.0.0\\\" />\"\n+            + \"<PackageVersion Include=\\\"Local.Runtime\\\" Version=\\\"2.0.0\\\" /></ItemGroup></Project>\";\n+        using WorkspaceGitFixture fixture = await WorkspaceGitFixture.CreateWithCatalogAsync(catalog).ConfigureAwait(true);\n+        SourceMapping mapping = await WorkspaceRootResolver.ResolveAsync(fixture.Manifest, mode, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        string workspace = Path.Combine(fixture.Directory, \"transitive-model\");\n+        await SourceMappingMaterializer.WriteAsync(mapping, workspace, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        string feed = Path.Combine(fixture.Directory, \"feed\");\n+        _ = Directory.CreateDirectory(feed);\n+        await PackAsync(fixture.Directory, feed, \"Local.Runtime\", \"1.0.0\", \"public static class SelectedRuntime { public static string Old() => \\\"old\\\"; }\", null).ConfigureAwait(true);\n+        await PackAsync(fixture.Directory, feed, \"Local.Runtime\", \"2.0.0\", \"public static class SelectedRuntime { public static string Current() => \\\"central-two\\\"; }\", null).ConfigureAwait(true);\n+        await PackAsync(fixture.Directory, feed, \"Local.Parent\", \"1.0.0\", \"public sealed class ParentMarker { }\", \"<PackageReference Include=\\\"Local.Runtime\\\" Version=\\\"1.0.0\\\" />\").ConfigureAwait(true);\n+        string root = mapping.PlatformIdentity!.PlatformPath;\n+        string cache = Path.Combine(fixture.Directory, \"packages\");\n+        string configuration = \"<configuration><packageSources><clear /><add key=\\\"local\\\" value=\\\"\" + Escape(feed)\n+            + \"\\\" /></packageSources><config><add key=\\\"globalPackagesFolder\\\" value=\\\"\" + Escape(cache)\n+            + \"\\\" /></config></configuration>\";\n+        await File.WriteAllTextAsync(Path.Combine(root, \"NuGet.Config\"), configuration, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+\n+        // The real owner enables transitive pinning in Directory.Packages.props, which the builder intentionally bypasses.\n+        const string ownerPackages = \"<Project><PropertyGroup><CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled></PropertyGroup></Project>\";\n+        await File.WriteAllTextAsync(Path.Combine(root, \"Directory.Packages.props\"), ownerPackages, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        string model = Path.Combine(root, \"src\", \"Hexalith.Platform.Composition\");\n+        _ = Directory.CreateDirectory(model);\n+        const string modelProject = \"<Project Sdk=\\\"Microsoft.NET.Sdk\\\"><PropertyGroup><TargetFramework>net11.0</TargetFramework><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>\"\n+            + \"<ItemGroup><PackageReference Include=\\\"Local.Parent\\\" /></ItemGroup></Project>\";\n+        await File.WriteAllTextAsync(Path.Combine(model, \"Hexalith.Platform.Composition.csproj\"), modelProject, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        const string modelSource = \"public static class ModelProbe { public static string Read() => SelectedRuntime.Current(); }\";\n+        await File.WriteAllTextAsync(Path.Combine(model, \"ModelProbe.cs\"), modelSource, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+\n+        string assembly = await PlatformManifestCommand.BuildModelAsync(mapping, workspace, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+\n+        string assetsPath = Directory.GetFiles(Path.Combine(workspace, \"build\", \"platform-model\", \"obj\"), \"project.assets.json\", SearchOption.AllDirectories).ShouldHaveSingleItem();\n+        using JsonDocument assets = JsonDocument.Parse(await File.ReadAllTextAsync(assetsPath, TestContext.Current.CancellationToken).ConfigureAwait(true));\n+        assets.RootElement.GetProperty(\"libraries\").TryGetProperty(\"Local.Runtime/2.0.0\", out _).ShouldBeTrue();\n+        assets.RootElement.GetProperty(\"libraries\").TryGetProperty(\"Local.Runtime/1.0.0\", out _).ShouldBeFalse();\n+        JsonElement audit = assets.RootElement.GetProperty(\"project\").GetProperty(\"restore\").GetProperty(\"restoreAuditProperties\");\n+        audit.GetProperty(\"enableAudit\").GetString().ShouldBe(\"true\");\n+        audit.GetProperty(\"auditMode\").GetString().ShouldBe(\"all\");\n+        audit.GetProperty(\"auditLevel\").GetString().ShouldBe(\"low\");\n+        AssemblyLoadContext context = new(\"transitive-model-\" + Guid.NewGuid().ToString(\"N\"), isCollectible: true);\n+        context.Resolving += (load, name) => load.LoadFromAssemblyPath(Path.Combine(Path.GetDirectoryName(assembly)!, name.Name + \".dll\"));\n+        try\n+        {\n+            context.LoadFromAssemblyPath(assembly).GetType(\"ModelProbe\", throwOnError: true)!.GetMethod(\"Read\")!.Invoke(null, null).ShouldBe(\"central-two\");\n+        }\n+        finally\n+        {\n+            context.Unload();\n+        }\n+    }\n+\n+    private static string Escape(string value) => System.Security.SecurityElement.Escape(value);\n+\n+    private static async Task PackAsync(string root, string feed, string id, string version, string source, string? dependency)\n+    {\n+        string directory = Path.Combine(root, id + \"-\" + version);\n+        _ = Directory.CreateDirectory(directory);\n+        string project = Path.Combine(directory, id + \".csproj\");\n+        string packageProject = \"<Project Sdk=\\\"Microsoft.NET.Sdk\\\"><PropertyGroup><TargetFramework>net11.0</TargetFramework><PackageId>\" + id + \"</PackageId><Version>\" + version\n+            + \"</Version><RestoreSources>\" + Escape(feed) + \"</RestoreSources></PropertyGroup><ItemGroup>\" + dependency + \"</ItemGroup></Project>\";\n+        await File.WriteAllTextAsync(project, packageProject, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        await File.WriteAllTextAsync(Path.Combine(directory, \"Contract.cs\"), source, TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        CompositionProcessResult result = await CompositionProcess.RunAsync(\n+            CompositionProcess.CreateStartInfo(\"dotnet\", [\"pack\", project, \"-c\", \"Release\", \"-o\", feed, \"-v:q\"], directory, null),\n+            TimeSpan.FromMinutes(1),\n+            TestContext.Current.CancellationToken).ConfigureAwait(true);\n+        result.ExitCode.ShouldBe(0, result.Output + result.ErrorOutput);\n+    }\n+}"
+          }
+        ]
+      }
+    }
+  ]
+}

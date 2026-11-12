@@ -1,0 +1,33 @@
+{
+  "observed_at": "2026-11-12T16:51:40.025058Z",
+  "run_id": 43262148178,
+  "run_conclusion": "success",
+  "run_source_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+  "sole_outcome": {
+    "outcome": "nothing",
+    "schema": "hexalith.release-outcome.v1",
+    "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+  },
+  "outcome_artifact_id": 13962939908,
+  "api_digest": "sha256:680e6dd23757c2ec6d8ad2d970e06f514ab04f3ff72503bd69d1ce1d51c7f14b",
+  "downloaded_archive_digest": "sha256:680e6dd23757c2ec6d8ad2d970e06f514ab04f3ff72503bd69d1ce1d51c7f14b",
+  "archive_members": [
+    "outcome.json"
+  ],
+  "outcome_json_sha256": "71bee3b6544698a0af281481796726f818de93efeb5305397f3f46ffb8a382aa",
+  "schema_validation": "PASS: runtime validator and JSON Schema draft 2020-12",
+  "original_release_artifacts": [],
+  "job_conclusions": {
+    "release / Resolve release identity": "success",
+    "release / Release CodeQL (csharp)": "success",
+    "release / Prepare and run nightly hook": "skipped",
+    "release / Compute release version": "success",
+    "release / Report release outcome": "success",
+    "release / Build audited release payload": "skipped",
+    "release / Authenticate original artifact and process marked draft": "skipped",
+    "publish": "skipped"
+  },
+  "workflow_dispatch_count": 1,
+  "redispatch_count": 0,
+  "decision": "STOP: no bootstrap tag; no seed, publication, artificial commit or automatic redispatch."
+}

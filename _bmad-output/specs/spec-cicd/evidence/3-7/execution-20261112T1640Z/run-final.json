@@ -1,0 +1,1059 @@
+{
+  "observed_at": "2026-11-12T16:51:38.674338Z",
+  "run": {
+    "id": 43262148178,
+    "name": "Release",
+    "node_id": "WFR_kwLOOMzNRc8AAAAKEp_-Ug",
+    "head_branch": "main",
+    "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+    "path": ".github/workflows/builds-release.yml",
+    "display_title": "Release",
+    "run_number": 14,
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success",
+    "workflow_id": 411848293,
+    "check_suite_id": 117152534282,
+    "check_suite_node_id": "CS_kwDOOMzNRc8AAAAbRtXPCg",
+    "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+    "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+    "pull_requests": [],
+    "created_at": "2026-11-12T16:45:35Z",
+    "updated_at": "2026-11-12T16:50:43Z",
+    "actor": {
+      "login": "jpiquot",
+      "id": 6775094,
+      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpiquot",
+      "html_url": "https://github.com/jpiquot",
+      "followers_url": "https://api.github.com/users/jpiquot/followers",
+      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+      "repos_url": "https://api.github.com/users/jpiquot/repos",
+      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [
+      {
+        "path": "Hexalith/Hexalith.Builds/.github/workflows/release.yml@3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+        "ref": "refs/heads/main"
+      }
+    ],
+    "run_started_at": "2026-11-12T16:45:35Z",
+    "triggering_actor": {
+      "login": "jpiquot",
+      "id": 6775094,
+      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpiquot",
+      "html_url": "https://github.com/jpiquot",
+      "followers_url": "https://api.github.com/users/jpiquot/followers",
+      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+      "repos_url": "https://api.github.com/users/jpiquot/repos",
+      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/jobs",
+    "logs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/logs",
+    "check_suite_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-suites/117152534282",
+    "artifacts_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/artifacts",
+    "cancel_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/cancel",
+    "rerun_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/workflows/411848293",
+    "head_commit": {
+      "id": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "tree_id": "adde3a76dca54616215dcb088f03c7ed5b541088",
+      "message": "fix(runtime): retain transitive pins in isolated model builds\n\nThe production model skips the owner package wrapper when importing its\nauthenticated catalog. Preserve canonical transitive package pinning and\nrun all-dependency NuGet auditing at low severity in that real command.\n\nExercise source and package builds with a real two-version dependency\ngraph; the compiled model must execute the API from the central pin.",
+      "timestamp": "2026-11-12T14:23:26Z",
+      "author": {
+        "name": "J\u00e9r\u00f4me Piquot",
+        "email": "jpiquot@itaneo.com"
+      },
+      "committer": {
+        "name": "J\u00e9r\u00f4me Piquot",
+        "email": "jpiquot@itaneo.com"
+      }
+    },
+    "repository": {
+      "id": 952945989,
+      "node_id": "R_kgDOOMzNRQ",
+      "name": "Hexalith.Builds",
+      "full_name": "Hexalith/Hexalith.Builds",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+      "description": "Common project for building Hexalith applications, modules and libraries",
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments"
+    },
+    "head_repository": {
+      "id": 952945989,
+      "node_id": "R_kgDOOMzNRQ",
+      "name": "Hexalith.Builds",
+      "full_name": "Hexalith/Hexalith.Builds",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+      "description": "Common project for building Hexalith applications, modules and libraries",
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments"
+    }
+  },
+  "job_pages": [
+    {
+      "observed_at": "2026-11-12T16:51:38.258867Z",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/jobs?per_page=100&page=1",
+      "data": {
+        "total_count": 8,
+        "jobs": [
+          {
+            "id": 131336018182,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelDyZBg",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131336018182",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131336018182",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T16:45:37Z",
+            "started_at": "2026-11-12T16:45:40Z",
+            "completed_at": "2026-11-12T16:45:56Z",
+            "name": "release / Resolve release identity",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T16:45:41Z",
+                "completed_at": "2026-11-12T16:45:44Z"
+              },
+              {
+                "name": "Read dispatch settings and freeze release source",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T16:45:45Z",
+                "completed_at": "2026-11-12T16:45:54Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T16:45:54Z",
+                "completed_at": "2026-11-12T16:45:54Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131336018182",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081523,
+            "runner_name": "GitHub Actions 1000081523",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131336217334,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelD-i9g",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131336217334",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131336217334",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T16:45:56Z",
+            "started_at": "2026-11-12T16:45:59Z",
+            "completed_at": "2026-11-12T16:50:14Z",
+            "name": "release / Release CodeQL (csharp)",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T16:45:59Z",
+                "completed_at": "2026-11-12T16:46:02Z"
+              },
+              {
+                "name": "Checkout dispatch source",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T16:46:03Z",
+                "completed_at": "2026-11-12T16:46:05Z"
+              },
+              {
+                "name": "Initialize release analysis",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T16:46:05Z",
+                "completed_at": "2026-11-12T16:46:16Z"
+              },
+              {
+                "name": "Analyze and wait for processing",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T16:46:16Z",
+                "completed_at": "2026-11-12T16:50:10Z"
+              },
+              {
+                "name": "Check processed release security findings",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-12T16:50:10Z",
+                "completed_at": "2026-11-12T16:50:11Z"
+              },
+              {
+                "name": "Post Analyze and wait for processing",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-11-12T16:50:11Z",
+                "completed_at": "2026-11-12T16:50:12Z"
+              },
+              {
+                "name": "Post Initialize release analysis",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-11-12T16:50:12Z",
+                "completed_at": "2026-11-12T16:50:13Z"
+              },
+              {
+                "name": "Post Checkout dispatch source",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 10,
+                "started_at": "2026-11-12T16:50:13Z",
+                "completed_at": "2026-11-12T16:50:13Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11,
+                "started_at": "2026-11-12T16:50:13Z",
+                "completed_at": "2026-11-12T16:50:13Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131336217334",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081524,
+            "runner_name": "GitHub Actions 1000081524",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131336221573,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelD-zhQ",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131336221573",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131336221573",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-11-12T16:45:57Z",
+            "started_at": "2026-11-12T16:45:57Z",
+            "completed_at": "2026-11-12T16:45:56Z",
+            "name": "release / Prepare and run nightly hook",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131336221573",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          },
+          {
+            "id": 131338924894,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelGjzXg",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131338924894",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131338924894",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T16:50:15Z",
+            "started_at": "2026-11-12T16:50:17Z",
+            "completed_at": "2026-11-12T16:50:32Z",
+            "name": "release / Compute release version",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T16:50:18Z",
+                "completed_at": "2026-11-12T16:50:21Z"
+              },
+              {
+                "name": "Analyze the frozen release range",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T16:50:21Z",
+                "completed_at": "2026-11-12T16:50:31Z"
+              },
+              {
+                "name": "Post Analyze the frozen release range",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T16:50:31Z",
+                "completed_at": "2026-11-12T16:50:31Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-12T16:50:31Z",
+                "completed_at": "2026-11-12T16:50:31Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131338924894",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081525,
+            "runner_name": "GitHub Actions 1000081525",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131339111248,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelGvLUA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339111248",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339111248",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-11-12T16:50:33Z",
+            "started_at": "2026-11-12T16:50:35Z",
+            "completed_at": "2026-11-12T16:50:42Z",
+            "name": "release / Report release outcome",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-12T16:50:36Z",
+                "completed_at": "2026-11-12T16:50:39Z"
+              },
+              {
+                "name": "Decide outcome with failure precedence",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-12T16:50:39Z",
+                "completed_at": "2026-11-12T16:50:39Z"
+              },
+              {
+                "name": "Upload the sole reusable outcome",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-12T16:50:39Z",
+                "completed_at": "2026-11-12T16:50:41Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-12T16:50:41Z",
+                "completed_at": "2026-11-12T16:50:41Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339111248",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000081526,
+            "runner_name": "GitHub Actions 1000081526",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 131339112388,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelGvPxA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339112388",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339112388",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-11-12T16:50:33Z",
+            "started_at": "2026-11-12T16:50:33Z",
+            "completed_at": "2026-11-12T16:50:33Z",
+            "name": "release / Build audited release payload",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339112388",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          },
+          {
+            "id": 131339112596,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelGvQlA",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339112596",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339112596",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-11-12T16:50:33Z",
+            "started_at": "2026-11-12T16:50:33Z",
+            "completed_at": "2026-11-12T16:50:33Z",
+            "name": "release / Authenticate original artifact and process marked draft",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339112596",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          },
+          {
+            "id": 131339215505,
+            "run_id": 43262148178,
+            "workflow_name": "Release",
+            "head_branch": "main",
+            "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOOMzNRc8AAAAelG1ikQ",
+            "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339215505",
+            "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339215505",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-11-12T16:50:43Z",
+            "started_at": "2026-11-12T16:50:43Z",
+            "completed_at": "2026-11-12T16:50:42Z",
+            "name": "publish",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339215505",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          }
+        ]
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "id": 131336018182,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelDyZBg",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131336018182",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131336018182",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T16:45:37Z",
+      "started_at": "2026-11-12T16:45:40Z",
+      "completed_at": "2026-11-12T16:45:56Z",
+      "name": "release / Resolve release identity",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T16:45:41Z",
+          "completed_at": "2026-11-12T16:45:44Z"
+        },
+        {
+          "name": "Read dispatch settings and freeze release source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T16:45:45Z",
+          "completed_at": "2026-11-12T16:45:54Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T16:45:54Z",
+          "completed_at": "2026-11-12T16:45:54Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131336018182",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081523,
+      "runner_name": "GitHub Actions 1000081523",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131336217334,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelD-i9g",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131336217334",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131336217334",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T16:45:56Z",
+      "started_at": "2026-11-12T16:45:59Z",
+      "completed_at": "2026-11-12T16:50:14Z",
+      "name": "release / Release CodeQL (csharp)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T16:45:59Z",
+          "completed_at": "2026-11-12T16:46:02Z"
+        },
+        {
+          "name": "Checkout dispatch source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T16:46:03Z",
+          "completed_at": "2026-11-12T16:46:05Z"
+        },
+        {
+          "name": "Initialize release analysis",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T16:46:05Z",
+          "completed_at": "2026-11-12T16:46:16Z"
+        },
+        {
+          "name": "Analyze and wait for processing",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T16:46:16Z",
+          "completed_at": "2026-11-12T16:50:10Z"
+        },
+        {
+          "name": "Check processed release security findings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T16:50:10Z",
+          "completed_at": "2026-11-12T16:50:11Z"
+        },
+        {
+          "name": "Post Analyze and wait for processing",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-12T16:50:11Z",
+          "completed_at": "2026-11-12T16:50:12Z"
+        },
+        {
+          "name": "Post Initialize release analysis",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-12T16:50:12Z",
+          "completed_at": "2026-11-12T16:50:13Z"
+        },
+        {
+          "name": "Post Checkout dispatch source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-12T16:50:13Z",
+          "completed_at": "2026-11-12T16:50:13Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-12T16:50:13Z",
+          "completed_at": "2026-11-12T16:50:13Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131336217334",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081524,
+      "runner_name": "GitHub Actions 1000081524",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131336221573,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelD-zhQ",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131336221573",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131336221573",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-12T16:45:57Z",
+      "started_at": "2026-11-12T16:45:57Z",
+      "completed_at": "2026-11-12T16:45:56Z",
+      "name": "release / Prepare and run nightly hook",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131336221573",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 131338924894,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelGjzXg",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131338924894",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131338924894",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T16:50:15Z",
+      "started_at": "2026-11-12T16:50:17Z",
+      "completed_at": "2026-11-12T16:50:32Z",
+      "name": "release / Compute release version",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T16:50:18Z",
+          "completed_at": "2026-11-12T16:50:21Z"
+        },
+        {
+          "name": "Analyze the frozen release range",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T16:50:21Z",
+          "completed_at": "2026-11-12T16:50:31Z"
+        },
+        {
+          "name": "Post Analyze the frozen release range",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T16:50:31Z",
+          "completed_at": "2026-11-12T16:50:31Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-12T16:50:31Z",
+          "completed_at": "2026-11-12T16:50:31Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131338924894",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081525,
+      "runner_name": "GitHub Actions 1000081525",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131339111248,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelGvLUA",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339111248",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339111248",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-12T16:50:33Z",
+      "started_at": "2026-11-12T16:50:35Z",
+      "completed_at": "2026-11-12T16:50:42Z",
+      "name": "release / Report release outcome",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-12T16:50:36Z",
+          "completed_at": "2026-11-12T16:50:39Z"
+        },
+        {
+          "name": "Decide outcome with failure precedence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-12T16:50:39Z",
+          "completed_at": "2026-11-12T16:50:39Z"
+        },
+        {
+          "name": "Upload the sole reusable outcome",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-12T16:50:39Z",
+          "completed_at": "2026-11-12T16:50:41Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-12T16:50:41Z",
+          "completed_at": "2026-11-12T16:50:41Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339111248",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000081526,
+      "runner_name": "GitHub Actions 1000081526",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 131339112388,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelGvPxA",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339112388",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339112388",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-12T16:50:33Z",
+      "started_at": "2026-11-12T16:50:33Z",
+      "completed_at": "2026-11-12T16:50:33Z",
+      "name": "release / Build audited release payload",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339112388",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 131339112596,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelGvQlA",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339112596",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339112596",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-12T16:50:33Z",
+      "started_at": "2026-11-12T16:50:33Z",
+      "completed_at": "2026-11-12T16:50:33Z",
+      "name": "release / Authenticate original artifact and process marked draft",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339112596",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 131339215505,
+      "run_id": 43262148178,
+      "workflow_name": "Release",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/43262148178",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOOMzNRc8AAAAelG1ikQ",
+      "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/jobs/131339215505",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43262148178/job/131339215505",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-12T16:50:43Z",
+      "started_at": "2026-11-12T16:50:43Z",
+      "completed_at": "2026-11-12T16:50:42Z",
+      "name": "publish",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/131339215505",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ],
+  "artifact_pages": [
+    {
+      "observed_at": "2026-11-12T16:51:38.674309Z",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/runs/43262148178/artifacts?per_page=100&page=1",
+      "data": {
+        "total_count": 1,
+        "artifacts": [
+          {
+            "id": 13962939908,
+            "node_id": "MDg6QXJ0aWZhY3QxMzk2MjkzOTkwOA==",
+            "name": "hexalith-release-outcome",
+            "size_in_bytes": 238,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13962939908",
+            "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13962939908/zip",
+            "expired": false,
+            "digest": "sha256:680e6dd23757c2ec6d8ad2d970e06f514ab04f3ff72503bd69d1ce1d51c7f14b",
+            "created_at": "2026-11-12T16:50:41Z",
+            "updated_at": "2026-11-12T16:50:41Z",
+            "expires_at": "2027-02-10T16:45:37Z",
+            "workflow_run": {
+              "id": 43262148178,
+              "repository_id": 952945989,
+              "head_repository_id": 952945989,
+              "head_branch": "main",
+              "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 13962939908,
+      "node_id": "MDg6QXJ0aWZhY3QxMzk2MjkzOTkwOA==",
+      "name": "hexalith-release-outcome",
+      "size_in_bytes": 238,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13962939908",
+      "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13962939908/zip",
+      "expired": false,
+      "digest": "sha256:680e6dd23757c2ec6d8ad2d970e06f514ab04f3ff72503bd69d1ce1d51c7f14b",
+      "created_at": "2026-11-12T16:50:41Z",
+      "updated_at": "2026-11-12T16:50:41Z",
+      "expires_at": "2027-02-10T16:45:37Z",
+      "workflow_run": {
+        "id": 43262148178,
+        "repository_id": 952945989,
+        "head_repository_id": 952945989,
+        "head_branch": "main",
+        "head_sha": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7"
+      }
+    }
+  ]
+}

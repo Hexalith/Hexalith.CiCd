@@ -1,0 +1,35 @@
+{
+  "observed_at": "2026-11-12T16:56:55.206418+00:00",
+  "workflow_status": "blocked",
+  "blocking_condition": "implementation verification failed",
+  "run_id": 43262148178,
+  "run_conclusion": "success",
+  "outcome": "nothing",
+  "baseline_revision": "44adaab81c554e405dd941615819f3ce38b6ca9a",
+  "implementation_baseline_revision": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+  "built_source_revision": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+  "outcome_artifact_id": 13962939908,
+  "api_and_downloaded_archive_digest": "sha256:680e6dd23757c2ec6d8ad2d970e06f514ab04f3ff72503bd69d1ce1d51c7f14b",
+  "passed": [
+    "Independent live completed-run and correlation reads",
+    "Independent sole artifact ZIP download, digest, original bytes and runtime outcome validation",
+    "All retained JSON parse and staged content equals disk",
+    "All three evidence SHA-256 manifests",
+    "Exact complete pre/post release and tag inventory equality",
+    "Exact qualification-artifact metadata preservation",
+    "30 passing preflight checks retained",
+    "Unchanged full CiCd baseline, intent contract, clean Builds checkout/gitlink and reviewed references",
+    "Absent seed from disk/index/HEAD; scoped changes and no credential-pattern matches",
+    "Working and staged whitespace checks"
+  ],
+  "unmet_check": {
+    "command": "git ls-tree HEAD builds-version",
+    "actual": "empty output",
+    "required": "A committed seed from an accepted release produced by this invocation",
+    "reason": "Successful nothing outcome produced no version, release payload, draft, publication or tag; story forbids automatic redispatch or artificial releasable changes."
+  },
+  "publication_count": 0,
+  "redispatch_count": 0,
+  "seed_written": false,
+  "commit_created": false
+}

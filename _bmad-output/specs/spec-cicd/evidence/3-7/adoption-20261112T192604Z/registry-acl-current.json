@@ -1,0 +1,338 @@
+{
+  "observed_at": "2026-11-12T19:33:57.771591+00:00",
+  "namespace": "registry-distribution",
+  "configmap": "distribution-registry-config",
+  "resourceVersion": "43593736",
+  "access_control": {
+    "repositories": {
+      "**": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          }
+        ]
+      },
+      "cicd-publish-spike-3-1": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "cicd-publish-spike-3-1"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      }
+    },
+    "adminPolicy": {
+      "users": [
+        "jpiquot",
+        "jpiquot@itaneo.com"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "scope": "Read-only ACL metadata; no fresh credential authentication or credential values read.",
+  "running_registry_supplement": {
+    "observed_at": "2026-11-12T19:45:37.163774Z",
+    "context": "jpiquot@local",
+    "cluster_server": "https://192.168.1.30:6443",
+    "method": [
+      "GET Deployment distribution-registry",
+      "GET Pods in registry-distribution",
+      "GET ReplicaSet distribution-registry-568b5bbc9b",
+      "GET ConfigMap distribution-registry-config"
+    ],
+    "configmap": {
+      "name": "distribution-registry-config",
+      "uid": "d00eeb4b-f507-440f-8328-fb838a7d5da3",
+      "resourceVersion": "43593736",
+      "access_control_matches_original_readback": true
+    },
+    "deployment": {
+      "name": "distribution-registry",
+      "uid": "20bb657c-b622-4e1b-81a2-f97bc353a811",
+      "generation": 19,
+      "resourceVersion": "44669324",
+      "selector": {
+        "app.kubernetes.io/component": "registry",
+        "app.kubernetes.io/name": "distribution-registry",
+        "deployment.registry/trust-zone": "distribution"
+      },
+      "desired_replicas": 1,
+      "status": {
+        "availableReplicas": 1,
+        "conditions": [
+          {
+            "lastTransitionTime": "2026-11-12T12:58:48Z",
+            "lastUpdateTime": "2026-11-12T12:58:48Z",
+            "message": "Deployment has minimum availability.",
+            "reason": "MinimumReplicasAvailable",
+            "status": "True",
+            "type": "Available"
+          },
+          {
+            "lastTransitionTime": "2026-07-16T12:52:22Z",
+            "lastUpdateTime": "2026-11-12T12:58:48Z",
+            "message": "ReplicaSet \"distribution-registry-568b5bbc9b\" has successfully progressed.",
+            "reason": "NewReplicaSetAvailable",
+            "status": "True",
+            "type": "Progressing"
+          }
+        ],
+        "observedGeneration": 19,
+        "readyReplicas": 1,
+        "replicas": 1,
+        "updatedReplicas": 1
+      },
+      "containers": [
+        {
+          "name": "zot",
+          "image": "ghcr.io/project-zot/zot-linux-amd64@sha256:95a837a0afacf5b7edc0c92493f04beee6891989b8d2fd50a00cf65a1e6d4fd5",
+          "args": [
+            "serve",
+            "/etc/zot/config.json"
+          ],
+          "readinessProbe": {
+            "failureThreshold": 3,
+            "periodSeconds": 5,
+            "successThreshold": 1,
+            "tcpSocket": {
+              "port": "registry"
+            },
+            "timeoutSeconds": 3
+          },
+          "config_mounts": [
+            {
+              "mountPath": "/etc/zot/config.json",
+              "name": "registry-config",
+              "readOnly": true,
+              "subPath": "config.json"
+            }
+          ]
+        }
+      ],
+      "config_volumes": [
+        {
+          "configMap": {
+            "defaultMode": 420,
+            "name": "distribution-registry-config"
+          },
+          "name": "registry-config"
+        }
+      ]
+    },
+    "replicaset": {
+      "name": "distribution-registry-568b5bbc9b",
+      "uid": "6ef5c6be-43f6-4c63-b259-b84c8d5f63a4",
+      "generation": 1,
+      "resourceVersion": "44669323",
+      "ownerReferences": [
+        {
+          "apiVersion": "apps/v1",
+          "blockOwnerDeletion": true,
+          "controller": true,
+          "kind": "Deployment",
+          "name": "distribution-registry",
+          "uid": "20bb657c-b622-4e1b-81a2-f97bc353a811"
+        }
+      ]
+    },
+    "pods": [
+      {
+        "name": "distribution-registry-568b5bbc9b-xwqf7",
+        "uid": "eea1e8f1-0652-4613-9235-eeb7dc2e35ef",
+        "generation": 1,
+        "resourceVersion": "44669320",
+        "ownerReferences": [
+          {
+            "apiVersion": "apps/v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "ReplicaSet",
+            "name": "distribution-registry-568b5bbc9b",
+            "uid": "6ef5c6be-43f6-4c63-b259-b84c8d5f63a4"
+          }
+        ],
+        "labels": {
+          "app.kubernetes.io/component": "registry",
+          "app.kubernetes.io/name": "distribution-registry",
+          "app.kubernetes.io/part-of": "registries",
+          "deployment.registry/managed-by": "kustomize",
+          "deployment.registry/trust-zone": "distribution",
+          "pod-template-hash": "568b5bbc9b",
+          "registries.hexalith.com/profile": "hardened",
+          "registries.hexalith.com/trust-zone": "distribution"
+        },
+        "phase": "Running",
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-12T12:58:39Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-12T12:58:38Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-12T12:58:48Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-12T12:58:48Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-12T12:58:38Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containers": [
+          {
+            "name": "zot",
+            "image": "ghcr.io/project-zot/zot-linux-amd64@sha256:95a837a0afacf5b7edc0c92493f04beee6891989b8d2fd50a00cf65a1e6d4fd5",
+            "args": [
+              "serve",
+              "/etc/zot/config.json"
+            ],
+            "readinessProbe": {
+              "failureThreshold": 3,
+              "periodSeconds": 5,
+              "successThreshold": 1,
+              "tcpSocket": {
+                "port": "registry"
+              },
+              "timeoutSeconds": 3
+            },
+            "config_mounts": [
+              {
+                "mountPath": "/etc/zot/config.json",
+                "name": "registry-config",
+                "readOnly": true,
+                "subPath": "config.json"
+              }
+            ]
+          }
+        ],
+        "config_volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "distribution-registry-config"
+            },
+            "name": "registry-config"
+          }
+        ],
+        "container_readiness": [
+          {
+            "name": "zot",
+            "ready": true,
+            "started": true,
+            "restartCount": 0,
+            "state": {
+              "running": {
+                "startedAt": "2026-11-12T12:58:38Z"
+              }
+            },
+            "imageID": "ghcr.io/project-zot/zot-linux-amd64@sha256:95a837a0afacf5b7edc0c92493f04beee6891989b8d2fd50a00cf65a1e6d4fd5"
+          }
+        ]
+      }
+    ],
+    "scope": "Sanitized read-only configured-ACL, deployment ownership, pod mount and readiness metadata. ConfigMap ACL matches the original observation; the running Zot container serves /etc/zot/config.json through the read-only registry-config/config.json subPath mount. No runtime file-content read, mounted-byte comparison, credential values, login or fresh credential authentication is claimed. Prior successful authentication remains the separately retained provisioning proof in baselines.json#/registry_proof."
+  }
+}

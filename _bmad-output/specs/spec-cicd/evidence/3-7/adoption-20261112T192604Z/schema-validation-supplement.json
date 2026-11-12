@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-11-12T19:45:37.135963Z",
+  "scope": "Supplemental repeat validation and environment metadata; the original candidate observation and acceptance times are unchanged. Interpreter/version details describe this repeat, not a newly asserted historical capture.",
+  "python": {
+    "executable": "/usr/bin/python3",
+    "resolved_executable": "/usr/bin/python3.14",
+    "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "implementation": "CPython"
+  },
+  "validator": {
+    "distribution": "jsonschema",
+    "version": "4.26.0",
+    "class": "jsonschema.Draft202012Validator"
+  },
+  "schema": {
+    "path": "references/Hexalith.Builds/schemas/hexalith.release-outcome.v1.json",
+    "id": "https://hexalith.com/schemas/hexalith.release-outcome.v1.json",
+    "dialect": "https://json-schema.org/draft/2020-12/schema",
+    "sha256": "1fca76d21ce4459cfdf4528644e27c76db7d884aa120106246626aa5380f2a4a",
+    "builds_revision": "adfbf21896ef982ae9d1c3ee1db247e87bda22c0",
+    "git_blob": "3a671dec6aebd208d5d02356c0836c52fcbb9508"
+  },
+  "outcome": {
+    "path": "_bmad-output/specs/spec-cicd/evidence/3-7/adoption-20261112T192604Z/producer-outcome.json",
+    "sha256": "9d5730d4cae87c64e01e921c2acdc82c16ddc4d14efa1a60d3984690ee0f0bc2"
+  },
+  "invocation": {
+    "cwd": "/home/administrator/projects/hexalith/cicd",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-c",
+      "import hashlib,json,pathlib,sys; from jsonschema import Draft202012Validator; schema=json.loads(pathlib.Path(sys.argv[1]).read_text()); outcome=json.loads(pathlib.Path(sys.argv[2]).read_text()); Draft202012Validator.check_schema(schema); Draft202012Validator(schema).validate(outcome); print(\"PASS: release outcome JSON Schema draft 2020-12\")",
+      "references/Hexalith.Builds/schemas/hexalith.release-outcome.v1.json",
+      "_bmad-output/specs/spec-cicd/evidence/3-7/adoption-20261112T192604Z/producer-outcome.json"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS: release outcome JSON Schema draft 2020-12"
+  }
+}
