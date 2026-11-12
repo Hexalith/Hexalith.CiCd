@@ -1,0 +1,221 @@
+{
+  "observed_at": "2026-11-12T15:43:46.943905+00:00",
+  "scope": "Read-only Kubernetes ConfigMap access-control metadata; no credential reads, pod exec, registry authentication, writes or resource mutations.",
+  "kubernetes_context": "jpiquot@local",
+  "kubernetes_server": "https://192.168.1.30:6443",
+  "namespace": "registry-distribution",
+  "configmap": "distribution-registry-config",
+  "resourceVersion": "43593736",
+  "access_control": {
+    "repositories": {
+      "**": {
+        "policies": [
+          {
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ],
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ]
+          },
+          {
+            "actions": [
+              "read"
+            ],
+            "users": [
+              "cluster-reader"
+            ]
+          },
+          {
+            "actions": [
+              "read"
+            ],
+            "users": [
+              "ci-reader"
+            ]
+          },
+          {
+            "actions": [
+              "read"
+            ],
+            "users": [
+              "hexalith-registry-pull"
+            ]
+          }
+        ],
+        "anonymousPolicy": []
+      },
+      "cicd-publish-spike-3-1": {
+        "policies": [
+          {
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ],
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ]
+          },
+          {
+            "actions": [
+              "read"
+            ],
+            "users": [
+              "cluster-reader"
+            ]
+          },
+          {
+            "actions": [
+              "read"
+            ],
+            "users": [
+              "ci-reader"
+            ]
+          },
+          {
+            "actions": [
+              "read"
+            ],
+            "users": [
+              "hexalith-registry-pull"
+            ]
+          },
+          {
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ],
+            "users": [
+              "cicd-publish-spike-3-1"
+            ]
+          }
+        ],
+        "anonymousPolicy": []
+      }
+    },
+    "adminPolicy": {
+      "actions": [
+        "read",
+        "create",
+        "update",
+        "delete"
+      ],
+      "users": [
+        "jpiquot",
+        "jpiquot@itaneo.com"
+      ]
+    }
+  },
+  "configured_principal_grants": {
+    "hexalith-builds-publish": {
+      "configured_repository_pattern_actions": {
+        "**": [],
+        "cicd-publish-spike-3-1": []
+      },
+      "configured_admin_actions": []
+    },
+    "cicd-publish-spike-3-1": {
+      "configured_repository_pattern_actions": {
+        "**": [],
+        "cicd-publish-spike-3-1": [
+          "create",
+          "read",
+          "update"
+        ]
+      },
+      "configured_admin_actions": []
+    },
+    "jpiquot": {
+      "configured_repository_pattern_actions": {
+        "**": [
+          "create",
+          "delete",
+          "read",
+          "update"
+        ],
+        "cicd-publish-spike-3-1": [
+          "create",
+          "delete",
+          "read",
+          "update"
+        ]
+      },
+      "configured_admin_actions": [
+        "create",
+        "delete",
+        "read",
+        "update"
+      ]
+    },
+    "jpiquot@itaneo.com": {
+      "configured_repository_pattern_actions": {
+        "**": [
+          "create",
+          "delete",
+          "read",
+          "update"
+        ],
+        "cicd-publish-spike-3-1": [
+          "create",
+          "delete",
+          "read",
+          "update"
+        ]
+      },
+      "configured_admin_actions": [
+        "create",
+        "delete",
+        "read",
+        "update"
+      ]
+    },
+    "cluster-reader": {
+      "configured_repository_pattern_actions": {
+        "**": [
+          "read"
+        ],
+        "cicd-publish-spike-3-1": [
+          "read"
+        ]
+      },
+      "configured_admin_actions": []
+    },
+    "ci-reader": {
+      "configured_repository_pattern_actions": {
+        "**": [
+          "read"
+        ],
+        "cicd-publish-spike-3-1": [
+          "read"
+        ]
+      },
+      "configured_admin_actions": []
+    },
+    "hexalith-registry-pull": {
+      "configured_repository_pattern_actions": {
+        "**": [
+          "read"
+        ],
+        "cicd-publish-spike-3-1": [
+          "read"
+        ]
+      },
+      "configured_admin_actions": []
+    }
+  },
+  "interpretation_limits": [
+    "Configured ACL readback only; no credential values or htpasswd material read, no registry authentication, no pod exec and no write probes performed.",
+    "No groups or defaultPolicy grants are configured; anonymousPolicy lists are empty.",
+    "Legacy GitHub secret names were not mapped to usernames because secret values were not accessed; administrator identities remain broadly authorized as recorded.",
+    "Spike identity remains restricted to its exact qualification repository; its current read/create/update grant is evidence of retained access, not an assertion of revocation.",
+    "This read-only verification changed no qualification draft, artifact, package, image, principal, credential or resource."
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "story_key": "3-7",
+  "phase": "after-approved-nuget-repair",
+  "started_at": "2026-11-12T16:23:06.226301+00:00",
+  "completed_at": "2026-11-12T16:23:07.041798+00:00",
+  "scope": "Independent targeted read-only preservation comparison after approved NuGet repair. No artifact/package/image download or mutation, no credential reads, dispatch, publication, implementation, tests or commits.",
+  "profile": "Command-local GH_CONFIG_DIR=/home/administrator/.config/gh; no default profile changes.",
+  "artifact_downloaded": false,
+  "before_evidence": "/home/administrator/projects/hexalith/cicd/.bmad-loop/runs/20261111-102637-40e4/resolve/3-7/preservation-before-20261112T161731Z.json",
+  "before_evidence_sha256": "f8e28300b3e3de0039d8de2accecdc55348b7caa1e77c70c8994b8710be0973e",
+  "comparisons": {
+    "release": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 0,
+      "after_exit_code": 0
+    },
+    "artifact": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 0,
+      "after_exit_code": 0
+    },
+    "immutable_releases": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 0,
+      "after_exit_code": 0
+    },
+    "branch_ruleset": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 0,
+      "after_exit_code": 0
+    },
+    "tag_ruleset": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 0,
+      "after_exit_code": 0
+    },
+    "orphan_v4_46_0": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 1,
+      "after_exit_code": 1
+    },
+    "orphan_v4_47_1": {
+      "equal": true,
+      "changed_data_keys": [],
+      "before_exit_code": 1,
+      "after_exit_code": 1
+    }
+  },
+  "all_captured_metadata_equal": true,
+  "limits": [
+    "Only GitHub API metadata and qualification draft history references were compared. No live NuGet package bytes or registry image bytes/manifests were downloaded or authenticated.",
+    "Unchanged package/image trailer references preserve recorded history; they do not independently prove current package/image content or existence.",
+    "This targeted preservation capture is not a complete immediately-before-dispatch AD-19 preflight and authorizes no release dispatch."
+  ],
+  "results": {
+    "release": {
+      "captured_at": "2026-11-12T16:23:06.547747+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/441591623",
+      "method": "GET",
+      "exit_code": 0,
+      "data": {
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/441591623",
+        "assets_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/441591623/assets",
+        "upload_url": "https://uploads.github.com/repos/Hexalith/Hexalith.Builds/releases/441591623/assets{?name,label}",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/untagged-3c30f47f2e384072c3fe",
+        "id": 441591623,
+        "author": {
+          "id": 41898282,
+          "login": "github-actions[bot]",
+          "type": "Bot"
+        },
+        "node_id": "RE_kwDOOMzNRc4aUidH",
+        "tag_name": "v4.47.1",
+        "target_commitish": "75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+        "name": "v4.47.1",
+        "draft": true,
+        "immutable": false,
+        "prerelease": false,
+        "created_at": "2026-11-11T11:16:38Z",
+        "updated_at": "2026-11-12T08:52:41Z",
+        "published_at": "2026-11-11T11:22:37Z",
+        "assets": [],
+        "tarball_url": null,
+        "zipball_url": null,
+        "body_sha256": "a33f030d96ca5ff6a275267421ac52793e586d77dd9157db58a2c3a6a90d440e",
+        "protected_history_trailers": [
+          "hexalith-qualification-source: 75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+          "hexalith-release-run: 43010609603",
+          "hexalith-release-artifact: 13850760915 sha256:18db4ed7b07ffa3c5fd4496afce65dd50888705687d42695260e7573a7456d30",
+          "hexalith-release-packages: Hexalith.Builds.PublishProbe.20261111",
+          "hexalith-release-containers: cicd-publish-spike-3-1"
+        ],
+        "body_length": 780
+      },
+      "stderr": ""
+    },
+    "artifact": {
+      "captured_at": "2026-11-12T16:23:06.682818+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/artifacts/13850760915",
+      "method": "GET",
+      "exit_code": 0,
+      "data": {
+        "id": 13850760915,
+        "node_id": "MDg6QXJ0aWZhY3QxMzg1MDc2MDkxNQ==",
+        "name": "release",
+        "size_in_bytes": 83256215,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13850760915",
+        "archive_download_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/artifacts/13850760915/zip",
+        "expired": false,
+        "digest": "sha256:18db4ed7b07ffa3c5fd4496afce65dd50888705687d42695260e7573a7456d30",
+        "created_at": "2026-11-11T11:17:15Z",
+        "updated_at": "2026-11-11T11:17:15Z",
+        "expires_at": "2027-02-09T11:16:45Z",
+        "workflow_run": {
+          "id": 43010609603,
+          "repository_id": 952945989,
+          "head_repository_id": 952945989,
+          "head_branch": "main",
+          "head_sha": "75e1d4a3809b30684e67c7e9b2c8043720b49c53"
+        }
+      },
+      "stderr": ""
+    },
+    "immutable_releases": {
+      "captured_at": "2026-11-12T16:23:06.561790+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/immutable-releases",
+      "method": "GET",
+      "exit_code": 0,
+      "data": {
+        "enabled": true,
+        "enforced_by_owner": false
+      },
+      "stderr": ""
+    },
+    "branch_ruleset": {
+      "captured_at": "2026-11-12T16:23:06.670668+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets/19196298",
+      "method": "GET",
+      "exit_code": 0,
+      "data": {
+        "id": 19196298,
+        "name": "Protect main",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Builds",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "~DEFAULT_BRANCH"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgEk6Yo",
+        "created_at": "2026-07-20T09:31:13.745+02:00",
+        "updated_at": "2026-11-08T21:25:52.675+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/19196298"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Builds/rules/19196298"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    "tag_ruleset": {
+      "captured_at": "2026-11-12T16:23:06.672262+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/rulesets/26812219",
+      "method": "GET",
+      "exit_code": 0,
+      "data": {
+        "id": 26812219,
+        "name": "v tags",
+        "target": "tag",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Builds",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/tags/v*"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "update"
+          },
+          {
+            "type": "deletion"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec44zM1FzgGZHzs",
+        "created_at": "2026-11-08T21:25:53.491+01:00",
+        "updated_at": "2026-11-12T15:01:50.899+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Builds/rulesets/26812219"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Builds/rules/26812219"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    "orphan_v4_46_0": {
+      "captured_at": "2026-11-12T16:23:07.002947+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/tags/v4.46.0",
+      "method": "GET",
+      "exit_code": 1,
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/git/refs#get-a-reference",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    },
+    "orphan_v4_47_1": {
+      "captured_at": "2026-11-12T16:23:07.041128+00:00",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/tags/v4.47.1",
+      "method": "GET",
+      "exit_code": 1,
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/git/refs#get-a-reference",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    }
+  }
+}

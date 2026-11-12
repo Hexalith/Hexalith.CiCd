@@ -1,0 +1,86 @@
+{
+  "story_key": "3-7",
+  "decision_source": "Interactive maintainer reply \"ok\" after the concrete correction request and recommended disposition were presented.",
+  "approved_scope": "Narrow Builds policy26029 to Hexalith.Builds*, retain new-package and new-version push without unlist/relist; remove Builds policies17615/25021/25370/25734; preserve qualification resources and restricted qualification registry access; retain the legacy API key in its expired state.",
+  "policy_identity": {
+    "owner": "Hexalith",
+    "owner_id": 80614290,
+    "repository": "Hexalith.Builds",
+    "repository_id": 952945989
+  },
+  "save_submitted_at": "2026-11-12T16:18:40.3175441Z",
+  "first_removal": {
+    "policy_id": 17615,
+    "workflow": "build-release.yml",
+    "environment": "production",
+    "confirmation_at": "2026-11-12T16:21:19.3667512Z",
+    "absence_verified_at": "2026-11-12T16:21:26.7533950Z"
+  },
+  "other_removals_evidence": "approved-removals.jsonl",
+  "final_nuget_readback_at": "2026-11-12T16:23:14.9423950Z",
+  "final_github_readback_at": "2026-11-12T16:24:12.8774840Z",
+  "scope_limits": [
+    "No other repository policies changed.",
+    "No credential values read, exposed, regenerated or replaced; no default authentication profile changed.",
+    "No workflow dispatch, publication, package/image/release/resource cleanup, runtime edit, version seed, gitlink movement, commit or push.",
+    "Protected package/image history references were preserved; live package/image bytes were not independently downloaded or authenticated.",
+    "This prerequisite resolution is not the complete AD-19 preflight required immediately before dispatch."
+  ],
+  "source_files": [
+    {
+      "file": "github-app-readback.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/github-uia-final-readback-20261112.json",
+      "sha256": "a2d078a184aa6e95649d9dd9b02a5ee9dcf3ee11efddc55dc0269edd0999de38"
+    },
+    {
+      "file": "nuget-policies-before.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/nuget-uia-before-20261112.json",
+      "sha256": "17fed5e1c5decf187959d50c6f338a8f4ec58a62f471351194c1e2f42445c86e"
+    },
+    {
+      "file": "nuget-policies-after.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/nuget-uia-after-20261112.json",
+      "sha256": "b1ae4a8a81187a892c98aa98ca6f8122a54d3190d98900c51d145d2648a5e827"
+    },
+    {
+      "file": "nuget-policy-verification.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/nuget-repair-verification-20261112.json",
+      "sha256": "fbc4c045bb1aea6cf240e69b7dfe3f7b58319c4cd1e43d45230ff920a6eb3890"
+    },
+    {
+      "file": "legacy-api-key-readback.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/nuget-legacy-key-readback-20261112.json",
+      "sha256": "8fba83feb6dee1f72970e4eea7a7f5eb318451fa995501374a559a1aee90d297"
+    },
+    {
+      "file": "credential-selection-metadata.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/credential-metadata-20261112T154403Z.json",
+      "sha256": "86c8b7591ccbfc9fa306835b3bbc68ee6a9026093adbec05a14409a68b470bf6"
+    },
+    {
+      "file": "registry-acl-readback.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/registry-acl-readback-20261112.json",
+      "sha256": "de7835cbe3d5a5e3a34151b9984904f2c3c0dcaa0af54108430714bf7c32fb4a"
+    },
+    {
+      "file": "preservation-before.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/preservation-before-20261112T161731Z.json",
+      "sha256": "f8e28300b3e3de0039d8de2accecdc55348b7caa1e77c70c8994b8710be0973e"
+    },
+    {
+      "file": "preservation-after.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/preservation-after-20261112T162306Z.json",
+      "sha256": "9cfa0f3a4b7840daa0aadf4929b1e854115d99d5cb1fc7a26fc2594dc532eb72"
+    },
+    {
+      "file": "nuget-narrowed-policy-readback.json",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/nuget-narrowed-policy-readback-20261112.json",
+      "sha256": "d21771eee8fc9ffe3bc6388f575c54a00b83754a3ef3b9c3ca2ddaa454b20320"
+    },
+    {
+      "file": "approved-removals.jsonl",
+      "source": ".bmad-loop/runs/20261111-102637-40e4/resolve/3-7/nuget-approved-removals-20261112.jsonl",
+      "sha256": "ecdcbd115ec2a1214dd41f51e9250d678f21d7db01a5bc97ab71c6c18ffa2b23"
+    }
+  ]
+}
