@@ -1,0 +1,154 @@
+{
+  "observed_at": "2026-11-12T13:57:42.637470+00:00",
+  "scope": "Read-only inspection of existing sanitized project documents/evidence; no live NuGet account read, policy mutation, credential read or OIDC exchange.",
+  "verdict": "UNVERIFIED: no current NuGet policy exclusivity or legacy/probe credential disposition proof found in the inspected relevant artifacts.",
+  "latest_recorded_preflight": {
+    "captured_at": "2026-11-12T13:36:20Z\u20132026-11-12T13:36:30Z",
+    "path": "_bmad-output/specs/spec-cicd/evidence/3-7/recheck-20261112T133620Z/preflight.md",
+    "nuget_gate": "UNVERIFIED",
+    "org_variable": {
+      "name": "HEXALITH_NUGET_USER",
+      "value": "jpiquot",
+      "source": "_bmad-output/specs/spec-cicd/evidence/3-7/recheck-20261112T133620Z/settings.json"
+    }
+  },
+  "required_production_policy": {
+    "github_owner": "Hexalith",
+    "github_repository": "Hexalith.Builds",
+    "workflow_filename": "builds-release.yml",
+    "environment": "hexalith-release",
+    "package_id_glob": "Hexalith.Builds*",
+    "nuget_login_or_creator": "jpiquot",
+    "package_owner": "Hexalith",
+    "ownership_evidence_note": "Package owner Hexalith and creator jpiquot are historically confirmed by the story 3-1 protected setup record; current owner/policy confirmation is still required.",
+    "exclusivity": "Only this production Trusted Publishing policy for the Builds repository after rewrite; other active legacy/probe policies must be reconciled."
+  },
+  "historical_items_requiring_current_disposition": [
+    {
+      "kind": "production/legacy policies",
+      "workflow_filenames": [
+        "build-release.yml",
+        "builds-release.yml"
+      ],
+      "old_environment": "production",
+      "required": "Confirm final builds-release.yml/hexalith-release/Hexalith.Builds* policy, and absence/revocation of competing legacy policies."
+    },
+    {
+      "kind": "spike Trusted Publishing policy",
+      "name": "Hexalith.Builds CiCd",
+      "workflow_filename": "publish-spike.yml",
+      "environment": "hexalith-release",
+      "package_id_glob": "*",
+      "historical_operations": [
+        "push new package",
+        "push new version",
+        "unlist/relist"
+      ],
+      "required": "Confirm removed/revoked or explicitly reconcile under the exclusive production-policy requirement; historical qualification success is not completion proof."
+    },
+    {
+      "kind": "probe Trusted Publishing policy",
+      "workflow_filename": "release-publish-probe.yml",
+      "environment": "hexalith-release",
+      "package_id": "Hexalith.Builds.PublishProbe.20261111",
+      "required": "Confirm current revocation/removal/disposition; retain the already protected qualification draft, package, image and original artifact."
+    },
+    {
+      "kind": "spike Zot credentials",
+      "principal": "cicd-publish-spike-3-1",
+      "repository": "cicd-publish-spike-3-1",
+      "secret_metadata": [
+        "HEXALITH_REGISTRY_PUSH_USERNAME",
+        "HEXALITH_REGISTRY_PUSH_PASSWORD"
+      ],
+      "variable_metadata": [
+        "HEXALITH_REGISTRY_SPIKE_REPOSITORY",
+        "HEXALITH_REGISTRY_SPIKE_TAG"
+      ],
+      "required": "Record current approved disposition of identity grants and retained secrets; no mutation is authorized by this inspection."
+    },
+    {
+      "kind": "legacy publication access",
+      "names_or_families": [
+        "NUGET_API_KEY",
+        "HEXALITH_ZOT_*"
+      ],
+      "required": "Confirm Builds/CiCd exclusion from legacy publication credentials and appropriate legacy package/registry scopes, under the frozen architecture and current maintainer disposition."
+    }
+  ],
+  "minimal_completion_evidence": [
+    "Timestamped maintainer readback from NuGet Trusted Publishing confirming current policy owner, repository, workflow filename, environment and package glob.",
+    "Current policy inventory for Hexalith.Builds confirming exclusive production policy and recorded disposition of publish-spike.yml wildcard, release-publish-probe.yml and legacy production policies.",
+    "Timestamped current disposition of spike/legacy publishing credentials and their repository grants/selections; metadata only, no secret values.",
+    "Preservation of qualification draft 441591623 and original artifact/package/image history per the newer story 3-7 contract, which supersedes older story 3-4 disposal guidance."
+  ],
+  "sources": [
+    {
+      "path": "_bmad-output/specs/spec-cicd/stories/3-7-bootstrap-the-first-builds-release.md",
+      "lines": [
+        34,
+        36,
+        38,
+        40,
+        69,
+        71,
+        113
+      ]
+    },
+    {
+      "path": "_bmad-output/specs/spec-cicd/evidence/3-7/recheck-20261112T133620Z/preflight.md",
+      "lines": [
+        58,
+        61,
+        64
+      ]
+    },
+    {
+      "path": "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md",
+      "lines": [
+        220,
+        511,
+        516,
+        551,
+        574,
+        575
+      ]
+    },
+    {
+      "path": "references/Hexalith.Builds/docs/cicd-3-1-publish-composite-spike-results.md",
+      "lines": [
+        23,
+        24,
+        25,
+        26,
+        33,
+        35,
+        37
+      ]
+    },
+    {
+      "path": "references/Hexalith.Builds/docs/cicd-3-4-publish-composite-results.md",
+      "lines": [
+        135,
+        136,
+        137,
+        138,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281
+      ]
+    },
+    {
+      "path": "references/Hexalith.Builds/docs/cicd-3-6-builds-shared-release-results.md",
+      "lines": [
+        224,
+        225,
+        248,
+        249
+      ]
+    }
+  ]
+}

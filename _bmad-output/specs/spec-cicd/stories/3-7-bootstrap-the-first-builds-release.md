@@ -2,7 +2,7 @@
 title: 'Bootstrap the first Builds release'
 type: chore
 created: '2026-11-12'
-status: ready-for-dev
+status: in-progress
 blocking_condition: implementation verification failed
 baseline_revision: a60a60a08f46a0c02422a6d850b00bbd295ae694
 implementation_repository: references/Hexalith.Builds

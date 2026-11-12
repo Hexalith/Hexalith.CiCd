@@ -1,0 +1,408 @@
+{
+  "story_key": "3-7",
+  "started_at": "2026-11-12T13:57:15.464624+00:00",
+  "completed_at": "2026-11-12 13:57:51 UTC",
+  "scope": "Read-only verification of current App repository-selection prerequisites; no credential expansion, App authentication creation, private key reads, selection/settings mutations, dispatch, publication, implementation, tests or commits.",
+  "captured_at": "2026-11-12T13:57:15.464624+00:00",
+  "authentication": {
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "GH_TOKEN_present": false,
+    "GITHUB_TOKEN_present": false
+  },
+  "requests": [
+    {
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "user",
+      "exit_code": 0,
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:15 GMT",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Github-Request-Id: CD24:250B24:433E45:73CD55:6AF5C5BB"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds",
+      "exit_code": 0,
+      "data": {
+        "full_name": "Hexalith/Hexalith.Builds",
+        "id": 952945989,
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:16 GMT",
+        "X-Accepted-Github-Permissions: metadata=read",
+        "X-Github-Request-Id: FF2F:F661D:41D538:727CDF:6AF5C5BB"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd",
+      "exit_code": 0,
+      "data": {
+        "full_name": "Hexalith/Hexalith.CiCd",
+        "id": 1379430755,
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:16 GMT",
+        "X-Accepted-Github-Permissions: metadata=read",
+        "X-Github-Request-Id: FF31:32A51F:DBC6F39:1484C57C:6AF5C5BC"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "user",
+      "exit_code": 0,
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:16 GMT",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Github-Request-Id: FF35:256DDA:DE423F8:14BC336B:6AF5C5BC",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds",
+      "exit_code": 0,
+      "data": {
+        "full_name": "Hexalith/Hexalith.Builds",
+        "id": 952945989,
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:17 GMT",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Github-Request-Id: FF39:131EE2:E440A99:154AB548:6AF5C5BD",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd",
+      "exit_code": 0,
+      "data": {
+        "full_name": "Hexalith/Hexalith.CiCd",
+        "id": 1379430755,
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:17 GMT",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Github-Request-Id: FF3B:17BB0C:E22E9D7:151B59BF:6AF5C5BD",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/installations?per_page=100&page=1",
+      "exit_code": 0,
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "app_id": 67,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 31626264,
+            "app_id": 56611,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 31641834,
+            "app_id": 254,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 77847816,
+            "app_id": 1144995,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 97329264,
+            "app_id": 12526,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 179966090,
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            },
+            "suspended_at": null
+          }
+        ]
+      },
+      "response_metadata": [
+        "HTTP/2.0 200 OK",
+        "Date: Thu, 12 Nov 2026 13:57:18 GMT",
+        "X-Accepted-Oauth-Scopes: admin:org, read:org, write:org",
+        "X-Github-Request-Id: FF3F:3595C3:42B801:733F19:6AF5C5BE",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "stderr": ""
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "user/installations/179966090/repositories?per_page=100&page=1",
+      "exit_code": 1,
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "response_metadata": [
+        "HTTP/2.0 403 Forbidden",
+        "Date: Thu, 12 Nov 2026 13:57:18 GMT",
+        "X-Accepted-Oauth-Scopes: read:user, user",
+        "X-Github-Request-Id: C97B:2F2F4F:E114CE6:150495F7:6AF5C5BE",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "user/installations/77847816/repositories?per_page=100&page=1",
+      "exit_code": 1,
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "response_metadata": [
+        "HTTP/2.0 403 Forbidden",
+        "Date: Thu, 12 Nov 2026 13:57:19 GMT",
+        "X-Accepted-Oauth-Scopes: read:user, user",
+        "X-Github-Request-Id: C983:256DDA:DE4408E:14BC5DEA:6AF5C5BE",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "profile": "maintainer-read-only",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/installation",
+      "exit_code": 1,
+      "data": {
+        "message": "A JSON web token could not be decoded",
+        "documentation_url": "https://docs.github.com/rest",
+        "status": "401"
+      },
+      "response_metadata": [
+        "HTTP/2.0 401 Unauthorized",
+        "Date: Thu, 12 Nov 2026 13:57:19 GMT",
+        "X-Github-Request-Id: CCF7:2F2F4F:E11573C:1504A4A9:6AF5C5BF"
+      ],
+      "stderr": "gh: A JSON web token could not be decoded (HTTP 401)"
+    }
+  ],
+  "connected_tool_evidence": {
+    "provider": "GitHub plugin",
+    "authenticated_user": {
+      "id": "6775094",
+      "login": "jpiquot"
+    },
+    "installation_inventory": {
+      "allow_all_repositories_for_testing": false,
+      "installations": [
+        {
+          "id": 77847787,
+          "account_login": "Itaneo",
+          "repository_selection": "all",
+          "html_url": "https://github.com/organizations/Itaneo/settings/installations/77847787"
+        },
+        {
+          "id": 77847816,
+          "account_login": "Hexalith",
+          "repository_selection": "selected",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/77847816"
+        }
+      ]
+    },
+    "cicd_selection": {
+      "tool": "list_repositories_by_installation",
+      "args": {
+        "installation_id": 179966090,
+        "page_offset": 0,
+        "page_size": 100
+      },
+      "isError": true,
+      "error": "GitHub API error 403: {\"message\":\"Resource not accessible by integration\",\"documentation_url\":\"https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token\",\"status\":\"403\"}",
+      "error_code": "FORBIDDEN",
+      "error_data": {
+        "message": "Resource not accessible by integration",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      }
+    },
+    "connector_selection_pages": [
+      {
+        "tool": "list_repositories_by_installation",
+        "args": {
+          "installation_id": 77847816,
+          "page_offset": 0,
+          "page_size": 100
+        },
+        "repositories": [
+          {
+            "id": "1155154671",
+            "repository_full_name": "Hexalith/Hexalith.EventStore",
+            "permissions": {
+              "admin": true,
+              "maintain": true,
+              "pull": true,
+              "push": true,
+              "triage": true
+            }
+          }
+        ]
+      },
+      {
+        "tool": "list_repositories_by_installation",
+        "args": {
+          "installation_id": 77847816,
+          "page_offset": 1,
+          "page_size": 100
+        },
+        "repositories": []
+      }
+    ]
+  },
+  "conclusions": {
+    "cicd_installed": "PASS: current complete six-installation org response contains active hexalith-cicd installation 179966090 with Actions/Contents/Workflows write and Administration/security-events read.",
+    "cicd_includes_builds": "UNVERIFIED: maintainer selected-repository API returns HTTP 403, plugin returns HTTP 403 Resource not accessible by integration, repository installation endpoint returns HTTP 401 A JSON web token could not be decoded. None proves absence.",
+    "connector_excludes_builds_and_cicd": "PASS through connected GitHub plugin: installation 77847816 currently lists only Hexalith/Hexalith.EventStore, followed by an empty offset-1 page; allow_all_repositories_for_testing is false. Connected user jpiquot matches intended profiles and has account admin/read access to both target repositories.",
+    "other_agent_apps": "Current complete org listing includes no claude, cursor or semgrep-app installation.",
+    "required_remaining_evidence": "Current timestamped maintainer UI readback at https://github.com/organizations/Hexalith/settings/installations/179966090 showing hexalith-cicd installation and selected repositories explicitly including Hexalith.Builds. Retain exact selected set and current permissions; do not infer current inclusion from historical workflow runs.",
+    "token_scope_note": "Account admin:true does not establish token API scopes. The maintainer response advertises read:user/user for installation repository reads, while its current reported scopes omit read:user. No auth refresh or credential expansion was performed."
+  },
+  "reference_docs": [
+    "https://docs.github.com/en/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+    "https://docs.github.com/en/rest/apps/apps#get-a-repository-installation-for-the-authenticated-app"
+  ]
+}
