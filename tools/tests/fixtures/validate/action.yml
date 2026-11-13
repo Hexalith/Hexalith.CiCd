@@ -1,0 +1,7 @@
+name: Validator fixture
+description: Must be read from a committed Git tree, never executed.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: exit 99

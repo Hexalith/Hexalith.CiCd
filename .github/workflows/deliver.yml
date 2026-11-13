@@ -1,0 +1,60 @@
+name: Delivery
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '47 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+cache-mode: none
+
+concurrency:
+  group: ${{ github.ref == 'refs/heads/main' && 'deliver' || format('deliver-validate-{0}', github.ref) }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    outputs:
+      verdict: ${{ steps.validate.outputs.verdict }}
+    steps:
+      - name: Checkout CiCd candidate
+        id: cicd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Setup uv
+        id: uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          enable-cache: false
+
+      - name: Checkout Builds objects and tags
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Hexalith/Hexalith.Builds
+          ref: main
+          path: references/Hexalith.Builds
+          fetch-depth: 0
+          fetch-tags: true
+          submodules: false
+          persist-credentials: false
+
+      - name: Validate candidate and modules
+        id: validate
+        # A failed Builds checkout must still permit a conservative verdict.
+        # Its failed step keeps the job red even if validation can continue.
+        # !cancelled(), unlike always(), lets a superseded or cancelled run stop.
+        if: ${{ !cancelled() && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: uv run --locked --script tools/validate.py

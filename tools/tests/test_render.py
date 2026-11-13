@@ -36,6 +36,8 @@ def load_module(name: str, path: Path):
 
 
 renderer = load_module("_cicd_renderer", ROOT / "tools/render.py")
+# The shared global checker owns the permission-union rule.
+global_checks = load_module("_cicd_render_global_checks", ROOT / "tools/check_global.py")
 
 
 def run(arguments, *, cwd=None, input=None, env=None, check=True):
@@ -810,12 +812,7 @@ class RenderTests(unittest.TestCase):
             })
             self.assert_arguments_supplied(job["with"], release_api["inputs"])
             self.assert_arguments_supplied(pull_secrets, release_api["secrets"])
-            union = {}
-            for shared_job in release_declaration["jobs"].values():
-                for scope, permission in shared_job["permissions"].items():
-                    if union.get(scope) != "write":
-                        union[scope] = permission
-            self.assertEqual(job["permissions"], union)
+            self.assertEqual(job["permissions"], global_checks.permission_union(release_declaration))
             handoff = ("publish", "version", "sha", "last-tag", "draft-id", "artifact-id", "artifact-digest", "artifact-run")
             values = {key: "${{ needs.release.outputs." + key + " }}" for key in handoff}
             values.update({"nuget-user": "${{ vars.HEXALITH_NUGET_USER }}",

@@ -161,7 +161,7 @@ def git(repository: Path, *arguments: str, data: bytes | None = None) -> bytes:
     result = subprocess.run([
         "git", "-c", "core.hooksPath=/dev/null", "-c", "submodule.recurse=false",
         "-C", str(repository), *arguments,
-    ], input=data, capture_output=True, env=environment, check=False)
+    ], input=data, capture_output=True, env=environment, timeout=60, check=False)
     if result.returncode:
         raise RenderError(f"{repository}: git {arguments[0]}: "
                           f"{result.stderr.decode('utf-8', 'backslashreplace').strip()}")
@@ -204,7 +204,7 @@ class Contract:
             arguments = [sys.executable, "-I", str(self.root / f"Github/lib/{kind}_config.py"), str(path)]
             if kind == "ci":
                 arguments += ["--repository", f"Hexalith/{repository}"]
-            result = subprocess.run(arguments, capture_output=True, text=True, check=False)
+            result = subprocess.run(arguments, capture_output=True, text=True, timeout=60, check=False)
             if result.returncode:
                 raise RenderError(f"{source}: pinned {kind} loader: {result.stderr.strip()}")
         return document
@@ -532,7 +532,8 @@ def main() -> int:
             return int(bool(mismatches))
         print(f"Rendered setup registry ({len(mismatches)} changed paths).")
         return 0
-    except (OSError, ValueError, KeyError, TypeError, RecursionError, SchemaError) as error:
+    except (OSError, ValueError, KeyError, TypeError, RecursionError, SchemaError,
+            subprocess.SubprocessError) as error:
         print(f"Render failed: {diagnostic(error)}", file=sys.stderr)
         return 1
 

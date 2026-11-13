@@ -108,3 +108,80 @@ policy change. Until then every marker body is exactly
 the owned deny values are `[]`. These valid v1 placeholders do not complete
 CAP-11. Rendering does not deliver, onboard, dispatch, publish, enforce drift,
 check acceptable GitHub releases, or orchestrate global checks.
+
+## Candidate validation
+
+Run either shared global checks or the full validation verdict from the root:
+
+```sh
+uv run --locked --script tools/check_global.py
+uv run --locked --script tools/validate.py
+uv run --locked --script tools/validate.py --project-root /path/to/cicd
+```
+
+Both commands require Python 3.12 or later and derive the default project root
+from the script location. Use an absolute script path from another directory.
+Commit the render with its cause before validating: global checks compare the
+candidate `HEAD` paths, bytes and modes under `rendered/` with the working copy
+and a fresh read-only render. The pin, registry and used templates must also
+match `HEAD`; unrelated planning, evidence and tool changes may remain in the
+working tree. Neither command writes generated files or module state.
+
+The CiCd candidate must be a Git checkout. A separate Builds checkout at
+`references/Hexalith.Builds` must have the complete local objects and tags for
+`builds-version`; no other module checkout is needed. The workflow checks out
+Builds `main` with `fetch-depth: 0`, without nested submodules or persisted
+credentials. Its worktree and HEAD never supply contract bytes: schemas,
+strict readers, callable interfaces and linter pins are exported from the exact
+tag's Git objects. The published `v5.1.0` release at
+`9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4` satisfies the perimeter schema/library
+prerequisite. An older or incomplete pin fails explicitly; newer checkout files
+cannot substitute for the selected release.
+
+Validation requires Linux x86_64, outbound HTTPS to GitHub for release and tag
+metadata, linter archives and online zizmor audits, and anonymous Git access to
+each registered module's live `main`. Supply a read-only `GH_TOKEN` or
+`GITHUB_TOKEN` privately through the environment. In Actions the only credential
+is the job's `GITHUB_TOKEN` with `contents: read`. Unavailable or malformed API
+responses fail verification, including authorization errors. Module reads use
+anonymous shallow clones with no checkout execution, recursive submodules,
+credentials, helpers or extra headers. Action availability comes from committed
+live-main trees, independently of local module checkouts and pinned gitlinks.
+
+`check_global.py` checks reproducibility, committed render, generated schemas
+and strict readers, actual rendered callers and permissions, tool suites, pinned
+actionlint and online zizmor, and acceptable Builds publication. The selected
+release must be published, immutable, authored by `github-actions[bot]`, agree
+with the locally peeled tag, and be an ancestor of live Builds `main`. This is
+the same global entry point that the future nightly bump will invoke. It writes
+nothing to stdout and logs each check to stderr. It exits 0 only when every
+global check passes; otherwise it reports each failed or incomplete check and
+exits 1. The shared runner executes tool tests without `--lint`; representative
+fixture online lint remains the separate `test_render.py --lint` command above.
+
+`validate.py` invokes global checks once, then independently checks every
+registration's candidate CI document, direct-submodule declaration and gitlink,
+enabled hook/job names and exclusion targets, and live action availability. It
+prints exactly one compact JSON object on stdout, for example
+`{"global":true,"modules":["Hexalith.Example"]}`. `modules` is sorted and contains
+only passing repository stems from this registry. Diagnostics and tool logs go
+to stderr. When `GITHUB_OUTPUT` is set, the same JSON is appended as one
+`verdict=` record. Exit 0 requires global checks and every module to pass;
+otherwise it emits the verdict and exits 1. A global failure preserves modules
+whose independent checks pass; an unusable registry or unavailable selected
+contract cannot certify module names.
+
+The intentionally empty production registry is valid and yields
+`{"global":true,"modules":[]}` when global checks pass. Nonempty validation
+fixtures live under `tools/tests/fixtures/validate/`; run them with
+`uv run --locked --script --python 3.12 tools/tests/test_validate.py` (or Python
+3.14). Dependency changes require adjacent locks from
+`uv lock --script tools/check_global.py`, `uv lock --script tools/validate.py`
+and `uv lock --script tools/tests/test_validate.py`. The story 10-2 ownership
+placeholder and empty deny values above remain intentional.
+
+`deliver.yml` currently runs only this read-only `validate` job on pushes to
+`main`, pull requests, hourly at minute 47 and manual dispatch. Its `verdict` job
+output carries the JSON even after ordinary validation failures. Main runs use
+noncancelling concurrency group `deliver`; all other refs use cancelling
+`deliver-validate-<ref>`. Delivery and App checks belong to a later story.
