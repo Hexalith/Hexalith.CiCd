@@ -2,10 +2,10 @@
 title: 'Guard drift detection and the release drift check'
 type: feature
 created: '2026-11-13'
-status: blocked
+status: in-progress
 review_loop_iteration: 0
 followup_review_recommended: false
-baseline_revision: bec78e64087aa4e3668210f47535afcad55258df
+baseline_revision: db053a530db7c8b69f73e742b6e76d7b13b92f44
 implementation_repository: references/Hexalith.Builds
 implementation_baseline_revision: f01c3ab70f7e7401b3b73217983955f7771a1465
 implementation_integration_revision: 05a75b626fb73c6e386d16c41e885f193d3cff16
@@ -38,6 +38,8 @@ Builds root skips both delivered-state guard and release drift lookup. Only Buil
 
 **Never:** Implement restore, delivery/ref advancement, local `check.py`, custom-action deny-list/audit/commitlint lint, schema changes, module onboarding, release publication or administration. Keep `commitlint-caller.yml` until commitlint actually migrates; stale earlier attribution does not remove existing coverage. Do not change frozen AD-20 runtime, publisher/original-artifact handling, sample imports/actions/Windows delegation, SDK pins or dependency pins. Do not test workflow source text, run a delivered-ref guard on Builds root, initialize nested submodules or execute module code in release resolve.
 
+**Story-specific verification exception (human-approved 2026-11-13):** For story 5-1 only, the all-green implementation/completion gate permits the two failures reproduced on integration revision `05a75b626fb73c6e386d16c41e885f193d3cff16` ([baseline run 43387068103](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43387068103)) and implementation revision `0f97426edb6f88ee6e534d95ca9029f7e0b20311` ([source run 43389324372](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43389324372)): the package-catalog validator's exit 1 with exactly the same 14 normalized EventStore 4.2.0-versus-5.0.0 assertion messages, and Evidence.Tests' exit 2 with exactly the same 44 failing test identities. Compare and retain the actual signatures against the baseline logs; matching counts alone are insufficient. Missing comparison evidence or any new or changed failure blocks verification. Keep these checks and assertions enabled and retain their failing results explicitly. All other required checks must pass, including both complete local Python lanes and completed exact-source hosted Python, sample Linux, dependent Windows and quality/API jobs. Independent review must still run and pass before completion. This exception governs story verification only; runtime and release green-CI requirements retain their existing semantics.
+
 ## I/O & Edge-Case Matrix
 
 | Scenario | Input / State | Expected Output / Behavior | Error Handling |
@@ -52,6 +54,7 @@ Builds root skips both delivered-state guard and release drift lookup. Only Buil
 | Release invalid source | Bad full-SHA syntax, missing object, sibling/future/unrelated supplied SHA | Reject before switch/green CI/publication | Nonzero; never silently fall back to live tip |
 | Release drift / kill switch | Create drift with switch true or false | Drift fails before switch/green CI; a false switch cannot hide it | Fixed ownership error; no publication handoff |
 | Release complete | Valid marked historical draft, changed delivered state | No expected-state fetch/comparison, old config load or CI check | Preserve original-artifact completion and dispatch-SHA security settings |
+| Implementation verification | Exact-source CI retains only the two baseline-matching failures defined above; every other required check passes | Record the known failures under the approved exception and proceed to independent review | Missing signature evidence or any new/changed failure blocks; review must pass before completion |
 
 </intent-contract>
 
@@ -96,9 +99,11 @@ All paths below are relative to `references/Hexalith.Builds`, unless explicitly 
 - Given a module create release, when delivered-sha is omitted/equal/ancestor, then resolve compares the frozen release SHA with the exact permitted delivered tree; sibling/future/unavailable commits fail without bare-SHA fetching or fallback.
 - Given create drift and any publishing-switch value, when resolve runs, then ownership failure precedes switch/green-CI processing, no publication handoff is emitted, and the release reports failed; valid dispatch security settings emitted after completed comparison remain available to existing security jobs.
 - Given a valid marked draft, when resolve selects complete mode, then delivered state and historical draft config/CI are never consulted, while current dispatch settings, original artifact recovery and outcome behavior remain intact.
-- Given the implementation revision, when existing quality/API and behavioral suites plus exact-source Builds CI run, then the retained public interfaces and product lanes pass without workflow-text assertions, changed frozen files or new write permission.
+- Given the implementation revision, when existing quality/API and behavioral suites plus exact-source Builds CI run, then the retained public interfaces and product lanes pass except for the two explicitly approved baseline-matching failures in the intent contract; their actual signatures and failing results are retained, every other required check passes, and independent review passes before completion, without workflow-text assertions, changed frozen files or new write permission.
 
 ## Spec Change Log
+
+- 2026-11-13: Human approved a story-5-1-only verification exception for the baseline-matching 14 catalog assertions and 44 Evidence.Tests failures. All other checks, completed hosted Python lanes and independent review remain mandatory; new/changed failures or missing signature evidence still block. This resolves the all-green gate conflict without changing implementation scope or runtime/release behavior.
 
 - 2026-11-13: Preserved concurrent upstream package-catalog updates by rebasing the implementation onto `05a75b626fb73c6e386d16c41e885f193d3cff16`. Those dependency edits belong to upstream; story code does not edit pins. Implementation commit `0f97426edb6f88ee6e534d95ca9029f7e0b20311` is pushed and its committed-object API check reports 2,581 entries with no removals.
 
@@ -126,12 +131,13 @@ Run from the Builds root during implementation, using its locked test dependenci
 - `uv run --no-cache --locked --script --python 3.12 Tools/ci/check_public_api.py` — API additions preserve the existing surface; run against committed implementation Git objects.
 - `git diff --check` and an explicit diff against `implementation_baseline_revision` — no whitespace faults, frozen runtime changes or unrelated scope.
 - Observe the implementation commit's normal `builds-ci.yml` push run at its full SHA, including guarded sample and dependent Windows success. Record its run link and actual job results in the implementation results file; do not substitute workflow-text checks. This planning run does not dispatch, publish or claim those future checks passed.
+- Apply the human-approved exception in the intent contract only after retaining the baseline/current signature comparison and the final results of all other required jobs, including both hosted Python lanes. Preserve the two known failures as failures in the evidence; proceed through independent review only when every other verification requirement is satisfied.
 
 Implementation delivery: implement and verify the tasks above, commit/push in Builds after exact-message pinned commitlint validation, and record exact-source hosted validation. Stage the canonical CiCd story and updated Builds gitlink together; leave the superproject commit/push to the caller. The prior planning delivery is preserved below as history.
 
 ## Matrix Test Audit
 
-All ten intent-matrix rows have executed, passing behavioral coverage in the focused Python 3.14.4 transcripts. These tests inspect Git objects, actual CLI/composite execution, API/Git calls and downstream execution, not workflow source text. Both complete interpreter lanes subsequently passed all 14 groups and 817 tests each without skips. Hosted guarded sample and Windows verification passed; independent upstream product failures prevent the overall verification gate from passing.
+All ten runtime intent-matrix rows have executed, passing behavioral coverage in the focused Python 3.14.4 transcripts. These tests inspect Git objects, actual CLI/composite execution, API/Git calls and downstream execution, not workflow source text. Both complete interpreter lanes subsequently passed all 14 groups and 817 tests each without skips. Hosted guarded sample and Windows verification passed; independent upstream product failures prevented the overall verification gate from passing at the implementation halt. The implementation-verification row added during resolution requires the signature comparison and completed job evidence described above; this resolution claims no new test execution or completed review.
 
 | Matrix row | Passing tests |
 |---|---|
@@ -146,30 +152,3 @@ All ten intent-matrix rows have executed, passing behavioral coverage in the foc
 | Release drift / kill switch | `test_release_state.ReleaseStateTests.test_create_drift_fails_before_switch_or_ci_with_dispatch_security_settings`; `test_release_outcome.OutcomeAdapterTests.test_real_drifted_resolve_retains_reporter_ownership_and_reports_failed` |
 | Release complete | `test_release_state.ReleaseStateTests.test_complete_mode_never_acquires_expected_state_even_with_changed_accepted_branch`; `test_release_adapters.ResolveAdapterTests.test_module_complete_uses_current_security_settings_without_delivered_lookup` |
 
-## Auto Run Result
-
-Status: blocked
-Blocking condition: implementation verification failed
-
-Story 5-1 runtime and tests are implemented and pushed in Builds. Source commit: `0f97426edb6f88ee6e534d95ca9029f7e0b20311`. Evidence commit: `2ecffe8bf5258c3a5b02e58ae8cfad8ab9d77071`. Builds is clean and its remote main was verified at that exact evidence revision. Both exact commit messages passed the owning pinned commitlint 21.2.4 CLI with zero problems/warnings. The story and remotely available Builds pointer are staged together in CiCd; no superproject commit/push was made.
-
-Both full locked Python lanes passed: Python 3.12.13 and runner Python 3.14.4, 14/14 groups, 817 tests each, no skips. The separate perimeter run passed 58 tests. Authenticated actionlint/zizmor passed with zero new findings; committed-object API verification passed 2,581 entries without removals. All ten matrix rows have passing behavioral coverage above. The final diff includes upstream package-catalog changes from the recorded integration revision; the authored story commit does not edit any pins, frozen runtime, schemas, publisher or sample import/action/Windows files.
-
-[Exact-source hosted run](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43389324372): guarded sample Linux/build/units/root hook/integration, dependent Windows and quality/API jobs passed. Overall product verification is blocked by two failures independently reproduced in the [pre-story upstream run](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43387068103) at `05a75b626fb73c6e386d16c41e885f193d3cff16`:
-
-- `pwsh -NoProfile -File ./Tools/test-authoritative-package-catalog.ps1` failed with exit 1 and 14 catalog assertions requiring EventStore 4.2.0 after upstream advanced the catalog to 5.0.0. All 14 normalized error messages match the upstream run exactly.
-- `dotnet test --project test/Hexalith.Builds.Evidence.Tests/Hexalith.Builds.Evidence.Tests.csproj --no-build --no-restore -p:Configuration=Release -p:UseHexalithProjectReferences=false -p:NuGetAudit=false -p:RestoreConfigFile=/home/runner/work/_actions/Hexalith/Hexalith.Builds/0f97426edb6f88ee6e534d95ca9029f7e0b20311/NuGet.ci.Config -p:EnableNETAnalyzers=true -p:RunAnalyzers=true -p:RunAnalyzersDuringBuild=true -p:TreatWarningsAsErrors=true -p:MSBuildTreatWarningsAsErrors=true --stop-on-fail off` failed with exit 2: 44 failed, 147 passed. All 44 failing test identities match the upstream run exactly. Guard, prepare and build passed before these existing evidence-validator failures.
-
-The authored story diff touches neither failing validator nor the package catalog. These failures cannot be repaired within the frozen story scope by changing pins or weakening unrelated assertions. The build-auto implementation-verification instruction requires HALT when verification cannot be satisfied; step 4 review has therefore not run and remains outstanding. Hosted Python jobs were still running/queued when this established blocker caused halt; both complete local lanes passed.
-
-[Implementation and verification record](../../../../references/Hexalith.Builds/docs/cicd-5-1-guard-drift-check-results.md) retains full source/integration identities, checks, job links and the terminal blocker. The requested skill renderer was executed exactly once in this dispatch.
-
-### Previous planning run
-
-Status: ready-for-dev
-
-Halted after planning as requested. The renderer ran once; three context subagents loaded all prior stories and investigated existing integration seams. The saved story passed the ready-for-development gate: file-specific ordered tasks, Given/When/Then acceptance, executable CI/release surfaces, defined edge cases and no unresolved intent gap.
-
-Planning verification used the existing strict perimeter loader and Git comparison API against the current committed sample: the proposed nonempty manifest is valid and produces zero drift against its existing expected config. Both enabled sample actions are regular committed files at workspace root. No fixture, runtime, schema or test was changed, and implementation/hosted verification remains future work.
-
-Delivery: committed and pushed the Builds planning document on `main` as `f01c3ab70f7e7401b3b73217983955f7771a1465`; `git ls-remote origin refs/heads/main` confirmed that exact remote revision, and Builds is clean. Pinned `@commitlint/cli@21.2.4` validated the exact message with zero problems/warnings, staged whitespace validation passed, and the planning check verified all 10 Given/When/Then criteria, canonical full revisions and ready-for-dev frontmatter. The canonical story and updated Builds gitlink are staged together in CiCd; no superproject commit/push was made.
