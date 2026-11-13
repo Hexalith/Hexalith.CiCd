@@ -2,17 +2,21 @@
 title: 'Guard drift detection and the release drift check'
 type: feature
 created: '2026-11-13'
-status: ready-for-dev
+status: done
 review_loop_iteration: 0
-followup_review_recommended: true
-baseline_revision: 0f1d464ffda8174345a4950b6e30bc50122d57b1
+followup_review_recommended: false
+baseline_revision: 171e764656d8b57d5f06c8f99c2b7c3b9c64650b
 implementation_repository: references/Hexalith.Builds
-implementation_baseline_revision: f01c3ab70f7e7401b3b73217983955f7771a1465
+implementation_baseline_revision: 3d110e06b286acbc6f5aae33fa7eb571e9268b0c
+implementation_original_baseline_revision: f01c3ab70f7e7401b3b73217983955f7771a1465
 implementation_integration_revision: 05a75b626fb73c6e386d16c41e885f193d3cff16
 implementation_original_revision: 0f97426edb6f88ee6e534d95ca9029f7e0b20311
 implementation_resume_baseline_revision: 2ecffe8bf5258c3a5b02e58ae8cfad8ab9d77071
-implementation_revision: e2bdaca58c95c52e05cb6db77d91ab7ae22ee4a0
-implementation_evidence_revision: 3d110e06b286acbc6f5aae33fa7eb571e9268b0c
+implementation_revision: 185e3a4e695f392e114eacffbdecd2a23da32c9b
+implementation_evidence_revision: 4dffd595e54699320d483edc1f27aff9b62ed8ca
+implementation_review_revision: 7db81f4f19bef5e5337d241abc4bbff98ef62c4c
+implementation_followup_integration_revision: cae351e20093634483afad16aca3bfd90845eda8
+implementation_final_integration_revision: 9bbe8380c13094ddf41cfd780e3a69289e94b9d4
 context:
   - _bmad-output/specs/spec-cicd/SPEC.md
   - _bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
@@ -38,6 +42,48 @@ deferred:
       Follow-up review BH14. Both failures reproduce on integration revision 05a75b626fb73c6e386d16c41e885f193d3cff16 (run 43387068103), before this story's source. They come from upstream dependency/catalog changes: Props/Directory.Packages.props moved HexalithEventStoreVersion to 5.0.0 while the catalog assertions still require 4.2.0. The story-5-1 verification exception tolerates them for story verification only. The deferred-work ledger has no entry for either failure. While they persist, Builds' own release green-CI gate cannot pass. Settle by reconciling the catalog validator with the EventStore 5.0.0 pin, and by triaging the 44 Evidence.Tests failures in their owning upstream change.
     location: >-
       references/Hexalith.Builds package catalog contracts job; test/Hexalith.Builds.Evidence.Tests
+    severity: medium
+  - summary: >-
+      Exact-name catalog snapshots accept case-varied consumer names.
+    evidence: |-
+      Review EC1/BH2: MSBuildProjectName.Equals selectors are case-sensitive, but CatalogVersionMaterializer stores project views with OrdinalIgnoreCase and CompositionDeclarationOptions.ReadRecordedPackageVersion uses OrdinalIgnoreCase. A clean Hexalith.Parties.Tests view selects SDK4.2/OpenAPI2; hexalith.Parties.Tests selects SDK5/OpenAPI3 but can reuse the recorded retained view. Both paths were traced and disposable MSBuild evaluations confirmed the selection difference. This is present in upstream integration cae351e20093634483afad16aca3bfd90845eda8, before the story follow-up commit; fix exact-name materialization/lookup and add a case-varied consumer test in the catalog workstream.
+    location: >-
+      references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Workspace/CatalogVersionMaterializer.cs:175; Runtime/CompositionDeclarationOptions.cs:183
+    severity: medium
+  - summary: >-
+      The no-snapshot catalog package reader selects conditional EventStore4.2 instead of the default SDK5 view.
+    evidence: |-
+      Review BH1: CompositionDeclarationOptions.ReadCatalogPackageVersion resolves $(HexalithEventStoreVersion) using the first XML descendant without evaluating its condition. The integrated catalog now declares the retained conditional 4.2.0 before the default 5.0.0, while the first OpenAPI declarations remain 11.0.0/3.11.0. This yields a crossed default tuple through the public no-snapshot overload. The implementation and declaration order are present unchanged in integration cae351e20093634483afad16aca3bfd90845eda8; this story changes neither file. Use an evaluated default view or require the materialized snapshot in that owning catalog change.
+    location: >-
+      references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionDeclarationOptions.cs:147
+    severity: medium
+  - summary: >-
+      The Python catalog selector reader omits the new Equals-based consumer views from runtime inventory.
+    evidence: |-
+      Review BH3: Tools/evaluated_catalog.py.conditioned_catalog_project_names recognizes quoted == expressions only. Tools/runtime_toolchain_v2.py.inventory evaluates a consumer-specific catalog only when the project stem is in that returned set. The integrated MSBuildProjectName.Equals selectors are therefore omitted and affected projects receive the default SDK5 inventory. The C# selector reader was updated upstream but this Python reader was not; both the new selectors and this omission already exist in integration cae351e20093634483afad16aca3bfd90845eda8. Extend the Python selector extraction and behavioral inventory tests in that catalog workstream.
+    location: >-
+      references/Hexalith.Builds/Tools/evaluated_catalog.py:96; Tools/runtime_toolchain_v2.py:186
+    severity: medium
+  - summary: >-
+      Current toolchain defaults and some tests remain coupled to newly frozen v1 runtime pins.
+    evidence: |-
+      Review BH4/BH9: SupportedPlatformPins now returns immutable v1 literals, but CompositionToolchainPins.DaprRuntimeVersion still delegates to that facade and CompositionPrerequisiteProbe uses it for its documented catalog default. SupportedPlatformPinsCatalogTests also retains current-versus-frozen equality for FrontComposer and Dapr. Values currently agree, so no current hosted failure exists; a future approved current-catalog update would leave the default probe on the frozen runtime and reject the otherwise independent catalog update in tests. This authority split was introduced by the preserved upstream frozen-pin work and is present at integration cae351e20093634483afad16aca3bfd90845eda8. Reconcile the intended current/frozen facade and test authorities in that workstream.
+    location: >-
+      references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionToolchainPins.cs:34; test/Hexalith.Builds.Module.Tests/SupportedPlatformPinsCatalogTests.cs:29
+    severity: low
+  - summary: >-
+      Active retained compatibility package selections have no current conditional-selection audit records.
+    evidence: |-
+      Review BH5: The current package audit rows bind EventStore.Gateway5.0.0, ASP.NET OpenAPI11.0.0, OpenAPI3.11.0 and OpenIdConnect11.0.0. The active named views select 4.2.0, 10.0.15, 2.13.0 and 10.0.15, respectively, but any old observations are labeled historical and do not bind the current conditional selections. This leaves current listing/retention provenance incomplete for those consumers. The audit and selectors are unchanged from upstream integration cae351e20093634483afad16aca3bfd90845eda8; extend current view-bound audit evidence in the owning package-audit workstream.
+    location: >-
+      references/Hexalith.Builds/Tools/package-version-audit.json; Props/Directory.Packages.props
+    severity: medium
+  - summary: >-
+      Automatic response-file isolation lacks a real consumer-authority regression test.
+    evidence: |-
+      Review VG1, pre-verified: Removing only -noAutoResponse from validate-central-package-versions.ps1 still passed all 23 central-validator scenarios. A disposable ancestor Directory.Build.rsp setting FixtureVersion=9.9.9 under TMPDIR made both actual and expected consumer evaluations use 9.9.9 and validation exit successfully after that mutation; current code correctly rejects 9.9.9 instead of 1.2.3. The consumer-authority suite covers local XML overrides but not this response-file path. The isolation fix and test gap already exist in upstream integration cae351e20093634483afad16aca3bfd90845eda8 and are outside this story-authored patch. Add the demonstrated real-process poisoned-response-file case to the owning consumer-authority suite.
+    location: >-
+      references/Hexalith.Builds/Tools/validate-central-package-versions.ps1:218; Tools/test-consumer-package-authority-validator.ps1
     severity: medium
 ---
 
@@ -201,6 +247,31 @@ All paths below are relative to `references/Hexalith.Builds`, unless explicitly 
   - `[false]` `[reject]` IA-D8: The exception names 0f97426, the docs-only head 3d110e0 has no run of its own, and completion preceded this review. — The exception names the revisions where the failures were reproduced. The exact-source signature comparison was repeated at code revision e2bdaca, and 3d110e0 changes only two evidence documents. Independent review ran and passed before completion. This follow-up pass repeats verification for any new code.
   - `[false]` `[reject]` IA-D9: The change surface includes unrelated pins and gitlinks. — carried I4: the pin edits are in integration revision 05a75b626fb73c6e386d16c41e885f193d3cff16, and the other gitlinks come from concurrent superproject synchronization.
 
+### 2026-11-13 — Follow-up delivery review
+
+- verdicts: 18 findings — high 0, medium 7, low 7, false 4, maybe-false 0
+- findings (review-layer completion order):
+  - `[medium]` `[defer]` EC1: Case-varied consumer names reuse exact-name catalog views. — Confirmed: catalog `.Equals` selection is case-sensitive, while snapshot storage and `ReadRecordedPackageVersion` use OrdinalIgnoreCase. The reviewer evaluated canonical/lowercase names and observed SDK4.2 versus SDK5. Already present in upstream integration `cae351e20093634483afad16aca3bfd90845eda8`; grouped with BH2 for the owning catalog workstream.
+  - `[medium]` `[defer]` BH1: No-snapshot package lookup chooses the first conditional SDK4.2 declaration. — Confirmed `ReadCatalogPackageVersion` uses `Descendants(property).FirstOrDefault()`, and the first SDK declaration is conditional 4.2.0 while default OpenAPI declarations are 11/3. This predates the story-authored follow-up at the upstream integration; recorded separately.
+  - `[medium]` `[defer]` BH2: Case-insensitive snapshot lookup disagrees with new exact-case selectors. — Confirmed the same bad outcome as EC1 from snapshot construction through the public lookup; grouped with EC1. This is an upstream catalog issue and neither file is changed by source `185e3a4e695f392e114eacffbdecd2a23da32c9b`.
+  - `[medium]` `[defer]` BH3: Python catalog selector discovery does not recognize `.Equals`. — Confirmed the regex accepts quoted equality only and `runtime_toolchain_v2.inventory` uses default versions when a name is omitted. The C# reader alone was updated upstream. Recorded for that existing inventory workstream.
+  - `[low]` `[defer]` BH4: Current runtime facade now follows a frozen literal. — Confirmed `CompositionToolchainPins.DaprRuntimeVersion` delegates to `SupportedPlatformPins` and the prerequisite probe documents a current catalog default. Current values agree; a future approved runtime bump would expose the mismatch. This upstream authority-coupling issue is grouped with BH9.
+  - `[medium]` `[defer]` BH5: Active compatibility versions lack current conditional-selection audit records. — Confirmed current audit rows bind default SDK5/OpenAPI11/3/OpenIdConnect11 selections, while retained selections only have historical observations where present. The missing current view-bound provenance predates this authored follow-up and belongs to upstream package auditing.
+  - `[low]` `[reject]` BH6: The independent host verifier checks thirteen SDK-prefixed rows rather than exact identities. — Real hardening opportunity, but replacing an identity is not an everyday consumer path; enforcement would introduce a separate canonical identity set and new mutation controls. No source identity is changed by this story, so the extra verifier policy is not warranted here.
+  - `[low]` `[reject]` BH7: Positive/negative catalog probes do not assert the entire non-host selector allowlist. — Real future verification limitation. Current named views are checked, and enforcing every possible added name needs new selector-validation policy and branches. Such an unrecorded selector edit is unlikely in everyday use; no change is justified for this low-severity case.
+  - `[low]` `[reject]` BH8: Clean catalog probes inherit explicitly poisoned version/MSBuild environment variables. — Confirmed this helper launches `dotnet` directly, unlike the separately isolated packaged-host verifier. Hosted checks pass with ordinary environments; adding a new process/environment abstraction for this uncommon developer-test setup is more than a direct correction.
+  - `[low]` `[defer]` BH9: Some frozen-pin tests still require equality with the moving catalog. — Confirmed the three Dapr/FrontComposer current/frozen equality assertions. They currently pass but would reject an approved independent current-catalog update. Grouped with BH4 as incomplete upstream separation of current/frozen authorities.
+  - `[low]` `[reject]` BH10: Transcript fingerprints become unverifiable after local/hosted log expiry. — Real long-term archival limitation. The committed text correctly labels local logs session-local and retains source identities, results and fingerprints; no current retrievability promise is false. Durable archival infrastructure adds retention/artifact policy for a rare later replay need, so it is not added.
+  - `[false]` `[reject]` IA1: Ordinary-module expectations are exercised through local adapters rather than a live adopted module. — carried I3: onboarding and production adoption are explicitly excluded. Disposable real Git histories, executed composites and hosted sample verification are the specified surfaces.
+  - `[false]` `[reject]` IA2: Reusable release forwarding is simulated rather than run through the hosted scheduler. — The new test evaluates the real `with:` mappings and executes the real composite; removing either forwarding entry fails the behavior check. Production release dispatch and downstream scheduling are excluded, so their absence is not a missing story acceptance surface.
+  - `[false]` `[reject]` IA3: Hosted sample owns one configuration file while all nine kinds run locally. — carried I2: that exact nonempty sample perimeter and disposable nine-kind library integration split are required by the intent; both passed.
+  - `[low]` `[defer]` IA4: Release configuration errors still expose temporary paths. — carried BH3/VG3: unchanged baseline `dispatch_settings` behavior, already deferred. No duplicate deferred entry or patch is added.
+  - `[medium]` `[defer]` IA5: Drift blocks publication while dispatch settings can still steer security jobs. — carried BH1/IA-D1: the recorded design explicitly preserves current dispatch settings after comparison. The pre-existing security-job policy decision remains deferred without duplication.
+  - `[false]` `[reject]` IA6: Aggregate diff changes pins/frozen facades/publisher behavior despite story exclusions. — carried I4: commit history proves those changes are separate upstream integration; the authored `cae351e20093634483afad16aca3bfd90845eda8..185e3a4e695f392e114eacffbdecd2a23da32c9b` diff is the seven recorded files and changes no excluded surface.
+  - `[medium]` `[defer]` VG1: Automatic response-file isolation lacks a consumer-authority regression. — Pre-verified: removing `-noAutoResponse` passes all 23 central-validator scenarios, and a poisoned ancestor response file then makes actual/expected consumer maps agree on 9.9.9 instead of 1.2.3. The filed patch disposition is appropriate to the owning catalog change; this isolation fix and gap already exist in upstream integration, so this story records the separate follow-up.
+
+No finding routes to intent_gap, bad_spec or patch. Six new upstream deferred root causes are recorded above; two release findings retain their earlier deferred decisions. This pass applied zero high, medium or low patches. No new story runtime verification is needed because the reviewed guard/release source remains byte-identical to the fully verified source.
+
 ## Design Notes
 
 Comparison and action availability are separate: release uses the drift comparison only; guard adds action checks after a match. Keep the public perimeter engine unchanged. A downloaded `$/` action has trusted source files but is not necessarily a Git clone, so acquire tag objects from the fixed Builds remote independently of module gitlink/worktree state. Expected branch data is read through Git objects even when sparse checkout omits it.
@@ -227,7 +298,7 @@ Implementation delivery: implement and verify the tasks above, commit/push in Bu
 
 ## Matrix Test Audit
 
-All ten runtime matrix rows have executed passing behavioral coverage in both complete post-review interpreter lanes: 14/14 groups and 822 test cases per lane, without skips. The original 817-case transcripts remain historical evidence. All seven exact-source hosted jobs at e2bdaca58c95c52e05cb6db77d91ab7ae22ee4a0 completed: both Python lanes, guarded sample Linux, dependent Windows and quality/API passed; only the two approved failures remained, with exact baseline signature/exit-code matches. Independent review completed, its six correction groups were applied, and post-review verification passed under the exception.
+All ten runtime matrix rows and the implementation-verification row are satisfied at source `185e3a4e695f392e114eacffbdecd2a23da32c9b`. Both exact-source local lanes and both hosted lanes passed 14/14 groups and 824 test cases with no skips. The parent independently checked the source/transcript/hosted-log fingerprints and the successful execution of all 22 named matrix/follow-up regressions in each local transcript. All seven hosted jobs passed; no historical failure exception was needed. Four independent review layers completed with no required story patch. Historical 817/822-case runs and baseline-failure signatures remain preserved below and in the evidence JSON.
 
 | Matrix row | Passing tests |
 |---|---|
@@ -241,7 +312,7 @@ All ten runtime matrix rows have executed passing behavioral coverage in both co
 | Release invalid source | `test_expected_state.ExpectedStateTests.test_sibling_and_future_commits_are_rejected_using_only_delivered_branch_history`; `test_release_state.ReleaseStateTests.test_missing_or_unrelated_delivered_sha_never_falls_back_to_tip` |
 | Release drift / kill switch | `test_release_state.ReleaseStateTests.test_create_drift_fails_before_switch_or_ci_with_dispatch_security_settings`; `test_release_outcome.OutcomeAdapterTests.test_real_drifted_resolve_retains_reporter_ownership_and_reports_failed` |
 | Release complete | `test_release_state.ReleaseStateTests.test_complete_mode_never_acquires_expected_state_even_with_changed_accepted_branch`; `test_release_adapters.ResolveAdapterTests.test_module_complete_uses_current_security_settings_without_delivered_lookup` |
-| Implementation verification | [Retained baseline/current signature arrays and completed exact-source jobs](../../../../references/Hexalith.Builds/docs/cicd-5-1-guard-drift-check-verification.json): exact 14 catalog messages and 44 failing test identities, exits 1 and 2; every other required local/hosted check passed |
+| Implementation verification | [Exact-source verification evidence](../../../../references/Hexalith.Builds/docs/cicd-5-1-guard-drift-check-verification.json): all seven hosted jobs and both complete local lanes passed at `185e3a4e695f392e114eacffbdecd2a23da32c9b`; historical exception signatures retained, unused |
 
 ## Historical implementation verification handoff
 
@@ -251,3 +322,67 @@ Re-fetched baseline/current logs establish exact equality of the full 14 catalog
 
 Both original complete local Python transcripts, the 58-test perimeter result, authenticated lint, committed-object 2,581-entry API result and exact-message pinned commitlint evidence remain retained and fingerprinted. The [updated Builds results](../../../../references/Hexalith.Builds/docs/cicd-5-1-guard-drift-check-results.md) record this historical pre-review handoff; the final reviewed result follows below.
 
+## Follow-up implementation verification handoff
+
+The recorded follow-up corrections were preserved and delivered as Builds source
+`185e3a4e695f392e114eacffbdecd2a23da32c9b`, over the separately authored upstream
+integration `cae351e20093634483afad16aca3bfd90845eda8`. The seven-file authored
+diff restores early delivered-SHA syntax validation in every release mode,
+reports sample configuration diagnostics with their committed logical path,
+executes release-workflow input forwarding, and asserts the strict anonymous
+resolver Git environment. Historical count and transcript descriptions were
+clarified. Frozen runtime, schemas, dependency pins, publisher behavior and
+sample imports/actions/Windows delegation were unchanged by this follow-up.
+
+Both complete local Python lanes were repeated at the committed source and
+passed 14/14 groups with 824 test cases each and no skips (Python 3.12.13 and
+runner 3.14.4). The 58 perimeter tests, authenticated pinned workflow lint,
+registry signature audit, exact-message pinned commitlint, whitespace/scope
+checks and committed-object public API check passed. The API result is 2,589
+entries with no removals against `v5.2.1`.
+
+The normal [exact-source push run](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43440467144)
+completed successfully with all seven jobs passing: both complete Python lanes
+(3.12.16 and 3.14.4; 824 cases each), guarded sample Linux, dependent sample
+Windows, workflow lint/API, catalog contracts and Builds .NET tests. The latter
+passed Evidence 191, Module 3,086 and Tooling integration 13 tests with zero
+failures. The separate [Commitlint run](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43440467014)
+also passed. The earlier catalog/Evidence failure signatures remain historical
+evidence; those failures are absent at this source, and no verification
+exception was used.
+
+Evidence-only Builds commit `4dffd595e54699320d483edc1f27aff9b62ed8ca` retains the
+completed job/step records, all seven hosted-log fingerprints, repeated local
+lane fingerprints and source identities in the existing results/verification
+documents. Local transcript paths describe session-local, uncommitted files.
+The required independent review of this follow-up remains pending; this
+implementation handoff does not claim that review has run or mark the story
+complete. The two previously deferred release behaviors remain unchanged.
+
+## Auto Run Result
+
+Status: done
+
+Completed story 5-1 in Builds using the existing 4-1 perimeter engine and loader. Shared CI guards pinned committed ownership before configuration/product stages, checks enabled root actions after comparison, and exercises Builds through `Samples/Hexalith.Sample/`. Create-mode release resolve uses the same read-only comparison against the exact accepted delivered commit; complete mode keeps its existing bypass/recovery behavior.
+
+This resumed run preserved the original implementation and delivered the recorded review corrections as source `185e3a4e695f392e114eacffbdecd2a23da32c9b`, integrated over separately authored upstream `cae351e20093634483afad16aca3bfd90845eda8`. The starting Builds revision was `3d110e06b286acbc6f5aae33fa7eb571e9268b0c`. The complete combined diff was retained and reviewed, with source authorship established from Git history.
+
+Changed files in this follow-up (Builds-relative):
+
+- `Github/lib/expected_state.py` — report sample loader failures using the committed logical path.
+- `Github/lib/release_state.py` — reject malformed delivered SHA syntax before mode selection in every mode.
+- `Github/lib/tests/test_guard.py` — execute the sample logical-diagnostic regression.
+- `Github/lib/tests/test_release_adapters.py` — execute actual workflow input mappings and assert strict anonymous Git environments.
+- `Github/lib/tests/test_release_state.py` — verify malformed identities fail before API/source selection in create and complete states.
+- `docs/cicd-5-1-guard-drift-check-results.md` — retain correction, verification and independent-review results.
+- `docs/cicd-5-1-guard-drift-check-verification.json` — retain full source/job identities, test results and log fingerprints.
+
+All four independent review layers ran. Their 18 findings were individually triaged above: 10 deferred finding rows (six new upstream root causes and two carried release issues), eight rejected rows, zero patches. Each rejected reason is retained in the triage log. No intent gap or bad specification remains. Follow-up review recommended: false; patched counts high 0, medium 0, low 0; no unverified story-specific risk was identified.
+
+Verification passed: both complete local locked Python lanes at the committed source (824 cases each, 14/14 groups, no skips), 58 perimeter tests, authenticated pinned actionlint/zizmor/online audits, registry signatures, exact-message pinned commitlint, committed-object public API (2,589 entries, no removals against `v5.2.1`), whitespace and authored-scope inspection, and all seven jobs of [exact-source Builds CI](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43440467144). The separate [Commitlint workflow](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43440467014) passed. The parent independently matched retained source/log fingerprints, checked successful matrix regression lines, and confirmed the run's completed success/full SHA through GitHub. No story-owned guard/release runtime changed after that verification.
+
+Residual risks are the two previously deferred release behaviors and the separately recorded upstream catalog follow-ups. Historical BH14 (red catalog/Evidence CI) is resolved by the preserved upstream fixes: current catalog and all 191 Evidence.Tests pass. The earlier failure arrays remain historical; the story-specific exception was not used.
+
+Builds source and verification evidence are committed and pushed. Final review metadata is delivered in documentation-only Builds commit `7db81f4f19bef5e5337d241abc4bbff98ef62c4c`. The canonical story and updated Builds pointer are staged together in CiCd; superproject commit/push remains with the caller as the implementation-delivery instruction specifies.
+
+The final divergence check also preserved independently authored upstream catalog commit `9bbe8380c13094ddf41cfd780e3a69289e94b9d4`. It changes no guard/release source, shared CI/release workflow or sample file. Exact-source story verification remains bound to `185e3a4e695f392e114eacffbdecd2a23da32c9b`; the late upstream C# work is outside that claim.

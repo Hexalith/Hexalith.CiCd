@@ -219,3 +219,75 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/4-1-perimeter-contract-and-library-in-builds.md`
   summary: Verify and document the minimum Git capability required for snapshot-pinned perimeter attributes (medium, unverified).
   evidence: Resumed review RB9 notes that old Git versions may ignore GIT_ATTR_SOURCE; no older binary was available to reproduce its exact behavior. Current hosted/local Git passes selected-index and dirty-worktree attribute controls. Settle this with a cross-version real-Git repair demonstrating whether an unsupported attribute source can affect hashing, then document or enforce the proven minimum without weakening index atomicity.
+
+### DW-24: On create-mode drift, release resolve still emits CodeQL and nightly-hook settings parsed from the drifted dispatch-SHA configuration, so the owned edit can steer the release security jobs.
+origin: spec-deferred 5638b7c7b782
+location: references/Hexalith.Builds/Github/lib/release_state.py resolve (dispatch_settings emission before require_clean); references/Hexalith.Builds/.github/workflows/release.yml codeql/nightly-hook if
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Follow-up review BH1/IA-D1. release_state.resolve emits dispatch_settings(git, sha, ...) after the completed comparison but before Comparison.require_clean() raises. release.yml gates codeql and nightly-hook only on !cancelled() && config-valid == 'true' (plus codeql != '[]' / nightly-hook == 'true'), not on the resolve result. So an owned edit setting "codeql": [] skips release CodeQL, and adding "nightly" to hooks starts nightly-hook, which runs $/Github/prepare with the registry pull secrets and then ./.github/actions/nightly. test_module_create_matches_accepted_state_and_blocks_drift_before_false_switch asserts codeql == ["ruby"] from the drifted file. This is pre-existing: the baseline emitted dispatch settings unconditionally, before any check. The story's AC and Design Notes explicitly keep these settings available to the existing security jobs, and no publication handoff occurs. Settling it needs a design decision: emit the accepted (expected) configuration's settings on drift,
+status: open
+
+### DW-25: Release resolve configuration diagnostics still name a random, already-deleted temporary path instead of the committed logical configuration path.
+origin: spec-deferred bcf2d39cf4a1
+location: references/Hexalith.Builds/Github/lib/release_state.py dispatch_settings
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: low
+reason: Follow-up review BH3/VG3. release_state.dispatch_settings materializes the dispatch blob into tempfile.TemporaryDirectory(prefix="hexalith-release-config-") and passes it to load_config. Two calls on an invalid configuration printed /tmp/hexalith-release-config-e4hcdqgv/hexalith-ci.json: ... and then /tmp/hexalith-release-config-m4ev6d9i/hexalith-ci.json: .... The guard's expected_state.load_ci maps loader errors to the committed path. dispatch_settings already has this behavior at implementation baseline f01c3ab70f7e7401b3b73217983955f7771a1465, and this story did not change it. Fix: apply the same str(error).replace(str(path), relative) mapping, and assert the logical path and repeat stability in test_release_adapters.
+status: open
+
+### DW-26: Builds main stays red on two baseline failures with no follow-up owner: the package-catalog validator's 14 EventStore 4.2.0-versus-5.0.0 assertions (exit 1) and the 44 failing Evidence.Tests
+origin: spec-deferred 25bd20338ca7
+location: references/Hexalith.Builds package catalog contracts job; test/Hexalith.Builds.Evidence.Tests
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Follow-up review BH14. Both failures reproduce on integration revision 05a75b626fb73c6e386d16c41e885f193d3cff16 (run 43387068103), before this story's source. They come from upstream dependency/catalog changes: Props/Directory.Packages.props moved HexalithEventStoreVersion to 5.0.0 while the catalog assertions still require 4.2.0. The story-5-1 verification exception tolerates them for story verification only. The deferred-work ledger has no entry for either failure. While they persist, Builds' own release green-CI gate cannot pass. Settle by reconciling the catalog validator with the EventStore 5.0.0 pin, and by triaging the 44 Evidence.Tests failures in their owning upstream change.
+status: open
+
+### DW-27: Exact-name catalog snapshots accept case-varied consumer names.
+origin: spec-deferred a3d95c73af72
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Workspace/CatalogVersionMaterializer.cs:175; Runtime/CompositionDeclarationOptions.cs:183
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Review EC1/BH2: MSBuildProjectName.Equals selectors are case-sensitive, but CatalogVersionMaterializer stores project views with OrdinalIgnoreCase and CompositionDeclarationOptions.ReadRecordedPackageVersion uses OrdinalIgnoreCase. A clean Hexalith.Parties.Tests view selects SDK4.2/OpenAPI2; hexalith.Parties.Tests selects SDK5/OpenAPI3 but can reuse the recorded retained view. Both paths were traced and disposable MSBuild evaluations confirmed the selection difference. This is present in upstream integration cae351e20093634483afad16aca3bfd90845eda8, before the story follow-up commit; fix exact-name materialization/lookup and add a case-varied consumer test in the catalog workstream.
+status: open
+
+### DW-28: The no-snapshot catalog package reader selects conditional EventStore4.2 instead of the default SDK5 view.
+origin: spec-deferred db73a849f2fd
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionDeclarationOptions.cs:147
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Review BH1: CompositionDeclarationOptions.ReadCatalogPackageVersion resolves $(HexalithEventStoreVersion) using the first XML descendant without evaluating its condition. The integrated catalog now declares the retained conditional 4.2.0 before the default 5.0.0, while the first OpenAPI declarations remain 11.0.0/3.11.0. This yields a crossed default tuple through the public no-snapshot overload. The implementation and declaration order are present unchanged in integration cae351e20093634483afad16aca3bfd90845eda8; this story changes neither file. Use an evaluated default view or require the materialized snapshot in that owning catalog change.
+status: open
+
+### DW-29: The Python catalog selector reader omits the new Equals-based consumer views from runtime inventory.
+origin: spec-deferred 499534893948
+location: references/Hexalith.Builds/Tools/evaluated_catalog.py:96; Tools/runtime_toolchain_v2.py:186
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Review BH3: Tools/evaluated_catalog.py.conditioned_catalog_project_names recognizes quoted == expressions only. Tools/runtime_toolchain_v2.py.inventory evaluates a consumer-specific catalog only when the project stem is in that returned set. The integrated MSBuildProjectName.Equals selectors are therefore omitted and affected projects receive the default SDK5 inventory. The C# selector reader was updated upstream but this Python reader was not; both the new selectors and this omission already exist in integration cae351e20093634483afad16aca3bfd90845eda8. Extend the Python selector extraction and behavioral inventory tests in that catalog workstream.
+status: open
+
+### DW-30: Current toolchain defaults and some tests remain coupled to newly frozen v1 runtime pins.
+origin: spec-deferred 4a73d8a5fd2b
+location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runtime/CompositionToolchainPins.cs:34; test/Hexalith.Builds.Module.Tests/SupportedPlatformPinsCatalogTests.cs:29
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: low
+reason: Review BH4/BH9: SupportedPlatformPins now returns immutable v1 literals, but CompositionToolchainPins.DaprRuntimeVersion still delegates to that facade and CompositionPrerequisiteProbe uses it for its documented catalog default. SupportedPlatformPinsCatalogTests also retains current-versus-frozen equality for FrontComposer and Dapr. Values currently agree, so no current hosted failure exists; a future approved current-catalog update would leave the default probe on the frozen runtime and reject the otherwise independent catalog update in tests. This authority split was introduced by the preserved upstream frozen-pin work and is present at integration cae351e20093634483afad16aca3bfd90845eda8. Reconcile the intended current/frozen facade and test authorities in that workstream.
+status: open
+
+### DW-31: Active retained compatibility package selections have no current conditional-selection audit records.
+origin: spec-deferred a5740c625d89
+location: references/Hexalith.Builds/Tools/package-version-audit.json; Props/Directory.Packages.props
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Review BH5: The current package audit rows bind EventStore.Gateway5.0.0, ASP.NET OpenAPI11.0.0, OpenAPI3.11.0 and OpenIdConnect11.0.0. The active named views select 4.2.0, 10.0.15, 2.13.0 and 10.0.15, respectively, but any old observations are labeled historical and do not bind the current conditional selections. This leaves current listing/retention provenance incomplete for those consumers. The audit and selectors are unchanged from upstream integration cae351e20093634483afad16aca3bfd90845eda8; extend current view-bound audit evidence in the owning package-audit workstream.
+status: open
+
+### DW-32: Automatic response-file isolation lacks a real consumer-authority regression test.
+origin: spec-deferred ac138a90e03b
+location: references/Hexalith.Builds/Tools/validate-central-package-versions.ps1:218; Tools/test-consumer-package-authority-validator.ps1
+source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
+severity: medium
+reason: Review VG1, pre-verified: Removing only -noAutoResponse from validate-central-package-versions.ps1 still passed all 23 central-validator scenarios. A disposable ancestor Directory.Build.rsp setting FixtureVersion=9.9.9 under TMPDIR made both actual and expected consumer evaluations use 9.9.9 and validation exit successfully after that mutation; current code correctly rejects 9.9.9 instead of 1.2.3. The consumer-authority suite covers local XML overrides but not this response-file path. The isolation fix and test gap already exist in upstream integration cae351e20093634483afad16aca3bfd90845eda8 and are outside this story-authored patch. Add the demonstrated real-process poisoned-response-file case to the owning consumer-authority suite.
+status: open
