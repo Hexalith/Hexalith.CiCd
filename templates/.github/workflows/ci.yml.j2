@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  ci:
+    uses: [[ ci_workflow | tojson ]]
+    permissions:
+      contents: read
+    secrets:
+      registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
+      registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
+[% for job, options in config.jobs | dictsort %]
+  [[ ('windows-' ~ job) | tojson ]]:
+    needs: ci
+    runs-on: [[ options.runner | tojson ]]
+    permissions:
+      contents: read
+    steps:
+      - uses: [[ prepare_action | tojson ]]
+        with:
+          solution: ${{ needs.ci.outputs.solution }}
+          submodules: ${{ needs.ci.outputs.submodules }}
+          global-json: ${{ needs.ci.outputs.global-json }}
+      - uses: [[ ('./.github/actions/' ~ job) | tojson ]]
+[% endfor %]

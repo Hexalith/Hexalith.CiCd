@@ -1,0 +1,36 @@
+{
+  "schema": [[ perimeter_schema | tojson ]],
+  "entries": [
+    {"kind": "whole-dir", "path": ".github/workflows"},
+    {"kind": "whole", "path": ".github/hexalith-ci.json"},
+    {"kind": "whole", "path": ".github/dependabot.yml"},
+    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": [[ builds_tag | tojson ]]},
+    {"kind": "gitmodules-section", "path": ".gitmodules", "submodulePath": "references/Hexalith.Builds", "url": "https://github.com/Hexalith/Hexalith.Builds.git"},
+    {"kind": "json-superset", "path": ".claude/settings.json", "pointer": "/permissions/deny", "values": [[ deny_entries | tojson ]]},
+    {"kind": "marker-block", "path": "AGENTS.md", "text": [[ ownership_block | tojson ]]},
+    {"kind": "marker-block", "path": "CLAUDE.md", "text": [[ ownership_block | tojson ]]},
+    {"kind": "marker-block", "path": ".github/copilot-instructions.md", "text": [[ ownership_block | tojson ]]},
+    {"kind": "absent-glob", "pattern": ".releaserc*"},
+    {"kind": "absent-glob", "pattern": "release.config.*"},
+    {"kind": "absent-glob", "pattern": "commitlint.config.*"},
+    {"kind": "absent-glob", "pattern": ".commitlintrc*"},
+    {"kind": "absent-glob", "pattern": "**/Directory.Build.rsp"},
+    {"kind": "absent-glob", "pattern": "**/bmad-testarch-ci/**"},
+    {"kind": "absent-json", "path": "package.json", "selectors": [
+      ["release"], ["commitlint"],
+      ["dependencies", "semantic-release"],
+      ["dependencies", "@semantic-release/*"],
+      ["dependencies", "@commitlint/*"],
+      ["devDependencies", "semantic-release"],
+      ["devDependencies", "@semantic-release/*"],
+      ["devDependencies", "@commitlint/*"],
+      ["optionalDependencies", "semantic-release"],
+      ["optionalDependencies", "@semantic-release/*"],
+      ["optionalDependencies", "@commitlint/*"],
+      ["peerDependencies", "semantic-release"],
+      ["peerDependencies", "@semantic-release/*"],
+      ["peerDependencies", "@commitlint/*"]
+    ]},
+    {"kind": "absent-line", "path": ".husky/commit-msg", "pattern": "\\bcommitlint\\b"}
+  ]
+}

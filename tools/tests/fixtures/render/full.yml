@@ -1,0 +1,21 @@
+solution: source/Fixture.slnx
+dapr: true
+browsers: true
+registry: true
+codeql: [csharp, javascript-typescript]
+tests:
+  integration: [test/Fixture.IntegrationTests.csproj]
+  exclude:
+    test/Fixture.E2E.csproj: after-unit-tests
+    test/Fixture.Windows.csproj: windows-tests
+hooks: [after-unit-tests, after-integration-tests, nightly]
+jobs:
+  123-job:
+    runner: windows-latest
+  windows-123-job:
+    runner: windows-latest
+  windows-tests:
+    runner: windows-latest
+  alpha-windows:
+    runner: windows-latest
+submodules: [references/Fixture.Sibling, references/Fixture.Other]

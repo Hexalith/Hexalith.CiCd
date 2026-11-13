@@ -1,0 +1,8 @@
+solution: 'source/Fixture "quoted" 雪 🚀.slnx'
+codeql: []
+submodules: ['references/Space "quoted" 雪 🚀']
+hooks: [after-unit-tests]
+tests:
+  integration: ['test/Fixture "quoted" 雪.csproj']
+  exclude:
+    'test/Fixture "quoted" 雪 E2E.csproj': after-unit-tests

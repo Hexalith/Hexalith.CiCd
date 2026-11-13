@@ -1,0 +1,49 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      delivered-sha:
+        description: Validated delivered-state commit
+        type: string
+        required: false
+        default: ''
+permissions: {}
+cache-mode: none
+concurrency:
+  group: release
+  cancel-in-progress: false
+jobs:
+  release:
+    uses: [[ release_workflow | tojson ]]
+    permissions:
+      contents: write
+      actions: read
+      security-events: write
+    with:
+      delivered-sha: ${{ inputs.delivered-sha }}
+    secrets:
+      registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
+      registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
+  publish:
+    needs: release
+    if: needs.release.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    environment: hexalith-release
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+    steps:
+      - uses: [[ publish_action | tojson ]]
+        with:
+          publish: ${{ needs.release.outputs.publish }}
+          version: ${{ needs.release.outputs.version }}
+          sha: ${{ needs.release.outputs.sha }}
+          last-tag: ${{ needs.release.outputs.last-tag }}
+          draft-id: ${{ needs.release.outputs.draft-id }}
+          artifact-id: ${{ needs.release.outputs.artifact-id }}
+          artifact-digest: ${{ needs.release.outputs.artifact-digest }}
+          artifact-run: ${{ needs.release.outputs.artifact-run }}
+          nuget-user: ${{ vars.HEXALITH_NUGET_USER }}
+          registry-username: ${{ secrets.HEXALITH_REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.HEXALITH_REGISTRY_PASSWORD }}

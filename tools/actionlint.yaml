@@ -1,0 +1,6 @@
+config-variables: null
+paths:
+  '**/.github/workflows/*':
+    # actionlint 1.7.12 does not yet recognize GitHub's cache-mode field.
+    ignore:
+      - '^unexpected key "cache-mode" for "workflow" section\.'

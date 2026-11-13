@@ -1,0 +1,17 @@
+version: 2
+[% if config.solution == 'none' %]
+updates: []
+[% else %]
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    exclude-paths: ["references/**"]
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build(deps)"
+[% endif %]

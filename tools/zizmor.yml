@@ -1,0 +1,9 @@
+rules:
+  self-repository:
+    # AD-11 permits literal workspace-relative module actions.
+    disable: true
+  unpinned-uses:
+    config:
+      policies:
+        "Hexalith/*": ref-pin
+        "*": hash-pin
