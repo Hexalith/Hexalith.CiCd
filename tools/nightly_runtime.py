@@ -23,7 +23,7 @@ import sys
 import time
 from types import SimpleNamespace
 from urllib.error import HTTPError, URLError
-from urllib.parse import parse_qsl, urlsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 import zipfile
 
@@ -190,9 +190,9 @@ class API:
         suffix = matched[2]
         workflow = "builds-release.yml" if matched[1] == BUILDS else "release.yml"
         get_patterns = (
-            r"actions/runs/[1-9][0-9]*(?:/artifacts)?",
+            r"actions/runs/[1-9][0-9]*(?:/artifacts|/attempts/[1-9][0-9]*/jobs)?",
             r"actions/artifacts/[1-9][0-9]*(?:/zip)?",
-            r"actions/workflows/(?:deliver|nightly|release|builds-release)\.yml/runs",
+            r"actions/workflows/(?:ci|deliver|nightly|release|builds-release)\.yml/runs",
             r"immutable-releases", r"releases(?:/[1-9][0-9]*|/tags/v[0-9]+\.[0-9]+\.[0-9]+)?",
             r"git/ref/(?:heads/main|tags/v[0-9]+\.[0-9]+\.[0-9]+)",
             r"git/matching-refs/tags/v[0-9]+\.[0-9]+\.[0-9]+",
@@ -200,7 +200,11 @@ class API:
         if method == "GET":
             allowed = any(re.fullmatch(pattern, suffix) for pattern in get_patterns)
         elif method == "POST":
-            allowed = suffix == f"actions/workflows/{workflow}/dispatches"
+            allowed = suffix == f"actions/workflows/{workflow}/dispatches" or (
+                matched[1] == CICD and suffix == "actions/workflows/deliver.yml/dispatches")
+        elif method == "PUT":
+            allowed = matched[1] == CICD and suffix in {
+                "actions/workflows/nightly.yml/enable", "actions/workflows/deliver.yml/enable"}
         elif method == "PATCH":
             allowed = re.fullmatch(r"releases/[1-9][0-9]*", suffix) is not None
         else:
@@ -214,6 +218,8 @@ class API:
             if ((key == "page" and re.fullmatch(r"[1-9][0-9]?", value) and int(value) <= MAX_PAGES)
                     or (key == "per_page" and re.fullmatch(r"[1-9][0-9]*", value) and int(value) <= 100)
                     or (key == "branch" and value == "main")
+                    or (key == "created" and re.fullmatch(r">=[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z", value)
+                        and re.fullmatch(r"actions/workflows/(?:ci|deliver)\.yml/runs", suffix))
                     or (key == "status" and value in {"queued", "requested", "waiting", "pending", "in_progress"})
                     or (key == "event" and value == "workflow_dispatch")):
                 continue
@@ -279,6 +285,8 @@ class API:
 
     def _request(self, method, path, token=None, document=None, *, deadline=None):
         self._path(path, method)
+        parsed = urlsplit(path)
+        wire_path = parsed.path + ("?" + urlencode(parse_qsl(parsed.query)) if parsed.query else "")
         data = None if document is None else json.dumps(document, separators=(",", ":")).encode()
         if data is not None and len(data) > MAX_JSON:
             raise NightlyError("API request exceeds JSON limit")
@@ -297,8 +305,15 @@ class API:
                 headers["Content-Type"] = "application/json"
             try:
                 with whole_operation(timeout, write=method != "GET"):
-                    with self.opener.open(Request("https://api.github.com" + path, data=data,
+                    with self.opener.open(Request("https://api.github.com" + wire_path, data=data,
                                                  headers=headers, method=method), timeout=timeout) as response:
+                        empty = method == "PUT" or method == "POST" and path.endswith("/deliver.yml/dispatches")
+                        if empty and response.status == 204:
+                            if response.read(1):
+                                raise NightlyError("GitHub API expected empty HTTP 204")
+                            return None
+                        if empty:
+                            raise NightlyError("GitHub API expected empty HTTP 204; write result uncertain, not retried")
                         if response.status != 200:
                             # A write the service accepted without the expected
                             # reply may have dispatched/published: never definite.
@@ -339,6 +354,15 @@ class API:
 
     def get(self, path, token=None, *, deadline=None):
         return self._request("GET", path, token, deadline=deadline)
+
+    def enable(self, workflow, token):
+        if workflow not in {"nightly.yml", "deliver.yml"}:
+            raise NightlyError("workflow enable outside nightly contract")
+        return self._request("PUT", f"/repos/Hexalith/{CICD}/actions/workflows/{workflow}/enable", token)
+
+    def dispatch_delivery(self, token):
+        return self._request("POST", f"/repos/Hexalith/{CICD}/actions/workflows/deliver.yml/dispatches",
+                             token, {"ref": "main"})
 
     def pages(self, path, token=None, *, field=None, deadline=None):
         result, total = [], None
@@ -444,7 +468,7 @@ class API:
         if expires.timestamp() <= self.budget.clock():
             raise NightlyError("artifact expiry could not be validated")
         identity = positive(metadata.get("id"))
-        if member not in {"dispatch.json", "wait.json", "nightly.json", "outcome.json"}:
+        if member not in {"dispatch.json", "wait.json", "nightly.json", "outcome.json", "candidate.json", "delivery.json"}:
             raise NightlyError("artifact member outside nightly contract")
         path = f"/repos/Hexalith/{repository}/actions/artifacts/{identity}/zip"
         self._path(path)

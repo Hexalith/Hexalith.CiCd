@@ -72,9 +72,9 @@ class Opener:
             raise value
         if isinstance(value, tuple):
             status, data, *headers = value
-            if status != 200:
+            if status not in {200, 204}:
                 raise HTTPError(request.full_url, status, "fixture", headers[0] if headers else {}, io.BytesIO(b"private body"))
-            return Response(data)
+            return Response(data, status=status)
         return Response(value)
 
 

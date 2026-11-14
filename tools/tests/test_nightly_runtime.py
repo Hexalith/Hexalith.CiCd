@@ -61,6 +61,55 @@ class RuntimeTests(unittest.TestCase):
                 self.assertNotIn(key, os.environ)
             self.assertEqual(os.environ["GIT_TERMINAL_PROMPT"], "0")
 
+    def test_bump_delivery_ci_endpoints_and_exact_empty_enable(self):
+        api, opener, _ = self.api([(204, b""), (204, b""), (204, b""), {}, {}, {}])
+        self.assertIsNone(api.enable("nightly.yml", "inert"))
+        self.assertIsNone(api.enable("deliver.yml", "inert"))
+        self.assertIsNone(api.dispatch_delivery("inert"))
+        api.get("/repos/Hexalith/Hexalith.Alpha/actions/workflows/ci.yml/runs?branch=main", "inert")
+        api.get("/repos/Hexalith/Hexalith.CiCd/actions/runs/123/attempts/2/jobs?per_page=100&page=1", "inert")
+        api.get("/repos/Hexalith/Hexalith.Builds/releases?per_page=100&page=1")
+        self.assertEqual([request.get_method() for request, _ in opener.requests], ["PUT", "PUT", "POST", "GET", "GET", "GET"])
+        for responses in ([(200, {})], [(204, b"unexpected")], [(403, {})], [URLError("reset")]):
+            api, opener, _ = self.api(responses)
+            with self.assertRaises(rt.NightlyError):
+                api.enable("nightly.yml", "inert")
+            self.assertEqual(len(opener.requests), 1)
+        api, opener, _ = self.api([])
+        for workflow in ("ci.yml", "release.yml", "../nightly.yml"):
+            with self.assertRaises(rt.NightlyError):
+                api.enable(workflow, "inert")
+        with self.assertRaises(rt.NightlyError):
+            api._request("PUT", "/repos/Hexalith/Hexalith.Alpha/actions/workflows/nightly.yml/enable", "inert")
+        with self.assertRaises(rt.NightlyError):
+            api._request("POST", "/repos/Hexalith/Hexalith.Alpha/actions/workflows/deliver.yml/dispatches", "inert")
+        self.assertFalse(opener.requests)
+        self.assertEqual(api._path("/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&created=>=2026-11-14T02:17:00Z"),
+                         "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs")
+        with self.assertRaises(rt.NightlyError):
+            api._path("/repos/Hexalith/Hexalith.Builds/releases?created=>=2026-11-14T02:17:00Z")
+        api, opener, _ = self.api([{}])
+        api.get("/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&created=>=2026-11-14T02:17:00Z", "inert")
+        self.assertIn("created=%3E%3D2026-11-14T02%3A17%3A00Z", opener.requests[0][0].full_url)
+
+    def test_exact_new_json_artifact_members_are_bounded_and_duplicate_rejecting(self):
+        for member in ("candidate.json", "delivery.json"):
+            for value in ({"schema": "fixture"}, b'{"same":1,"same":2}'):
+                if isinstance(value, bytes):
+                    stream = io.BytesIO()
+                    with zipfile.ZipFile(stream, "w") as archive:
+                        archive.writestr(member, value)
+                    payload = stream.getvalue()
+                else:
+                    payload = zip_document(member, value)
+                api, _, _ = self.api([payload])
+                info = metadata(8, "fixture", payload, 101, "a" * 40)
+                if isinstance(value, bytes):
+                    with self.assertRaisesRegex(rt.NightlyError, "duplicate JSON"):
+                        api.artifact_member(rt.CICD, info, member, "inert")
+                else:
+                    self.assertEqual(api.artifact_member(rt.CICD, info, member, "inert"), value)
+
     def test_conservative_epochs_and_operation_timeouts(self):
         clock = Clock()
         budget = rt.Budget(clock(), job_seconds=330 * 60, token_epoch=clock(), clock=clock)

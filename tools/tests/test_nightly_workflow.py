@@ -74,7 +74,12 @@ class Workflow(Expressions):
             return "not-triggered"
         self.concurrency_group = self.expand(self.document["concurrency"]["group"])
         self.cancel_in_progress = self.document["concurrency"]["cancel-in-progress"]
+        # These fixture I/O doubles exercise the pre-existing release contract.
+        # PostReleaseWorkflow below executes the new graph with its independent
+        # controller-result boundary, without silently dropping the new jobs.
         for phase, job in self.document["jobs"].items():
+            if phase not in controller.SECONDS:
+                continue
             self.failed = False
             self.context["steps"] = {}
             if not self.expression(job["if"]):
@@ -334,6 +339,8 @@ class NightlyWorkflowTests(unittest.TestCase):
 
     def test_job_timeouts_cover_controller_budgets_and_unmetered_step_limits(self):
         for phase, job in yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())["jobs"].items():
+            if phase not in controller.SECONDS:
+                continue
             with self.subTest(phase=phase):
                 limits = {step["uses"].split("@")[0]: step["timeout-minutes"] for step in job["steps"] if "uses" in step}
                 reserve = (limits["actions/checkout"] + limits["actions/create-github-app-token"]
@@ -374,6 +381,315 @@ class NightlyWorkflowTests(unittest.TestCase):
                 else:
                     self.assertEqual(final["result"], "fail")
                     self.assertTrue(all(row["publication"] != "published" for row in final["targets"]))
+
+
+class PostReleaseWorkflow(Workflow):
+    """Execute the real new graph with controller results at the I/O boundary.
+
+    Producer, verifier and observers have separate real Git/controller suites.
+    Here the boundary substitutes their outcomes so every workflow path, token
+    mapping, cancellation condition and artifact upload can be exercised without
+    a live Actions service. Inline failure seeds execute in isolated children.
+    """
+    def __init__(self, workspace, *, publication="success", producer="candidate", push="pushed",
+                 propagation="success", keepalive="success", qualify=False, ref="refs/heads/main",
+                 mint_fail=(), cancel_after=None, fail_checkout=None):
+        super().__init__(workspace, ref=ref, mint_fail=mint_fail, cancel_after=cancel_after,
+                         fail_checkout=fail_checkout)
+        self.context["inputs"] = {"qualify-bump": qualify}
+        self.context["needs"] = {"publish-ready": {"result": publication, "outputs": {}}}
+        self.producer, self.push, self.propagation, self.keepalive = producer, push, propagation, keepalive
+        self.extension_calls = []
+        self.current_directory = None
+        self.deadline, self.observation_failed = None, False
+
+    def controller_call(self, phase, command, env):
+        self.extension_calls.append((phase, tuple(command), env.copy(), self.w.clock()))
+        outputs, failed = {}, False
+        if phase == "bump":
+            if command != ["uv", "run", "--locked", "tools/bump.py"]:
+                raise AssertionError("unexpected producer command")
+            if env.get("GITHUB_TOKEN") != self.context["github"]["token"]:
+                raise AssertionError("producer lacks its read-only job token")
+            if self.producer == "candidate":
+                path = Path(env["BUMP_DIRECTORY"]) / "candidate.json"
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps({"candidate": "b" * 40, "base": self.w.sha}))
+                outputs = {"result": "candidate", "candidate": "b" * 40, "base": self.w.sha}
+            elif self.producer == "no-change":
+                outputs = {"result": "no-change", "base": self.w.sha}
+            elif self.producer == "missing":
+                outputs = {}
+            else:
+                failed = True
+            Path(env["BUMP_DIRECTORY"], "bump.json").write_text(json.dumps({"result": self.producer}))
+        elif phase == "bump-push":
+            if command[:3] != ["python3", "-I", "tools/bump_push.py"]:
+                raise AssertionError("writer did not isolate its stdlib controller")
+            if env.get("CICD_TOKEN") != self.context["github"]["token"]:
+                raise AssertionError("writer does not use its own job token")
+            if self.context["inputs"]["qualify-bump"]:
+                if command[3:] != ["qualify"] or env.get("BUMP_ARTIFACT_ID"):
+                    raise AssertionError("qualification entered production writer")
+                result = "qualified"
+            else:
+                if command[3:] or not env.get("BUMP_ARTIFACT_ID") or not env.get("BUMP_ARTIFACT_DIGEST"):
+                    raise AssertionError("writer lost candidate artifact binding")
+                if env.get("BUMP_TRANSPORT") != "github-token":
+                    raise AssertionError("unqualified fallback selected")
+                failed = self.push in {"failure", "dispatch-failure"}
+                result = "pushed" if self.push == "dispatch-failure" else "fail" if failed else self.push
+                if result == "pushed":
+                    outputs = {"result": "pushed", "candidate": "b" * 40, "base": self.w.sha}
+            Path(env["BUMP_DIRECTORY"], "bump-push.json").write_text(json.dumps({"result": result}))
+        elif phase == "delivery-wait":
+            if command[:3] != ["python3", "-I", "tools/nightly_delivery_wait.py"]:
+                raise AssertionError("App job executed an unexpected command")
+            if env.get("BUMP_SHA") != "b" * 40 or env.get("BUMP_PUSH_RESULT") != "pushed":
+                raise AssertionError("observer lost confirmed pushed identity")
+            operation = command[3]
+            if operation == "initialize":
+                self.deadline = self.w.clock() + 90 * 60
+                outputs = {"active": "true", "repositories": ",".join(["Hexalith.CiCd", *self.w.modules])}
+            elif operation == "permit":
+                outputs = {"active": str(self.w.clock() < self.deadline).lower(),
+                           "mint_epoch": str(self.w.clock())}
+            elif operation == "poll":
+                token = env.get("POLL_TOKEN", "")
+                if token:
+                    if token not in self.tokens or self.tokens[token] != len(self.mints) - 1:
+                        raise AssertionError("observer reused an earlier or cross-job token")
+                    mint = self.mints[self.tokens[token]]
+                    if mint[0] != phase or float(env["NIGHTLY_MINT_EPOCH"]) != mint[2]:
+                        raise AssertionError("observer uses a different mint's boundary")
+                    if self.w.clock() - mint[2] >= 50 * 60:
+                        raise AssertionError("observer exceeded token age boundary")
+                    self.w.advance(min(40 * 60, self.deadline - self.w.clock()))
+                else:
+                    self.observation_failed = True
+                    failed = True
+            elif operation == "finalize":
+                failed = self.propagation == "failure" or self.observation_failed or self.cancelled
+            else:
+                raise AssertionError("unexpected observer operation")
+            path = Path(env["NIGHTLY_DIRECTORY"]) / "delivery-wait/report.json"
+            path.write_text(json.dumps({"result": "fail" if failed else "pass", "deadline": self.deadline}))
+        elif phase == "keepalive":
+            if command != ["python3", "-I", "tools/nightly_keepalive.py"]:
+                raise AssertionError("keepalive did not isolate its stdlib controller")
+            if env.get("CICD_TOKEN") != self.context["github"]["token"]:
+                raise AssertionError("keepalive borrowed another job's token")
+            failed = self.keepalive == "failure"
+            Path(env["NIGHTLY_DIRECTORY"], "keepalive.json").write_text(json.dumps({"result": "fail" if failed else "pass"}))
+        else:
+            raise AssertionError("unrecognized post-release phase")
+        return failed, outputs
+
+    def execute(self):
+        for phase, job in self.document["jobs"].items():
+            if phase in controller.SECONDS:
+                # Qualify mode must skip every prior release phase as well.
+                if self.context["inputs"]["qualify-bump"] and self.expression(job["if"]):
+                    raise AssertionError("qualification allowed release orchestration")
+                continue
+            self.failed, self.context["steps"] = False, {}
+            if not self.expression(job["if"]):
+                self.results[phase] = "skipped"
+                self.context["needs"][phase] = {"result": "skipped", "outputs": {}}
+                continue
+            if not 0 < job["timeout-minutes"] < 360:
+                raise AssertionError("unbounded job timeout")
+            expected = {"contents": "read", "actions": "read"} if phase in {"bump", "delivery-wait"} else {
+                "contents": "write", "actions": "write"}
+            if job["permissions"] != expected:
+                raise AssertionError("post-release job token permission mismatch")
+            if (job.get("environment") == "cicd-app") != (phase == "delivery-wait"):
+                raise AssertionError("App environment escaped observer")
+            base = {key: value for key, value in self.w.env().items() if key not in TOKENS}
+            base.update({"GITHUB_" + key.upper(): str(value) for key, value in self.context["github"].items() if key != "token"})
+            base.update({key: self.expand(value) for key, value in job.get("env", {}).items()})
+            self.context["env"] = base
+            for ordinal, step in enumerate(job["steps"]):
+                self.context["job"] = {"status": "cancelled" if self.cancelled else "failure" if self.failed else "success"}
+                identifier = step.get("id", f"step_{ordinal}")
+                if not self.expression(step.get("if", "success()")):
+                    self.context["steps"][identifier] = {"outcome": "skipped", "outputs": {}}
+                    continue
+                outputs, failed = {}, False
+                env = base | {key: self.expand(value) for key, value in step.get("env", {}).items()}
+                if "uses" in step:
+                    action, pin = step["uses"].split("@")
+                    if not re.fullmatch(r"[0-9a-f]{40}", pin):
+                        raise AssertionError("unpinned action")
+                    inputs = {key: self.expand(value) for key, value in step.get("with", {}).items()}
+                    if action == "actions/checkout":
+                        if inputs.get("persist-credentials") is not False or inputs.get("submodules") is not False:
+                            raise AssertionError("unsafe controller checkout")
+                        failed = phase == self.fail_checkout
+                    elif action == "astral-sh/setup-uv":
+                        if phase != "bump" or inputs.get("enable-cache") is not False:
+                            raise AssertionError("uv or cache enabled in App job")
+                    elif action == "actions/create-github-app-token":
+                        scopes = inputs.get("repositories", "").split(",")
+                        if self.cancelled or phase != "delivery-wait" or scopes != ["Hexalith.CiCd", *self.w.modules]:
+                            raise AssertionError("invalid observer mint target or cancellation")
+                        if inputs.get("skip-token-revoke") is not True or inputs.get("permission-actions") != "read":
+                            raise AssertionError("invalid observer token lifecycle/permissions")
+                        if any(k.startswith("permission-") and k != "permission-actions" for k in inputs):
+                            raise AssertionError("observer token gained write access")
+                        self.mints.append((phase, identifier, self.w.clock(), inputs))
+                        self.w.advance(1)
+                        failed = identifier in self.mint_fail
+                        if not failed:
+                            token = "inert-" + identifier
+                            self.tokens[token] = len(self.mints) - 1
+                            outputs["token"] = token
+                    elif action == "actions/upload-artifact":
+                        path = Path(inputs["path"])
+                        failed = not path.exists()
+                        if not failed:
+                            data = json.loads(path.read_bytes())
+                            if "inert-" in json.dumps(data):
+                                raise AssertionError("token leaked in artifact")
+                            self.uploads.append((phase, data))
+                            outputs = {"artifact-id": str(7001 + len(self.uploads)), "artifact-digest": "a" * 64}
+                    else:
+                        raise AssertionError("unexpected action " + action)
+                else:
+                    command = shlex.split(step["run"])
+                    if "${{" in step["run"]:
+                        raise AssertionError("expression interpolation inside shell")
+                    if command[:3] == ["python3", "-I", "-c"]:
+                        self.w.outputs.unlink(missing_ok=True)
+                        result = subprocess.run([sys.executable, *command[1:]], env=env, capture_output=True)
+                        if result.stdout or result.stderr:
+                            raise AssertionError("inline controller leaked output")
+                        failed = result.returncode != 0
+                        if identifier == "boundary" and not failed:
+                            # The real inline command is wall-clock based; represent
+                            # the action boundary on this fixture's fake clock.
+                            outputs["mint_epoch"] = str(self.w.clock())
+                    elif phase == self.fail_checkout:
+                        failed = True
+                    else:
+                        failed, outputs = self.controller_call(phase, command, env)
+                outcome = "failure" if failed else "success"
+                self.context["steps"][identifier] = {"outcome": outcome, "outputs": outputs}
+                if failed and not step.get("continue-on-error", False):
+                    self.failed = True
+                if self.cancel_after == (phase, identifier):
+                    self.cancelled = True
+            self.results[phase] = "failure" if self.failed else "success"
+            self.context["needs"][phase] = {"result": self.results[phase], "outputs": {
+                key: self.expand(value) for key, value in job.get("outputs", {}).items()}}
+        failed_upstream = self.context["needs"]["publish-ready"]["result"] == "failure"
+        return "failure" if failed_upstream or "failure" in self.results.values() else "success"
+
+
+class PostReleaseWorkflowTests(unittest.TestCase):
+    def fixture(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        return Workspace(Path(temporary.name) / "workspace", ("Hexalith.Alpha", "Hexalith.Beta"))
+
+    def test_success_and_failed_publication_both_reach_bump_and_keepalive(self):
+        for publication in ("success", "failure"):
+            workflow = PostReleaseWorkflow(self.fixture(), publication=publication)
+            self.assertEqual(workflow.execute(), "failure" if publication == "failure" else "success")
+            self.assertEqual(workflow.results, {"bump": "success", "bump-push": "success",
+                                               "delivery-wait": "success", "keepalive": "success"})
+            self.assertEqual(workflow.context["needs"]["bump-push"]["outputs"]["candidate"], "b" * 40)
+            self.assertEqual([phase for phase, _ in workflow.uploads], ["bump", "bump", "bump-push", "delivery-wait", "keepalive"])
+            # The failed release job remains an independent red verdict in Actions.
+            self.assertEqual(workflow.context["needs"]["publish-ready"]["result"], publication)
+
+    def test_explicit_nochange_skips_push_and_observation_but_keeps_alive(self):
+        workflow = PostReleaseWorkflow(self.fixture(), producer="no-change")
+        self.assertEqual(workflow.execute(), "success")
+        self.assertEqual(workflow.results, {"bump": "success", "bump-push": "skipped",
+                                           "delivery-wait": "skipped", "keepalive": "success"})
+        self.assertEqual([phase for phase, _ in workflow.uploads], ["bump", "keepalive"])
+        self.assertFalse(workflow.mints)
+
+    def test_failed_and_missing_candidate_never_reach_writer_and_keepalive_continues(self):
+        for producer in ("failure", "missing"):
+            workflow = PostReleaseWorkflow(self.fixture(), producer=producer)
+            workflow.execute()
+            self.assertEqual(workflow.results["bump-push"], "skipped")
+            self.assertEqual(workflow.results["delivery-wait"], "skipped")
+            self.assertEqual(workflow.results["keepalive"], "success")
+            self.assertEqual([value["result"] for phase, value in workflow.uploads if phase == "bump"], [producer])
+            self.assertNotEqual(workflow.context["needs"]["bump"]["outputs"]["result"], "no-change")
+            self.assertEqual(workflow.results["bump"], "failure")
+
+    def test_unavailable_controllers_preserve_failed_reports_and_keepalive_independence(self):
+        for phase in ("bump", "bump-push", "delivery-wait", "keepalive"):
+            with self.subTest(phase=phase):
+                workflow = PostReleaseWorkflow(self.fixture(), fail_checkout=phase)
+                self.assertEqual(workflow.execute(), "failure")
+                self.assertEqual(workflow.results[phase], "failure")
+                self.assertIn(phase, [name for name, _ in workflow.uploads])
+                if phase != "keepalive":
+                    self.assertEqual(workflow.results["keepalive"], "success")
+
+    def test_failed_push_or_propagation_remains_red_and_keeps_alive(self):
+        for configuration in ({"push": "failure"}, {"propagation": "failure"}):
+            workflow = PostReleaseWorkflow(self.fixture(), **configuration)
+            self.assertEqual(workflow.execute(), "failure")
+            self.assertEqual(workflow.results["keepalive"], "success")
+            if "push" in configuration:
+                self.assertEqual(workflow.results["delivery-wait"], "skipped")
+
+    def test_confirmed_push_still_observes_when_explicit_dispatch_failed(self):
+        workflow = PostReleaseWorkflow(self.fixture(), push="dispatch-failure")
+        self.assertEqual(workflow.execute(), "failure")
+        self.assertEqual(workflow.results["bump-push"], "failure")
+        self.assertEqual(workflow.results["delivery-wait"], "success")
+        self.assertTrue(workflow.mints)
+        self.assertEqual(workflow.results["keepalive"], "success")
+
+    def test_failed_mint_has_no_stale_fallback_four_slices_share_deadline(self):
+        workflow = PostReleaseWorkflow(self.fixture(), mint_fail=("propagation_02_token",))
+        self.assertEqual(workflow.execute(), "failure")
+        polls = [call for call in workflow.extension_calls if call[0] == "delivery-wait" and call[1][-1] == "poll"]
+        self.assertEqual(len(polls), 4)
+        self.assertEqual(polls[1][2]["POLL_TOKEN"], "")
+        self.assertEqual([mint[1] for mint in workflow.mints], [f"propagation_{i:02d}_token" for i in range(1, 5)])
+        start = next(call[3] for call in workflow.extension_calls if call[0] == "delivery-wait" and call[1][-1] == "initialize")
+        self.assertEqual(workflow.deadline - start, 90 * 60)
+        self.assertEqual(workflow.w.clock(), workflow.deadline)
+        self.assertEqual(workflow.results["keepalive"], "success")
+
+    def test_qualification_is_main_only_and_bypasses_all_production_paths(self):
+        for ref in ("refs/heads/main", "refs/heads/other"):
+            workflow = PostReleaseWorkflow(self.fixture(), qualify=True, ref=ref)
+            workflow.execute()
+            self.assertFalse(workflow.mints)
+            calls = [(phase, command) for phase, command, _, _ in workflow.extension_calls]
+            self.assertEqual(calls, [("bump-push", ("python3", "-I", "tools/bump_push.py", "qualify"))]
+                             if ref == "refs/heads/main" else [])
+            self.assertEqual(workflow.results["keepalive"], "skipped")
+
+    def test_cancellation_stops_new_mints_and_writes_but_retains_reports(self):
+        workflow = PostReleaseWorkflow(self.fixture(), cancel_after=("delivery-wait", "propagation_01_budget"))
+        workflow.execute()
+        self.assertFalse(workflow.mints)
+        self.assertEqual(workflow.results["keepalive"], "skipped")
+        self.assertIn("delivery-wait", [phase for phase, _ in workflow.uploads])
+        self.assertFalse(any(call[1][-1] == "poll" for call in workflow.extension_calls))
+
+    def test_exact_job_timeouts_and_controller_surface(self):
+        document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
+        expected = {"dispatch": 55, "wait": 330, "publish-ready": 55,
+                    "bump": 55, "bump-push": 55, "delivery-wait": 105, "keepalive": 15}
+        self.assertEqual({phase: job["timeout-minutes"] for phase, job in document["jobs"].items()}, expected)
+        observer = document["jobs"]["delivery-wait"]
+        self.assertEqual(len([step for step in observer["steps"] if "uses" in step
+                              and step["uses"].startswith("actions/create-github-app-token@")]), 4)
+        for step in observer["steps"]:
+            if "run" in step:
+                self.assertTrue(step["run"].startswith("python3 -I "))
+                self.assertNotIn("uv run", step["run"])
 
 
 if __name__ == "__main__":

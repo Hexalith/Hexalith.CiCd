@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '17 2 * * *'
   workflow_dispatch:
+    inputs:
+      qualify-bump:
+        description: 'Qualify the job token on an isolated inert probe ref; skip nightly writes'
+        required: false
+        default: false
+        type: boolean
 
 permissions: {}
 cache-mode: none
@@ -15,7 +21,7 @@ concurrency:
 
 jobs:
   dispatch:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
     runs-on: ubuntu-latest
     timeout-minutes: 55
     environment: cicd-app
@@ -586,7 +592,7 @@ jobs:
           retention-days: 90
   wait:
     needs: dispatch
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
     runs-on: ubuntu-latest
     timeout-minutes: 330
     environment: cicd-app
@@ -877,7 +883,7 @@ jobs:
           retention-days: 90
   publish-ready:
     needs: wait
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
     runs-on: ubuntu-latest
     timeout-minutes: 55
     environment: cicd-app
@@ -1434,5 +1440,354 @@ jobs:
         with:
           name: hexalith-nightly-nightly-${{ github.run_attempt }}
           path: ${{ env.NIGHTLY_DIRECTORY }}/nightly.json
+          if-no-files-found: error
+          retention-days: 90
+
+  # Story 9 inserts its secretless scan after publish-ready and before bump.
+  # Its ordinary failure, like publication failure, must not suppress bump.
+  bump:
+    needs: publish-ready
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    permissions:
+      contents: read
+      actions: read
+    env:
+      BUMP_DIRECTORY: ${{ github.workspace }}/../.nightly-bump-${{ github.run_id }}-${{ github.run_attempt }}
+    outputs:
+      result: ${{ steps.produce.outputs.result }}
+      candidate: ${{ steps.produce.outputs.candidate }}
+      base: ${{ steps.produce.outputs.base }}
+      artifact_id: ${{ steps.candidate.outputs.artifact-id }}
+      artifact_digest: ${{ steps.candidate.outputs.artifact-digest }}
+    steps:
+      - name: Seed conservative bump report before checkout
+        run: >-
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['BUMP_DIRECTORY']); p.mkdir(mode=448,parents=True,exist_ok=True); (p/'bump.json').write_text(json.dumps({'schema':'hexalith.nightly-bump-report.v1','result':'failed','reason':'controller checkout or initialization unavailable'})+'\n')"
+
+      - name: Checkout CiCd controllers
+        id: checkout
+        timeout-minutes: 3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Setup locked producer environment
+        id: uv
+        timeout-minutes: 2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          enable-cache: false
+
+      - name: Produce and globally validate the live-main bump
+        id: produce
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.uv.outcome == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: uv run --locked tools/bump.py
+
+      - name: Reject missing or invalid producer outcome
+        if: ${{ !cancelled() && steps.produce.outcome == 'success' && steps.produce.outputs.result != 'candidate' && steps.produce.outputs.result != 'no-change' }}
+        run: >-
+          python3 -I -c "import os,pathlib; p=os.environ.get('GITHUB_STEP_SUMMARY'); pathlib.Path(p).open('a').write('Nightly Builds bump: FAIL — producer supplied no explicit candidate or no-change result.\n') if p else None; raise SystemExit(1)"
+
+      - name: Upload the exact validated candidate
+        id: candidate
+        if: ${{ !cancelled() && steps.produce.outcome == 'success' && steps.produce.outputs.result == 'candidate' }}
+        timeout-minutes: 3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-nightly-bump-${{ github.run_attempt }}
+          path: ${{ env.BUMP_DIRECTORY }}/candidate.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Report unavailable bump producer
+        if: ${{ always() && steps.produce.outcome != 'success' }}
+        run: >-
+          python3 -I -c "import os,pathlib; p=os.environ.get('GITHUB_STEP_SUMMARY'); pathlib.Path(p).open('a').write('Nightly Builds bump: FAIL — producer or global validation did not complete.\n') if p else None; raise SystemExit(1)"
+
+      - name: Upload token-free bump report
+        if: ${{ always() }}
+        timeout-minutes: 3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-nightly-bump-report-${{ github.run_attempt }}
+          path: ${{ env.BUMP_DIRECTORY }}/bump.json
+          if-no-files-found: error
+          retention-days: 90
+
+  bump-push:
+    needs: bump
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.qualify-bump == true || (needs.bump.result == 'success' && needs.bump.outputs.result == 'candidate' && needs.bump.outputs.artifact_id != '' && needs.bump.outputs.artifact_digest != '')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    permissions:
+      contents: write
+      actions: write
+    env:
+      BUMP_DIRECTORY: ${{ github.workspace }}/../.nightly-bump-push-${{ github.run_id }}-${{ github.run_attempt }}
+    outputs:
+      result: ${{ steps.push.outputs.result }}
+      candidate: ${{ steps.push.outputs.candidate }}
+      base: ${{ steps.push.outputs.base }}
+    steps:
+      - name: Seed conservative push report before checkout
+        run: >-
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['BUMP_DIRECTORY']); p.mkdir(mode=448,parents=True,exist_ok=True); (p/'bump-push.json').write_text(json.dumps({'schema':'hexalith.nightly-bump-push.v1','result':'fail','errors':['controller checkout or initialization unavailable']})+'\n')"
+
+      - name: Checkout CiCd verification controller
+        id: checkout
+        timeout-minutes: 3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Record job-token operation boundary
+        id: boundary
+        if: ${{ !cancelled() }}
+        run: >-
+          python3 -I -c "import os,time; p=os.environ.get('GITHUB_OUTPUT'); open(p,'a').write('mint_epoch='+str(time.time())+'\n') if p else None"
+
+      - name: Qualify the nested rendered workflow path in isolation
+        id: qualify
+        if: ${{ !cancelled() && inputs.qualify-bump == true }}
+        env:
+          CICD_TOKEN: ${{ github.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.boundary.outputs.mint_epoch }}
+        run: python3 -I tools/bump_push.py qualify
+
+      - name: Independently verify, push and dispatch delivery
+        id: push
+        if: ${{ !cancelled() && inputs.qualify-bump != true }}
+        env:
+          CICD_TOKEN: ${{ github.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.boundary.outputs.mint_epoch }}
+          BUMP_ARTIFACT_ID: ${{ needs.bump.outputs.artifact_id }}
+          BUMP_ARTIFACT_DIGEST: ${{ needs.bump.outputs.artifact_digest }}
+          BUMP_TRANSPORT: github-token
+        run: python3 -I tools/bump_push.py
+
+      - name: Reject missing push confirmation
+        if: ${{ !cancelled() && inputs.qualify-bump != true && steps.push.outcome == 'success' && (steps.push.outputs.result != 'pushed' || steps.push.outputs.candidate == '') }}
+        run: >-
+          python3 -I -c "import os,pathlib; p=os.environ.get('GITHUB_STEP_SUMMARY'); pathlib.Path(p).open('a').write('Nightly Builds bump: FAIL — writer supplied no confirmed pushed commit.\n') if p else None; raise SystemExit(1)"
+
+      - name: Upload bump push or qualification observations
+        if: ${{ always() }}
+        timeout-minutes: 3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-nightly-bump-push-${{ github.run_attempt }}
+          path: ${{ env.BUMP_DIRECTORY }}/bump-push.json
+          if-no-files-found: error
+          retention-days: 90
+
+  delivery-wait:
+    needs: bump-push
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true && needs.bump-push.outputs.result == 'pushed' && needs.bump-push.outputs.candidate != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 105
+    environment: cicd-app
+    permissions:
+      contents: read
+      actions: read
+    env:
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-delivery-wait-${{ github.run_id }}-${{ github.run_attempt }}
+      BUMP_SHA: ${{ needs.bump-push.outputs.candidate }}
+      BUMP_PUSH_RESULT: ${{ needs.bump-push.outputs.result }}
+    steps:
+      - name: Seed conservative propagation report before checkout
+        run: >-
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['NIGHTLY_DIRECTORY'])/'delivery-wait'; p.mkdir(mode=448,parents=True,exist_ok=True); (p/'report.json').write_text(json.dumps({'schema':'hexalith.nightly-delivery-wait.v1','result':'fail','errors':['controller checkout or initialization unavailable']})+'\n')"
+
+      - name: Checkout CiCd observation controllers
+        id: checkout
+        continue-on-error: true
+        timeout-minutes: 3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Initialize aggregate delivery and module CI observation
+        id: initialize
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: python3 -I tools/nightly_delivery_wait.py initialize
+
+      - name: Record propagation slice 01 mint boundary
+        id: propagation_01_budget
+        if: ${{ !cancelled() && steps.initialize.outputs.active == 'true' }}
+        continue-on-error: true
+        run: python3 -I tools/nightly_delivery_wait.py permit
+
+      - name: Mint propagation slice 01 token
+        id: propagation_01_token
+        if: ${{ !cancelled() && steps.propagation_01_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.initialize.outputs.repositories }}
+          skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
+          permission-actions: read
+
+      - name: Observe delivery and every pushed module CI in slice 01
+        if: ${{ !cancelled() && steps.propagation_01_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        env:
+          POLL_TOKEN: ${{ steps.propagation_01_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.propagation_01_budget.outputs.mint_epoch }}
+        run: python3 -I tools/nightly_delivery_wait.py poll
+
+      - name: Record propagation slice 02 mint boundary
+        id: propagation_02_budget
+        if: ${{ !cancelled() && steps.initialize.outputs.active == 'true' }}
+        continue-on-error: true
+        run: python3 -I tools/nightly_delivery_wait.py permit
+
+      - name: Mint propagation slice 02 token
+        id: propagation_02_token
+        if: ${{ !cancelled() && steps.propagation_02_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.initialize.outputs.repositories }}
+          skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
+          permission-actions: read
+
+      - name: Observe delivery and every pushed module CI in slice 02
+        if: ${{ !cancelled() && steps.propagation_02_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        env:
+          POLL_TOKEN: ${{ steps.propagation_02_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.propagation_02_budget.outputs.mint_epoch }}
+        run: python3 -I tools/nightly_delivery_wait.py poll
+
+      - name: Record propagation slice 03 mint boundary
+        id: propagation_03_budget
+        if: ${{ !cancelled() && steps.initialize.outputs.active == 'true' }}
+        continue-on-error: true
+        run: python3 -I tools/nightly_delivery_wait.py permit
+
+      - name: Mint propagation slice 03 token
+        id: propagation_03_token
+        if: ${{ !cancelled() && steps.propagation_03_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.initialize.outputs.repositories }}
+          skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
+          permission-actions: read
+
+      - name: Observe delivery and every pushed module CI in slice 03
+        if: ${{ !cancelled() && steps.propagation_03_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        env:
+          POLL_TOKEN: ${{ steps.propagation_03_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.propagation_03_budget.outputs.mint_epoch }}
+        run: python3 -I tools/nightly_delivery_wait.py poll
+
+      - name: Record propagation slice 04 mint boundary
+        id: propagation_04_budget
+        if: ${{ !cancelled() && steps.initialize.outputs.active == 'true' }}
+        continue-on-error: true
+        run: python3 -I tools/nightly_delivery_wait.py permit
+
+      - name: Mint propagation slice 04 token
+        id: propagation_04_token
+        if: ${{ !cancelled() && steps.propagation_04_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.initialize.outputs.repositories }}
+          skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
+          permission-actions: read
+
+      - name: Observe delivery and every pushed module CI in slice 04
+        if: ${{ !cancelled() && steps.propagation_04_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        env:
+          POLL_TOKEN: ${{ steps.propagation_04_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.propagation_04_budget.outputs.mint_epoch }}
+        run: python3 -I tools/nightly_delivery_wait.py poll
+
+      - name: Finalize delivery and module CI verdict
+        if: ${{ always() }}
+        env:
+          NIGHTLY_CANCELLED: ${{ job.status == 'cancelled' }}
+        run: python3 -I tools/nightly_delivery_wait.py finalize
+
+      - name: Report unavailable propagation controller
+        if: ${{ always() && steps.checkout.outcome != 'success' }}
+        run: >-
+          python3 -I -c "import os,pathlib; p=os.environ.get('GITHUB_STEP_SUMMARY'); pathlib.Path(p).open('a').write('Nightly propagation: FAIL — observation controller checkout unavailable.\n') if p else None; raise SystemExit(1)"
+
+      - name: Upload token-free propagation observations
+        if: ${{ always() }}
+        timeout-minutes: 3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-nightly-delivery-wait-${{ github.run_attempt }}
+          path: ${{ env.NIGHTLY_DIRECTORY }}/delivery-wait/report.json
+          if-no-files-found: error
+          retention-days: 90
+
+  keepalive:
+    needs: [publish-ready, bump, bump-push, delivery-wait]
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: write
+    env:
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-keepalive-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Seed conservative keepalive report before checkout
+        run: >-
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['NIGHTLY_DIRECTORY']); p.mkdir(mode=448,parents=True,exist_ok=True); (p/'keepalive.json').write_text(json.dumps({'schema':'hexalith.nightly-keepalive.v1','result':'fail','errors':['controller checkout or initialization unavailable']})+'\n')"
+
+      - name: Checkout CiCd keepalive controller
+        id: checkout
+        timeout-minutes: 3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Enable both schedules and maintain an idle main
+        if: ${{ !cancelled() }}
+        env:
+          CICD_TOKEN: ${{ github.token }}
+        run: python3 -I tools/nightly_keepalive.py
+
+      - name: Upload token-free keepalive observations
+        if: ${{ always() }}
+        timeout-minutes: 3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-nightly-keepalive-${{ github.run_attempt }}
+          path: ${{ env.NIGHTLY_DIRECTORY }}/keepalive.json
           if-no-files-found: error
           retention-days: 90

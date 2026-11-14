@@ -153,7 +153,7 @@ and strict readers, actual rendered callers and permissions, tool suites, pinned
 actionlint and online zizmor, and acceptable Builds publication. The selected
 release must be published, immutable, authored by `github-actions[bot]`, agree
 with the locally peeled tag, and be an ancestor of live Builds `main`. This is
-the same global entry point that the future nightly bump will invoke. It writes
+the same unchanged global entry point invoked by the nightly bump producer. It writes
 nothing to stdout and logs each check to stderr. It exits 0 only when every
 global check passes; otherwise it reports each failed or incomplete check and
 exits 1. The shared runner executes tool tests without `--lint`; representative
@@ -260,3 +260,30 @@ and global checks outside `cicd-app`. Hosted qualification records the exact
 source/run/artifact identities and inspected report in
 `_bmad-output/specs/spec-cicd/evidence/7/verification.md`. Production setup files
 remain empty until onboarding; delivery is infrastructure, not adoption.
+
+
+## Nightly Builds version policy
+
+`builds-version` pins one exact stable Builds tag. Nightly considers only its
+current major and the newest published, immutable bot release whose remote and
+locally peeled tag identities agree and whose commit is ancestral to Builds
+main. Version comparison is numeric (`v5.10.0` follows `v5.9.0`). A different
+major requires an explicit change here.
+
+`builds-skip` contains one exact stable tag per line; blank lines are ignored.
+Do not use comments, ranges or prereleases. To retain a rollback, restore the
+older pin and list each bad newer tag in `builds-skip`, then render and commit
+the cause with its output. Nightly leaves that rollback alone unless another
+newer acceptable unskipped release exists. It makes at most one automatic bump
+per UTC night, identified by the nightly run's creation date across reruns.
+
+The secretless producer commits and globally validates its candidate before a
+separate stdlib writer authenticates the object handoff and independently
+constrains the diff. Only existing rendered regular files and the pin can
+change automatically; a newly introduced CI JSON key must equal the exact tagged
+schema's default. Setup, templates, adoption and skip policy remain explicit
+maintainer changes. Failed validation or fresh-main/release races fail closed.
+Confirmed bumps wait for delivery and every actually pushed module's first
+qualifying CI result, including repair pushes. Production setup remains empty;
+nightly fixtures do not adopt a module. See [nightly operation and rollback](../docs/nightly.md)
+and [hosted transport qualification](../docs/nightly-bump-qualification.md).

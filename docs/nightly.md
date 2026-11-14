@@ -4,8 +4,10 @@
 The `nightly` concurrency group queues main runs without cancelling the active
 run; as with any GitHub concurrency group, a newer queued run replaces an older
 pending one. Skipped non-main dispatches use a separate group.
-It executes `dispatch → wait → publish-ready`, each in the `cicd-app`
-environment. There are no push or pull request triggers.
+It executes `dispatch → wait → publish-ready → bump → bump-push → delivery-wait
+→ keepalive`. Release dispatch, release wait, publication and delivery observation
+use `cicd-app`; the bump producer uses only a read-only job token. The writer and
+keepalive use their own job tokens. There are no push or pull request triggers.
 
 Dispatch waits up to 30 minutes for every main `deliver.yml` run to become
 terminal. If that barrier cannot be read or does not clear, nothing is
@@ -42,7 +44,7 @@ outcome, unfinished run, failed eligibility, uncertain dispatch/publication or
 missing orchestration state fails the night. Package and image publishing
 stays in the target run; nightly never rebuilds or republishes their bytes.
 
-Each job mints its own App tokens through the pinned mint action. Dispatch and
+Each App job mints its own tokens through the pinned mint action. Dispatch and
 publication use one explicitly scoped token per target. The delivery barrier
 uses Actions read on CiCd. A dispatch token has Actions write on its one target,
 plus Administration read on a module for the immutable-release check. Wait uses
@@ -97,8 +99,113 @@ just like re-running all jobs. Unverified pre-existing publication is never
 treated as proof that this nightly published a ready result.
 
 Once nightly has run, hourly delivery's existing freshness check fails if the
-last main nightly run is older than 26 hours. This story stops at publication
-and reporting. Story 9 inserts the secretless duplicate scan **after
-`publish-ready` regardless of its result and before the bump**. The later bump
-must continue regardless of publication or scan failure; no placeholder jobs
-are present here.
+last main nightly run is older than 26 hours. Story 9 inserts the secretless
+duplicate scan **after `publish-ready` and before `bump`**. Bump and keepalive
+continue after ordinary publication or scan failures; the failed upstream job
+still makes the overall night fail. Explicit cancellation stops new work.
+
+## Builds bumps and rollback
+
+The producer fetches current CiCd `main`, independently of the scheduler SHA,
+and selects the numerically newest stable `vX.Y.Z` in `builds-version`'s major.
+It excludes `builds-skip`. Every acceptable release must be published, immutable,
+authored by `github-actions[bot]`, agree with the remote and locally peeled tag,
+and be ancestral to current Builds `main`. Incomplete release or tag evidence
+fails the bump. A different major requires an explicit maintainer change.
+
+To roll back, restore `builds-version`, add the bad newer tag to `builds-skip`,
+re-render and commit the pin, policy and output together. `builds-skip` contains
+one exact stable tag per line, for example:
+
+```text
+v5.2.0
+v5.3.1
+```
+
+Blank lines are ignored. Comments, ranges and malformed tags are rejected with
+their line number. An absent skip file is treated as empty only when reading
+historical parents. With no newer acceptable unskipped release, the producer
+reports a successful no-change and no push, dispatch or propagation wait occurs.
+No acceptable release is a verification failure.
+
+The UTC creation date of the nightly run is its stable night key, including
+reruns that cross midnight. A successful automatic bump records
+`hexalith-nightly-bump: YYYY-MM-DD` in the body below the exact subject
+`build(cicd): bump Builds to vX.Y.Z`. A reachable matching automatic bump on main
+makes all later runs for that night no-change. A following UTC night may bump
+again. Unreadable history fails this guard.
+
+The producer renders in a disposable live-main checkout, locally commits the
+candidate, and runs the unchanged shared global gate. Only a successful
+candidate exposes `candidate.json` in `hexalith-nightly-bump-<attempt>`. Failed
+checks expose no candidate artifact. The separate
+`hexalith-nightly-bump-report-<attempt>` (`bump.json`) records candidate, no-change
+or failure observations. The isolated stdlib writer authenticates
+the artifact's run, attempt, source, name and digest; reconstructs and hashes its
+Git objects without executing them; and independently rechecks main, release,
+tag, schema and night evidence. It allows only `builds-version` and existing
+regular rendered files with the exact tag/commit substitution, plus newly
+introduced CI JSON keys justified by the selected tagged schema's defaults.
+It rejects unrelated edits, path additions/removals, mode changes and symlinks.
+A main or eligible-release race fails the night without rebasing or retrying an
+uncertain push. The push is an ordinary fast-forward of the exact validated
+commit.
+
+The default transport is the writer job's `GITHUB_TOKEN`, scoped to Contents and
+Actions write. After confirmed push it explicitly dispatches `deliver.yml` on
+main because token push events do not create downstream workflow runs. The
+manual **qualify-bump** input runs only an isolated inert rendered-workflow
+probe on main; it skips releases, production bump, delivery and keepalive.
+It must record the remote SHA/tree and remove its probe refs. Hosted evidence
+and the conditional App fallback are tracked in
+[`nightly-bump-qualification.md`](nightly-bump-qualification.md). Fixture success
+alone does not qualify the hosted transport. A definite nested-path Workflows
+permission rejection selects a fresh CiCd-only Contents/Workflows write App
+mint in `cicd-app`, the same verifier, and no explicit delivery dispatch; its
+push trigger starts delivery. Other authorization or transport failures leave
+qualification incomplete.
+
+## Propagation and schedule keepalive
+
+A confirmed push starts one aggregate 90-minute delivery and module-CI wait,
+even when its subsequent explicit dispatch or report upload failed. The writer
+job's failure remains red while observation collects available propagation links.
+It polls every 60 seconds. The observer accepts only noncancelled main
+`deliver.yml` runs on the bump commit or a proven descendant whose current
+attempt actually started its `deliver` job. It selects the earliest qualifying
+creation time, then run ID, and authenticates the sole current-attempt
+`hexalith-delivery` report before reading its actual pushed module commits,
+including repair pushes after skipped advancement. The report never authorizes
+a repository: authorization comes from the bumped-main registry and valid
+ancestral `delivered/<Repo>` refs, capped at 17 modules and excluding Builds.
+
+For every pushed module commit, the first completed noncancelled main `ci.yml`
+run on that commit or a proven descendant decides, ordered by completion time
+then run ID. Only success passes; a later green result cannot hide a selected
+red result. Delivery failure, a missing or invalid report, a skipped deliver
+job, missing module CI or aggregate timeout fails the observation job. Sibling
+links and diagnostics survive earlier failures in
+`hexalith-nightly-delivery-wait-<attempt>` (`report.json`). Four possible App
+mint/poll slices each last at most 40 minutes and share the same deadline, so a
+failed mint cannot extend it or reuse an old credential. These tokens have
+Actions read on exactly CiCd and the independently authorized module union.
+No rendering, tests, linting or artifact code runs in this App job.
+
+Keepalive runs even after failed or skipped ordinary prerequisites. It attempts
+both `nightly.yml` and `deliver.yml` enable calls independently, accepting the
+API's empty HTTP 204 response. It fetches fresh main and uses its UTC committer
+timestamp. Only a tip older than 50 days receives an empty
+`build(cicd): keepalive` commit with that exact tip as parent; it never overwrites
+a racing main. Enable and push failures remain red and are recorded in
+`hexalith-nightly-keepalive-<attempt>` (`keepalive.json`). The enable API is the
+primary protection against GitHub's 60-day schedule disable; the empty commit
+is secondary. If both schedules stop, the maintainer must re-enable them.
+
+New job limits are 55 minutes for bump, 55 for bump-push, 105 for propagation and
+15 for keepalive. Existing release limits remain 55/330/55 minutes. Every App
+mint belongs to its job, records its epoch before the action starts, reserves
+time before the 50-minute use boundary and uses `skip-token-revoke: true`.
+No token is carried through reports or artifacts. Push/qualification observations
+are in `hexalith-nightly-bump-push-<attempt>` (`bump-push.json`); available links
+also appear in the Actions summary. Missing producer outputs are failures or
+skipped downstream jobs, never inferred to mean no-change.
