@@ -1,0 +1,41 @@
+name: Qualify nightly delivery dispatch
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+cache-mode: none
+
+jobs:
+  dispatch:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Checkout the verified production API client
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Dispatch delivery through the production API client
+        env:
+          CICD_TOKEN: ${{ github.token }}
+        run: |
+          python3 -I - <<'PYTHON'
+          import importlib.util, os, pathlib, sys, time
+          path = pathlib.Path('tools/nightly_runtime.py').resolve()
+          spec = importlib.util.spec_from_file_location('_dispatch_qualification_runtime', path)
+          runtime = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = runtime
+          spec.loader.exec_module(runtime)
+          token = os.environ['CICD_TOKEN']
+          runtime.delivery._SECRETS.append(token)
+          started = time.time()
+          budget = runtime.Budget(started, job_seconds=300, token_epoch=started)
+          api = runtime.API(budget, repositories=(runtime.CICD,))
+          api.dispatch_delivery(token)
+          print('Production dispatch_delivery accepted: HTTP 204')
+          PYTHON

@@ -28,7 +28,7 @@ jobs:
     permissions:
       contents: read
     env:
-      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-state-dispatch-${{ github.run_id }}-${{ github.run_attempt }}
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}-nightly-state-dispatch-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       artifact_id: ${{ steps.state.outputs.artifact-id }}
     steps:
@@ -600,7 +600,7 @@ jobs:
       contents: read
       actions: read
     env:
-      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-state-wait-${{ github.run_id }}-${{ github.run_attempt }}
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}-nightly-state-wait-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       artifact_id: ${{ steps.state.outputs.artifact-id }}
     steps:
@@ -891,7 +891,7 @@ jobs:
       contents: read
       actions: read
     env:
-      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-state-publish-ready-${{ github.run_id }}-${{ github.run_attempt }}
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}-nightly-state-publish-ready-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       artifact_id: ${{ steps.state.outputs.artifact-id }}
     steps:
@@ -1454,7 +1454,7 @@ jobs:
       contents: read
       actions: read
     env:
-      BUMP_DIRECTORY: ${{ github.workspace }}/../.nightly-bump-${{ github.run_id }}-${{ github.run_attempt }}
+      BUMP_DIRECTORY: ${{ github.workspace }}-nightly-bump-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       result: ${{ steps.produce.outputs.result }}
       candidate: ${{ steps.produce.outputs.candidate }}
@@ -1529,7 +1529,7 @@ jobs:
       contents: write
       actions: write
     env:
-      BUMP_DIRECTORY: ${{ github.workspace }}/../.nightly-bump-push-${{ github.run_id }}-${{ github.run_attempt }}
+      BUMP_DIRECTORY: ${{ github.workspace }}-nightly-bump-push-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       result: ${{ steps.push.outputs.result }}
       candidate: ${{ steps.push.outputs.candidate }}
@@ -1597,7 +1597,7 @@ jobs:
       contents: read
       actions: read
     env:
-      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-delivery-wait-${{ github.run_id }}-${{ github.run_attempt }}
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}-nightly-delivery-wait-${{ github.run_id }}-${{ github.run_attempt }}
       BUMP_SHA: ${{ needs.bump-push.outputs.candidate }}
       BUMP_PUSH_RESULT: ${{ needs.bump-push.outputs.result }}
     steps:
@@ -1762,7 +1762,7 @@ jobs:
       contents: write
       actions: write
     env:
-      NIGHTLY_DIRECTORY: ${{ github.workspace }}/../.nightly-keepalive-${{ github.run_id }}-${{ github.run_attempt }}
+      NIGHTLY_DIRECTORY: ${{ github.workspace }}-nightly-keepalive-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Seed conservative keepalive report before checkout
         run: >-

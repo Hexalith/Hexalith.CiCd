@@ -24,6 +24,24 @@ controller = load(ROOT / "tools/nightly.py", "_nightly_workflow_controller")
 TOKENS = ("CICD_TOKEN", "TARGET_TOKEN", "POLL_TOKEN", "HANDOFF_TOKEN", "MODULE_TOKEN", "NIGHTLY_MINT_EPOCH")
 
 
+def artifact_path(inputs, workspace):
+    """Model upload-artifact's path rejection before reading fixture bytes."""
+    raw = inputs["path"]
+    if not isinstance(raw, str) or not Path(raw).is_absolute() or any(part in {".", ".."} for part in raw.split("/")):
+        raise AssertionError("artifact path is relative or contains '.'/'..' segments")
+    path = Path(raw)
+    checkout = Path(workspace)
+    try:
+        relative = path.relative_to(checkout.parent)
+    except ValueError:
+        raise AssertionError("nightly artifact path is outside the job's sibling directories") from None
+    if not relative.parts or not relative.parts[0].startswith(checkout.name + "-nightly-"):
+        raise AssertionError("nightly artifact path is inside checkout or outside its job directory prefix")
+    if any(part.startswith(".") for part in relative.parts):
+        raise AssertionError("artifact path would be excluded as hidden")
+    return path
+
+
 class Workflow(Expressions):
     lookup = Expressions.lookup
     def expression(self, value):
@@ -56,10 +74,11 @@ class Workflow(Expressions):
         self.document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
         self.context = {"github": {"ref": ref, "sha": workspace.sha, "repository": "Hexalith/Hexalith.CiCd",
             "workspace": str(workspace.candidate), "run_id": "101", "run_attempt": "1", "event_name": event,
-            "token": "inert-handoff-token"}, "needs": {}, "steps": {}, "runner": {"temp": str(workspace.root)},
+            "token": "inert-handoff-token"}, "needs": {}, "steps": {}, "runner": {"temp": str(workspace.root / "runner-temp")},
             "secrets": {"HEXALITH_CICD_APP_PRIVATE_KEY": "inert-private-key"},
             "vars": {"HEXALITH_CICD_APP_CLIENT_ID": "inert-client-id"}}
         self.mint_fail, self.cancel_after = set(mint_fail), cancel_after
+        Path(self.context["runner"]["temp"]).mkdir(exist_ok=True)
         self.lost_artifact, self.fail_checkout = lost_artifact, fail_checkout
         self.w.config["pending"] = list(pending)
         self.failed, self.cancelled = False, False
@@ -149,7 +168,7 @@ class Workflow(Expressions):
                             self.w.config["token_scopes"][token] = repositories
                         self.post_actions.append({"skip": inputs["skip-token-revoke"], "minted": self.w.clock()})
                     elif action == "actions/upload-artifact":
-                        path = Path(inputs["path"])
+                        path = artifact_path(inputs, self.context["github"]["workspace"])
                         if not path.exists():
                             outcome = "failure"
                         else:
@@ -214,6 +233,39 @@ class Workflow(Expressions):
             self.context["needs"][phase] = {"result": self.results[phase], "outputs": {
                 key: self.expand(value) for key, value in job.get("outputs", {}).items()}}
         return "failure" if "failure" in self.results.values() else "success"
+
+
+class ArtifactPathWorkflowTests(unittest.TestCase):
+    def test_every_job_upload_expands_to_a_nonhidden_canonical_sibling(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        workflow = Workflow(Workspace(Path(temporary.name) / "workspace", ()))
+        checkout = workflow.context["github"]["workspace"]
+        uploads = []
+        for phase, job in workflow.document["jobs"].items():
+            base = {key: workflow.expand(value) for key, value in job.get("env", {}).items()}
+            workflow.context["env"] = base
+            for step in job["steps"]:
+                if not step.get("uses", "").startswith("actions/upload-artifact@"):
+                    continue
+                inputs = {key: workflow.expand(value) for key, value in step["with"].items()}
+                path = artifact_path(inputs, checkout)
+                self.assertEqual(path.suffix, ".json")
+                self.assertNotIn("include-hidden-files", inputs)
+                uploads.append((phase, path))
+        self.assertEqual({phase for phase, _ in uploads}, set(workflow.document["jobs"]))
+        self.assertEqual(len(uploads), 8)
+        self.assertEqual(len({path for _, path in uploads}), 8)
+
+    def test_upload_boundary_rejects_parent_current_hidden_and_relative_paths(self):
+        checkout = "/runner/work/Repo/Repo"
+        for path in (checkout + "/../.nightly/report.json", checkout + "-nightly/./report.json",
+                     checkout + "-nightly-101-1/.report.json", "nightly/report.json",
+                     "/workspace/nightly/report.json", checkout + "/report.json"):
+            with self.subTest(path=path), self.assertRaises(AssertionError):
+                artifact_path({"path": path}, checkout)
+        self.assertEqual(artifact_path({"path": checkout + "-nightly-101-1/report.json"}, checkout),
+                         Path(checkout + "-nightly-101-1/report.json"))
 
 
 class NightlyWorkflowTests(unittest.TestCase):
@@ -545,7 +597,7 @@ class PostReleaseWorkflow(Workflow):
                             self.tokens[token] = len(self.mints) - 1
                             outputs["token"] = token
                     elif action == "actions/upload-artifact":
-                        path = Path(inputs["path"])
+                        path = artifact_path(inputs, self.context["github"]["workspace"])
                         failed = not path.exists()
                         if not failed:
                             data = json.loads(path.read_bytes())
