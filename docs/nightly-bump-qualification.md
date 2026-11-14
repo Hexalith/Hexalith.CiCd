@@ -1,48 +1,80 @@
 # Nightly bump transport qualification
 
-Status: **incomplete — hosted job-token evidence required**.
+Status: **GITHUB_TOKEN transport qualified on 2026-11-14**.
 
-The default implementation uses the `bump-push` job's `GITHUB_TOKEN` with
-Contents and Actions write, verifies the exact candidate, pushes it by ordinary
-fast-forward, and explicitly dispatches `deliver.yml` on main after confirmed
-push. Fixture tests verify the data and controller boundaries. They do not prove
-whether GitHub accepts a push changing a nested
-`rendered/<Repo>/.github/workflows/*.yml` path.
+Production uses the `bump-push` job's own GITHUB_TOKEN with Contents and Actions
+write. It independently verifies the candidate, confirms the exact fast-forward
+push, then explicitly dispatches delivery. No App fallback was selected.
 
-Dispatch `nightly.yml` on `main` with **qualify-bump: true** to exercise that exact
-job token on an isolated temporary probe ref. All release, production bump,
-delivery observation and keepalive jobs are skipped in this mode. The probe's
-child commit changes only the inert
-`rendered/Hexalith.Probe/.github/workflows/probe.yml` file. It must neither push
-main nor dispatch any release/delivery nor touch module repositories. Record
-its actual remote SHA/tree and the controller's cleanup evidence from the
-`hexalith-nightly-bump-push-<attempt>` artifact before accepting a result.
+## Hosted nested-path probe
 
-A successful push qualifies the job-token route; delivery dispatch/trigger
-behavior must also be validated with fixture modules before story acceptance.
-A definite GitHub rejection specifically for Workflows permission on that nested
-path selects the architecture's App fallback: put `bump-push` in `cicd-app`, mint
-a fresh CiCd-only Contents/Workflows write token through the pinned action, keep
-the same independent verifier, set `BUMP_TRANSPORT=app`, and omit explicit delivery
-dispatch because its push trigger starts delivery. An unrelated 401/403,
-transport failure or uncertain write leaves qualification incomplete and is
-never evidence of either route's success or of a Workflows rejection.
+The main-only `qualify-bump: true` run executed only `bump-push`; dispatch, wait,
+publish-ready, bump, delivery-wait and keepalive were all skipped. Its child
+changed only the inert nested file
+`rendered/Hexalith.Probe/.github/workflows/probe.yml` on a disposable ref. It
+neither changed main nor dispatched delivery/releases nor touched a module.
 
-For that fallback, pass the App token as `CICD_TOKEN` and that same job's
-Actions-read `GITHUB_TOKEN` as `HANDOFF_TOKEN` for artifact authentication. This
-keeps the App mint limited to Contents and Workflows write on CiCd.
-
-## Evidence to complete
-
-| Evidence | Value |
+| Evidence | Observed value |
 | --- | --- |
-| Controller/workflow source revision (full SHA) | Pending |
-| Hosted probe run URL and attempt | Pending |
-| Probe base, child and actual remote commit/tree (full SHAs) | Pending |
-| Job-token outcome or exact definite Workflows rejection | Pending |
-| Probe ref/workflow cleanup evidence | Pending |
-| Selected production transport | Default job-token route; not yet hosted-qualified |
-| Fixture-only delivery run and qualifying module CI links | Pending |
-| Final delivery trigger/dispatch confirmation and cleanup | Pending |
+| Controller/workflow source revision | `6a7b287b7f2b40614970f10e3479c109f114d863` |
+| Hosted run and attempt | [43643834124](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43643834124), attempt 1; success |
+| Captured main/base | `6a7b287b7f2b40614970f10e3479c109f114d863` |
+| Probe child and actual remote commit | `d7d04da2318ec9ffada4e0205a934811b2fc7058` |
+| Candidate and actual remote tree | `daea2603c740ac9d3c0f400f0c95bddc97306f8f` |
+| Artifact ID and name | `14132723343`, `hexalith-nightly-bump-push-1` |
+| Authenticated archive digest | `sha256:b19d4bd4e521256d92a13b38b4ab2b1319ac512477481d5191492647a5f9e646` |
+| Result | `qualified`, transport `github-token`, cleanup `true` |
+| Deleted probe ref | `refs/heads/nightly-bump-probe-43643834124-1-8aad84165517563d` |
 
-No hosted qualification or production adoption has been claimed by this file.
+The archive size and SHA-256 matched the authenticated Actions metadata. Its
+sole bounded JSON member was parsed in memory without extraction and bound to
+the source, run and attempt above. A separate `git ls-remote` confirmed no
+`nightly-bump-probe-*` refs remain. Deleting the ref also removed the probe's
+nested workflow from every live branch.
+
+## Hosted delivery dispatch
+
+A separate temporary main-only workflow invoked the production
+`API.dispatch_delivery` with its own Actions-write job token. It did not run the
+isolated probe or any release job. [Qualification run 43643836917](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43643836917)
+passed at source `6a7b287b7f2b40614970f10e3479c109f114d863`. Its strict HTTP 200 response
+parser returned the authenticated run ID and canonical URLs for
+[Delivery 43643848734](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43643848734).
+Independent Actions metadata confirmed event `workflow_dispatch`, branch main
+and the same full source revision. Delivery was queued behind an already
+running delivery when this evidence was collected; creation/trigger behavior is
+the hosted assertion here, and its eventual result is reported separately.
+
+The temporary `qualify-nightly-delivery.yml` workflow (ID 418652228) was disabled
+with verified state `disabled_manually` after its successful run and its file
+is removed by the qualification-cleanup commit. Production setup and delivered
+refs remained empty. No hosted module CI or production adoption is claimed.
+Real disposable module repositories exercise the producer/writer, repair-push,
+authenticated report and first-result CI propagation paths in the locked
+`test_bump_push.py` and `test_nightly_delivery_wait.py` suites.
+
+## Findings resolved during qualification
+
+The first probe at source `f7c76990342fcf87f719630da7a5b3b33264f893`
+accepted the nested push but its artifact upload rejected a path containing
+`..`. All seven nightly job directories now use canonical nonhidden siblings
+outside checkout. The 21-test workflow suite checks all eight upload paths at
+the action boundary.
+
+The first dispatch proof at source
+`d4b06d1215a9fe771b6338e81f548b1b72d2dc0f` created a delivery but
+rejected its response because the client expected HTTP 204. The pinned
+2026-03-10 API returns HTTP 200 with run details for dispatch; enable alone
+returns empty HTTP 204. The corrected dispatch client shares release dispatch's
+strict ID/URL validation, and malformed or uncertain writes are never retried.
+See the [official workflow API contract](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event).
+
+## Conditional fallback
+
+A future definite nested-path Workflows-permission rejection requires
+`bump-push` in `cicd-app`, a fresh action-minted CiCd-only Contents/Workflows
+write token, and the same verifier with `BUMP_TRANSPORT=app`. Its push triggers
+delivery, so explicit dispatch is omitted. Pass that App token as `CICD_TOKEN`
+and the same job's Actions-read GITHUB_TOKEN as `HANDOFF_TOKEN`; no credential
+crosses jobs. Generic authorization, transport or uncertain-write errors leave
+qualification incomplete and never justify selecting the fallback.
