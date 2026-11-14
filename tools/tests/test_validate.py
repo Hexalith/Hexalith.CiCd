@@ -465,6 +465,33 @@ class GlobalTests(unittest.TestCase):
             "jobs": {"inherited": {}, "overridden": {"permissions": {"contents": "none"}}}}),
             {"contents": "read", "actions": "none"})
 
+    def test_restore_enabled_tag_requires_exact_write_union_and_rejects_less_or_more_access(self):
+        with workspace() as fixture:
+            fixture.module()
+            path = ".github/workflows/ci.yml"
+            manifest = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{path}"), "tagged ci")
+            manifest["jobs"]["restore"] = {
+                "permissions": {"contents": "write", "actions": "write"},
+                "runs-on": "ubuntu-latest", "steps": [{"uses": "$/Github/restore"}],
+            }
+            revision = fixture.change_tag({path: json.dumps(manifest).encode()}, move_tag=False)
+            fixture.tag = "v5.2.0"
+            git(fixture.builds, "update-ref", f"refs/tags/{fixture.tag}", revision)
+            (fixture.root / "builds-version").write_text(fixture.tag + "\n")
+            fixture.commit()
+            with global_check.selected_contract(fixture.root) as contract:
+                global_check.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+                caller = fixture.output(path)
+                document = renderer.yaml_document(caller.read_bytes(), "rendered caller")
+                for permissions in ({"contents": "read"}, {"contents": "write"},
+                        {"contents": "write", "actions": "read"},
+                        {"contents": "write", "actions": "write", "id-token": "write"}):
+                    with self.subTest(permissions=permissions):
+                        document["jobs"]["ci"]["permissions"] = permissions
+                        caller.write_text(json.dumps(document))
+                        with self.assertRaisesRegex(ValueError, "permission union"):
+                            global_check.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+
     def test_callable_literal_types_preserve_expressions_and_untyped_composites(self):
         for declared, literal, invalid in (("string", "value", True), ("boolean", True, "true"),
                                            ("number", 2, True)):

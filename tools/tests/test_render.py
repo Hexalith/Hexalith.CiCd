@@ -36,7 +36,7 @@ def load_module(name: str, path: Path):
 
 
 renderer = load_module("_cicd_renderer", ROOT / "tools/render.py")
-# The shared global checker owns the permission-union rule.
+# Rendering and global qualification share the effective permission-union rule.
 global_checks = load_module("_cicd_render_global_checks", ROOT / "tools/check_global.py")
 
 
@@ -759,7 +759,8 @@ class RenderTests(unittest.TestCase):
             release = fixture.yaml(".github/workflows/release.yml")
             def tagged(path):
                 return renderer.yaml_document((contract.root / path).read_bytes(), path)
-            ci_api = tagged(".github/workflows/ci.yml")["on"]["workflow_call"]
+            ci_declaration = tagged(".github/workflows/ci.yml")
+            ci_api = ci_declaration["on"]["workflow_call"]
             release_declaration = tagged(".github/workflows/release.yml")
             release_api = release_declaration["on"]["workflow_call"]
             prepare_api = tagged("Github/prepare/action.yml")["inputs"]
@@ -782,6 +783,7 @@ class RenderTests(unittest.TestCase):
                 "uses": f"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{fixture.tag}",
                 "permissions": {"contents": "read"}, "secrets": pull_secrets,
             })
+            self.assertEqual(ci["jobs"]["ci"]["permissions"], global_checks.permission_union(ci_declaration))
             self.assert_arguments_supplied(ci["jobs"]["ci"].get("with", {}), ci_api["inputs"])
             self.assert_arguments_supplied(pull_secrets, ci_api["secrets"])
             for name in names:
@@ -827,6 +829,40 @@ class RenderTests(unittest.TestCase):
             self.assert_arguments_supplied(values, publish_api)
             self.assertTrue(set(handoff) <= release_api["outputs"].keys())
             self.assertTrue(all(publish_api[key]["required"] for key in values))
+
+    def test_ci_caller_permissions_follow_selected_tag_and_ignore_newer_head_or_worktree(self):
+        with workspace() as fixture:
+            fixture.setup("full")
+            path = ".github/workflows/ci.yml"
+            original = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{path}"), "old tagged CI")
+            updated = renderer.yaml_document(json.dumps(original).encode(), "new tagged CI")
+            updated["jobs"]["restore"] = {
+                "runs-on": "ubuntu-latest", "permissions": {"contents": "write", "actions": "write"},
+                "steps": [{"uses": "$/Github/restore"}],
+            }
+            revision = fixture.change_tag({path: json.dumps(updated).encode()}, move_tag=False)
+            # A newer checkout/HEAD cannot raise permissions for the old pin.
+            worktree = fixture.builds / path
+            worktree.parent.mkdir(parents=True, exist_ok=True)
+            worktree.write_text(json.dumps(updated))
+            fixture.cli()
+            self.assertEqual({"contents": "read"}, fixture.yaml(path)["jobs"]["ci"]["permissions"])
+            with renderer.pinned_contract(fixture.root) as contract:
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+            # Selecting the restore-enabled release grants exactly its union.
+            fixture.tag = "v5.2.0"
+            git(fixture.builds, "update-ref", f"refs/tags/{fixture.tag}", revision)
+            (fixture.root / "builds-version").write_text(fixture.tag + "\n")
+            fixture.cli()
+            fixture.cli("--check")
+            workflow = fixture.yaml(path)
+            self.assertEqual({"contents": "write", "actions": "write"}, workflow["jobs"]["ci"]["permissions"])
+            self.assertEqual(f"Hexalith/Hexalith.Builds/{path}@{fixture.tag}", workflow["jobs"]["ci"]["uses"])
+            for name, job in workflow["jobs"].items():
+                if name != "ci":
+                    self.assertEqual({"contents": "read"}, job["permissions"])
+            with renderer.pinned_contract(fixture.root) as contract:
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
 
     def test_new_required_callable_arguments_are_detected(self):
         with workspace() as fixture, renderer.pinned_contract(fixture.root) as contract:

@@ -12,8 +12,7 @@ concurrency:
 jobs:
   ci:
     uses: [[ ci_workflow | tojson ]]
-    permissions:
-      contents: read
+    permissions: [[ ci_permissions | tojson ]]
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}

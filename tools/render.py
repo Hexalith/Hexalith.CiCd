@@ -387,9 +387,25 @@ def rendered_bytes(environment: Environment, template: str, context: dict) -> by
         raise RenderError(f"templates/{template}: {error}") from error
 
 
+def permission_union(document: dict) -> dict:
+    """Maximum effective job access required by a selected reusable workflow."""
+    union = {}
+    ranks = {"none": 0, "read": 1, "write": 2}
+    for job in document["jobs"].values():
+        for scope, permission in job.get("permissions", document.get("permissions", {})).items():
+            if permission not in ranks:
+                raise RenderError(f"invalid pinned permission {scope}: {permission}")
+            if ranks[permission] >= ranks.get(union.get(scope), -1):
+                union[scope] = permission
+    return union
+
+
 def desired_tree(project: Path, registrations: list[tuple[str, Path]],
                  environment: Environment, contract: Contract) -> dict[str, bytes]:
     result = {}
+    source = f"Builds {contract.tag}/.github/workflows/ci.yml"
+    ci_declaration = yaml_document((contract.root / ".github/workflows/ci.yml").read_bytes(), source)
+    ci_permissions = permission_union(ci_declaration)
     for repository, path in registrations:
         setup = yaml_document(path.read_bytes(), str(path))
         if not isinstance(setup, dict):
@@ -407,6 +423,7 @@ def desired_tree(project: Path, registrations: list[tuple[str, Path]],
             "config": config, "builds_tag": contract.tag,
             "perimeter_schema": contract.schemas["perimeter"]["properties"]["schema"]["const"],
             "ci_workflow": f"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{contract.tag}",
+            "ci_permissions": ci_permissions,
             "release_workflow": f"Hexalith/Hexalith.Builds/.github/workflows/release.yml@{contract.tag}",
             "prepare_action": f"Hexalith/Hexalith.Builds/Github/prepare@{contract.tag}",
             "publish_action": f"Hexalith/Hexalith.Builds/Github/publish@{contract.tag}",

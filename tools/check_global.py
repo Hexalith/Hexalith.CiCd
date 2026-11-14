@@ -174,15 +174,8 @@ def arguments_supplied(supplied: dict, declarations: dict, source: str) -> None:
 
 
 def permission_union(document: dict) -> dict:
-    union = {}
-    ranks = {"none": 0, "read": 1, "write": 2}
-    for job in document["jobs"].values():
-        for scope, permission in job.get("permissions", document.get("permissions", {})).items():
-            if permission not in ranks:
-                raise CheckError(f"invalid pinned permission {scope}: {permission}")
-            if ranks[permission] >= ranks.get(union.get(scope), -1):
-                union[scope] = permission
-    return union
+    """Use the renderer's exact effective-permission union for caller checks."""
+    return renderer.permission_union(document)
 
 
 def string_values(value):
