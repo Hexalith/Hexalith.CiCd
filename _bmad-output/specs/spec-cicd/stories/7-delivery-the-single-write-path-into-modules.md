@@ -2,7 +2,8 @@
 title: 'Delivery: the single write path into modules'
 type: feature
 created: '2026-11-14'
-status: ready-for-dev
+status: done
+baseline_commit: 58341fa67826946b5e09538c74c61547aca7583d
 baseline_revision: 6d229cab21a30887722e1e1ed58088bb134daad7
 review_loop_iteration: 1
 followup_review_recommended: false
@@ -79,18 +80,18 @@ deferred: []
 
 **Review-1 fixes (in place on the committed implementation; bootstrap pin `03d130f82366dec8ed70a21a14177ae55ea09ca1` unchanged — no fix touches `tools/delivery_bootstrap.py`):**
 
-- [ ] `tools/delivery_runtime.py` (G1) — `API.get` rejects `.`/`..` *segments* of the pre-query path instead of any `..` substring, so the Builds `compare/<sha>...<sha>` request is accepted and `/repos/Hexalith/x/../y` still refused.
-- [ ] `tools/tests/delivery_support.py` (G1, G11) — replace the fixture `API` class that overrides `get`/`pages` with a fake urllib opener behind the real `rt.API`: serve the same fixture JSON by path and query (paginated `total_count` wrappers, Dependabot absence as HTTP 404, `fail_app` as HTTP 403, `config["api"]` overrides as status/body), and record each request with its `Authorization` header. Every controller and workflow test then crosses the real path guard, JSON limits and pagination.
-- [ ] `tools/tests/delivery_support.py` (G12) — set `uploadpack.allowFilter=true` and `uploadpack.allowAnySHA1InWant=true` on every fixture bare remote so `--filter=blob:none` is honored; assert in one controller test that a module acquisition is really partial before apply.
-- [ ] `tools/deliver.py`, `tools/tests/test_delivery_runtime.py`, `setup/README.md:234-235` (G2) — remove the repository-run fallback in `nightly`: a missing workflow is `not-activated`. Update the nightly unit test and README wording.
-- [ ] `.github/workflows/deliver.yml`, `tools/tests/test_delivery_workflow.py` (G3) — job `if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}`; the CiCd mint, initialize and every permit/mint/process step use `!cancelled()`; select, finalize and upload keep `always()`. Let the harness cancel after a chosen step and show that later mints/processes are skipped, finalize marks unstarted rows failed, the upload still runs and the untouched module remote is unchanged.
-- [ ] `tools/delivery_runtime.py`, `tools/deliver.py` (G4) — every Builds rejection reason names the cleaned tag and, where applicable, the mismatching object SHAs or the missing capability path; extend the existing bad-release, tag-mismatch and missing-capability tests to assert them.
-- [ ] `tools/tests/test_deliver.py` (G5) — failed global with the validator's real shape `{"global": false, "modules": [all names]}` after a candidate render change: refs unchanged, advancement `skipped`, module trees equal the accepted render, no App-check request recorded.
-- [ ] `tools/tests/test_deliver.py` (G6) — one case per closed App check (installation inventory without the repo, missing/inactive/extra-rule/extra ruleset, retention 30, CodeQL `configured`, Dependabot 200): that module skips advancement with a reason naming the check while its sibling advances.
-- [ ] `tools/tests/test_delivery_workflow.py` (G7, G8) — record each mint's inputs and each process step's `MODULE_TOKEN`/`--slot`. Assert `permission-administration` is `read` on checking runs for registry slots (and `''` on repair-only runs), and run a 17-module capacity scenario where every slot's mint repository, received token and `--slot N` match `slot_NN` and every row is processed.
-- [ ] `tools/tests/test_delivery_workflow.py`, `tools/check_global.py` (G9) — the checkout substitute copies exactly the step's `sparse-checkout` paths, taking bytes from `<source_sha>:<path>` when that object exists locally. Add an online `check_global.py` check that reads both bootstrap files at `source_sha` through the contents API with the read-only token and compares them with the manifest hashes.
-- [ ] `tools/tests/test_deliver.py` (G10) — assert the delivered commit's subject `build(cicd): apply <accepted> from Hexalith.CiCd`, author/committer `github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>` and sole parent equal to the previous module head.
-- [ ] `tools/tests/test_delivery_runtime.py` (G11) — assert a token-bearing `Git.run` environment carries exactly `http.https://github.com/.extraheader = AUTHORIZATION: basic base64(x-access-token:<token>)`, `API.get` sends `Authorization: Bearer <token>`, and the production `Transport().remote()` is `https://github.com/Hexalith/<repo>.git`.
+- [x] `tools/delivery_runtime.py` (G1) — `API.get` rejects `.`/`..` *segments* of the pre-query path instead of any `..` substring, so the Builds `compare/<sha>...<sha>` request is accepted and `/repos/Hexalith/x/../y` still refused.
+- [x] `tools/tests/delivery_support.py` (G1, G11) — replace the fixture `API` class that overrides `get`/`pages` with a fake urllib opener behind the real `rt.API`: serve the same fixture JSON by path and query (paginated `total_count` wrappers, Dependabot absence as HTTP 404, `fail_app` as HTTP 403, `config["api"]` overrides as status/body), and record each request with its `Authorization` header. Every controller and workflow test then crosses the real path guard, JSON limits and pagination.
+- [x] `tools/tests/delivery_support.py` (G12) — set `uploadpack.allowFilter=true` and `uploadpack.allowAnySHA1InWant=true` on every fixture bare remote so `--filter=blob:none` is honored; assert in one controller test that a module acquisition is really partial before apply.
+- [x] `tools/deliver.py`, `tools/tests/test_delivery_runtime.py`, `setup/README.md:234-235` (G2) — remove the repository-run fallback in `nightly`: a missing workflow is `not-activated`. Update the nightly unit test and README wording.
+- [x] `.github/workflows/deliver.yml`, `tools/tests/test_delivery_workflow.py` (G3) — job `if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}`; the CiCd mint, initialize and every permit/mint/process step use `!cancelled()`; select, finalize and upload keep `always()`. Let the harness cancel after a chosen step and show that later mints/processes are skipped, finalize marks unstarted rows failed, the upload still runs and the untouched module remote is unchanged.
+- [x] `tools/delivery_runtime.py`, `tools/deliver.py` (G4) — every Builds rejection reason names the cleaned tag and, where applicable, the mismatching object SHAs or the missing capability path; extend the existing bad-release, tag-mismatch and missing-capability tests to assert them.
+- [x] `tools/tests/test_deliver.py` (G5) — failed global with the validator's real shape `{"global": false, "modules": [all names]}` after a candidate render change: refs unchanged, advancement `skipped`, module trees equal the accepted render, no App-check request recorded.
+- [x] `tools/tests/test_deliver.py` (G6) — one case per closed App check (installation inventory without the repo, missing/inactive/extra-rule/extra ruleset, retention 30, CodeQL `configured`, Dependabot 200): that module skips advancement with a reason naming the check while its sibling advances.
+- [x] `tools/tests/test_delivery_workflow.py` (G7, G8) — record each mint's inputs and each process step's `MODULE_TOKEN`/`--slot`. Assert `permission-administration` is `read` on checking runs for registry slots (and `''` on repair-only runs), and run a 17-module capacity scenario where every slot's mint repository, received token and `--slot N` match `slot_NN` and every row is processed.
+- [x] `tools/tests/test_delivery_workflow.py`, `tools/check_global.py` (G9) — the checkout substitute copies exactly the step's `sparse-checkout` paths, taking bytes from `<source_sha>:<path>` when that object exists locally. Add an online `check_global.py` check that reads both bootstrap files at `source_sha` through the contents API with the read-only token and compares them with the manifest hashes.
+- [x] `tools/tests/test_deliver.py` (G10) — assert the delivered commit's subject `build(cicd): apply <accepted> from Hexalith.CiCd`, author/committer `github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>` and sole parent equal to the previous module head.
+- [x] `tools/tests/test_delivery_runtime.py` (G11) — assert a token-bearing `Git.run` environment carries exactly `http.https://github.com/.extraheader = AUTHORIZATION: basic base64(x-access-token:<token>)`, `API.get` sends `Authorization: Bearer <token>`, and the production `Transport().remote()` is `https://github.com/Hexalith/<repo>.git`.
 
 **Acceptance Criteria:**
 
@@ -208,3 +209,81 @@ Full identities and the inspected report are recorded in
 The shared root filesystem reached capacity during qualification. Only this
 task's generated bytecode was removed; subsequent temporary fixtures and a
 private uv cache use `/dev/shm`. No unrelated workspaces or caches were deleted.
+
+
+## Review-1 Implementation Verification
+
+Completed G1–G12 locally from baseline `58341fa67826946b5e09538c74c61547aca7583d`.
+The real HTTP adapter now receives fixture traffic, and filtered fixture remotes
+exposed a v5.1.0 compatibility requirement: acquire bounded regular committed
+`.gitattributes` blobs before the released engine constructs its attribute tree.
+The module acquisition remains partial. Frozen, digest-checked bootstrap source
+fixtures support offline shallow checkouts without changing the live bootstrap
+or its immutable pin.
+
+All 42 focused tests passed on Python 3.12.13 and Python 3.14.4: bootstrap 9,
+runtime 7, controller 16 and workflow 10. Controller scenarios include eight
+negative App checks; workflow scenarios cover cancellation and all 17 slots.
+Runner Python also passed render 32 and validate 50. Local committed-input,
+committed-render, reproducibility and schema/interface gates, isolated stdlib
+controller import, actionlint 1.7.12 and whitespace checks passed. The complete
+edge-case matrix remains covered by executed bootstrap/runtime/controller/workflow
+scenarios, including real remote refs/trees and uploaded report bytes.
+
+Exact commands, output and G1–G12 coverage are saved in the local
+[verification log](../evidence/7/review-1-local-verification.log).
+Online release/bootstrap-content/zizmor checks and hosted requalification were
+not run because implementation step 3 prohibits remote operations. Existing
+hosted qualification is preserved. Render/validate were not repeated on Python
+3.12 because its locked `rpds-py` wheel was unavailable offline; both passed on
+Python 3.14.4. No module/Builds gitlink, production bootstrap, manifest pin, remote
+ref or hosted configuration changed.
+
+
+### Review 2 Triage (2026-11-14)
+
+Reviewed the local diff from `58341fa67826946b5e09538c74c61547aca7583d`.
+The edge-case layer returned no findings. Each blind-layer finding and both
+pre-verified verification gaps are recorded individually below, before grouping.
+
+| ID | Location | Claim | Verdict | Route | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| R2-B1 | `tools/deliver.py:194` | Eager attribute acquisition rejects an unchanged module with a foreign attribute blob larger than 2 MiB | low | rejected | The isolated probe reproduces the failure, while preserving every remote ref/tree. Such an oversized attribute file is unlikely in ordinary use; skipping acquisition requires new comparison/branching logic, while the bounded committed-blob limit is intentional. |
+| R2-B2 | `tools/deliver.py:85` | Malformed workflow inventory entries can exempt nightly freshness | medium | patch (P1) | `API.pages` checks the wrapper/list, but nightly filters `[{}]` into no matches and returns not-activated. Validate entry path/id before deciding absence; malformed API data must fail. |
+| R2-B3 | `tools/delivery_runtime.py:399` | Ancestry rejection omits returned base/merge-base identities | low | patch (P2) | The error includes only requested source/main SHAs despite checking different response SHAs. Add cleaned returned identities to this existing diagnostic. |
+| R2-B4 | `tools/tests/delivery_support.py:184` | HTTP fixture accepts missing/wrong scoped credentials | medium | patch (P3) | The opener records headers but dispatches exclusively on URL; a different-repository Bearer token still receives compliant App responses. Reject inappropriate fixture credentials and cover that rejection. |
+| R2-B5 | `tools/tests/test_delivery_workflow.py:279` | Cancellation tests miss the permit-to-mint window | medium | patch (P4) | Current cancellation points leave the later permit output unset or finish a full slot. Cancelling after `module_01_budget` is needed to detect an always-run mint with an already-active permit. |
+| R2-B6 | `tools/tests/test_delivery_workflow.py:262` | Mint Contents/Workflows permissions are unasserted | medium | patch (P9) | Action substitution checks scope and Administration but ignores Contents/Workflows. Incorrect permission inputs can therefore pass simulated delivery. Assert required permission inputs on every executed mint. |
+| R2-B7 | `tools/tests/test_deliver.py:79` | Repository/main metadata checks have no negative cases | medium | patch (P5) | The eight new cases cover installation, rulesets, retention and security features; none changes metadata `full_name` or `default_branch`. Add both negative cases with accepted repair and sibling advancement. |
+| R2-B8 | `tools/tests/test_delivery_runtime.py:84` | Successful API pagination past page one is uncovered | low | patch (P6) | Current pagination tests exercise malformed/limit failures; normal fixture inventories fit one page. Add a successful multi-page real-API fixture case with the required identity on a later page. |
+| R2-B9 | `tools/delivery_runtime.py:400` | Ancestry-response rejection lacks focused negative tests | medium | patch (P10) | Delivery fixture comparisons always match; `test_validate` covers a separate checker, not this runtime. Cover divergent/null and mismatching base/merge-base responses before source export/execution. |
+| R2-B10 | `tools/delivery_runtime.py:393` | Annotated-tag identity diagnostic is untested | low | patch (P11) | Runtime fixture refs always identify commits, so its annotated response identity check never runs. Cover annotation success and expected/received mismatch diagnostics. |
+| R2-V1 | `tools/check_global.py:477` | Bootstrap gate can be deleted without failing tests | medium | patch (P7) | Pre-verified: deleting the call passes all 50 validation tests. Helper coverage bypasses run, and runner/CLI mocks replace the helper. Exercise a real helper digest failure through run and assert its verdict/diagnostic. |
+| R2-V2 | `tools/deliver.py:194` | Nested attribute acquisition is unprotected | medium | patch (P8) | Pre-verified: root-only prefetch passes all 16 controller tests; a nested-attribute fixture passes current code and fails that mutation with mktree. Add nested committed attributes to the existing filtered delivery case and assert preserved bytes. |
+
+Each surviving entry has its own root cause and remains a separate patch entry.
+No finding requires changing the intent or implementation plan.
+
+
+### Review 2 Resolution and Final Verification
+
+All eleven surviving patch entries P1–P11 are resolved. Nightly inventory now
+rejects malformed identities; ancestry diagnostics include returned base and
+merge-base identities. The fixtures enforce scoped API credentials, and tests
+cover the post-permit cancellation window, required mint permissions, metadata
+rejection, successful pagination, annotated tags, malformed ancestry responses,
+the actual global bootstrap gate, and preserved nested attribute bytes.
+
+Final verification on the patched tree passed all 48 focused tests on each of
+Python 3.12.13 and Python 3.14.4: runtime 12, controller 17, workflow 10 and
+bootstrap 9. Python 3.14.4 additionally passed render 32 and validate 51.
+The isolated `python3 -I -S -B` controller import, local actionlint and whitespace
+checks passed. Every child process finished and run-with-temp removed its private
+scratch directory. No remote operation occurred.
+
+The final [verification output](../evidence/7/final-local-verification.log) and
+[targeted patch checks](../evidence/7/review-1-followup-local-verification.log)
+are saved locally. Live online gates and hosted requalification remain unrun;
+the earlier hosted evidence is unchanged. The earlier Python 3.12 regression
+wheel limitation remains applicable only to render/validate, whose final runner
+passes are recorded above.

@@ -6,10 +6,11 @@
 """Executed controller tests with released perimeter code and real remotes."""
 from pathlib import Path
 import json
+import subprocess
 import tempfile
 import unittest
 
-from delivery_support import Workspace, git, RELEASE
+from delivery_support import Workspace, git, RELEASE, TAG, filtered_remote
 
 
 class DeliveryTests(unittest.TestCase):
@@ -20,13 +21,22 @@ class DeliveryTests(unittest.TestCase):
 
     def test_all_entry_kinds_foreign_content_modes_and_idempotence(self):
         w = self.ws
+        previous = {r: git(Path(p), "rev-parse", "main") for r, p in w.remotes.items()}
         self.assertEqual(w.deliver(), 0, w.report())
         for row in w.report()["modules"]:
             self.assertEqual(row["advancement"], "advanced")
             self.assertEqual(row["application"], "pushed")
             remote = Path(w.remotes[row["repository"]])
+            self.assertEqual(git(remote, "show", "-s", "--format=%s", "main"),
+                             f"build(cicd): apply {row['accepted_sha']} from Hexalith.CiCd")
+            identity = "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+            self.assertEqual(git(remote, "show", "-s", "--format=%an <%ae>%n%cn <%ce>", "main"),
+                             identity + "\n" + identity)
+            self.assertEqual(git(remote, "show", "-s", "--format=%P", "main"), previous[row["repository"]])
             self.assertEqual(git(w.remote, "rev-parse", "refs/heads/delivered/" + row["repository"]), w.sha)
             self.assertEqual(git(remote, "show", "main:product.txt"), "foreign product")
+            self.assertEqual(subprocess.run(["git", "-C", str(remote), "show", "main:src/.gitattributes"],
+                                           capture_output=True, check=True).stdout, b"*.txt text eol=lf\n")
             self.assertIn("foreign instructions", git(remote, "show", "main:AGENTS.md"))
             self.assertIn("owned instructions", git(remote, "show", "main:AGENTS.md"))
             settings = json.loads(git(remote, "show", "main:.claude/settings.json"))
@@ -42,6 +52,8 @@ class DeliveryTests(unittest.TestCase):
             for removed in (".releaserc.json", "Directory.Build.rsp", ".github/workflows/old.yml"):
                 self.assertEqual(git(remote, "ls-tree", "main", removed), "")
             self.assertEqual(git(remote, "rev-list", "--count", "main"), "2")
+        acquisitions = [json.loads(line) for line in Path(w.config["acquisitions"]).read_text().splitlines()]
+        self.assertEqual({r["repository"] for r in acquisitions if r["partial"]}, set(w.modules))
         before = {r: git(Path(p), "rev-parse", "main") for r, p in w.remotes.items()}
         self.assertEqual(w.deliver(), 0, w.report())
         self.assertEqual([r["application"] for r in w.report()["modules"]], ["unchanged", "unchanged"])
@@ -49,6 +61,56 @@ class DeliveryTests(unittest.TestCase):
         report = (w.directory / "report/delivery.json").read_bytes()
         self.assertNotIn(b"inert-", report)
         self.assertNotIn(b"inert-", (w.directory / "state.json").read_bytes())
+
+    def test_failed_global_with_passing_names_keeps_refs_and_repairs_accepted_render(self):
+        w = self.ws
+        for repository in w.modules:
+            w.ref(repository)
+            (w.candidate / f"rendered/{repository}/.github/hexalith-ci.json").write_text('{"rejected":true}\n')
+        w.commit()
+        self.assertEqual(w.deliver({"global": False, "modules": w.modules}), 1)
+        for row in w.report()["modules"]:
+            self.assertEqual(row["advancement"], "skipped")
+            self.assertEqual(row["accepted_sha"], w.accepted)
+            self.assertEqual(row["application"], "pushed")
+            self.assertEqual(git(w.remote, "rev-parse", "refs/heads/delivered/" + row["repository"]), w.accepted)
+            self.assertEqual(git(Path(w.remotes[row["repository"]]), "show", "main:.github/hexalith-ci.json"), '{"accepted":true}')
+        requests = [json.loads(line) for line in Path(w.config["requests"]).read_text().splitlines()]
+        self.assertTrue(requests)
+        self.assertTrue(all(request["authorization"] is None for request in requests), requests)
+
+    def test_each_closed_app_check_blocks_only_its_module_and_preserves_repair(self):
+        prefix = "/repos/Hexalith/Hexalith.Alpha"
+        branch = {"target": "branch", "enforcement": "active",
+                  "conditions": {"ref_name": {"include": ["refs/heads/main"], "exclude": []}},
+                  "rules": [{"type": "deletion"}, {"type": "non_fast_forward"}]}
+        cases = [
+            ("installation", "/installation/repositories", [{"full_name": "Hexalith/Hexalith.Beta"}]),
+            ("identity", prefix, {"full_name": "Hexalith/Hexalith.Beta", "default_branch": "main"}),
+            ("identity", prefix, {"full_name": "Hexalith/Hexalith.Alpha", "default_branch": "other"}),
+            ("rulesets", prefix + "/rulesets?includes_parents=true", [{"id": 1}]),
+            ("rulesets", prefix + "/rulesets/1", branch | {"enforcement": "disabled"}),
+            ("rulesets", prefix + "/rulesets/1", branch | {"rules": branch["rules"] + [{"type": "creation"}]}),
+            ("ruleset", prefix + "/rulesets?includes_parents=true", [{"id": 1}, {"id": 2}, {"id": 3}]),
+            ("retention", prefix + "/actions/permissions/artifact-and-log-retention", {"days": 30}),
+            ("code-scanning", prefix + "/code-scanning/default-setup", {"state": "configured"}),
+            ("Dependabot", prefix + "/automated-security-fixes", {"enabled": True})]
+        for index, (reason, path, body) in enumerate(cases):
+            with self.subTest(check=reason, index=index):
+                w = Workspace(Path(self.temp.name) / f"case-{index}", self.ws.modules)
+                w.ref("Hexalith.Alpha")
+                (w.candidate / "rendered/Hexalith.Alpha/.github/hexalith-ci.json").write_text('{"rejected":true}\n')
+                w.commit()
+                w.config["api"][path] = {"status": 200, "body": body}
+                self.assertEqual(w.deliver(), 1)
+                alpha, beta = w.report()["modules"]
+                self.assertEqual((alpha["advancement"], alpha["application"]), ("skipped", "pushed"))
+                self.assertIn(reason, " ".join(alpha["reasons"]))
+                self.assertEqual(git(w.remote, "rev-parse", "refs/heads/delivered/Hexalith.Alpha"), w.accepted)
+                self.assertEqual(git(Path(w.remotes["Hexalith.Alpha"]), "show", "main:.github/hexalith-ci.json"), '{"accepted":true}')
+                self.assertEqual((beta["advancement"], beta["application"]), ("advanced", "pushed"))
+                requests = [json.loads(line) for line in Path(w.config["requests"]).read_text().splitlines()]
+                self.assertTrue(any(r["authorization"] == "Bearer inert-token-Hexalith.Alpha" for r in requests))
 
     def test_rejected_module_repairs_old_render_healthy_sibling_advances(self):
         w = self.ws
@@ -113,6 +175,9 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(git(w.remote, "rev-parse", "refs/heads/delivered/Hexalith.Alpha"), w.accepted)
         for remote in w.remotes.values():
             self.assertEqual(git(Path(remote), "rev-list", "--count", "main"), "1")
+        for row in w.report()["modules"]:
+            self.assertIn(TAG, " ".join(row["reasons"]))
+            self.assertIn("immutable", " ".join(row["reasons"]))
 
     def test_stale_candidate_and_ref_race_keep_newer_accepted_state(self):
         w = self.ws
@@ -149,7 +214,7 @@ class DeliveryTests(unittest.TestCase):
         for module in w.modules:
             w.ref(module)
         prefix = "/repos/Hexalith/Hexalith.CiCd/actions/"
-        w.config["api"][prefix + "workflows"] = {"error": "HTTP 403 inert-cicd-token"}
+        w.config["api"][prefix + "workflows"] = {"status": 403, "body": {"message": "inert-cicd-token"}}
         self.assertEqual(w.deliver({"global": False, "modules": []}, GITHUB_EVENT_NAME="schedule"), 1)
         self.assertEqual(w.report()["freshness"]["status"], "failed")
         self.assertEqual([r["application"] for r in w.report()["modules"]], ["pushed", "pushed"])
@@ -162,6 +227,18 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(w.report()["freshness"]["status"], "stale")
         self.assertEqual([r["application"] for r in w.report()["modules"]], ["unchanged", "unchanged"])
 
+    def test_malformed_workflow_inventory_fails_freshness_while_repairs_continue(self):
+        w = self.ws
+        for repository in w.modules:
+            w.ref(repository)
+        w.config["api"]["/repos/Hexalith/Hexalith.CiCd/actions/workflows"] = [{}]
+        self.assertEqual(w.deliver({"global": False, "modules": w.modules}, GITHUB_EVENT_NAME="schedule"), 1)
+        self.assertEqual(w.report()["freshness"]["status"], "failed")
+        self.assertIn("malformed nightly workflow inventory", w.report()["freshness"]["reason"])
+        self.assertEqual([r["application"] for r in w.report()["modules"]], ["pushed", "pushed"])
+        self.assertTrue(all(r["accepted_sha"] == w.accepted and r["advancement"] == "skipped"
+                            for r in w.report()["modules"]))
+
     def test_tag_source_mismatch_executes_nothing_and_writes_nothing(self):
         w = self.ws
         w.config["release"] = "f" * 40
@@ -169,6 +246,11 @@ class DeliveryTests(unittest.TestCase):
         for remote in w.remotes.values():
             self.assertEqual(git(Path(remote), "rev-list", "--count", "main"), "1")
         self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
+        for row in w.report()["modules"]:
+            reason = " ".join(row["reasons"])
+            self.assertIn(TAG, reason)
+            self.assertIn("f" * 40, reason)
+            self.assertIn(RELEASE, reason)
 
     def test_missing_perimeter_capability_rejects_before_tag_code_executes(self):
         w = self.ws
@@ -184,10 +266,14 @@ class DeliveryTests(unittest.TestCase):
         git(source, "tag", "v5.1.0")
         remote = w.root / "incomplete-builds.git"
         git(w.root, "clone", "--quiet", "--bare", source, remote)
+        filtered_remote(remote)
         w.config.update(builds=str(remote), release=revision)
         self.assertEqual(w.deliver(), 1)
         self.assertFalse(marker.exists())
         self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
+        for row in w.report()["modules"]:
+            self.assertIn(TAG, " ".join(row["reasons"]))
+            self.assertIn("Github/lib/perimeter_config.py", " ".join(row["reasons"]))
 
     def test_expired_private_state_budget_causes_zero_writes(self):
         w = self.ws

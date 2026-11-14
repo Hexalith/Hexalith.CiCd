@@ -83,7 +83,10 @@ def nightly(transport, token, *, now=None):
     api = transport.api
     prefix = "/repos/Hexalith/Hexalith.CiCd/actions/"
     workflows = api.pages(prefix + "workflows", token, field="workflows")
-    matches = [w for w in workflows if isinstance(w, dict) and w.get("path") == ".github/workflows/nightly.yml"]
+    if any(not isinstance(w, dict) or not isinstance(w.get("path"), str)
+           or not w["path"] or type(w.get("id")) is not int or w["id"] <= 0 for w in workflows):
+        raise rt.DeliveryError("malformed nightly workflow inventory")
+    matches = [w for w in workflows if w["path"] == ".github/workflows/nightly.yml"]
     if len(matches) > 1:
         raise rt.DeliveryError("ambiguous nightly workflow inventory")
     if matches:
@@ -97,11 +100,7 @@ def nightly(transport, token, *, now=None):
             raise rt.DeliveryError("malformed nightly run history")
         runs = document["workflow_runs"]
     else:
-        # A deleted workflow file must not hide retained path-matched history.
-        runs = api.pages(prefix + "runs?branch=main", token, field="workflow_runs")
-        if any(not isinstance(run, dict) or not isinstance(run.get("path"), str) for run in runs):
-            raise rt.DeliveryError("malformed repository run history")
-        runs = [r for r in runs if r["path"].split("@", 1)[0] == ".github/workflows/nightly.yml"]
+        return {"status": "not-activated"}
     if not runs:
         return {"status": "not-activated"}
     dates = []
@@ -123,13 +122,15 @@ def nightly(transport, token, *, now=None):
 def trusted_state(git, revision, repository, transport, directory):
     tag = git.blob(revision, "builds-version").decode("utf-8").strip()
     if not rt.TAG.fullmatch(tag):
-        raise rt.DeliveryError("accepted Builds version is not an exact stable tag")
+        raise rt.DeliveryError(f"accepted Builds {rt.clean(tag)}: version is not an exact stable tag")
     builds, root = transport.builds(tag, directory)
     library = rt.load_library(root, transport.budget)
     document = library.config.load_bytes(git.blob(revision, f"rendered/{repository}.perimeter.json"),
                                          source="accepted perimeter")
     if any(entry["kind"] == "gitlink" and entry["buildsTag"] != tag for entry in document["entries"]):
-        raise rt.DeliveryError("accepted perimeter/Builds tag mismatch")
+        mismatches = sorted({entry["buildsTag"] for entry in document["entries"]
+                             if entry["kind"] == "gitlink" and entry["buildsTag"] != tag})
+        raise rt.DeliveryError(f"accepted perimeter/Builds {rt.clean(tag)} tag mismatch: {rt.clean(mismatches)}")
     expected = library.Snapshot(library.Git(git.root), revision)
     # Preload bounded regular expected blobs before any mutation. Never read a
     # symlink render or obtain executable content from the module.
@@ -191,6 +192,11 @@ def apply_module(git, repository, transport, token, root, item):
                                                                directory / f"builds-{attempt}")
             head = transport.module(actual, repository)
             actual.run("read-tree", head)
+            # v5.1.0 builds an attribute-only tree with mktree, which does not
+            # lazily fetch promised blobs. Acquire those regular blobs first.
+            for path, (mode, kind, _) in actual.items(head).items():
+                if Path(path).name == ".gitattributes" and mode in {"100644", "100755"} and kind == "blob":
+                    actual.blob(head, path)
             engine_git = library.Git(actual.root, index_file=directory / "index")
             library.apply(document, engine_git, expected=expected, rendered_root=f"rendered/{repository}",
                           builds=library.Git(builds.root))

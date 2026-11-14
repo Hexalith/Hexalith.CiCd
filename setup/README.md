@@ -197,6 +197,8 @@ selects candidate tools. Otherwise it selects the newest valid accepted target
 in `git rev-list --topo-order main`; missing accepted tools fail closed, with no
 candidate fallback. Only regular `tools/` blobs are exported. Setup/workflow YAML
 and module executables are never parsed or run in the privileged job.
+A manual cancellation stops further mints, accepted-ref advances and module
+writes; finalization and report upload still run and mark unstarted slots failed.
 
 The selector supplies seventeen sequential ordinal slots from the committed
 registry and accepted-ref union. The workflow has no second module-name list.
@@ -231,8 +233,8 @@ module check, unavailable scope, stale/unreadable nightly history, or failed
 write makes finalization fail after all repairs. Supersession and an empty
 registry alone do not fail. On hourly runs, valid empty nightly history is not
 activated; a latest main nightly creation time exactly 26 hours old passes,
-and older fails regardless of the nightly conclusion. Deleted workflow files
-cannot hide retained path-matched run history.
+and older fails regardless of the nightly conclusion. A nightly workflow absent
+from a successful workflow inventory is not activated; inventory errors fail.
 
 Only the pinned mint action receives the `cicd-app` private key and client ID.
 CiCd tokens have Contents/Workflows write and Actions read; module tokens have
@@ -248,6 +250,10 @@ To maintain the bootstrap, first test and commit the selector, runtime and
 controller, obtain the full commit with `git rev-parse HEAD`, and push that source
 so GitHub can fetch it. Only afterward change the workflow's literal checkout
 SHA. Never point it at the candidate, a branch, a fabricated hash or a placeholder.
+The global check reads both bootstrap files at the manifest's immutable source
+SHA through the read-only contents API and verifies their SHA-256 digests.
+Refresh the frozen `tools/tests/fixtures/delivery-bootstrap/` copies and manifest
+digests when changing that pin; they support offline tests in shallow checkouts.
 Re-run the four `test_delivery_*.py`/`test_deliver.py` scripts with adjacent locked
 PEP 723 environments on Python 3.12 and runner Python, then the existing suites
 and global checks outside `cicd-app`. Hosted qualification records the exact

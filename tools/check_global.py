@@ -8,9 +8,11 @@
 from __future__ import annotations
 
 import argparse
+import base64
 from contextlib import contextmanager
 from datetime import datetime
 import http.client
+import hashlib
 import importlib.util
 import os
 from pathlib import Path
@@ -265,11 +267,11 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         raise CheckError(f"GitHub API redirected (HTTP {code}); release remains unverified")
 
 
-def github_api(path: str) -> dict:
+def github_api(path: str, *, repository="Hexalith.Builds") -> dict:
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     if not token:
         raise CheckError("GitHub API verification requires a read-only GITHUB_TOKEN or GH_TOKEN")
-    request = urllib.request.Request("https://api.github.com/repos/Hexalith/Hexalith.Builds/" + path,
+    request = urllib.request.Request(f"https://api.github.com/repos/Hexalith/{repository}/" + path,
                                     headers={"Authorization": "Bearer " + token,
                                              "Accept": "application/vnd.github+json",
                                              "X-GitHub-Api-Version": "2022-11-28",
@@ -286,6 +288,32 @@ def github_api(path: str) -> dict:
     if not isinstance(document, dict):
         raise CheckError(f"GitHub API GET {path}: expected an object")
     return document
+
+
+def check_bootstrap(project: Path, api=None) -> None:
+    """Bind manifest digests to the remotely fetchable immutable selector."""
+    api = github_api if api is None else api
+    manifest = renderer.json_document(renderer.safe_path(project, "tools/tests/fixtures/delivery-bootstrap.json").read_bytes(),
+                                      "delivery bootstrap manifest")
+    paths = {"tools/delivery_bootstrap.py", "tools/delivery_runtime.py"}
+    if (not isinstance(manifest, dict) or not isinstance(manifest.get("source_sha"), str)
+            or SHA.fullmatch(manifest["source_sha"]) is None or not isinstance(manifest.get("files"), dict)
+            or set(manifest["files"]) != paths):
+        raise CheckError("delivery bootstrap: malformed immutable source manifest")
+    for path in sorted(paths):
+        expected = manifest["files"][path]
+        if not isinstance(expected, str) or re.fullmatch(r"[0-9a-f]{64}", expected) is None:
+            raise CheckError(f"delivery bootstrap {path}: invalid source digest")
+        document = api(f"contents/{path}?ref={manifest['source_sha']}", repository="Hexalith.CiCd")
+        if (not isinstance(document, dict) or document.get("encoding") != "base64"
+                or not isinstance(document.get("content"), str)):
+            raise CheckError(f"delivery bootstrap {path}: malformed contents response")
+        try:
+            data = base64.b64decode("".join(document["content"].split()), validate=True)
+        except ValueError as error:
+            raise CheckError(f"delivery bootstrap {path}: invalid base64 content") from error
+        if hashlib.sha256(data).hexdigest() != expected:
+            raise CheckError(f"delivery bootstrap {manifest['source_sha']}:{path}: source digest mismatch")
 
 
 def git_object(document: dict, source: str) -> tuple[str, str]:
@@ -446,6 +474,7 @@ def run(project: Path) -> bool:
 
     check("committed render inputs", lambda: check_committed_inputs(project))
     check("committed render", lambda: check_committed_render(project))
+    check("immutable delivery bootstrap", lambda: check_bootstrap(project))
     try:
         with selected_contract(project) as contract:
             check("render reproducibility", lambda: check_render(project, contract))

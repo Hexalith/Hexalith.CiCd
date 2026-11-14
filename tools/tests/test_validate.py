@@ -21,6 +21,7 @@ import tempfile
 import unittest
 from unittest import mock
 import urllib.error
+from delivery_support import bootstrap_source
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -109,6 +110,7 @@ def external_global_checks(module=global_check):
     """The child suites are always stubbed: exercising this runner cannot recurse."""
     with (mock.patch.object(module, "run_tool_tests") as tests,
           mock.patch.object(module, "lint_workflows") as lint,
+          mock.patch.object(module, "check_bootstrap"),
           mock.patch.object(module, "check_release") as release):
         yield tests, lint, release
 
@@ -452,6 +454,16 @@ class ValidateTests(unittest.TestCase):
 
 
 class GlobalTests(unittest.TestCase):
+    def test_bootstrap_digest_failure_fails_actual_global_runner(self):
+        with (mock.patch.object(global_check, "run_tool_tests"),
+              mock.patch.object(global_check, "lint_workflows"),
+              mock.patch.object(global_check, "check_release"),
+              mock.patch.object(global_check, "github_api", return_value={"encoding": "base64", "content": "dGFtcGVyZWQ="}),
+              redirect_stderr(io.StringIO()) as diagnostic):
+            self.assertFalse(global_check.run(ROOT))
+        self.assertIn("global immutable delivery bootstrap:", diagnostic.getvalue())
+        self.assertIn("source digest mismatch", diagnostic.getvalue())
+
     def test_permission_union_uses_effective_mappings_and_maximum_access(self):
         for levels in (("read", "none"), ("none", "read"), ("write", "none", "read")):
             document = {"permissions": {}, "jobs": {
@@ -671,7 +683,7 @@ class GlobalTests(unittest.TestCase):
                     "sys.dont_write_bytecode = True\n"
                     f"spec=importlib.util.spec_from_file_location('global_cli', {str(ROOT / 'tools/check_global.py')!r})\n"
                     "module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module; spec.loader.exec_module(module)\n"
-                    "module.run_tool_tests = module.lint_workflows = module.check_release = lambda *arguments: None\n"
+                    "module.run_tool_tests = module.lint_workflows = module.check_release = module.check_bootstrap = lambda *arguments: None\n"
                     "raise SystemExit(module.main())\n")
                 result = run([sys.executable, "-I", harness, "--project-root", fixture.root], check=False)
                 self.assertEqual(result.returncode, int(failing))
@@ -860,6 +872,26 @@ class GlobalTests(unittest.TestCase):
 
 
 class BoundaryTests(unittest.TestCase):
+    def test_bootstrap_manifest_is_verified_against_pinned_remote_contents(self):
+        import base64
+        manifest = json.loads((ROOT / "tools/tests/fixtures/delivery-bootstrap.json").read_bytes())
+        calls = []
+        def api(path, *, repository):
+            calls.append((path, repository))
+            source = path.removeprefix("contents/").split("?", 1)[0]
+            data = bootstrap_source(manifest["source_sha"], source)
+            return {"encoding": "base64", "content": base64.b64encode(data).decode()}
+        global_check.check_bootstrap(ROOT, api=api)
+        self.assertEqual(calls, [(f"contents/{path}?ref={manifest['source_sha']}", "Hexalith.CiCd")
+                                 for path in sorted(manifest["files"])])
+        for response, reason in (({"encoding": "base64", "content": "dGFtcGVyZWQ="}, "digest mismatch"),
+                                 ({"encoding": "base64", "content": "!"}, "invalid base64"),
+                                 ({"encoding": "none"}, "malformed contents")):
+            with self.subTest(reason=reason), self.assertRaisesRegex(ValueError, reason):
+                global_check.check_bootstrap(ROOT, api=lambda *args, **kwargs: response)
+        with self.assertRaisesRegex(ValueError, "HTTP 403"):
+            global_check.check_bootstrap(ROOT, api=mock.Mock(side_effect=ValueError("HTTP 403")))
+
     def test_anonymous_clone_scrubs_credentials_config_and_git_context(self):
         inherited = {"GH_TOKEN": "private-fixture", "GITHUB_TOKEN": "private-fixture", "GIT_DIR": "/invalid/git",
                      "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "http.extraHeader", "GIT_CONFIG_VALUE_0": "private-fixture",

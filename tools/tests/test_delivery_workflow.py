@@ -16,17 +16,17 @@ import hashlib
 from pathlib import Path
 import re
 import shlex
-import shutil
 import tempfile
 import unittest
+from unittest import mock
 
 import yaml
-from delivery_support import ROOT, Workspace, git
+from delivery_support import ROOT, Workspace, bootstrap_source, git
 
 
 class Workflow:
     def __init__(self, workspace, *, ref="refs/heads/main", event="push", validation="success", verdict=None,
-                 mint_fail=()):
+                 mint_fail=(), cancel_after=None):
         self.w = workspace
         self.document = yaml.safe_load((ROOT / ".github/workflows/deliver.yml").read_bytes())
         self.job = self.document["jobs"]["deliver"]
@@ -45,6 +45,9 @@ class Workflow:
         self.mint_fail = set(mint_fail)
         self.actions, self.commands, self.uploads = [], [], []
         self.failed = False
+        self.cancelled = validation == "cancelled"
+        self.cancel_after = cancel_after
+        self.mints, self.processes, self.checkouts = [], [], []
 
     def lookup(self, path):
         value = self.context
@@ -72,7 +75,7 @@ class Workflow:
             else:
                 result.append(repr(self.lookup(token)))
         return eval(" ".join(result), {"__builtins__": {}}, {"always": lambda: True,
-            "success": lambda: not self.failed, "failure": lambda: self.failed, "cancelled": lambda: False,
+            "success": lambda: not self.failed and not self.cancelled, "failure": lambda: self.failed, "cancelled": lambda: self.cancelled,
             "format": lambda pattern, value: pattern.format(value)})
 
     def expand(self, value):
@@ -113,17 +116,26 @@ class Workflow:
                     if inputs.get("persist-credentials") is not False or inputs.get("submodules") is not False:
                         raise AssertionError("unsafe checkout")
                     destination = self.w.root / inputs["path"]
-                    for path in ("tools/delivery_bootstrap.py", "tools/delivery_runtime.py"):
-                        data = (ROOT / path).read_bytes()
+                    for path in inputs.get("sparse-checkout", "").splitlines():
+                        if not path or path.startswith("/") or ".." in Path(path).parts:
+                            raise AssertionError("noncanonical sparse path")
+                        data = bootstrap_source(source, path)
                         if hashlib.sha256(data).hexdigest() != anchor["files"][path]:
-                            raise AssertionError("bootstrap bytes do not match the committed immutable source manifest")
+                            raise AssertionError("bootstrap bytes do not match immutable source manifest")
                         target = destination / path
                         target.parent.mkdir(parents=True, exist_ok=True)
                         target.write_bytes(data)
+                    self.checkouts.append(sorted(p.relative_to(destination).as_posix()
+                                                 for p in destination.rglob("*") if p.is_file()))
                 elif action == "actions/create-github-app-token":
                     repository = inputs.get("repositories")
+                    self.mints.append((identifier, inputs.copy()))
                     if inputs.get("owner") != "Hexalith" or not repository or "," in repository or "\n" in repository:
                         raise AssertionError("mint broadened beyond one explicit repository")
+                    if inputs.get("permission-contents") != "write" or inputs.get("permission-workflows") != "write":
+                        raise AssertionError("mint lacks required Contents/Workflows write permissions")
+                    if repository == "Hexalith.CiCd" and inputs.get("permission-actions") != "read":
+                        raise AssertionError("CiCd mint lacks Actions read permission")
                     if repository in self.mint_fail:
                         outcome = "failure"
                     else:
@@ -142,6 +154,9 @@ class Workflow:
                 self.commands.append(command)
                 self.w.outputs.unlink(missing_ok=True)
                 env = base | {key: self.expand(value) for key, value in step.get("env", {}).items()}
+                if command[3:4] == ["module"]:
+                    self.processes.append({"name": step["name"], "slot": int(command[command.index("--slot") + 1]),
+                                           "token": env.get("MODULE_TOKEN", "")})
                 result = self.w.call(str(self.w.root / command[2]), command[3:], env=env)
                 if result:
                     outcome = "failure"
@@ -152,10 +167,24 @@ class Workflow:
             self.context["steps"][identifier] = {"outcome": outcome, "outputs": outputs}
             if outcome == "failure" and not step.get("continue-on-error", False):
                 self.failed = True
+            if self.cancel_after is not None and self.cancel_after in (identifier, step.get("name")):
+                self.cancelled = True
         return "failure" if self.failed else "success"
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_shallow_checkout_uses_frozen_pinned_bootstrap_bytes(self):
+        import delivery_support
+        original = delivery_support.subprocess.run
+        def shallow(command, *args, **kwargs):
+            if command[:4] == ["git", "-C", str(ROOT), "show"]:
+                return type("MissingObject", (), {"returncode": 128})()
+            return original(command, *args, **kwargs)
+        w = self.fixture(())
+        with mock.patch.object(delivery_support.subprocess, "run", side_effect=shallow):
+            _, report = self.run_workflow(w, verdict={"global": True, "modules": []})
+        self.assertFalse(report["failed"])
+
     def fixture(self, modules=("Hexalith.Alpha", "Hexalith.Beta")):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
@@ -180,6 +209,9 @@ class WorkflowTests(unittest.TestCase):
                 self.assertFalse(report["failed"], report)
                 self.assertEqual([r["application"] for r in report["modules"]], ["pushed", "pushed"])
                 self.assertTrue(all(r["advancement"] == "advanced" for r in report["modules"]))
+                module_mints = [inputs for _, inputs in workflow.mints if inputs["repositories"] != "Hexalith.CiCd"]
+                self.assertEqual([inputs["permission-administration"] for inputs in module_mints], ["read", "read"])
+                self.assertEqual(workflow.checkouts, [["tools/delivery_bootstrap.py", "tools/delivery_runtime.py"]])
 
     def test_missing_validation_uses_accepted_tools_and_repairs(self):
         w = self.fixture()
@@ -230,6 +262,46 @@ class WorkflowTests(unittest.TestCase):
                 minted = [i["repositories"] for a, i in workflow.actions if a.startswith("actions/create-github-app-token")]
                 self.assertEqual(minted, ["Hexalith.CiCd"])
                 self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
+
+    def test_full_capacity_keeps_each_repository_token_and_slot_together(self):
+        w = self.fixture(tuple(f"Hexalith.Module{index:02d}" for index in range(1, 18)))
+        workflow, report = self.run_workflow(w, verdict={"global": True, "modules": w.modules})
+        self.assertEqual(len(report["modules"]), 17)
+        self.assertTrue(all(row["processed"] and row["application"] == "pushed" for row in report["modules"]))
+        module_mints = [(identifier, inputs) for identifier, inputs in workflow.mints
+                        if inputs["repositories"] != "Hexalith.CiCd"]
+        self.assertEqual(len(module_mints), 17)
+        self.assertEqual(len(workflow.processes), 17)
+        for slot, ((identifier, inputs), process) in enumerate(zip(module_mints, workflow.processes), 1):
+            repository = workflow.lookup(f"steps.select.outputs.slot_{slot:02d}")
+            self.assertEqual(identifier, f"module_{slot:02d}_token")
+            self.assertEqual(inputs["repositories"], repository)
+            self.assertEqual(inputs["permission-administration"], "read")
+            self.assertEqual(process["slot"], slot)
+            self.assertEqual(process["token"], "inert-token-" + repository)
+
+    def test_cancel_stops_later_mints_and_writes_but_finalizes_and_uploads(self):
+        for after, processed in (("select", 0), ("cicd_token", 0), ("module_01_budget", 0), ("Process module slot 01", 1)):
+            with self.subTest(after=after):
+                w = self.fixture()
+                before = {r: git(Path(p), "rev-parse", "main") for r, p in w.remotes.items()}
+                workflow, report = self.run_workflow(w, cancel_after=after,
+                    verdict={"global": True, "modules": w.modules})
+                self.assertTrue(workflow.cancelled)
+                self.assertTrue(report["failed"])
+                if after == "module_01_budget":
+                    self.assertEqual(workflow.lookup("steps.module_01_budget.outputs.active"), "true")
+                self.assertEqual(len(workflow.processes), processed)
+                module_mints = [i for _, i in workflow.mints if i["repositories"] != "Hexalith.CiCd"]
+                self.assertEqual(len(module_mints), processed)
+                for row in report["modules"][processed:]:
+                    self.assertEqual(row["application"], "failed")
+                    self.assertIn("module slot did not complete", row["reasons"])
+                    self.assertEqual(git(Path(w.remotes[row["repository"]]), "rev-parse", "main"), before[row["repository"]])
+                    self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/" + row["repository"]), "")
+        workflow = Workflow(self.fixture(), validation="cancelled")
+        self.assertEqual(workflow.execute(), "skipped")
+        self.assertEqual(workflow.actions, [])
 
     def test_overflow_and_source_failure_upload_failed_report_without_mints(self):
         w = self.fixture(())

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -11,8 +12,11 @@ import subprocess
 import sys
 import tempfile
 import time
+from urllib.error import HTTPError
+from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.dont_write_bytecode = True
 TAG = "v5.1.0"
 RELEASE = "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4"
 
@@ -26,12 +30,26 @@ def git(root, *args, data=None, check=True):
     return result.stdout.decode().strip()
 
 
+def filtered_remote(path):
+    for key in ("uploadpack.allowFilter", "uploadpack.allowAnySHA1InWant"):
+        git(path, "config", key, "true")
+
+
 def load(path, name):
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def bootstrap_source(source, path):
+    result = subprocess.run(["git", "-C", str(ROOT), "show", source + ":" + path], capture_output=True)
+    if result.returncode == 0:
+        return result.stdout
+    # GitHub's validation checkout can be shallow. Frozen release bytes keep
+    # the action boundary executable offline; callers verify manifest digests.
+    return (ROOT / "tools/tests/fixtures/delivery-bootstrap" / path).read_bytes()
 
 
 class Workspace:
@@ -52,14 +70,17 @@ class Workspace:
         self.accepted = self.sha
         self.remote = self.root / "cicd.git"
         git(self.root, "clone", "--quiet", "--bare", self.candidate, self.remote)
+        filtered_remote(self.remote)
         # Exact released objects, not current Builds HEAD or a fake engine.
         self.builds = self.root / "builds.git"
         self.builds.mkdir()
         git(self.builds, "init", "--bare", "--quiet")
+        filtered_remote(self.builds)
         git(self.builds, "fetch", "--quiet", "--depth=1", ROOT / "references/Hexalith.Builds", f"refs/tags/{TAG}:refs/tags/{TAG}")
         self.config = {"cicd": str(self.remote), "builds": str(self.builds), "modules": self.remotes,
                        "release": RELEASE, "fail_app": [], "mint_fail": [], "push_fail": [], "races": {},
-                       "ref_races": {}, "api": {}, "bad_release": False}
+                       "ref_races": {}, "api": {}, "bad_release": False,
+                       "requests": str(self.root / "requests.jsonl"), "acquisitions": str(self.root / "acquisitions.jsonl")}
         self.config_path = self.root / "config.json"
         self.directory = self.root / "delivery"
         self.outputs = self.root / "outputs"
@@ -71,6 +92,8 @@ class Workspace:
         (path / "product.txt").write_text("foreign product\n")
         (path / "AGENTS.md").write_text("foreign instructions\n")
         (path / ".gitattributes").write_text("* filter=poison\n")
+        (path / "src").mkdir()
+        (path / "src/.gitattributes").write_bytes(b"*.txt text eol=lf\n")
         settings = path / ".claude/settings.json"
         settings.parent.mkdir()
         settings.write_text('{"permissions":{"allow":["foreign"],"deny":["foreign"]},"foreign":true}\n')
@@ -88,6 +111,7 @@ class Workspace:
         git(path, "commit", "--quiet", "-m", "Product")
         remote = self.root / (module + ".git")
         git(self.root, "clone", "--quiet", "--bare", path, remote)
+        filtered_remote(remote)
         self.remotes[module] = str(remote)
         (self.candidate / "setup" / (module + ".yml")).write_text("{}\n")
         rendered = self.candidate / "rendered" / module
@@ -124,7 +148,7 @@ class Workspace:
             "GITHUB_REPOSITORY": "Hexalith/Hexalith.CiCd", "GITHUB_REF": "refs/heads/main", "GITHUB_SHA": self.sha,
             "GITHUB_RUN_ID": "101", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_EVENT_NAME": "push",
             "DELIVERY_VERDICT": json.dumps(verdict if verdict is not None else {"global": True, "modules": sorted(self.modules)}),
-            "CICD_TOKEN": "inert-cicd-token", "MODULE_TOKEN": "inert-module-token", **extra}
+            "CICD_TOKEN": "inert-cicd-token", "MODULE_TOKEN": "inert-token-" + self.modules[0] if self.modules else "", **extra}
 
     def call(self, script, args, *, env=None):
         self.config_path.write_text(json.dumps(self.config))
@@ -142,6 +166,8 @@ class Workspace:
         args = [operation, "--state", str(self.directory / "state.json")]
         if slot is not None:
             args += ["--slot", str(slot)]
+            state = json.loads((self.directory / "state.json").read_bytes())
+            extra.setdefault("MODULE_TOKEN", "inert-token-" + state["slots"][slot - 1])
         selected = self.directory / "selected/tools/deliver.py"
         return self.call(str(selected) if selected.exists() else "deliver.py", args, env=self.env(**extra))
 
@@ -158,69 +184,110 @@ class Workspace:
 
 
 def fixture_transport(rt, config):
-    class API:
-        def __init__(self):
-            self.calls = []
+    class Response(io.BytesIO):
+        status = 200
 
-        def get(self, path, token=None, *, absent=False):
-            self.calls.append(path)
-            if path in config["api"]:
-                value = config["api"][path]
-                if isinstance(value, dict) and "error" in value:
-                    raise rt.DeliveryError(value["error"])
-                return value
+    class Opener:
+        def open(self, request, timeout):
+            url = urlsplit(request.full_url)
+            path = url.path + ("?" + url.query if url.query else "")
+            with Path(config["requests"]).open("a") as stream:
+                stream.write(json.dumps({"path": path, "authorization": request.get_header("Authorization")}) + "\n")
+            credentials = {"Bearer inert-cicd-token": rt.CICD,
+                           **{"Bearer inert-token-" + repository: repository for repository in (rt.CICD, *config["modules"])}}
+            scope = credentials.get(request.get_header("Authorization"))
+            repository = url.path.split("/")[3] if url.path.startswith("/repos/Hexalith/") else None
+            if repository != rt.BUILDS and (scope is None or repository is not None and scope != repository):
+                status, value = 403, {"message": "fixture credential scope denied"}
+            else:
+                status, value = self.response(url.path, parse_qs(url.query), path, scope)
+            data = value if isinstance(value, bytes) else json.dumps(value).encode()
+            if status != 200:
+                raise HTTPError(request.full_url, status, "fixture", {}, io.BytesIO(data))
+            return Response(data)
+
+        def response(self, path, query, exact, scope):
+            # Overrides use wire status/body; list bodies are paginated exactly
+            # as the production endpoints, including total_count wrappers.
+            base = path + ("?" + "&".join(f"{key}={values[0]}" for key, values in query.items()
+                                         if key not in {"page", "per_page"}) if any(
+                                             key not in {"page", "per_page"} for key in query) else "")
+            override = config["api"].get(exact, config["api"].get(base))
+            if override is not None:
+                if isinstance(override, dict) and "status" in override and "body" in override:
+                    status, value = override["status"], override["body"]
+                else:
+                    status, value = 200, override
+            else:
+                status, value = self.default(path, scope)
+            if isinstance(value, list) and status == 200:
+                size, page = int(query.get("per_page", [100])[0]), int(query.get("page", [1])[0])
+                total = len(value)
+                value = value[(page - 1) * size:page * size]
+                field = ("repositories" if path == "/installation/repositories" else
+                         "workflows" if path.endswith("actions/workflows") else
+                         "workflow_runs" if path.endswith("/runs") else None)
+                if field:
+                    value = {"total_count": total, field: value}
+            return status, value
+
+        def default(self, path, scope):
+            if path == "/installation/repositories":
+                return 200, [{"full_name": "Hexalith/" + scope}]
             if path.startswith("/repos/Hexalith/Hexalith.Builds/"):
                 tail = path.split("Hexalith.Builds/", 1)[1]
                 if tail.startswith("releases/tags/"):
-                    return {"tag_name": TAG, "draft": False, "immutable": not config["bad_release"],
+                    return 200, {"tag_name": TAG, "draft": False, "immutable": not config["bad_release"],
                             "published_at": "2026-11-01T00:00:00Z", "author": {"login": "github-actions[bot]"}}
                 if tail == "git/ref/tags/" + TAG:
-                    return {"ref": "refs/tags/" + TAG, "object": {"type": "commit", "sha": config["release"]}}
+                    return 200, {"ref": "refs/tags/" + TAG, "object": {"type": "commit", "sha": config["release"]}}
                 if tail == "git/ref/heads/main":
-                    return {"ref": "refs/heads/main", "object": {"type": "commit", "sha": config["release"]}}
+                    return 200, {"ref": "refs/heads/main", "object": {"type": "commit", "sha": config["release"]}}
                 if tail.startswith("compare/"):
-                    return {"status": "identical", "base_commit": {"sha": config["release"]}, "merge_base_commit": {"sha": config["release"]}}
+                    return 200, {"status": "identical", "base_commit": {"sha": config["release"]}, "merge_base_commit": {"sha": config["release"]}}
             for repository in config["modules"]:
                 prefix = "/repos/Hexalith/" + repository
-                if path.startswith(prefix):
+                if path == prefix or path.startswith(prefix + "/"):
                     if repository in config["fail_app"]:
-                        raise rt.DeliveryError("fixture App administration denied")
+                        return 403, {"message": "fixture App administration denied"}
                     tail = path[len(prefix):]
                     if not tail:
-                        return {"full_name": "Hexalith/" + repository, "default_branch": "main"}
+                        return 200, {"full_name": "Hexalith/" + repository, "default_branch": "main"}
+                    if tail == "/rulesets":
+                        return 200, [{"id": 2}, {"id": 1}]
                     if tail.startswith("/rulesets/"):
                         branch = tail.endswith("/1")
-                        return {"id": 1 if branch else 2, "target": "branch" if branch else "tag", "enforcement": "active",
+                        return 200, {"id": 1 if branch else 2, "target": "branch" if branch else "tag", "enforcement": "active",
                                 "conditions": {"ref_name": {"include": ["refs/heads/main" if branch else "refs/tags/v*"], "exclude": []}},
                                 "rules": [{"type": "deletion"}, {"type": "non_fast_forward" if branch else "update"}],
                                 "bypass_actors": [{"fixture": "ignored"}]}
                     if tail == "/actions/permissions/artifact-and-log-retention":
-                        return {"days": 90}
+                        return 200, {"days": 90}
                     if tail == "/code-scanning/default-setup":
-                        return {"state": "not-configured"}
-                    if tail == "/automated-security-fixes" and absent:
-                        return None
+                        return 200, {"state": "not-configured"}
+                    if tail == "/automated-security-fixes":
+                        return 404, {"message": "disabled"}
+            if path == "/repos/Hexalith/Hexalith.CiCd/actions/workflows":
+                return 200, []
             raise rt.DeliveryError("unmocked HTTP boundary: " + path)
-
-        def pages(self, path, token=None, *, field=None):
-            if path in config["api"]:
-                return self.get(path, token)
-            if path == "/installation/repositories":
-                return [{"full_name": "Hexalith/" + r} for r in config["modules"]]
-            if path.endswith("/rulesets?includes_parents=true"):
-                return [{"id": 2}, {"id": 1}]
-            if path.endswith("actions/workflows") or path.endswith("actions/runs?branch=main"):
-                return []
-            raise rt.DeliveryError("unmocked paginated HTTP boundary")
 
     class Transport(rt.Transport):
         def __init__(self, budget=None):
-            super().__init__(budget, API())
+            super().__init__(budget, rt.API(budget, opener=Opener()))
             self.count = {}
 
         def remote(self, repository):
             return Path(config["cicd"] if repository == rt.CICD else config["builds"] if repository == rt.BUILDS
                         else config["modules"][repository]).as_uri()
+
+        def module(self, target, repository):
+            head = super().module(target, repository)
+            # rev-list --missing=print inventories promised blobs without fetching
+            # them. Record this before the perimeter can trigger lazy reads.
+            missing = target.run("rev-list", "--objects", "--missing=print", head).decode().splitlines()
+            with Path(config["acquisitions"]).open("a") as stream:
+                stream.write(json.dumps({"repository": repository, "partial": any(v.startswith("?") for v in missing)}) + "\n")
+            return head
 
         def push(self, target, repository, commit, token):
             count = self.count.get(repository, 0)

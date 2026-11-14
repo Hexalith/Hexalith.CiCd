@@ -61,7 +61,7 @@ jobs:
 
   deliver:
     needs: validate
-    if: ${{ always() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: cicd-app
@@ -94,7 +94,7 @@ jobs:
       - name: Mint CiCd accepted-ref and freshness token
         timeout-minutes: 1
         id: cicd_token
-        if: ${{ always() && steps.select.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.ready == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -107,7 +107,7 @@ jobs:
           permission-actions: read
 
       - name: Initialize delivery and hourly freshness
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -115,14 +115,14 @@ jobs:
 
       - name: Check module slot 01 time budget
         id: module_01_budget
-        if: ${{ always() && steps.select.outputs.slot_01 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 1
 
       - name: Mint module slot 01 token
         timeout-minutes: 1
         id: module_01_token
-        if: ${{ always() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -135,7 +135,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_01 == 'true' && 'read' || '' }}
 
       - name: Process module slot 01
-        if: ${{ always() && steps.select.outputs.slot_01 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -144,14 +144,14 @@ jobs:
 
       - name: Check module slot 02 time budget
         id: module_02_budget
-        if: ${{ always() && steps.select.outputs.slot_02 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 2
 
       - name: Mint module slot 02 token
         timeout-minutes: 1
         id: module_02_token
-        if: ${{ always() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -164,7 +164,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_02 == 'true' && 'read' || '' }}
 
       - name: Process module slot 02
-        if: ${{ always() && steps.select.outputs.slot_02 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -173,14 +173,14 @@ jobs:
 
       - name: Check module slot 03 time budget
         id: module_03_budget
-        if: ${{ always() && steps.select.outputs.slot_03 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 3
 
       - name: Mint module slot 03 token
         timeout-minutes: 1
         id: module_03_token
-        if: ${{ always() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -193,7 +193,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_03 == 'true' && 'read' || '' }}
 
       - name: Process module slot 03
-        if: ${{ always() && steps.select.outputs.slot_03 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -202,14 +202,14 @@ jobs:
 
       - name: Check module slot 04 time budget
         id: module_04_budget
-        if: ${{ always() && steps.select.outputs.slot_04 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 4
 
       - name: Mint module slot 04 token
         timeout-minutes: 1
         id: module_04_token
-        if: ${{ always() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -222,7 +222,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_04 == 'true' && 'read' || '' }}
 
       - name: Process module slot 04
-        if: ${{ always() && steps.select.outputs.slot_04 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -231,14 +231,14 @@ jobs:
 
       - name: Check module slot 05 time budget
         id: module_05_budget
-        if: ${{ always() && steps.select.outputs.slot_05 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 5
 
       - name: Mint module slot 05 token
         timeout-minutes: 1
         id: module_05_token
-        if: ${{ always() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -251,7 +251,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_05 == 'true' && 'read' || '' }}
 
       - name: Process module slot 05
-        if: ${{ always() && steps.select.outputs.slot_05 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -260,14 +260,14 @@ jobs:
 
       - name: Check module slot 06 time budget
         id: module_06_budget
-        if: ${{ always() && steps.select.outputs.slot_06 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 6
 
       - name: Mint module slot 06 token
         timeout-minutes: 1
         id: module_06_token
-        if: ${{ always() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -280,7 +280,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_06 == 'true' && 'read' || '' }}
 
       - name: Process module slot 06
-        if: ${{ always() && steps.select.outputs.slot_06 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -289,14 +289,14 @@ jobs:
 
       - name: Check module slot 07 time budget
         id: module_07_budget
-        if: ${{ always() && steps.select.outputs.slot_07 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 7
 
       - name: Mint module slot 07 token
         timeout-minutes: 1
         id: module_07_token
-        if: ${{ always() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -309,7 +309,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_07 == 'true' && 'read' || '' }}
 
       - name: Process module slot 07
-        if: ${{ always() && steps.select.outputs.slot_07 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -318,14 +318,14 @@ jobs:
 
       - name: Check module slot 08 time budget
         id: module_08_budget
-        if: ${{ always() && steps.select.outputs.slot_08 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 8
 
       - name: Mint module slot 08 token
         timeout-minutes: 1
         id: module_08_token
-        if: ${{ always() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -338,7 +338,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_08 == 'true' && 'read' || '' }}
 
       - name: Process module slot 08
-        if: ${{ always() && steps.select.outputs.slot_08 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -347,14 +347,14 @@ jobs:
 
       - name: Check module slot 09 time budget
         id: module_09_budget
-        if: ${{ always() && steps.select.outputs.slot_09 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 9
 
       - name: Mint module slot 09 token
         timeout-minutes: 1
         id: module_09_token
-        if: ${{ always() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -367,7 +367,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_09 == 'true' && 'read' || '' }}
 
       - name: Process module slot 09
-        if: ${{ always() && steps.select.outputs.slot_09 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -376,14 +376,14 @@ jobs:
 
       - name: Check module slot 10 time budget
         id: module_10_budget
-        if: ${{ always() && steps.select.outputs.slot_10 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 10
 
       - name: Mint module slot 10 token
         timeout-minutes: 1
         id: module_10_token
-        if: ${{ always() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -396,7 +396,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_10 == 'true' && 'read' || '' }}
 
       - name: Process module slot 10
-        if: ${{ always() && steps.select.outputs.slot_10 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -405,14 +405,14 @@ jobs:
 
       - name: Check module slot 11 time budget
         id: module_11_budget
-        if: ${{ always() && steps.select.outputs.slot_11 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 11
 
       - name: Mint module slot 11 token
         timeout-minutes: 1
         id: module_11_token
-        if: ${{ always() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -425,7 +425,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_11 == 'true' && 'read' || '' }}
 
       - name: Process module slot 11
-        if: ${{ always() && steps.select.outputs.slot_11 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -434,14 +434,14 @@ jobs:
 
       - name: Check module slot 12 time budget
         id: module_12_budget
-        if: ${{ always() && steps.select.outputs.slot_12 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 12
 
       - name: Mint module slot 12 token
         timeout-minutes: 1
         id: module_12_token
-        if: ${{ always() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -454,7 +454,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_12 == 'true' && 'read' || '' }}
 
       - name: Process module slot 12
-        if: ${{ always() && steps.select.outputs.slot_12 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -463,14 +463,14 @@ jobs:
 
       - name: Check module slot 13 time budget
         id: module_13_budget
-        if: ${{ always() && steps.select.outputs.slot_13 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 13
 
       - name: Mint module slot 13 token
         timeout-minutes: 1
         id: module_13_token
-        if: ${{ always() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -483,7 +483,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_13 == 'true' && 'read' || '' }}
 
       - name: Process module slot 13
-        if: ${{ always() && steps.select.outputs.slot_13 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -492,14 +492,14 @@ jobs:
 
       - name: Check module slot 14 time budget
         id: module_14_budget
-        if: ${{ always() && steps.select.outputs.slot_14 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 14
 
       - name: Mint module slot 14 token
         timeout-minutes: 1
         id: module_14_token
-        if: ${{ always() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -512,7 +512,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_14 == 'true' && 'read' || '' }}
 
       - name: Process module slot 14
-        if: ${{ always() && steps.select.outputs.slot_14 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -521,14 +521,14 @@ jobs:
 
       - name: Check module slot 15 time budget
         id: module_15_budget
-        if: ${{ always() && steps.select.outputs.slot_15 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 15
 
       - name: Mint module slot 15 token
         timeout-minutes: 1
         id: module_15_token
-        if: ${{ always() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -541,7 +541,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_15 == 'true' && 'read' || '' }}
 
       - name: Process module slot 15
-        if: ${{ always() && steps.select.outputs.slot_15 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -550,14 +550,14 @@ jobs:
 
       - name: Check module slot 16 time budget
         id: module_16_budget
-        if: ${{ always() && steps.select.outputs.slot_16 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 16
 
       - name: Mint module slot 16 token
         timeout-minutes: 1
         id: module_16_token
-        if: ${{ always() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -570,7 +570,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_16 == 'true' && 'read' || '' }}
 
       - name: Process module slot 16
-        if: ${{ always() && steps.select.outputs.slot_16 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -579,14 +579,14 @@ jobs:
 
       - name: Check module slot 17 time budget
         id: module_17_budget
-        if: ${{ always() && steps.select.outputs.slot_17 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 17
 
       - name: Mint module slot 17 token
         timeout-minutes: 1
         id: module_17_token
-        if: ${{ always() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -599,7 +599,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_17 == 'true' && 'read' || '' }}
 
       - name: Process module slot 17
-        if: ${{ always() && steps.select.outputs.slot_17 != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}

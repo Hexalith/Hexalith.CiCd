@@ -245,7 +245,8 @@ class API:
 
     def get(self, path, token=None, *, absent=False):
         if (not isinstance(path, str) or not path.startswith(("/repos/Hexalith/", "/installation/repositories"))
-                or any(c in path for c in ("\r", "\n", "#", "\\")) or ".." in path):
+                or any(c in path for c in ("\r", "\n", "#", "\\"))
+                or any(segment in {".", ".."} for segment in path.split("?", 1)[0].split("/"))):
             raise DeliveryError("noncanonical GitHub API path")
         if absent and not path.endswith("/automated-security-fixes"):
             raise DeliveryError("absence is permitted only for Dependabot security updates")
@@ -362,6 +363,12 @@ class Transport:
                        sha(commit) + ":refs/heads/main", token=token, check=False)
 
     def builds(self, tag, destination):
+        try:
+            return self._builds(tag, destination)
+        except Exception as error:
+            raise DeliveryError(f"Builds {clean(tag)}: {clean(error)}") from None
+
+    def _builds(self, tag, destination):
         if not TAG.fullmatch(tag):
             raise DeliveryError("Builds version is not an exact stable tag")
         path = "/repos/Hexalith/Hexalith.Builds/"
@@ -383,18 +390,25 @@ class Transport:
             seen.add(source)
             value = self.api.get(path + "git/tags/" + source)
             if not isinstance(value, dict) or value.get("sha") != source:
-                raise DeliveryError("Builds annotated tag identity mismatch")
+                raise DeliveryError(f"Builds annotated tag identity mismatch: expected {source}, received {value.get('sha') if isinstance(value, dict) else None}")
             kind, source = object_identity(value)
         main = self.api.get(path + "git/ref/heads/main")
         if not isinstance(main, dict) or main.get("ref") != "refs/heads/main":
             raise DeliveryError("Builds main identity mismatch")
         main_kind, main_sha = object_identity(main)
         comparison = self.api.get(path + f"compare/{source}...{main_sha}?per_page=1&page=2")
+        base = comparison.get("base_commit") if isinstance(comparison, dict) else None
+        merge_base = comparison.get("merge_base_commit") if isinstance(comparison, dict) else None
+        base_sha = base.get("sha") if isinstance(base, dict) else base
+        merge_base_sha = merge_base.get("sha") if isinstance(merge_base, dict) else merge_base
         if (main_kind != "commit" or not isinstance(comparison, dict)
                 or comparison.get("status") not in {"ahead", "identical"}
-                or comparison.get("base_commit", {}).get("sha") != source
-                or comparison.get("merge_base_commit", {}).get("sha") != source):
-            raise DeliveryError("Builds release is not ancestral to live main")
+                or not isinstance(comparison.get("base_commit"), dict)
+                or comparison["base_commit"].get("sha") != source
+                or not isinstance(comparison.get("merge_base_commit"), dict)
+                or comparison["merge_base_commit"].get("sha") != source):
+            raise DeliveryError(f"Builds release {source} is not ancestral to live main {main_sha}: "
+                                f"returned base_commit {clean(base_sha)}, merge_base_commit {clean(merge_base_sha)}")
         # Verify capability from authenticated-by-identity committed objects
         # before exporting or executing even one byte of this release.
         git = Git(Path(destination) / "objects", self.budget)
@@ -402,8 +416,10 @@ class Transport:
         self.configure(git, BUILDS)
         git.run("fetch", "--depth=1", "--filter=blob:none", "--no-tags", "--no-recurse-submodules",
                 self.remote(BUILDS), f"refs/tags/{tag}:refs/tags/{tag}")
-        if git.resolve("refs/tags/" + tag) != raw or git.resolve("refs/tags/" + tag + "^{commit}") != source:
-            raise DeliveryError("Builds acquired tag/source identity mismatch")
+        acquired_raw = git.resolve("refs/tags/" + tag)
+        acquired_source = git.resolve("refs/tags/" + tag + "^{commit}")
+        if acquired_raw != raw or acquired_source != source:
+            raise DeliveryError(f"Builds acquired tag/source identity mismatch: expected {raw}/{source}, acquired {acquired_raw}/{acquired_source}")
         for required in ("Github/lib/perimeter.py", "Github/lib/perimeter_config.py", "schemas/hexalith.perimeter.v1.json"):
             git.blob(source, required)
         exported = Path(destination) / "source"
