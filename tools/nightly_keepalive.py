@@ -17,6 +17,7 @@ sys.modules[_SPEC.name] = rt
 _SPEC.loader.exec_module(rt)
 
 IDLE_SECONDS = 50 * 24 * 3600
+JOB_SECONDS = 8 * 60
 
 
 def context(environment):
@@ -111,7 +112,7 @@ def main(argv=None, *, transport=None, clock=time.time):
     epoch = environment.get("NIGHTLY_MINT_EPOCH", "")
     # The 15-minute job also reserves three minutes each for checkout and
     # artifact upload, plus the controller's usual trailing 30-second reserve.
-    budget = rt.Budget(started, job_seconds=8 * 60, token_epoch=float(epoch) if epoch else started, clock=clock)
+    budget = rt.Budget(started, job_seconds=JOB_SECONDS, token_epoch=float(epoch) if epoch else started, clock=clock)
     transport = transport or rt.Transport(budget)
     transport.budget = transport.api.budget = budget
     transport.api.repositories = frozenset((rt.CICD,))

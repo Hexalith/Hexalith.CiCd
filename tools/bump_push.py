@@ -14,6 +14,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bump_runtime as br
 rt = br.rt
+JOB_SECONDS = 46 * 60
 
 
 def artifact(api, expected, artifact_id, digest, token):
@@ -198,9 +199,10 @@ def main(argv=None, *, transport=None, clock=time.time):
     # neither credential is ever received from another job.
     read_token = tokens.get("HANDOFF_TOKEN", "") or token
     epoch = float(environment.get("NIGHTLY_MINT_EPOCH") or clock())
-    budget = rt.Budget(clock(), job_seconds=46 * 60, token_epoch=epoch, clock=clock)
+    budget = rt.Budget(clock(), job_seconds=JOB_SECONDS, token_epoch=epoch, clock=clock)
     transport = transport or br.Transport(budget)
     transport.budget = transport.api.budget = budget
+    transport.token = read_token or None
     try:
         expected = br.identity(environment, transport.api, read_token)
         if args.operation == "qualify":

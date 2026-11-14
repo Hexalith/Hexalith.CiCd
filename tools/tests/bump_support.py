@@ -34,8 +34,11 @@ class API:
         self.workspace = workspace
         self.dispatched = 0
         self.budget = workspace.budget
+        self.builds_tokens = []
 
     def pages(self, path, token=None, *, field=None):
+        if "/Hexalith.Builds/" in path:
+            self.builds_tokens.append(token)
         if path == "/repos/Hexalith/Hexalith.CiCd/actions/runs/101/artifacts":
             return [{"id": 9, "name": "hexalith-nightly-bump-1", "digest": "sha256:" + "a" * 64,
                      "workflow_run": {"id": 101, "head_sha": "a" * 40}}]
@@ -44,6 +47,8 @@ class API:
         return list(self.workspace.releases)
 
     def get(self, path, token=None):
+        if "/Hexalith.Builds/" in path:
+            self.builds_tokens.append(token)
         if path == "/repos/Hexalith/Hexalith.CiCd/actions/runs/101":
             return {"id": 101, "run_attempt": 1, "head_sha": "a" * 40, "head_branch": "main",
                     "path": ".github/workflows/nightly.yml", "event": "schedule",

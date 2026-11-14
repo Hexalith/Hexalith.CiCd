@@ -270,7 +270,7 @@ locally peeled tag identities agree and whose commit is ancestral to Builds
 main. Version comparison is numeric (`v5.10.0` follows `v5.9.0`). A different
 major requires an explicit change here.
 
-`builds-skip` contains one exact stable tag per line; blank lines are ignored.
+`builds-skip` contains one exact stable tag per line; empty lines are ignored.
 Do not use comments, ranges or prereleases. To retain a rollback, restore the
 older pin and list each bad newer tag in `builds-skip`, then render and commit
 the cause with its output. Nightly leaves that rollback alone unless another

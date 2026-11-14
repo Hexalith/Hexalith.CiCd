@@ -2,7 +2,7 @@
 title: 'Nightly Builds bump'
 type: 'feature'
 created: '2026-11-14'
-status: 'in-review'
+status: 'done'
 baseline_revision: '125bf2db35885fd0aaf4cad6a81109604446b099'
 review_loop_iteration: 0
 followup_review_recommended: false
@@ -92,6 +92,54 @@ This map records the planning baseline. The completed execution checklist, verif
 
 ## Review Triage Log
 
+Review 1 (2026-11-15), baseline `125bf2db35885fd0aaf4cad6a81109604446b099`. Layers: blind-hunter (B), verification-gap (V), edge-case-hunter (E). No intent_gap or bad_spec entries; no loopback.
+
+| ID | Finding | Verdict | Route | Evidence |
+|----|---------|---------|-------|----------|
+| E1 | Producer Builds store lacks tags the global gate's suites read | high | patch P1 | `delivery_support.py:20,79`, `nightly_support.py:154`, `nightly_publish_cases.py:30` fetch/read `v5.1.0` from `ROOT/references/Hexalith.Builds`; the producer fetches only main, tried candidates and the current pin (`bump.py:70-76`). Builds already has v5.2.2, so once the pin leaves v5.1.0 every later gate fails. |
+| V5 | Same producer-workspace tag gap (other finding) | high | patch P1 | Same root cause as E1; validate uses `fetch-depth: 0` and `fetch-tags: true` (`deliver.yml`). |
+| B2 | Builds and run-identity reads sent without a token | medium | patch P2 | `Transport.select/tag` call `api.get/pages` without a token, so `_headers(None)` sends no Authorization and a rate-limit 403 whose reset exceeds the budget fails the night. Patch covers the producer/writer Builds reads; the observer's single per-night `bind_creation` read stays unauthenticated (low; a token there needs new mint-epoch plumbing in the App job). Delivery's shared anonymous `Transport.builds` reads remain open as DW-35; this patch applies DW-35's suggested remedy only to the new bump reads. |
+| E11 | Unauthenticated Builds release/tag/main reads | medium | patch P2 | Same root cause as B2. |
+| V6 | Unauthenticated Builds reads (other finding) | medium | patch P2 | Same root cause as B2. |
+| V1 | Producer `run_script` exit/timeout/redaction path has no test | medium | patch P3 | Pre-verified gap: every producer test injects `check`; no test reaches `run_script`. |
+| B8 | Real render/check path never exercised | medium | patch P3 | Same gap as V1; hosted run executed only qualify mode. |
+| V2 | "Report omits authorized target" rule untested | medium | patch P4 | Pre-verified gap at `nightly_delivery_wait.py:304-305`. |
+| V3 | Skip-with-newer, draft, author and ancestry selection rules untested | medium | patch P5 | Pre-verified gap at `bump_runtime.py:159-192`; the writer reuses the same selection. |
+| V4 | New jobs' timeouts not checked against controller budgets | medium | patch P6 | Pre-verified gap: the existing invariant skips phases outside `controller.SECONDS`. |
+| B15 | New jobs excluded from the timeout invariant | medium | patch P6 | Same gap as V4. |
+| E2 | `builds-version` without trailing newline blocks every bump | low | patch P7 | `policy()`, render and `check_global` strip one newline, but `verify_diff` requires an exact `tag\n` parent; a hand-restored pin then fails nightly with "parent tag mismatch". Direct comparison correction. |
+| B14 | One non-UTF-8 commit body permanently breaks the night guard | low | patch P8 | Strict decode at `bump_runtime.py:123`; current 101-commit history has none. The subject and marker are ASCII, so replacement decoding is a direct correction. |
+| E13 | Non-UTF-8 historical commit | low | patch P8 | Same root cause as B14. |
+| B3 | Absent `builds-skip` is empty on live main; docs claim "only historical parents" | low | patch P9 | `policy()` and `test_historical_missing_skip_is_empty` treat absence as empty at any base; `docs/nightly.md:126-127` says otherwise. Doc correction. |
+| E14 | `builds-skip` deleted from live main is silently empty | low | patch P9 | Same root cause as B3. |
+| E15 | Whitespace-only skip line rejected while docs say blank lines are ignored | low | patch P10 | `if not tag` skips only empty lines; whitespace-only lines fail with their line number (NightlyError is a ValueError). Doc correction in `docs/nightly.md` and `setup/README.md`. |
+| B1 | GITHUB_TOKEN push to protected main never qualified | maybe-false | defer (medium, unverified) | Ruleset 26812262 has only `deletion` and `non_fast_forward`, so fast-forwards are allowed; classic branch protection was unreadable with the available token. |
+| B9 | Writer default logic has no parity test against the renderer on a real schema | maybe-false | defer (medium, unverified) | v5.1.0 and v5.2.2 CI schemas are identical, so `add_defaults` is not yet reached. Parity on a schema that adds defaults is unproven. |
+| B4 | Prerelease flag not rejected | low | reject | Every Builds release is `prerelease: false`, and `check_release` uses the same predicates. A new predicate guards an undemonstrated state. |
+| B5 | Keepalive re-enables a manually disabled `deliver.yml` | low | reject | The intent matrix requires attempting both enable calls for active or disabled schedules. |
+| B6 | Dispatched delivery run id discarded | false | reject | The observer selects the first qualifying delivery by design (also for the App fallback) and `finalize` writes its link to the summary. |
+| B7 | A `rejected` qualification exits 0 | low | reject | Manual one-off path; the summary and artifact state the result; qualification already concluded `qualified`. |
+| B10 | Two CI schemas break schema lookup | false | reject | `render.pinned_contract` itself requires exactly one `hexalith.ci.v*.json` (`render.py:255-260`). |
+| B11 | Candidate author/committer/dates unchecked | low | reject | Needs a compromised producer; identity/date guards add complexity. |
+| B12 | Rerunning failed jobs cannot recover the bump chain, undocumented | false | reject | `docs/nightly.md:92-97` documents that rerunning only failed jobs is unsupported for attempt-bound handoffs. |
+| B13 | A qualification dispatch can replace a pending scheduled run | low | reject | Requires a scheduled run pending behind a running qualification plus a second dispatch. |
+| B16 | `bump.py` dependencies not kept in sync with the scripts it runs | low | reject | Pins currently match `render.py` and `check_global.py`; no automated updater; a sync test is beyond a direct correction. |
+| B17 | Seed and controller report vocabularies differ | false | reject | No code reads these report fields; job outputs come only from the controllers. |
+| B18 | Delivery dispatch relies on default run details | false | reject | Under the pinned API version, hosted proof 43643836917 returned HTTP 200 run details. |
+| B19 | Observer token lacks `contents: read` for compare | false | reject | CiCd, Builds and the sampled module repositories are public. |
+| B20 | Missing checkout guards, dead env fallbacks, unpassed `NIGHTLY_CANCELLED` | low | reject | A failed checkout already fails the job, and `!cancelled()` stops bump and keepalive steps; the fallbacks have no effect. |
+| B21 | Double blank line, probe sentence, blank-line note | low | reject | Renders identically or is cosmetic; the blank-line note is handled by P10. |
+| E3 | Substring tag substitution falsely rejects a valid render | low | reject | Templates contain no literal versions; the tag reaches rendered files only through `builds_tag`/`@tag`. A collision needs setup text containing the old tag, and fails closed. |
+| E4 | `add_defaults` sees schema/buildsTag that `render.defaults` does not | false | reject | The only `if` in the real CI schemas tests `solution` (`#/allOf/0`); those keys cannot change the branch. |
+| E5 | Nonzero push exit after the remote applied it | low | reject | The intent forbids retrying uncertain writes; the night fails loudly. |
+| E6 | Report persistence raises after a confirmed push | low | reject | Needs a local atomic write failure right after an identical successful write at `bump_push.py:97`. |
+| E7 | Empty artifact outputs silently skip bump-push | false | reject | A failed upload fails the bump job (no `continue-on-error`); a successful upload sets both outputs. |
+| E8 | A transient discovery error stays sticky in the verdict | low | reject | The observer is fail-closed by design; discovery spans a few polls after explicit dispatch, and GETs already retry three times. |
+| E9 | Descendant registry differs from the bump commit | low | reject | The intent prescribes the bumped-main registry plus delivered refs; the explicit dispatch runs at the bump tip; a race fails closed. |
+| E10 | Repeated compares exhaust MAX_CALLS | low | reject | Needs several completed non-descendant main CI runs per module across 17 modules for a whole slice; caching adds persisted state. |
+| E12 | History batch exceeds the 16 MiB Git output bound | low | reject | Current history is 101 commits / 36 KB, roughly 46k commits before the bound. |
+| E16 | Producer timeout kills only the direct child | low | reject | Only on the 40-minute timeout; no candidate is uploaded after the error and the runner reaps orphans at job end. |
+
 ## Design Notes
 
 The candidate must be committed locally before global checks because those checks compare against HEAD. This commit is still unprivileged until the separate writer has authenticated its objects and constrained its diff. Use a single bounded JSON Git-object envelope rather than archive extraction or a producer-supplied patch executed in the writer.
@@ -112,10 +160,12 @@ The earlier planning invocation ended at ready-for-development. This implementat
 
 ## Auto Run Result
 
-Status: in-review
+Status: done
 
 Implemented the secretless producer, bounded Git-object envelope, independent stdlib verifier/writer, delivery/report/module-CI observer, schedule keepalive, workflow wiring, skip policy, locked regression suites and operating documentation. The intent contract is unchanged. No Builds/module repository or production registration changed.
 
 The parent verification passed all six initial requested suites (102 tests), every edge-case matrix row, and the unchanged global gate (13 suites/272 tests plus actionlint 1.7.12 and online zizmor 1.32.0). Hosted qualification then exposed and resolved artifact paths containing `..` and the dispatch API's current HTTP 200 response. The corrected workflow passed 21 tests; the dispatch fix passed 114 tests across runtime, writer, release controllers, observer and keepalive. Final parent verification after both hosted fixes passed the unchanged global gate: 13 suites/275 tests, all global checks, actionlint 1.7.12 and online zizmor 1.32.0. Every matrix-covering test is registered, enabled and passing. Mandatory independent review follows.
 
 The [hosted qualification record](../../../../docs/nightly-bump-qualification.md) binds successful nested-path probe 43643834124 and delivery-dispatch proof 43643836917 to source revision `6a7b287b7f2b40614970f10e3479c109f114d863`. The probe artifact was authenticated and its ref cleanup independently confirmed. The separate job-token proof returned actual delivery run 43643848734. That transport uses GITHUB_TOKEN and explicit delivery dispatch; the App fallback was not selected. Temporary workflow cleanup is complete at revision `f5b6389b9363bdf062ada1fed9dc48b028dea462`: its Actions definition is disabled, its file is absent from remote main, and all probe refs are absent. The earlier hosted empty-registry delivery completed successfully, and the authenticated corrected-dispatch delivery has started.
+
+Review 1 (three layers, 43 findings) produced ten patches, two deferrals and no loopback. The serious fix was that the producer now fetches every Builds tag before the shared gate, whose suites read `v5.1.0` from that reference. Without it, every bump after the first would have failed. The other patches authenticate the producer and writer Builds reads with the job token, accept a parent pin with no trailing newline, decode legacy commit bodies leniently, and correct the `builds-skip` docs. They also add regression tests for the shared-gate exit code and redaction, the selection rules, report target omission and the new jobs' timeout budgets. Each defect test failed on the unpatched code, and mutation checks confirmed that the gap tests catch their regressions. The six requested suites passed, and the unchanged global gate passed: 13 suites/283 tests, all eight global checks, actionlint 1.7.12 and online zizmor 1.32.0. The production producer path still has no hosted run, so the first eligible scheduled night is its first live execution.

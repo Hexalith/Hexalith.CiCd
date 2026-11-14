@@ -16,6 +16,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bump_runtime as br
 rt = br.rt
+JOB_SECONDS = 40 * 60
 
 
 def run_script(project, script, budget, log):
@@ -68,6 +69,11 @@ def produce(transport, directory, expected, *, render=None, check=None):
             # templates/setup/tools; no scheduler-SHA source substitutes for it.
             git.run("checkout", "--quiet", "--detach", "--force", base)
             builds.init()
+            # The unchanged global gate's suites read older released tags from
+            # this reference, like validate's full-tag Builds checkout. Fetch
+            # all of them first; selection then reverifies each tag it uses.
+            builds.run("fetch", "--no-tags", "--no-recurse-submodules", transport.remote(rt.BUILDS),
+                       "+refs/heads/main:refs/remotes/origin/main", "refs/tags/*:refs/tags/*")
             selected = transport.select(builds, current, skipped)
             report["tag"] = selected["tag"]
             if br.version(selected["tag"]) <= br.version(current):
@@ -120,9 +126,10 @@ def main(*, transport=None, clock=time.time):
     scratch = directory / "scratch"
     br.scratch(scratch)
     # Leave checkout/setup and both final uploads within the 55-minute job.
-    budget = rt.Budget(clock(), job_seconds=40 * 60, token_epoch=clock(), clock=clock)
+    budget = rt.Budget(clock(), job_seconds=JOB_SECONDS, token_epoch=clock(), clock=clock)
     transport = transport or br.Transport(budget)
     transport.budget = transport.api.budget = budget
+    transport.token = token or None
     try:
         expected = br.identity(environment, transport.api, token or None)
         report = produce(transport, directory, expected)

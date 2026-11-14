@@ -399,6 +399,22 @@ class NightlyWorkflowTests(unittest.TestCase):
                            + limits["actions/upload-artifact"] + 1) * 60
                 self.assertLess(controller.SECONDS[phase] + reserve, job["timeout-minutes"] * 60)
 
+    def test_bump_job_timeouts_cover_controller_budgets_and_metered_step_limits(self):
+        jobs = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())["jobs"]
+        observer = load(ROOT / "tools/nightly_delivery_wait.py", "_timeout_delivery_wait")
+        budgets = {
+            "bump": load(ROOT / "tools/bump.py", "_timeout_bump").JOB_SECONDS,
+            "bump-push": load(ROOT / "tools/bump_push.py", "_timeout_bump_push").JOB_SECONDS,
+            # The persisted aggregate deadline bounds every observer operation.
+            "delivery-wait": min(observer.JOB_SECONDS, observer.WAIT_SECONDS),
+            "keepalive": load(ROOT / "tools/nightly_keepalive.py", "_timeout_keepalive").JOB_SECONDS,
+        }
+        for phase, budget in budgets.items():
+            with self.subTest(phase=phase):
+                steps = sum(step.get("timeout-minutes", 0) for step in jobs[phase]["steps"]) * 60
+                # One further minute covers job setup and unmetered seed/report steps.
+                self.assertLessEqual(budget + steps + 60, jobs[phase]["timeout-minutes"] * 60)
+
     def test_cancel_stops_new_mints_dispatches_and_publication_but_uploads(self):
         for after in ("select", "target_01_budget", "target_01_token"):
             with self.subTest(after=after):

@@ -310,6 +310,15 @@ class ObserverTests(unittest.TestCase):
         self.assertEqual(beta["conclusion"], "success")
         self.assertEqual(controller.finalize(self.state, {}), 1)
 
+    def test_report_omitting_an_authorized_target_fails_without_observing_it(self):
+        self.state["repositories"] = [ALPHA, BETA]
+        self.complete(rows=[row(ALPHA)])
+        self.assertEqual(self.poll(), 0)
+        self.assertEqual(self.state["delivery"]["report"], "failed")
+        self.assertEqual(self.state["modules"], [])
+        self.assertEqual(controller.finalize(self.state, {}), 1)
+        self.assertTrue(any("omits independently authorized" in message for message in self.state["errors"]))
+
     def test_repair_push_is_observed_after_skipped_advancement(self):
         repair = row()
         repair["advancement"] = "skipped"

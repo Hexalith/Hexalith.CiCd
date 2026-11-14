@@ -20,6 +20,7 @@ _SPEC.loader.exec_module(rt)
 SCHEMA = "hexalith.nightly-delivery-wait.v1"
 WAIT_SECONDS = 90 * 60
 SLICE_SECONDS = 40 * 60
+JOB_SECONDS = 100 * 60
 STATE_KEYS = {"schema", "identity", "bump", "started", "deadline", "since", "repositories", "delivery", "modules", "errors", "result"}
 REPORT_KEYS = {"schema", "run_id", "run_attempt", "event", "candidate_sha", "tools_source_sha", "global", "failed", "failures", "freshness", "modules"}
 ROW_KEYS = {"repository", "accepted_sha", "advancement", "application", "pushed_sha", "retries", "reasons", "processed"}
@@ -485,7 +486,7 @@ def main(argv=None, *, transport=None, clock=time.time, sleep=time.sleep):
     else:
         state = validate_state(rt.json_read(path.read_bytes()), expected)
     epoch = environment.get("NIGHTLY_MINT_EPOCH", "")
-    budget = rt.Budget(state["started"], job_seconds=100 * 60, token_epoch=float(epoch) if epoch else None,
+    budget = rt.Budget(state["started"], job_seconds=JOB_SECONDS, token_epoch=float(epoch) if epoch else None,
                        deadline=state["deadline"], clock=clock)
     transport = transport or rt.Transport(budget)
     transport.budget = transport.api.budget = budget

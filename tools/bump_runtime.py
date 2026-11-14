@@ -120,7 +120,7 @@ def already_bumped(git, base, night):
         if len(raw) != int(header[2]) or stream.read(1) != b"\n" or b"\n\n" not in raw:
             raise rt.NightlyError("nightly bump history is incomplete")
         body = raw.split(b"\n\n", 1)[1]
-        lines = body.decode("utf-8", "strict").splitlines()
+        lines = body.decode("utf-8", "replace").splitlines()
         if lines and SUBJECT.fullmatch(lines[0]) and "hexalith-nightly-bump: " + night in lines[1:]:
             found = True
     if stream.read(1):
@@ -129,6 +129,9 @@ def already_bumped(git, base, night):
 
 
 class Transport(rt.Transport):
+    # The job's own read token for public Builds reads; never persisted.
+    token = None
+
     def main(self, git):
         git.run("fetch", "--no-tags", "--no-recurse-submodules", self.remote(rt.CICD),
                 "+refs/heads/main:refs/remotes/origin/main")
@@ -137,7 +140,7 @@ class Transport(rt.Transport):
     def tag(self, git, tag):
         version(tag)
         path = f"/repos/Hexalith/{rt.BUILDS}/"
-        ref = self.api.get(path + "git/ref/tags/" + tag)
+        ref = self.api.get(path + "git/ref/tags/" + tag, self.token)
         if not isinstance(ref, dict) or ref.get("ref") != "refs/tags/" + tag:
             raise rt.NightlyError(f"Builds {tag}: remote tag identity mismatch")
         kind, raw = object_identity(ref)
@@ -146,7 +149,7 @@ class Transport(rt.Transport):
             if source in seen or len(seen) >= 16:
                 raise rt.NightlyError(f"Builds {tag}: annotated tag cycle/depth")
             seen.add(source)
-            obj = self.api.get(path + "git/tags/" + source)
+            obj = self.api.get(path + "git/tags/" + source, self.token)
             if not isinstance(obj, dict) or obj.get("sha") != source:
                 raise rt.NightlyError(f"Builds {tag}: annotated tag identity mismatch")
             kind, source = object_identity(obj)
@@ -158,7 +161,7 @@ class Transport(rt.Transport):
 
     def select(self, git, current, skipped):
         major = version(current)[0]
-        releases = self.api.pages(f"/repos/Hexalith/{rt.BUILDS}/releases")
+        releases = self.api.pages(f"/repos/Hexalith/{rt.BUILDS}/releases", self.token)
         candidates, seen = [], set()
         for release in releases:
             if not isinstance(release, dict):
@@ -181,7 +184,7 @@ class Transport(rt.Transport):
             candidates.append((tag, release))
         for tag, _ in sorted(candidates, key=lambda item: version(item[0]), reverse=True):
             selected = self.tag(git, tag)
-            main = self.api.get(f"/repos/Hexalith/{rt.BUILDS}/git/ref/heads/main")
+            main = self.api.get(f"/repos/Hexalith/{rt.BUILDS}/git/ref/heads/main", self.token)
             if not isinstance(main, dict) or main.get("ref") != "refs/heads/main":
                 raise rt.NightlyError("Builds main remote identity mismatch")
             kind, main_sha = object_identity(main)
@@ -429,7 +432,7 @@ def verify_diff(git, value, builds):
     if before.keys() != after.keys():
         raise rt.NightlyError("candidate adds or removes committed paths")
     old, new = value["old"], value["new"]
-    if git.blob(base, "builds-version") != (old["tag"] + "\n").encode():
+    if git.blob(base, "builds-version").removesuffix(b"\n") != old["tag"].encode():
         raise rt.NightlyError("builds-version: parent tag mismatch")
     if git.blob(candidate, "builds-version") != (new["tag"] + "\n").encode():
         raise rt.NightlyError("builds-version: candidate tag mismatch")

@@ -122,9 +122,10 @@ v5.2.0
 v5.3.1
 ```
 
-Blank lines are ignored. Comments, ranges and malformed tags are rejected with
-their line number. An absent skip file is treated as empty only when reading
-historical parents. With no newer acceptable unskipped release, the producer
+Empty lines are ignored. Whitespace-only lines, comments, ranges and malformed
+tags are rejected with their line number. An absent skip file is treated as an
+empty policy, so deleting it re-admits every previously skipped tag. With no
+newer acceptable unskipped release, the producer
 reports a successful no-change and no push, dispatch or propagation wait occurs.
 No acceptable release is a verification failure.
 
