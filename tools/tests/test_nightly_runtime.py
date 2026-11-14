@@ -62,10 +62,13 @@ class RuntimeTests(unittest.TestCase):
             self.assertEqual(os.environ["GIT_TERMINAL_PROMPT"], "0")
 
     def test_bump_delivery_ci_endpoints_and_exact_empty_enable(self):
-        api, opener, _ = self.api([(204, b""), (204, b""), (204, b""), {}, {}, {}])
+        identity = 43643156668
+        reply = {"workflow_run_id": identity, "run_url": f"https://api.github.com/repos/Hexalith/{rt.CICD}/actions/runs/{identity}",
+                 "html_url": rt.run_link(rt.CICD, identity)}
+        api, opener, _ = self.api([(204, b""), (204, b""), reply, {}, {}, {}])
         self.assertIsNone(api.enable("nightly.yml", "inert"))
         self.assertIsNone(api.enable("deliver.yml", "inert"))
-        self.assertIsNone(api.dispatch_delivery("inert"))
+        self.assertEqual(api.dispatch_delivery("inert"), {"runId": identity, "link": reply["html_url"]})
         api.get("/repos/Hexalith/Hexalith.Alpha/actions/workflows/ci.yml/runs?branch=main", "inert")
         api.get("/repos/Hexalith/Hexalith.CiCd/actions/runs/123/attempts/2/jobs?per_page=100&page=1", "inert")
         api.get("/repos/Hexalith/Hexalith.Builds/releases?per_page=100&page=1")
@@ -91,6 +94,37 @@ class RuntimeTests(unittest.TestCase):
         api, opener, _ = self.api([{}])
         api.get("/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&created=>=2026-11-14T02:17:00Z", "inert")
         self.assertIn("created=%3E%3D2026-11-14T02%3A17%3A00Z", opener.requests[0][0].full_url)
+
+    def test_delivery_dispatch_requires_current_200_exact_run_details_without_retries(self):
+        identity = 43643156668
+        reply = {"workflow_run_id": identity, "run_url": f"https://api.github.com/repos/Hexalith/{rt.CICD}/actions/runs/{identity}",
+                 "html_url": rt.run_link(rt.CICD, identity)}
+        api, opener, clock = self.api([reply])
+        self.assertEqual(api.dispatch_delivery("inert"), {"runId": identity, "link": reply["html_url"]})
+        request, _ = opener.requests[0]
+        self.assertEqual(request.full_url, f"https://api.github.com/repos/Hexalith/{rt.CICD}/actions/workflows/deliver.yml/dispatches")
+        self.assertEqual((request.get_method(), json.loads(request.data)), ("POST", {"ref": "main"}))
+        self.assertEqual(request.get_header("X-github-api-version"), "2026-03-10")
+        self.assertEqual((len(opener.requests), clock.sleeps), (1, []))
+        malformed = (None, [], {}, reply | {"workflow_run_id": True}, reply | {"workflow_run_id": "43643156668"},
+                     reply | {"workflow_run_id": 0}, reply | {"html_url": "https://evil.invalid/run"},
+                     reply | {"html_url": rt.run_link("Hexalith.Other", identity)},
+                     reply | {"html_url": rt.run_link(rt.CICD, identity + 1)},
+                     reply | {"run_url": f"https://api.github.com/repos/Hexalith/Other/actions/runs/{identity}"},
+                     reply | {"run_url": f"https://api.github.com/repos/Hexalith/{rt.CICD}/actions/runs/{identity + 1}"},
+                     b'{"workflow_run_id":1,"workflow_run_id":2}', b'{', (204, b""), (204, b"unexpected"))
+        for response in malformed:
+            with self.subTest(response=response):
+                api, opener, clock = self.api([response, reply])
+                with self.assertRaisesRegex(rt.NightlyError, "uncertain"):
+                    api.dispatch_delivery("inert")
+                self.assertEqual((len(opener.requests), clock.sleeps), (1, []))
+        for response in ((403, {}), (503, {}), URLError("lost dispatch response")):
+            with self.subTest(response=response):
+                api, opener, clock = self.api([response, reply])
+                with self.assertRaises(rt.NightlyError):
+                    api.dispatch_delivery("inert")
+                self.assertEqual((len(opener.requests), clock.sleeps), (1, []))
 
     def test_exact_new_json_artifact_members_are_bounded_and_duplicate_rejecting(self):
         for member in ("candidate.json", "delivery.json"):

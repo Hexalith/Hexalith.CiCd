@@ -25,7 +25,7 @@ jobs:
           CICD_TOKEN: ${{ github.token }}
         run: |
           python3 -I - <<'PYTHON'
-          import importlib.util, os, pathlib, sys, time
+          import importlib.util, json, os, pathlib, sys, time
           path = pathlib.Path('tools/nightly_runtime.py').resolve()
           spec = importlib.util.spec_from_file_location('_dispatch_qualification_runtime', path)
           runtime = importlib.util.module_from_spec(spec)
@@ -36,6 +36,6 @@ jobs:
           started = time.time()
           budget = runtime.Budget(started, job_seconds=300, token_epoch=started)
           api = runtime.API(budget, repositories=(runtime.CICD,))
-          api.dispatch_delivery(token)
-          print('Production dispatch_delivery accepted: HTTP 204')
+          result = api.dispatch_delivery(token)
+          print('Production dispatch_delivery accepted: ' + json.dumps(result, sort_keys=True))
           PYTHON

@@ -147,6 +147,17 @@ def run_link(repository, identity):
     return f"https://github.com/Hexalith/{name(repository, module=False)}/actions/runs/{positive(identity)}"
 
 
+def dispatch_details(repository, value):
+    """Authenticate the exact run returned by a successful workflow dispatch."""
+    if not isinstance(value, dict):
+        raise NightlyError("dispatch response uncertain: missing exact run identity")
+    identity = positive(value.get("workflow_run_id"), "dispatch response uncertain: missing exact run identity")
+    if (value.get("html_url") != run_link(repository, identity)
+            or value.get("run_url") != f"https://api.github.com/repos/Hexalith/{repository}/actions/runs/{identity}"):
+        raise NightlyError("dispatch response uncertain: run URL mismatch")
+    return {"runId": identity, "link": value["html_url"]}
+
+
 def run_identity(document, repository, workflow, identity):
     """Require exactly the dispatch-created caller, never a latest-run guess."""
     expected = "Hexalith/" + name(repository, module=False)
@@ -307,7 +318,7 @@ class API:
                 with whole_operation(timeout, write=method != "GET"):
                     with self.opener.open(Request("https://api.github.com" + wire_path, data=data,
                                                  headers=headers, method=method), timeout=timeout) as response:
-                        empty = method == "PUT" or method == "POST" and path.endswith("/deliver.yml/dispatches")
+                        empty = method == "PUT"
                         if empty and response.status == 204:
                             if response.read(1):
                                 raise NightlyError("GitHub API expected empty HTTP 204")
@@ -319,7 +330,14 @@ class API:
                             # reply may have dispatched/published: never definite.
                             raise NightlyError("GitHub API unexpected response status" + (
                                 "; write result uncertain, not retried" if method != "GET" else ""))
-                        value = json_read(response.read(MAX_JSON + 1))
+                        payload = response.read(MAX_JSON + 1)
+                        try:
+                            value = json_read(payload)
+                        except NightlyError as error:
+                            if method != "GET":
+                                raise NightlyError("GitHub API malformed write response; write result uncertain, not retried: "
+                                                   + clean(error)) from None
+                            raise
                     if method == "GET":
                         # A received write response is never discarded by a
                         # later budget check: its created identity must survive.
@@ -361,8 +379,9 @@ class API:
         return self._request("PUT", f"/repos/Hexalith/{CICD}/actions/workflows/{workflow}/enable", token)
 
     def dispatch_delivery(self, token):
-        return self._request("POST", f"/repos/Hexalith/{CICD}/actions/workflows/deliver.yml/dispatches",
-                             token, {"ref": "main"})
+        value = self._request("POST", f"/repos/Hexalith/{CICD}/actions/workflows/deliver.yml/dispatches",
+                              token, {"ref": "main"})
+        return dispatch_details(CICD, value)
 
     def pages(self, path, token=None, *, field=None, deadline=None):
         result, total = [], None
@@ -396,13 +415,7 @@ class API:
             raise NightlyError("module dispatch requires exact delivered commit")
         value = self._request("POST", f"/repos/Hexalith/{repository}/actions/workflows/{expected}/dispatches", token,
                               {"ref": "main", "inputs": inputs, "return_run_details": True})
-        if not isinstance(value, dict):
-            raise NightlyError("dispatch response uncertain: missing exact run identity")
-        identity = positive(value.get("workflow_run_id"), "dispatch response uncertain: missing exact run identity")
-        if (value.get("html_url") != run_link(repository, identity)
-                or value.get("run_url") != f"https://api.github.com/repos/Hexalith/{repository}/actions/runs/{identity}"):
-            raise NightlyError("dispatch response uncertain: run URL mismatch")
-        return {"runId": identity, "link": value["html_url"]}
+        return dispatch_details(repository, value)
 
     def patch(self, path, document, token, *, deadline=None):
         if (not isinstance(document, dict) or set(document) != {"tag_name", "target_commitish", "draft"}
