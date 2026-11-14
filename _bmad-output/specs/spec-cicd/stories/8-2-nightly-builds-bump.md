@@ -2,7 +2,7 @@
 title: 'Nightly Builds bump'
 type: 'feature'
 created: '2026-11-14'
-status: 'in-progress'
+status: 'in-review'
 baseline_revision: '125bf2db35885fd0aaf4cad6a81109604446b099'
 review_loop_iteration: 0
 followup_review_recommended: false
@@ -112,7 +112,7 @@ The earlier planning invocation ended at ready-for-development. This implementat
 
 ## Auto Run Result
 
-Status: in-progress
+Status: in-review
 
 Implemented the secretless producer, bounded Git-object envelope, independent stdlib verifier/writer, delivery/report/module-CI observer, schedule keepalive, workflow wiring, skip policy, locked regression suites and operating documentation. The intent contract is unchanged. No Builds/module repository or production registration changed.
 
