@@ -2,7 +2,7 @@
 title: 'Delivery: the single write path into modules'
 type: feature
 created: '2026-11-14'
-status: in-progress
+status: in-review
 baseline_revision: 6d229cab21a30887722e1e1ed58088bb134daad7
 review_loop_iteration: 0
 followup_review_recommended: false
