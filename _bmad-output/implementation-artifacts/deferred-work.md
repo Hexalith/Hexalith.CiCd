@@ -307,3 +307,27 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/7-delivery-the-single-write-path-into-modules.md`
   summary: Measure whether per-slot Builds re-acquisition and partial-clone lazy fetches keep a full 17-module delivery inside the 36-minute soft deadline (unverified; medium if true).
   evidence: Review-1 E13. A real anonymous `Transport.builds("v5.1.0")` took 26–27 s from the dev host: 57 blobs, each lazily fetched. `trusted_state` runs it once per attempt, plus a preflight for each eligible module, so 17 modules take an estimated 15–20 min, not shown to exceed 36 min. Settle it by timing the first hosted multi-module run. If it is too slow, cache the verified acquisition per tag or fetch the tag without `blob:none`.
+
+### DW-33: A rerun release run may still list its earlier attempt's same-name outcome artifact, which would make a valid current-attempt outcome non-unique.
+origin: spec-deferred 124d582e1b7d
+location: tools/nightly.py:338
+source_spec: `8-1-nightly-releases.md`
+severity: medium
+reason: `outcome()` requires exactly one `hexalith-release-outcome` artifact before it rejects artifacts created before `run_started_at`. If GitHub's list-run-artifacts endpoint returns earlier attempts' artifacts for a rerun, every rerun target fails closed as an unreadable outcome (medium if true). To settle it, list the artifacts of a hosted rerun release run. If earlier attempts appear, filter by `created_at >= run_started_at` before the uniqueness check. (declared severity: medium (unverified))
+status: open
+
+### DW-34: The delivery barrier's sequential per-status scans can miss a `deliver.yml` run that moves into `waiting` between two status queries.
+origin: spec-deferred fda010c8a0b1
+location: tools/nightly.py:214
+source_spec: `8-1-nightly-releases.md`
+severity: medium
+reason: `delivery_barrier` queries `requested`, `waiting`, `pending`, `queued` and `in_progress` one after another. A run that moves queued→waiting or in_progress→waiting after the `waiting` query and before the later query appears in no inventory, so the barrier can clear while delivery is still active (medium if true). Only deployment protection on the run's environment produces `waiting`. To settle it, check whether `cicd-app` protection rules can hold a main deliver run in `waiting`, or require two consecutive clear scans. (declared severity: medium (unverified))
+status: open
+
+### DW-35: Anonymous trusted-Builds REST acquisition in each nightly job may exhaust the shared unauthenticated rate limit on hosted runners.
+origin: spec-deferred 30d6c9d78f3f
+location: tools/delivery_runtime.py:365 (Transport.builds), reused by tools/nightly_runtime.py Transport
+source_spec: `8-1-nightly-releases.md`
+severity: medium
+reason: Each nightly job acquires the trusted Builds release through delivery's existing anonymous `Transport.builds` reads: about four per job, twelve per night. If hosted runners share egress IPs, the 60/hour unauthenticated quota may already be spent, failing initialization and with it the whole night (medium if true). The same anonymous pattern already runs hourly in delivery and passed story 7's hosted requalification. To settle it, record the X-RateLimit headers from hosted nightly runs. If they show exhaustion, authenticate these public reads with the job token. (declared severity: medium (unverified))
+status: open

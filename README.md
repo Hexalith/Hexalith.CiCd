@@ -1,6 +1,10 @@
 # Hexalith.CiCd
 Maintain harmonized Hexalith CI/CD workflows threw all modules
 
+[Nightly releases](docs/nightly.md) dispatch Builds and adopted modules at
+02:17 UTC, collect their exact run outcomes, publish validated ready drafts,
+and report every target's verdict and run link.
+
 BMAD Loop worktrees initialize the direct submodules declared in `.gitmodules`
 at their pinned commits. Nested submodules stay uninitialized, even when Git's
 `submodule.recurse` setting is enabled. Initialization failures stop that unit
