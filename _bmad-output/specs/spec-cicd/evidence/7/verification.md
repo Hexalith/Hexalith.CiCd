@@ -105,3 +105,38 @@ attempt `1`, event `push`, candidate and tools-source SHAs both
 Its successful verdict agrees with both actual job conclusions. This hosted
 proof qualifies the current empty production registry; disposable remotes supply
 the separate multi-module failure/race qualification above.
+
+## Independent parent verification and matrix audit
+
+The parent read the complete superproject change since baseline
+`6d229cab21a30887722e1e1ed58088bb134daad7` at implementation HEAD
+`2ff9ac7abaf92ba57b6eb92d6b4c892b6a48d999`. Its independent Python 3.12 delivery runs passed
+9 bootstrap, 6 runtime, 12 controller and 7 workflow tests; the independent
+Python 3.14 full global run passed all 115 tests plus committed render,
+reproducibility, schemas/interfaces, acceptable publication and online lints.
+Two additional remote-state assertions were then added for the matrix audit;
+the complete expanded controller suite passed all 14 tests on both versions.
+Both isolated `python3 -I -S` entrypoint imports and Git whitespace checks pass.
+No module or Builds path differs from the baseline.
+
+Every matrix row has executed passing coverage (all cases ran; none skipped):
+
+| Matrix row | Executed covering test(s) |
+| --- | --- |
+| Advance and apply | `test_all_entry_kinds_foreign_content_modes_and_idempotence` |
+| Idempotence | `test_all_entry_kinds_foreign_content_modes_and_idempotence` |
+| Candidate rejected for one module | `test_rejected_module_repairs_old_render_healthy_sibling_advances`; `test_anonymous_rejection_without_accepted_ref_makes_no_write` |
+| Failed/missing/malformed global verdict | `test_failed_global_repairs_removed_setup_and_no_candidate_execution`; `test_missing_malformed_and_duplicate_verdict_fail_closed`; `test_missing_validation_uses_accepted_tools_and_repairs` |
+| No accepted state | `test_anonymous_rejection_without_accepted_ref_makes_no_write`; `test_failed_global_repairs_removed_setup_and_no_candidate_execution` |
+| Old run or ref race | `test_stale_candidate_and_ref_race_keep_newer_accepted_state` |
+| Invalid accepted ref | `test_nonancestor_ref_is_reported_and_excluded`; `test_invalid_ref_excluded_while_valid_sibling_repairs` |
+| Concurrent product push | `test_race_retry_parentage_and_exhaustion` |
+| Unusable Builds release/source | `test_bad_release_retains_ref_and_fails_before_module_write`; `test_tag_source_mismatch_executes_nothing_and_writes_nothing`; `test_missing_perimeter_capability_rejects_before_tag_code_executes` |
+| App unavailable for one module | `test_mint_and_transport_failure_continue_siblings`; `test_individual_mint_and_cicd_mint_failures_do_not_suppress_slots` |
+| Nightly freshness | `test_nightly_absence_boundary_and_deleted_workflow_history`; `test_hourly_history_error_and_staleness_still_repair`; `test_empty_slots_no_module_mint_and_all_main_events` |
+
+The parent independently re-downloaded authenticated artifact `14106088036`,
+verified its API digest against the archive bytes, checked the sole ZIP member
+without extraction, and compared report bytes with the committed copy. The
+successful report identities match the exact-source run; remote accepted refs
+were independently confirmed empty again. No App key was accessed.

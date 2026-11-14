@@ -204,6 +204,35 @@ class DeliveryTests(unittest.TestCase):
         for module in w.report()["modules"]:
             self.assertIn("deadline", " ".join(module["reasons"]))
 
+    def test_invalid_ref_excluded_while_valid_sibling_repairs(self):
+        w = self.ws
+        tree = git(w.remote, "rev-parse", "main^{tree}")
+        unrelated = git(w.remote, "commit-tree", tree, data=b"Unrelated accepted ref\n")
+        w.ref("Hexalith.Alpha", unrelated)
+        w.ref("Hexalith.Beta")
+        alpha_remote = Path(w.remotes["Hexalith.Alpha"])
+        alpha_head = git(alpha_remote, "rev-parse", "main")
+        self.assertEqual(w.deliver({"global": False, "modules": []}), 1)
+        alpha, beta = w.report()["modules"]
+        self.assertEqual(alpha["application"], "failed")
+        self.assertIn(unrelated, " ".join(alpha["reasons"]))
+        self.assertEqual(git(alpha_remote, "rev-parse", "main"), alpha_head)
+        self.assertEqual(git(w.remote, "rev-parse", "refs/heads/delivered/Hexalith.Alpha"), unrelated)
+        self.assertEqual(beta["application"], "pushed")
+        self.assertEqual(git(Path(w.remotes["Hexalith.Beta"]), "show", "main:.github/hexalith-ci.json"), '{"accepted":true}')
+
+    def test_anonymous_rejection_without_accepted_ref_makes_no_write(self):
+        w = self.ws
+        alpha_remote = Path(w.remotes["Hexalith.Alpha"])
+        alpha_head = git(alpha_remote, "rev-parse", "main")
+        self.assertEqual(w.deliver({"global": True, "modules": ["Hexalith.Beta"]}), 1)
+        alpha, beta = w.report()["modules"]
+        self.assertEqual((alpha["advancement"], alpha["application"]), ("skipped", "no-ref"))
+        self.assertIn("anonymous module validation failed", alpha["reasons"])
+        self.assertEqual(git(alpha_remote, "rev-parse", "main"), alpha_head)
+        self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/Hexalith.Alpha"), "")
+        self.assertEqual(beta["application"], "pushed")
+
 
 if __name__ == "__main__":
     unittest.main()
