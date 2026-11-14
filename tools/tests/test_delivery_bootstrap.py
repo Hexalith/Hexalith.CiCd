@@ -97,6 +97,18 @@ class BootstrapTests(unittest.TestCase):
             self.assertTrue(self.w.report()["failed"])
             self.assertEqual(json.loads((self.w.directory / "state.json").read_bytes())["slots"], [])
 
+    def test_mint_permit_reserves_a_minute_before_soft_deadline(self):
+        w = self.w
+        w.select()
+        self.assertEqual(w.call("delivery_bootstrap.py", ["permit", "--slot", "1"]), 0)
+        self.assertTrue(w.outputs.read_text().endswith("active=true\n"))
+        state_path = w.directory / "state.json"
+        state = json.loads(state_path.read_bytes())
+        state["started"] -= 35 * 60
+        state_path.write_text(json.dumps(state))
+        self.assertEqual(w.call("delivery_bootstrap.py", ["permit", "--slot", "1"]), 0)
+        self.assertTrue(w.outputs.read_text().endswith("active=false\n"))
+
 
 if __name__ == "__main__":
     unittest.main()

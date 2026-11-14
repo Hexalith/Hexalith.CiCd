@@ -252,6 +252,7 @@ def driver():
     original = rt.environment
     def fixture_environment():
         env = original()
+        env["TMPDIR"] = str(Path(configuration).parent)
         index = int(env["GIT_CONFIG_COUNT"])
         env.update(GIT_CONFIG_COUNT=str(index + 1))
         env[f"GIT_CONFIG_KEY_{index}"] = "protocol.file.allow"

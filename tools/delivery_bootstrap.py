@@ -212,7 +212,7 @@ def fallback(root, reason, *, slot=None, final=True):
 
 def main(argv=None, *, transport=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=("select", "initialize", "module", "finalize"))
+    parser.add_argument("operation", choices=("select", "permit", "initialize", "module", "finalize"))
     parser.add_argument("--slot", type=int)
     args = parser.parse_args(argv)
     context = os.environ.copy()
@@ -220,6 +220,19 @@ def main(argv=None, *, transport=None):
     root = Path(context["DELIVERY_DIRECTORY"]).resolve()
     if args.operation == "select":
         return select(root, context, transport=transport)
+    if args.operation == "permit":
+        active = "false"
+        try:
+            state = rt.read_state(root / "state.json")
+            budget = rt.Budget(state["started"])
+            budget.check()
+            if (state.get("ready") and type(args.slot) is int and 1 <= args.slot <= len(state["slots"])
+                    and budget.clock() - budget.started < 35 * 60):
+                active = "true"
+        except Exception:
+            pass
+        emit({"active": active}, context.get("GITHUB_OUTPUT"))
+        return 0
     return invoke(root, args.operation, args.slot, context=context)
 
 
