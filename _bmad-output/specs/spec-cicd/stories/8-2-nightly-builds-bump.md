@@ -48,6 +48,8 @@ App jobs use `cicd-app`, mint their own explicitly scoped tokens through the pin
 
 ## Code Map
 
+This map records the planning baseline. The completed execution checklist, verification record and as-built notes below describe the resulting implementation.
+
 - `.github/workflows/nightly.yml` — existing `dispatch`, `wait`, `publish-ready` jobs, timeouts 55/330/55 minutes. Preserve main-only gating, cancellation, cache policy, pinned actions, nonpersistent checkout credentials, failure seeding and final reports. There is no bump/scan placeholder.
 - `tools/nightly.py` — `SECONDS`, `permit`, `poll`, `finalize` provide persisted budgets and failure isolation. `tools/nightly_runtime.py` — `Budget`, `API._path`, `_request`, `artifact_member`, `validate_state` provide strict transport and handoff patterns. Existing state is closed to the three release phases; add a separate bump/report contract.
 - `tools/check_global.py` — `run`, `check_committed_render`, `check_committed_inputs` require candidate HEAD to contain both inputs and rendered bytes/modes. `check_release` is the existing acceptable-tag reference; `run_tool_tests` discovers every `tools/tests/test_*.py`. It imports third-party dependencies and must remain outside privileged jobs.
@@ -86,6 +88,8 @@ App jobs use `cicd-app`, mint their own explicitly scoped tokens through the pin
 
 ## Spec Change Log
 
+- 2026-11-14 — Hosted verification corrected all seven artifact directories to canonical nonhidden sibling paths and corrected delivery dispatch to authenticate the pinned API's HTTP 200 run-details response. Enable remains exact empty HTTP 204. These are protocol/transport fixes; the intent contract and stage policy are unchanged.
+
 ## Review Triage Log
 
 ## Design Notes
@@ -112,6 +116,6 @@ Status: in-progress
 
 Implemented the secretless producer, bounded Git-object envelope, independent stdlib verifier/writer, delivery/report/module-CI observer, schedule keepalive, workflow wiring, skip policy, locked regression suites and operating documentation. The intent contract is unchanged. No Builds/module repository or production registration changed.
 
-The parent verification passed all six initial requested suites (102 tests), every edge-case matrix row, and the unchanged global gate (13 suites/272 tests plus actionlint 1.7.12 and online zizmor 1.32.0). Hosted qualification then exposed and resolved artifact paths containing `..` and the dispatch API's current HTTP 200 response. The corrected workflow passed 21 tests; the dispatch fix passed 114 tests across runtime, writer, release controllers, observer and keepalive. Final comprehensive verification and mandatory review follow these corrections.
+The parent verification passed all six initial requested suites (102 tests), every edge-case matrix row, and the unchanged global gate (13 suites/272 tests plus actionlint 1.7.12 and online zizmor 1.32.0). Hosted qualification then exposed and resolved artifact paths containing `..` and the dispatch API's current HTTP 200 response. The corrected workflow passed 21 tests; the dispatch fix passed 114 tests across runtime, writer, release controllers, observer and keepalive. Final parent verification after both hosted fixes passed the unchanged global gate: 13 suites/275 tests, all global checks, actionlint 1.7.12 and online zizmor 1.32.0. Every matrix-covering test is registered, enabled and passing. Mandatory independent review follows.
 
-The [hosted qualification record](../../../../docs/nightly-bump-qualification.md) binds successful nested-path probe 43643834124 and delivery-dispatch proof 43643836917 to source revision `6a7b287b7f2b40614970f10e3479c109f114d863`. The probe artifact was authenticated and its ref cleanup independently confirmed. The separate job-token proof returned actual delivery run 43643848734. That transport uses GITHUB_TOKEN and explicit delivery dispatch; the App fallback was not selected. Temporary workflow cleanup is in progress.
+The [hosted qualification record](../../../../docs/nightly-bump-qualification.md) binds successful nested-path probe 43643834124 and delivery-dispatch proof 43643836917 to source revision `6a7b287b7f2b40614970f10e3479c109f114d863`. The probe artifact was authenticated and its ref cleanup independently confirmed. The separate job-token proof returned actual delivery run 43643848734. That transport uses GITHUB_TOKEN and explicit delivery dispatch; the App fallback was not selected. Temporary workflow cleanup is complete at revision `f5b6389b9363bdf062ada1fed9dc48b028dea462`: its Actions definition is disabled, its file is absent from remote main, and all probe refs are absent. The earlier hosted empty-registry delivery completed successfully, and the authenticated corrected-dispatch delivery has started.
