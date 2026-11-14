@@ -58,3 +58,564 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: uv run --locked --script tools/validate.py
+
+  deliver:
+    needs: validate
+    if: ${{ always() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: cicd-app
+    permissions:
+      contents: read
+    env:
+      DELIVERY_DIRECTORY: ${{ github.workspace }}/.delivery-state-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Checkout immutable delivery bootstrap
+        timeout-minutes: 3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 03d130f82366dec8ed70a21a14177ae55ea09ca1
+          path: .delivery-bootstrap
+          sparse-checkout: |
+            tools/delivery_bootstrap.py
+            tools/delivery_runtime.py
+          sparse-checkout-cone-mode: false
+          submodules: false
+          persist-credentials: false
+
+      - name: Select trusted delivery source and initialize report
+        id: select
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          DELIVERY_VERDICT: ${{ needs.validate.outputs.verdict }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py select
+
+      - name: Mint CiCd accepted-ref and freshness token
+        timeout-minutes: 1
+        id: cicd_token
+        if: ${{ always() && steps.select.outputs.ready == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.CiCd
+          permission-contents: write
+          permission-workflows: write
+          permission-actions: read
+
+      - name: Initialize delivery and hourly freshness
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py initialize
+
+      - name: Check module slot 01 time budget
+        id: module_01_budget
+        if: ${{ always() && steps.select.outputs.slot_01 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 1
+
+      - name: Mint module slot 01 token
+        timeout-minutes: 1
+        id: module_01_token
+        if: ${{ always() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_01 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_01 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 01
+        if: ${{ always() && steps.select.outputs.slot_01 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_01_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 1
+
+      - name: Check module slot 02 time budget
+        id: module_02_budget
+        if: ${{ always() && steps.select.outputs.slot_02 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 2
+
+      - name: Mint module slot 02 token
+        timeout-minutes: 1
+        id: module_02_token
+        if: ${{ always() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_02 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_02 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 02
+        if: ${{ always() && steps.select.outputs.slot_02 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_02_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 2
+
+      - name: Check module slot 03 time budget
+        id: module_03_budget
+        if: ${{ always() && steps.select.outputs.slot_03 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 3
+
+      - name: Mint module slot 03 token
+        timeout-minutes: 1
+        id: module_03_token
+        if: ${{ always() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_03 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_03 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 03
+        if: ${{ always() && steps.select.outputs.slot_03 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_03_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 3
+
+      - name: Check module slot 04 time budget
+        id: module_04_budget
+        if: ${{ always() && steps.select.outputs.slot_04 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 4
+
+      - name: Mint module slot 04 token
+        timeout-minutes: 1
+        id: module_04_token
+        if: ${{ always() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_04 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_04 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 04
+        if: ${{ always() && steps.select.outputs.slot_04 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_04_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 4
+
+      - name: Check module slot 05 time budget
+        id: module_05_budget
+        if: ${{ always() && steps.select.outputs.slot_05 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 5
+
+      - name: Mint module slot 05 token
+        timeout-minutes: 1
+        id: module_05_token
+        if: ${{ always() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_05 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_05 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 05
+        if: ${{ always() && steps.select.outputs.slot_05 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_05_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 5
+
+      - name: Check module slot 06 time budget
+        id: module_06_budget
+        if: ${{ always() && steps.select.outputs.slot_06 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 6
+
+      - name: Mint module slot 06 token
+        timeout-minutes: 1
+        id: module_06_token
+        if: ${{ always() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_06 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_06 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 06
+        if: ${{ always() && steps.select.outputs.slot_06 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_06_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 6
+
+      - name: Check module slot 07 time budget
+        id: module_07_budget
+        if: ${{ always() && steps.select.outputs.slot_07 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 7
+
+      - name: Mint module slot 07 token
+        timeout-minutes: 1
+        id: module_07_token
+        if: ${{ always() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_07 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_07 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 07
+        if: ${{ always() && steps.select.outputs.slot_07 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_07_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 7
+
+      - name: Check module slot 08 time budget
+        id: module_08_budget
+        if: ${{ always() && steps.select.outputs.slot_08 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 8
+
+      - name: Mint module slot 08 token
+        timeout-minutes: 1
+        id: module_08_token
+        if: ${{ always() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_08 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_08 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 08
+        if: ${{ always() && steps.select.outputs.slot_08 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_08_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 8
+
+      - name: Check module slot 09 time budget
+        id: module_09_budget
+        if: ${{ always() && steps.select.outputs.slot_09 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 9
+
+      - name: Mint module slot 09 token
+        timeout-minutes: 1
+        id: module_09_token
+        if: ${{ always() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_09 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_09 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 09
+        if: ${{ always() && steps.select.outputs.slot_09 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_09_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 9
+
+      - name: Check module slot 10 time budget
+        id: module_10_budget
+        if: ${{ always() && steps.select.outputs.slot_10 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 10
+
+      - name: Mint module slot 10 token
+        timeout-minutes: 1
+        id: module_10_token
+        if: ${{ always() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_10 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_10 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 10
+        if: ${{ always() && steps.select.outputs.slot_10 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_10_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 10
+
+      - name: Check module slot 11 time budget
+        id: module_11_budget
+        if: ${{ always() && steps.select.outputs.slot_11 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 11
+
+      - name: Mint module slot 11 token
+        timeout-minutes: 1
+        id: module_11_token
+        if: ${{ always() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_11 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_11 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 11
+        if: ${{ always() && steps.select.outputs.slot_11 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_11_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 11
+
+      - name: Check module slot 12 time budget
+        id: module_12_budget
+        if: ${{ always() && steps.select.outputs.slot_12 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 12
+
+      - name: Mint module slot 12 token
+        timeout-minutes: 1
+        id: module_12_token
+        if: ${{ always() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_12 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_12 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 12
+        if: ${{ always() && steps.select.outputs.slot_12 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_12_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 12
+
+      - name: Check module slot 13 time budget
+        id: module_13_budget
+        if: ${{ always() && steps.select.outputs.slot_13 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 13
+
+      - name: Mint module slot 13 token
+        timeout-minutes: 1
+        id: module_13_token
+        if: ${{ always() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_13 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_13 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 13
+        if: ${{ always() && steps.select.outputs.slot_13 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_13_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 13
+
+      - name: Check module slot 14 time budget
+        id: module_14_budget
+        if: ${{ always() && steps.select.outputs.slot_14 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 14
+
+      - name: Mint module slot 14 token
+        timeout-minutes: 1
+        id: module_14_token
+        if: ${{ always() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_14 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_14 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 14
+        if: ${{ always() && steps.select.outputs.slot_14 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_14_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 14
+
+      - name: Check module slot 15 time budget
+        id: module_15_budget
+        if: ${{ always() && steps.select.outputs.slot_15 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 15
+
+      - name: Mint module slot 15 token
+        timeout-minutes: 1
+        id: module_15_token
+        if: ${{ always() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_15 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_15 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 15
+        if: ${{ always() && steps.select.outputs.slot_15 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_15_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 15
+
+      - name: Check module slot 16 time budget
+        id: module_16_budget
+        if: ${{ always() && steps.select.outputs.slot_16 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 16
+
+      - name: Mint module slot 16 token
+        timeout-minutes: 1
+        id: module_16_token
+        if: ${{ always() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_16 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_16 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 16
+        if: ${{ always() && steps.select.outputs.slot_16 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_16_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 16
+
+      - name: Check module slot 17 time budget
+        id: module_17_budget
+        if: ${{ always() && steps.select.outputs.slot_17 != '' }}
+        continue-on-error: true
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 17
+
+      - name: Mint module slot 17 token
+        timeout-minutes: 1
+        id: module_17_token
+        if: ${{ always() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ steps.select.outputs.slot_17 }}
+          permission-contents: write
+          permission-workflows: write
+          permission-administration: ${{ steps.select.outputs.check_17 == 'true' && 'read' || '' }}
+
+      - name: Process module slot 17
+        if: ${{ always() && steps.select.outputs.slot_17 != '' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+          MODULE_TOKEN: ${{ steps.module_17_token.outputs.token }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 17
+
+      - name: Finalize delivery report and aggregate result
+        if: ${{ always() }}
+        run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py finalize
+
+      - name: Upload delivery report
+        timeout-minutes: 3
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-delivery
+          path: ${{ env.DELIVERY_DIRECTORY }}/report/delivery.json
+          if-no-files-found: error
+          retention-days: 90

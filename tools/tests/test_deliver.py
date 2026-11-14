@@ -189,6 +189,21 @@ class DeliveryTests(unittest.TestCase):
         self.assertFalse(marker.exists())
         self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
 
+    def test_expired_private_state_budget_causes_zero_writes(self):
+        w = self.ws
+        w.select()
+        w.operation("initialize")
+        path = w.directory / "state.json"
+        state = json.loads(path.read_bytes())
+        state["started"] -= 51 * 60
+        path.write_text(json.dumps(state))
+        for slot in (1, 2):
+            self.assertEqual(w.operation("module", slot), 0)
+        self.assertEqual(w.operation("finalize"), 1)
+        self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
+        for module in w.report()["modules"]:
+            self.assertIn("deadline", " ".join(module["reasons"]))
+
 
 if __name__ == "__main__":
     unittest.main()

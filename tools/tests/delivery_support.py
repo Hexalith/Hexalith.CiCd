@@ -270,10 +270,8 @@ def driver():
             return original_run(command, *positional, **keywords)
         module.subprocess.run = nested
     try:
-        if Path(script).name == "delivery_bootstrap.py":
-            result = module.main(args, transport=Transport())
-        else:
-            result = module.main(args, transport=Transport())
+        budget = rt.Budget(rt.read_state(Path(args[args.index("--state") + 1]))["started"]) if "--state" in args else None
+        result = module.main(args, transport=Transport(budget))
     except Exception:
         result = 2
     raise SystemExit(result)
