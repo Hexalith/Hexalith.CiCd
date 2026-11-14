@@ -180,8 +180,77 @@ fixtures live under `tools/tests/fixtures/validate/`; run them with
 and `uv lock --script tools/tests/test_validate.py`. The story 10-2 ownership
 placeholder and empty deny values above remain intentional.
 
-`deliver.yml` currently runs only this read-only `validate` job on pushes to
+`deliver.yml` runs this read-only `validate` job on pushes to
 `main`, pull requests, hourly at minute 47 and manual dispatch. Its `verdict` job
 output carries the JSON even after ordinary validation failures. Main runs use
 noncancelling concurrency group `deliver`; all other refs use cancelling
-`deliver-validate-<ref>`. Delivery and App checks belong to a later story.
+`deliver-validate-<ref>`.
+
+## Delivery and repair
+
+On `main`, the second job enters `cicd-app` after validation even when validation
+fails. The immutable bootstrap is checked out into `.delivery-bootstrap` from
+the literal source commit in the workflow. It fetches committed CiCd objects
+anonymously, validates the exact JSON verdict, and verifies every accepted
+`delivered/<Repo>` ref is ancestral to current CiCd `main`. A true global verdict
+selects candidate tools. Otherwise it selects the newest valid accepted target
+in `git rev-list --topo-order main`; missing accepted tools fail closed, with no
+candidate fallback. Only regular `tools/` blobs are exported. Setup/workflow YAML
+and module executables are never parsed or run in the privileged job.
+
+The selector supplies seventeen sequential ordinal slots from the committed
+registry and accepted-ref union. The workflow has no second module-name list.
+Overflow fails before writes; an empty registry succeeds without module tokens
+or accepted-ref writes. A module's scoped mint failure or controller failure
+does not prevent later slots. Each passing module must satisfy both anonymous
+validation and the closed App checks (installation access, AD-21 rulesets,
+CodeQL default setup off, Dependabot security updates off, retention 90 days).
+Only then can its accepted ref advance forward to the exact candidate SHA.
+An older run reports `superseded by <full-sha>` and applies current accepted state.
+
+Every valid accepted ref is reapplied, including skipped modules and failed
+global runs. The writer verifies that ref's exact published immutable bot Builds
+release, remote tag object, peeled source, live-main ancestry, and released
+perimeter schema/library before loading code or writing the module. The current
+`v5.1.0` release supplies this prerequisite. Its library applies every perimeter
+entry to a private index from anonymous live module `main`, preserving foreign
+content. An unchanged tree produces no commit. A changed tree gets one
+`build(cicd): apply …` commit whose sole parent is fresh module `main`. Only a
+genuine non-fast-forward with changed main retries, at most three reapplications;
+the writer never rebases or force-pushes.
+
+Each entered job attempts one `hexalith-delivery` artifact containing only
+`delivery.json`, written atomically from bootstrap initialization onward. Its
+`schema`, run ID/attempt/event, candidate SHA, tools-source SHA (nullable),
+`global`, `failed`, `failures`, and `freshness` describe the run. Deterministic
+`modules` rows contain `repository`, `accepted_sha`, `advancement` (`advanced`,
+`unchanged`, `superseded`, `skipped`, `failed`), `application` (`pushed`,
+`unchanged`, `no-ref`, `failed`), `pushed_sha`, `retries`, sanitized `reasons`,
+and `processed`. Advancement and repair are independent. Any failed global or
+module check, unavailable scope, stale/unreadable nightly history, or failed
+write makes finalization fail after all repairs. Supersession and an empty
+registry alone do not fail. On hourly runs, valid empty nightly history is not
+activated; a latest main nightly creation time exactly 26 hours old passes,
+and older fails regardless of the nightly conclusion. Deleted workflow files
+cannot hide retained path-matched run history.
+
+Only the pinned mint action receives the `cicd-app` private key and client ID.
+CiCd tokens have Contents/Workflows write and Actions read; module tokens have
+Contents/Workflows write, plus Administration read only when checks are needed.
+Tokens are private process inputs, never JSON state, files, URLs or command
+arguments; Git receives a process-local header scoped to GitHub HTTPS. No module
+or Builds source receives the private key. Processes discard inherited Git,
+Python, helper, attribute and credential configuration before tagged code loads.
+All work observes a 36-minute soft deadline within the 40-minute job, with token
+age conservatively measured from selector startup and limited to 50 minutes.
+
+To maintain the bootstrap, first test and commit the selector, runtime and
+controller, obtain the full commit with `git rev-parse HEAD`, and push that source
+so GitHub can fetch it. Only afterward change the workflow's literal checkout
+SHA. Never point it at the candidate, a branch, a fabricated hash or a placeholder.
+Re-run the four `test_delivery_*.py`/`test_deliver.py` scripts with adjacent locked
+PEP 723 environments on Python 3.12 and runner Python, then the existing suites
+and global checks outside `cicd-app`. Hosted qualification records the exact
+source/run/artifact identities and inspected report in
+`_bmad-output/specs/spec-cicd/evidence/7/verification.md`. Production setup files
+remain empty until onboarding; delivery is infrastructure, not adoption.
