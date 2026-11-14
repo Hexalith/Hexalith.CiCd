@@ -287,3 +287,17 @@ are saved locally. Live online gates and hosted requalification remain unrun;
 the earlier hosted evidence is unchanged. The earlier Python 3.12 regression
 wheel limitation remains applicable only to render/validate, whose final runner
 passes are recorded above.
+
+
+### Hosted Requalification (2026-11-14)
+
+After the user authorized the push, `d5e3611b29d0d0decf054cb4ce55d0f96b4c229f`
+was pushed to main and requalified at its exact source. Delivery run
+`43586771910` succeeded: validate job `132422865247` and deliver job
+`132424239258`. All 51 module steps were skipped. Artifact `14110674238` holds
+the final successful empty-registry report, and its archive digest matches the
+API digest. Accepted refs stayed empty. The online global check passed every
+gate, including the immutable-bootstrap content check and zizmor 1.32.0. The
+live online gates and hosted requalification noted above are therefore
+complete. Identities are recorded in
+`_bmad-output/specs/spec-cicd/evidence/7/verification.md`.

@@ -140,3 +140,70 @@ verified its API digest against the archive bytes, checked the sole ZIP member
 without extraction, and compared report bytes with the committed copy. The
 successful report identities match the exact-source run; remote accepted refs
 were independently confirmed empty again. No App key was accessed.
+
+## Hosted requalification after reviews 1 and 2
+
+The review-1 and review-2 fixes changed the workflow's cancellation conditions
+and the selected controller/runtime sources, so the empty-registry integration
+was repeated at the exact pushed source. The immutable bootstrap pin
+`03d130f82366dec8ed70a21a14177ae55ea09ca1` is unchanged. Commits
+`58341fa67826946b5e09538c74c61547aca7583d` and
+`d5e3611b29d0d0decf054cb4ce55d0f96b4c229f` were pushed to main
+(`717df85b8d23de1472790afd970c36802c403a24..d5e3611b29d0d0decf054cb4ce55d0f96b4c229f`)
+with the same CiCd-agent profile and no token overrides. The App private key was
+not accessed.
+
+Before the push and after the run, the production registry held only
+`setup/README.md` and the anonymous `git ls-remote --heads origin
+'refs/heads/delivered/*'` result was empty.
+
+Qualification run: [43586771910](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43586771910),
+attempt 1, event `push`, workflow `.github/workflows/deliver.yml` (ID 417001267),
+head `d5e3611b29d0d0decf054cb4ce55d0f96b4c229f`. It completed **success** at
+`2026-11-14T10:51:37Z`.
+
+| Job | Full job ID | Conclusion | UTC interval |
+| --- | --- | --- | --- |
+| validate | 132422865247 | success | 10:45:27–10:51:21 |
+| deliver | 132424239258 | success | 10:51:26–10:51:37 |
+
+The immutable checkout, selector, CiCd-scoped mint, initialization, finalizer
+and upload steps concluded success. All 51 module steps were skipped: 17 budget
+checks, 17 mints and 17 controller steps. No module scope was minted and no
+writer ran.
+
+The authenticated artifact was downloaded with the CiCd-agent profile and
+inspected in memory with `zipfile` under `python3 -I`. It was not extracted.
+Its sole member, `delivery.json` (306 bytes), is preserved as
+[hosted-delivery-review-2.json](hosted-delivery-review-2.json).
+
+- Artifact: **14110674238**, name `hexalith-delivery`, created
+  `2026-11-14T10:51:35Z`, 335 archive bytes, not expired. Its metadata binds
+  run 43586771910 and head `d5e3611b29d0d0decf054cb4ce55d0f96b4c229f`.
+- API digest and independently computed archive SHA-256 both equal
+  `d0ac417d20acbc4dbf3ea87dd84c68c35884a163473121e77f91fb3df344c59e`.
+- Exact report SHA-256:
+  `88256648699e677e010c60f17c0bcbe5e4aed7c790ba9cfb922269c65fcc0cc2`.
+
+The report has `schema: hexalith.delivery.v1`, run ID `43586771910`, attempt `1`,
+event `push`, candidate and tools-source SHAs both
+`d5e3611b29d0d0decf054cb4ce55d0f96b4c229f`, `global: true`, `failed: false`,
+`failures: []`, `modules: []` and `freshness.status: not-scheduled`. Its verdict
+agrees with both job conclusions.
+
+The online gates that the local review runs could not execute were run on the
+same clean tree:
+`uv run --locked --script --python 3.14 tools/check_global.py`, with the
+CiCd-agent credential passed only through the process environment. Every gate
+passed. Those gates are committed render inputs and render, the online
+immutable-bootstrap content check, render reproducibility, schemas and caller
+interfaces, acceptable Builds publication, actionlint 1.7.12 and online
+zizmor 1.32.0. All discovered suites also passed: controller 17, bootstrap 9,
+runtime 12, workflow 10, render 32 and validate 51. The output, which contains
+no credential, is saved locally (ignored `*.log`, like the earlier local logs) as
+[review-2-online-global-check.log](review-2-online-global-check.log).
+
+This run qualifies push delivery for the current empty registry. Hourly
+schedule freshness remains covered by the executed controller and workflow
+scenarios. The deferred Dependabot-response and 17-module timing questions
+still need onboarded modules.
