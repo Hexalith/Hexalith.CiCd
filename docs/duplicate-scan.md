@@ -24,90 +24,204 @@ staging is capped at 128 MiB, reports at 16 MiB and findings at 1,000. Fetch, pa
 path, symlink, gitlink and capacity failures are explicit. A failed module cannot
 prevent healthy siblings from contributing files and findings.
 
-Supported YAML, shell, PowerShell and Python files beneath
-`.github/actions/**` are initial sources, including dormant action directories.
-The selected extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1` and
-`.py`. Literal local calls are followed recursively, including local Python
-imports and package initialization. A called extensionless script, or an action
-source with a supported shell/Python shebang, is also included. Static discovery covers:
-
-- Local composite `uses:` calls, literal `working-directory`, and literal Bash/sh `cd`.
-- Workspace and action path expressions, their usual environment-variable
-  forms, and PowerShell `$PSScriptRoot` paths.
-- Direct script invocations, `bash`/`sh`, `pwsh`/`powershell`, shell `source` and
-  dot sourcing, plus literal interpreter `-c` or `-Command` strings. Literal
-  calls in `while`, `until` and `elif` conditions are included. PowerShell
-  `Import-Module` accepts a literal local module directly or through `-Name`.
-- Python file calls, `python -m package.module`, static `import`/`from` imports,
-  namespace packages, package initializers and executable `__main__.py` files,
-  and literal `subprocess`, `os.system` and `runpy` calls. File invocations retain
-  their original script import root through recursive imports; `-m`, `-c` and
-  inline Python action shells start from the known working directory.
-- A literal subprocess `cwd` resolves relative to the invoking process's known
-  working directory and is inherited by the child script's discovery. `None`
-  retains that directory. Dynamic working directories, unsafe directory paths,
-  alternate executable overrides and expanded/positional subprocess options
-  that could change resolution fail with a source diagnostic. Computed `env`
-  overrides and overrides of `PYTHONPATH`, `PYTHONHOME`, `PYTHONSAFEPATH` or
-  `PATH` also fail coverage explicitly.
-- Static subprocess, importlib and runpy aliases are followed inside functions
-  and other scopes. Reused alias names retain all recognized possibilities.
-  Python search-path mutations (`sys.path`, its aliases, import hooks and
-  `site.addsitedir`) and process working-directory mutations fail coverage
-  explicitly because their execution order is outside this static model.
-- `env`/`exec`/`command`, `time`, `nohup`, `nice`, `sudo`/`doas`, `setsid`,
-  `stdbuf`, `ionice`, `unbuffer`, `xargs`, `timeout DURATION`, `flock FILE` and
-  `chrt PRIORITY` wrappers without options, and literal `uv run` script targets.
-  Wrapper option forms and uv `--directory`/`-C` fail coverage.
-- Literal `eval`/`Invoke-Expression` text, `trap` handlers and `find -exec`/`-ok`
-  commands. A directory change inside evaluated or trap text fails coverage;
-  `find -execdir`/`-okdir` and `-exec {}` fail.
-- Interpreter options are read only before the script or `-m`/`-c`/`-Command`
-  operand; later words are script arguments. Versioned and `.exe` interpreter
-  spellings (`python3.11`, `pypy3`, `python.exe`, `pwsh.exe`) are recognized.
-  `pwsh -WorkingDirectory`, `-EncodedCommand` and `-CommandWithArgs` fail. A
-  `node`, `deno`, `bun`, `ruby`, `perl` or `php` call of a tracked local script fails
-  as an unsupported language. `python -m` with no local top-level package (for
-  example `pip`) is an installed tool, not a missing local call.
-- PowerShell `using module` paths. Comment-based help (`<# ... #>` starting a
-  line), word-internal `#` such as `$#`, and a UTF-8 byte-order mark do not hide
-  or invent calls.
-- `os.popen` and `subprocess.getoutput`/`getstatusoutput` literal commands.
-  `os.exec*`, `os.spawn*`, `os.posix_spawn*`, `asyncio.create_subprocess_*`,
-  `pty.spawn`, file-location import loaders, `exec`, `compile`, star imports of
-  process/import modules and `functools.partial` of a recognized process/import
-  API fail coverage. A `from module import name` of a non-local module never
-  selects a local file merely named `name`.
-- Shell assignments, `env` assignments, exports/declarations and composite step
-  `env` entries for `PYTHONPATH`, `PYTHONHOME` or `PYTHONSAFEPATH`, and Python
-  `os.environ`/`os.putenv` writes of those or computed names, fail coverage.
-  `contextlib.chdir` is a working-directory mutation.
-
-Command substitutions, shell functions/compound blocks, subshells, PowerShell
-script blocks and `Start-Process`/`Invoke-Command` are explicit coverage failures.
-Directory stack/location commands (`pushd`, `popd`, `Set-Location` and their
-supported spellings) also fail. A sourced script that changes the caller's directory
-fails coverage instead of letting later calls use a guessed directory. Quoted
-ordinary data arguments remain data, including text that resembles these forms.
-These conservative failures also apply to ordinary constructs that call no local
-script, such as `$(date)`, `case` patterns, heredoc bodies and PowerShell
-variable assignments; extend central discovery before onboarding modules whose
-actions rely on them.
-
-A path passed only as data is not a script call.
-Repository configuration is never a detector input: `.jscpd*`, `.gitignore`,
-`.ignore` and source suppression directives cannot waive detection.
-
-Static discovery cannot resolve an arbitrary computed script path. A local call
-with a missing, unsafe, unsupported or unresolved target is a failed coverage
-diagnostic at the originating action or script. Make the target statically
-identifiable or extend the central discovery implementation and its fixtures;
-do not hide it through a module-specific exclusion. The scanner does not prove
-that differently written implementations share no logic.
-
 An empty registry succeeds with an explicit zero scope. A registered repository
 with no custom-action sources also succeeds with zero files after recording its
 live revision. Neither case means a failed fetch or unresolved call was clean.
+Repository configuration is never a detector input: `.jscpd*`, `.gitignore`,
+`.ignore` and source suppression directives cannot waive detection.
+
+## Discovery coverage model
+
+Initial sources are the YAML, shell, PowerShell and Python files beneath
+`.github/actions/**`, including dormant action directories. The selected
+extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1` and `.py`. An
+extensionless file with a shebang is selected too, and fails as an unsupported
+language unless the shebang names a shell, PowerShell or Python. A dormant file's
+action context, which `$GITHUB_ACTION_PATH` names, is its nearest ancestor
+directory holding `action.yml` or `action.yaml`. Discovery reads every reachable
+source as data and never executes it. Recognized calls refine resolution only.
+Two fail-safe rules decide coverage: literal references are included, and
+unmodeled indirection fails.
+
+### Recognized calls refine resolution
+
+Recognized forms supply the exact working directory, import roots and language:
+
+- Each composite step is discovered independently, and its diagnostics name the
+  step's line. A local `uses:` names exactly one `action.yml`/`action.yaml` under
+  `.github/actions/`; any other `uses:` must pin a full commit SHA. Literal
+  `working-directory` and literal Bash `cd` set the working directory.
+- Workspace and action path expressions, their environment-variable forms
+  (only at a variable-name boundary) and PowerShell `$PSScriptRoot`.
+- Direct script paths; `bash`, `sh`, `dash`, `zsh`, `ksh`, `pwsh` and
+  `powershell`; `source` and dot sourcing; literal `-c` and `-Command` strings;
+  PowerShell `Import-Module` (directly or through `-Name`) and `using module`.
+  Interpreter options are read positionally, so later words are script
+  arguments. Versioned and `.exe` interpreter spellings are recognized.
+- The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
+  `sudo`, `doas`, `setsid`, `stdbuf`, `ionice`, `unbuffer` and `xargs` wrappers,
+  plus `timeout DURATION`, `flock FILE` and `chrt PRIORITY`, also when called by
+  absolute path. `command -v` and `command -V` are non-executing probes. Leading
+  list and block words (`then`, `do`, `else`, `{`, `}`, `try`, `catch`,
+  `finally` and similar), redirections and `NAME=value` or `NAME+=value` prefixes
+  are skipped.
+- `uv run` with every known option value consumed, where `-m`/`--module` means
+  `python -m` and `--script`/`--gui-script` runs the target as Python, and the
+  child command of `poetry`, `pipenv`, `pdm` and `hatch run`.
+- Literal `eval`/`Invoke-Expression` text, `trap` handlers (including after
+  `--`) and `find -exec`/`-ok` commands.
+- Python file calls, `python -m` (a package's `__main__.py`), static
+  `import`/`from` imports, namespace packages and every enclosing `__init__.py`.
+  Literal `subprocess`, `os.system`, `os.popen`, `runpy`, `importlib.import_module`
+  and `__import__` calls are followed too. So are static name aliases of these
+  APIs, and `sys.executable` (or an alias of it) as argv[0]. A literal subprocess
+  `cwd` applies to its child. File invocations keep the script's import root;
+  `-m`, `-c` and inline Python action shells start from the working directory.
+
+### Rule 1: literal references are included
+
+Every literal in a reachable source counts: a shell word after quote removal, a
+Python string constant (including list and tuple elements and the words inside
+it), or a scalar in an action file. It is a reference when it names a tracked
+regular shell, PowerShell or Python script, by suffix or as an extensionless file
+with a supported shebang. The reference is included and traversed whatever
+consumes it: any command, wrapper, runner, block, pipeline, redirection, heredoc
+body or API. For example, `cat scripts/tool.py` and `echo "see scripts/x.sh"`
+include those scripts.
+
+References resolve against every candidate base:
+
+- the workspace root;
+- the owning action directory;
+- the referencing file's directory;
+- every literal working directory that the source establishes, before and after
+  each change, so a conditional `cd` keeps both directories.
+
+Every match is included, and over-inclusion is acceptable. A literal never pulls
+in YAML outside `.github/actions`, and a literal that names nothing is data.
+
+Module names follow the same rule. In any literal sequence (a line's shell words,
+a heredoc body line, a Python string, a list, tuple or set, or a call's
+arguments), the operand of `-m` or `--module` names a module. So does every
+module that the Python code in a `-c` operand imports, including through
+`importlib.import_module`, `__import__` or `runpy.run_module`. A word holding
+whitespace is tokenized again, so command strings and nested `bash -c` or
+`pwsh -Command` text count too. Each module resolves from every base as an
+import root; its file, its package initializer and `__main__.py`, and every
+enclosing `__init__.py` are included. So `xvfb-run python -m tool`,
+`Start-Job { python -m tool }` and
+`sys.modules['subprocess'].run(['python', '-m', 'tool'])` include a local
+`tool.py` even though the consumer is unrecognized.
+
+From an execution position (a command word, interpreter operand, sourced path or
+`runpy.run_path` target), a literal is resolved precisely first. When that exact
+target is not tracked, every base is tried, and the literal fails coverage only
+when it resolves against none of them. A precise path that is unsafe, escapes the
+module or crosses a symlink, blob or gitlink still fails. A tracked script in
+another supported language also fails, for example `bash x.py`, `python x.sh`,
+`pwsh -File x.sh`, `uv run --script x.sh`, Bash `source x.py` or `. x.ps1`, or
+`bash tool` when `tool` has a Python shebang. Sourcing runs the target in the
+current shell's language, and a directly executed script whose shebang names a
+different supported language than its suffix fails as ambiguous. A `node`,
+`nodejs`, `deno`, `bun`, `ruby`, `perl` or `php` call of a tracked local script
+also fails, as an unsupported language.
+
+Python imports resolve against every candidate root: the invocation roots, the
+importing file's directory, the working directory and the workspace root. Every
+match is included. A required `python -m` module fails as missing only when its
+top-level package exists locally; otherwise, as with `pip`, it is an installed
+tool. A `from module import name` of a non-local module never selects a local
+file named `name`.
+
+### Rule 2: unmodeled indirection fails
+
+These fail coverage with a diagnostic naming the source file and line:
+
+- A computed value in an execution position: a command word, interpreter
+  operand, sourced path, import or process-API target, or working directory.
+  The structural forms are command substitution (`$(...)` and backticks),
+  subshells and other parenthesized syntax, and shell function definitions. So
+  are brace groups that start a list, PowerShell script blocks (`& { ... }`),
+  `pushd`/`popd`/`Set-Location` and their aliases, and PowerShell `cd`. Also
+  covered: a sourced or evaluated script that changes the caller's directory,
+  `find -execdir`/`-okdir` and `-exec {}`, `Start-Process` and `Invoke-Command`.
+  Options that redirect execution fail as well: `pwsh -WorkingDirectory`,
+  `-EncodedCommand` and `-CommandWithArgs`, `uv --directory`/`-C`, unknown `uv`
+  options, wrapper options and task-runner options.
+- An interpreter fed from stdin or a heredoc, such as `bash <<EOF`,
+  `python - <<'EOF'`, `pwsh -Command -`, `bash -s`, `python -` or
+  `cat x.py | python`.
+- `PYTHONPATH`, `PYTHONHOME`, `PYTHONSAFEPATH`, `PYTHONUSERBASE` or `UV_ENV_FILE`,
+  or the name-based lookup paths `PSModulePath` and `CDPATH`, set by any means:
+  - a shell assignment, including `+=`, or `export`/`declare`;
+  - a composite step `env` entry, or a non-mapping step `env`;
+  - PowerShell `$env:` or `Set-Item env:`;
+  - Python `os.environ` or `os.environb` (a computed or resolution key, or
+    replacing or merging into the mapping with `=` or `|=`), `os.putenv` or a
+    subprocess `env`;
+  - an env file through `uv --env-file` or python-dotenv's `load_dotenv`;
+  - a `$GITHUB_ENV` write.
+
+  A computed environment name in `export`/`declare` fails too.
+- A `PATH` value, or a `$GITHUB_PATH` write, that adds a relative, workspace or
+  action-path directory, or any computed component other than `$PATH` and
+  `$HOME`. Absolute literal directories and `$HOME/...` pass. Python `PATH`
+  writes and subprocess `PATH` overrides always fail.
+- A `$GITHUB_ENV` write with a computed key, meaning that line has no literal
+  `NAME=` or `NAME<<`. Python code that names `GITHUB_ENV` or `GITHUB_PATH` fails
+  too.
+- Reflective use of a process or import API. That means storing it in an
+  attribute, a class body, a tuple or a container; passing it as an argument;
+  using it as a default, a return value or a walrus target; or fetching it with
+  `getattr`. A plain name alias is followed instead, and type annotations,
+  comparisons and `isinstance`-style inspection are not uses. The following
+  fail too:
+  - `eval`, `exec`, `compile` and the file-location import loaders;
+  - `os.exec*`, `os.spawn*`, `os.posix_spawn*`, `asyncio.create_subprocess_*` and
+    `pty.spawn`;
+  - star imports of process/import modules, and `functools.partial` of one of
+    these APIs;
+  - Python search-path mutations (`sys.path`, its aliases, import hooks and
+    `site.addsitedir`) and working-directory mutations (`os.chdir`,
+    `contextlib.chdir`).
+- A task runner whose recipes are tracked module files:
+  - `make`/`gmake` with a tracked Makefile;
+  - `just`, `task`, `invoke`, `nox`, `tox`, `poe`, `rake` or `pre-commit` with
+    its tracked recipe file, also as `python -m tox` or `python -m pre_commit`;
+  - `pytest`, `py.test`, `python -m pytest`, `python -m unittest` or
+    `python -m nose2` when the module tracks `conftest.py` or a file named
+    `test*.py` or `*_test.py`;
+  - `npm`, `pnpm`, `yarn` or `bun` with a tracked `package.json`, unless
+    `--ignore-scripts` is given or the subcommand runs no scripts;
+  - `uv`, `poetry`, `pipenv`, `pdm` or `hatch run` of a script name defined in a
+    tracked `pyproject.toml`, `Pipfile` or `hatch.toml`.
+
+  An explicit recipe file or directory option fails as well.
+
+### Lines, comments and data
+
+Shell and PowerShell sources split only on LF, and a trailing CR is dropped.
+Other separators, such as U+2028, form feed or a lone CR, stay inside the line.
+The continuation character is a backslash in shell and a backtick in PowerShell,
+and nothing else. A logical line keeps its first physical line number in
+diagnostics. A comment starts only at a word boundary, so `$#` and `a#b` are
+words. PowerShell `<# ... #>` comments are removed wherever they occur, without
+changing line numbers. A UTF-8 byte-order mark is ignored for parsing.
+
+Heredoc bodies fed to any command other than an interpreter are data, and so are
+PowerShell here-string bodies. They are scanned for literal references and never
+parsed as commands. Quoted ordinary data stays data, including text that
+resembles the failing forms above.
+
+### Conservative failures and limits
+
+Some ordinary constructs that call no local script still fail, because their
+structure is unmodeled: `$(date)`, parenthesized `case` patterns, PowerShell
+variable assignments, and PowerShell `if (...)` or `foreach (...)` blocks. Make
+such a call statically identifiable, or extend central discovery and its
+fixtures before onboarding a module whose actions rely on them. Never hide a
+call through a module-specific exclusion. The scanner does not prove that
+differently written implementations share no logic.
 
 ## Detector and reports
 

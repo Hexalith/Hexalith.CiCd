@@ -162,7 +162,9 @@ makes all later runs for that night no-change. A following UTC night may bump
 again. Unreadable history fails this guard.
 
 The producer renders in a disposable live-main checkout, locally commits the
-candidate, and runs the unchanged shared global gate. Only a successful
+candidate, and runs the unchanged shared global gate. The gate runs the scan
+suite with the real pinned detector, so the bump job sets up the same pinned
+Node 24 as the scan job before its producer step. Only a successful
 candidate exposes `candidate.json` in `hexalith-nightly-bump-<attempt>`. Failed
 checks expose no candidate artifact. The separate
 `hexalith-nightly-bump-report-<attempt>` (`bump.json`) records candidate, no-change

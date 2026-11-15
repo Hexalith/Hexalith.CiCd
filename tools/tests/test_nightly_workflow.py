@@ -475,7 +475,7 @@ class PostReleaseWorkflow(Workflow):
         self.current_directory = None
         self.deadline, self.observation_failed = None, False
         self.scan, self.fail_tool = scan, fail_tool
-        self.scan_summaries = []
+        self.scan_summaries, self.executed = [], []
 
     def controller_call(self, phase, command, env):
         self.extension_calls.append((phase, tuple(command), env.copy(), self.w.clock()))
@@ -650,6 +650,7 @@ class PostReleaseWorkflow(Workflow):
                     self.context["steps"][identifier] = {"outcome": "skipped", "outputs": {}}
                     continue
                 outputs, failed = {}, False
+                self.executed.append((phase, identifier))
                 env = base | {key: self.expand(value) for key, value in step.get("env", {}).items()}
                 if "uses" in step:
                     action, pin = step["uses"].split("@")
@@ -665,7 +666,8 @@ class PostReleaseWorkflow(Workflow):
                             raise AssertionError("uv or cache enabled in App job")
                         failed = self.fail_tool == (phase, identifier)
                     elif action == "actions/setup-node":
-                        if phase != "scan" or inputs.get("node-version") != "24" or inputs.get("package-manager-cache") is not False or "cache" in inputs:
+                        # The bump's shared global gate runs the real-detector scan suite.
+                        if phase not in {"scan", "bump"} or inputs.get("node-version") != "24" or inputs.get("package-manager-cache") is not False or "cache" in inputs:
                             raise AssertionError("unsafe detector runtime or package cache")
                         failed = self.fail_tool == (phase, identifier)
                     elif action == "actions/create-github-app-token":
@@ -811,6 +813,28 @@ class PostReleaseWorkflowTests(unittest.TestCase):
                                  ("hexalith.duplicate-scan.v1", [], []))
                 self.assertIn("coverage is unverified", workflow.scan_summaries[0])
                 self.assertIn(workflow.scan_summaries[0], (workflow.w.root / "summary.md").read_text())
+
+    def test_bump_sets_up_pinned_node_before_its_shared_gate_producer(self):
+        workflow = PostReleaseWorkflow(self.fixture())
+        self.assertEqual(workflow.execute(), "success")
+        bump = [identifier for phase, identifier in workflow.executed if phase == "bump"]
+        self.assertLess(bump.index("node"), bump.index("produce"))
+        scan = [identifier for phase, identifier in workflow.executed if phase == "scan"]
+        self.assertLess(scan.index("node"), scan.index("scan"))
+        # The same pinned action and inputs serve the scan and the bump gate.
+        jobs = workflow.document["jobs"]
+        node = {phase: next(step for step in jobs[phase]["steps"] if step.get("id") == "node") for phase in ("scan", "bump")}
+        self.assertEqual(node["scan"]["uses"], node["bump"]["uses"])
+        self.assertEqual(node["scan"]["with"], node["bump"]["with"])
+        # Unavailable Node fails the bump without running its producer.
+        workflow = PostReleaseWorkflow(self.fixture(), fail_tool=("bump", "node"))
+        self.assertEqual(workflow.execute(), "failure")
+        self.assertEqual(workflow.results["bump"], "failure")
+        self.assertFalse(any(phase == "bump" for phase, _, _, _ in workflow.extension_calls))
+        self.assertEqual(workflow.results["bump-push"], "skipped")
+        self.assertEqual(workflow.results["keepalive"], "success")
+        report = next(value for phase, value in workflow.uploads if phase == "bump")
+        self.assertEqual(report["result"], "failed")
 
     def test_job_conditions_follow_github_needs_status_semantics(self):
         # Without !cancelled(), GitHub's implicit success() skips a job after a

@@ -1540,9 +1540,18 @@ jobs:
           version: '0.13.7'
           enable-cache: false
 
+      # The shared global gate runs the scan suite with the real pinned detector.
+      - name: Setup detector Node runtime for the shared global gate
+        id: node
+        timeout-minutes: 3
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
       - name: Produce and globally validate the live-main bump
         id: produce
-        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.uv.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.uv.outcome == 'success' && steps.node.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: uv run --locked tools/bump.py

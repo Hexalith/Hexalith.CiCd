@@ -2,9 +2,9 @@
 title: 'Nightly cross-module duplicate scan'
 type: 'feature'
 created: '2026-11-15'
-status: 'done'
-baseline_revision: '93e3d33b6436d9e8f215a7556b0beb0368107b56'
-review_loop_iteration: 0
+status: 'in-review'
+baseline_revision: '23e1c39cf387151467cac4636267c780098a388d'
+review_loop_iteration: 1
 followup_review_recommended: true
 context:
   - /home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/enforcement.md
@@ -72,10 +72,10 @@ deferred:
 **Execution:**
 
 - [x] `tools/jscpd/package.json`, `tools/jscpd/package-lock.json`, `.jscpd.json` — add exact detector/dependency integrity pins and central format/threshold policy; validate actual signature verification and version before detection. Keep installation and outputs in private disposable scratch.
-- [x] `tools/scan.py`, `tools/scan.py.lock` (and a focused helper if needed) — implement committed registry, anonymous current-main snapshots, bounded nonexecuting action/call discovery and isolated staging; run central jscpd over module roots; independently validate report endpoints; emit deterministic token-free report, full source SHAs and actionable code/location diagnostics. Fail closed while retaining healthy observations and an explicit empty-scope result.
-- [x] `tools/tests/test_scan.py`, adjacent `.py.lock`, fixture helper if useful — test every matrix row through real temporary Git repositories and actual pinned detector integration. Include all four formats, transitive calls/imports, same-module repetition beside cross-module copies, module config/ignores/directives, invalid outputs, bad paths and empty scope. Every matrix-covering test must run without skips.
+- [x] `tools/scan.py`, `tools/scan.py.lock` (and a focused helper if needed) — implement committed registry, anonymous current-main snapshots, bounded nonexecuting action/call discovery following the Design Notes discovery coverage model, and isolated staging; run central jscpd over module roots; independently validate report endpoints; emit deterministic token-free report, full source SHAs and actionable code/location diagnostics. Fail closed while retaining healthy observations and an explicit empty-scope result.
+- [x] `tools/tests/test_scan.py`, adjacent `.py.lock`, fixture helper if useful — test every matrix row through real temporary Git repositories and actual pinned detector integration. Include all four formats, transitive calls/imports, same-module repetition beside cross-module copies, module config/ignores/directives, invalid outputs, bad paths and empty scope, plus both coverage-model rules and the Spec Change Log re-derivation constraints. Every matrix-covering test must run without skips.
 - [x] `.github/workflows/nightly.yml`, `tools/tests/test_nightly_workflow.py` — insert scan as a secretless read-only job, with conservative failure seed, persistent summary/report and always-upload; use setup-node 24 and locked uv with caches off and pinned actions. Add scan to bump dependencies and retain failed-prerequisite continuation, qualification and cancellation. Verify failures through execution of the workflow model, including unavailable checkout/tooling. Choose a bounded scan timeout below six hours.
-- [x] `docs/nightly.md`, `docs/duplicate-scan.md`, `setup/README.md` — document scope, supported/static and unresolved/dynamic calls, thresholds, reporting, failure continuation and retuning procedure. Retain reproducible real-detector calibration results and full live Memories/Tenants identities, distinguishing empty action scope from optional broader tooling diagnostics.
+- [x] `docs/nightly.md`, `docs/duplicate-scan.md`, `setup/README.md` — document scope, the discovery coverage model (included literal references and failing indirection), thresholds, reporting, failure continuation and retuning procedure. Retain reproducible real-detector calibration results and full live Memories/Tenants identities, distinguishing empty action scope from optional broader tooling diagnostics.
 
 **Acceptance Criteria:**
 
@@ -84,6 +84,87 @@ deferred:
 - Given unchanged inputs and detector policy, when scan runs again, then its selected scope and findings are reproducible except for freshly recorded remote revisions/observation metadata.
 
 ## Spec Change Log
+
+### 2026-11-15 — Review pass 3 loopback (review_loop_iteration 1)
+
+**Triggering finding: A1.** Discovery recognizes a fixed set of invocation forms. Anything it does not recognize is treated as data: commands, syntax and APIs outside the set, and any resolution state it does not model.
+
+- At `23e1c39cf387151467cac4636267c780098a388d`, triage rows B2, E1–E11, E14, E15 and E23 reproduced 30 silent omissions, each with `errors: []` (`_bmad-output/implementation-artifacts/story-9-review3-probes.log`).
+- This is the third review pass to find omissions of this class. The previous pass recommended examining the unknown-form default instead of enumerating more examples.
+
+**Amended:**
+
+- Design Notes now carry the **Discovery coverage model**. Recognized calls refine resolution only; literal references to tracked scripts are included from every candidate base, whatever consumes them; unmodeled indirection fails.
+- The Tasks checklist is unchecked, and its discovery, test and docs lines reference the model.
+- Code was reverted in the working tree to `93e3d33b6436d9e8f215a7556b0beb0368107b56` for re-derivation. Three paths were not reverted: this spec, the orchestrator-owned `_bmad-output/implementation-artifacts/deferred-work.md` and the evidence artifact `story-9-detector-investigation.md`.
+
+**Known-bad state avoided:** a module produces `result: pass` while its copied action or called-script code sits outside the scanned scope. The copied code is reached through any of:
+
+- an unrecognized wrapper, runner, block, redirection, option or assignment;
+- an environment or `PATH` write;
+- a conditional directory change;
+- a piped interpreter;
+- a reflective Python API.
+
+**Re-derivation constraints.** Each item was verified in this pass and is patch-level: moot until re-derivation, then mandatory in the re-derived code.
+
+| Item | Source | Required behavior |
+| --- | --- | --- |
+| C1 | B1/E12/I2 | A dormant file's action context is its nearest ancestor holding `action.yml`/`action.yaml`. Add a test with a script in an action subfolder that uses `$GITHUB_ACTION_PATH`. |
+| C2 | B4/E17 | The continuation characters are `\` in shell and the backtick in PowerShell, and nothing else. Diagnostics keep physical line numbers. |
+| C3 | B5 | Each composite step is discovered independently. A step's error is anchored at that step's line, and later steps are still discovered. |
+| C4 | B6 | The bump job sets up the same pinned Node 24 as the scan job before its producer step, because its shared global gate runs `tools/tests/test_scan.py` with the real detector. The workflow model asserts the step. `setup/README.md` lists Node/npm and `registry.npmjs.org` among the validation prerequisites. |
+| C5 | B8 | Heredoc-fed interpreters fail. A heredoc body fed to any other command is scanned for literal references as data. `docs/duplicate-scan.md` describes the actual behavior. |
+| C6 | E13 | An import through a namespace package nested in a regular package includes every ancestor `__init__.py`. |
+| C7 | E16 | Shell and PowerShell discovery split only on LF and drop a trailing CR. |
+| C8 | E18 | PowerShell `<# … #>` comments are removed wherever they occur, preserving the line count. |
+| C9 | E20 | `command -v`/`-V` is a non-executing probe and passes. |
+| C10 | E22 | `sys.executable`, and any alias of it, as argv[0] is the Python interpreter. |
+| C11 | G1 | Tests pin the followed `xargs`, `flock <lock>`, `bash -c`, `pwsh -Command` and `uv run --with` forms. |
+| C12 | G2 | Tests pin following `os.system`, `subprocess.Popen`/`call`/`check_output`/`getstatusoutput`, `runpy.run_module` and `__import__`. |
+| C13 | G3 | Tests pin these failures: `os.chdir`, `os.putenv`, `os.environ.setdefault`, `os.spawn*`/`posix_spawn`, `SourceFileLoader`/`compile`, and a missing local `-m` child. |
+| C14 | G4 | Tests pin an extensionless shebang file directly under `.github/actions/**`. |
+| C15 | G5 | Tests assert a Python finding at `scripts/helper`, next to a distinct `scripts/helper.py`, in both modules. |
+| C16 | G6 | Tests have one single-violation subtest per central-policy rule. |
+
+Every A1 reproduction in the probe log becomes a two-module real-detector regression that produces either the cross-module finding or the named coverage failure.
+
+**KEEP:**
+
+1. **Restore first.** Begin by restoring every reverted path from `23e1c39cf387151467cac4636267c780098a388d`, using `git restore --source=23e1c39cf387151467cac4636267c780098a388d --worktree -- <path>`. Do not re-implement from scratch.
+2. **Keep these verbatim, except as C4 requires:**
+   - `.jscpd.json`;
+   - `tools/jscpd/package.json` and `tools/jscpd/package-lock.json`;
+   - `tools/scan.py` and `tools/scan.py.lock`;
+   - `tools/tests/test_scan.py.lock`;
+   - the nightly scan job, its seed, summary and artifact upload, and the bump/keepalive ordering;
+   - `tools/tests/test_nightly_workflow.py`;
+   - `docs/nightly.md`.
+3. **In `tools/scan.py`, keep:**
+   - the detector install, signature and version checks;
+   - central-policy validation;
+   - endpoint validation with LF-only slicing;
+   - unique flat staged names;
+   - same-length directive neutralization;
+   - persist with its bounded fallback;
+   - the fenced summary;
+   - the CLI.
+4. **In `tools/scan_discovery.py`, keep the proven recognized-call layer as the precise-resolution path:**
+   - hardened `safe_path`/`resolve`;
+   - the duplicate-key action loader;
+   - composite-only, SHA-pinned `uses:`;
+   - wrapper unwrapping and its option failures;
+   - positional interpreter options and interpreter spellings;
+   - invocation-specific Python roots;
+   - the `-m` package `__main__`, namespace packages and non-local `-m` handling;
+   - BOM handling, comment-help blanking and the word-boundary `#`;
+   - the process, environment, search-path and working-directory failures;
+   - every resource bound.
+
+   Add the coverage model around this layer rather than replacing it.
+5. **Keep existing tests.** Every existing test stays unless the amended model reverses one of its assertions. One known case: a data argument that names a tracked script is now included.
+6. **`docs/duplicate-scan.md`:** keep its scope, threshold, reporting and retuning sections, and rewrite its discovery section for the model.
+7. **Do not modify:** `_bmad-output/implementation-artifacts/deferred-work.md`, the investigation artifact, `<intent-contract>`, or the frontmatter `deferred` item.
 
 ## Review Triage Log
 
@@ -204,11 +285,105 @@ Grouping produced 15 patched entries (14 high, 1 medium), one unverified deferra
 
 Grouping produced 19 patched entries: 5 high (P1–P4, P9), 8 medium (P5–P8, P10–P13) and 6 low (P14–P19). E20 carries the existing deferral, so there is no new one. Thirty-one rows are rejected or carried as false. Every patch is private: discovery or validation behavior, report rendering, the workflow model, documentation, or a regression for a demonstrated state. None adds a public interface or amends the intent contract or plan. The original step-03 implementation subagent belongs to an earlier session and could not be re-engaged, so this session applied the patches directly.
 
+### 2026-11-15 — Review pass
+- verdicts: 53 findings — high 17, medium 12, low 10, false 13, maybe-false 1
+- This is the second follow-up pass on the `done` spec, reviewing `93e3d33..23e1c39`. All four layers completed and none were skipped.
+- Rows follow layer completion order: blind hunter (B1–B12), edge-case hunter (E1–E23), verification gap (G1–G6) and intent alignment (I1–I12, one row per described divergence).
+- Parent reproductions are in `story-9-review3-probes.log` (Git-ignored), with their probe sources alongside.
+- Entry A1 routes to bad_spec, and the cascade makes this pass's patch entries moot. Each patch row names the Spec Change Log constraint (C1–C16) that carries it into re-derivation.
+- findings:
+  - `[medium]` `[patch]` B1: dormant files in action subfolders use their own folder as `$GITHUB_ACTION_PATH`. Parent probe: `.github/actions/a/scripts/run.sh` sources `$GITHUB_ACTION_PATH/scripts/lib.sh`. The pass from `action.yml` resolves it, but the dormant-seed pass fails with `.../scripts/scripts/lib.sh` and turns a correct module red. Moot; constraint C1.
+  - `[high]` `[bad_spec]` B2: `$GITHUB_ENV`/`$GITHUB_PATH` writes and shell `PATH` changes silently redirect resolution. Parent probe: a `PYTHONPATH=support` write to `$GITHUB_ENV` followed by `python -m helper` omitted `support/helper.py` with no error, and so did `export PATH="$PWD/scripts:$PATH"; helper.sh` for `scripts/helper.sh`. Amendment A1 (Design Notes coverage model, rule 2).
+  - `[false]` `[reject]` B3: `python -I`/`-P` keep the script directory as an import root. Under `-I`/`-P`, Python imports from no local directory, so keeping the script directory only over-includes; the parent probe selected `scripts/lp.py`. The Design Notes permit conservative inclusion, and no file that runs is omitted.
+  - `[low]` `[patch]` B4: line continuations shift later diagnostics and join on the wrong character per shell. Parent probe: `python missing.py` on physical line 5, after two `\` continuations, was reported at line 3. Continuations are everyday shell. Moot; constraint C2.
+  - `[low]` `[patch]` B5: one bad composite step stops discovery of later steps and anchors at line 1. Parent probe: `uses: actions/checkout@v4` followed by `python scripts/later.py` reported `action.yml:1` and never selected `scripts/later.py`. The module stays red, so scope and diagnostics are truncated rather than passed. Moot; constraint C3.
+  - `[medium]` `[patch]` B6: the bump's shared gate now needs npm and registry.npmjs.org, and neither is declared. `tools/bump.py:97` runs `check_global.py`, whose `run_tool_tests` runs `test_scan.py` with a real `npm ci` and `npm audit signatures`. The bump job has no setup-node step and relies on the runner image's unpinned npm, and `setup/README.md` lists no npm prerequisite. The spec deliberately runs every suite in the shared gate, so the coupling itself stays; the smallest fix pins Node and documents the prerequisite. Moot; constraint C4.
+  - `[false]` `[reject]` B7: the detector's fragment is never compared with the source. Staging preserves every line (directive neutralization keeps the same length), and the actual-detector offset test asserts the published fragment equals the exact copied source (`tools/tests/test_scan.py:656`). A wrong range would need a defect in the pinned engine, which no probe has shown.
+  - `[low]` `[patch]` B8: the docs say heredoc bodies fail coverage, but discovery parses them as commands. Parent probe: a `cat > notes.md <<EOF` body passed with no error, and `bash <<EOF` followed the body and also reported a bogus missing `<<EOF`. Moot; constraint C5, and A1 rule 2 makes heredoc-fed interpreters fail.
+  - `[low]` `[reject]` B9: the spec metadata and pre-review results are stale. The pre-review counts are stale. `review_loop_iteration: 0` was correct, because no bad_spec loopback had happened before this pass. The fix would edit this build's spec.
+  - `[low]` `[reject]` B10: scan reads the triggering CiCd commit while bump fetches current main. Confirmed: the scan checkout has no `ref`, and `docs/nightly.md:134` describes the bump fetch. A module registered during that same night's window is scanned the following night. Aligning the revisions needs fetch plumbing beyond a direct correction, for an unlikely race.
+  - `[false]` `[reject]` B11: the summary lacks permalinks, numbering and the policy digest. For each finding, the summary already gives the module main revision, `module/path:start-end` for both endpoints and the fenced fragment, which is everything the intent's actionable-report row asks for. Reproducibility metadata is in the `report.json` uploaded with it.
+  - `[false]` `[reject]` B12: jscpd's `maxSize: 2mb` may silently skip files that the 2 MiB blob cap admits. Pinned-jscpd probe: copies of 1,990,000, 2,050,000 and 2,097,152 bytes each reported 2 sources and 1 clone, so `2mb` covers the full cap.
+  - `[high]` `[bad_spec]` E1: wrappers and uv invoked by absolute path hide the script. Parent probe: `/usr/bin/env python3 scripts/helper.py`, `/usr/bin/timeout 60 ./scripts/helper.sh` and `/home/runner/.local/bin/uv run scripts/helper.py` each selected nothing, with no error. A1 rule 1.
+  - `[high]` `[bad_spec]` E2: brace groups after then/do/else, a mid-line `function` and PowerShell `try`/`else` blocks hide calls. Parent probe reproduced the omission for `then { ./scripts/helper.sh; }`, `do { …; }`, `function f { …; }`, `try { ./scripts/helper.ps1 } catch {…}` and `} else { … }`. A1 rule 1.
+  - `[high]` `[bad_spec]` E3: `builtin`, `coproc` and leading redirections hide calls. Parent probe: `builtin source`, `coproc` and `>out.log ./scripts/helper.sh` each omitted the helper silently. A1 rule 1.
+  - `[high]` `[bad_spec]` E4: `trap -- 'handler' EXIT` drops the handler. Parent probe: the handler was omitted silently, because the trap branch treats `--` as an option and skips. A1 rule 1.
+  - `[high]` `[bad_spec]` E5: unlisted `uv run` value options become the command. Parent probe: `-p 3.12`, `--extra dev` and `--env-file .env` each omitted the target silently. A1 rules 1–2.
+  - `[high]` `[bad_spec]` E6: `NAME+=value` prefixes and `export PYTHONPATH+=` are not recognized as assignments. Parent probe: `MODE+=x ./scripts/helper.sh`, `env MODE+=x …` and `export PYTHONPATH+=:support` each omitted the target silently. A1 rules 1–2.
+  - `[high]` `[bad_spec]` E7: `$GITHUB_ENV` writes and a non-mapping step `env` bypass the resolution check. Same reproduction as B2. A non-mapping `env:` expression also skips the `isinstance(dict)` check (`tools/scan_discovery.py:199`). A1 rule 2.
+  - `[high]` `[bad_spec]` E8: a `PATH` prepend followed by a slashless call selects a decoy. Same reproduction as B2 (`path-export`). A1 rule 2.
+  - `[high]` `[bad_spec]` E9: a conditional `cd` is applied unconditionally. Parent probe: after `if [ -n "$X" ]; then cd scripts; fi`, `python helper.py` selected only `scripts/helper.py` and omitted the root `helper.py`. A1 rule 1 keeps every established working directory as a base.
+  - `[high]` `[bad_spec]` E10: Python `eval` of an import or process call is ignored. Parent probe: `eval("__import__('helper')")` omitted `scripts/helper.py`. A1 rule 2.
+  - `[high]` `[bad_spec]` E11: process APIs that are stored, passed, unpacked, defaulted or fetched with `getattr` launch silently. Parent probe reproduced the omission for attribute-store, argument, `getattr(subprocess, 'run')`, tuple-unpack, walrus and default-argument forms. A1 rules 1–2.
+  - `[medium]` `[patch]` E12: a dormant script under `.github/actions/x/scripts` resolves `$GITHUB_ACTION_PATH` against its own folder. Same defect and reproduction as B1. Moot; constraint C1.
+  - `[high]` `[patch]` E13: `from pkg.ns import helper` omits the regular parent package's initializer. Parent probe: `scripts/pkg/__init__.py` was not selected, although Python executes it. The smallest fix walks ancestors from the namespace stem. Moot; constraint C6.
+  - `[high]` `[bad_spec]` E14: `pwsh -Command -` fed from a pipe hides the piped script. Parent probe: `Get-Content scripts/x.ps1 | pwsh -Command -` omitted `scripts/x.ps1` silently. A1 rule 1 makes the operand a literal reference, and rule 2 fails stdin-fed interpreters.
+  - `[high]` `[bad_spec]` E15: scripts launched through runners (`poetry`/`pipenv`/`pdm`/`hatch run`, `make`/`just`) are omitted. Code path: an unrecognized command word leaves every operand as data, as in E1, and recipe files are never examined. A1 rules 1–2.
+  - `[low]` `[patch]` E16: shell discovery splits lines on U+2028, `\x85`, form feed and lone CR. Parent probe: `echo x  # ; ./scripts/helper.sh` hid the call. Only crafted separators reach it, but the fix is the direct LF-only split that `scan.py` already uses. Moot; constraint C7.
+  - `[low]` `[patch]` E17: backslash continuations shift later diagnostics. Same defect and reproduction as B4. Moot; constraint C2.
+  - `[high]` `[patch]` E18: an inline PowerShell `<# … #>` comment discards the rest of the line. Parent probe: `Write-Output x <# note #> ; ./scripts/helper.ps1` omitted the helper silently, because only line-leading comment help is blanked. Moot; constraint C8.
+  - `[false]` `[reject]` E19: a symlinked TMPDIR would make every endpoint unknown. The supported runtime is Linux x86_64. The GitHub runner's `/tmp` is a real directory, and `run-with-temp` gives a real `/tmp/hexalith-job.*` (`readlink -f` returns it unchanged). Reaching this would fail closed with an explicit endpoint error.
+  - `[medium]` `[patch]` E20: `command -v tool` fails as a wrapper option. Parent probe: `if command -v jq >/dev/null; then …` raised "unsupported shell wrapper options". This common, non-executing probe turns healthy modules red. Moot; constraint C9.
+  - `[low]` `[reject]` E21: sourcing or calling an absolute system path fails coverage. Reproduced with `/etc/os-release` and `/usr/local/bin/tool.sh`. An absolute target can be a module script copied at runtime, so the loud failure is the conservative outcome. Exempting system paths needs a path policy, which is beyond a direct correction for an uncommon idiom.
+  - `[medium]` `[patch]` E22: `subprocess.run([sys.executable, 'scripts/helper.py'])` fails as computed. Parent probe: "unresolved computed Python script invocation" for the standard interpreter idiom, and the helper was not staged. Moot; constraint C10.
+  - `[high]` `[bad_spec]` E23: claim-level for AC1 — copied called-script code reached through these forms yields a pass. This aggregates E1–E6 and E15, each reproduced with `errors: []`. A1.
+  - `[medium]` `[patch]` G1: no test pins the xargs/flock wrappers, the `bash -c`/`pwsh -Command` recursion or `uv run --with`. Pre-verified: each mutant passed all 33 tests. Moot; constraint C11.
+  - `[medium]` `[patch]` G2: following `os.system`, `Popen`, `runpy.run_module` and `__import__` is untested. Pre-verified by mutation. Moot; constraint C12.
+  - `[medium]` `[patch]` G3: the `os.chdir`, `os.putenv`, `os.environ.setdefault`, `os.spawn*` and missing-local-`-m`-child failures are untested. Pre-verified by mutation. Moot; constraint C13.
+  - `[medium]` `[patch]` G4: extensionless shebang files directly under `.github/actions/**` are untested. Pre-verified by mutation. Moot; constraint C14.
+  - `[medium]` `[patch]` G5: the staged-name collision fixture cannot observe a collision. Pre-verified: with path-based staging, all tests passed while the copied Python was overwritten. Moot; constraint C15.
+  - `[medium]` `[patch]` G6: the central-policy test violates two rules at once. Pre-verified: removing `ignore` from the denylist still passed all tests. Moot; constraint C16.
+  - `[low]` `[reject]` I1: discovery over-rejects realistic shell and PowerShell code — carried: same claim as logged B6/I1. `$(...)`, `case` and computed PowerShell values still fail as described.
+  - `[medium]` `[patch]` I2: scripts in action subdirectories fail spuriously. Same defect and reproduction as B1. Moot; constraint C1.
+  - `[false]` `[reject]` I3: one invalid registration aborts the scan for every module. The intent says to "reject invalid/colliding registrations or capacity above 17". The isolation clause and the partial-failure row concern module-level fetch, action and path failures. A Builds, colliding or over-capacity registry is invalid system-wide (`render.registry`, `rt.registry`), and the scan rejects it loudly instead of certifying partial scope.
+  - `[false]` `[reject]` I4: tests use injected local remotes, not the production partial-clone transport — carried: same claim as logged I2/I3. The transport is unchanged.
+  - `[false]` `[reject]` I5: neither suite runs the real controller inside the real job — carried: same claim as logged I1/I4.
+  - `[maybe-false]` `[defer]` I6: detector source counts are checked structurally, not for semantic completeness — carried: same location and claim as the logged B10/E20 deferral (`tools/scan.py:findings`). The code is unchanged, so it is not deferred again.
+  - `[false]` `[reject]` I7: calibration is synthetic and the Bash margin is thin — carried: same claims as logged I4 and B13.
+  - `[false]` `[reject]` I8: the scan job's Contents-read token reaches the checkout and setup actions. The intent forbids App and publish credentials, and the default Contents-read job token is neither. The controller step receives no token, and the docs state this (P19).
+  - `[false]` `[reject]` I9: non-composite and tag-pinned actions fail their module — carried: same claim as logged E14/B7, on the authority of `enforcement.md:29`.
+  - `[false]` `[reject]` I10: three-module copies are reported pairwise — carried: same claim as logged I6.
+  - `[low]` `[reject]` I11: the global staging budget and finding caps can discard sibling observations — carried: same claims as logged I7/E15/B12, all fail-closed.
+  - `[false]` `[reject]` I12: compliance with `run-with-temp` and retained logs cannot be checked from the diff. This is a descriptive limitation, not a defect. The retained logs exist as `_bmad-output/implementation-artifacts/story-9-*.log` (Git-ignored), and every recorded command ran under `run-with-temp`.
+
+Grouping produced these entries:
+
+- **A1 (bad_spec, high, 15 rows):** discovery treats unrecognized invocation forms and unmodeled resolution state as data. It triggered the Design Notes coverage-model amendment and the unchecked Tasks.
+- **16 patch entries (19 rows):** 2 high (C6, C8), 10 medium (C1, C4, C9–C16) and 4 low (C2, C3, C5, C7). The bad_spec cascade makes them moot, and the Spec Change Log carries them as re-derivation constraints.
+- **One carried deferral.**
+- **18 rejected or carried rows.**
+
+`review_loop_iteration` is now 1. Code was reverted for re-derivation through step 3.
+
 ## Design Notes
 
 One supplied root per module plus `skipLocal` reduces same-module noise, but the wrapper remains authoritative for cross-module policy and validates every finding against its own manifest. Materialize only selected regular blobs into private scratch; neither module Git attributes nor action/script text is executed. Discovery can conservatively include ambiguous candidate files, but cannot report clean when a local-script call remains uncovered.
 
 Calibrate minimum lines/tokens with the real pinned binary before finalizing policy; document the measured tradeoff without blanket suppression. This is an implementation decision within the explicit tuning requirement, not a new product requirement. Current empty live action corpora provide source/scope evidence only. Useful logs and calibration evidence stay outside disposable scratch.
+
+**Discovery coverage model** (amended in review pass 3). Recognized calls refine resolution; they never bound coverage. Discovery keeps recognized semantics for interpreters, wrappers, `source`/dot-source, imports and process APIs, because they supply the exact working directory, import roots and language. Two fail-safe rules cover everything else:
+
+1. **Literal references are included.**
+   - **What counts as a reference.** The sources are every reachable action `run`, shell, PowerShell and Python file. A literal is a shell word after quote removal, or a Python string constant, including list and tuple elements. It is a reference when it names a tracked regular blob that is a shell, PowerShell or Python script, either by suffix or as an extensionless file with a supported shebang. This holds whatever consumes the literal: any command, wrapper, runner, block, pipeline, redirection, heredoc body or API.
+   - **Resolution.** Resolve each reference against every candidate base:
+     - the workspace root;
+     - the owning action directory;
+     - the referencing file's directory;
+     - every literal working directory that the source has established, both before and after each change.
+   - **Inclusion.** Include and traverse every match. Over-inclusion is acceptable, and a reference never fails merely because its consumer is unrecognized. A literal never pulls in YAML outside `.github/actions`.
+   - **Execution positions.** From an execution position, a literal fails coverage when it names a tracked file in another script language, or when it resolves against no base.
+   - **Python imports.** Imports resolve against every candidate root: the invocation roots, the importing file's directory, the working directory and the workspace root. Every match is included.
+2. **Unmodeled indirection fails** with a source diagnostic. This covers:
+   - a computed value in an execution position: a command word, interpreter operand, sourced path, import or process-API target, or working directory;
+   - an interpreter fed from stdin or a heredoc, such as `bash <<EOF`, `pwsh -Command -` or `python -`;
+   - a `PYTHONPATH`, `PYTHONHOME` or `PYTHONSAFEPATH` value set by any means: assignment including `+=`, export/declare, step `env` (including a non-mapping `env`), `$env:`, `os.environ`, `os.putenv`, subprocess `env`, an env file, or a `$GITHUB_ENV` write;
+   - a `PATH` value or `$GITHUB_PATH` write that adds a relative, workspace or action-path directory, or any computed component other than `$PATH` and `$HOME`;
+   - a `$GITHUB_ENV` write with a computed key;
+   - Python code that opens `GITHUB_ENV` or `GITHUB_PATH`;
+   - reflective use of a process or import API: one that is stored, passed, unpacked, defaulted, returned, fetched with `getattr`, or run through `eval`, `exec` or `compile`;
+   - a task runner whose recipes are tracked module files, for example `make`/`just` with a tracked Makefile/justfile, or `npm`/`pnpm`/`yarn run` with a tracked `package.json`.
+
+Existing explicit failures stay conservative, for example substitutions, subshells, `pushd`/`Set-Location`, `uv --directory` and `Start-Process`. This model is what "cannot report clean when a local-script call remains uncovered" means for discovery.
 
 ## Verification
 
@@ -221,127 +396,3 @@ Calibrate minimum lines/tokens with the real pinned binary before finalizing pol
 - `git diff --check` — no whitespace errors.
 
 **Pre-review results:** Parent scanner checks passed 22 tests on the current interpreter and 22 on Python 3.12. Behavioral nightly workflow checks passed 25 tests. The unchanged global gate passed all 14 suites / 308 tests plus committed render/input, immutable bootstrap, reproducibility, schemas/caller interfaces, acceptable Builds publication, actionlint 1.7.12 and online zizmor 1.32.0 checks. All 10 matrix rows have enabled passing coverage. Parent inspection additionally reproduced and repaired subprocess cwd resolution, function-local aliases and import search-path mutation gaps; regressions exercise real Git and the pinned detector. `git diff --check` passed. Useful logs are `story-9-parent-*.log` under implementation-artifacts (Git-ignored).
-
-## Auto Run Result
-
-Status: done
-
-**Implemented change:** Nightly now runs a secretless cross-module duplicate scan after publish-ready and before the Builds bump.
-
-- It fetches each registered module's anonymous live main, recording full revisions.
-- It discovers custom-action sources and the local scripts they call, statically and without executing module code.
-- It runs integrity-pinned, signature-verified jscpd 5.4.3 under CiCd's central policy.
-- Cross-module fragments and incomplete coverage fail the night. Bump and keepalive still continue.
-- The intent contract is preserved verbatim.
-
-This follow-up review pass hardened discovery, reporting and the workflow model:
-
-- Wrappers and evaluators are unwrapped or rediscovered: timeout, nohup, sudo, eval, trap, find -exec and others.
-- Interpreter options are read only before the script operand. Versioned and `.exe` interpreter spellings are recognized.
-- Tracked scripts in unsupported languages fail coverage.
-- os.popen and getoutput are followed; unsupported process/import APIs fail.
-- Import-path environment overrides fail, whether set in shell, step `env` or Python.
-- Word-internal `#`, byte-order marks and PowerShell comment help no longer hide or invent calls.
-- `python -m` of an installed tool is treated as non-local.
-- Copied fragments render in inert fences and use the detector's LF-only line numbering.
-- The summary, seed and CLI edge cases are corrected.
-- The workflow model now enforces GitHub's job-level needs semantics.
-
-**Files changed** (story total; † = changed in this follow-up pass):
-
-- `.github/workflows/nightly.yml` † — read-only scan job, failure seeds, summary/artifact and bump ordering. This pass: the seed carries the documented v1 report shape.
-- `.jscpd.json` — central weak-mode 10-line/50-token policy for YAML, Bash, PowerShell and Python.
-- `tools/jscpd/package.json`, `tools/jscpd/package-lock.json` — exact detector version and dependency integrity pins.
-- `tools/scan.py` † — locked controller, signature/version checks, snapshots, validated reports and CLI verdict. This pass: LF-only slicing, fenced fragments, zero-registry failure message, empty `SCAN_DIRECTORY` rejection.
-- `tools/scan_discovery.py` † — bounded static action/script/import discovery. This pass: wrappers and evaluators, positional options, interpreter spellings, environment and process-API coverage failures, comment/BOM handling, non-local `-m` and from-import fixes.
-- `tools/tests/test_scan.py`, `tools/tests/test_scan.py.lock` † — 33 enabled real-Git/pinned-detector tests, 5 of them new this pass.
-- `tools/tests/test_nightly_workflow.py` † — 26 behavioral workflow tests. This pass: job-level implicit success() and transitive needs, a `!cancelled()` mutation test, the seed shape.
-- `docs/duplicate-scan.md` †, `docs/nightly.md` †, `setup/README.md` — scope, supported and failing forms, the conservative over-rejection limit, thresholds, reporting, job-token wording.
-- `_bmad-output/implementation-artifacts/story-9-detector-investigation.md` — live Memories/Tenants identities, detector evidence and calibration.
-- This story spec † — plan, checklist, both triage logs, the existing deferral and this result.
-
-**Review findings breakdown (this pass):** 62 findings — high 14, medium 9, low 28, false 8, maybe-false 3.
-
-Patches applied (19 entries):
-
-- **5 high:**
-  - P1: unrecognized invocation forms silently treated as data
-  - P2: word-internal `#` treated as a comment
-  - P3: interpreter options matched anywhere in the arguments
-  - P4: import-path environment overrides
-  - P9: workflow model missing needs semantics
-- **8 medium:**
-  - P5: `-m` of installed tools
-  - P6: byte-order mark
-  - P7: PowerShell comment help
-  - P8: inert fragments
-  - P10–P13: verification gaps G2–G5
-- **6 low:**
-  - P14: LF slicing
-  - P15: zero-registry message
-  - P16: seed shape
-  - P17: empty `SCAN_DIRECTORY`
-  - P18: non-local from-import
-  - P19: job-token wording
-
-Deferred: nothing new. E20 carries the existing eligible-source deferral (the earlier B10).
-
-Rejected rows, with the recorded reasons:
-
-- **Cosmetic, rare or fail-closed lows whose fix exceeds a direct correction:**
-  - B2: Markdown in paths
-  - B3/E19: 1 MiB summary limit
-  - B7: line-1 anchoring; the action rules come from enforcement policy
-  - B8: lazy blob fetch
-  - B11: policy denylist
-  - B12/I7: caps discard findings
-  - B14: Git-ignored logs, by convention
-  - B15: the intent prescribes Python >=3.12
-  - B17: shared-runtime API change
-  - E10: relative attribute import
-  - E13: empty shell
-  - E15/E26: aggregate staging
-  - E16/E28: unbounded errors
-  - E22: per-module budgets
-  - E23: orphaned grandchildren
-- **Conservative over-rejection of `$(...)`, case, heredocs and PowerShell blocks** (B6/I1): matrix-prescribed loud failure, no current module reaches it, and the limit is now documented.
-- **Refuted:**
-  - B13: realistic Bash measured 72 and 128 tokens and was detected
-  - E14, I9: rules come from `enforcement.md:29`
-  - E21: prefix-sharing roots were detected
-  - I6: pairwise findings name every module
-- **Carried as false:** I3, I4, I5.
-- **Maybe-false:** B16/E24, a stale test-only report; if true it is low.
-
-**Follow-up review recommendation:** true. This follow-up pass patched 5 high, 8 medium and 6 low entries. The specific unverified risk is that discovery remains an allowlist recognizer. An unlisted command, alias or API whose operand is a local script is still treated as data, which is fail-open by construction. This pass closed 33 reproduced omissions, and unreviewed classes remain:
-
-- `$GITHUB_ENV`/`$GITHUB_PATH` writes that affect later steps
-- shell aliases
-- PowerShell invocation forms outside the handled set
-
-A further pass should examine that unknown-command default rather than enumerate more examples.
-
-**Verification performed:**
-
-- `run-with-temp uv run --locked --script tools/tests/test_scan.py -v` — 33 tests passed.
-- `run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py -v` — 33 tests passed.
-- `run-with-temp uv run --locked --script tools/tests/test_nightly_workflow.py -v` — 26 tests passed.
-- `run-with-temp uv run --locked --script tools/check_global.py --project-root .`:
-  - The first attempt hit the 10-minute tool limit and was rerun detached.
-  - A tokenless run failed only the three online checks that require a read-only token.
-  - With the CiCd-agent profile token supplied privately, it exited 0: 14 suites / 320 tests, plus committed render/input, immutable delivery bootstrap, reproducibility, schemas/caller interfaces, acceptable Builds publication, actionlint 1.7.12 and online zizmor 1.32.0. No token appears in the log.
-- Probes: 33 silent omissions at HEAD and 0 in the patched tree, plus the module-corpus scan and pinned-jscpd measurements described in the triage log.
-- `git diff --check` — passed.
-- Logs: `_bmad-output/implementation-artifacts/story-9-followup-*.log` (Git-ignored). Disposable jobs used wrapper scratch.
-
-**Residual risks:**
-
-- The allowlist recognizer risk described above.
-- The conservative failure on common shell and PowerShell constructs will turn realistic modules red until central discovery is extended. Measure it at onboarding.
-- Eligible-source accounting remains the carried deferral.
-- The production registry is empty, so no hosted nonempty nightly scan has been observed.
-- Extreme clone volume can still empty findings or overflow the step summary. Both fail closed.
-
-No module, Builds, credential or delivered-ref changes were made.
-
-The reviewed files are finalized as a local commit; the finalization check verifies the working copy is clean.

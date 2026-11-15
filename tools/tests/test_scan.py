@@ -22,6 +22,7 @@ from delivery_support import ROOT, git, load
 sys.path.insert(0, str(ROOT / "tools"))
 sc = load(ROOT / "tools/scan.py", "_scan_tests")
 rt = sc.rt
+FORMATS = sc.FORMATS
 
 
 class FixtureGit(rt.Git):
@@ -103,6 +104,120 @@ def block(fmt, label="shared", count=18):
     return "".join(f"- name: {label} step {i:02d}\n  run: echo operation-{i:02d}\n" for i in range(count))
 
 
+def steps(*items):
+    """A composite action whose steps are (shell, run, extra) tuples."""
+    text = "name: Dormant\nruns:\n  using: composite\n  steps:\n"
+    for shell, run, extra in items:
+        text += "    - shell: " + shell + "\n" + extra + "      run: " + json.dumps(run) + "\n"
+    return text
+
+
+def python_source(label="shared"):
+    return block("python", label)
+
+
+# Review pass 3 (A1) reproductions. Each is (label, steps, files, target, diagnostic):
+# the copied target is a cross-module finding, the diagnostic names the coverage
+# failure, or both. "COPY" marks the substantial copied source.
+COPY = object()
+A1 = (
+    ("env-abs", [("bash", "/usr/bin/env python3 scripts/helper.py", "")], {"scripts/helper.py": COPY},
+     "scripts/helper.py", None),
+    ("timeout-abs", [("bash", "/usr/bin/timeout 60 ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("abs-uv", [("bash", "/home/runner/.local/bin/uv run scripts/helper.py", "")], {"scripts/helper.py": COPY},
+     "scripts/helper.py", None),
+    ("then-brace", [("bash", "if true; then { ./scripts/helper.sh; }; fi", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("do-brace", [("bash", "while true; do { ./scripts/helper.sh; break; }; done", "")],
+     {"scripts/helper.sh": COPY}, "scripts/helper.sh", None),
+    ("func-midline", [("bash", "true; function f { ./scripts/helper.sh; }; f", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", "unsupported shell compound/subshell execution"),
+    ("ps-try", [("pwsh", "try { ./scripts/helper.ps1 } catch { exit 1 }", "")], {"scripts/helper.ps1": COPY},
+     "scripts/helper.ps1", None),
+    ("ps-else", [("pwsh", "} else { ./scripts/helper.ps1 }", "")], {"scripts/helper.ps1": COPY},
+     "scripts/helper.ps1", None),
+    ("builtin-source", [("bash", "builtin source ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("coproc", [("bash", "coproc ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY}, "scripts/helper.sh", None),
+    ("redirect-first", [("bash", ">out.log ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("trap-dashdash", [("bash", "trap -- './scripts/helper.sh' EXIT", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("uv-p", [("bash", "uv run -p 3.12 scripts/helper.py", "")], {"scripts/helper.py": COPY},
+     "scripts/helper.py", None),
+    ("uv-extra", [("bash", "uv run --extra dev scripts/helper.py", "")], {"scripts/helper.py": COPY},
+     "scripts/helper.py", None),
+    ("uv-envfile", [("bash", "uv run --env-file .env python -m helper", "")],
+     {".env": "PYTHONPATH=support\n", "support/helper.py": COPY, "helper.py": "# root decoy\n"},
+     None, "unsupported uv env file affecting script resolution"),
+    ("prefix-append", [("bash", "MODE+=x ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("prefix-append-env", [("bash", "env MODE+=x ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
+     "scripts/helper.sh", None),
+    ("export-append", [("bash", "export PYTHONPATH+=:support; python -m helper", "")],
+     {"support/helper.py": COPY, "helper.py": "# root decoy\n"},
+     None, "unsupported environment assignment affecting script resolution"),
+    ("github-env", [("bash", 'echo "PYTHONPATH=support" >> "$GITHUB_ENV"', ""), ("bash", "python -m helper", "")],
+     {"support/helper.py": COPY, "helper.py": "# root decoy\n"},
+     None, "unsupported $GITHUB_ENV write affecting script resolution"),
+    ("non-mapping-step-env", [("bash", "python -m helper", "      env: ${{ fromJSON(inputs.environment) }}\n")],
+     {"support/helper.py": COPY, "helper.py": "# root decoy\n"},
+     None, "unsupported computed step environment affecting script resolution"),
+    ("path-export", [("bash", 'export PATH="$PWD/scripts:$PATH"; helper.sh', "")],
+     {"scripts/helper.sh": COPY, "helper.sh": "# root decoy\n"},
+     None, "unsupported PATH change affecting script resolution"),
+    ("cond-cd", [("bash", 'if [ -n "$X" ]; then cd scripts; fi\npython helper.py', "")],
+     {"helper.py": COPY, "scripts/helper.py": "# conditional decoy\n"}, "helper.py", None),
+    ("py-eval", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "eval(\"__import__('helper')\")\n", "scripts/helper.py": COPY},
+     None, "unsupported Python process/import API: eval"),
+    ("py-attr-alias", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "import subprocess\nclass R:\n    def __init__(self):\n        self.launch = subprocess.run\n"
+                          "R().launch(['python', 'scripts/helper.py'])\n", "scripts/helper.py": COPY},
+     "scripts/helper.py", "scripts/start.py:4: local-script discovery: unsupported reflective use"),
+    ("py-arg-pass", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "import subprocess\ndef call(f, *a):\n    return f(*a)\n"
+                          "call(subprocess.run, ['python', 'scripts/helper.py'])\n", "scripts/helper.py": COPY},
+     "scripts/helper.py", "unsupported reflective use of a process/import API"),
+    ("py-getattr", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "import subprocess\ngetattr(subprocess, 'run')(['python', 'scripts/helper.py'])\n",
+      "scripts/helper.py": COPY}, "scripts/helper.py", "unsupported reflective getattr"),
+    ("py-tuple", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "import subprocess, os\na, b = subprocess.run, os.system\n"
+                          "a(['python', 'scripts/helper.py'])\n", "scripts/helper.py": COPY},
+     "scripts/helper.py", "unsupported reflective use of a process/import API"),
+    ("py-walrus", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "import subprocess\nif (r := subprocess.run):\n    r(['python', '-m', 'helper'])\n",
+      "helper.py": COPY}, None, "unsupported reflective use of a process/import API"),
+    ("py-default-arg", [("bash", "python scripts/start.py", "")],
+     {"scripts/start.py": "import subprocess\ndef f(run=subprocess.run):\n    run(['python', '-m', 'helper'])\nf()\n",
+      "helper.py": COPY}, None, "unsupported reflective use of a process/import API"),
+    ("pwsh-stdin", [("pwsh", "Get-Content scripts/x.ps1 | pwsh -Command -", "")], {"scripts/x.ps1": COPY},
+     "scripts/x.ps1", "unsupported stdin-fed interpreter"),
+    ("bash-heredoc", [("bash", "bash <<EOF\n./scripts/x.sh\nEOF", "")], {"scripts/x.sh": COPY},
+     "scripts/x.sh", "unsupported heredoc-fed interpreter"),
+    ("python-heredoc", [("bash", "python - <<'EOF'\nimport helper\nEOF", "")], {"helper.py": COPY},
+     None, "unsupported heredoc-fed interpreter"),
+    ("make-recipe", [("bash", "make lint", "")], {"Makefile": "lint:\n\tpython -m helper\n", "helper.py": COPY},
+     None, "unsupported task runner with tracked module recipes: make"),
+    ("just-recipe", [("bash", "just lint", "")], {"justfile": "lint:\n    python -m helper\n", "helper.py": COPY},
+     None, "unsupported task runner with tracked module recipes: just"),
+    ("npm-recipe", [("bash", "npm run lint", "")],
+     {"package.json": '{"scripts": {"lint": "python -m helper"}}\n', "helper.py": COPY},
+     None, "unsupported task runner with tracked module recipes: npm"),
+    ("poetry-recipe", [("bash", "poetry run lint", "")],
+     {"pyproject.toml": "[tool.poetry.scripts]\nlint = 'helper:main'\n", "helper.py": COPY},
+     None, "unsupported task runner with tracked module recipes: poetry"),
+    ("pdm-recipe", [("bash", "pdm run lint", "")],
+     {"pyproject.toml": "[tool.pdm.scripts]\nlint = 'python -m helper'\n", "helper.py": COPY},
+     None, "unsupported task runner with tracked module recipes: pdm"),
+    ("uv-entry-point", [("bash", "uv run lint", "")],
+     {"pyproject.toml": "[project]\nname = 'x'\n[project.scripts]\nlint = 'helper:main'\n", "helper.py": COPY},
+     None, "unsupported task runner with tracked module recipes: uv"),
+)
+
+
 class ScanTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -160,8 +275,10 @@ class ScanTests(unittest.TestCase):
         for module in w.paths:
             w.action(module, "cd $GITHUB_WORKSPACE; env MODE=fixture bash -e -o pipefail scripts/start.sh",
                      extra="      working-directory: ${{ github.workspace }}\n")
-            w.write(module, "scripts/start.sh", "exec ./scripts/helper\nuv run --locked --script scripts/extra.py\n")
+            w.write(module, "scripts/start.sh", "exec ./scripts/helper\nuv run --locked --script scripts/extra.py\n"
+                    "python scripts/helper.py --check\n")
             w.write(module, "scripts/helper", "#!/usr/bin/env python3\n" + block("python"))
+            # Selected beside scripts/helper: path-based staging would overwrite one.
             w.write(module, "scripts/helper.py", "# distinct source with colliding suffix\n")
             w.write(module, "scripts/extra.py", "from subprocess import run as launch\nlaunch(['pwsh', '-File', 'scripts/windows.ps1'])\n")
             w.write(module, "scripts/windows.ps1", '. "$PSScriptRoot\\leaf.ps1"\n')
@@ -169,10 +286,13 @@ class ScanTests(unittest.TestCase):
             w.commit(w.paths[module])
         report = w.scan(self.factory)
         self.assertEqual([row["errors"] for row in report["modules"]], [[], []], report)
-        selected = {item["path"] for item in report["modules"][0]["files"]}
-        self.assertIn("scripts/helper", selected)
-        self.assertIn("scripts/leaf.ps1", selected)
-        self.assertTrue(report["findings"], report)
+        for row in report["modules"]:
+            selected = {item["path"] for item in row["files"]}
+            self.assertLessEqual({"scripts/helper", "scripts/helper.py", "scripts/leaf.ps1"}, selected)
+        # The Python finding stays at the extensionless source in both modules.
+        self.assertTrue(any(row["format"] == "python" and row["first"]["path"] == "scripts/helper"
+                            and row["second"]["path"] == "scripts/helper"
+                            and row["first"]["module"] != row["second"]["module"] for row in report["findings"]), report)
 
     def test_three_modules_same_module_repetition_and_trivial_boilerplate(self):
         w = self.workspace(("Hexalith.Alpha", "Hexalith.Beta", "Hexalith.Gamma"))
@@ -254,7 +374,9 @@ class ScanTests(unittest.TestCase):
                     self.assertEqual(row["errors"], [], row)
                     selected = {item["path"] for item in row["files"]}
                     self.assertIn(target, selected)
-                    self.assertNotIn("helper.py", selected)
+                    # Coverage model rule 1: the literal 'helper.py' also names
+                    # the root decoy from the workspace base, so it is included.
+                    self.assertIn("helper.py", selected)
                 self.assertTrue(any(row["first"]["path"] == target and row["second"]["path"] == target
                                     for row in report["findings"]), report)
 
@@ -274,7 +396,8 @@ class ScanTests(unittest.TestCase):
                 row = report["modules"][0]
                 self.assertEqual(row["result"], "fail", row)
                 self.assertTrue(any("scripts/start.py:2:" in error and "subprocess" in error for error in row["errors"]), row)
-                self.assertNotIn("helper.py", {item["path"] for item in row["files"]})
+                # The decoy is included as a data literal; it never certifies coverage.
+                self.assertIn("helper.py", {item["path"] for item in row["files"]})
 
     def test_nested_python_aliases_retain_actual_helper_findings(self):
         cases = (
@@ -516,8 +639,10 @@ class ScanTests(unittest.TestCase):
                                     for error in report["modules"][0]["errors"]), report)
 
     def test_inline_python_action_shell_starts_from_working_directory(self):
-        for extra, target, decoy in (("", "helper.py", "scripts/helper.py"),
-                                     ("      working-directory: scripts\n", "scripts/helper.py", "helper.py")):
+        # Imports resolve from every candidate root, including the workspace
+        # root, so the root decoy is included beside a working-directory target.
+        for extra, target, decoy, included in (("", "helper.py", "scripts/helper.py", False),
+                                               ("      working-directory: scripts\n", "scripts/helper.py", "helper.py", True)):
             with self.subTest(working_directory=bool(extra)):
                 w = self.workspace()
                 for module in w.paths:
@@ -530,7 +655,7 @@ class ScanTests(unittest.TestCase):
                 for row in report["modules"]:
                     selected = {item["path"] for item in row["files"]}
                     self.assertIn(target, selected)
-                    self.assertNotIn(decoy, selected)
+                    self.assertEqual(decoy in selected, included)
                 self.assertTrue(any(row["first"]["path"] == target for row in report["findings"]), report)
 
     def test_literal_data_arguments_do_not_become_unsupported_execution_forms(self):
@@ -575,21 +700,24 @@ class ScanTests(unittest.TestCase):
                                 for error in row["errors"]) for row in report["modules"]), report)
 
     def test_python_invocation_roots_namespace_imports_and_package_entrypoints(self):
+        # The last field is whether the decoy is a candidate root match. Imports
+        # resolve from the invocation roots, the importer's directory, the
+        # working directory and the workspace root, and every match counts.
         cases = (
             ("python scripts/start.py", {"scripts/start.py": "from pkg import helper\n"},
-             "scripts/pkg/helper.py", "pkg/helper.py"),
+             "scripts/pkg/helper.py", "pkg/helper.py", True),
             ("python -m scripts.start", {"scripts/start.py": "import helper\n"},
-             "helper.py", "scripts/helper.py"),
-            ("python -c 'import helper'", {}, "helper.py", ".github/actions/dormant/helper.py"),
+             "helper.py", "scripts/helper.py", True),
+            ("python -c 'import helper'", {}, "helper.py", ".github/actions/dormant/helper.py", True),
             ("python scripts/start.py", {"scripts/start.py": "import package.worker\n",
                                         "scripts/package/__init__.py": "# package\n",
                                         "scripts/package/worker.py": "import helper\n"},
-             "scripts/helper.py", "scripts/package/helper.py"),
+             "scripts/helper.py", "scripts/package/helper.py", True),
             ("python -m package", {"package/__init__.py": "# package\n"},
-             "package/__main__.py", "scripts/package/__main__.py"),
-            ("python -m package", {}, "package/__main__.py", "scripts/package/__main__.py"),
+             "package/__main__.py", "scripts/package/__main__.py", False),
+            ("python -m package", {}, "package/__main__.py", "scripts/package/__main__.py", False),
         )
-        for command, sources, target, decoy in cases:
+        for command, sources, target, decoy, included in cases:
             with self.subTest(command=command, target=target, sources=sources):
                 w = self.workspace()
                 for module in w.paths:
@@ -607,9 +735,7 @@ class ScanTests(unittest.TestCase):
                     for source in sources:
                         if source.endswith("/__init__.py"):
                             self.assertIn(source, {item["path"] for item in row["files"]})
-                    # Files initially seeded beneath actions remain in scope.
-                    if not decoy.startswith(".github/actions/"):
-                        self.assertNotIn(decoy, {item["path"] for item in row["files"]})
+                    self.assertEqual(decoy in {item["path"] for item in row["files"]}, included)
                 self.assertTrue(any(row["first"]["path"] == target and row["second"]["path"] == target
                                     for row in report["findings"]), report)
 
@@ -918,6 +1044,398 @@ class ScanTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, 2)
         self.assertIn("FAIL", (w.output / "summary.md").read_text())
 
+
+    def coverage_case(self, items, files, modules=("Hexalith.Alpha", "Hexalith.Beta")):
+        w = self.workspace(modules)
+        for module in w.paths:
+            w.write(module, ".github/actions/dormant/action.yml", steps(*items))
+            for path, text in files.items():
+                fmt = FORMATS.get(Path(path).suffix, "python")
+                w.write(module, path, block(fmt, "copied " + path) if text is COPY else text)
+            w.commit(w.paths[module])
+        return w.scan(self.factory)
+
+    def assert_coverage(self, report, target, diagnostic):
+        """Never pass while copied code sits outside the scanned scope."""
+        self.assertEqual(report["result"], "fail", report)
+        for row in report["modules"]:
+            if diagnostic is None:
+                self.assertEqual(row["errors"], [], row)
+            else:
+                self.assertEqual(row["result"], "fail", row)
+                self.assertTrue(any(diagnostic in error for error in row["errors"]), row)
+            if target:
+                self.assertIn(target, {item["path"] for item in row["files"]}, row)
+        if target:
+            self.assertTrue(any(row["first"]["path"] == target and row["second"]["path"] == target
+                                and row["first"]["module"] != row["second"]["module"]
+                                for row in report["findings"]), report)
+
+    def test_review3_reproductions_yield_cross_module_finding_or_named_failure(self):
+        for label, items, files, target, diagnostic in A1:
+            with self.subTest(case=label):
+                self.assert_coverage(self.coverage_case(items, files), target, diagnostic)
+
+    def test_literal_references_include_data_arguments_and_heredoc_bodies(self):
+        # A data argument or heredoc body that names a tracked script includes it.
+        for command, target in (("chmod +x scripts/x.sh && cat scripts/y.py", "scripts/y.py"),
+                                ("chmod +x scripts/x.sh && cat scripts/y.py", "scripts/x.sh"),
+                                ("cat > notes.md <<EOF\nRun ./scripts/x.sh manually\nEOF", "scripts/x.sh"),
+                                ("echo 'see scripts/y.py' > /dev/null", "scripts/y.py")):
+            with self.subTest(command=command, target=target):
+                report = self.coverage_case([("bash", command, "")], {"scripts/x.sh": COPY, "scripts/y.py": COPY})
+                self.assert_coverage(report, target, None)
+        # Literal data naming no tracked script, including heredoc prose, passes.
+        for command in ("cat > notes.md <<'EOF'\nDon't run ./scripts/missing.sh manually\nEOF\necho done",
+                        "echo 'MODE=fast' >> \"$GITHUB_ENV\"",
+                        'export PATH="$HOME/.local/bin:$PATH"',
+                        'echo "$HOME/.local/bin" >> "$GITHUB_PATH"',
+                        "poetry run pytest -q"):
+            with self.subTest(command=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.write("Hexalith.Alpha", "pyproject.toml", "[tool.poetry.scripts]\nlint = 'helper:main'\n")
+                w.commit(w.paths["Hexalith.Alpha"])
+                report = w.scan(self.factory)
+                self.assertEqual(report["result"], "pass", report)
+
+    def test_unmodeled_environment_and_path_writes_fail(self):
+        cases = (
+            ('echo "$NAME=support" >> "$GITHUB_ENV"', "bash", "computed environment name"),
+            ('echo "PATH=$GITHUB_WORKSPACE/scripts:$PATH" >> "$GITHUB_ENV"', "bash", "$GITHUB_ENV PATH write"),
+            ('echo "$GITHUB_WORKSPACE/scripts" >> "$GITHUB_PATH"', "bash", "$GITHUB_PATH change"),
+            ('echo "${{ github.action_path }}/bin" >> "$GITHUB_PATH"', "bash", "$GITHUB_PATH change"),
+            ("PATH=scripts:$PATH helper.sh", "bash", "PATH change"),
+            ("env PATH=./scripts:$PATH helper.sh", "bash", "PATH change"),
+            ("export UV_ENV_FILE=.env", "bash", "environment assignment"),
+            ("$env:PYTHONPATH = 'support'; python -m helper", "pwsh", "environment assignment"),
+            ('$env:PATH = "$PWD/scripts;$env:PATH"', "pwsh", "PATH change"),
+            ("Set-Item -Path env:PYTHONPATH -Value support", "pwsh", "environment assignment"),
+        )
+        for command, shell, diagnostic in cases:
+            with self.subTest(command=command):
+                report = self.coverage_case([(shell, command, "")], {"support/helper.py": COPY,
+                                                                     "scripts/helper.sh": COPY})
+                self.assert_coverage(report, None, diagnostic)
+        python = (
+            ("import os\nwith open(os.environ['GITHUB_ENV'], 'a') as f:\n    f.write('PYTHONPATH=support\\n')\n",
+             "access to GITHUB_ENV"),
+            ("import os\nos.environ['PATH'] = 'support:' + os.environ['PATH']\n", "environment mutation"),
+            ("from dotenv import load_dotenv\nload_dotenv()\n", "env file"),
+        )
+        for source, diagnostic in python:
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py\npython -m helper", "")],
+                                            {"scripts/start.py": source, "support/helper.py": COPY})
+                self.assert_coverage(report, None, diagnostic)
+        report = self.coverage_case([("bash", "python -m helper", "      env:\n        PATH: ${{ github.workspace }}/support\n")],
+                                    {"support/helper.py": COPY})
+        self.assert_coverage(report, None, "step PATH environment")
+
+    def test_dormant_action_subfolder_uses_owning_action_path(self):
+        # C1: the dormant seed's context is the nearest ancestor holding an action.
+        report = self.coverage_case([("bash", 'bash "$GITHUB_ACTION_PATH/scripts/run.sh"', "")], {
+            ".github/actions/dormant/scripts/run.sh": 'source "$GITHUB_ACTION_PATH/scripts/lib.sh"\n',
+            ".github/actions/dormant/scripts/lib.sh": COPY})
+        self.assert_coverage(report, ".github/actions/dormant/scripts/lib.sh", None)
+
+    def test_continuations_keep_physical_lines_and_split_only_on_lf(self):
+        # C2: backslash continues shell, backtick continues PowerShell, and a
+        # logical line keeps its first physical line number.
+        for name, source in (("run.sh", "echo a \\\n  b \\\n  c\nfoo\npython missing.py\npython \\\n  other.py\n"),
+                             ("run.ps1", "Write-Output a `\n  b `\n  c\nfoo\npython missing.py\npython `\n  other.py\n")):
+            with self.subTest(name=name):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.write("Hexalith.Alpha", ".github/actions/dormant/" + name, source)
+                w.commit(w.paths["Hexalith.Alpha"])
+                errors = w.scan(self.factory)["modules"][0]["errors"]
+                prefix = ".github/actions/dormant/" + name + ":"
+                self.assertEqual([error.split(": ", 1)[0] for error in errors], [prefix + "5", prefix + "6"], errors)
+                self.assertIn("missing.py", errors[0])
+                self.assertIn("other.py", errors[1])
+        # Only the shell's own continuation joins lines; C7: only LF splits, a
+        # trailing CR is dropped and other separators stay inside the line.
+        for name, source in (("cross.ps1", "Write-Output a \\\npython -m helper\n"),
+                             ("cross.sh", "echo a\\`\npython -m helper\n"),
+                             ("crlf.sh", "echo a\r\npython -m helper\r\n"),
+                             ("u2028.sh", "echo x \u2028# ; python -m helper\n"),
+                             ("cr.sh", "echo x\r# ; python -m helper\n"),
+                             ("ff.sh", "echo x \f# ; python -m helper\n")):
+            with self.subTest(name=name):
+                report = self.coverage_case([("bash", "true", "")], {".github/actions/dormant/" + name: source,
+                                                                     "helper.py": COPY})
+                self.assert_coverage(report, "helper.py", None)
+
+    def test_each_composite_step_is_discovered_independently(self):
+        # C3: an invalid step is anchored at its own line; later steps continue.
+        w = self.workspace()
+        for module in w.paths:
+            w.write(module, ".github/actions/dormant/action.yml", "name: Steps\nruns:\n  using: composite\n  steps:\n"
+                    "    - uses: actions/checkout@v4\n    - shell: bash\n      run: python -m helper\n")
+            w.write(module, "helper.py", block("python", "later step"))
+            w.commit(w.paths[module])
+        report = w.scan(self.factory)
+        self.assert_coverage(report, "helper.py", ".github/actions/dormant/action.yml:5: invalid action/discovery: "
+                             "unresolved or unpinned action target")
+
+    def test_powershell_block_comments_are_removed_anywhere(self):
+        # C8: inline and multi-line <# ... #> comments keep the line count.
+        report = self.coverage_case([("pwsh", "Write-Output x <# note #> ; python -m helper", "")], {"helper.py": COPY})
+        self.assert_coverage(report, "helper.py", None)
+        w = self.workspace(("Hexalith.Alpha",))
+        w.write("Hexalith.Alpha", ".github/actions/dormant/run.ps1",
+                "Write-Output x <# a\nb #> ; Write-Output y\npython missing.py\n")
+        w.commit(w.paths["Hexalith.Alpha"])
+        errors = w.scan(self.factory)["modules"][0]["errors"]
+        self.assertEqual(len(errors), 1, errors)
+        self.assertTrue(errors[0].startswith(".github/actions/dormant/run.ps1:3: "), errors)
+
+    def test_command_lookup_probe_and_sys_executable_interpreter(self):
+        # C9: command -v/-V is a non-executing probe. C10: sys.executable, and
+        # any alias of it, as argv[0] is the Python interpreter.
+        for command in ("if command -v jq >/dev/null; then python -m helper; fi",
+                        "command -V jq && python -m helper"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"helper.py": COPY}), "helper.py", None)
+        for source in ("import subprocess, sys\nsubprocess.run([sys.executable, '-m', 'helper'])\n",
+                       "import subprocess, sys\npy = sys.executable\nsubprocess.check_call((py, '-m', 'helper'))\n",
+                       "import subprocess\nfrom sys import executable as python\nsubprocess.run([python, '-m', 'helper'])\n"):
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")],
+                                            {"scripts/start.py": source, "helper.py": COPY})
+                self.assert_coverage(report, "helper.py", None)
+
+    def test_followed_wrapper_and_recursive_interpreter_forms(self):
+        # C11: module-form children are reachable only through the recognized layer.
+        for command, shell in (("echo x | xargs python -m helper", "bash"),
+                               ("flock /tmp/scan.lock python -m helper", "bash"),
+                               ("bash -c 'python -m helper'", "bash"),
+                               ("pwsh -Command 'python -m helper'", "bash"),
+                               ("pwsh -Command python -m helper", "pwsh"),
+                               ("uv run --with requests python -m helper", "bash")):
+            with self.subTest(command=command):
+                report = self.coverage_case([(shell, command, "")], {"helper.py": COPY})
+                self.assert_coverage(report, "helper.py", None)
+
+    def test_followed_python_process_and_import_apis(self):
+        # C12: each recognized API reaches a module that no path literal names.
+        for source in ("import os\nos.system('python -m helper')\n",
+                       "import subprocess\nsubprocess.Popen(['python', '-m', 'helper']).wait()\n",
+                       "import subprocess\nsubprocess.call(['python', '-m', 'helper'])\n",
+                       "import subprocess\nsubprocess.check_output(['python', '-m', 'helper'])\n",
+                       "import subprocess\nsubprocess.getstatusoutput('python -m helper')\n",
+                       "import runpy\nrunpy.run_module('helper')\n",
+                       "__import__('helper')\n"):
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")],
+                                            {"scripts/start.py": source, "helper.py": COPY})
+                self.assert_coverage(report, "helper.py", None)
+
+    def test_python_resolution_and_execution_apis_fail(self):
+        # C13: each failure is pinned by its own diagnostic.
+        cases = (
+            ("import os\nos.chdir('scripts')\n", "working-directory mutation"),
+            ("import os\nos.putenv('PYTHONPATH', 'support')\n", "environment mutation"),
+            ("import os\nos.environ.setdefault('PYTHONPATH', 'support')\n", "environment mutation"),
+            ("import os\nos.spawnl(os.P_WAIT, '/usr/bin/python3', 'python3', '-m', 'helper')\n",
+             "process/import API: os.spawnl"),
+            ("import os\nos.posix_spawn('/usr/bin/python3', ['python3', '-m', 'helper'], {})\n",
+             "process/import API: os.posix_spawn"),
+            ("from importlib.machinery import SourceFileLoader\nSourceFileLoader('h', 'support/helper.py').load_module()\n",
+             "process/import API: importlib.machinery.SourceFileLoader"),
+            ("exec(compile(open('support/helper.py').read(), 'h', 'exec'))\n", "process/import API: compile"),
+        )
+        for source, diagnostic in cases:
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")],
+                                            {"scripts/start.py": source, "support/helper.py": COPY})
+                self.assert_coverage(report, None, diagnostic)
+                for row in report["modules"]:
+                    self.assertTrue(any(error.startswith("scripts/start.py:") and diagnostic in error
+                                        for error in row["errors"]), row)
+        report = self.coverage_case([("bash", "python -m pkg.missing", "")], {"pkg/__init__.py": COPY})
+        self.assert_coverage(report, None, "missing local Python module: pkg.missing")
+
+    def test_extensionless_shebang_action_source_is_scanned(self):
+        # C14: an extensionless file directly beneath .github/actions/** with a
+        # supported shebang is an initial source.
+        w = self.workspace()
+        for module in w.paths:
+            w.write(module, ".github/actions/dormant/tool", "#!/usr/bin/env bash\n" + block("bash", "shebang"))
+            w.commit(w.paths[module])
+        report = w.scan(self.factory)
+        self.assert_coverage(report, ".github/actions/dormant/tool", None)
+        self.assertTrue(all(row["format"] == "bash" for row in report["findings"]), report)
+
+    def test_namespace_package_inside_regular_package_runs_ancestor_initializer(self):
+        # C6: every ancestor __init__.py of an imported namespace package runs.
+        for source, child in (("from pkg.ns import helper\n", True), ("import pkg.ns\n", False)):
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "scripts/pkg/__init__.py": COPY,
+                    "scripts/pkg/ns/helper.py": "# namespace child\n"})
+                self.assert_coverage(report, "scripts/pkg/__init__.py", None)
+                for row in report["modules"]:
+                    self.assertEqual("scripts/pkg/ns/helper.py" in {item["path"] for item in row["files"]}, child)
+
+    def test_module_operands_behind_unrecognized_consumers_are_included(self):
+        # Rule 1 for module names: a literal -m operand, or a module that a
+        # literal -c operand imports, is included whatever consumes it.
+        shell = (
+            ("bash", "xvfb-run python -m helper", "helper.py"),
+            ("bash", "retry --times 3 -- bash -c 'python -m helper'", "helper.py"),
+            ("bash", "xvfb-run python -c 'import helper'", "helper.py"),
+            ("bash", "xvfb-run python -m pkg", "pkg/__main__.py"),
+            ("bash", "cat <<EOF | parallel\npython -m helper\nEOF", "helper.py"),
+            ("bash", "python -m cProfile -m helper", "helper.py"),
+            ("pwsh", "Start-Job { python -m helper } | Wait-Job", "helper.py"),
+            ("pwsh", "1..2 | ForEach-Object { python -m helper }", "helper.py"),
+        )
+        for command_shell, command, target in shell:
+            with self.subTest(command=command):
+                report = self.coverage_case([(command_shell, command, "")], {
+                    "helper.py": COPY, "pkg/__init__.py": "# package\n", "pkg/__main__.py": COPY})
+                self.assert_coverage(report, target, None)
+                for row in report["modules"]:
+                    if target.startswith("pkg/"):
+                        self.assertIn("pkg/__init__.py", {item["path"] for item in row["files"]})
+        python = (
+            "import sys\nsys.modules['subprocess'].run(['python', '-m', 'helper'])\n",
+            "__import__('subprocess').run(['python', '-m', 'helper'])\n",
+            "import importlib\nimportlib.import_module('subprocess').call('python -m helper', shell=True)\n",
+            "import sh\nsh.python('-m', 'helper')\n",
+            "import subprocess\nsubprocess.run(['xvfb-run', 'python', '-c', 'import helper'])\n",
+            "import os\nos.system(\"xvfb-run python -c 'from helper import main; main()'\")\n",
+        )
+        for source in python:
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")],
+                                            {"scripts/start.py": source, "helper.py": COPY})
+                self.assert_coverage(report, "helper.py", None)
+
+    def test_cross_language_execution_positions_fail(self):
+        # From an execution position, a tracked script in another language fails.
+        tool = "#!/usr/bin/env python3\n" + block("python", "copied tool")
+        mixed = "#!/usr/bin/env python3\n" + block("bash", "copied mixed")
+        cases = (
+            ("bash", "bash scripts/helper.py", "scripts/helper.py", "cross-language script invocation: scripts/helper.py"),
+            ("bash", "python scripts/helper.sh", "scripts/helper.sh", "cross-language script invocation: scripts/helper.sh"),
+            ("bash", "pwsh -File scripts/helper.sh", "scripts/helper.sh", "cross-language script invocation"),
+            ("bash", "source scripts/helper.py", "scripts/helper.py", "cross-language script invocation"),
+            ("bash", ". ./scripts/helper.ps1", "scripts/helper.ps1", "cross-language script invocation"),
+            ("pwsh", ". ./scripts/helper.sh", "scripts/helper.sh", "cross-language script invocation"),
+            ("bash", "uv run --script scripts/helper.sh", "scripts/helper.sh", "cross-language script invocation"),
+            ("bash", "bash scripts/tool", "scripts/tool", "cross-language script invocation: scripts/tool"),
+            ("bash", "./scripts/mixed.sh", "scripts/mixed.sh", "ambiguous script language: scripts/mixed.sh"),
+        )
+        for shell, command, target, diagnostic in cases:
+            with self.subTest(command=command):
+                report = self.coverage_case([(shell, command, "")], {
+                    "scripts/helper.py": COPY, "scripts/helper.sh": COPY, "scripts/helper.ps1": COPY,
+                    "scripts/tool": tool, "scripts/mixed.sh": mixed})
+                self.assert_coverage(report, target, diagnostic)
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+            "scripts/start.py": "import runpy\nrunpy.run_path('scripts/helper.sh')\n", "scripts/helper.sh": COPY})
+        self.assert_coverage(report, "scripts/helper.sh", "scripts/start.py:2: local-script discovery: unsupported "
+                             "cross-language script invocation")
+        # uv run --script runs its target as Python, so an extensionless PEP 723
+        # script without a shebang is reached through the recognized call.
+        report = self.coverage_case([("bash", "uv run --script scripts/inline", "")], {
+            "scripts/inline": "# /// script\n# ///\n" + block("python", "copied inline")})
+        self.assert_coverage(report, "scripts/inline", None)
+        self.assertTrue(all(row["format"] == "python" for row in report["findings"]), report)
+
+    def test_python_environment_mapping_writes_fail(self):
+        for source in ("import os\nos.environ |= {'PYTHONPATH': 'support'}\n",
+                       "import os\nos.environ = {'PYTHONPATH': 'support'}\n",
+                       "from os import environ\nenviron |= {'PYTHONPATH': 'support'}\n",
+                       "import os\nos.environb[b'PYTHONPATH'] = b'support'\n",
+                       "import os\nos.environb.update({b'PYTHONPATH': b'support'})\n"):
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py\npython -m helper", "")], {
+                    "scripts/start.py": source, "support/helper.py": COPY, "helper.py": "# root decoy\n"})
+                self.assert_coverage(report, None, "scripts/start.py:2: local-script discovery: unsupported Python "
+                                     "environment mutation affecting resolution")
+        # Rebinding a plain alias and reading the mapping change no environment.
+        w = self.workspace(("Hexalith.Alpha",))
+        w.action("Hexalith.Alpha", "python scripts/start.py")
+        w.write("Hexalith.Alpha", "scripts/start.py", "from os import environ\nenviron = dict(environ, MODE='x')\n")
+        w.commit(w.paths["Hexalith.Alpha"])
+        self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_runners_with_tracked_recipes_or_tests_fail(self):
+        config = "repos:\n- repo: local\n  hooks:\n  - id: helper\n    entry: python helper.py\n    language: system\n"
+        cases = (
+            ("pre-commit run --all-files", {".pre-commit-config.yaml": config},
+             "unsupported task runner with tracked module recipes: pre-commit"),
+            ("python -m pre_commit run", {".pre-commit-config.yaml": config},
+             "unsupported task runner with tracked module recipes: pre-commit"),
+            ("python -m tox -c ci.ini", {"ci.ini": "[testenv]\ncommands = python helper.py\n"},
+             "unsupported task runner recipe location: tox"),
+            ("pytest tests", {"tests/test_helper.py": "import helper\n"},
+             "unsupported test runner with tracked module tests: pytest"),
+            ("python -m pytest -q", {"tests/conftest.py": "import helper\n"},
+             "unsupported test runner with tracked module tests: pytest"),
+            ("uv run pytest", {"helper_test.py": "import helper\n"},
+             "unsupported test runner with tracked module tests: pytest"),
+            ("python -m unittest discover -s tests", {"tests/test_helper.py": "import helper\n"},
+             "unsupported test runner with tracked module tests: unittest"),
+        )
+        for command, files, diagnostic in cases:
+            with self.subTest(command=command):
+                report = self.coverage_case([("bash", command, "")], files | {"helper.py": COPY})
+                self.assert_coverage(report, None, diagnostic)
+        # Without tracked recipes or tests these runners execute no module file.
+        for command in ("pytest --version", "python -m pytest --version", "pre-commit --version"):
+            with self.subTest(command=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.commit(w.paths["Hexalith.Alpha"])
+                self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_module_user_and_directory_search_paths_fail(self):
+        # PSModulePath, PYTHONUSERBASE and CDPATH redirect name-based lookup.
+        cases = (
+            ("bash", "export PSModulePath=./modules; pwsh -Command 'Import-Module helper'", "",
+             "environment assignment affecting script resolution"),
+            ("pwsh", '$env:PSModulePath = "./modules;" + $env:PSModulePath; Import-Module helper', "",
+             "environment assignment affecting script resolution"),
+            ("bash", "pwsh -Command 'Import-Module helper'", "      env:\n        PSModulePath: ./modules\n",
+             "step environment affecting script resolution"),
+            ("bash", "export PYTHONUSERBASE=./local; python -m helper", "",
+             "environment assignment affecting script resolution"),
+            ("bash", "CDPATH=scripts; cd sub && python helper.py", "",
+             "environment assignment affecting script resolution"),
+        )
+        for shell, command, extra, diagnostic in cases:
+            with self.subTest(command=command):
+                report = self.coverage_case([(shell, command, extra)], {
+                    "modules/helper/helper.psm1": COPY, "local/lib/python3.12/site-packages/helper.py": COPY,
+                    "scripts/sub/helper.py": COPY})
+                self.assert_coverage(report, None, diagnostic)
+
+    def test_each_central_policy_rule_fails_alone(self):
+        # C16: one single-violation subtest per central-policy rule.
+        policy = json.loads((ROOT / ".jscpd.json").read_bytes())
+        mutations = {"not-an-object": [], "format": policy | {"format": ["python"]},
+                     "format-missing": {k: v for k, v in policy.items() if k != "format"},
+                     "skipLocal": policy | {"skipLocal": False}, "noGitignore": policy | {"noGitignore": False},
+                     "absolute": policy | {"absolute": False}, "reporters": policy | {"reporters": ["json", "console"]},
+                     "ignore": policy | {"ignore": ["**"]}, "ignorePattern": policy | {"ignorePattern": ["x"]},
+                     "threshold": policy | {"threshold": 0}, "baseline": policy | {"baseline": "x"},
+                     "pattern": policy | {"pattern": "**"}}
+        w = self.workspace(())
+        for rule, value in mutations.items():
+            with self.subTest(rule=rule):
+                (w.cicd / ".jscpd.json").write_text(json.dumps(value))
+                revision = w.commit(w.cicd)
+                with tempfile.TemporaryDirectory() as scratch, self.assertRaises(rt.DeliveryError) as raised:
+                    sc.Detector(rt.Git(w.cicd), revision, scratch)
+                self.assertEqual(str(raised.exception), "invalid central detector policy")
+        (w.cicd / ".jscpd.json").write_text(json.dumps(policy))
+        revision = w.commit(w.cicd)
+        # The unchanged committed policy is accepted by the same validation.
+        self.assertEqual(rt.json_read(rt.Git(w.cicd).blob(revision, ".jscpd.json")), policy)
 
 if __name__ == "__main__":
     unittest.main()

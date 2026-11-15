@@ -140,7 +140,11 @@ cannot substitute for the selected release.
 
 Validation requires Linux x86_64, outbound HTTPS to GitHub for release and tag
 metadata, linter archives and online zizmor audits, and anonymous Git access to
-each registered module's live `main`. Supply a read-only `GH_TOKEN` or
+each registered module's live `main`. The tool suites include the duplicate-scan
+suite, which installs the integrity-pinned jscpd with the real detector, so
+validation also requires Node 24 with npm on `PATH` and outbound HTTPS to
+`registry.npmjs.org` for `npm ci --ignore-scripts` and `npm audit signatures`.
+The nightly bump job sets up the same pinned Node 24 before its global gate. Supply a read-only `GH_TOKEN` or
 `GITHUB_TOKEN` privately through the environment. In Actions the only credential
 is the job's `GITHUB_TOKEN` with `contents: read`. Unavailable or malformed API
 responses fail verification, including authorization errors. Module reads use
@@ -294,8 +298,14 @@ The committed setup filenames also register the nightly duplicate scan. Every
 registered module is scanned at its anonymous live `main`, including modules
 not yet adopted and dormant `.github/actions/**` directories. Builds is excluded,
 and the registry is capped at 17 modules. The scan recursively follows supported
-local YAML, shell, PowerShell and Python sources and Python imports. Missing,
-unsafe or unresolved local calls fail coverage with a source diagnostic.
+local YAML, shell, PowerShell and Python sources and Python imports. Every literal
+that names a tracked script, and every local module that a literal `-m` operand
+names or a `-c` operand imports, is included from every candidate base, whatever
+consumes it. Missing, unsafe, cross-language or unresolved local calls and
+unmodeled indirection fail coverage with a source diagnostic. Unmodeled
+indirection includes stdin-fed interpreters, import-path, module-path or `PATH`
+changes, reflective process APIs, and task or test runners with tracked recipes
+or tests.
 
 CiCd's committed jscpd 5.4.3 policy uses weak mode with 10 lines and 50 tokens;
 module detector config, ignore files and suppression directives cannot waive it.
