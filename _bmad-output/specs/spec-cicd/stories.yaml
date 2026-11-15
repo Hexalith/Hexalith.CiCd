@@ -343,14 +343,16 @@
 - id: "10-1"
   title: "Module-agent token"
   description: >-
-    Qualify the supplied AD-7 module-agent token with four live checks:
+    Qualify the supplied AD-7 module-agent token with three pre-adoption checks:
     workflow-changing push refusal and workflow-dispatch refusal (CAP-7),
-    product-only branch push from current main, and meaningful PR Update
-    branch. Use existing real workflow-changing history on a declared module
-    before adoption; prior CiCd delivery is not required. Record preliminary
-    branch findings and limits for 10-2's block, distinguishing GitHub
-    mechanics from actual delivery proof. Story 11's existing pilot checkpoint
-    confirms the post-delivery branch behavior. Clean up all probe refs/PRs.
+    and product-only branch push from current main. Meaningful PR Update
+    branch is deferred to story 11 by the human's 2026-11-15 decision after
+    GitHub refused its historical-head fixture. Use existing real history on
+    a declared module; prior delivery is not required. Record the verified
+    findings and unverified update for 10-2's block, distinguishing GitHub
+    mechanics from actual delivery proof. Story 11 confirms post-delivery
+    branching and tests the deferred update. Until then 10-2 prohibits Update
+    branch. Clean up all probe refs/PRs.
   invoke_dev_with: >-
     Use the dedicated token from the protected credential file
     /home/administrator/.config/gh-module-agent/token, not a gh profile;
@@ -365,7 +367,8 @@
   description: >-
     Write the CI/CD-ownership block text and the .claude/settings.json
     deny-entry list in this repo's templates (run check.py before pushing, no
-    YAML-asserting tests, no skip markers, plus any restriction 10-1 found),
+    YAML-asserting tests, no skip markers, fresh-main product branches and a
+    temporary prohibition of Update branch pending story 11's live test),
     make AI.Tools' shared guide link to the block and drop the
     release-on-merge line, and add the gate rule to this repo's AGENTS.md
     (CAP-11; enforcement.md, gate-classification.md).
@@ -377,8 +380,10 @@
     Adopt both repos through the AD-21 sequence and apply the gate rule
     (CAP-10, CAP-16). The pause after this story is for watching one real
     night: CodeQL, release, Builds bump, and delivery. At this existing pilot
-    checkpoint, confirm 10-1's branch findings after real CiCd delivery and
-    confirm or correct 10-2's instruction restrictions before accepting it.
+    checkpoint, confirm 10-1's branch findings and test its deferred Update
+    branch operation after real CiCd delivery. Create a product-only probe
+    head/PR before delivery, then update it afterward. Confirm or correct
+    10-2's instruction restrictions before accepting the checkpoint.
   spec_checkpoint: true
   done_checkpoint: true
   invoke_dev_with: >-
@@ -390,15 +395,19 @@
     and .husky/) go in references/Hexalith.Commons and
     references/Hexalith.PolymorphicSerializations with the module-agent token;
     never edit owned files there. A CiCd agent adds the waivers to Builds'
-    Props/, and adoption waits for a builds-version that contains them. Then
-    commit submodule + setup file + render here; delivery adopts the module.
+    Props/, and adoption waits for a builds-version that contains them. Before
+    pilot adoption, use the restricted module credential to create a disposable
+    product-only probe branch/PR from current main, with unchanged workflows;
+    record its full base/head revisions. Then commit submodule + setup file +
+    render here; delivery adopts the module.
     Right after adoption, the maintainer turns on immutable releases, deletes
     the other nuget.org policies, and removes the repo from the legacy org
     secrets, the NUGET_API_KEY scope, and the legacy Zot push. After the first
     real delivery, use the same restricted credential from
     /home/administrator/.config/gh-module-agent/token to rerun a product-only
-    branch push from current post-delivery main and a meaningful PR Update
-    branch. Record actual delivery/base revisions and server outcomes; use
+    branch push from current post-delivery main and attempt Update branch on
+    the pre-delivery probe PR, bringing the actual delivery's workflow change
+    into its head. Record actual delivery/base revisions and server outcomes; use
     disposable refs/PRs, change no owned file or main ref, do not merge, and
     clean up. Confirm or correct 10-2's instruction restrictions if findings
     differ, before accepting this existing pilot checkpoint.

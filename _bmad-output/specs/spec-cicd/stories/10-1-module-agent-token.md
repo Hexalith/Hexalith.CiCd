@@ -15,15 +15,17 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 
 ## Intent
 
-**Problem:** CAP-7 needs live proof that the module-agent credential cannot push workflow changes or dispatch workflows. Story 10-2 also needs preliminary, live-verified answers about branch pushes from current `main` and a PR's Update branch operation; story 11 confirms those answers after a real CiCd delivery.
+**Problem:** CAP-7 needs live proof that the module-agent credential cannot push workflow changes or dispatch workflows. Story 10-2 also needs the verified current-main branch result and an explicit restriction while meaningful PR Update branch remains unverified.
 
-**Approach:** Use the maintainer-supplied AD-7 fine-grained token at `/home/administrator/.config/gh-module-agent/token`. The agent verifies its identity and permissions and exercises all four live operations on one of the 17 module repositories declared in `.gitmodules`, using existing real workflow-changing history. Prior CiCd adoption or delivery is not required for 10-1 readiness or completion. Record these results as qualification of GitHub permission/branch mechanics before adoption, not proof of the CiCd delivery path. At story 11's existing pilot checkpoint, repeat the branch-push and Update branch checks after the first real delivery and confirm or correct 10-2's recorded restrictions before accepting that checkpoint. Missing credentials, unavailable meaningful Git history or unrelated authorization failures remain blockers, never successful refusal evidence.
+**Approach:** Use the maintainer-supplied AD-7 fine-grained token at `/home/administrator/.config/gh-module-agent/token`. Qualify workflow-changing push refusal, dispatch refusal and a product-only branch push on an existing declared module before adoption. The human approved moving the unavailable meaningful Update branch operation to story 11: create a product-only probe head from current main before real delivery, then test its update after delivery advances main. Hand the three verified results and this explicit deferral to 10-2, which temporarily forbids Update branch. At story 11, repeat fresh-main product branching, record the actual Update branch result, clean every probe and confirm or correct the restrictions. No refused fixture creation counts as an Update branch result.
 
 ## Boundaries & Constraints
 
 **Always:** Limit the token to module repositories, with Contents and Pull requests write and no Workflows, Administration, Actions, Variables or Secrets write. Use the supplied module credential explicitly for every qualification operation, preserving the default CiCd-agent profile. Keep credentials out of output, source, logs and URLs. Use `run-with-temp` for disposable repository/object workspaces and save useful evidence outside `$TMPDIR`. Record full revisions directly from Git. Preserve owned files and all module `main` refs; confine permitted branch/PR operations to disposable refs and clean up after them.
 
 **Qualification scope:** Existing real module history is sufficient for 10-1 even while `setup/*.yml` and CiCd `delivered/*` refs are empty. Ordinary workflow-changing history is not a CiCd delivery. Keep the preliminary branch findings and the pending post-delivery confirmation distinct in the evidence handed to 10-2; do not represent the later story 11 check as already verified.
+
+**Human sequencing decision, 2026-11-15:** Three live results plus cleanup and an explicit deferred Update branch check satisfy the handoff to 10-2. The fourth operation remains mandatory for story 11 acceptance. Do not use PR Update branch until that live test establishes its behavior; report refusals instead of substituting broader credentials.
 
 **Never:** Create or broaden the token, use the maintainer login or CiCd-agent credential as a substitute, fetch the App key, edit any owned file, register/adopt a module to manufacture this test, change the 10-2 instruction block, dispatch a release with a privileged credential, merge a probe PR, force-push, or claim that a dry run or mock proves a GitHub refusal.
 
@@ -45,8 +47,8 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 - [x] `/home/administrator/.config/gh-module-agent/token` — use this supplied protected credential file with the AD-7 repository selection and permissions. Record only its local source and intended module target. Agent checks effective profile, override presence, account, target and available read-only permission metadata. A filename or successful login alone does not establish suitability; qualify the actual permission behavior through the live checks below. No session-wide authentication changes.
 - [x] `_bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md` — record a successful module-owned-content branch push as the positive control, then the workflow-change push refusal. Use existing Git objects/history for the negative candidate and disposable refs, without editing owned files. Record candidate/base revisions, actual server response, ref state and cleanup. A repository-wide 403 is not a workflow-specific refusal.
 - [x] `_bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md` — attempt dispatch of a real existing dispatchable workflow with that same token, recording endpoint, ref, permission-specific response and absence of a created run. Do not use an invalid workflow/ref/input as the negative control.
-- [ ] `_bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md` — identify an existing real workflow-changing commit reachable from the chosen module's current `main`, push a product-only branch from current `main`, then exercise the PR Update branch API with a disposable PR/head whose update would introduce an existing real workflow difference from its base. Use no owned-file edits or fabricated delivery. Record each actual result, limits and exact revision; close/delete probes without merging. Missing meaningful history leaves the affected result unverified, but absence of a prior CiCd delivery does not block this pre-adoption qualification.
-- [ ] `_bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md` — provide 10-2 with both preliminary branch answers and any observed restriction, explicitly label the pre-adoption scope and pending confirmation at story 11, and include final owned-state/main-ref comparisons. Mark 10-1 complete only after all four live results and cleanup are established; story 11's later confirmation is not a 10-1 completion prerequisite.
+- [x] `_bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md` — record the successful product-only branch push from current main with exact existing workflow-history revisions, actual server response and cleanup. Preserve the unavailable Update branch fixture finding as unverified; the human moved the actual operation to story 11, with no owned-file edits, fabricated delivery or substitute credential.
+- [x] `_bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md` — hand 10-2 the three live results, cleanup/owned-state comparisons, and temporary Update branch prohibition. Record the human-approved deferred operation as mandatory at story 11; do not claim that permission or PR write has been verified. Existing orchestrator status remains separate from this revised handoff condition.
 
 **Acceptance Criteria:**
 
@@ -54,8 +56,8 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 - Given the maintainer-created AD-7 token and successful ordinary branch access to a declared module, when a push introducing a workflow difference is attempted, then GitHub refuses it specifically for missing workflow permission and the rejected ref is unchanged.
 - Given the same credential, a real dispatchable workflow and valid request, when workflow dispatch is attempted, then GitHub refuses it for missing Actions write and creates no run.
 - Given an existing real workflow-changing revision reachable from current `main` and a product-only branch created from that current `main`, when the module token pushes it, then its success or restriction is recorded with server evidence for 10-2 as a pre-adoption GitHub-mechanics result.
-- Given the same token and a disposable PR whose meaningful update would introduce an existing real workflow difference from its base into its head, when Update branch is attempted, then the actual result or permission restriction is recorded for 10-2 as a pre-adoption result, separately from an already-up-to-date or conflicted request.
-- Given all four live results and cleanup, when 10-1 completes, then 10-2 receives the actual preliminary findings and their limits, with post-delivery confirmation explicitly pending at story 11's existing pilot checkpoint. That checkpoint repeats both branch checks after real delivery, records delivery/base revisions and actual outcomes, and confirms or corrects the instruction restrictions before acceptance.
+- Given the unavailable older-workflow head and the human-approved deferral, when 10-1 hands off to 10-2, then Update branch and PR write remain explicitly unverified and the provisional instructions forbid Update branch until the story 11 test.
+- Given three verified live results and cleanup, when the revised handoff is assessed, then 10-2 receives the results and deferral without waiting for the fourth operation. Story 11 must create its product-only probe head before real delivery and test its meaningful update afterward, repeat branching from post-delivery main, record exact revisions/results and cleanup, and confirm or correct the restrictions before acceptance.
 - Given all probes, when verification ends, then no owned file or module `main` revision has changed, temporary refs/PRs are cleaned up, and no credential has been exposed.
 
 ## Spec Change Log
@@ -63,6 +65,7 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 - 2026-11-15 — Human approved reusing a known suitable dedicated module-agent credential, otherwise creating it privately through the maintainer. Made the explicit credential handoff and existing delivery/base scenario prerequisites to re-arm; retained all four live checks and the existing permission boundaries.
 - 2026-11-15 — Maintainer supplied `/home/administrator/.config/gh-module-agent/token`; read-only preflight verified its protected storage, `jpiquot` identity and Commons metadata access. Recorded the successful handoff separately from the still-unverified write permissions and missing qualifying delivery history.
 - 2026-11-15 — Human selected option 1: qualify all four GitHub operations before adoption using existing real module history, then confirm both branch cases after real delivery at story 11's existing pilot checkpoint. This supersedes the earlier pre-rearm delivery gate. Updated the contract, acceptance criteria, story 10-1/11 manifest entries and architecture's deferred Story 10 check; retained AD-7 permissions and cleanup boundaries.
+- 2026-11-15 — After the attempted historical PR head was refused before Update branch could run, the human selected deferral to story 11. Revised the handoff to accept the three verified outcomes and cleanup, retained Update branch/PR write as unverified, and required a product-only probe head before real delivery plus its actual update afterward. Story 10-2 temporarily forbids Update branch. Earlier blocked-run evidence and orchestrator status are preserved; no fourth outcome is fabricated.
 
 ## Review Triage Log
 
@@ -180,6 +183,30 @@ No implementation build is applicable to this evidence-only change. Local commit
 Status: blocked
 
 Blocking condition: implementation verification failed — the meaningful PR Update branch fixture is unavailable under the supplied restricted credential. Creating its historical-workflow head ref returned HTTP 403 before any PR existed. No actual Update branch request was possible; its permission behavior and Pull requests write remain unverified. Read-only branch discovery across the 17 declared modules found no suitable existing head to reuse. Completion still requires the fourth live result; the earlier credential-handoff and delivery-ordering issues are resolved.
+
+## Subsequent human sequencing resolution — 2026-11-15
+
+The human selected deferral of the missing Update branch operation to story 11.
+The current intent, tasks and acceptance criteria above reflect that decision;
+the earlier Auto Run Result and frontmatter status remain the orchestrator's
+record of the prior attempt. They are not evidence of a fourth live outcome.
+
+The three verified results, their cleanup and explicit limitation now permit
+the handoff to 10-2. Its provisional instruction prohibits PR Update branch
+until the pilot verifies it. Before actual pilot adoption, story 11 creates a
+disposable product-only branch/PR from current main using the restricted
+credential. After real App delivery advances main with workflow changes,
+story 11 attempts that PR's meaningful Update branch, repeats product-only
+branching from fresh post-delivery main, records exact base/head/delivery
+revisions and actual responses, and cleans up without merging. Any inability
+to create the PR or establish a meaningful update remains an actual pilot
+blocker; it is not converted to a successful permission check.
+
+This session changed only the agreed sequencing and documentation. It did not
+rewrite saved response evidence, alter the credential, issue qualification
+writes, or mark the orchestrator's blocked attempt complete. The same decision
+is recorded in stories.yaml, the architecture deferred check and the 10-2/11
+draft specs.
 
 Three live results are retained: the product-only push from current main succeeded, the workflow-changing push was refused specifically for missing workflow permission, and valid workflow dispatch was refused with an Actions-write requirement and no matching run. The rejected workflow ref remained absent. Product and PR-base probe refs were deleted; no PR was created or merged. Unreachable probe objects may remain on GitHub. No delivery, adoption, owned-file edit, module-main write, token/profile change or 10-2 template change was performed by this run.
 
