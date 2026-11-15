@@ -1,0 +1,2472 @@
+{
+  "recorded_at": "2026-11-15T17:36:44.254469+00:00",
+  "profile": "/home/administrator/.config/gh",
+  "identity": "jpiquot (6775094)",
+  "inherited_GH_TOKEN_present": false,
+  "inherited_GITHUB_TOKEN_present": false,
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 952960148,
+        "full_name": "Hexalith/Hexalith.Commons",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/commits/main",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "sha": "fbf4e94233821f6ca336af91a06feaaeb7a16855"
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/rulesets?includes_parents=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": []
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/environments",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 18774213318,
+            "node_id": "EN_kwDOOM0ElM8AAAAEXwfCxg",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Commons/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.Commons/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-07-26T15:39:32Z",
+            "updated_at": "2026-07-26T15:39:32Z",
+            "can_admins_bypass": true,
+            "protection_rules": [
+              {
+                "id": 60948301,
+                "node_id": "GA_kwDOOM0ElM4Dof9N",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 60948302,
+                "node_id": "GA_kwDOOM0ElM4Dof9O",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/environments/hexalith-release/secrets",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/reference/actions#list-environment-secrets",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/code-scanning/default-setup",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/automated-security-fixes",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/immutable-releases",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/releases?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "id": 442873336,
+          "tag_name": "v3.0.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v3.0.0"
+        },
+        {
+          "id": 442593923,
+          "tag_name": "v2.30.11",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.11"
+        },
+        {
+          "id": 430578082,
+          "tag_name": "v2.30.10",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.10"
+        },
+        {
+          "id": 430570902,
+          "tag_name": "v2.30.9",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.9"
+        },
+        {
+          "id": 430456676,
+          "tag_name": "v2.30.8",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.8"
+        },
+        {
+          "id": 429227360,
+          "tag_name": "v2.30.7",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.7"
+        },
+        {
+          "id": 429092688,
+          "tag_name": "v2.30.6",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.6"
+        },
+        {
+          "id": 429017297,
+          "tag_name": "v2.30.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.5"
+        },
+        {
+          "id": 428985698,
+          "tag_name": "v2.30.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.4"
+        },
+        {
+          "id": 416541731,
+          "tag_name": "v2.30.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.3"
+        },
+        {
+          "id": 391991421,
+          "tag_name": "v2.30.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.1"
+        },
+        {
+          "id": 363527664,
+          "tag_name": "v2.30.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.30.0"
+        },
+        {
+          "id": 360063940,
+          "tag_name": "v2.29.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.29.0"
+        },
+        {
+          "id": 355129638,
+          "tag_name": "v2.28.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.28.2"
+        },
+        {
+          "id": 352766395,
+          "tag_name": "v2.28.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.28.1"
+        },
+        {
+          "id": 351558364,
+          "tag_name": "v2.28.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.28.0"
+        },
+        {
+          "id": 350484019,
+          "tag_name": "v2.27.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.27.0"
+        },
+        {
+          "id": 348432690,
+          "tag_name": "v2.26.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.26.0"
+        },
+        {
+          "id": 348010981,
+          "tag_name": "v2.25.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.25.1"
+        },
+        {
+          "id": 347985411,
+          "tag_name": "v2.25.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.25.0"
+        },
+        {
+          "id": 347932793,
+          "tag_name": "v2.24.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.24.4"
+        },
+        {
+          "id": 347555450,
+          "tag_name": "v2.24.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.24.3"
+        },
+        {
+          "id": 347248446,
+          "tag_name": "v2.24.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.24.2"
+        },
+        {
+          "id": 347240717,
+          "tag_name": "v2.24.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.24.1"
+        },
+        {
+          "id": 346623253,
+          "tag_name": "v2.24.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.24.0"
+        },
+        {
+          "id": 346251992,
+          "tag_name": "v2.23.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.23.0"
+        },
+        {
+          "id": 346244387,
+          "tag_name": "v2.22.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.22.0"
+        },
+        {
+          "id": 346183807,
+          "tag_name": "v2.21.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.21.0"
+        },
+        {
+          "id": 346167079,
+          "tag_name": "v2.20.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.20.0"
+        },
+        {
+          "id": 346161625,
+          "tag_name": "v2.19.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.19.0"
+        },
+        {
+          "id": 330391236,
+          "tag_name": "v2.18.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.18.0"
+        },
+        {
+          "id": 328980321,
+          "tag_name": "v2.17.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.17.0"
+        },
+        {
+          "id": 328493707,
+          "tag_name": "v2.16.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.16.0"
+        },
+        {
+          "id": 324491993,
+          "tag_name": "v2.15.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.15.0"
+        },
+        {
+          "id": 324169881,
+          "tag_name": "v2.14.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.14.0"
+        },
+        {
+          "id": 297015735,
+          "tag_name": "v2.13.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.13.0"
+        },
+        {
+          "id": 297014422,
+          "tag_name": "v2.12.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.12.0"
+        },
+        {
+          "id": 297008301,
+          "tag_name": "v2.11.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.11.0"
+        },
+        {
+          "id": 297007710,
+          "tag_name": "v2.10.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.10.0"
+        },
+        {
+          "id": 297005032,
+          "tag_name": "v2.9.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.9.0"
+        },
+        {
+          "id": 275709789,
+          "tag_name": "v2.8.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.8.0"
+        },
+        {
+          "id": 272521310,
+          "tag_name": "v2.7.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.7.0"
+        },
+        {
+          "id": 272520626,
+          "tag_name": "v2.6.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.6.1"
+        },
+        {
+          "id": 272142332,
+          "tag_name": "v2.6.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.6.0"
+        },
+        {
+          "id": 272039550,
+          "tag_name": "v2.5.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.5.0"
+        },
+        {
+          "id": 272038559,
+          "tag_name": "v2.4.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.4.1"
+        },
+        {
+          "id": 272029193,
+          "tag_name": "v2.4.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.4.0"
+        },
+        {
+          "id": 272028711,
+          "tag_name": "v2.3.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.3.0"
+        },
+        {
+          "id": 267940430,
+          "tag_name": "v2.2.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.2.2"
+        },
+        {
+          "id": 266213543,
+          "tag_name": "v2.2.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.2.1"
+        },
+        {
+          "id": 262220567,
+          "tag_name": "v2.2.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.2.0"
+        },
+        {
+          "id": 254269457,
+          "tag_name": "v2.1.9",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.9"
+        },
+        {
+          "id": 253962338,
+          "tag_name": "v2.1.8",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.8"
+        },
+        {
+          "id": 248775395,
+          "tag_name": "v2.1.7",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.7"
+        },
+        {
+          "id": 238828933,
+          "tag_name": "v2.1.6",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.6"
+        },
+        {
+          "id": 237624622,
+          "tag_name": "v2.1.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.5"
+        },
+        {
+          "id": 234834427,
+          "tag_name": "v2.1.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.4"
+        },
+        {
+          "id": 231066808,
+          "tag_name": "v2.1.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.3"
+        },
+        {
+          "id": 230289807,
+          "tag_name": "v2.1.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.2"
+        },
+        {
+          "id": 230276419,
+          "tag_name": "v2.1.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.1"
+        },
+        {
+          "id": 230273497,
+          "tag_name": "v2.1.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.1.0"
+        },
+        {
+          "id": 230273068,
+          "tag_name": "v2.0.6",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.6"
+        },
+        {
+          "id": 229967189,
+          "tag_name": "v2.0.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.5"
+        },
+        {
+          "id": 229965418,
+          "tag_name": "v2.0.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.4"
+        },
+        {
+          "id": 228581330,
+          "tag_name": "v2.0.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.3"
+        },
+        {
+          "id": 227380143,
+          "tag_name": "v2.0.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.2"
+        },
+        {
+          "id": 225078569,
+          "tag_name": "v2.0.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.1"
+        },
+        {
+          "id": 225071110,
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v2.0.0"
+        },
+        {
+          "id": 211895044,
+          "tag_name": "v1.66.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.66.5"
+        },
+        {
+          "id": 211507862,
+          "tag_name": "v1.66.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.66.4"
+        },
+        {
+          "id": 211309217,
+          "tag_name": "v1.66.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.66.3"
+        },
+        {
+          "id": 210929331,
+          "tag_name": "v1.66.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.66.2"
+        },
+        {
+          "id": 210927841,
+          "tag_name": "v1.66.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.66.1"
+        },
+        {
+          "id": 210857132,
+          "tag_name": "v1.66.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.66.0"
+        },
+        {
+          "id": 210610299,
+          "tag_name": "v1.65.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.65.1"
+        },
+        {
+          "id": 210610024,
+          "tag_name": "v1.65.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.65.0"
+        },
+        {
+          "id": 209913665,
+          "tag_name": "v1.64.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.64.0"
+        },
+        {
+          "id": 209852062,
+          "tag_name": "v1.63.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.63.1"
+        },
+        {
+          "id": 209844817,
+          "tag_name": "v1.63.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.63.0"
+        },
+        {
+          "id": 209016155,
+          "tag_name": "v1.62.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.62.0"
+        },
+        {
+          "id": 208999613,
+          "tag_name": "v1.61.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.61.2"
+        },
+        {
+          "id": 208962898,
+          "tag_name": "v1.61.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.61.1"
+        },
+        {
+          "id": 208912169,
+          "tag_name": "v1.61.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.61.0"
+        },
+        {
+          "id": 208577870,
+          "tag_name": "v1.60.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.60.1"
+        },
+        {
+          "id": 208575837,
+          "tag_name": "v1.60.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/releases/tag/v1.60.0"
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/tags?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "name": "v3.0.0",
+          "sha": "fbf4e94233821f6ca336af91a06feaaeb7a16855"
+        },
+        {
+          "name": "v2.30.11",
+          "sha": "5f9d783babadc30748a91f00e5ad6b863e16dd79"
+        },
+        {
+          "name": "v2.30.10",
+          "sha": "11555ace9efcae2928a00122dcba91243e5a8a1a"
+        },
+        {
+          "name": "v2.30.9",
+          "sha": "7424ae33404cf1741ec21e996899a0efd1d6f4b0"
+        },
+        {
+          "name": "v2.30.8",
+          "sha": "bbbce518bcca9ca359762393688f02d142af1c61"
+        },
+        {
+          "name": "v2.30.7",
+          "sha": "0604bcf5304fc09a569f7abbd8e5d1b9049c02b7"
+        },
+        {
+          "name": "v2.30.6",
+          "sha": "63b761cd7ff18cd0d919e7ec9c8a41473fe47cfb"
+        },
+        {
+          "name": "v2.30.5",
+          "sha": "ecfc37cea5b1c22dbdd5867996b1bf8b497c6ab5"
+        },
+        {
+          "name": "v2.30.4",
+          "sha": "61ef2270051558d24dfcf45474140585a5308e99"
+        },
+        {
+          "name": "v2.30.3",
+          "sha": "5c23c818f639c5bb3175f964c5549440bd5b876d"
+        },
+        {
+          "name": "v2.30.2",
+          "sha": "6646e37ed4abc380333f11c22908ac40a6b80abf"
+        },
+        {
+          "name": "v2.30.1",
+          "sha": "db7da1bad68ae470fbb1c90091994d45a00119c1"
+        },
+        {
+          "name": "v2.30.0",
+          "sha": "426e1a196ed1b018d11500f43dc8d6740a5f4994"
+        },
+        {
+          "name": "v2.29.0",
+          "sha": "427530e27eab40b12e85832698da6962fd0c5a48"
+        },
+        {
+          "name": "v2.28.2",
+          "sha": "48feced64053171b6dd1ab5c862976323c0f25e8"
+        },
+        {
+          "name": "v2.28.1",
+          "sha": "b03469b13408530bb757d3d02279c2d772ee4848"
+        },
+        {
+          "name": "v2.28.0",
+          "sha": "0350739f38c5cdd0ebdf93d719b0b421c73268f3"
+        },
+        {
+          "name": "v2.27.0",
+          "sha": "20048e9b10a9ee691cf4b360ef3c409de5a88815"
+        },
+        {
+          "name": "v2.26.0",
+          "sha": "2ada99f62a7348db3c56b29f123783fbdedc4947"
+        },
+        {
+          "name": "v2.25.1",
+          "sha": "38b55b60755fe58f7dadb197036c9aea64cd3cbc"
+        },
+        {
+          "name": "v2.25.0",
+          "sha": "c43e7abd3a4f1e9a81fe1147e828b2161f5b32bb"
+        },
+        {
+          "name": "v2.24.4",
+          "sha": "b202d6f81a8c75e4caf85debfc03a65999638684"
+        },
+        {
+          "name": "v2.24.3",
+          "sha": "244cf240dca39a4c936801ae3dde6ff7c23ccde5"
+        },
+        {
+          "name": "v2.24.2",
+          "sha": "8133cdcd33fe57b7fa50e018d805ea4dbe8bf988"
+        },
+        {
+          "name": "v2.24.1",
+          "sha": "b835846c36ba455630ad7552f5d3bc71f31f05a4"
+        },
+        {
+          "name": "v2.24.0",
+          "sha": "305a0a3b84c351a72c409ae904d1259bc58b0473"
+        },
+        {
+          "name": "v2.23.0",
+          "sha": "a037ea7255e920ae714ba57aafe5dd1e557f5d53"
+        },
+        {
+          "name": "v2.22.0",
+          "sha": "b16611c372a45b7c3537ea21c19cb9a02774b06b"
+        },
+        {
+          "name": "v2.21.0",
+          "sha": "02ba1b9adc51def8c82d185d25bcb768f475a4d8"
+        },
+        {
+          "name": "v2.20.0",
+          "sha": "a1a86f2a389fb1b4fcef8bd55394a4b45debbe69"
+        },
+        {
+          "name": "v2.19.0",
+          "sha": "413b7e6266dca9b93c32de5af439e5ad5d9c503a"
+        },
+        {
+          "name": "v2.18.0",
+          "sha": "3bf2b3cb5b3beb1582e6eb36bd0e495b9069f08d"
+        },
+        {
+          "name": "v2.17.0",
+          "sha": "d0eb8ac92a98397efbeaeecea1c2ff54e7002600"
+        },
+        {
+          "name": "v2.16.0",
+          "sha": "29319fce478612907f3e11a0de81a460a2d8da86"
+        },
+        {
+          "name": "v2.15.0",
+          "sha": "13797674c8ba5351843d1b4aa7c50e7bac1a0f6e"
+        },
+        {
+          "name": "v2.14.0",
+          "sha": "92d04f676870d83e08727a06fe052c874da220db"
+        },
+        {
+          "name": "v2.13.0",
+          "sha": "55caaa564f8c74103fc56bbc4694eeb5b906aad3"
+        },
+        {
+          "name": "v2.12.0",
+          "sha": "3d87b8387dfcb92bece05352a2820428ba547f17"
+        },
+        {
+          "name": "v2.11.0",
+          "sha": "f2e71f5408f9b176dcef7b9baae1ebfeaac8f34e"
+        },
+        {
+          "name": "v2.10.0",
+          "sha": "bcd0cabd7cd3b13ee2233ce7fb1affe605614ee7"
+        },
+        {
+          "name": "v2.9.0",
+          "sha": "30f23f090cfc373b1265866f0661976e534f592e"
+        },
+        {
+          "name": "v2.8.0",
+          "sha": "0bfca69c241ec30364a02c3010a255f491ee72fb"
+        },
+        {
+          "name": "v2.7.0",
+          "sha": "39c54f98b2837bed2aed8054d6a017f1ac5c07dd"
+        },
+        {
+          "name": "v2.6.1",
+          "sha": "d3f9a4621abf58dedec5fb1161278a61cbfa1cbe"
+        },
+        {
+          "name": "v2.6.0",
+          "sha": "a4aa57d76ab2a8becf44b7b3bd17788f9cc19713"
+        },
+        {
+          "name": "v2.5.0",
+          "sha": "739ad4944bd7f2285314c8635149cb79b5078152"
+        },
+        {
+          "name": "v2.4.1",
+          "sha": "f2d17ffb9c90188e4dd48544b7c3c6d093560c12"
+        },
+        {
+          "name": "v2.4.0",
+          "sha": "70597cb71be1a593525ab6525d0a2f53d8861028"
+        },
+        {
+          "name": "v2.3.0",
+          "sha": "903ea3e871c2590ab163c4a9f87e9769c1f7a515"
+        },
+        {
+          "name": "v2.2.2",
+          "sha": "337ea26626d80da73c5516442e6c3c119e339ce3"
+        },
+        {
+          "name": "v2.2.1",
+          "sha": "b98cb92039350faa2479c85629430449dbb40c71"
+        },
+        {
+          "name": "v2.2.0",
+          "sha": "a42574f8ad1b2bac74a48f1713e5376dc5b67fa9"
+        },
+        {
+          "name": "v2.1.9",
+          "sha": "22b79e600d3dcd351e0b19def90050aa1489377c"
+        },
+        {
+          "name": "v2.1.8",
+          "sha": "3a76446faccc32309820b49c30920c4e960eef78"
+        },
+        {
+          "name": "v2.1.7",
+          "sha": "d3dacdca33c994a46ed81b06de8c7430f4735ade"
+        },
+        {
+          "name": "v2.1.6",
+          "sha": "f49a1809b7a47699e642b2ff653d3a7c671ef0aa"
+        },
+        {
+          "name": "v2.1.5",
+          "sha": "c055297b47cfa0f20516473badc105c8d225c565"
+        },
+        {
+          "name": "v2.1.4",
+          "sha": "b31a1f49f21d8f739bafc419bc324af4ccb24c46"
+        },
+        {
+          "name": "v2.1.3",
+          "sha": "2296dc44110b4b01716aeffdd59614d79f828f20"
+        },
+        {
+          "name": "v2.1.2",
+          "sha": "a3ac603c75c6ae10c5d3a90b7b03cf50329b70a6"
+        },
+        {
+          "name": "v2.1.1",
+          "sha": "85b9e213e67c98ea60b9a9d13757d3d80afd3efd"
+        },
+        {
+          "name": "v2.1.0",
+          "sha": "b86d885c52eef5a7c3dea0c457fdaf5d874337f9"
+        },
+        {
+          "name": "v2.0.6",
+          "sha": "425db6915144fce278961998939664f64fa66a91"
+        },
+        {
+          "name": "v2.0.5",
+          "sha": "8fecf5ff7541577ce4ae4d29d053db69c37cc832"
+        },
+        {
+          "name": "v2.0.4",
+          "sha": "e7030d3b15e4b95f8a66dafe53502b63c1904936"
+        },
+        {
+          "name": "v2.0.3",
+          "sha": "faf657273e759a240320f19ca03e859642bd8d27"
+        },
+        {
+          "name": "v2.0.2",
+          "sha": "a0531dd50aafc43c60ecdda606764a53a67c6215"
+        },
+        {
+          "name": "v2.0.1",
+          "sha": "5f1c92ec461c613bde75ecd3e76527b1f24cd4de"
+        },
+        {
+          "name": "v2.0.0",
+          "sha": "579e2d4243aadaf803a30143f3a92e87750cbbb7"
+        },
+        {
+          "name": "v1.66.5",
+          "sha": "091e26bd96cde4ce9020a4e919cfda8aee97fe93"
+        },
+        {
+          "name": "v1.66.4",
+          "sha": "5dc169f353f2f26e08c73e6255f6e0e01d585c9c"
+        },
+        {
+          "name": "v1.66.3",
+          "sha": "cc24979c344bb84a447bb424f37e3be771fd3a6e"
+        },
+        {
+          "name": "v1.66.2",
+          "sha": "05cdb881baf7d0b670bbeee890459ff05d4ad61b"
+        },
+        {
+          "name": "v1.66.1",
+          "sha": "8e1d025c712e0a05d6e6996c7016e5396f9c4d45"
+        },
+        {
+          "name": "v1.66.0",
+          "sha": "57e79692a3a78f4ea25736709abf03136bc3ab89"
+        },
+        {
+          "name": "v1.65.1",
+          "sha": "980808621e843050e77ad6fbd509e78fb2b0f4b9"
+        },
+        {
+          "name": "v1.65.0",
+          "sha": "652c91d371840f1479756774c38ae78202b98f6b"
+        },
+        {
+          "name": "v1.64.0",
+          "sha": "a08904d8796c1cbdcb88d8e1852bec2b0bc0a982"
+        },
+        {
+          "name": "v1.63.1",
+          "sha": "49062dc1249f9aa459a70d65d33a2577c6adab70"
+        },
+        {
+          "name": "v1.63.0",
+          "sha": "5cf9eb79ca1cb7175e075f8ee51ce0084d504a10"
+        },
+        {
+          "name": "v1.62.0",
+          "sha": "224200b8ec0df52d5e7cbcaa0bfd27973be1d44f"
+        },
+        {
+          "name": "v1.61.2",
+          "sha": "03bb18d7974f37c4d3df4aef9dd673d361e9d750"
+        },
+        {
+          "name": "v1.61.1",
+          "sha": "d783c8fd6f9daa975a56b4b01545178e0e726731"
+        },
+        {
+          "name": "v1.61.0",
+          "sha": "48fbd11ccc6848fec322e2e0468089af4c0f7774"
+        },
+        {
+          "name": "v1.60.1",
+          "sha": "bab72f3c64f42e0b665ff1d0ca7ca42b7e12dc77"
+        },
+        {
+          "name": "v1.60.0",
+          "sha": "f49b81325dc1b80575567394551ebddf6ed284e3"
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 957156862,
+        "full_name": "Hexalith/Hexalith.PolymorphicSerializations",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/commits/main",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "sha": "e97b56930e213f674b64c157551f499b0473ec43"
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets?includes_parents=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": []
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 24638170322,
+            "node_id": "EN_kwDOOQ0N_s8AAAAFvIyk0g",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-10-18T15:10:20Z",
+            "updated_at": "2026-10-18T15:10:20Z",
+            "can_admins_bypass": true,
+            "protection_rules": [
+              {
+                "id": 69231082,
+                "node_id": "GA_kwDOOQ0N_s4EIGHq",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release/secrets",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/reference/actions#list-environment-secrets",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/code-scanning/default-setup",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/automated-security-fixes",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/immutable-releases",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/releases?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "id": 442865410,
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v2.0.0"
+        },
+        {
+          "id": 442598799,
+          "tag_name": "v1.19.9",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.9"
+        },
+        {
+          "id": 430507005,
+          "tag_name": "v1.19.8",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.8"
+        },
+        {
+          "id": 430455244,
+          "tag_name": "v1.19.7",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.7"
+        },
+        {
+          "id": 428988177,
+          "tag_name": "v1.19.6",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.6"
+        },
+        {
+          "id": 416519644,
+          "tag_name": "v1.19.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.5"
+        },
+        {
+          "id": 391988880,
+          "tag_name": "v1.19.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.3"
+        },
+        {
+          "id": 363521863,
+          "tag_name": "v1.19.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.2"
+        },
+        {
+          "id": 360085519,
+          "tag_name": "v1.19.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.19.1"
+        },
+        {
+          "id": 360014356,
+          "tag_name": "v1.18.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.18.1"
+        },
+        {
+          "id": 355786916,
+          "tag_name": "v1.18.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.18.0"
+        },
+        {
+          "id": 355580159,
+          "tag_name": "v1.17.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.17.0"
+        },
+        {
+          "id": 355203780,
+          "tag_name": "v1.16.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.16.5"
+        },
+        {
+          "id": 355128571,
+          "tag_name": "v1.16.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.16.4"
+        },
+        {
+          "id": 354836080,
+          "tag_name": "v1.16.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.16.3"
+        },
+        {
+          "id": 350479409,
+          "tag_name": "v1.16.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.16.2"
+        },
+        {
+          "id": 348010233,
+          "tag_name": "v1.16.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.16.1"
+        },
+        {
+          "id": 347984536,
+          "tag_name": "v1.16.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.16.0"
+        },
+        {
+          "id": 347932576,
+          "tag_name": "v1.15.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.15.5"
+        },
+        {
+          "id": 347261424,
+          "tag_name": "v1.15.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.15.4"
+        },
+        {
+          "id": 347235523,
+          "tag_name": "v1.15.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.15.3"
+        },
+        {
+          "id": 346169321,
+          "tag_name": "v1.15.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.15.2"
+        },
+        {
+          "id": 346164781,
+          "tag_name": "v1.15.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.15.1"
+        },
+        {
+          "id": 346161162,
+          "tag_name": "v1.15.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.15.0"
+        },
+        {
+          "id": 346157831,
+          "tag_name": "v1.14.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.14.1"
+        },
+        {
+          "id": 346154910,
+          "tag_name": "v1.14.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.14.0"
+        },
+        {
+          "id": 340728016,
+          "tag_name": "v1.13.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.13.0"
+        },
+        {
+          "id": 339113994,
+          "tag_name": "v1.12.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.12.0"
+        },
+        {
+          "id": 273939346,
+          "tag_name": "v1.11.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.11.0"
+        },
+        {
+          "id": 273938756,
+          "tag_name": "v1.10.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.10.1"
+        },
+        {
+          "id": 273938501,
+          "tag_name": "v1.10.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.10.0"
+        },
+        {
+          "id": 272032897,
+          "tag_name": "v1.9.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.9.2"
+        },
+        {
+          "id": 267940221,
+          "tag_name": "v1.9.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.9.1"
+        },
+        {
+          "id": 266214212,
+          "tag_name": "v1.9.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.9.0"
+        },
+        {
+          "id": 266213732,
+          "tag_name": "v1.8.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.8.1"
+        },
+        {
+          "id": 262224233,
+          "tag_name": "v1.8.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.8.0"
+        },
+        {
+          "id": 253950857,
+          "tag_name": "v1.7.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.7.1"
+        },
+        {
+          "id": 248775063,
+          "tag_name": "v1.7.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.7.0"
+        },
+        {
+          "id": 238828904,
+          "tag_name": "v1.6.15",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.15"
+        },
+        {
+          "id": 237628462,
+          "tag_name": "v1.6.14",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.14"
+        },
+        {
+          "id": 234836236,
+          "tag_name": "v1.6.13",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.13"
+        },
+        {
+          "id": 231067772,
+          "tag_name": "v1.6.12",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.12"
+        },
+        {
+          "id": 230290123,
+          "tag_name": "v1.6.11",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.11"
+        },
+        {
+          "id": 229966006,
+          "tag_name": "v1.6.10",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.10"
+        },
+        {
+          "id": 228586653,
+          "tag_name": "v1.6.9",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.9"
+        },
+        {
+          "id": 227380617,
+          "tag_name": "v1.6.8",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.8"
+        },
+        {
+          "id": 225083598,
+          "tag_name": "v1.6.7",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.7"
+        },
+        {
+          "id": 213348804,
+          "tag_name": "v1.6.6",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.6"
+        },
+        {
+          "id": 213347871,
+          "tag_name": "v1.6.5",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.5"
+        },
+        {
+          "id": 213327981,
+          "tag_name": "v1.6.4",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.4"
+        },
+        {
+          "id": 213283894,
+          "tag_name": "v1.6.3",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.3"
+        },
+        {
+          "id": 209516044,
+          "tag_name": "v1.6.2",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.2"
+        },
+        {
+          "id": 209387266,
+          "tag_name": "v1.6.1",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.1"
+        },
+        {
+          "id": 209288885,
+          "tag_name": "v1.6.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.6.0"
+        },
+        {
+          "id": 209286228,
+          "tag_name": "v1.5.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.5.0"
+        },
+        {
+          "id": 209283947,
+          "tag_name": "v1.4.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.4.0"
+        },
+        {
+          "id": 209218990,
+          "tag_name": "v1.3.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.3.0"
+        },
+        {
+          "id": 209217979,
+          "tag_name": "v1.2.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.2.0"
+        },
+        {
+          "id": 209205649,
+          "tag_name": "v1.1.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.1.0"
+        },
+        {
+          "id": 209165248,
+          "tag_name": "v1.0.0",
+          "draft": false,
+          "immutable": false,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/releases/tag/v1.0.0"
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/tags?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "name": "v2.0.0",
+          "sha": "4d58b8bebe989a6895c610afe4084566b9b254ab"
+        },
+        {
+          "name": "v1.19.9",
+          "sha": "3400fbf6a318b04fd5b9a7d91c2903727e535126"
+        },
+        {
+          "name": "v1.19.8",
+          "sha": "2a66be84ac99753713a077a018ba650134396818"
+        },
+        {
+          "name": "v1.19.7",
+          "sha": "7e53c59d3404c5c5d6ffce6666e5950af1bef8aa"
+        },
+        {
+          "name": "v1.19.6",
+          "sha": "2e68a028c695d577cd733d0c1e40ec57531c7547"
+        },
+        {
+          "name": "v1.19.5",
+          "sha": "221ac4592ba908ae7661ba1fa9e2d1fcc23baee0"
+        },
+        {
+          "name": "v1.19.4",
+          "sha": "98de6e013840ece9f0fa7c68ab7dcdf2bba3b375"
+        },
+        {
+          "name": "v1.19.3",
+          "sha": "b96ea91798a37ef3b8ac2a1c800d16127976dd5d"
+        },
+        {
+          "name": "v1.19.2",
+          "sha": "ac24523181816c5874e535173cd96d25d3782ff9"
+        },
+        {
+          "name": "v1.19.1",
+          "sha": "f3b23304283b0e7a35ffa66bf8d9bf2499e35e66"
+        },
+        {
+          "name": "v1.19.0",
+          "sha": "5ef1b2773b651c264f1c1506ec4623d35e40e977"
+        },
+        {
+          "name": "v1.18.1",
+          "sha": "cb483e444a34d848305671a650f0e280917cce1d"
+        },
+        {
+          "name": "v1.18.0",
+          "sha": "30312d8cc7b15adf477bf5fbab3e852393086ec0"
+        },
+        {
+          "name": "v1.17.0",
+          "sha": "cbc6575bd705293224f4b4b170e5dac81b625224"
+        },
+        {
+          "name": "v1.16.5",
+          "sha": "19607b31bb3728e5a1f0ec13d5ee9d3bfcba5b02"
+        },
+        {
+          "name": "v1.16.4",
+          "sha": "d2f9a0d68c9856bca901b0acfc4cba6a5d58cce8"
+        },
+        {
+          "name": "v1.16.3",
+          "sha": "1a4eb3f7245b58336995664e88006d4f12a15fc3"
+        },
+        {
+          "name": "v1.16.2",
+          "sha": "ca1086497c58d0e3ae3c4795655f853b6299b3db"
+        },
+        {
+          "name": "v1.16.1",
+          "sha": "65a05318158b195dda3779dd4e361421c3b996a1"
+        },
+        {
+          "name": "v1.16.0",
+          "sha": "dd82e10b2c5d7a9ab09751d3ee37c37e3ee91bc0"
+        },
+        {
+          "name": "v1.15.5",
+          "sha": "d31746d703c3b7dfa81afe09df7b41fcf741890a"
+        },
+        {
+          "name": "v1.15.4",
+          "sha": "4dbbb41c9bc4796c2d2aac7f9071962a3ae6f752"
+        },
+        {
+          "name": "v1.15.3",
+          "sha": "d9f11dcd67130c275d59879ef019c6958080ad9a"
+        },
+        {
+          "name": "v1.15.2",
+          "sha": "1a31416129a5042e89ff13114bab84eb78e70526"
+        },
+        {
+          "name": "v1.15.1",
+          "sha": "9a4bfb989fc762b1c1c4fd2459bed690f3361029"
+        },
+        {
+          "name": "v1.15.0",
+          "sha": "cdfc010c6f9be04f06fe5eab237a79cb3e04b6e2"
+        },
+        {
+          "name": "v1.14.1",
+          "sha": "09be087b4e145cda73a6b4088c7d07d345ea22b5"
+        },
+        {
+          "name": "v1.14.0",
+          "sha": "a777d76e713d9c3448601efbc7a8f74db492e500"
+        },
+        {
+          "name": "v1.13.0",
+          "sha": "a122ede834ef774705a658f7c890918c91044d10"
+        },
+        {
+          "name": "v1.12.0",
+          "sha": "7d783d3df1efb2075285d799057a10ae8264b61a"
+        },
+        {
+          "name": "v1.11.0",
+          "sha": "03a5ba1c1c967f0aa311f9ada257b95ad8163d09"
+        },
+        {
+          "name": "v1.10.1",
+          "sha": "827b8bee62a15f1edc35071f9e7ac43d600402a8"
+        },
+        {
+          "name": "v1.10.0",
+          "sha": "9a1aefba31dfa3ff937ce34afeef76befa896809"
+        },
+        {
+          "name": "v1.9.2",
+          "sha": "76fb40166cc55ecad637b5882b238128b8060e81"
+        },
+        {
+          "name": "v1.9.1",
+          "sha": "921a0551d5fb40e8f961a9b8acbce617f75fabb2"
+        },
+        {
+          "name": "v1.9.0",
+          "sha": "0e17d8eedbbabc42c55d4888a54079b3749522cf"
+        },
+        {
+          "name": "v1.8.1",
+          "sha": "f94731eb417fee4fd76d8392cfb0c9ce49b0e5d1"
+        },
+        {
+          "name": "v1.8.0",
+          "sha": "0d863554dcbb470da4566276b1db29cffaca14ec"
+        },
+        {
+          "name": "v1.7.1",
+          "sha": "f81d8058c5c94af9c8bd3380548779d10326e07c"
+        },
+        {
+          "name": "v1.7.0",
+          "sha": "bc8a0096b52ce8b92e70e97b17912c5d6fcce202"
+        },
+        {
+          "name": "v1.6.15",
+          "sha": "35ba655e8a0c5c7638a080b8b29af038fd03d7c8"
+        },
+        {
+          "name": "v1.6.14",
+          "sha": "37b71cd545cd102f9ea30483de2d05cdca7f99f8"
+        },
+        {
+          "name": "v1.6.13",
+          "sha": "24a9a76a0324362473b2d8f3e5c61aed22a73f90"
+        },
+        {
+          "name": "v1.6.12",
+          "sha": "cb460d1a3d1735bccee2bce61ced02325fed7d54"
+        },
+        {
+          "name": "v1.6.11",
+          "sha": "959c3f524ba3164bd41815e82a851890fe9afc6f"
+        },
+        {
+          "name": "v1.6.10",
+          "sha": "52302b0cd5f26959275b2ea8c27310fd4c24224e"
+        },
+        {
+          "name": "v1.6.9",
+          "sha": "2cb285e458efddf2cdb2e286a3ffdf42c344b9e0"
+        },
+        {
+          "name": "v1.6.8",
+          "sha": "9203fb4deb630aba9c0b3eae122b10fd13e450be"
+        },
+        {
+          "name": "v1.6.7",
+          "sha": "40b9359df6b7db64cb1dd514eca8b000ba9c8316"
+        },
+        {
+          "name": "v1.6.6",
+          "sha": "0877f6785556434eda1f1db86afd46a94385b536"
+        },
+        {
+          "name": "v1.6.5",
+          "sha": "f1c18edd4abe1a7362ea0382172b130cefb93e33"
+        },
+        {
+          "name": "v1.6.4",
+          "sha": "7d2da5dd4a7bd4486ac384583d51f2cfdfa01ad5"
+        },
+        {
+          "name": "v1.6.3",
+          "sha": "325350c475830241a5614be38cd95a007a057fbe"
+        },
+        {
+          "name": "v1.6.2",
+          "sha": "7e5499d750d2a3ec2a68dc000b61e66ed8b5693b"
+        },
+        {
+          "name": "v1.6.1",
+          "sha": "a657e20847d36a7c00afa2e19cb9de652ae7d150"
+        },
+        {
+          "name": "v1.6.0",
+          "sha": "2db47ff7a75a14c488ae217460803bb4401b3eeb"
+        },
+        {
+          "name": "v1.5.0",
+          "sha": "866c2a3a72088d6c265f794f3196e9c66918e1e0"
+        },
+        {
+          "name": "v1.4.0",
+          "sha": "1ef863cf5ce55d406e33165ce2408cf28ecd55bb"
+        },
+        {
+          "name": "v1.3.0",
+          "sha": "e35a18ba39d39c606746f6f29d392cedffbafaaf"
+        },
+        {
+          "name": "v1.2.0",
+          "sha": "3701991bac978cec4fcd686bf583a5d4473d38a1"
+        },
+        {
+          "name": "v1.1.0",
+          "sha": "df03277d01ceca8317131cff9b5e46ce8124dcc0"
+        },
+        {
+          "name": "v1.0.0",
+          "sha": "4ab5b5d2f77ab050a12224712adaeac0167868f0"
+        }
+      ]
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "installations": [
+          {
+            "id": 31615326,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            }
+          },
+          {
+            "id": 31626264,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            }
+          },
+          {
+            "id": 31641834,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            }
+          },
+          {
+            "id": 77847816,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            }
+          },
+          {
+            "id": 97329264,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            }
+          },
+          {
+            "id": 179966090,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 10,
+        "secrets": [
+          {
+            "name": "AZURE_APPLICATIONID",
+            "created_at": "2024-05-10T11:49:54Z",
+            "updated_at": "2026-11-08T21:46:54Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories"
+          },
+          {
+            "name": "AZURE_APPLICATIONSECRET",
+            "created_at": "2024-05-10T11:52:00Z",
+            "updated_at": "2026-11-08T21:47:24Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories"
+          },
+          {
+            "name": "AZURE_SUBSCRIPTION_ID",
+            "created_at": "2024-11-16T19:45:07Z",
+            "updated_at": "2026-11-08T21:45:48Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories"
+          },
+          {
+            "name": "AZURE_TENANT_ID",
+            "created_at": "2024-11-16T19:44:21Z",
+            "updated_at": "2026-11-08T21:46:21Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "created_at": "2026-11-08T23:43:37Z",
+            "updated_at": "2026-11-08T23:43:37Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "created_at": "2026-11-08T23:43:36Z",
+            "updated_at": "2026-11-08T23:43:36Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+          },
+          {
+            "name": "HEXALITH_ZOT_API_KEY",
+            "created_at": "2026-07-09T07:47:49Z",
+            "updated_at": "2026-11-08T21:45:17Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories"
+          },
+          {
+            "name": "HEXALITH_ZOT_USERNAME",
+            "created_at": "2026-07-08T14:34:13Z",
+            "updated_at": "2026-11-08T21:44:48Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories"
+          },
+          {
+            "name": "NUGET_API_KEY",
+            "created_at": "2022-11-21T07:33:02Z",
+            "updated_at": "2026-11-08T21:49:02Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories"
+          },
+          {
+            "name": "SONAR_TOKEN",
+            "created_at": "2024-05-12T16:40:50Z",
+            "updated_at": "2026-11-08T21:47:54Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "variables": [
+          {
+            "name": "AZURE_REGISTRY",
+            "value": "itaneo.azurecr.io",
+            "created_at": "2023-11-17T15:55:06Z",
+            "updated_at": "2024-11-16T19:32:21Z",
+            "visibility": "all"
+          },
+          {
+            "name": "HEXALITH_NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-11-08T20:26:36Z",
+            "updated_at": "2026-11-08T20:26:36Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories"
+          },
+          {
+            "name": "HEXALITH_ZOT_REGISTRY",
+            "value": "registry.hexalith.com",
+            "created_at": "2026-07-08T14:37:51Z",
+            "updated_at": "2026-07-08T14:37:51Z",
+            "visibility": "all"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 2,
+        "secrets": [
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "created_at": "2026-11-08T23:43:39Z",
+            "updated_at": "2026-11-08T23:43:39Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "created_at": "2026-11-08T23:43:38Z",
+            "updated_at": "2026-11-08T23:43:38Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/matching-refs/heads/delivered/",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": []
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/actions/variables",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "variables": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true",
+            "created_at": "2026-09-19T07:58:05Z",
+            "updated_at": "2026-09-19T07:58:05Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-18T15:40:56Z",
+            "updated_at": "2026-10-18T15:40:56Z"
+          }
+        ],
+        "total_count": 2
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/automated-security-fixes",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/actions/variables",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "variables": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true",
+            "created_at": "2026-10-18T15:10:20Z",
+            "updated_at": "2026-10-18T15:10:20Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-18T15:07:47Z",
+            "updated_at": "2026-10-18T15:07:47Z"
+          }
+        ],
+        "total_count": 2
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/automated-security-fixes",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories",
+      "api_version": "2026-03-10",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          "Hexalith/Hexalith.Builds"
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          "Hexalith/Hexalith.Builds"
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          "Hexalith/Hexalith.Builds"
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          "Hexalith/Hexalith.Builds"
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "api_version": "2026-03-10",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "repositories": [
+          "Hexalith/Hexalith.Builds"
+        ]
+      }
+    }
+  ],
+  "note": "Initial requests used gh default API version; follow-up requests explicitly match production API version 2026-03-10. Initial /variables/HEXALITH_RELEASE_PUBLISH_ENABLED requests used a nonexistent route and establish nothing; use /actions/variables inventories."
+}
