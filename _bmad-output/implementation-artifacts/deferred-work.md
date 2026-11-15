@@ -345,3 +345,23 @@ source_spec: `9-nightly-cross-module-duplicate-scan.md`
 severity: high
 reason: The report validator accepts coherent all-zero counters. Actual pinned jscpd 5.4.3 reports zero sources for two comment-heavy 100-line files below the token floor, while substantial 100-line copies report two sources and one clone. No engine failure on an eligible substantive corpus was reproduced. Establish the pinned engine's eligible-source counting contract and reproduce an unexpectedly omitted eligible input before introducing a coverage invariant. Evidence: _bmad-output/implementation-artifacts/story-9-parent-counter-check.log. This is review finding B10, unverified, rather than an observed production defect. (declared severity: high (unverified))
 status: open
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
+  summary: Scope the shared guide's mandatory Builds pre-push command for standalone tooling repositories.
+  evidence: Review B1 (medium): AI.Tools entry points require hexalith-llm-instructions.md, whose new CI/CD section requires references/Hexalith.Builds/check.py before every push, but AI.Tools has no Builds checkout or .gitmodules. Clarify tooling versus product-module scope; the workflow defers agent-context changes found in review.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
+  summary: Make the restricted module-credential refusal rule explicitly override the shared Git guide's interactive maintainer fallback.
+  evidence: Review B2 (medium): hexalith-llm-instructions.md both prohibits switching credentials after module refusals and calls hexalith-git-instructions.md the Git source of truth; the latter permits a maintainer-profile fallback for an explicitly requested interactive push to an uncovered repository. Resolve precedence without broadening module credentials; this instruction-file correction is deferred by the build review workflow.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
+  summary: Describe package publishing under the shared guide's release flow rather than as a push/PR CI action.
+  evidence: Review B3 (low): the new shared-guide CI bullet includes package publishing, while generated CI is read-only and the release caller owns publication; the adjacent nightly release paragraph is correct. This wording correction edits agent-context instructions and is deferred by the build review workflow.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
+  summary: Document forbidden release/commitlint configuration and agent-tooling portions alongside the positive ownership list.
+  evidence: Review B4 (low): templates/perimeter.json.j2 also owns absent release/commitlint config, selected package entries, commitlint hook lines, Directory.Build.rsp and bmad-testarch-ci paths, while the final ownership body lists the positive ownership portions. Guard enforcement remains unchanged; the generated agent-context clarification is deferred by the build review workflow.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
+  summary: Preserve foreign instructions or fail safely when repairing malformed or duplicated perimeter markers before pilot adoption.
+  evidence: Review B7 (high, pre-existing): unchanged Builds v5.2.2 Github/lib/perimeter.py _marker() replaces the whole instruction file for unbalanced, duplicated or reversed markers. The parent reproduced foreign prefix/suffix loss for unbalanced and duplicated markers; tagged tests explicitly assert recreation. Evidence is _bmad-output/specs/spec-cicd/evidence/10-2/review-dependency-probe.json. Resolve in Builds and qualify the accepted tag before relying on preservation for malformed pilot input; this story adopted no production module.

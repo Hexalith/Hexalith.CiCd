@@ -1,0 +1,58 @@
+{
+  "unbalanced": {
+    "compliant": false,
+    "foreign_prefix_retained": false,
+    "foreign_suffix_retained": false,
+    "result": "<!-- hexalith-cicd:begin -->\nowned policy\n<!-- hexalith-cicd:end -->\n"
+  },
+  "duplicated": {
+    "compliant": false,
+    "foreign_prefix_retained": false,
+    "foreign_suffix_retained": false,
+    "result": "<!-- hexalith-cicd:begin -->\nowned policy\n<!-- hexalith-cicd:end -->\n"
+  },
+  "missing_file": {
+    "compliant": false,
+    "result": {
+      "permissions": {
+        "deny": [
+          "one",
+          "two",
+          "three",
+          "four"
+        ]
+      }
+    }
+  },
+  "missing_permissions": {
+    "compliant": false,
+    "result": {
+      "foreign": true,
+      "permissions": {
+        "deny": [
+          "one",
+          "two",
+          "three",
+          "four"
+        ]
+      }
+    }
+  },
+  "missing_deny": {
+    "compliant": false,
+    "result": {
+      "permissions": {
+        "allow": [
+          "Read(**)"
+        ],
+        "deny": [
+          "one",
+          "two",
+          "three",
+          "four"
+        ]
+      },
+      "foreign": true
+    }
+  }
+}

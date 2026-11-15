@@ -1,0 +1,15 @@
+Installed 8 packages in 15ms
+...........................F....
+======================================================================
+FAIL: test_tagged_perimeter_applies_only_index_and_preserves_foreign_content (__main__.RenderTests.test_tagged_perimeter_applies_only_index_and_preserves_foreign_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd/tools/tests/test_render.py", line 1013, in test_tagged_perimeter_applies_only_index_and_preserves_foreign_content
+    self.assertEqual(repaired.read(relative), actual.read(relative))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b"For[22 chars]re.\nForeign after.\n<!-- hexalith-cicd:begin [2367 chars]->\n" != b"For[22 chars]re.\n<!-- hexalith-cicd:begin -->\nCI/CD is ow[2367 chars]r.\n"
+
+----------------------------------------------------------------------
+Ran 32 tests in 34.017s
+
+FAILED (failures=1)

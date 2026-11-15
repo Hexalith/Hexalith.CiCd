@@ -102,12 +102,35 @@ Builds releases. A module agent or maintainer reviews and merges after green CI,
 preserving `build(deps)`; a deliberately releasable security fix uses `fix(deps)`.
 There is no automerge workflow or new agent permission.
 
-Story 10-2 replaces two deliberate interim partials, then re-renders with that
-policy change. Until then every marker body is exactly
-`CI/CD ownership instruction placeholder; replaced by story 10-2.` plus LF, and
-the owned deny values are `[]`. These valid v1 placeholders do not complete
-CAP-11. Rendering does not deliver, onboard, dispatch, publish, enforce drift,
-check acceptable GitHub releases, or orchestrate global checks.
+The [ownership block](../templates/partials/ownership-block.txt.j2) is the
+canonical module-agent CI/CD contract. CiCd owns workflows, CI configuration,
+Dependabot, the Builds gitlink and its `.gitmodules` section, the three delivered
+instruction blocks, and the required Claude deny entries. The shared perimeter
+library supplies the instruction markers and merges those blocks and deny
+entries while preserving foreign text, allow/deny entries and unrelated settings.
+
+The [deny list](../templates/partials/deny-entries.json.j2) uses project-local
+`Edit(/path)` rules for whole-owned files and the Builds subtree. Launch Claude
+Code from the module root: a project's `/path` rule anchors at the primary
+working directory. Reads remain available. Do not put these rules in
+machine-wide settings. File rules cannot target JSON keys, marker ranges or a
+single `.gitmodules` section; the instructions and shared guard protect those
+owned portions. See [Claude's permission documentation](https://code.claude.com/docs/en/permissions#read-and-edit).
+
+Keep module gates that check compilation, tests, security and dependencies,
+commit format or package publishing, including module-specific product checks
+as enabled custom actions. Delete module gates that check CI itself, agent
+tooling, story evidence or workflow YAML text, and tests that assert workflow
+YAML. Apply the [gate rule](../AGENTS.md) during migration before enabling hooks
+or jobs. Agents fix product failures, report pipeline defects and credential
+refusals, and require a successful `python3 references/Hexalith.Builds/check.py`
+before pushing without audit/test bypasses or skip markers/trailers. Product
+branches start from freshly fetched current `main`; do not use PR Update branch
+until the CiCd pilot verifies it. Releases follow the central nightly process.
+
+Rendering does not deliver, onboard, dispatch, publish, enforce drift, check
+acceptable GitHub releases, or orchestrate global checks. Updating these policy
+partials does not register or adopt a production module.
 
 ## Candidate validation
 
@@ -181,8 +204,7 @@ fixtures live under `tools/tests/fixtures/validate/`; run them with
 `uv run --locked --script --python 3.12 tools/tests/test_validate.py` (or Python
 3.14). Dependency changes require adjacent locks from
 `uv lock --script tools/check_global.py`, `uv lock --script tools/validate.py`
-and `uv lock --script tools/tests/test_validate.py`. The story 10-2 ownership
-placeholder and empty deny values above remain intentional.
+and `uv lock --script tools/tests/test_validate.py`.
 
 `deliver.yml` runs this read-only `validate` job on pushes to
 `main`, pull requests, hourly at minute 47 and manual dispatch. Its `verdict` job

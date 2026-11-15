@@ -720,7 +720,7 @@ class RenderTests(unittest.TestCase):
                              {"ci", "windows-123-job", "windows-alpha-windows", "windows-windows-123-job", "windows-windows-tests"})
             self.assertEqual(set(fixture.yaml(".github/workflows/release.yml")["jobs"]), {"release", "publish"})
 
-    def test_perimeter_all_nine_kinds_and_exact_interim_policy(self):
+    def test_perimeter_all_nine_kinds_and_final_policy(self):
         with workspace() as fixture:
             fixture.setup()
             fixture.cli()
@@ -734,11 +734,25 @@ class RenderTests(unittest.TestCase):
             blocks = [entry for entry in entries if entry["kind"] == "marker-block"]
             self.assertEqual({entry["path"] for entry in blocks},
                              {"AGENTS.md", "CLAUDE.md", ".github/copilot-instructions.md"})
-            self.assertTrue(all(entry["text"] == "CI/CD ownership instruction placeholder; replaced by story 10-2.\n"
-                                for entry in blocks))
+            body = (ROOT / "templates/partials/ownership-block.txt.j2").read_text()
+            self.assertTrue(body.strip())
+            self.assertTrue(all(entry["text"] == body for entry in blocks))
+            self.assertNotIn("<!-- hexalith-cicd:begin -->", body)
+            self.assertNotIn("<!-- hexalith-cicd:end -->", body)
+            for entry in blocks:
+                with self.subTest(instruction_file=entry["path"]):
+                    policy = " ".join(entry["text"].split())
+                    self.assertIn("Do not use PR Update branch until the CiCd pilot verifies it;", policy)
+                    self.assertIn("that operation's permission behavior remains unverified.", policy)
             deny = next(entry for entry in entries if entry["kind"] == "json-superset")
             self.assertEqual(deny, {"kind": "json-superset", "path": ".claude/settings.json",
-                                    "pointer": "/permissions/deny", "values": []})
+                                    "pointer": "/permissions/deny", "values": [
+                                        "Edit(/.github/workflows/**)",
+                                        "Edit(/.github/hexalith-ci.json)",
+                                        "Edit(/.github/dependabot.yml)",
+                                        "Edit(/references/Hexalith.Builds/**)",
+                                    ]})
+            self.assertEqual(len(deny["values"]), len(set(deny["values"])))
             self.assertEqual(next(entry for entry in entries if entry["kind"] == "gitlink")["buildsTag"], fixture.tag)
             self.assertEqual({entry["pattern"] for entry in entries if entry["kind"] == "absent-glob"}, {
                 ".releaserc*", "release.config.*", "commitlint.config.*", ".commitlintrc*",
@@ -905,7 +919,7 @@ class RenderTests(unittest.TestCase):
                 ".github/dependabot.yml": b"malformed owned yaml\n",
                 ".github/actions/windows-tests/action.yml": b"module-owned product action\n",
                 ".gitmodules": b'[submodule "other"]\n\tpath = references/Other\n\turl = https://example.invalid/Other.git\n',
-                ".claude/settings.json": b'{"permissions":{"allow":["Read(**)"],"deny":["foreign-deny"]},"other":true}\n',
+                ".claude/settings.json": b'{"permissions":{"allow":["Read(**)"],"deny":["foreign-deny","Edit(/.github/workflows/**)"],"defaultMode":"default"},"other":{"enabled":true}}\n',
                 "AGENTS.md": b"Foreign instructions before.\n<!-- hexalith-cicd:begin -->\nold\n<!-- hexalith-cicd:end -->\nForeign after.\n",
                 "CLAUDE.md": b"Foreign Claude instructions.\n",
                 ".github/copilot-instructions.md": b"Foreign Copilot instructions.\n",
@@ -942,11 +956,20 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(file_bytes(module), before)
             self.assertEqual(actual.read("product.txt"), files["product.txt"])
             self.assertEqual(actual.read(".github/actions/windows-tests/action.yml"), files[".github/actions/windows-tests/action.yml"])
-            self.assertEqual(json.loads(actual.read(".claude/settings.json")), json.loads(files[".claude/settings.json"]))
+            required_denies = next(entry["values"] for entry in document["entries"]
+                                   if entry["kind"] == "json-superset")
+            settings = json.loads(files[".claude/settings.json"])
+            settings["permissions"]["deny"] += [value for value in required_denies
+                                                if value not in settings["permissions"]["deny"]]
+            self.assertEqual(json.loads(actual.read(".claude/settings.json")), settings)
+            body = next(entry["text"].encode() for entry in document["entries"]
+                        if entry["kind"] == "marker-block")
             for name, foreign in (("AGENTS.md", b"Foreign instructions before."), ("CLAUDE.md", b"Foreign Claude instructions."),
                                   (".github/copilot-instructions.md", b"Foreign Copilot instructions.")):
                 self.assertIn(foreign, actual.read(name))
-                self.assertIn(b"CI/CD ownership instruction placeholder; replaced by story 10-2.", actual.read(name))
+                self.assertIn(body, actual.read(name))
+                self.assertEqual(actual.read(name).count(b"<!-- hexalith-cicd:begin -->"), 1)
+                self.assertEqual(actual.read(name).count(b"<!-- hexalith-cicd:end -->"), 1)
             self.assertIn(b"Foreign after.", actual.read("AGENTS.md"))
             self.assertIn(b"references/Other", actual.read(".gitmodules"))
             self.assertIn(b"https://github.com/Hexalith/Hexalith.Builds.git", actual.read(".gitmodules"))
@@ -965,6 +988,36 @@ class RenderTests(unittest.TestCase):
                 self.assertNotIn(relative, actual.items)
             for relative in renderer.TEMPLATES:
                 self.assertEqual(actual.read(relative), fixture.output(relative).read_bytes())
+            index = repository.index_path().read_bytes()
+            self.assertEqual(library.apply(document, repository, **options), [])
+            self.assertEqual(repository.index_path().read_bytes(), index)
+            self.assertEqual(file_bytes(module), before)
+
+            # Lose an entire owned block, change another body and remove one
+            # required deny. Repair must restore each without losing foreign data.
+            damaged = json.loads(actual.read(".claude/settings.json"))
+            damaged["permissions"]["deny"].remove(required_denies[-1])
+            drift = {
+                "AGENTS.md": files["AGENTS.md"].split(b"<!-- hexalith-cicd:begin -->")[0]
+                             + b"Foreign after.\n",
+                "CLAUDE.md": actual.read("CLAUDE.md").replace(body, b"Drifted owned policy.\n"),
+                ".claude/settings.json": (json.dumps(damaged) + "\n").encode(),
+            }
+            for relative, data in drift.items():
+                oid = git(module, "hash-object", "-w", "--stdin", input=data).decode().strip()
+                git(module, "update-index", "--cacheinfo", "100644", oid, relative)
+            differences = library.compare(document, repository.snapshot("index"), **options)
+            self.assertTrue(differences)
+            for relative in drift:
+                with self.subTest(drift=relative):
+                    self.assertTrue(any(relative in str(difference) for difference in differences))
+            self.assertTrue(library.apply(document, repository, **options))
+            repaired = repository.snapshot("index")
+            self.assertEqual(library.compare(document, repaired, **options), [])
+            self.assertIn(b"Foreign instructions before.\nForeign after.\n", repaired.read("AGENTS.md"))
+            self.assertIn(body, repaired.read("AGENTS.md"))
+            for relative in ("CLAUDE.md", ".claude/settings.json"):
+                self.assertEqual(repaired.read(relative), actual.read(relative))
             index = repository.index_path().read_bytes()
             self.assertEqual(library.apply(document, repository, **options), [])
             self.assertEqual(repository.index_path().read_bytes(), index)

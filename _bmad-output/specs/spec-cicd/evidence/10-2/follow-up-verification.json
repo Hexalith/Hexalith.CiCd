@@ -1,0 +1,40 @@
+{
+  "purpose": "Follow-up row-4 policy invariant assertions after parent audit",
+  "prior_full_validator_candidate": "957c30be66a17e8fd9d5163710607724ebca77d7",
+  "prior_full_validator_exit": 0,
+  "prior_full_validator_verdict": {
+    "global": true,
+    "modules": []
+  },
+  "broad_validator_repeated": false,
+  "parent_staged_entries_sha256_before": "4387cdd4eac30b1243b18d311593f6ea3ba7a0271d929f7d00df1fad089a4d83",
+  "follow_up_results": {
+    "python312": {
+      "command": "run-with-temp bash -c 'UV_CACHE_DIR=\"$TMPDIR/uv-cache\" uv run --locked --script --python 3.12 tools/tests/test_render.py'",
+      "log": "render-python312-follow-up.log",
+      "tests": 32,
+      "seconds": 24.87,
+      "exit": 0
+    },
+    "python314": {
+      "command": "run-with-temp bash -c 'UV_CACHE_DIR=\"$TMPDIR/uv-cache\" uv run --locked --script --python 3.14 tools/tests/test_render.py'",
+      "log": "render-python314-follow-up.log",
+      "tests": 32,
+      "seconds": 24.859,
+      "exit": 0
+    }
+  },
+  "post_candidate_source_changes": [
+    "tools/tests/test_render.py"
+  ],
+  "source_files_after_follow_up": {
+    "AGENTS.md": "489cb606dc30b9c32a853de5f25891b9bfe28e6249f81d067f7ebdbebfbdc83c",
+    "setup/README.md": "4830820dad753fd05783f85ceddd35925f8a346505563ef640d0a0ee5ac0c956",
+    "templates/partials/ownership-block.txt.j2": "a0539f80d75804d2dfd5e5cc5d61697ffb7825910817afe65f2b1315ef1e09aa",
+    "templates/partials/deny-entries.json.j2": "c4cd87385fcf2fb515b2d433f864598e423f8f05e6415ce6d0c2c50db9b79cad",
+    "tools/tests/test_render.py": "e9c46ff01c50d120d204afe509d269bf3494d34d5ee964bdcfe893ca9b7f13a7"
+  },
+  "change": "The existing final-policy test now requires every rendered instruction body to prohibit PR Update branch until the CiCd pilot verifies it and state that permission behavior remains unverified.",
+  "parent_staged_entries_sha256_after": "4387cdd4eac30b1243b18d311593f6ea3ba7a0271d929f7d00df1fad089a4d83",
+  "parent_staged_entries_preserved": true
+}

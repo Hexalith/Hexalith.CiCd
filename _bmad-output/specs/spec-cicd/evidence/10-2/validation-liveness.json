@@ -1,0 +1,132 @@
+{
+  "first": [
+    {
+      "pid": 2032063,
+      "ppid": 1469803,
+      "state": "S",
+      "cpu_seconds": 0.01,
+      "elapsed_seconds": 27.6,
+      "wait": "futex_wait_queue",
+      "command": "uv",
+      "scripts": [
+        "test_delivery_workflow.py"
+      ]
+    },
+    {
+      "pid": 2032081,
+      "ppid": 2032063,
+      "state": "S",
+      "cpu_seconds": 0.24,
+      "elapsed_seconds": 27.6,
+      "wait": "do_sys_poll",
+      "command": "python",
+      "scripts": [
+        "test_delivery_workflow.py"
+      ]
+    },
+    {
+      "pid": 2047555,
+      "ppid": 2032081,
+      "state": "S",
+      "cpu_seconds": 0.04,
+      "elapsed_seconds": 5.1,
+      "wait": "hrtimer_nanosleep",
+      "command": "python",
+      "scripts": [
+        "delivery_support.py",
+        "delivery_bootstrap.py"
+      ],
+      "driver_operation": "module"
+    },
+    {
+      "pid": 2047600,
+      "ppid": 2047555,
+      "state": "S",
+      "cpu_seconds": 0.24,
+      "elapsed_seconds": 5.1,
+      "wait": "hrtimer_nanosleep",
+      "command": "python",
+      "scripts": [
+        "delivery_support.py",
+        "deliver.py"
+      ],
+      "driver_operation": "module"
+    }
+  ],
+  "after_five_seconds": [
+    {
+      "pid": 2032063,
+      "ppid": 1469803,
+      "state": "S",
+      "cpu_seconds": 0.01,
+      "elapsed_seconds": 32.6,
+      "wait": "futex_wait_queue",
+      "command": "uv",
+      "scripts": [
+        "test_delivery_workflow.py"
+      ]
+    },
+    {
+      "pid": 2032081,
+      "ppid": 2032063,
+      "state": "S",
+      "cpu_seconds": 0.4,
+      "elapsed_seconds": 32.6,
+      "wait": "do_sys_poll",
+      "command": "python",
+      "scripts": [
+        "test_delivery_workflow.py"
+      ]
+    },
+    {
+      "pid": 2054065,
+      "ppid": 2032081,
+      "state": "S",
+      "cpu_seconds": 0.01,
+      "elapsed_seconds": 0.4,
+      "wait": "pipe_read",
+      "command": "git",
+      "scripts": []
+    },
+    {
+      "pid": 2054066,
+      "ppid": 2054065,
+      "state": "S",
+      "cpu_seconds": 0.0,
+      "elapsed_seconds": 0.4,
+      "wait": "do_wait",
+      "command": "sh",
+      "scripts": []
+    },
+    {
+      "pid": 2054067,
+      "ppid": 2054066,
+      "state": "S",
+      "cpu_seconds": 0.0,
+      "elapsed_seconds": 0.4,
+      "wait": "do_sys_poll",
+      "command": "git-upload-pack",
+      "scripts": []
+    },
+    {
+      "pid": 2054070,
+      "ppid": 2054067,
+      "state": "R",
+      "cpu_seconds": 0.55,
+      "elapsed_seconds": 0.4,
+      "wait": "0",
+      "command": "git",
+      "scripts": []
+    },
+    {
+      "pid": 2054249,
+      "ppid": 2054065,
+      "state": "R",
+      "cpu_seconds": 0.1,
+      "elapsed_seconds": 0.2,
+      "wait": "0",
+      "command": "git",
+      "scripts": []
+    }
+  ]
+}
