@@ -343,14 +343,23 @@
 - id: "10-1"
   title: "Module-agent token"
   description: >-
-    Set up the module-agent token with the AD-7 permissions and confirm that
-    GitHub refuses its pushes that change workflow files and its workflow
-    dispatches (CAP-7). Check whether it can push a branch created after a
-    delivery and use a PR's Update branch, and record the answers for 10-2's
-    block (the spine's story-10 checks).
+    Qualify the supplied AD-7 module-agent token with four live checks:
+    workflow-changing push refusal and workflow-dispatch refusal (CAP-7),
+    product-only branch push from current main, and meaningful PR Update
+    branch. Use existing real workflow-changing history on a declared module
+    before adoption; prior CiCd delivery is not required. Record preliminary
+    branch findings and limits for 10-2's block, distinguishing GitHub
+    mechanics from actual delivery proof. Story 11's existing pilot checkpoint
+    confirms the post-delivery branch behavior. Clean up all probe refs/PRs.
   invoke_dev_with: >-
-    The maintainer creates the token; the agent verifies the refusals with it
-    on a managed module, changing no owned file.
+    Use the dedicated token from the protected credential file
+    /home/administrator/.config/gh-module-agent/token, not a gh profile;
+    preserve the default CiCd-agent authentication. Commons is a candidate
+    declared module. Exercise real GitHub operations using existing history,
+    changing no owned file or module main ref, manufacturing no delivery and
+    adopting no module for this qualification. Use disposable refs/PRs, do not
+    merge, and clean up. Report exact revisions, responses and evidence limits;
+    leave actual post-CiCd-delivery confirmation to story 11's checkpoint.
 - id: "10-2"
   title: "Agent instructions and deny entries"
   description: >-
@@ -367,7 +376,9 @@
   description: >-
     Adopt both repos through the AD-21 sequence and apply the gate rule
     (CAP-10, CAP-16). The pause after this story is for watching one real
-    night: CodeQL, release, Builds bump, and delivery.
+    night: CodeQL, release, Builds bump, and delivery. At this existing pilot
+    checkpoint, confirm 10-1's branch findings after real CiCd delivery and
+    confirm or correct 10-2's instruction restrictions before accepting it.
   spec_checkpoint: true
   done_checkpoint: true
   invoke_dev_with: >-
@@ -383,7 +394,14 @@
     commit submodule + setup file + render here; delivery adopts the module.
     Right after adoption, the maintainer turns on immutable releases, deletes
     the other nuget.org policies, and removes the repo from the legacy org
-    secrets, the NUGET_API_KEY scope, and the legacy Zot push.
+    secrets, the NUGET_API_KEY scope, and the legacy Zot push. After the first
+    real delivery, use the same restricted credential from
+    /home/administrator/.config/gh-module-agent/token to rerun a product-only
+    branch push from current post-delivery main and a meaningful PR Update
+    branch. Record actual delivery/base revisions and server outcomes; use
+    disposable refs/PRs, change no owned file or main ref, do not merge, and
+    clean up. Confirm or correct 10-2's instruction restrictions if findings
+    differ, before accepting this existing pilot checkpoint.
 - id: "12"
   title: "Migrate AI.Tools"
   description: >-
