@@ -337,3 +337,11 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/8-2-nightly-builds-bump.md`
   summary: Add a parity test showing that the writer's `bump_runtime.add_defaults` gives the same additions as `render.defaults` on a real tagged Builds CI schema that introduces new defaults.
   evidence: Story 8-2 review B9 (maybe-false; medium if true). The v5.1.0 and v5.2.2 `hexalith.ci.v1.json` schemas are byte-identical, so the writer's default-addition path is not reached yet, and every test uses a synthetic schema. If the two traversals drift, the writer either blocks valid bumps or accepts additions the renderer would not produce. The first Builds release that adds a CI default settles it: run both functions on that schema with the registered setups.
+
+### DW-36: Verify eligible-source accounting can distinguish legitimate token-floor filtering from unexpectedly missing substantial detector inputs.
+origin: spec-deferred c8c02347814a
+location: tools/scan.py:findings
+source_spec: `9-nightly-cross-module-duplicate-scan.md`
+severity: high
+reason: The report validator accepts coherent all-zero counters. Actual pinned jscpd 5.4.3 reports zero sources for two comment-heavy 100-line files below the token floor, while substantial 100-line copies report two sources and one clone. No engine failure on an eligible substantive corpus was reproduced. Establish the pinned engine's eligible-source counting contract and reproduce an unexpectedly omitted eligible input before introducing a coverage invariant. Evidence: _bmad-output/implementation-artifacts/story-9-parent-counter-check.log. This is review finding B10, unverified, rather than an observed production defect. (declared severity: high (unverified))
+status: open
