@@ -2,13 +2,15 @@
 title: 'Module-agent token'
 type: 'chore'
 created: '2026-11-15'
-status: blocked
+status: done
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
 warnings: [oversized]
 deferred: []
 baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
+prior_attempt_status: blocked
+closeout_spec: ../../../implementation-artifacts/spec-10-1-module-agent-token.md
 ---
 
 <intent-contract>
@@ -30,6 +32,46 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 **Never:** Create or broaden the token, use the maintainer login or CiCd-agent credential as a substitute, fetch the App key, edit any owned file, register/adopt a module to manufacture this test, change the 10-2 instruction block, dispatch a release with a privileged credential, merge a probe PR, force-push, or claim that a dry run or mock proves a GitHub refusal.
 
 </intent-contract>
+
+## Current disposition — interactive closeout, 2026-11-15
+
+The re-driven build completes the human-approved three-result handoff after
+independent review. The earlier four-result blocking statements
+below describe the prior attempt and are superseded by the subsequent human
+sequencing decision. The saved GitHub responses remain unchanged.
+
+| Required result | Retained server evidence | Outcome |
+| --- | --- | --- |
+| Product-only push from then-current main | `11-product-commit.txt`, `13-product-push.txt`, `first-probes.json` | Accepted; sole parent was current main; only README.md changed. |
+| Workflow-changing push | `14-workflow-push.txt`, `first-probes.json` | Refused specifically for missing workflow permission; rejected ref absent. |
+| Valid workflow dispatch | `16-dispatch.txt`, `35-dispatchable-release-workflow.txt`, before/after run queries | HTTP 403 requiring Actions write; no matching run created. |
+| Probe cleanup and preservation | `18-first-probes-cleanup.txt`, `29-pr-cleanup.txt`, owned-state/tree snapshots, `parent-final-read-only.json` | Disposable refs removed or never created; no PR created or merged; no qualification write to main or owned files. |
+
+The [read-only closeout verification](../evidence/10-1/closeout-verification.json)
+audits all 41 retained evidence files and records their SHA-256 hashes. Fresh
+checks with the same protected module credential identify `jpiquot`, preserve
+the default CiCd-agent profile, and find no original probe ref or PR and zero
+matching dispatch runs. API and Git agree on live Commons main
+`ab5e92faa3bab1fa43b8ecadd423432dfe652bb2`. Local owned-file hashes, Builds
+gitlink, HEAD and worktree status match across this read-only closeout. No new
+remote mutation was necessary to validate the already established outcomes.
+
+This accepts pre-adoption GitHub mechanics only. Meaningful Update branch,
+Pull requests write, complete repository selection and absence of every
+prohibited token grant remain unverified; unreadable inventories and endpoint
+requirement headers do not establish those facts. The refused historical-head
+fixture is not an Update branch result. Story 10-2 already consumes the agreed
+handoff and its delivered policy prohibits Update branch pending the pilot.
+Story 11 must create its product-only probe branch/PR before real delivery,
+test its meaningful update afterward, repeat fresh post-delivery main
+branching, record actual revisions/responses, clean up and confirm or correct
+the restrictions before acceptance.
+
+Main preservation describes the qualification's actions and recorded probe
+checkpoints. Concurrent external main changes documented below are retained;
+the evidence does not establish a globally frozen main. The prior automated
+attempt remains recorded as blocked; this interactive build does not rewrite
+or re-arm the orchestrator's internal state.
 
 ## Code Map
 
@@ -58,7 +100,7 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 - Given an existing real workflow-changing revision reachable from current `main` and a product-only branch created from that current `main`, when the module token pushes it, then its success or restriction is recorded with server evidence for 10-2 as a pre-adoption GitHub-mechanics result.
 - Given the unavailable older-workflow head and the human-approved deferral, when 10-1 hands off to 10-2, then Update branch and PR write remain explicitly unverified and the provisional instructions forbid Update branch until the story 11 test.
 - Given three verified live results and cleanup, when the revised handoff is assessed, then 10-2 receives the results and deferral without waiting for the fourth operation. Story 11 must create its product-only probe head before real delivery and test its meaningful update afterward, repeat branching from post-delivery main, record exact revisions/results and cleanup, and confirm or correct the restrictions before acceptance.
-- Given all probes, when verification ends, then no owned file or module `main` revision has changed, temporary refs/PRs are cleaned up, and no credential has been exposed.
+- Given all probes, when verification ends, then qualification has changed no owned file or module `main` ref, temporary refs/PRs are cleaned up, and no credential has been exposed; external main movement is recorded separately.
 
 ## Spec Change Log
 
@@ -66,8 +108,21 @@ baseline_revision: bfeaca0561ce041efa7b6e7828ca70a8fc20f211
 - 2026-11-15 — Maintainer supplied `/home/administrator/.config/gh-module-agent/token`; read-only preflight verified its protected storage, `jpiquot` identity and Commons metadata access. Recorded the successful handoff separately from the still-unverified write permissions and missing qualifying delivery history.
 - 2026-11-15 — Human selected option 1: qualify all four GitHub operations before adoption using existing real module history, then confirm both branch cases after real delivery at story 11's existing pilot checkpoint. This supersedes the earlier pre-rearm delivery gate. Updated the contract, acceptance criteria, story 10-1/11 manifest entries and architecture's deferred Story 10 check; retained AD-7 permissions and cleanup boundaries.
 - 2026-11-15 — After the attempted historical PR head was refused before Update branch could run, the human selected deferral to story 11. Revised the handoff to accept the three verified outcomes and cleanup, retained Update branch/PR write as unverified, and required a product-only probe head before real delivery plus its actual update afterward. Story 10-2 temporarily forbids Update branch. Earlier blocked-run evidence and orchestrator status are preserved; no fourth outcome is fabricated.
+- 2026-11-15 — Interactive re-drive audited the three retained outcomes against that approved handoff, repeated only read-only cleanup checks and separated current disposition from the historical blocked attempt. Clarified main preservation as no qualification writes, retaining the documented external advances. No intent-contract or saved response evidence was changed.
 
 ## Review Triage Log
+
+The interactive closeout's seven findings and dispositions are recorded in
+the [closeout spec](../../../implementation-artifacts/spec-10-1-module-agent-token.md).
+Evidence coverage, reproducibility, authentication snapshots and log inclusion
+were strengthened. Two wording follow-ups are deferred: “delivered policy”
+means the completed canonical template, without asserting module delivery;
+“same credential” identifies the supplied protected source, without proving
+token-byte continuity or unchanged grants since the historical probes.
+The [verification record](../evidence/10-1/closeout-verification.json) and
+[reproduction recipe](../evidence/10-1/closeout-reproduction.md) preserve those
+limits explicitly. The prior attempt remains historical, and Update branch
+remains mandatory in story 11.
 
 ## Design Notes
 
@@ -78,7 +133,7 @@ The workflow-change probe requires a real server-side decision; `git push --dry-
 ## Verification
 
 - Read-only authentication preflight and exact GitHub responses; no local unit test can establish these credential permissions.
-- Actual token-qualified push/dispatch/Update branch operations, with revisions and API/Git responses saved here; no dry-run substitution.
+- Retained actual token-qualified push/dispatch operations, with revisions and API/Git responses saved here; no dry-run substitution. The actual Update branch operation remains mandatory in story 11 under the approved sequencing decision.
 - Compare owned Git tree entries and module `main` before/after; verify probe cleanup.
 - `git diff --check` and inspect the final story diff; no implementation build is needed for evidence-only changes.
 
@@ -131,7 +186,12 @@ Commons is an available pre-adoption candidate: local `HEAD` is `fbf4e94233821f6
 
 This decision removes the prior-delivery readiness gate for 10-1, keeps all four live checks and their cleanup mandatory, and preserves actual post-delivery confirmation in story 11. Story 10-2 receives preliminary findings with their limits; the pilot checkpoint confirms or corrects its instruction restrictions if real post-delivery behavior differs. The manifest and architecture deferred check carry the same schedule. The missing-credential and sequencing issues are resolved; the orchestrator may re-arm 10-1 against this corrected working-tree spec. Its status is unchanged here.
 
-## Live qualification — 2026-11-15
+## Live qualification — prior attempt, 2026-11-15
+
+This historical execution record used the earlier four-result completion
+condition. Its incomplete/blocking statements are superseded by the human
+sequencing resolution and current disposition above; the actual outcomes and
+their limits are preserved.
 
 **Result: three of the four required live outcomes are established. Update branch remains unverified because GitHub refused creation of the meaningful historical-workflow PR head. This story is incomplete.** Its status remains under the orchestrator's control. This is pre-adoption GitHub permission/branch evidence, not a CiCd delivery or story 11's post-delivery confirmation.
 
@@ -178,13 +238,17 @@ Retained text logs normalize trailing whitespace and extra blank lines at EOF. P
 No implementation build is applicable to this evidence-only change. Local commitlint and final whitespace/diff inspection supplement the retained live evidence; they do not establish the missing Update branch outcome.
 
 
-## Auto Run Result
+## Auto Run Result — prior attempt
 
 Status: blocked
 
 Blocking condition: implementation verification failed — the meaningful PR Update branch fixture is unavailable under the supplied restricted credential. Creating its historical-workflow head ref returned HTTP 403 before any PR existed. No actual Update branch request was possible; its permission behavior and Pull requests write remain unverified. Read-only branch discovery across the 17 declared modules found no suitable existing head to reuse. Completion still requires the fourth live result; the earlier credential-handoff and delivery-ordering issues are resolved.
 
 ## Subsequent human sequencing resolution — 2026-11-15
+
+The following records the earlier resolution session, before this interactive
+closeout. References to unchanged frontmatter, staged files and an incomplete
+implementation describe that session's state.
 
 The human selected deferral of the missing Update branch operation to story 11.
 The current intent, tasks and acceptance criteria above reflect that decision;

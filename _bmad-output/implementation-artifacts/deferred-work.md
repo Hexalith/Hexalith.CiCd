@@ -365,3 +365,12 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
   summary: Preserve foreign instructions or fail safely when repairing malformed or duplicated perimeter markers before pilot adoption.
   evidence: Review B7 (high, pre-existing): unchanged Builds v5.2.2 Github/lib/perimeter.py _marker() replaces the whole instruction file for unbalanced, duplicated or reversed markers. The parent reproduced foreign prefix/suffix loss for unbalanced and duplicated markers; tagged tests explicitly assert recreation. Evidence is _bmad-output/specs/spec-cicd/evidence/10-2/review-dependency-probe.json. Resolve in Builds and qualify the accepted tag before relying on preservation for malformed pilot input; this story adopted no production module.
+
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-10-1-module-agent-token.md`
+  summary: Describe 10-2's canonical policy template without calling it already delivered in the 10-1 closeout.
+  evidence: Closeout review B1 (low): the current-disposition paragraph says "its delivered policy" while all qualification is pre-adoption and no module delivery is proved. The verification record, reproduction recipe and triage explicitly state the canonical-template scope; the review workflow defers corrections to specifications.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-10-1-module-agent-token.md`
+  summary: Describe observed credential-source continuity without implying verified token-byte or grant continuity in the 10-1 closeout.
+  evidence: Closeout review B6 (low): the current-disposition paragraph says "same protected module credential" but source path, account and expiration alone do not establish unchanged bytes or grants since the historical probes. Verification/recipe evidence and triage record this limit, and fresh read-only checks do not requalify write restrictions. The review workflow defers the spec wording correction.
