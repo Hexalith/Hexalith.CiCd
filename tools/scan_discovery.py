@@ -16,6 +16,37 @@ FORMATS = {".yml": "yaml", ".yaml": "yaml", ".sh": "bash", ".bash": "bash",
            ".ps1": "powershell", ".psm1": "powershell", ".py": "python"}
 MAX_FILES = 2000
 MAX_BYTES = 32 * 1024 * 1024
+# Environment variables that change which local Python sources are imported.
+RESOLUTION = {"PYTHONPATH", "PYTHONHOME", "PYTHONSAFEPATH"}
+# Commands that execute their operand after this many fixed positional values.
+WRAPPERS = {"env": 0, "exec": 0, "command": 0, "time": 0, "nohup": 0, "nice": 0, "sudo": 0, "doas": 0,
+            "setsid": 0, "stdbuf": 0, "ionice": 0, "unbuffer": 0, "xargs": 0, "timeout": 1, "flock": 1, "chrt": 1}
+OTHER_LANGUAGES = {".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".rb", ".pl", ".pm", ".php"}
+COMMAND_APIS = {"subprocess.run", "subprocess.call", "subprocess.Popen", "subprocess.check_call",
+                "subprocess.check_output", "subprocess.getoutput", "subprocess.getstatusoutput",
+                "os.system", "os.popen", "runpy.run_path", "runpy.run_module"}
+UNSUPPORTED_PREFIXES = ("os.exec", "os.spawn", "os.posix_spawn", "asyncio.create_subprocess_", "pty.spawn")
+UNSUPPORTED_CALLS = {"importlib.util.spec_from_file_location", "importlib.machinery.SourceFileLoader",
+                     "importlib.machinery.SourcelessFileLoader", "exec", "compile"}
+PROCESS_MODULES = {"subprocess", "os", "runpy", "importlib", "importlib.util", "importlib.machinery",
+                   "asyncio", "pty", "contextlib", "functools"}
+
+
+def assignment(word):
+    """Return whether a shell word is NAME=value; import-path overrides fail."""
+    match = re.match(r"([A-Za-z_]\w*)=", word)
+    if match and match[1].upper() in RESOLUTION:
+        raise DeliveryError("unsupported environment assignment affecting script resolution")
+    return match is not None
+
+
+def executes(name):
+    return (name in COMMAND_APIS or name in UNSUPPORTED_CALLS or name.startswith(UNSUPPORTED_PREFIXES)
+            or name in {"importlib.import_module", "__import__"})
+
+
+def literal_key(node):
+    return isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value.upper() not in RESOLUTION
 
 
 class ActionLoader(yaml.SafeLoader):
@@ -165,6 +196,8 @@ class Discovery:
                     command, shell = step["run"], step.get("shell")
                     if not isinstance(command, str) or not isinstance(shell, str):
                         raise DeliveryError("action run requires literal command and shell")
+                    if isinstance(step.get("env"), dict) and any(str(key).upper() in RESOLUTION for key in step["env"]):
+                        raise DeliveryError("unsupported step environment affecting script resolution")
                     cwd = "."
                     if "working-directory" in step:
                         cwd = self.resolve(step["working-directory"], path=path, cwd=".", action=parent, allow_root=True)
@@ -185,6 +218,10 @@ class Discovery:
         # Shell state is intentionally limited to literal cd/working-directory.
         # Computed executable/script targets fail; ordinary data arguments do not
         # become reachability edges merely because their name ends in .py/.sh.
+        text = text.removeprefix("﻿")
+        if powershell:
+            # Comment-based help is data; blanking it keeps diagnostic line numbers.
+            text = re.sub(r"(?ms)^[ \t]*<#.*?#>", lambda match: "\n" * match[0].count("\n"), text)
         text = re.sub(r"[\\`]\r?\n", " ", text)
         for number, line in enumerate(text.splitlines(), 1 + offset):
             if not line.strip() or line.lstrip().startswith("#"):
@@ -195,13 +232,15 @@ class Discovery:
                               lambda m: "$GITHUB_WORKSPACE" if m[1] == "workspace" else "$GITHUB_ACTION_PATH", line)
                 # Reject execution syntax outside literal quotes before shlex
                 # can discard its structure and certify the wrong scope.
-                single, double, escaped, syntax = False, False, False, []
+                single, double, escaped, syntax, cut = False, False, False, [], len(line)
                 for index, char in enumerate(line):
                     if escaped:
                         escaped = False
                         syntax.append(" ")
                         continue
-                    if char == "#" and not single and not double:
+                    # A comment starts only at a word boundary: $#, ${#x} and a#b are words.
+                    if char == "#" and not single and not double and (index == 0 or line[index - 1] in " \t;&|()<>"):
+                        cut = index
                         break
                     if char == ("`" if powershell else "\\") and not single:
                         escaped = True
@@ -218,10 +257,10 @@ class Discovery:
                 if ("(" in structure or ")" in structure
                         or re.search(r"(?:^|[;&|])\s*\{|^\s*function\b", structure)):
                     raise DeliveryError("unsupported shell compound/subshell execution")
-                lex = shlex.shlex(line, posix=True, punctuation_chars=";&|()")
+                lex = shlex.shlex(line[:cut], posix=True, punctuation_chars=";&|()")
                 if powershell:
                     lex.escape = ""
-                lex.whitespace_split, lex.commenters = True, "#"
+                lex.whitespace_split, lex.commenters = True, ""
                 segments, words = [], []
                 for word in lex:
                     if word and set(word) <= set(";&|()"):
@@ -234,15 +273,17 @@ class Discovery:
                     segments.append(words)
                 for words in segments:
                     while words and (words[0] in {"then", "do", "else", "if", "elif", "while", "until", "!", "&"}
-                                     or re.match(r"[A-Za-z_]\w*=", words[0])):
+                                     or assignment(words[0])):
                         words = words[1:]
                     if not words:
                         continue
-                    while words and words[0] in {"env", "exec", "command"}:
+                    while words and words[0] in WRAPPERS:
+                        positional = WRAPPERS[words[0]]
                         words = words[1:]
                         if words and words[0].startswith("-"):
                             raise DeliveryError("unsupported shell wrapper options")
-                        while words and re.match(r"[A-Za-z_]\w*=", words[0]):
+                        words = words[positional:]
+                        while words and assignment(words[0]):
                             words = words[1:]
                     if words[:2] == ["uv", "run"]:
                         words = words[2:]
@@ -262,6 +303,38 @@ class Discovery:
                         raise DeliveryError("unsupported shell working-directory command")
                     if builtin == "start-process":
                         raise DeliveryError("unsupported PowerShell process invocation")
+                    if builtin in {"invoke-command", "icm"}:
+                        raise DeliveryError("unsupported PowerShell Invoke-Command execution")
+                    if builtin in {"export", "declare", "typeset", "readonly", "local"}:
+                        if any(argument.split("=", 1)[0].upper() in RESOLUTION for argument in args):
+                            raise DeliveryError("unsupported environment assignment affecting script resolution")
+                        continue
+                    if builtin in {"eval", "invoke-expression", "iex"}:
+                        if args[:1] and args[0].lower() == "-command":
+                            args = args[1:]
+                        # Evaluated text runs in this shell, so a directory change
+                        # inside it fails rather than leaving a stale caller cwd.
+                        self.commands(path, " ".join(args), cwd, action, offset=number - 1,
+                                      powershell=powershell, sourced=True)
+                        continue
+                    if builtin == "trap" and not powershell:
+                        if args and args[0] != "-" and not args[0].startswith("-"):
+                            self.commands(path, args[0], cwd, action, offset=number - 1, sourced=True)
+                        continue
+                    if builtin == "find":
+                        for index, argument in enumerate(args):
+                            if argument in {"-execdir", "-okdir"}:
+                                raise DeliveryError("unsupported find -execdir working directory")
+                            if argument in {"-exec", "-ok"}:
+                                inner = []
+                                for word in args[index + 1:]:
+                                    if word in {"-exec", "-ok", "-execdir", "-okdir"}:
+                                        break
+                                    inner.append(word)
+                                if not inner or inner[0] == "{}":
+                                    raise DeliveryError("unresolved computed find -exec command")
+                                self.commands(path, shlex.join(inner), cwd, action, offset=number - 1)
+                        continue
                     if cmd == "cd":
                         if sourced:
                             raise DeliveryError("sourced script changes caller working directory; coverage unsupported")
@@ -269,50 +342,45 @@ class Discovery:
                             raise DeliveryError("unresolved local working directory")
                         cwd = self.resolve(args[0], path=path, cwd=cwd, action=action, allow_root=True)
                         continue
-                    base = PurePosixPath(cmd).name.lower()
+                    base = PurePosixPath(cmd).name.lower().removesuffix(".exe")
                     fmt, target = None, None
-                    if base in {"python", "python3", "python3.12", "python3.13", "python3.14", "py"}:
+                    if re.fullmatch(r"(?:python|pypy)(?:\d+(?:\.\d+)*)?|py", base):
                         fmt = "python"
-                        if "-m" in args:
-                            index = args.index("-m")
-                            if index + 1 >= len(args):
-                                raise DeliveryError("unresolved python -m target")
-                            self.import_module(args[index + 1], path, cwd, action, roots=(cwd,), required=True, execute=True)
+                        mode, value, remaining = self.python_options(args)
+                        if mode == "m":
+                            self.import_module(value, path, cwd, action, roots=(cwd,), required=True, execute=True)
                             continue
-                        if "-c" in args:
-                            index = args.index("-c")
-                            if index + 1 >= len(args):
-                                raise DeliveryError("unresolved inline Python")
-                            self.python(path, args[index + 1], cwd, action, roots=(cwd,), offset=number - 1)
+                        if mode == "c":
+                            self.python(path, value, cwd, action, roots=(cwd,), offset=number - 1)
                             continue
-                        remaining = list(args)
-                        while remaining and remaining[0].startswith("-"):
-                            option = remaining.pop(0)
-                            if option in {"-W", "-X"} and remaining:
-                                remaining.pop(0)
                         target = remaining[0] if remaining else None
                         if target is None or target in {"-", "<<"} or target.startswith("<<"):
                             raise DeliveryError("unresolved Python script target")
                     elif base in {"bash", "sh", "pwsh", "powershell"}:
                         fmt = "powershell" if base in {"pwsh", "powershell"} else "bash"
-                        flags = {arg.lower() for arg in args}
-                        inline = "-command" if "-command" in flags else next(
-                            (arg for arg in args if re.fullmatch(r"-[a-z]*c[a-z]*", arg)), None)
+                        inline, remaining = self.shell_options(args, fmt == "powershell")
                         if inline:
-                            index = next(i for i, arg in enumerate(args) if arg.lower() == inline)
-                            if index + 1 >= len(args):
+                            if not remaining:
                                 raise DeliveryError("unresolved shell command")
-                            self.commands(path, args[index + 1], cwd, action, offset=number - 1,
+                            self.commands(path, remaining[0], cwd, action, offset=number - 1,
                                           powershell=fmt == "powershell")
                             continue
-                        remaining = list(args)
-                        while remaining and remaining[0].startswith("-"):
-                            option = remaining.pop(0).lower()
-                            if option in {"-o", "-executionpolicy", "-inputformat", "-outputformat", "-version"} and remaining:
-                                remaining.pop(0)
                         target = remaining[0] if remaining else None
                         if target is None:
                             raise DeliveryError("unresolved shell script target")
+                    elif base in {"node", "nodejs", "deno", "bun", "ruby", "perl", "php"}:
+                        for argument in args:
+                            if PurePosixPath(argument).suffix.lower() in OTHER_LANGUAGES:
+                                try:
+                                    resolved = self.resolve(argument, path=path, cwd=cwd, action=action)
+                                except DeliveryError:
+                                    continue
+                                if resolved in self.items:
+                                    raise DeliveryError("unsupported local-script language: " + clean(resolved))
+                    elif powershell and builtin == "using":
+                        if len(args) >= 2 and args[0].lower() == "module" and (
+                                args[1].lower().endswith(".psm1") or any(c in args[1] for c in "/\\$")):
+                            target, fmt = args[1], "powershell"
                     elif cmd in {".", "source"}:
                         target = args[0] if args else None
                         fmt = FORMATS.get(PurePosixPath(target or "").suffix.lower(), "bash")
@@ -337,6 +405,62 @@ class Discovery:
                         raise DeliveryError("unresolved sourced script")
             except (ValueError, RecursionError) as error:
                 self.error(path, number, "local-script discovery: " + clean(error))
+
+    @staticmethod
+    def python_options(args):
+        """Parse interpreter options before the script; later words are its arguments."""
+        remaining = list(args)
+        while remaining and remaining[0].startswith("-") and remaining[0] != "-":
+            option = remaining.pop(0)
+            if option == "--":
+                break
+            if option.startswith("--") or re.fullmatch(r"-\d+(?:\.\d+)*(?:-\d+)?", option):
+                if option == "--check-hash-based-pycs" and remaining:
+                    remaining.pop(0)
+                continue
+            if option[1] in "WX":
+                if len(option) == 2 and remaining:
+                    remaining.pop(0)
+                continue
+            short = re.fullmatch(r"-[bBdEhiIOPqRsSuvVx]*([cm]?)(.*)", option, re.S)
+            if not short or (short[2] and not short[1]):
+                raise DeliveryError("unsupported Python interpreter option")
+            if short[1]:
+                value = short[2] or (remaining.pop(0) if remaining else None)
+                if value is None:
+                    raise DeliveryError("unresolved python -m target" if short[1] == "m" else "unresolved inline Python")
+                return short[1], value, remaining
+        return None, None, remaining
+
+    @staticmethod
+    def shell_options(args, powershell):
+        """Parse shell options before the script or inline command operand."""
+        remaining = list(args)
+        while remaining and remaining[0][:1] in {"-", "+"} and remaining[0] not in {"-", "+"}:
+            option = remaining.pop(0)
+            lower = option.lower()
+            if not powershell:
+                if option == "--":
+                    break
+                if option in {"-o", "+o", "-O", "+O"}:
+                    remaining = remaining[1:]
+                elif option[0] == "-" and not option.startswith("--") and "c" in option[1:]:
+                    return True, remaining
+                continue
+            # PowerShell parameters are case-insensitive unambiguous prefixes.
+            if lower == "-c" or (len(lower) > 4 and "-command".startswith(lower)):
+                return True, remaining
+            if lower in {"-e", "-ec", "-cwa", "-commandwithargs"} or (len(lower) > 2 and "-encodedcommand".startswith(lower)):
+                raise DeliveryError("unsupported PowerShell encoded or argument command")
+            if lower == "-wd" or (len(lower) > 2 and "-workingdirectory".startswith(lower)):
+                raise DeliveryError("unsupported PowerShell working-directory option")
+            if lower == "-f" or (len(lower) > 2 and "-file".startswith(lower)):
+                break
+            if (lower in {"-ep", "-if", "-inputformat", "-of", "-o", "-outputformat", "-v", "-version", "-config",
+                          "-configurationname", "-settingsfile", "-w", "-windowstyle"}
+                    or (len(lower) > 2 and "-executionpolicy".startswith(lower))):
+                remaining = remaining[1:]
+        return False, remaining
 
     def import_module(self, module, path, cwd, action, *, roots=None, required=False, relative=0, execute=False):
         if not isinstance(module, str) or not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*", module):
@@ -368,14 +492,22 @@ class Discovery:
                 self.add(stem + "/__main__.py", "python", cwd=cwd, action=action, python_roots=import_roots)
         if selected:
             return selected
-        if required or relative:
+        if relative:
             raise DeliveryError("missing local Python module: " + clean(module))
+        if required:
+            # A missing child of a local package is a missing local call; a
+            # name without a local top-level package is an installed tool.
+            top = module.split(".", 1)[0]
+            for root in search_roots:
+                stem = posixpath.normpath(posixpath.join(root, top))
+                if stem + ".py" in self.items or any(source.startswith(stem + "/") for source in self.items):
+                    raise DeliveryError("missing local Python module: " + clean(module))
         return None
 
     def python(self, path, text, cwd, action, *, roots=None, offset=0):
         roots = roots if roots is not None else (str(PurePosixPath(path).parent),)
         try:
-            tree = ast.parse(text)
+            tree = ast.parse(text.removeprefix("﻿"))
         except (SyntaxError, ValueError, RecursionError) as error:
             self.error(path, getattr(error, "lineno", 1) + offset, "invalid Python source")
             return
@@ -417,7 +549,8 @@ class Discovery:
                     continue
                 targets = node.targets if isinstance(node, ast.Assign) else [node.target]
                 resolved = {candidate for candidate in names(ast.unparse(node.value))
-                            if candidate.split(".", 1)[0] in {"subprocess", "importlib", "runpy", "sys", "site", "os"}}
+                            if candidate.split(".", 1)[0] in {"subprocess", "importlib", "runpy", "sys", "site", "os",
+                                                              "asyncio", "pty", "contextlib", "functools"}}
                 if not resolved:
                     continue
                 for target in targets:
@@ -446,6 +579,8 @@ class Discovery:
                         self.import_module(item.name, path, cwd, action, roots=roots)
                 elif isinstance(node, ast.ImportFrom):
                     module = node.module or ""
+                    if not node.level and module in PROCESS_MODULES and any(item.name == "*" for item in node.names):
+                        raise DeliveryError("unsupported star import of a process/import API")
                     resolved = None
                     if module:
                         resolved = self.import_module(module, path, cwd, action, roots=roots, relative=node.level)
@@ -459,12 +594,17 @@ class Discovery:
                                     for candidate in (stem + ".py", stem + "/__init__.py"):
                                         if candidate in self.items:
                                             self.add(candidate, "python", cwd, action, python_roots=roots)
-                            else:
+                            elif not module:
+                                # Only "from . import name" imports a module by that
+                                # name; names from a non-local module are its own.
                                 self.import_module(item.name, path, cwd, action, roots=roots, relative=node.level)
                 elif (isinstance(node, (ast.Attribute, ast.Subscript))
                       and isinstance(node.ctx, (ast.Store, ast.Del))
                       and any(search_path(candidate) for candidate in names(ast.unparse(node)))):
                     raise DeliveryError("unsupported Python search-path mutation")
+                elif (isinstance(node, ast.Subscript) and isinstance(node.ctx, (ast.Store, ast.Del))
+                      and "os.environ" in names(ast.unparse(node.value)) and not literal_key(node.slice)):
+                    raise DeliveryError("unsupported Python environment mutation affecting resolution")
                 elif isinstance(node, ast.Call):
                     calls = names(ast.unparse(node.func))
                     mutators = {"append", "insert", "extend", "remove", "pop", "clear", "reverse", "sort",
@@ -472,20 +612,35 @@ class Discovery:
                     if any(candidate.rsplit(".", 1)[-1] in mutators and search_path(candidate.rsplit(".", 1)[0])
                            for candidate in calls) or "site.addsitedir" in calls:
                         raise DeliveryError("unsupported Python search-path mutation")
-                    if calls & {"os.chdir", "os.fchdir"}:
+                    if calls & {"os.chdir", "os.fchdir", "contextlib.chdir"}:
                         raise DeliveryError("unsupported Python working-directory mutation")
+                    environment = calls & {"os.putenv", "os.environ.setdefault", "os.environ.__setitem__",
+                                           "os.environ.update"}
+                    if environment:
+                        if "os.environ.update" in environment:
+                            source = node.args[0] if node.args else ast.Dict(keys=[], values=[])
+                            keys = [*source.keys] if isinstance(source, ast.Dict) else [None]
+                            keys += [ast.Constant(keyword.arg) if keyword.arg else None for keyword in node.keywords]
+                        else:
+                            keys = node.args[:1] or [None]
+                        if not all(literal_key(key) for key in keys):
+                            raise DeliveryError("unsupported Python environment mutation affecting resolution")
+                    if "functools.partial" in calls and node.args and any(
+                            executes(candidate) for candidate in names(ast.unparse(node.args[0]))):
+                        raise DeliveryError("unsupported partial application of a process/import API")
                     for call in sorted(calls):
                         self.python_call(call, node, path, cwd, action, roots, offset)
             except (ValueError, RecursionError) as error:
                 self.error(path, node.lineno + offset, "local-script discovery: " + clean(error))
 
     def python_call(self, call, node, path, cwd, action, roots, offset):
+        if call.startswith(UNSUPPORTED_PREFIXES) or call in UNSUPPORTED_CALLS:
+            raise DeliveryError("unsupported Python process/import API: " + clean(call))
         if call in {"importlib.import_module", "__import__"}:
             if not node.args or not isinstance(node.args[0], ast.Constant):
                 raise DeliveryError("unresolved computed Python import")
             self.import_module(node.args[0].value, path, cwd, action, roots=roots)
-        if call in {"subprocess.run", "subprocess.call", "subprocess.Popen", "subprocess.check_call",
-                    "subprocess.check_output", "os.system", "runpy.run_path", "runpy.run_module"}:
+        if call in COMMAND_APIS:
             target_cwd = cwd
             if call.startswith("subprocess."):
                 if len(node.args) > 1 or any(keyword.arg is None for keyword in node.keywords):

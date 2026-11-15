@@ -58,8 +58,11 @@ class Workflow(Expressions):
             elif token in {"always", "success", "failure", "cancelled", "format"}: result.append(token)
             elif token in {"true", "false"}: result.append("True" if token == "true" else "False")
             else: result.append(repr(self.lookup(token)))
+        # A job condition binds success() to its needs (see job_condition);
+        # step conditions keep the job's own step status.
         return eval(" ".join(result), {"__builtins__": {}}, {"always": lambda: True,
-            "success": lambda: not self.failed and not self.cancelled, "failure": lambda: self.failed,
+            "success": lambda: getattr(self, "upstream", None) is not False and not self.failed and not self.cancelled,
+            "failure": lambda: self.failed,
             "cancelled": lambda: self.cancelled, "format": lambda pattern, value: pattern.format(value)})
 
     def expand(self, value):
@@ -594,10 +597,36 @@ class PostReleaseWorkflow(Workflow):
             else:
                 raise AssertionError("post-release graph has an unresolved dependency")
 
+    def job_condition(self, phase, job):
+        """Evaluate a job `if` with GitHub's job-level status semantics.
+
+        Without a status function the condition is implicitly `success() && ...`.
+        success() requires every transitive need to have succeeded; failure()
+        is true when any of them failed. Removing `!cancelled()` is observable.
+        """
+        text = job.get("if", "").strip()
+        if text.startswith("${{"):
+            text = text[3:-2].strip()
+        if not re.search(r"\b(?:success|failure|cancelled|always)\s*\(", text):
+            text = "success() && (" + (text or "true") + ")"
+        ancestors, pending = set(), [phase]
+        while pending:
+            needed = self.document["jobs"].get(pending.pop(), {}).get("needs", [])
+            for name in [needed] if isinstance(needed, str) else needed:
+                if name not in ancestors:
+                    ancestors.add(name)
+                    pending.append(name)
+        results = [self.context["needs"][name]["result"] for name in ancestors if name in self.context["needs"]]
+        self.failed, self.upstream = "failure" in results, all(result == "success" for result in results)
+        try:
+            return self.expression(text)
+        finally:
+            self.failed, self.upstream = False, None
+
     def execute(self):
         for phase, job in self.ordered_jobs():
             self.failed, self.context["steps"] = False, {}
-            if not self.expression(job["if"]):
+            if not self.job_condition(phase, job):
                 self.results[phase] = "skipped"
                 self.context["needs"][phase] = {"result": "skipped", "outputs": {}}
                 continue
@@ -777,8 +806,26 @@ class PostReleaseWorkflowTests(unittest.TestCase):
                 self.assertFalse(any(phase == "scan" for phase, _, _, _ in workflow.extension_calls))
                 report = next(value for phase, value in workflow.uploads if phase == "scan")
                 self.assertEqual(report["result"], "fail")
+                # The seed carries the documented report shape, with no observations.
+                self.assertEqual((report["schema"], report["modules"], report["findings"]),
+                                 ("hexalith.duplicate-scan.v1", [], []))
                 self.assertIn("coverage is unverified", workflow.scan_summaries[0])
                 self.assertIn(workflow.scan_summaries[0], (workflow.w.root / "summary.md").read_text())
+
+    def test_job_conditions_follow_github_needs_status_semantics(self):
+        # Without !cancelled(), GitHub's implicit success() skips a job after a
+        # failed need. The model observes both continuation guards.
+        for job, configuration in (("scan", {"publication": "failure"}), ("bump", {"scan": "failure"})):
+            with self.subTest(job=job):
+                workflow = PostReleaseWorkflow(self.fixture(), **configuration)
+                condition = workflow.document["jobs"][job]["if"]
+                workflow.document["jobs"][job]["if"] = condition.replace("!cancelled() && ", "")
+                workflow.execute()
+                self.assertEqual(workflow.results[job], "skipped")
+                self.assertEqual(workflow.results["keepalive"], "success")
+        workflow = PostReleaseWorkflow(self.fixture(), publication="failure", scan="failure")
+        self.assertEqual(workflow.execute(), "failure")
+        self.assertEqual((workflow.results["scan"], workflow.results["bump"]), ("failure", "success"))
 
     def test_nonmain_and_cancelled_scan_skip_production_controller(self):
         workflow = PostReleaseWorkflow(self.fixture(), ref="refs/heads/other")

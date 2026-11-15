@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -156,7 +157,9 @@ def findings(value, manifest):
                 raise rt.DeliveryError("detector endpoint is not a staged known source")
             item = manifest[raw]
             start, end = source.get("start"), source.get("end")
-            lines = item["text"].splitlines()
+            # jscpd counts only LF line breaks; str.splitlines also splits on
+            # form feeds, Unicode separators and lone CR, shifting the slice.
+            lines = item["text"].split("\n")
             if (type(start) is not int or type(end) is not int or not 1 <= start <= end <= len(lines)
                     or item["format"] != duplicate["format"]):
                 raise rt.DeliveryError("detector source range/format mismatch")
@@ -188,7 +191,8 @@ def summary(report):
                      f"{len(module['files'])} selected files")
         lines.extend("  - " + error for error in module["errors"])
     if not report["modules"]:
-        lines.append("Empty committed registry: successful zero scope." if not report["errors"] else "Registry unavailable.")
+        lines.append("Empty committed registry: successful zero scope." if not report["errors"]
+                     else "No registered module was scanned.")
     elif not any(module["files"] for module in report["modules"]) and not report["errors"] and all(
             module["result"] == "pass" for module in report["modules"]):
         lines.append("Registered modules have no supported action sources: successful zero scope.")
@@ -198,9 +202,11 @@ def summary(report):
         for key in ("first", "second"):
             endpoint = row[key]
             lines.append(f"- {endpoint['module']}/{endpoint['path']}:{endpoint['start']}-{endpoint['end']}")
-        # Indentation makes all module text inert Markdown, including backticks
-        # and HTML. Exact original source also survives in report.json.
-        lines.extend(["", *["    " + line for line in row["fragment"].splitlines()]])
+        # A top-level fence longer than any backtick run in the fragment keeps
+        # module text inert; indentation after a list item would render it as
+        # list Markdown. Exact original source also survives in report.json.
+        fence = "`" * max(3, 1 + max((len(run) for run in re.findall(r"`+", row["fragment"])), default=0))
+        lines.extend(["", fence + row["format"], *row["fragment"].split("\n"), fence])
     if not report["findings"]:
         lines.extend(["", "No cross-module copies observed in the selected scope." if report["result"] == "pass"
                       else "Coverage is incomplete; this result does not establish a clean scan."])
@@ -298,7 +304,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument("--output", type=Path, default=os.environ.get("SCAN_DIRECTORY"))
+    parser.add_argument("--output", type=Path, default=os.environ.get("SCAN_DIRECTORY") or None)
     args = parser.parse_args(argv)
     if args.output is None:
         parser.error("--output or SCAN_DIRECTORY is required")

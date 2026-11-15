@@ -55,15 +55,44 @@ source with a supported shell/Python shebang, is also included. Static discovery
   Python search-path mutations (`sys.path`, its aliases, import hooks and
   `site.addsitedir`) and process working-directory mutations fail coverage
   explicitly because their execution order is outside this static model.
-- `env`/`exec`/`command` wrappers without options and literal `uv run` script
-  targets. Wrapper option forms and uv `--directory`/`-C` fail coverage.
+- `env`/`exec`/`command`, `time`, `nohup`, `nice`, `sudo`/`doas`, `setsid`,
+  `stdbuf`, `ionice`, `unbuffer`, `xargs`, `timeout DURATION`, `flock FILE` and
+  `chrt PRIORITY` wrappers without options, and literal `uv run` script targets.
+  Wrapper option forms and uv `--directory`/`-C` fail coverage.
+- Literal `eval`/`Invoke-Expression` text, `trap` handlers and `find -exec`/`-ok`
+  commands. A directory change inside evaluated or trap text fails coverage;
+  `find -execdir`/`-okdir` and `-exec {}` fail.
+- Interpreter options are read only before the script or `-m`/`-c`/`-Command`
+  operand; later words are script arguments. Versioned and `.exe` interpreter
+  spellings (`python3.11`, `pypy3`, `python.exe`, `pwsh.exe`) are recognized.
+  `pwsh -WorkingDirectory`, `-EncodedCommand` and `-CommandWithArgs` fail. A
+  `node`, `deno`, `bun`, `ruby`, `perl` or `php` call of a tracked local script fails
+  as an unsupported language. `python -m` with no local top-level package (for
+  example `pip`) is an installed tool, not a missing local call.
+- PowerShell `using module` paths. Comment-based help (`<# ... #>` starting a
+  line), word-internal `#` such as `$#`, and a UTF-8 byte-order mark do not hide
+  or invent calls.
+- `os.popen` and `subprocess.getoutput`/`getstatusoutput` literal commands.
+  `os.exec*`, `os.spawn*`, `os.posix_spawn*`, `asyncio.create_subprocess_*`,
+  `pty.spawn`, file-location import loaders, `exec`, `compile`, star imports of
+  process/import modules and `functools.partial` of a recognized process/import
+  API fail coverage. A `from module import name` of a non-local module never
+  selects a local file merely named `name`.
+- Shell assignments, `env` assignments, exports/declarations and composite step
+  `env` entries for `PYTHONPATH`, `PYTHONHOME` or `PYTHONSAFEPATH`, and Python
+  `os.environ`/`os.putenv` writes of those or computed names, fail coverage.
+  `contextlib.chdir` is a working-directory mutation.
 
 Command substitutions, shell functions/compound blocks, subshells, PowerShell
-script blocks and `Start-Process` are explicit coverage failures. Directory
-stack/location commands (`pushd`, `popd`, `Set-Location` and their supported
-spellings) also fail. A sourced script that changes the caller's directory
+script blocks and `Start-Process`/`Invoke-Command` are explicit coverage failures.
+Directory stack/location commands (`pushd`, `popd`, `Set-Location` and their
+supported spellings) also fail. A sourced script that changes the caller's directory
 fails coverage instead of letting later calls use a guessed directory. Quoted
 ordinary data arguments remain data, including text that resembles these forms.
+These conservative failures also apply to ordinary constructs that call no local
+script, such as `$(date)`, `case` patterns, heredoc bodies and PowerShell
+variable assignments; extend central discovery before onboarding modules whose
+actions rely on them.
 
 A path passed only as data is not a script call.
 Repository configuration is never a detector input: `.jscpd*`, `.gitignore`,
@@ -105,7 +134,10 @@ The durable output directory contains:
   revisions, selected original paths and per-module errors, and findings with
   format, lines, tokens, fragment and both original module/path/line endpoints.
 - `summary.md`: the readable verdict, source coverage, diagnostics and copied
-  fragments with the original locations of code to move into Builds.
+  fragments with the original locations of code to move into Builds. Each
+  fragment is a top-level fenced block longer than any backtick run it contains,
+  so module text stays inert Markdown. Fragment lines follow the detector's
+  LF-only line numbering.
 
 The nightly job seeds both files before checkout and always uploads the directory
 as `hexalith-nightly-scan-<attempt>`, retained for 90 days. It also preserves the

@@ -124,6 +124,86 @@ deferred:
 
 Grouping produced 15 patched entries (14 high, 1 medium), one unverified deferral and six rejected descriptive observations. Every duplicated observation retains its own row. All patches are private discovery/validation corrections or assertions for demonstrated states; they add no public interface. No intent-contract or planning amendment was required.
 
+### 2026-11-15 — Review pass
+- verdicts: 62 findings — high 14, medium 9, low 28, false 8, maybe-false 3
+- Follow-up pass on the `done` spec. All four layers completed and none were skipped. Rows follow layer completion order: blind hunter (B1–B18), edge-case hunter (E1–E28), verification gap (G1–G7, where G6–G7 are its other findings) and intent alignment (I1–I9, one row per described divergence). Before/after reproductions are in `story-9-followup-probes.log` (Git-ignored), which also holds a read-only run over the 18 `references/` module checkouts: 17 have no custom actions, and Builds' two composite actions discover cleanly. Its pinned-jscpd measurements are in the same log. Patch entries P1–P19 are named in the rows.
+- findings:
+  - `[medium]` `[patch]` B1: Summary fragment indented after list items renders as live Markdown — CommonMark treats the 4-space text after a `- ` item as a list-item paragraph, so module HTML and links render and lines join. Applied (P8): each fragment is a top-level fence longer than any backtick run, tagged with its format. Regressions assert the fenced copy and an HTML/backtick fragment.
+  - `[low]` `[reject]` B2: Module paths and errors enter the summary unescaped — Real but cosmetic. GitHub sanitizes summary HTML, and only registered organization modules supply paths. An escaping helper is more than a direct correction for a rare file-name shape.
+  - `[low]` `[reject]` B3: Summary can exceed GitHub's 1 MiB step-summary limit — This needs on the order of a thousand fragments. The job stays red and the full summary and report are still uploaded. Truncation would add a guard for an unlikely volume.
+  - `[high]` `[patch]` B4: Common shell wrappers silently drop the called script — Parent probe: timeout, nohup, sudo, xargs, find -exec, time, eval, trap and nice each selected nothing with no error. Applied (P1):
+    - Wrappers are unwrapped with fixed positional operands; their option forms fail.
+    - eval/Invoke-Expression text, trap handlers and find -exec commands are rediscovered.
+    - find -execdir, find -exec {} and Invoke-Command fail.
+  - `[high]` `[patch]` B5: Python process/import APIs outside the allowlist are ignored — Parent probe: os.popen, subprocess.getoutput, os.execv, a star import, spec_from_file_location, exec(open()) and asyncio subprocess calls each omitted the helper silently. Applied (P1):
+    - os.popen, getoutput and getstatusoutput literal commands are followed.
+    - These fail coverage: exec/spawn/posix_spawn/asyncio/pty APIs, file-location loaders, exec/compile, partial application and star imports of process modules.
+  - `[low]` `[reject]` B6: Ordinary shell constructs such as `$(date)`, `case` and heredocs fail coverage — This is the loud, conservative failure the matrix prescribes for unresolvable forms. No module reaches it before onboarding: the referenced module checkouts have no custom actions, and Builds' two composite actions discover cleanly. Parsing substitutions, case patterns and heredocs is beyond a direct correction. The docs now state this limitation.
+  - `[low]` `[reject]` B7: Non-composite and tag-pinned actions always fail, undocumented, at line 1 — The failure matches `enforcement.md:29`: custom actions are composite, and third-party `uses:` are full-SHA pinned. What remains is cosmetic line-1 anchoring, and the diagnostic names the target. Threading step line numbers is more than a direct correction.
+  - `[low]` `[reject]` B8: Production blob:none fetch lazily fetches each selected blob — This is the existing delivery_runtime transport pattern. Realistic action scopes are a few files, each Git call is bounded (≤120 s), and a slow module fails visibly. Batch prefetching is beyond a direct correction.
+  - `[low]` `[patch]` B9: Empty registry with a tooling failure says "Registry unavailable." — The production registry is empty today, so every tooling failure was mislabelled; the real cause appeared only on the next ERROR line. Applied (P15): the message is now "No registered module was scanned.", and a regression asserts it beside the real error.
+  - `[low]` `[patch]` B10: Endpoint validation uses str.splitlines and never compares content — Pinned-jscpd probe: form feed, U+2028 and lone CR are not detector line breaks, so splitlines shifted the reported source slice. Applied (P14): source is split on LF only, and the original-offset regression now contains a form feed.
+  - `[low]` `[reject]` B11: Central policy validation is a denylist — The policy is CiCd's committed, reviewed file and never module input. Exact key/value validation would add guards against an unlikely internal edit.
+  - `[low]` `[reject]` B12: Finding and report caps discard actionable findings — The failure is visible and fail-closed. More than 1,000 raw clones, or a report over 16 MiB, is unlikely for composite-action corpora. Partial truncation changes report semantics beyond a direct correction.
+  - `[false]` `[reject]` B13: A thin Bash calibration margin may miss substantial copies — Pinned-jscpd probe: a realistic 13-line Bash script measured 72 tokens and was detected, and a 16-line cp sequence measured 128 tokens and was detected. Only 2-token echo lines fall under the floor, and those are trivial boilerplate.
+  - `[low]` `[reject]` B14: The investigation cites Git-ignored logs — The project convention keeps logs outside version control (run-with-temp), and the key measurements are inlined in the investigation and docs.
+  - `[low]` `[reject]` B15: The Python interpreter is not pinned — The intent prescribes a Python >=3.12 entry point, verified on 3.12 and on the current interpreter. Version-specific module syntax yields a loud invalid-source diagnostic. Pinning or recording runtimes is outside a direct correction.
+  - `[maybe-false]` `[reject]` B16: The reused detector result directory could expose a stale report — Production builds a fresh detector root per scan; only the shared test detector reuses it, and pinned jscpd rewrites the report on every successful run. It would be settled by showing jscpd exit 0 without writing a report. If true, it is low and test-only.
+  - `[low]` `[reject]` B17: read_json duplicates rt.json_read — This is developer-only duplication with no diverging caller named. Adding a limit parameter changes the shared runtime API.
+  - `[low]` `[patch]` B18: The seed report lacks the documented v1 shape — `docs/duplicate-scan.md` documents modules, findings, detector and policy, but the seed declared v1 without them. Applied (P16): the seed carries empty observation fields, and a workflow regression asserts the shape.
+  - `[high]` `[patch]` E1: An unquoted `#` inside a word discards the rest of the line — Parent probe: `if [ $# -lt 1 ]; then ./scripts/helper.sh; fi` omitted the helper silently. Applied (P2): a comment starts only at a word boundary, and shlex comment handling is disabled after the cut.
+  - `[high]` `[patch]` E2: -m/-c are found among the script's own arguments — Parent probe: these omitted the script:
+    - `python helper.py -c cfg`
+    - `bash helper.sh -c Release`
+    - `pwsh -File b.ps1 -config x`
+    - lowercase `-executionpolicy`
+
+    `-m fast` failed spuriously. Applied (P3): interpreter options are parsed positionally, and pwsh -WorkingDirectory, -EncodedCommand and -CommandWithArgs fail.
+  - `[high]` `[patch]` E3: python3.11, python3.15, pypy3, python.exe and pwsh.exe are not recognized — Parent probe: each omitted its script silently. Applied (P1): versioned and `.exe` interpreter spellings are recognized.
+  - `[high]` `[patch]` E4: A shell PYTHONPATH prefix, env assignment, export or step `env:` silently changes import roots — Parent probe: all four forms omitted `support/helper.py`. Applied (P4): these assignments, exports, declarations and composite step env entries fail coverage.
+  - `[high]` `[patch]` E5: os.environ writes, os.putenv and contextlib.chdir are ignored — Parent probe reproduced the omission for an os.environ write, and the decoy selection for contextlib.chdir. Applied (P4): writes of resolution or computed keys through subscript, update, setdefault or putenv fail, and contextlib.chdir is a working-directory mutation.
+  - `[high]` `[patch]` E6: eval, time, timeout, sudo, xargs, trap, Invoke-Expression and `using module` hide calls — Same unrecognized-invocation root cause as B4, reproduced by the parent probe. Applied (P1), including PowerShell `using module` paths.
+  - `[high]` `[patch]` E7: os.popen, getoutput, exec*/spawn*, exec(open()), partial and star imports launch silently — Same root cause as B5, reproduced by the parent probe. Applied (P1).
+  - `[medium]` `[patch]` E8: A UTF-8 BOM hides first-line calls and invalidates Python — Parent probe: a BOM dot-source was omitted, and a BOM Python file reported invalid source. Applied (P6): a leading BOM is ignored for parsing only.
+  - `[medium]` `[patch]` E9: `python -m pip` and other installed tools fail coverage — Parent probe: "missing local Python module: pip". Applied (P5): a required module fails only when its top-level package exists locally.
+  - `[low]` `[reject]` E10: `from . import name` for an `__init__` attribute fails spuriously — The failure is loud and rare in action helper packages. Supporting it needs an initializer branch, beyond a direct correction.
+  - `[low]` `[patch]` E11: `from os import path` selects an unrelated local `path.py` — Verified: the else branch imported a non-local module's attribute names as top-level modules. Applied (P18): only module-less relative imports name modules, and a regression excludes `path.py`.
+  - `[medium]` `[patch]` E12: PowerShell block comments and heredoc bodies are parsed as commands — Parent probe: comment-based help containing an apostrophe failed with "No closing quotation". Applied (P7): `<# … #>` regions that start a line are blanked, preserving line numbers. Heredoc bodies keep the conservative explicit failure rejected under B6.
+  - `[low]` `[reject]` E13: An empty composite `shell:` raises IndexError — Reproduced. The module still fails visibly while its siblings continue, GitHub rejects the same invalid shape, and the fix would be an added guard.
+  - `[false]` `[reject]` E14: JS, Docker and tag-pinned actions keep modules permanently red — `enforcement.md:29` makes these invalid custom actions for every module, so failing them is the matrix's invalid-action row.
+  - `[low]` `[reject]` E15: Overflowing the 128 MiB aggregate staging cap fails later siblings — This needs more than 128 MiB of selected action sources across modules that are each capped at 32 MiB. It fails closed, and rebalancing would add accounting branches.
+  - `[low]` `[reject]` E16: Discovery errors beyond 16 MiB break the fallback persist — This needs about 10^5 failing lines. The initialization stub then remains a conservative failure, and capping would add guards.
+  - `[low]` `[patch]` E17: splitlines also splits on \f, \v, \x85,   and lone CR — Same root cause as B10, confirmed by the pinned-jscpd probe. Applied (P14).
+  - `[medium]` `[patch]` E18: Fragment indentation after list items renders as Markdown — Same root cause as B1. Applied (P8).
+  - `[low]` `[reject]` E19: summary.md can exceed GitHub's 1 MiB limit — Same claim as B3, rejected for the same reason.
+  - `[maybe-false]` `[defer]` E20: The detector could silently skip a staged file, so sources should equal the staged count — carried: same location and claim as the logged B10 deferral (eligible-source accounting in `tools/scan.py:findings`). The code is unchanged, so it is not deferred again.
+  - `[false]` `[reject]` E21: Prefix-sharing module roots could be skipped under skipLocal — Pinned-jscpd probe: roots `Hexalith.Tenants` and `Hexalith.TenantsAdmin` reported the cross-root clone exactly like the control pair.
+  - `[low]` `[reject]` E22: Fresh 36-minute budgets per module can outlast the 55-minute job — Each Git call is ≤120 s, so only pathological network delay reaches this. A killed job leaves the conservative failure report. A shared budget would add plumbing.
+  - `[low]` `[reject]` E23: A timed-out npm or jscpd can orphan grandchild processes — The timeout fails closed and runner teardown removes strays. Process-group handling adds complexity for an unlikely 600 s hang.
+  - `[maybe-false]` `[reject]` E24: The reused detector could validate a stale report — Same claim as B16, settled the same way. If true, it is low.
+  - `[low]` `[patch]` E25: An empty SCAN_DIRECTORY writes reports into the current directory — argparse converts "" to `Path(".")`. The workflow always sets the variable, but local runs could leave it empty. Applied (P17): an empty value counts as missing, and a regression asserts exit 2.
+  - `[low]` `[reject]` E26: The aggregate total keeps the overflowing module's bytes — Same claim as E15.
+  - `[high]` `[patch]` E27: commands() treats calls after `$#`, after a script's `-c`, under env prefixes and inside unlisted wrappers as data — Aggregate of E1, E2, E4 and E6, each reproduced. Applied by P1–P4.
+  - `[low]` `[reject]` E28: Unbounded per-line errors can crash report generation — Same claim as E16.
+  - `[high]` `[patch]` G1: The workflow model ignores job-level needs status, so removing `!cancelled()` goes undetected — Pre-verified by the reviewer's mutation probe. Applied (P9): `PostReleaseWorkflow.job_condition` applies GitHub's implicit success() and transitive needs results. A new test removes `!cancelled()` from scan and from bump and observes each skip.
+  - `[medium]` `[patch]` G2: A real Detector.run nonzero exit is never exercised — Pre-verified. Applied (P10): a real child exiting 3 raises exactly "npm signature verification failed (exit 3)", without its stderr.
+  - `[medium]` `[patch]` G3: Composite `uses:` steps are never exercised — Pre-verified. Applied (P11): a local `uses:` plus a SHA-pinned remote passes with findings; `@v4`, a missing local action and a target outside `.github/actions` fail at the action.
+  - `[medium]` `[patch]` G4: Inline `shell: python` steps are never exercised — Pre-verified. Applied (P12): imports from the root and from `working-directory` select the actual helper, not the decoy.
+  - `[medium]` `[patch]` G5: summary.md diagnostics and copied code are never asserted — Pre-verified. Applied (P13): module diagnostics and the fenced copied fragment are now asserted.
+  - `[high]` `[patch]` G6: Interpreter flags are matched anywhere in the arguments — Same root cause as E2, confirmed by the reviewer's probe. Applied (P3).
+  - `[high]` `[patch]` G7: Wrappers other than env/exec/command drop the inner call — Same root cause as B4. Applied (P1).
+  - `[low]` `[reject]` I1: Discovery over-rejects realistic shell and PowerShell code — Same claim as B6, rejected for the same reason. The docs now state the limitation.
+  - `[high]` `[patch]` I2: timeout, python3.11, node and os.popen calls cause silent under-coverage — Same unrecognized-invocation root cause, reproduced. Applied (P1): node, deno, bun, ruby, perl and php calls of tracked local scripts now fail as unsupported languages.
+  - `[false]` `[reject]` I3: The production partial-clone transport is never executed by the tests — carried: same claim as logged I2. Production uses the fixed anonymous transport and is unchanged.
+  - `[false]` `[reject]` I4: A simulator stands in for the hosted job graph — carried: same claim as logged I1. The concrete model defect behind it is G1, patched separately.
+  - `[false]` `[reject]` I5: Production detects nothing yet, so all evidence is synthetic — carried: same claim as logged I5 and I4.
+  - `[false]` `[reject]` I6: Three-module copies are reported pairwise, not grouped — The intent requires naming each implicated module with its locations. Pairwise findings do that, and the three-module test asserts that their union names all three.
+  - `[low]` `[reject]` I7: One oversized clone volume or malformed endpoint empties the findings — Same claim as B12; this fails closed, per the tool/report failure row.
+  - `[low]` `[patch]` I8: `docs/nightly.md` says scan "receives no credentials" — Its pinned checkout and setup actions use the Contents-read job token by default; only the controller step is token-free. Applied (P19): the wording is corrected.
+  - `[false]` `[reject]` I9: The SHA-pinning and composite-only rules were never stated — `enforcement.md:29` states both rules for every module's custom actions.
+
+Grouping produced 19 patched entries: 5 high (P1–P4, P9), 8 medium (P5–P8, P10–P13) and 6 low (P14–P19). E20 carries the existing deferral, so there is no new one. Thirty-one rows are rejected or carried as false. Every patch is private: discovery or validation behavior, report rendering, the workflow model, documentation, or a regression for a demonstrated state. None adds a public interface or amends the intent contract or plan. The original step-03 implementation subagent belongs to an earlier session and could not be re-engaged, so this session applied the patches directly.
+
 ## Design Notes
 
 One supplied root per module plus `skipLocal` reduces same-module noise, but the wrapper remains authoritative for cross-module policy and validates every finding against its own manifest. Materialize only selected regular blobs into private scratch; neither module Git attributes nor action/script text is executed. Discovery can conservatively include ambiguous candidate files, but cannot report clean when a local-script call remains uncovered.
@@ -146,37 +226,122 @@ Calibrate minimum lines/tokens with the real pinned binary before finalizing pol
 
 Status: done
 
-Added the secretless nightly cross-module duplicate scan after publish-ready, with bump/keepalive continuation after ordinary failure. It uses committed registry and policy data, anonymous live-main snapshots, bounded nonexecuting discovery, verified jscpd 5.4.3, original-source locations/code, durable failure reports and explicit zero-scope outcomes. The intent contract is preserved verbatim.
+**Implemented change:** Nightly now runs a secretless cross-module duplicate scan after publish-ready and before the Builds bump.
 
-**Files changed:**
+- It fetches each registered module's anonymous live main, recording full revisions.
+- It discovers custom-action sources and the local scripts they call, statically and without executing module code.
+- It runs integrity-pinned, signature-verified jscpd 5.4.3 under CiCd's central policy.
+- Cross-module fragments and incomplete coverage fail the night. Bump and keepalive still continue.
+- The intent contract is preserved verbatim.
 
-- `.github/workflows/nightly.yml` — read-only scan job, failure seeds, summary/artifact and bump ordering.
+This follow-up review pass hardened discovery, reporting and the workflow model:
+
+- Wrappers and evaluators are unwrapped or rediscovered: timeout, nohup, sudo, eval, trap, find -exec and others.
+- Interpreter options are read only before the script operand. Versioned and `.exe` interpreter spellings are recognized.
+- Tracked scripts in unsupported languages fail coverage.
+- os.popen and getoutput are followed; unsupported process/import APIs fail.
+- Import-path environment overrides fail, whether set in shell, step `env` or Python.
+- Word-internal `#`, byte-order marks and PowerShell comment help no longer hide or invent calls.
+- `python -m` of an installed tool is treated as non-local.
+- Copied fragments render in inert fences and use the detector's LF-only line numbering.
+- The summary, seed and CLI edge cases are corrected.
+- The workflow model now enforces GitHub's job-level needs semantics.
+
+**Files changed** (story total; † = changed in this follow-up pass):
+
+- `.github/workflows/nightly.yml` † — read-only scan job, failure seeds, summary/artifact and bump ordering. This pass: the seed carries the documented v1 report shape.
 - `.jscpd.json` — central weak-mode 10-line/50-token policy for YAML, Bash, PowerShell and Python.
 - `tools/jscpd/package.json`, `tools/jscpd/package-lock.json` — exact detector version and dependency integrity pins.
-- `tools/scan.py`, `tools/scan.py.lock` — locked controller, signature/version checks, snapshots, validated reports and CLI verdict.
-- `tools/scan_discovery.py` — bounded action/script/import discovery and explicit unsupported-coverage diagnostics.
-- `tools/tests/test_scan.py`, `tools/tests/test_scan.py.lock` — 28 enabled real-Git/pinned-detector tests, including exact source ranges.
-- `tools/tests/test_nightly_workflow.py` — 25 behavioral workflow tests, including failure continuation and qualification/cancellation.
-- `docs/duplicate-scan.md`, `docs/nightly.md`, `setup/README.md` — scope, supported/rejected forms, thresholds, reporting and operations.
-- `_bmad-output/implementation-artifacts/story-9-detector-investigation.md` — live Memories/Tenants identities, detector evidence and empirical calibration.
-- This story spec — plan, completed checklist, per-finding review triage, deferred item and verification results.
+- `tools/scan.py` † — locked controller, signature/version checks, snapshots, validated reports and CLI verdict. This pass: LF-only slicing, fenced fragments, zero-registry failure message, empty `SCAN_DIRECTORY` rejection.
+- `tools/scan_discovery.py` † — bounded static action/script/import discovery. This pass: wrappers and evaluators, positional options, interpreter spellings, environment and process-API coverage failures, comment/BOM handling, non-local `-m` and from-import fixes.
+- `tools/tests/test_scan.py`, `tools/tests/test_scan.py.lock` † — 33 enabled real-Git/pinned-detector tests, 5 of them new this pass.
+- `tools/tests/test_nightly_workflow.py` † — 26 behavioral workflow tests. This pass: job-level implicit success() and transitive needs, a `!cancelled()` mutation test, the seed shape.
+- `docs/duplicate-scan.md` †, `docs/nightly.md` †, `setup/README.md` — scope, supported and failing forms, the conservative over-rejection limit, thresholds, reporting, job-token wording.
+- `_bmad-output/implementation-artifacts/story-9-detector-investigation.md` — live Memories/Tenants identities, detector evidence and calibration.
+- This story spec † — plan, checklist, both triage logs, the existing deferral and this result.
 
-**Review:** Four independent layers reported 30 observations. Twenty-three observations were patched in 15 entries (14 high, 1 medium); B10 remains one unverified deferral. The six rejected auditor observations and their individual reasons are recorded in the triage log: hosted qualification was not claimed, local Git fixtures exercise the production boundary, static analysis is intentionally nonexecuting, calibration distinguishes synthetic and live scope, setup defines registration, and hoisting belongs to later migration. All concrete discovery defects from the other layers were retained and repaired.
+**Review findings breakdown (this pass):** 62 findings — high 14, medium 9, low 28, false 8, maybe-false 3.
 
-**Follow-up review recommendation:** true. This first pass patched 14 high entries and one medium entry. The specific remaining unverified risk is whether other scripting forms outside the exercised wrapper/import matrix can still differ from the bounded static model; eligible-source accounting also remains unverified as B10. Further review should inspect those boundaries rather than repeat already-covered examples.
+Patches applied (19 entries):
+
+- **5 high:**
+  - P1: unrecognized invocation forms silently treated as data
+  - P2: word-internal `#` treated as a comment
+  - P3: interpreter options matched anywhere in the arguments
+  - P4: import-path environment overrides
+  - P9: workflow model missing needs semantics
+- **8 medium:**
+  - P5: `-m` of installed tools
+  - P6: byte-order mark
+  - P7: PowerShell comment help
+  - P8: inert fragments
+  - P10–P13: verification gaps G2–G5
+- **6 low:**
+  - P14: LF slicing
+  - P15: zero-registry message
+  - P16: seed shape
+  - P17: empty `SCAN_DIRECTORY`
+  - P18: non-local from-import
+  - P19: job-token wording
+
+Deferred: nothing new. E20 carries the existing eligible-source deferral (the earlier B10).
+
+Rejected rows, with the recorded reasons:
+
+- **Cosmetic, rare or fail-closed lows whose fix exceeds a direct correction:**
+  - B2: Markdown in paths
+  - B3/E19: 1 MiB summary limit
+  - B7: line-1 anchoring; the action rules come from enforcement policy
+  - B8: lazy blob fetch
+  - B11: policy denylist
+  - B12/I7: caps discard findings
+  - B14: Git-ignored logs, by convention
+  - B15: the intent prescribes Python >=3.12
+  - B17: shared-runtime API change
+  - E10: relative attribute import
+  - E13: empty shell
+  - E15/E26: aggregate staging
+  - E16/E28: unbounded errors
+  - E22: per-module budgets
+  - E23: orphaned grandchildren
+- **Conservative over-rejection of `$(...)`, case, heredocs and PowerShell blocks** (B6/I1): matrix-prescribed loud failure, no current module reaches it, and the limit is now documented.
+- **Refuted:**
+  - B13: realistic Bash measured 72 and 128 tokens and was detected
+  - E14, I9: rules come from `enforcement.md:29`
+  - E21: prefix-sharing roots were detected
+  - I6: pairwise findings name every module
+- **Carried as false:** I3, I4, I5.
+- **Maybe-false:** B16/E24, a stale test-only report; if true it is low.
+
+**Follow-up review recommendation:** true. This follow-up pass patched 5 high, 8 medium and 6 low entries. The specific unverified risk is that discovery remains an allowlist recognizer. An unlisted command, alias or API whose operand is a local script is still treated as data, which is fail-open by construction. This pass closed 33 reproduced omissions, and unreviewed classes remain:
+
+- `$GITHUB_ENV`/`$GITHUB_PATH` writes that affect later steps
+- shell aliases
+- PowerShell invocation forms outside the handled set
+
+A further pass should examine that unknown-command default rather than enumerate more examples.
 
 **Verification performed:**
 
-- `run-with-temp uv run --locked --script tools/tests/test_scan.py -v` — 28 tests passed after final repairs.
-- `run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py -v` — 28 tests passed after final repairs.
-- `run-with-temp uv run --locked --script tools/tests/test_nightly_workflow.py -v` — 25 tests passed.
-- `run-with-temp uv run --locked --script tools/check_global.py --project-root .` — final exit 0; 14 suites / 314 tests passed, plus committed render/input, immutable delivery bootstrap, reproducibility, schema/caller interface, acceptable Builds publication, actionlint 1.7.12 and online zizmor 1.32.0 checks.
-- Matrix audit — all 10 rows covered by enabled passing cases; 53 distinct scanner/workflow methods, with no skips.
-- Original-range regression — exact 3–20 and 6–23 offsets, both original source slices, fragment and summary locations are asserted; the endpoint +1 mutation now fails.
+- `run-with-temp uv run --locked --script tools/tests/test_scan.py -v` — 33 tests passed.
+- `run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py -v` — 33 tests passed.
+- `run-with-temp uv run --locked --script tools/tests/test_nightly_workflow.py -v` — 26 tests passed.
+- `run-with-temp uv run --locked --script tools/check_global.py --project-root .`:
+  - The first attempt hit the 10-minute tool limit and was rerun detached.
+  - A tokenless run failed only the three online checks that require a read-only token.
+  - With the CiCd-agent profile token supplied privately, it exited 0: 14 suites / 320 tests, plus committed render/input, immutable delivery bootstrap, reproducibility, schemas/caller interfaces, acceptable Builds publication, actionlint 1.7.12 and online zizmor 1.32.0. No token appears in the log.
+- Probes: 33 silent omissions at HEAD and 0 in the patched tree, plus the module-corpus scan and pinned-jscpd measurements described in the triage log.
 - `git diff --check` — passed.
-- One parallel interpreter run encountered uv's shared script-environment recreation race (`ModuleNotFoundError: yaml`). Its failed log is preserved; sequential current/floor reruns passed, as did the final global gate.
-- Useful logs: `_bmad-output/implementation-artifacts/story-9-parent-postreview-*.log`, plus the counter-check log. All disposable jobs used private wrapper scratch.
+- Logs: `_bmad-output/implementation-artifacts/story-9-followup-*.log` (Git-ignored). Disposable jobs used wrapper scratch.
 
-**Residual risks:** Production setup is currently empty, so a hosted nonempty nightly scan has not been observed. Future adopted modules exercise actual Actions timing and source patterns beyond the fixtures. Recognized unsupported constructs fail coverage explicitly; static detection cannot prove semantic equivalence or model arbitrary runtime behavior. The observed Memories/Tenants action corpora are empty at their recorded revisions; the separate 97-file tooling diagnostic and synthetic calibration do not establish future production noise rates. No module, Builds, credential or delivered-ref changes were made.
+**Residual risks:**
+
+- The allowlist recognizer risk described above.
+- The conservative failure on common shell and PowerShell constructs will turn realistic modules red until central discovery is extended. Measure it at onboarding.
+- Eligible-source accounting remains the carried deferral.
+- The production registry is empty, so no hosted nonempty nightly scan has been observed.
+- Extreme clone volume can still empty findings or overflow the step summary. Both fail closed.
+
+No module, Builds, credential or delivered-ref changes were made.
 
 The reviewed files are finalized as a local commit; the finalization check verifies the working copy is clean.

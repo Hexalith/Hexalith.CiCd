@@ -357,6 +357,17 @@ class ScanTests(unittest.TestCase):
             ('Start-Process python -ArgumentList scripts/helper.py -Wait', "pwsh", "process invocation"),
             ('uv run --directory scripts helper.py', "bash", "uv working-directory"),
             ('uv run --directory scripts python helper.py', "bash", "uv working-directory"),
+            ('nice -n 5 python scripts/helper.py', "bash", "wrapper options"),
+            ('PYTHONPATH=scripts python -m helper', "bash", "environment"),
+            ('env PYTHONPATH=scripts python -m helper', "bash", "environment"),
+            ('export PYTHONPATH=scripts; python -m helper', "bash", "environment"),
+            ('eval "cd scripts"; python helper.py', "bash", "working directory"),
+            ('find . -execdir python helper.py \\;', "bash", "execdir"),
+            ('find scripts -name "*.py" -exec {} \\;', "bash", "find -exec"),
+            ('Invoke-Command -FilePath scripts/helper.ps1', "pwsh", "Invoke-Command"),
+            ('pwsh -WorkingDirectory scripts -File helper.ps1', "pwsh", "working-directory"),
+            ('pwsh -EncodedCommand ZQBjAGgAbwA=', "pwsh", "encoded"),
+            ('node scripts/tool.js', "bash", "unsupported local-script language"),
         )
         for command, shell, diagnostic in cases:
             with self.subTest(command=command):
@@ -367,12 +378,160 @@ class ScanTests(unittest.TestCase):
                     w.write(module, "scripts/helper.py", block("python"))
                     w.write(module, "other.py", block("python", "actual root target"))
                     w.write(module, "scripts/other.py", "# clean subdirectory decoy\n")
+                    w.write(module, "scripts/tool.js", "console.log('unsupported language');\n")
                     w.commit(w.paths[module])
                 report = w.scan(self.factory)
                 self.assertEqual(report["result"], "fail", report)
                 for row in report["modules"]:
                     self.assertEqual(row["result"], "fail", row)
                     self.assertTrue(any("action.yml:" in error and diagnostic in error for error in row["errors"]), row)
+
+    def test_wrapped_option_positioned_and_spelled_interpreter_calls_reach_actual_scripts(self):
+        cases = (
+            ("timeout 60 ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("nohup ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("time ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("sudo ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("nice ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("eval ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("trap './scripts/helper.sh' EXIT", "bash", "scripts/helper.sh"),
+            ("find . -name '*.txt' -exec ./scripts/helper.sh {} \\;", "bash", "scripts/helper.sh"),
+            ("if [ $# -lt 1 ]; then ./scripts/helper.sh; fi  # trailing comment", "bash", "scripts/helper.sh"),
+            ("python scripts/helper.py -c config.yml -m fast", "bash", "scripts/helper.py"),
+            ("python -u -X dev scripts/helper.py", "bash", "scripts/helper.py"),
+            ("python3.11 scripts/helper.py", "bash", "scripts/helper.py"),
+            ("python.exe scripts/helper.py", "bash", "scripts/helper.py"),
+            ("bash scripts/helper.sh -c Release", "bash", "scripts/helper.sh"),
+            ("pwsh -NoProfile -executionpolicy Bypass -File scripts/helper.ps1 -config release", "pwsh", "scripts/helper.ps1"),
+            ("pwsh.exe -File scripts/helper.ps1", "pwsh", "scripts/helper.ps1"),
+            ("Invoke-Expression './scripts/helper.ps1'", "pwsh", "scripts/helper.ps1"),
+            ("using module ./scripts/helper.psm1", "pwsh", "scripts/helper.psm1"),
+        )
+        formats = {".sh": "bash", ".py": "python", ".ps1": "powershell", ".psm1": "powershell"}
+        for command, shell, target in cases:
+            with self.subTest(command=command):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, command, shell=shell)
+                    w.write(module, target, block(formats[Path(target).suffix]))
+                    w.commit(w.paths[module])
+                report = w.scan(self.factory)
+                self.assertEqual([row["errors"] for row in report["modules"]], [[], []], report)
+                for row in report["modules"]:
+                    self.assertIn(target, {item["path"] for item in row["files"]})
+                self.assertTrue(any(row["first"]["path"] == target and row["second"]["path"] == target
+                                    for row in report["findings"]), report)
+
+    def test_python_process_apis_are_followed_or_fail_explicitly(self):
+        for source in ("import os\nos.popen('python scripts/helper.py')\n",
+                       "import subprocess\nsubprocess.getoutput('python scripts/helper.py')\n"):
+            with self.subTest(source=source):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, "python scripts/start.py")
+                    w.write(module, "scripts/start.py", source)
+                    w.write(module, "scripts/helper.py", block("python"))
+                    w.commit(w.paths[module])
+                report = w.scan(self.factory)
+                self.assertEqual([row["errors"] for row in report["modules"]], [[], []], report)
+                self.assertTrue(any(row["first"]["path"] == "scripts/helper.py" for row in report["findings"]), report)
+        failing = (
+            ("import os\nos.execv('/usr/bin/python3', ['python3', 'scripts/helper.py'])\n", "process/import API"),
+            ("from subprocess import *\nrun(['python', 'scripts/helper.py'])\n", "star import"),
+            ("import importlib.util\nimportlib.util.spec_from_file_location('h', 'scripts/helper.py')\n", "process/import API"),
+            ("exec(open('scripts/helper.py').read())\n", "process/import API"),
+            ("import asyncio\nasyncio.create_subprocess_exec('python', 'scripts/helper.py')\n", "process/import API"),
+            ("import functools, subprocess\nfunctools.partial(subprocess.run, cwd='support')(['python', 'helper.py'])\n",
+             "partial"),
+            ("import os, subprocess\nos.environ['PYTHONPATH'] = 'support'\nsubprocess.run(['python', '-m', 'helper'])\n",
+             "environment"),
+            ("import os, subprocess\nos.environ.update(PYTHONPATH='support')\nsubprocess.run(['python', '-m', 'helper'])\n",
+             "environment"),
+            ("import contextlib, subprocess\nwith contextlib.chdir('support'):\n    subprocess.run(['python', 'helper.py'])\n",
+             "working-directory"),
+        )
+        for source, diagnostic in failing:
+            with self.subTest(source=source):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, "python scripts/start.py")
+                    w.write(module, "scripts/start.py", source)
+                    w.write(module, "helper.py", "# clean root decoy\n")
+                    w.write(module, "support/helper.py", block("python"))
+                    w.write(module, "scripts/helper.py", block("python", "script helper"))
+                    w.commit(w.paths[module])
+                report = w.scan(self.factory)
+                self.assertEqual(report["result"], "fail", report)
+                for row in report["modules"]:
+                    self.assertEqual(row["result"], "fail", row)
+                    self.assertTrue(any("scripts/start.py:" in error and diagnostic in error for error in row["errors"]), row)
+
+    def test_comments_bom_installed_tools_and_attribute_imports_keep_actual_scope(self):
+        w = self.workspace()
+        for module in w.paths:
+            w.action(module, "python -m pip --version\npython scripts/start.py\npwsh -File scripts/help.ps1\n"
+                     "pwsh -File scripts/bom.ps1\npython scripts/bom.py")
+            w.write(module, "scripts/start.py", "from os import path\n")
+            w.write(module, "scripts/path.py", "# unrelated name of a non-local module attribute\n")
+            w.write(module, "scripts/help.ps1", "<#\n.SYNOPSIS\nGets the module's version.\n.EXAMPLE\n"
+                    "./scripts/missing.ps1\n#>\n. ./scripts/leaf.ps1\n")
+            w.write(module, "scripts/leaf.ps1", block("powershell"))
+            w.write(module, "scripts/bom.ps1", "﻿. ./scripts/bomleaf.ps1\n")
+            w.write(module, "scripts/bomleaf.ps1", block("powershell", "bom"))
+            w.write(module, "scripts/bom.py", "﻿import bomhelper\n")
+            w.write(module, "scripts/bomhelper.py", block("python", "bom"))
+            w.commit(w.paths[module])
+        report = w.scan(self.factory)
+        self.assertEqual([row["errors"] for row in report["modules"]], [[], []], report)
+        for row in report["modules"]:
+            selected = {item["path"] for item in row["files"]}
+            self.assertLessEqual({"scripts/leaf.ps1", "scripts/bomleaf.ps1", "scripts/bomhelper.py"}, selected)
+            self.assertNotIn("scripts/path.py", selected)
+        self.assertTrue(any(row["first"]["path"] == "scripts/bomleaf.ps1" for row in report["findings"]), report)
+
+    def test_composite_uses_follow_local_actions_and_require_pinned_remote_targets(self):
+        w = self.workspace()
+        for module in w.paths:
+            w.write(module, ".github/actions/outer/action.yml", "name: Outer\nruns:\n  using: composite\n  steps:\n"
+                    "    - uses: ./.github/actions/inner\n    - uses: actions/checkout@" + "a" * 40 + "\n")
+            w.write(module, ".github/actions/inner/action.yaml", "name: Inner\nruns:\n  using: composite\n  steps:\n"
+                    "    - shell: bash\n      run: python scripts/helper.py\n")
+            w.write(module, "scripts/helper.py", block("python"))
+            w.commit(w.paths[module])
+        report = w.scan(self.factory)
+        self.assertEqual([row["errors"] for row in report["modules"]], [[], []], report)
+        self.assertTrue(any(row["first"]["path"] == "scripts/helper.py" for row in report["findings"]), report)
+        for target, diagnostic in (("actions/checkout@v4", "unpinned action target"),
+                                   ("./.github/actions/missing", "missing/ambiguous local action"),
+                                   ("./elsewhere", "missing/ambiguous local action")):
+            with self.subTest(target=target):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.write("Hexalith.Alpha", ".github/actions/outer/action.yml", "name: Outer\nruns:\n  using: composite\n"
+                        "  steps:\n    - uses: " + target + "\n")
+                w.write("Hexalith.Alpha", "elsewhere/action.yml", "name: Elsewhere\nruns:\n  using: composite\n  steps: []\n")
+                w.commit(w.paths["Hexalith.Alpha"])
+                report = w.scan(self.factory)
+                self.assertEqual(report["result"], "fail", report)
+                self.assertTrue(any(".github/actions/outer/action.yml:" in error and diagnostic in error
+                                    for error in report["modules"][0]["errors"]), report)
+
+    def test_inline_python_action_shell_starts_from_working_directory(self):
+        for extra, target, decoy in (("", "helper.py", "scripts/helper.py"),
+                                     ("      working-directory: scripts\n", "scripts/helper.py", "helper.py")):
+            with self.subTest(working_directory=bool(extra)):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, "import helper", shell="python", extra=extra)
+                    w.write(module, target, block("python"))
+                    w.write(module, decoy, "# inactive clean import decoy\n")
+                    w.commit(w.paths[module])
+                report = w.scan(self.factory)
+                self.assertEqual([row["errors"] for row in report["modules"]], [[], []], report)
+                for row in report["modules"]:
+                    selected = {item["path"] for item in row["files"]}
+                    self.assertIn(target, selected)
+                    self.assertNotIn(decoy, selected)
+                self.assertTrue(any(row["first"]["path"] == target for row in report["findings"]), report)
 
     def test_literal_data_arguments_do_not_become_unsupported_execution_forms(self):
         for shell in ("bash", "pwsh"):
@@ -468,12 +627,23 @@ class ScanTests(unittest.TestCase):
             self.assertEqual(report["result"], "fail", report)
             self.assertTrue(all(any("scripts/start.py:2:" in error and "env" in error for error in row["errors"])
                                 for row in report["modules"]), report)
+        w = self.workspace()
+        for module in w.paths:
+            w.action(module, "python -m helper", extra="      env:\n        PYTHONPATH: support\n")
+            w.write(module, "helper.py", "# root decoy\n")
+            w.write(module, "support/helper.py", block("python"))
+            w.commit(w.paths[module])
+        report = w.scan(self.factory)
+        self.assertEqual(report["result"], "fail", report)
+        self.assertTrue(all(any("action.yml:" in error and "step environment" in error for error in row["errors"])
+                            for row in report["modules"]), report)
 
     def test_actual_detector_original_offsets_source_slices_and_summary_ranges(self):
         w = self.workspace()
         target = ".github/actions/dormant/code.py"
         copied = block("python", "original-offset-calibration")
-        prefixes = {"Hexalith.Alpha": "import decimal\n\n", "Hexalith.Beta": "from fractions import Fraction\n\n\n\n\n"}
+        # A form feed is not a detector line break; it must not shift the slice.
+        prefixes = {"Hexalith.Alpha": "import decimal  # \f page\n\n", "Hexalith.Beta": "from fractions import Fraction\n\n\n\n\n"}
         expected = {"Hexalith.Alpha": (3, 20), "Hexalith.Beta": (6, 23)}
         for module in w.paths:
             w.write(module, target, prefixes[module] + copied)
@@ -490,9 +660,16 @@ class ScanTests(unittest.TestCase):
             module = endpoint["module"]
             self.assertEqual(endpoint["path"], target)
             self.assertEqual((endpoint["start"], endpoint["end"]), expected[module])
-            source = (w.paths[module] / target).read_text().splitlines()
+            source = (w.paths[module] / target).read_text().split("\n")
             self.assertEqual("\n".join(source[endpoint["start"] - 1:endpoint["end"]]), copied.rstrip("\n"))
             self.assertIn(f"{module}/{target}:{expected[module][0]}-{expected[module][1]}", summary)
+        # The copied code itself is in an inert top-level fence.
+        self.assertIn("\n```python\n" + copied.rstrip("\n") + "\n```\n", summary)
+        endpoint = {"module": "Hexalith.Alpha", "path": "a.sh", "start": 1, "end": 2}
+        rendered = sc.summary({"result": "fail", "modules": [], "errors": [], "findings": [
+            {"format": "bash", "first": endpoint, "second": endpoint | {"module": "Hexalith.Beta"},
+             "fragment": "echo ```\n    <b>[link](https://example.invalid)</b>"}]})
+        self.assertIn("\n````bash\necho ```\n    <b>[link](https://example.invalid)</b>\n````\n", rendered)
 
     def test_live_main_is_authoritative_committed_registry_and_reproducibility(self):
         w = self.workspace()
@@ -599,6 +776,7 @@ class ScanTests(unittest.TestCase):
             error = report["modules"][0]["errors"][0]
             self.assertIn("action.yml:", error)
             self.assertIn("local-script", error)
+            self.assertIn("  - " + error + "\n", (w.output / "summary.md").read_text())
 
     def test_nonexecuting_git_and_anonymous_transport_environment(self):
         w = self.workspace(("Hexalith.Alpha",))
@@ -638,6 +816,11 @@ class ScanTests(unittest.TestCase):
             report = w.scan(self.factory)
         self.assertEqual(report["result"], "fail")
         self.assertIn("duplicate detector failed", report["errors"])
+        # A real nonzero child exit fails the named boundary without its stderr.
+        with self.assertRaises(rt.DeliveryError) as raised:
+            self.detector.run([sys.executable, "-c", "import sys; sys.stderr.write('inert-secret'); sys.exit(3)"],
+                              "npm signature verification", 20)
+        self.assertEqual(str(raised.exception), "npm signature verification failed (exit 3)")
 
     def test_invalid_and_outside_detector_reports_fail_closed(self):
         w = self.workspace()
@@ -691,6 +874,10 @@ class ScanTests(unittest.TestCase):
         with mock.patch.object(sc.Detector, "run", wrong_version):
             report = w.scan(sc.Detector)
         self.assertIn("detector reported unexpected version", report["errors"])
+        # An empty registry with a tooling failure names the actual cause.
+        summary = (w.output / "summary.md").read_text()
+        self.assertIn("No registered module was scanned.", summary)
+        self.assertIn("- ERROR: detector reported unexpected version", summary)
         lock_path = w.cicd / "tools/jscpd/package-lock.json"
         lock = json.loads(lock_path.read_bytes())
         del lock["packages"]["node_modules/jscpd"]["integrity"]
@@ -724,6 +911,11 @@ class ScanTests(unittest.TestCase):
             w.commit(w.cicd)
             self.assertEqual(sc.main(["--project-root", str(w.cicd), "--output", str(w.output)]), 1)
         self.assertEqual(json.loads((w.output / "report.json").read_bytes())["result"], "fail")
+        # An empty SCAN_DIRECTORY is missing output, never the current directory.
+        with mock.patch.dict(os.environ, {"SCAN_DIRECTORY": ""}), mock.patch("sys.stderr", new_callable=io.StringIO):
+            with self.assertRaises(SystemExit) as raised:
+                sc.main(["--project-root", str(w.cicd)])
+        self.assertEqual(raised.exception.code, 2)
         self.assertIn("FAIL", (w.output / "summary.md").read_text())
 
 

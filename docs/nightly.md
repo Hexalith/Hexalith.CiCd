@@ -6,7 +6,8 @@ run; as with any GitHub concurrency group, a newer queued run replaces an older
 pending one. Skipped non-main dispatches use a separate group.
 It executes `dispatch → wait → publish-ready → scan → bump → bump-push → delivery-wait
 → keepalive`. Release dispatch, release wait, publication and delivery observation
-use `cicd-app`; scan has only Contents read and receives no credentials, while
+use `cicd-app`; scan has only a Contents-read job token, used by its pinned
+checkout/setup actions and never passed to the scan controller, while
 the bump producer uses only a read-only job token. The writer and
 keepalive use their own job tokens. There are no push or pull request triggers.
 

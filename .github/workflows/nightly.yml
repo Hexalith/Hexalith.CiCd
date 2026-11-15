@@ -1455,7 +1455,7 @@ jobs:
     steps:
       - name: Seed conservative scan report and summary before checkout
         run: >-
-          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['SCAN_DIRECTORY']); p.mkdir(mode=448,parents=True,exist_ok=True); (p/'report.json').write_text(json.dumps({'schema':'hexalith.duplicate-scan.v1','result':'fail','errors':['controller checkout or tooling unavailable']})+'\n'); (p/'summary.md').write_text('# Cross-module duplicate scan\n\nFAIL: controller checkout or tooling unavailable; coverage is unverified.\n')"
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['SCAN_DIRECTORY']); p.mkdir(mode=448,parents=True,exist_ok=True); (p/'report.json').write_text(json.dumps({'schema':'hexalith.duplicate-scan.v1','result':'fail','controllerRevision':'','modules':[],'findings':[],'errors':['controller checkout or tooling unavailable'],'detector':{},'policy':{}})+'\n'); (p/'summary.md').write_text('# Cross-module duplicate scan\n\nFAIL: controller checkout or tooling unavailable; coverage is unverified.\n')"
 
       - name: Checkout CiCd scan controller and policy
         id: checkout
