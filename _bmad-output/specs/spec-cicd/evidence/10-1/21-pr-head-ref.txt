@@ -1,0 +1,29 @@
+POST repos/Hexalith/Hexalith.Commons/git/refs
+request={"ref": "refs/heads/fix/cicd-token-qualification-20261115-1752-update-head", "sha": "1580e3a60b853de4e3cebf8f134fe4011683fd2d"}
+exit=1
+HTTP/2.0 403 Forbidden
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning
+Content-Security-Policy: default-src 'none'
+Content-Type: application/json; charset=utf-8
+Date: Sun, 15 Nov 2026 17:48:12 GMT
+Github-Authentication-Token-Expiration: 2027-11-14 23:00:00 UTC
+Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+Server: github.com
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+Vary: Accept-Encoding, Accept, X-Requested-With
+X-Accepted-Github-Permissions: contents=write; contents=write,workflows=write
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+X-Github-Api-Version-Selected: 2022-11-28
+X-Github-Edge-Region: fra
+X-Github-Media-Type: github.v3; format=json
+X-Github-Request-Id: D712:28BACB:111D0E41:1A0E1E42:6AF9F05B
+X-Ratelimit-Limit: 5000
+X-Ratelimit-Remaining: 4985
+X-Ratelimit-Reset: 1794767874
+X-Ratelimit-Resource: core
+X-Ratelimit-Used: 15
+X-Xss-Protection: 0
+
+{"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}gh: Resource not accessible by personal access token (HTTP 403)

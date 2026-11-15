@@ -1,0 +1,20 @@
+candidate=f789cd85599fc3dbd7bf02c24cbeb2f381b0287a
+current_main=fbf4e94233821f6ca336af91a06feaaeb7a16855
+existing_main_workflow_commit=1705ebc20195a9f830da066144dd97b6bc4c0ace
+:100644 100644 7ea05a1 47b63bb M	.github/workflows/ci.yml
+:100644 100644 f948775 195fd70 M	.github/workflows/release.yml
+
+commit f789cd85599fc3dbd7bf02c24cbeb2f381b0287a
+Author:     Jérôme Piquot <jpiquot@itaneo.com>
+AuthorDate: Thu Nov 12 00:04:25 2026 +0100
+Commit:     Jérôme Piquot <jpiquot@itaneo.com>
+CommitDate: Thu Nov 12 00:04:25 2026 +0100
+
+    style(test): satisfy sdk 11 collection diagnostics
+
+ .../AspireDaprDomainModuleTest.cs                  | 35 ++++++++++++++--------
+ .../HexalithServiceDefaultsTest.cs                 | 11 ++++---
+ ...ntAccessProjectionHandlerReplayToleranceTest.cs |  4 +--
+ .../TenantAccessProjectionHandlerTest.cs           |  2 +-
+ .../Helpers/ObjectToDictionaryHelper.cs            |  2 +-
+ 5 files changed, 33 insertions(+), 21 deletions(-)

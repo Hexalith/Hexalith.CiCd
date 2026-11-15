@@ -1,0 +1,55 @@
+commit 1705ebc20195a9f830da066144dd97b6bc4c0ace
+Author:     Jérôme Piquot <jpiquot@itaneo.com>
+AuthorDate: Thu Nov 12 12:42:07 2026 +0100
+Commit:     Jérôme Piquot <jpiquot@itaneo.com>
+CommitDate: Thu Nov 12 12:42:07 2026 +0100
+
+    feat!: require .NET 11 for common libraries
+
+    Retarget the active libraries and tests with the published Builds 5
+    configuration. Keep package-mode solution builds on packaged dependency
+    edges and validate every packed runtime asset with a .NET 11 consumer.
+
+    BREAKING CHANGE: All current Commons runtime packages require .NET 11.
+
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 6812aa0..7ea05a1 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -26,10 +26,9 @@ jobs:
+       - run: python3 -m unittest discover -s tools -p 'test_verify_nuget_release.py' -v
+
+   ci:
+-    uses: Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++    uses: Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec
+     with:
+       solution: Hexalith.Commons.slnx
+-      additional-sdk-version: '10.0.404'
+       run-consumer-validation: true
+       test-platform: microsoft-testing-platform
+       unit-test-projects: |
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index c8acaea..f948775 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -89,17 +89,16 @@ jobs:
+           submodules: false
+           persist-credentials: false
+       # Authentication stays in this job so NuGet sees release.yml in this repository.
+-      - name: Install build SDK and .NET 10 runtime
++      - name: Install the selected .NET 11 SDK
+         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+         with:
+           global-json-file: global.json
+-          dotnet-version: '10.0.x'
+       - name: Prepare release
+         id: prepare
+-        uses: Hexalith/Hexalith.Builds/Github/prepare-domain-release@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++        uses: Hexalith/Hexalith.Builds/Github/prepare-domain-release@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec
+         with:
+           solution: Hexalith.Commons.slnx
+-          builds-execution-sha: 6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++          builds-execution-sha: 9f5d751f7ab0b7a621dcd18b589bf061fabac6ec
+           expected-package-count: 12
+           publication-flag: ${{ vars.HEXALITH_RELEASE_PUBLISH_ENABLED }}
+           nuget-user: ${{ vars.NUGET_USER }}

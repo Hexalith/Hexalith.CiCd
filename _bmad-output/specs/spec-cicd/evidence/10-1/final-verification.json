@@ -1,0 +1,62 @@
+{
+  "utc": "2026-11-15T17:51:37.262195+00:00",
+  "module_count": 17,
+  "commons_main_ref_unchanged": true,
+  "commons_main_tree_identical": true,
+  "local_owned_file_hashes_and_builds_gitlink_identical": true,
+  "commons_worktree_status": "",
+  "other_module_main_changes_during_observation": {
+    "Hexalith.FrontComposer": {
+      "before": "d654bb412bfc54635b356527a89988a99f91992e",
+      "after": "923988d855cd6131b4287e3da763f12baf60ab22"
+    },
+    "Hexalith.Platform": {
+      "before": "ddb1c0b141372a66d4a9d9c231d0041afbb7cd0c",
+      "after": "217889d7830553c9a8c5340f02f9ec5fe87c8001"
+    }
+  },
+  "probe_write_target": "Hexalith/Hexalith.Commons disposable refs only",
+  "final_remote_heads": [
+    [
+      "refs/heads/main",
+      "fbf4e94233821f6ca336af91a06feaaeb7a16855"
+    ]
+  ],
+  "matching_probe_prs": 0,
+  "matching_dispatch_runs": 0,
+  "default_GH_CONFIG_DIR_after": "/home/administrator/.config/gh-cicd-agent",
+  "inherited_override_presence_after": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "retained_evidence_files_checked_for_secret_and_pat_preview": 40,
+  "story_checked_for_secret_and_pat_preview": true,
+  "final_local_verification_utc": "2026-11-15T17:57:24.237802+00:00",
+  "earlier_story_only_unstaged_whitespace_check": {
+    "command": "git diff --check -- _bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md",
+    "exit": 0,
+    "coverage": "Unstaged story diff only; the then-untracked evidence files were excluded."
+  },
+  "text_log_whitespace_normalization": {
+    "files": [
+      "11-product-commit.txt",
+      "13-product-push.txt",
+      "19-pr-base-push.txt",
+      "33-final-git-objects.txt",
+      "34-existing-workflow-history.txt"
+    ],
+    "changes": "Trim trailing spaces/tabs and remove extra blank lines at EOF.",
+    "preserved_content": "Permission messages, response headers and bodies, and full revisions.",
+    "git_diff_transcripts": "Whitespace-normalized evidence excerpts; not patches to apply."
+  },
+  "scoped_cached_check_before_normalization": {
+    "command": "git diff --cached --check bfeaca0561ce041efa7b6e7828ca70a8fc20f211 -- _bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md _bmad-output/specs/spec-cicd/evidence/10-1",
+    "result": "Failed on trailing whitespace in four text logs and extra blank EOF lines in one text log and the story; repaired before the final scoped cached check."
+  },
+  "final_scoped_cached_whitespace_check": {
+    "command": "git diff --cached --check bfeaca0561ce041efa7b6e7828ca70a8fc20f211 -- _bmad-output/specs/spec-cicd/stories/10-1-module-agent-token.md _bmad-output/specs/spec-cicd/evidence/10-1",
+    "exit": 0,
+    "coverage": "Staged story and every retained evidence file, compared with the story baseline revision."
+  },
+  "main_ref_comparison_scope": "Recorded qualification checkpoints through the saved 2026-11-15T17:51:37.262195+00:00 API snapshot and retained final Git read; does not assert no later external movement."
+}
