@@ -53,11 +53,12 @@ OTHER_LANGUAGES = {".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".rb", ".pl", "
 COMMAND_APIS = {"subprocess.run", "subprocess.call", "subprocess.Popen", "subprocess.check_call",
                 "subprocess.check_output", "subprocess.getoutput", "subprocess.getstatusoutput",
                 "os.system", "os.popen", "runpy.run_path", "runpy.run_module"}
-UNSUPPORTED_PREFIXES = ("os.exec", "os.spawn", "os.posix_spawn", "asyncio.create_subprocess_", "pty.spawn")
+UNSUPPORTED_PREFIXES = ("os.exec", "os.spawn", "os.posix_spawn", "asyncio.create_subprocess_",
+                        "asyncio.subprocess.create_subprocess_", "pty.spawn")
 UNSUPPORTED_CALLS = {"importlib.util.spec_from_file_location", "importlib.machinery.SourceFileLoader",
                      "importlib.machinery.SourcelessFileLoader", "exec", "eval", "compile"}
 PROCESS_MODULES = {"subprocess", "os", "runpy", "importlib", "importlib.util", "importlib.machinery",
-                   "asyncio", "pty", "contextlib", "functools"}
+                   "asyncio", "pty", "contextlib", "functools", "builtins", "__builtins__"}
 # Calls that change the working directory, environment or import path.
 MUTATORS = {"os.chdir", "os.fchdir", "contextlib.chdir", "os.putenv", "site.addsitedir", "dotenv.load_dotenv",
             *(environ + "." + write for environ in ENVIRON for write in ENVIRON_WRITES)}
@@ -88,10 +89,13 @@ RECIPES = {"make": ("Makefile", "makefile", "GNUmakefile"), "gmake": ("Makefile"
            "poe": ("pyproject.toml",), "rake": ("Rakefile", "rakefile"),
            "pre-commit": (".pre-commit-config.yaml", ".pre-commit-config.yml")}
 RECIPE_LOCATIONS = {"-f", "--file", "--makefile", "-C", "--directory", "--justfile", "--working-directory", "-d",
-                    "--dir", "--taskfile", "-t", "--prefix", "--cwd", "--rakefile", "-c", "--noxfile"}
+                    "--dir", "--taskfile", "-t", "--prefix", "--cwd", "--rakefile", "-c", "--noxfile",
+                    "--project", "--project-dir"}
 NODE_RUNNERS = {"npm", "pnpm", "yarn", "bun"}
-NODE_SAFE = {"view", "info", "show", "config", "audit", "ls", "list", "outdated", "help", "whoami", "ping",
+NODE_SAFE = {"view", "info", "show", "config", "ls", "list", "outdated", "help", "whoami", "ping",
              "--version", "-v", "--help", "-h"}
+NODE_FLAGS = {"--ignore-scripts", "--offline", "--foreground-scripts", "--silent", "--quiet", "--verbose",
+              "--json", "--no-audit", "--no-fund", "--global", "-g"}
 PYTHON_RUNNERS = {"uv", "poetry", "pipenv", "pdm", "hatch"}
 REDIRECTION = re.compile(r"(\d*|&|\*)(>>|>\||>&|>|<<<|<<-|<<|<>|<&|<)(.*)", re.S)
 
@@ -213,6 +217,62 @@ def shell_words(text, powershell):
         return [word.strip("'\"") for word in text.split()]
 
 
+def powershell_comments(text):
+    """Blank actual block comments, preserving quotes, positions and lines."""
+    result, quote, here, comment, index = [], None, None, False, 0
+    newline = re.compile(r"[ \t]*\r?\n")
+    while index < len(text):
+        char, pair = text[index], text[index:index + 2]
+        if here:
+            if (index == 0 or text[index - 1] == "\n") and pair == here + "@":
+                result.extend(pair)
+                here, index = None, index + 2
+                continue
+            result.append(char)
+        elif comment:
+            if pair == "#>":
+                result.extend("  ")
+                comment, index = False, index + 2
+                continue
+            result.append("\n" if char == "\n" else " ")
+        elif quote:
+            result.append(char)
+            if char == "`" and quote == '"' and index + 1 < len(text):
+                index += 1
+                result.append(text[index])
+            elif char == quote:
+                if quote == "'" and index + 1 < len(text) and text[index + 1] == "'":
+                    index += 1
+                    result.append(text[index])
+                else:
+                    quote = None
+        elif char == "`" and index + 1 < len(text):
+            result.extend(text[index:index + 2])
+            index += 1
+        elif char == "@" and len(pair) == 2 and pair[1] in "'\"" and newline.match(text, index + 2):
+            result.extend(pair)
+            here, index = pair[1], index + 2
+            continue
+        elif char in "'\"":
+            result.append(char)
+            quote = char
+        elif pair == "<#":
+            result.extend("  ")
+            comment, index = True, index + 2
+            continue
+        elif char == "#":
+            # A line comment's quotes and delimiters are all inert.
+            end = text.find("\n", index)
+            end = len(text) if end < 0 else end
+            result.extend(text[index:end])
+            index = end
+            continue
+        else:
+            result.append(char)
+        index += 1
+    return "".join(result)
+
+
 def tokens(value):
     """A literal and the path-shaped pieces of a word or Python string."""
     if not isinstance(value, str) or not value or len(value) > MAX_LITERAL:
@@ -229,16 +289,29 @@ def module_references(words, depth=0):
     """
     found = set()
     for index, word in enumerate(words):
-        if not isinstance(word, str) or not word or len(word) > MAX_LITERAL:
+        if not isinstance(word, str) or not word:
             continue
         option = (re.fullmatch(r"-[bBdEhiIOPqRsSuvVx]*([mc])(.*)", word, re.S)
                   or re.fullmatch(r"--(module)(?:=(.*))?", word, re.S))
         if option:
             value = option[2] or (words[index + 1] if index + 1 < len(words) else None)
+            if isinstance(value, str) and len(value) > MAX_LITERAL:
+                raise DeliveryError("execution literal coverage limit exceeded")
             if isinstance(value, str) and option[1] == "c":
                 found |= imported(value, depth)
             elif isinstance(value, str) and MODULE.fullmatch(value):
                 found.add(value)
+        if len(word) > MAX_LITERAL:
+            # Search the entire already-bounded source literal with constant
+            # parser state. Never feed an oversized string to shlex, or let a
+            # harmless prefix conceal an execution-bearing suffix.
+            interpreter = re.search(r"(?<![\w.])(?:(?:python|pypy)(?:\d+(?:\.\d+)*)?|py|"
+                                    + "|".join(map(re.escape, sorted(SHELLS))) +
+                                    r")(?:\.exe)?(?=[\s'\";&|()]|$)", word, re.I)
+            option = re.compile(r"(?:^|[\s'\";&|()])(?:-[bBdEhiIOPqRsSuvVx]*[cm]|(?i:-command))")
+            if interpreter and option.search(word, interpreter.end()):
+                raise DeliveryError("execution literal coverage limit exceeded")
+            continue
         if depth < 3 and re.search(r"\s", word):
             found |= module_references(shell_words(word, False), depth + 1)
     return found
@@ -260,7 +333,7 @@ def sequences(node):
 def imported(code, depth):
     """Modules that literal Python code imports, never failing on other text."""
     if depth >= 3 or len(code) > MAX_LITERAL:
-        return set()
+        raise DeliveryError("execution literal coverage limit exceeded")
     try:
         tree = ast.parse(code)
     except (SyntaxError, ValueError, RecursionError):
@@ -302,6 +375,37 @@ def redirections(words):
             continue
         result.append(word)
     return result, stdin
+
+
+def heredoc_word(text, start):
+    """Quote-remove the complete delimiter word, including mixed E'OF' forms."""
+    result, quote, quoted, index = [], None, False, start
+    while index < len(text):
+        char = text[index]
+        if quote:
+            if char == quote:
+                quote = None
+            elif char == "\\" and quote == '"':
+                raise DeliveryError("unsupported heredoc delimiter syntax")
+            else:
+                result.append(char)
+        elif char in " \t;&|<>()":
+            break
+        elif char == "$" and text[index + 1:index + 2] in {"'", '"'}:
+            raise DeliveryError("unsupported heredoc delimiter syntax: ANSI/locale quoting")
+        elif char in "'\"":
+            quote, quoted = char, True
+        elif char == "\\":
+            quoted, index = True, index + 1
+            if index >= len(text):
+                raise DeliveryError("unsupported heredoc delimiter syntax")
+            result.append(text[index])
+        else:
+            result.append(char)
+        index += 1
+    if quote or index == start:
+        raise DeliveryError("unsupported heredoc delimiter syntax")
+    return "".join(result), not quoted
 
 
 class ActionLoader(yaml.SafeLoader):
@@ -498,41 +602,47 @@ class Discovery:
         return list(dict.fromkeys([".", str(PurePosixPath(path).parent), *([action] if action else []), *cwds]))
 
     def include(self, literals, path, cwd, action, bases):
-        """Include every tracked script a literal names; already selected files stay as they are."""
+        """Traverse literal references in every supplied invocation context."""
         for number, value in literals:
             for candidate in sorted(tokens(value)):
                 for match, fmt in self.locate(candidate, path, action, bases):
-                    if match in self.files:
-                        continue
                     try:
                         self.add(match, fmt, cwd=cwd, action=action)
                     except (ValueError, UnicodeError) as error:
                         self.error(path, number, "local-script discovery: " + clean(error))
+
+    def references(self, words, path, number):
+        """Every literal-sequence entry point preserves coverage-limit errors."""
+        try:
+            return module_references(words)
+        except (ValueError, RecursionError) as error:
+            self.error(path, number, "local-script discovery: " + clean(error))
+            return set()
 
     def include_modules(self, modules, path, cwd, action, bases):
         """Rule 1 for module names: include every local module a -m/-c literal names.
 
         A module resolves from every base as an import root; its file, package
         initializer and __main__.py, and every enclosing __init__.py, are
-        included. Already selected files stay as they are.
+        included and traversed under each invocation context.
         """
         for number, module in sorted(set(modules)):
             for root in bases:
                 stem = posixpath.normpath(posixpath.join(root, module.replace(".", "/")))
                 if stem == ".." or stem.startswith("../") or ".git" in stem.split("/"):
                     continue
-                files = [candidate for candidate in (stem + ".py", stem + "/__init__.py", stem + "/__main__.py")
-                         if self.regular(candidate)]
-                if not files:
-                    continue
-                files += [str(parent / "__init__.py") for parent in PurePosixPath(stem).parents]
-                for target in dict.fromkeys(files):
-                    if target in self.files or not self.regular(target):
+                try:
+                    self.import_path(stem)
+                    files = [candidate for candidate in (stem + ".py", stem + "/__init__.py", stem + "/__main__.py")
+                             if candidate in self.items]
+                    if not files and stem not in self.directories:
                         continue
-                    try:
-                        self.add(target, "python", cwd=cwd, action=action, python_roots=(root,))
-                    except (ValueError, UnicodeError) as error:
-                        self.error(path, number, "local-script discovery: " + clean(error))
+                    # Namespace packages also execute every regular ancestor
+                    # initializer, and unsafe initializers must fail visibly.
+                    for target in files or [stem + "/__init__.py"]:
+                        self.add_module(target, cwd, action, (root,))
+                except (ValueError, UnicodeError) as error:
+                    self.error(path, number, "local-script discovery: " + clean(error))
 
     def language(self, path, fmt):
         """An execution-position target in another script language fails coverage."""
@@ -605,6 +715,46 @@ class Discovery:
                 names |= self.recipes[candidate]
         return names
 
+    def project_preparation(self, name, words, bases):
+        """Project synchronization may execute a tracked backend before a child."""
+        if name == "uv":
+            remaining, flags = list(words), set()
+            # Global and run options end at the visible child, whose arguments
+            # cannot disable preparation already performed by uv.
+            for _ in range(2):
+                while remaining and remaining[0].startswith("-"):
+                    key, equals, value = remaining.pop(0).partition("=")
+                    if key == "--":
+                        break
+                    flags.add(key)
+                    if key in UV_VALUES and not equals and remaining:
+                        value = remaining.pop(0)
+                    if key in {"--with", "-w", "--with-editable", "--with-requirements"}:
+                        local = (key in {"--with-editable", "--with-requirements"}
+                                 or re.search(r"[$`]|(?:^|[ @])(?:[./~]|file:)", value)
+                                 or any(posixpath.normpath(posixpath.join(base, value)) in self.items
+                                        or posixpath.normpath(posixpath.join(base, value)) in self.directories
+                                        for base in bases))
+                        if local:
+                            raise DeliveryError("unsupported local dependency preparation: " + name)
+                    if key in {"-m", "--module"}:
+                        break
+                if remaining[:1] != ["run"]:
+                    break
+                remaining.pop(0)
+            if flags & {"--no-project", "--no-sync"}:
+                return
+        for base in bases:
+            candidate = posixpath.normpath(posixpath.join(base, "pyproject.toml"))
+            if candidate not in self.items:
+                continue
+            try:
+                project = tomllib.loads(self.git.blob(self.revision, candidate).decode("utf-8"))
+            except (ValueError, UnicodeError):
+                raise DeliveryError("unreadable task runner recipe: " + clean(candidate)) from None
+            if "build-system" in project or self.recipe(("setup.py", "setup.cfg"), bases):
+                raise DeliveryError("unsupported local project preparation with tracked build backend: " + name)
+
     def action(self, path, text):
         try:
             value = yaml.load(text, Loader=ActionLoader)
@@ -670,11 +820,12 @@ class Discovery:
             except (RecursionError, TypeError, ValueError) as error:
                 self.error(path, line, "invalid action/discovery: " + clean(error))
         bases = self.bases(path, parent, cwds)
-        self.include(literals, path, ".", parent, bases)
-        self.include_modules([(number, module) for number, item in literals
-                              for module in module_references([item])], path, ".", parent, bases)
+        for candidate_cwd in dict.fromkeys(cwds):
+            self.include(literals, path, candidate_cwd, parent, bases)
+            self.include_modules([(number, module) for number, item in literals
+                                  for module in self.references([item], path, number)], path, candidate_cwd, parent, bases)
 
-    def logical(self, text, offset, powershell):
+    def logical(self, text, offset, powershell, path):
         """Yield (first physical line number, logical line, data lines).
 
         Lines split only on LF with a trailing CR dropped. The continuation
@@ -701,21 +852,29 @@ class Discovery:
                         if body.startswith(opener[1] + "@"):
                             line += " " + body[2:]
                             break
-                        data.append((index + offset, body))
+                        data.append((index + offset, body, opener[1] == '"'))
             else:
                 cut, structure, _ = lexical(line, powershell)
-                pattern = r"<<(-?)[ \t]*(?:'([^']*)'|\"([^\"]*)\"|\\?([^\s;&|<>()'\"]+))"
-                for match in re.finditer(pattern, line[:cut]):
+                for match in re.finditer(r"<<(-?)[ \t]*", line[:cut]):
                     start = match.start()
                     if (structure[start:start + 2] != "<<" or line[start + 2:start + 3] == "<"
                             or line[start - 1:start] == "<"):
                         continue
-                    delimiter = next(group for group in match.groups()[1:] if group is not None)
+                    try:
+                        delimiter, expands = heredoc_word(line[:cut], match.end())
+                    except DeliveryError as error:
+                        self.error(path, number, "local-script discovery: " + clean(error))
+                        break
                     while index < len(physical):
-                        body, index = physical[index], index + 1
+                        body_number, body, index = index + 1 + offset, physical[index], index + 1
+                        # Expanding heredocs remove backslash-newline before
+                        # delimiter recognition and substitution expansion.
+                        while (expands and body.endswith("\\") and (len(body) - len(body.rstrip("\\"))) % 2
+                               and index < len(physical)):
+                            body, index = body[:-1] + physical[index], index + 1
                         if (body.lstrip("\t") if match[1] else body) == delimiter:
                             break
-                        data.append((index + offset, body))
+                        data.append((body_number, body, expands))
             yield number, line, data
 
     def commands(self, path, text, cwd, action, *, offset=0, powershell=False, sourced=False):
@@ -723,23 +882,24 @@ class Discovery:
         # naming tracked scripts are included afterwards from every base.
         text = text.removeprefix("\ufeff")
         if powershell:
-            # Block comments are data wherever they occur; keep the line count.
-            text = re.sub(r"(?s)<#.*?#>", lambda match: " " + "\n" * match[0].count("\n"), text)
+            text = powershell_comments(text)
         # Replace spaced Actions expressions before shell tokenization.
         text = re.sub(r"\$\{\{\s*github\.(workspace|action_path)\s*\}\}",
                       lambda m: "$GITHUB_WORKSPACE" if m[1] == "workspace" else "$GITHUB_ACTION_PATH", text)
         cwds, literals, modules = [cwd], [], []
-        for number, line, data in self.logical(text, offset, powershell):
-            for body_number, body in data:
+        for number, line, data in self.logical(text, offset, powershell, path):
+            for body_number, body, expands in data:
                 words = shell_words(body, powershell)
                 literals.extend((body_number, word) for word in words)
-                modules.extend((body_number, module) for module in module_references(words))
+                modules.extend((body_number, module) for module in self.references(words, path, body_number))
+                if expands and re.search(r"\$\(|`", body):
+                    self.error(path, body_number, "local-script discovery: unsupported expanding heredoc execution")
             if not line.strip() or line.lstrip().startswith("#"):
                 continue
             cut, structure, substitution = lexical(line, powershell)
             words = shell_words(line[:cut], powershell)
             literals.extend((number, word) for word in words)
-            modules.extend((number, module) for module in module_references(words))
+            modules.extend((number, module) for module in self.references(words, path, number))
             try:
                 # Reject execution syntax outside literal quotes before shlex
                 # can discard its structure and certify the wrong scope.
@@ -767,22 +927,103 @@ class Discovery:
                     cwd = self.segment(words, path, cwd, action, cwds, number, powershell, sourced)
             except (ValueError, RecursionError) as error:
                 self.error(path, number, "local-script discovery: " + clean(error))
-        self.include(literals, path, cwds[0], action, self.bases(path, action, cwds))
-        self.include_modules(modules, path, cwds[0], action, self.bases(path, action, cwds))
+        for candidate_cwd in dict.fromkeys(cwds):
+            self.include(literals, path, candidate_cwd, action, self.bases(path, action, cwds))
+            self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, cwds))
+
+    @staticmethod
+    def environment_output(words, *, marker="GITHUB_ENV", powershell=False):
+        """Understand a small literal producer, or fail the complete write.
+
+        Only a redirection's exact target is a destination. Marker substrings
+        inside emitted arguments are ordinary output, including computed data.
+        No shell, printf implementation or module code is run to derive bytes.
+        """
+        destination = re.compile(r"\$(?:" + marker + r"|\{" + marker + r"\}|env:" + marker +
+                                 r"|\{env:" + marker + r"\})\Z", re.I)
+        label = "$" + marker
+        output, remaining, found, index = [], [], False, 0
+        while index < len(words):
+            word = words[index]
+            match = REDIRECTION.fullmatch(word)
+            if match and match[2] in {">", ">>", ">|"}:
+                target = match[3]
+                if not target and index + 1 < len(words):
+                    index += 1
+                    target = words[index]
+                if destination.fullmatch(target):
+                    found = True
+                elif (environment_names if marker == "GITHUB_ENV" else path_names)(target):
+                    raise DeliveryError(f"unresolved {label} write: computed destination")
+            else:
+                remaining.append(word)
+            index += 1
+        if not found:
+            raise DeliveryError(f"unresolved {label} write: unsupported destination or producer")
+        while remaining and assignment(remaining[0]):
+            remaining = remaining[1:]
+        remaining, stdin = redirections(remaining)
+        if not remaining or stdin:
+            raise DeliveryError(f"unsupported {label} write output producer")
+        name, args = tool(remaining[0]).lower(), remaining[1:]
+        for word in args:
+            if marker == "GITHUB_ENV" and word.startswith("PATH="):
+                check_path(word[5:], message="unsupported $GITHUB_ENV PATH write affecting script resolution")
+            candidate = re.sub(r"\$\{?(?:PATH|HOME)\}?", "", word) if word.startswith("PATH=") else word
+            if marker == "GITHUB_PATH":
+                candidate = re.sub(r"\$(?:HOME(?![A-Za-z0-9_])|\{HOME\})", "", word)
+            if "$" in candidate or "`" in candidate:
+                raise DeliveryError(f"unresolved {label} write: computed environment name or output")
+        if name in {"echo", "write-output", "write-host"}:
+            if any(word.startswith("-") or "\\" in word for word in args):
+                raise DeliveryError(f"unsupported {label} formatted output")
+            separator = "\n" if powershell and name in {"echo", "write-output"} else " "
+            result = separator.join(args) + "\n"
+            if len(result) > MAX_LITERAL:
+                raise DeliveryError("environment output coverage limit exceeded")
+            return result
+        if name != "printf" or not args:
+            raise DeliveryError(f"unsupported {label} write output producer")
+        format_string, values = args[0], args[1:]
+        # Reject expansion modes, octal/hex escapes, widths and other formatting
+        # instead of certifying environment keys by their source spelling.
+        if re.search(r"\\(?![ntr\\])|%(?![%s])", format_string):
+            raise DeliveryError(f"unsupported {label} formatted output")
+        format_string = re.sub(r"\\([ntr\\])", lambda match: {"n": "\n", "t": "\t", "r": "\r", "\\": "\\"}[match[1]],
+                               format_string)
+        substitutions = list(re.finditer(r"%[%s]", format_string))
+        count = sum(match[0] == "%s" for match in substitutions)
+        if values and not count:
+            raise DeliveryError(f"unsupported {label} formatted output")
+        while True:
+            cursor = 0
+            for match in substitutions:
+                output.append(format_string[cursor:match.start()])
+                output.append("%" if match[0] == "%%" else (values.pop(0) if values else ""))
+                cursor = match.end()
+            output.append(format_string[cursor:])
+            if sum(map(len, output)) > MAX_LITERAL:
+                raise DeliveryError("environment output coverage limit exceeded")
+            if not values:
+                return "".join(output)
 
     @staticmethod
     def environment(segments, text, powershell):
         """Unmodeled environment writes that change script or import resolution fail."""
         flat = [word for words in segments for word in words]
         if any(environment_names(word) for word in flat):
+            outputs = [Discovery.environment_output(words, powershell=powershell) for words in segments
+                       if any(environment_names(word) for word in words)]
             keys = []
-            for word in flat:
-                if environment_names(word):
-                    continue
-                for part in re.split(r"\\n|\n", word):
+            for output in outputs:
+                for part in output.split("\n"):
+                    if not part:
+                        continue
                     match = re.match(r"([A-Za-z_][A-Za-z0-9_]*)(\+?=|<<)(.*)", part, re.S)
                     if match:
                         keys.append((match[1], match[3]))
+                    else:
+                        raise DeliveryError("unresolved $GITHUB_ENV write: computed environment name or output")
             if not keys:
                 raise DeliveryError("unresolved $GITHUB_ENV write: computed environment name")
             for name, value in keys:
@@ -791,15 +1032,17 @@ class Discovery:
                 if name.upper() == "PATH":
                     check_path(value, message="unsupported $GITHUB_ENV PATH write affecting script resolution")
         if any(path_names(word) for word in flat):
-            values = []
-            for words in segments:
-                for index, word in enumerate(words):
-                    if (path_names(word) or word.startswith("-") or REDIRECTION.fullmatch(word)
-                            or (index == 0 and not re.search(r"[/\\$]", word))):
-                        continue
-                    values.append(word)
-            if not values or not all(path_component(value.rstrip("/\\") or value) for value in values):
-                raise DeliveryError("unsupported $GITHUB_PATH change affecting script resolution")
+            try:
+                outputs = [Discovery.environment_output(words, marker="GITHUB_PATH", powershell=powershell)
+                           for words in segments if any(path_names(word) for word in words)]
+                # AddPathFileCommand uses File.ReadAllLines, whose records
+                # split on CRLF, lone CR and LF. GITHUB_ENV and source offsets
+                # retain their separate LF-based parsing contracts.
+                values = [value for output in outputs for value in re.split(r"\r\n|\r|\n", output) if value]
+                if not values or not all(path_component(value.rstrip("/\\") or value) for value in values):
+                    raise DeliveryError("unmodeled emitted path output")
+            except DeliveryError as error:
+                raise DeliveryError("unsupported $GITHUB_PATH change affecting script resolution: " + clean(error)) from None
         if powershell:
             for match in re.finditer(r"(?i)\$\{?env:([A-Za-z_]\w*)\}?\s*(\+?)=(?!=)(.*)", text):
                 if match[1].upper() in RESOLUTION:
@@ -827,6 +1070,17 @@ class Discovery:
             words = words[1:]
             if name in PYTHON_RUNNERS:
                 runner = name
+                if words[:1] and words[0] in {"--version", "-V", "--help", "-h", "help", "version"}:
+                    return cwd
+                project_words = self.uv_options(words) if name == "uv" else words
+                if name != "uv":
+                    self.runner_location(words)
+                if (project_words[:1] != ["run"] and project_words
+                        and project_words[0] not in {"--version", "-V", "--help", "-h", "help", "version"}
+                        and self.recipe(("pyproject.toml", "Pipfile", "hatch.toml"), bases)):
+                    raise DeliveryError("unsupported project runner with tracked module build/recipes: " + name)
+                if project_words[:1] == ["run"]:
+                    self.project_preparation(name, words, bases)
                 words = self.uv(words) if name == "uv" else self.runner(words)
                 if words is None:
                     return cwd
@@ -844,6 +1098,8 @@ class Discovery:
         cmd, args = words[0], words[1:]
         builtin = cmd.lower()
         base = PurePosixPath(cmd).name.lower().removesuffix(".exe")
+        if runner and cmd.split(":")[-1] in self.recipe_names(bases):
+            raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(runner))
         if (builtin in {"pushd", "popd", "push-location", "pop-location", "set-location", "sl", "chdir"}
                 or (powershell and builtin == "cd")):
             raise DeliveryError("unsupported shell working-directory command")
@@ -851,7 +1107,40 @@ class Discovery:
             raise DeliveryError("unsupported PowerShell process invocation")
         if builtin in {"invoke-command", "icm"}:
             raise DeliveryError("unsupported PowerShell Invoke-Command execution")
+        if builtin == "read" and not powershell:
+            operands, remaining = [], list(args)
+            while remaining:
+                value = remaining.pop(0)
+                if value == "--":
+                    operands += remaining
+                    break
+                if value.startswith("-"):
+                    if re.search(r"[$`]", value):
+                        raise DeliveryError("unsupported read environment mutation affecting script resolution")
+                    for index, option in enumerate(value[1:], 1):
+                        if option not in "adinNptu":
+                            continue
+                        argument = value[index + 1:] or (remaining.pop(0) if remaining else "")
+                        if option == "a":
+                            operands.append(argument)
+                        break
+                    continue
+                operands.append(value)
+            if any(re.search(r"[$`]", value) or value.split("[", 1)[0].upper() in RESOLUTION | {"PATH"}
+                   for value in operands):
+                raise DeliveryError("unsupported read environment mutation affecting script resolution")
+            return cwd
+        if builtin == "printf" and not powershell and args and args[0].startswith("-v"):
+            destination = args[0][2:] or (args[1] if len(args) > 1 else "")
+            if (not re.fullmatch(r"[A-Za-z_]\w*(?:\[-?\d+\])?", destination)
+                    or destination.split("[", 1)[0].upper() in RESOLUTION | {"PATH"}):
+                raise DeliveryError("unsupported printf variable write affecting script resolution")
         if builtin in {"export", "declare", "typeset", "readonly", "local"}:
+            for argument in args:
+                if argument == "--":
+                    break
+                if builtin in {"declare", "typeset", "local"} and argument.startswith("-") and "n" in argument[1:]:
+                    raise DeliveryError("unsupported shell nameref declaration affecting script resolution")
             for argument in args:
                 if argument.startswith(("-", "+")):
                     continue
@@ -896,12 +1185,29 @@ class Discovery:
         if base in NODE_RUNNERS:
             if base == "bun":
                 self.other_language(args, path, cwd, action)
-            subcommand = next((argument for argument in args if not argument.startswith("-")), None)
-            if "--ignore-scripts" in args or subcommand in NODE_SAFE or (
+            if any(argument.split("=", 1)[0] in RECIPE_LOCATIONS | {"--workspace", "--workspaces", "-w"} or (
+                    argument[:1] == "-" and argument[1:2] != "-" and argument[:2] in RECIPE_LOCATIONS)
+                   for argument in args):
+                raise DeliveryError("unsupported task runner recipe location: " + clean(base))
+            remaining = list(args)
+            while remaining and remaining[0].startswith("-"):
+                option = remaining.pop(0)
+                if option == "--":
+                    break
+                if option in NODE_SAFE:
+                    return cwd
+                if option not in NODE_FLAGS:
+                    raise DeliveryError("unsupported task runner leading option: " + clean(base))
+            subcommand = remaining[0] if remaining else None
+            if subcommand == "audit":
+                if any(not argument.startswith("-") and argument != "signatures" for argument in remaining[1:]):
+                    raise DeliveryError("unsupported mutating npm audit operation")
+                return cwd
+            if subcommand in NODE_SAFE or (
                     subcommand is None and set(args) & NODE_SAFE):
                 return cwd
-            if any(argument.split("=", 1)[0] in RECIPE_LOCATIONS for argument in args):
-                raise DeliveryError("unsupported task runner recipe location: " + clean(base))
+            if "--ignore-scripts" in args and subcommand in {"install", "ci", "add", "remove", "uninstall"}:
+                return cwd
             if self.recipe(("package.json",), bases):
                 raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(base))
             return cwd
@@ -910,17 +1216,31 @@ class Discovery:
                 raise DeliveryError("sourced script changes caller working directory; coverage unsupported")
             if len(args) != 1 or args[0] == "-":
                 raise DeliveryError("unresolved local working directory")
-            cwd = self.resolve(args[0], path=path, cwd=cwd, action=action, allow_root=True)
-            cwds.append(cwd)
+            # A preceding conditional cd may or may not have run. Extend
+            # every prior candidate, and keep the before/after contexts.
+            established = [self.resolve(args[0], path=path, cwd=base, action=action, allow_root=True)
+                           for base in dict.fromkeys([*cwds, cwd])]
+            for directory in established:
+                if directory not in cwds:
+                    if len(cwds) >= 4 * MAX_FILES:
+                        raise DeliveryError("working-directory coverage limit exceeded")
+                    cwds.append(directory)
+            cwd = established[-1]
             return cwd
         fmt, target = None, None
         if re.fullmatch(r"(?:python|pypy)(?:\d+(?:\.\d+)*)?|py", base):
             fmt = "python"
             mode, value, remaining = self.python_options(args)
+            if isinstance(value, str) and len(value) > MAX_LITERAL:
+                raise DeliveryError("execution literal coverage limit exceeded")
             if mode == "m":
                 if not self.import_module(value, path, cwd, action, roots=(cwd,), required=True, execute=True):
                     # An installed runner can still execute tracked recipes or tests.
-                    self.task_runner(value.split(".", 1)[0].replace("_", "-"), remaining, bases)
+                    name = value.split(".", 1)[0].replace("_", "-")
+                    if name in PYTHON_RUNNERS:
+                        self.segment([name, *remaining], path, cwd, action, cwds, number, powershell, sourced)
+                    else:
+                        self.task_runner(name, remaining, bases)
                 return cwd
             if mode == "c":
                 self.python(path, value, cwd, action, roots=(cwd,), offset=number - 1)
@@ -937,6 +1257,8 @@ class Discovery:
                     raise DeliveryError("unresolved shell command")
                 if inline.strip() == "-":
                     raise DeliveryError("unsupported stdin-fed interpreter; coverage unsupported")
+                if len(inline) > MAX_LITERAL:
+                    raise DeliveryError("execution literal coverage limit exceeded")
                 self.commands(path, inline, cwd, action, offset=number - 1, powershell=fmt == "powershell")
                 return cwd
             target = remaining[0] if remaining and mode != "stdin" else None
@@ -964,8 +1286,20 @@ class Discovery:
             target = cmd
         elif "$" in cmd or "`" in cmd:
             raise DeliveryError("unresolved computed command: " + clean(cmd))
-        elif runner and cmd.split(":")[-1] in self.recipe_names(bases):
-            raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(runner))
+        elif builtin not in {"echo", "printf", "write-output", "write-host", "cat", "get-content", "[", "[[", "test"}:
+            # An unknown consumer cannot certify an unresolved operand as
+            # nonexecuting data. Follow a visible execution tool through the
+            # precise layer; otherwise fail computed operands conservatively.
+            for index, word in enumerate(args):
+                name = PurePosixPath(word).name.lower().removesuffix(".exe")
+                if (name in SHELLS or name in WRAPPERS or name in PYTHON_RUNNERS or name in {"source", "."}
+                        or re.fullmatch(r"(?:python|pypy)(?:\d+(?:\.\d+)*)?|py", name)):
+                    self.segment(args[index:], path, cwd, action, cwds, number, powershell, sourced)
+                    return cwd
+            for word in args:
+                expanded, _ = self.expand(word, path, action)
+                if "$" in expanded or "`" in expanded:
+                    raise DeliveryError("unresolved computed operand of unknown command: " + clean(cmd))
         if target is not None:
             for resolved in self.targets(target, path=path, cwd=cwd, action=action, bases=bases):
                 self.language(resolved, fmt)
@@ -998,6 +1332,8 @@ class Discovery:
             key, equals, value = option.partition("=")
             if key in {"--directory", "-C"}:
                 raise DeliveryError("unsupported uv working-directory option")
+            if key == "--project":
+                raise DeliveryError("unsupported uv project recipe-root option")
             if key == "--env-file":
                 raise DeliveryError("unsupported uv env file affecting script resolution")
             if key in {"-m", "--module"}:
@@ -1017,11 +1353,23 @@ class Discovery:
 
     @classmethod
     def uv(cls, words):
-        """The command that uv run executes; other subcommands run no local script."""
+        """The command uv run executes, after the caller guards project operations."""
         words = cls.uv_options(words)
         if words[:1] != ["run"]:
             return None
         return cls.uv_options(words[1:], run=True)
+
+    @staticmethod
+    def runner_location(words):
+        """Check runner selectors before their operands can become subcommands."""
+        for word in words:
+            if word == "run":
+                break
+            if (word.split("=", 1)[0] in RECIPE_LOCATIONS or (
+                    word[:1] == "-" and word[1:2] != "-" and word[:2] in RECIPE_LOCATIONS)):
+                raise DeliveryError("unsupported task runner recipe location")
+        if words and words[0].startswith("-") and words[0] not in {"--version", "-V", "--help", "-h"}:
+            raise DeliveryError("unsupported task runner option: " + clean(words[0]))
 
     @staticmethod
     def runner(words):
@@ -1071,8 +1419,8 @@ class Discovery:
             if not powershell:
                 if option == "--":
                     break
-                if option in {"--rcfile", "--init-file"}:
-                    remaining = remaining[1:]
+                if option.split("=", 1)[0] in {"--rcfile", "--init-file"}:
+                    raise DeliveryError("unsupported shell startup source option")
                 elif option.startswith("--"):
                     continue
                 elif "c" in option[1:] and option[0] == "-":
@@ -1097,13 +1445,22 @@ class Discovery:
                 remaining = remaining[1:]
         return None, remaining
 
+    def import_path(self, path):
+        """A known import component must be a directory, never a git blob/link."""
+        parts = path.split("/")
+        for index in range(1, len(parts) + 1):
+            prefix = "/".join(parts[:index])
+            if prefix in self.items:
+                raise DeliveryError("unsafe non-directory Python import path component: " + clean(prefix))
+
     def add_module(self, target, cwd, action, roots):
         """Importing a module executes every enclosing package initializer."""
-        if self.regular(target):
+        self.import_path(str(PurePosixPath(target).parent))
+        if target in self.items:
             self.add(target, "python", cwd=cwd, action=action, python_roots=roots)
         for parent in PurePosixPath(target).parents:
             init = str(parent / "__init__.py")
-            if init != target and self.regular(init):
+            if init != target and init in self.items:
                 self.add(init, "python", cwd=cwd, action=action, python_roots=roots)
 
     def import_module(self, module, path, cwd, action, *, roots=None, required=False, relative=0, execute=False):
@@ -1124,6 +1481,7 @@ class Discovery:
             stem = posixpath.normpath(posixpath.join(root, module.replace(".", "/")))
             if stem == ".." or stem.startswith("../"):
                 continue
+            self.import_path(stem)
             candidates = [p for p in (stem + ".py", stem + "/__init__.py") if p in self.items]
             namespace = not candidates and stem not in self.items and stem in self.directories
             if not candidates and not namespace:
@@ -1192,7 +1550,24 @@ class Discovery:
                 suffix = bracket + subscript + (dot + tail if dot else "")
             else:
                 suffix = dot + tail if dot else ""
-            return {(target + suffix).removeprefix("builtins.") for target in aliases.get(head, {head})}
+            resolved = {target + suffix for target in aliases.get(head, {head})}
+            # A literal sys.modules lookup names the same known namespace.
+            # Normalize after aliases, preserving precise literal subprocess
+            # calls and their computed-target failures.
+            for target in tuple(resolved):
+                match = re.match(r"sys\.modules\[(['\"])([^'\"]+)\1\](.*)\Z", target)
+                if match and match[2] in PROCESS_MODULES:
+                    resolved.add(match[2] + match[3])
+                match = re.match(r"sys\.modules\.get\((['\"])([^'\"]+)\1\)(.*)\Z", target)
+                if match and match[2] in PROCESS_MODULES:
+                    resolved.add(match[2] + match[3])
+                match = re.match(r"(?:(?:builtins\.)?__import__|importlib\.import_module)"
+                                 r"\((['\"])([^'\"]+)\1\)(.*)\Z", target)
+                if match and match[2] in PROCESS_MODULES:
+                    resolved.add(match[2] + match[3])
+            # Keep the namespace identity for reflection checks; also expose
+            # direct builtin calls under their ordinary supported spelling.
+            return resolved | {target.removeprefix("builtins.") for target in resolved}
 
         assignments = [node for node in nodes if isinstance(node, (ast.Assign, ast.AnnAssign))]
         for _ in range(8):
@@ -1203,7 +1578,8 @@ class Discovery:
                 targets = node.targets if isinstance(node, ast.Assign) else [node.target]
                 resolved = {candidate for candidate in names(ast.unparse(node.value))
                             if candidate.split(".", 1)[0] in {"subprocess", "importlib", "runpy", "sys", "site", "os",
-                                                              "asyncio", "pty", "contextlib", "functools"}}
+                                                              "asyncio", "pty", "contextlib", "functools",
+                                                              "builtins", "__builtins__"}}
                 if not resolved:
                     continue
                 for target in targets:
@@ -1225,10 +1601,11 @@ class Discovery:
             return any(expression == root or expression.startswith(root + "[")
                        for root in ("sys.path", "sys.meta_path", "sys.path_hooks"))
 
-        literals, modules, bases = [], [], [cwd, *roots]
+        literals, modules, bases, cwds = [], [], [cwd, *roots], [cwd]
         for node in nodes:
             for sequence in sequences(node):
-                modules.extend((getattr(node, "lineno", 1) + offset, module) for module in module_references(sequence))
+                modules.extend((getattr(node, "lineno", 1) + offset, module)
+                               for module in self.references(sequence, path, getattr(node, "lineno", 1) + offset))
             try:
                 if isinstance(node, ast.Constant) and isinstance(node.value, str):
                     literals.append((getattr(node, "lineno", 1) + offset, node.value))
@@ -1253,6 +1630,7 @@ class Discovery:
                                 # add its submodule only when that file exists.
                                 for location in resolved:
                                     stem = location + "/" + item.name
+                                    self.import_path(stem)
                                     for candidate in (stem + ".py", stem + "/__init__.py"):
                                         if candidate in self.items:
                                             self.add_module(candidate, cwd, action, roots)
@@ -1276,12 +1654,24 @@ class Discovery:
                     raise DeliveryError("unsupported Python environment mutation affecting resolution")
                 elif isinstance(node, ast.Call):
                     calls = names(ast.unparse(node.func))
+                    receiver = parents.get(node)
+                    direct_namespace_call = (isinstance(receiver, ast.Attribute)
+                                             and isinstance(parents.get(receiver), ast.Call)
+                                             and parents[receiver].func is receiver
+                                             and any(reflective_api(name) for name in names(ast.unparse(receiver))))
+                    if (calls & {"__import__", "builtins.__import__", "importlib.import_module", "sys.modules.get"}
+                            and node.args and isinstance(node.args[0], ast.Constant)
+                            and node.args[0].value in PROCESS_MODULES
+                            and not isinstance(receiver, ast.Expr) and not direct_namespace_call):
+                        raise DeliveryError("unsupported reflective use of an imported process/import namespace")
                     for keyword in node.keywords:
                         # A literal subprocess cwd establishes a working directory.
                         if keyword.arg == "cwd" and isinstance(keyword.value, ast.Constant) and isinstance(keyword.value.value, str):
                             try:
-                                bases.append(self.resolve(keyword.value.value, path=path, cwd=cwd, action=action,
-                                                          allow_root=True))
+                                directory = self.resolve(keyword.value.value, path=path, cwd=cwd, action=action,
+                                                         allow_root=True)
+                                bases.append(directory)
+                                cwds.append(directory)
                             except DeliveryError:
                                 pass
                     mutators = {"append", "insert", "extend", "remove", "pop", "clear", "reverse", "sort",
@@ -1311,8 +1701,9 @@ class Discovery:
                         self.python_call(call, node, path, cwd, action, roots, offset, names)
             except (ValueError, RecursionError) as error:
                 self.error(path, getattr(node, "lineno", 1) + offset, "local-script discovery: " + clean(error))
-        self.include(literals, path, cwd, action, self.bases(path, action, bases))
-        self.include_modules(modules, path, cwd, action, self.bases(path, action, bases))
+        for candidate_cwd in dict.fromkeys(cwds):
+            self.include(literals, path, candidate_cwd, action, self.bases(path, action, bases))
+            self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, bases))
 
     @staticmethod
     def annotation(node, parents):
@@ -1327,12 +1718,16 @@ class Discovery:
     def reflective(self, node, parents, names):
         """A process/import API reached other than by a direct call is unmodeled."""
         parent = parents.get(node)
+        candidates = names(ast.unparse(node))
+        if (isinstance(parent, ast.Call) and parent.func is node
+                and candidates & {"__import__", "builtins.__import__"}):
+            return
+        if any(".__" in candidate and (candidate.split(".__", 1)[0] in PROCESS_MODULES
+                                       or reflective_api(candidate.split(".__", 1)[0]))
+               for candidate in candidates):
+            raise DeliveryError("unsupported reflective use of a process/import API")
         if isinstance(parent, ast.Attribute) and parent.value is node:
             return
-        candidates = names(ast.unparse(node))
-        if any("." in c and c.rsplit(".", 1)[0] in PROCESS_MODULES and c.rsplit(".", 1)[1].startswith("__")
-               for c in candidates):
-            raise DeliveryError("unsupported reflective use of a process/import API")
         if not any(reflective_api(c) or c in PROCESS_MODULES for c in candidates):
             return
         if isinstance(parent, ast.Call) and parent.func is node:

@@ -1414,6 +1414,613 @@ class ScanTests(unittest.TestCase):
                     "scripts/sub/helper.py": COPY})
                 self.assert_coverage(report, None, diagnostic)
 
+    def test_review4_children_retain_all_working_directory_contexts(self):
+        # D1: selection alone is insufficient; even previously selected children
+        # must be traversed under every established invocation cwd.
+        cases = (
+            ("cd support; xvfb-run python ../scripts/start.py", {
+                "scripts/start.py": "import subprocess\nsubprocess.run(['python', '-m', 'helper'])\n",
+                "support/helper.py": COPY}, "support/helper.py"),
+            ("cd work; xvfb-run ../scripts/start.sh", {
+                "scripts/start.sh": "python -m helper\n", "work/helper.py": COPY}, "work/helper.py"),
+            ("cat scripts/start.py\ncd support; xvfb-run python ../scripts/start.py", {
+                "scripts/start.py": "import subprocess\nsubprocess.run(['python', '-m', 'helper'])\n",
+                "support/helper.py": COPY}, "support/helper.py"),
+        )
+        for command, files, target in cases:
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], files), target, None)
+
+    def test_review4_successive_conditional_directories_extend_every_candidate(self):
+        # D2: b and a/b are both possible after the second literal cd.
+        report = self.coverage_case([("bash", "if false; then cd a; fi\ncd b; python -m helper", "")], {
+            "b/helper.py": COPY, "a/b/helper.py": "# conditional decoy\n"})
+        self.assert_coverage(report, "b/helper.py", None)
+
+    def test_review4_quoted_powershell_comment_delimiters_are_data(self):
+        # D3: only unquoted delimiters remove comments; physical lines survive.
+        for command in ("Write-Output '<#'; python -m helper; Write-Output '#>'",
+                        'Write-Output "<#"; python -m helper; Write-Output "#>"',
+                        "Write-Output '<#'; <# actual\ncomment #> python -m helper; Write-Output '#>'",
+                        'Write-Output @"\nliteral " <#\n"@\npython -m helper'):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("pwsh", command, "")], {"helper.py": COPY}),
+                                     "helper.py", None)
+        report = self.coverage_case([("pwsh", "Write-Output '<#'\n<# actual\ncomment #>\npython missing.py", "")],
+                                    {"helper.py": COPY})
+        self.assert_coverage(report, None, "action.yml:9: local-script discovery: missing or unsafe")
+
+    def test_review4_hidden_computed_interpreter_operands_fail(self):
+        # D4: an unknown outer consumer does not erase an execution position.
+        for command in ('xvfb-run python "${{ inputs.script }}"', 'xvfb-run python -m "$MODULE"',
+                        'xvfb-run env python "${{ inputs.script }}"'):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"helper.py": COPY}),
+                                     None, "unresolved local")
+        for command in ('xvfb-run "$COMMAND"', 'xvfb-run env "$COMMAND"'):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"helper.py": COPY}),
+                                     None, "unresolved computed")
+        for command in ('echo "python $DATA"', 'printf "%s" "python ${INPUT}"',
+                        'cat "$INPUT"'):
+            with self.subTest(data=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.commit(w.paths["Hexalith.Alpha"])
+                self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review4_reflected_builtin_and_imported_namespaces_fail(self):
+        # D5/D6: retain namespace identity, including modules returned by imports.
+        sources = (
+            "import builtins\nbuiltins.__dict__['__import__']('helper')\n",
+            "import builtins as b\nb.__dict__['__import__']('helper')\n",
+            "__builtins__['__import__']('helper')\n",
+            "import sys\ngetattr(__import__('subprocess'), 'run')(['python', '-m', sys.argv[1]])\n",
+            "import importlib, sys\ngetattr(importlib.import_module('subprocess'), 'run')"
+            "(['python', '-m', sys.argv[1]])\n",
+        )
+        for source in sources:
+            with self.subTest(source=source):
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "scripts/helper.py": COPY}), None, "unsupported reflective")
+        self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+            "scripts/start.py": "import builtins\nbuiltins.__import__('helper')\n", "scripts/helper.py": COPY}),
+            "scripts/helper.py", None)
+
+    def test_review4_complete_environment_output_is_validated(self):
+        # D7: another literal key cannot certify computed emitted output.
+        for command in ('printf "X=1\\n%s" "$CONFIG" >> "$GITHUB_ENV"',
+                        'printf \'%s\\n\' MODE=fast "$NAME=support" >> "$GITHUB_ENV"'):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"support/helper.py": COPY}),
+                                     None, "computed environment name or output")
+        w = self.workspace(("Hexalith.Alpha",))
+        w.action("Hexalith.Alpha", 'printf \'%s\\n\' MODE=fast X=1 >> "$GITHUB_ENV"')
+        w.commit(w.paths["Hexalith.Alpha"])
+        self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review4_ignore_scripts_does_not_suppress_named_npm_scripts(self):
+        # D8: --ignore-scripts suppresses lifecycle hooks, not npm run's target.
+        for command in ("npm run go --ignore-scripts", "npm --ignore-scripts run lint"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "package.json": '{"scripts":{"go":"python -m helper","lint":"python -m helper"}}',
+                    "helper.py": COPY}), None, "unsupported task runner with tracked module recipes: npm")
+        for command in ("npm --ignore-scripts --version", "npm view jscpd version", "npm ci --ignore-scripts"):
+            with self.subTest(probe=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.write("Hexalith.Alpha", "package.json", '{"scripts":{"lint":"python -m helper"}}')
+                w.commit(w.paths["Hexalith.Alpha"])
+                self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review4_project_build_backends_fail_without_execution(self):
+        # D9: build backends are executable tracked project code.
+        for command in ("uv build", "poetry build", "pdm build", "hatch build"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "pyproject.toml": '[build-system]\nrequires=[]\nbuild-backend="backend"\nbackend-path=["support"]\n',
+                    "support/backend.py": COPY}), None, "unsupported project runner with tracked module build/recipes")
+
+    def test_review4_inline_namespace_import_includes_regular_ancestors(self):
+        # D10: a namespace itself has no initializer, but its regular parent does.
+        self.assert_coverage(self.coverage_case([("bash", 'xvfb-run python -c "import pkg.ns"', "")], {
+            "pkg/__init__.py": COPY, "pkg/ns/leaf.py": "# namespace member\n"}), "pkg/__init__.py", None)
+
+    def test_review4_expanding_heredocs_cannot_hide_execution(self):
+        # D11: unquoted heredocs expand even though their bodies are not commands.
+        for body in ("$(cd support; python -m helper)", '$(python -m "$MODULE")', "`python -m helper`"):
+            with self.subTest(body=body):
+                self.assert_coverage(self.coverage_case([("bash", "cat > notes.md <<EOF\n" + body + "\nEOF", "")],
+                                                       {"support/helper.py": COPY}),
+                                     None, "action.yml:7: local-script discovery: unsupported expanding heredoc execution")
+        # A quoted delimiter suppresses expansion while retaining literal references.
+        self.assert_coverage(self.coverage_case([("bash", "cat <<'EOF'\n$(python scripts/helper.py)\nEOF", "")],
+                                               {"scripts/helper.py": COPY}), "scripts/helper.py", None)
+
+    def test_review4_read_cannot_mutate_resolution_names(self):
+        # D12: builtin input assignment changes resolution just like an export.
+        for command in ("read -r PATH <<<support; helper", "read PYTHONPATH", 'read -r "$NAME"',
+                        "read -aPATH <<<support; helper", "read -raPATH <<<support; helper"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "support/helper": "#!/usr/bin/env python3\n" + block("python")}),
+                    None, "unsupported read environment mutation")
+        w = self.workspace(("Hexalith.Alpha",))
+        w.action("Hexalith.Alpha", "read -r MODE <<<fast")
+        w.commit(w.paths["Hexalith.Alpha"])
+        self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review4_over_limit_inline_execution_fails_visibly(self):
+        # D13: never silently discard a bounded execution-bearing literal.
+        command = "xvfb-run python -c '" + "x=0;" * 1100 + "import helper'"
+        self.assert_coverage(self.coverage_case([("bash", command, "")], {"helper.py": COPY}),
+                             None, "execution literal coverage limit exceeded")
+
+    def test_review4_module_form_project_runners_apply_recipe_guard(self):
+        # D14: installed -m entrypoints have the same recipe guard as CLI tools.
+        for command in ("python -m poetry run lint", "python -m pdm run lint", "python -m hatch run lint"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "pyproject.toml": '[project.scripts]\nlint="helper:main"\n', "helper.py": COPY}),
+                    None, "unsupported task runner with tracked module recipes")
+
+    def test_review4_shell_startup_sources_fail_explicitly(self):
+        # D15: an interactive shell startup file is an executing source.
+        for option in ("--rcfile", "--init-file"):
+            with self.subTest(option=option):
+                self.assert_coverage(self.coverage_case([("bash", "bash " + option + " setup.rc -ic true", "")], {
+                    "setup.rc": "python -m helper\n", "helper.py": COPY}),
+                    None, "unsupported shell startup source option")
+
+    def test_review4_unsafe_imports_fail_instead_of_disappearing(self):
+        # D16: a found symlink or gitlink import is unsafe, not a non-local module.
+        for kind in ("symlink", "gitlink"):
+            with self.subTest(kind=kind):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, "python scripts/start.py")
+                    w.write(module, "scripts/start.py", "import helper\n")
+                    w.write(module, "support/helper.py", block("python"))
+                    if kind == "symlink":
+                        (w.paths[module] / "scripts/helper.py").symlink_to("../support/helper.py")
+                        w.commit(w.paths[module])
+                    else:
+                        w.commit(w.paths[module])
+                        revision = git(w.paths[module], "rev-parse", "HEAD")
+                        git(w.paths[module], "update-index", "--add", "--cacheinfo", "160000," + revision + ",scripts/helper.py")
+                        git(w.paths[module], "commit", "--quiet", "-m", "unsafe import")
+                self.assert_coverage(w.scan(self.factory), None, "missing or unsafe regular script/action: scripts/helper.py")
+
+    def test_review4_uv_project_recipe_root_changes_fail(self):
+        # D17: do not search the caller's recipes after discarding --project.
+        for command in ("uv run --project tools lint", "uv --project=tools run lint"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "tools/pyproject.toml": '[project.scripts]\nlint="helper:main"\n', "tools/helper.py": COPY}),
+                    None, "unsupported uv project recipe-root option")
+
+    def test_review4_action_input_default_and_step_with_scalars_include_copied_scripts(self):
+        # D18: these YAML scalars are the sole references to the copied helper.
+        for field in ("input-default", "step-with"):
+            with self.subTest(field=field):
+                w = self.workspace()
+                for module in w.paths:
+                    action = "name: Dormant\n"
+                    if field == "input-default":
+                        action += "inputs:\n  script:\n    default: scripts/helper.py\n"
+                    action += "runs:\n  using: composite\n  steps:\n"
+                    if field == "step-with":
+                        action += ("    - uses: owner/action@" + "a" * 40 +
+                                   "\n      with:\n        script: scripts/helper.py\n")
+                    else:
+                        action += "    - shell: bash\n      run: echo ready\n"
+                    w.write(module, ".github/actions/dormant/action.yml", action)
+                    w.write(module, "scripts/helper.py", block("python"))
+                    w.commit(w.paths[module])
+                self.assert_coverage(w.scan(self.factory), "scripts/helper.py", None)
+
+    def test_review6_returned_process_namespaces_fail_even_as_attribute_receivers(self):
+        # R1: a namespace returned by an import retains execution identity even
+        # when the receiver is an Attribute rather than getattr or an assignment.
+        for expression in ("__import__('subprocess')", "importlib.import_module('subprocess')"):
+            with self.subTest(expression=expression):
+                source = "import sys, importlib\n" + expression + ".run(['python3', '-m', sys.argv[1]])\n"
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py support.helper", "")], {
+                    "scripts/start.py": source, "support/helper.py": COPY}), None,
+                    "scripts/start.py:2: local-script discovery: unresolved computed Python script invocation")
+        for namespace in ("sys.modules['subprocess']", "s.modules['subprocess']"):
+            with self.subTest(namespace=namespace):
+                source = ("import sys\nimport sys as s\n" + namespace +
+                          ".run(['python', '-m', sys.argv[1]])\n")
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py helper", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), None,
+                    "scripts/start.py:3: local-script discovery: unresolved computed Python script invocation")
+
+    def test_review6_nested_builtin_namespace_reflection_fails(self):
+        # R11: do not exempt a namespace because another Attribute follows it.
+        for expression in ("builtins.__dict__.get('__import__')('helper')",
+                           "builtins.__dict__.__getitem__('__import__')('helper')",
+                           "__builtins__.__dict__.get('__import__')('helper')"):
+            with self.subTest(expression=expression):
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": "import builtins\n" + expression + "\n", "scripts/helper.py": COPY}),
+                    None, "scripts/start.py:2: local-script discovery: unsupported reflective")
+
+    def unsafe_import_case(self, kind, unsafe, source, *, child=False):
+        w = self.workspace()
+        for module in w.paths:
+            w.action(module, "python scripts/start.py")
+            w.write(module, "scripts/start.py", source)
+            w.write(module, "support/helper.py", block("python"))
+            if child:
+                w.write(module, "scripts/pkg/helper.py", "# regular imported child\n")
+            target = w.paths[module] / unsafe
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if kind == "symlink":
+                target.symlink_to("../support" if unsafe == "scripts/pkg" else (
+                    "../support/helper.py" if unsafe == "scripts/helper.py" else "../../support/helper.py"))
+                w.commit(w.paths[module])
+            else:
+                w.commit(w.paths[module])
+                revision = git(w.paths[module], "rev-parse", "HEAD")
+                git(w.paths[module], "update-index", "--add", "--cacheinfo", "160000," + revision + "," + unsafe)
+                git(w.paths[module], "commit", "--quiet", "-m", "unsafe import")
+        return w.scan(self.factory)
+
+    def test_review6_intermediate_unsafe_import_paths_fail(self):
+        # R2: final-path absence cannot turn a tracked symlink/gitlink ancestor
+        # into an installed non-local module.
+        for kind in ("symlink", "gitlink"):
+            with self.subTest(kind=kind):
+                self.assert_coverage(self.unsafe_import_case(kind, "scripts/pkg", "import pkg.helper\n"), None,
+                                     "scripts/start.py:1: local-script discovery: unsafe non-directory Python import")
+
+    def test_review6_literal_import_fallback_validates_unsafe_paths(self):
+        # R3: unknown process consumers still validate every literal import,
+        # including its leaf, intermediate directories and initializers.
+        for kind in ("symlink", "gitlink"):
+            for unsafe, module, child in (("scripts/helper.py", "helper", False),
+                                           ("scripts/pkg", "pkg.helper", False),
+                                           ("scripts/pkg/__init__.py", "pkg.helper", True)):
+                for consumer in ("sys.modules['subprocess']", "runner"):
+                    with self.subTest(kind=kind, unsafe=unsafe, consumer=consumer):
+                        source = ("import sys, subprocess\n" + consumer + ".run(['python3', '-c', "
+                                  + repr("import " + module) + "], cwd='scripts')\n")
+                        diagnostic = "unsafe non-directory Python import" if unsafe == "scripts/pkg" else (
+                            "missing or unsafe regular script/action: " + unsafe)
+                        self.assert_coverage(self.unsafe_import_case(kind, unsafe, source, child=child), None,
+                                             "scripts/start.py:2: local-script discovery: " + diagnostic)
+
+    def test_review6_unsafe_ancestor_initializers_fail_for_regular_children(self):
+        # R16: changing add_module's ancestor membership check to regular(init)
+        # must not let the regular child certify its unsafe initializer.
+        for kind in ("symlink", "gitlink"):
+            with self.subTest(kind=kind):
+                self.assert_coverage(self.unsafe_import_case(kind, "scripts/pkg/__init__.py",
+                                                            "import pkg.helper\n", child=True), None,
+                                     "scripts/start.py:1: local-script discovery: missing or unsafe regular "
+                                     "script/action: scripts/pkg/__init__.py")
+
+    def test_review6_project_preparation_fails_before_a_harmless_child(self):
+        # R4: uv may build the local project before running python -c pass.
+        project = ('[project]\nname="probe"\nversion="1.0"\n[build-system]\nrequires=[]\n'
+                   'build-backend="backend"\nbackend-path=["support"]\n')
+        for command in ("uv run --offline python -c pass", "python -m uv run --offline python -c pass",
+                        "uv run python -c pass --no-sync", "uv run python -c pass --no-project",
+                        "poetry run python -c pass", "pdm run python -c pass", "hatch run python -c pass"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "pyproject.toml": project, "support/backend.py": COPY}), None,
+                    "unsupported local project preparation with tracked build backend")
+        for command in ("uv --version", "uv run --no-project python -c pass", "uv run --no-sync python -c pass"):
+            with self.subTest(probe=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.write("Hexalith.Alpha", "pyproject.toml", project)
+                w.write("Hexalith.Alpha", "support/backend.py", block("python"))
+                w.commit(w.paths["Hexalith.Alpha"])
+                self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review6_runner_locations_are_checked_before_option_values(self):
+        # R5/R14: selector values such as info cannot masquerade as safe probes.
+        for command in ("npm --prefix info run lint", "npm --prefix=info run lint", "pnpm --dir info run lint",
+                        "yarn --cwd info run lint", "python -m poetry --directory tools run lint",
+                        "poetry --directory tools run lint", "pdm --project tools run lint"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "info/package.json": '{"scripts":{"lint":"python3 -m helper"}}', "info/helper.py": COPY,
+                    "tools/pyproject.toml": '[tool.poetry.scripts]\nlint="helper:main"\n',
+                    "tools/helper.py": COPY}), None, "unsupported task runner recipe location")
+        for command in ("npm info jscpd", "npm --version", "npm audit signatures"):
+            with self.subTest(probe=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.write("Hexalith.Alpha", "package.json", '{"scripts":{"lint":"python -m helper"}}')
+                w.commit(w.paths["Hexalith.Alpha"])
+                self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review6_environment_marker_output_is_not_a_destination(self):
+        # R6: only the actual redirect destination is exempt from output checks.
+        for value in ("$CONFIG$GITHUB_ENV", "GITHUB_ENV$CONFIG", "${GITHUB_ENV}$CONFIG"):
+            with self.subTest(value=value):
+                command = 'printf "MODE=fast\\n%s" "' + value + '" >> "$GITHUB_ENV"'
+                self.assert_coverage(self.coverage_case([("bash", command, ""), ("bash", "python -m helper", "")],
+                                                       {"support/helper.py": COPY}), None,
+                                     "computed environment name or output")
+
+    def test_review6_environment_heredoc_output_cannot_use_a_prefix_assignment(self):
+        # R7: MODE belongs to cat's environment, not its emitted heredoc body.
+        command = 'MODE=fast cat >> "$GITHUB_ENV" <<EOF\nPYTHONPATH=support\nEOF\npython3 -m helper'
+        self.assert_coverage(self.coverage_case([("bash", command, "")], {"support/helper.py": COPY}), None,
+                             "action.yml:6: local-script discovery: unsupported $GITHUB_ENV write output producer")
+
+    def test_review6_formatted_environment_output_cannot_hide_keys(self):
+        # R8: exact octal and %b/hex review fixtures must fail without execution.
+        for command in ("printf 'MODE=fast\\n\\120YTHONPATH=support\\n' >> \"$GITHUB_ENV\"",
+                        "printf '%b' 'MODE=fast\\x0aPYTHONPATH=support\\x0a' >> \"$GITHUB_ENV\"",
+                        "printf '%s\\n' MODE=fast PYTHONPATH=support >> \"$GITHUB_ENV\""):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, ""), ("bash", "python -m helper", "")],
+                                                       {"support/helper.py": COPY}), None, "$GITHUB_ENV")
+        for command in ("printf 'MODE=fast\\n' >> \"$GITHUB_ENV\"",
+                        "printf '%s\\n' MODE=fast X=1 >> \"$GITHUB_ENV\"",
+                        "echo MODE=fast >> \"$GITHUB_ENV\""):
+            with self.subTest(literal=command):
+                w = self.workspace(("Hexalith.Alpha",))
+                w.action("Hexalith.Alpha", command)
+                w.commit(w.paths["Hexalith.Alpha"])
+                self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review6_expanding_heredoc_continuations_preserve_execution_diagnostics(self):
+        # R9: fold backslash-newline before recognizing the resulting $(...).
+        for target in ("helper", '"$MODULE"'):
+            with self.subTest(target=target):
+                command = "cat <<EOF\n$\\\n(cd support; python3 -m " + target + ")\nEOF"
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"support/helper.py": COPY}), None,
+                                     "action.yml:7: local-script discovery: unsupported expanding heredoc execution")
+        # Quoted heredocs preserve the backslash and remain literal data.
+        w = self.workspace(("Hexalith.Alpha",))
+        w.action("Hexalith.Alpha", "cat <<'EOF'\n$\\\n(python -m \"$MODULE\")\nEOF")
+        w.commit(w.paths["Hexalith.Alpha"])
+        self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_review6_double_quoted_powershell_here_strings_expand(self):
+        # R10: double-quoted here strings execute subexpressions; single quotes
+        # retain data and literal script references without execution parsing.
+        command = 'Write-Output @"\n$(Set-Location support; python3 -m helper)\n"@'
+        self.assert_coverage(self.coverage_case([("pwsh", command, "")], {"support/helper.py": COPY}), None,
+                             "action.yml:7: local-script discovery: unsupported expanding heredoc execution")
+        self.assert_coverage(self.coverage_case([("pwsh", "Write-Output @'\n$(python scripts/helper.py)\n'@", "")],
+                                               {"scripts/helper.py": COPY}), "scripts/helper.py", None)
+
+    def test_review6_indexed_read_destinations_fail(self):
+        # R12: an array subscript does not change the resolution-variable name.
+        for command in ("read PATH[0]", "read -r 'PATH[0]' <<<support; helper", "read PYTHONPATH[1]",
+                        "read -a 'PATH[0]' <<<support", 'read "${NAME}[0]"'):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "support/helper": "#!/usr/bin/env python3\n" + block("python")}), None,
+                    "unsupported read environment mutation")
+
+    def test_review6_literal_fallback_limits_fail_at_the_source(self):
+        # R13: both known namespaces and unknown consumers reach the sequence bound.
+        for consumer, operands in (("sys.modules['subprocess']", ["python", "-c", "x=0;" * 1100 + "import helper"]),
+                                   ("runner", ["python", "-c", "x=0;" * 1100 + "import helper"]),
+                                   ("runner", ["python", "-c" + "x=0;" * 1100 + "import helper"])):
+            with self.subTest(consumer=consumer, joined=len(operands) == 2):
+                source = "import sys, subprocess\n" + consumer + ".run(" + repr(operands) + ")\n"
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), None,
+                    "scripts/start.py:2: local-script discovery: execution literal coverage limit exceeded")
+
+    def test_review6_mixed_quoted_heredoc_delimiter_preserves_later_execution(self):
+        # R15: E'OF' is the complete quote-removed EOF delimiter, not E.
+        for delimiter in ("E'OF'", 'E"OF"', "E\\OF"):
+            with self.subTest(delimiter=delimiter):
+                command = 'cat <<' + delimiter + '\ndata\nEOF\npython "$SCRIPT"'
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"support/helper.py": COPY}), None,
+                                     "action.yml:9: local-script discovery: unresolved local-script target")
+
+    def test_review7_sys_modules_get_retains_process_identity(self):
+        for namespace in ("sys.modules.get('subprocess')", "s.modules.get('subprocess')"):
+            with self.subTest(namespace=namespace):
+                source = ("import sys\nimport sys as s\n" + namespace +
+                          ".run(['python3','-m',sys.argv[1]])\n")
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py helper", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), None,
+                    "unresolved computed Python script invocation")
+                source = "import sys\nimport sys as s\n" + namespace + ".run(['python3','-m','helper'])\n"
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), "helper.py", None)
+        source = ("import sys, subprocess\nsp = sys.modules.get('subprocess')\n"
+                  "sp.run(['python','-m',sys.argv[1]])\n")
+        self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py helper", "")], {
+            "scripts/start.py": source, "helper.py": COPY}), None,
+            "scripts/start.py:2: local-script discovery: unsupported reflective use of an imported process/import namespace")
+
+    def test_review7_qualified_asyncio_subprocess_apis_fail(self):
+        for source in (
+                "import asyncio, sys\nasyncio.run(asyncio.subprocess.create_subprocess_exec"
+                "('python3','-m',sys.argv[1]))\n",
+                "import asyncio, sys\nfrom asyncio.subprocess import create_subprocess_exec as launch\n"
+                "asyncio.run(launch('python3','-m',sys.argv[1]))\n",
+                "import asyncio, sys\nimport asyncio.subprocess as child\n"
+                "asyncio.run(child.create_subprocess_exec('python3','-m',sys.argv[1]))\n"):
+            with self.subTest(source=source):
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py helper", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), None,
+                    "unsupported Python process/import API: asyncio.subprocess.create_subprocess_exec")
+
+    def test_review7_from_import_checks_unsafe_child_directories(self):
+        for kind in ("symlink", "gitlink"):
+            with self.subTest(kind=kind):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, "python scripts/start.py")
+                    w.write(module, "scripts/start.py", "from pkg import ns\n")
+                    w.write(module, "scripts/pkg/__init__.py", "# regular package\n")
+                    w.write(module, "support/__init__.py", block("python"))
+                    if kind == "symlink":
+                        (w.paths[module] / "scripts/pkg/ns").symlink_to("../../support")
+                        w.commit(w.paths[module])
+                    else:
+                        w.commit(w.paths[module])
+                        revision = git(w.paths[module], "rev-parse", "HEAD")
+                        git(w.paths[module], "update-index", "--add", "--cacheinfo",
+                            "160000," + revision + ",scripts/pkg/ns")
+                        git(w.paths[module], "commit", "--quiet", "-m", "unsafe child directory")
+                self.assert_coverage(w.scan(self.factory), None,
+                                     "unsafe non-directory Python import path component: scripts/pkg/ns")
+
+    def test_review7_printf_variable_resolution_writes_fail(self):
+        for command in ("printf -v PATH '%s' support; helper", "printf -vPATH '%s' support; helper",
+                        "printf -v 'PATH[0]' '%s' support; helper", 'printf -v "$NAME" %s support',
+                        "printf -v PYTHONPATH %s support", "printf -v 'MODE[PATH=1]' %s support"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "support/helper": "#!/usr/bin/env python3\n" + block("python")}), None,
+                    "unsupported printf variable write affecting script resolution")
+        self.assertEqual(self.coverage_case([("bash", "printf -v MODE '%s' fast", "")], {},
+                                            modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_unmodeled_nameref_declarations_fail(self):
+        for declaration in ("declare -n indirect=PATH", "declare -gn indirect=PATH", "typeset -n indirect=PATH"):
+            with self.subTest(declaration=declaration):
+                self.assert_coverage(self.coverage_case([("bash", declaration + "; read indirect <<<support", "")], {
+                    "support/helper": "#!/usr/bin/env python3\n" + block("python")}), None,
+                    "unsupported shell nameref declaration")
+        self.assertEqual(self.coverage_case([("bash", "declare MODE=fast; read MODE <<<fast", "")], {},
+                                            modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_path_file_validates_complete_emitted_output(self):
+        for command in ('echo /usr/bin "$CONFIG$GITHUB_PATH" >> "$GITHUB_PATH"',
+                        'echo /usr/bin "GITHUB_PATH$CONFIG" >> "$GITHUB_PATH"',
+                        'printf "%b" "/usr/bin\\nsupport" >> "$GITHUB_PATH"'):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"support/helper.py": COPY}), None,
+                                     "unsupported $GITHUB_PATH change affecting script resolution")
+        for command in ('echo "$HOME/.local/bin" >> "$GITHUB_PATH"',
+                        'printf \'%s\\n\' "$HOME/bin" /usr/bin >> "$GITHUB_PATH"'):
+            with self.subTest(safe=command):
+                self.assertEqual(self.coverage_case([("bash", command, "")], {},
+                                                    modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_project_build_system_preparation_fails_without_backend_path(self):
+        project = ('[project]\nname="probe"\nversion="1.0"\n[build-system]\nrequires=["setuptools"]\n'
+                   'build-backend="setuptools.build_meta"\n')
+        files = {"pyproject.toml": project, "setup.py": COPY}
+        self.assert_coverage(self.coverage_case([("bash", "uv run --no-build-isolation --offline python -c pass", "")],
+                                               files), None,
+                             "unsupported local project preparation with tracked build backend")
+        for command in ("uv --version", "uv run --no-sync python -c pass", "uv run --no-project python -c pass"):
+            with self.subTest(probe=command):
+                self.assertEqual(self.coverage_case([("bash", command, "")], files,
+                                                    modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_path_file_cr_records_are_validated_individually(self):
+        for separator in (r"\r", r"\r\n", r"\n"):
+            with self.subTest(separator=separator):
+                command = "printf '/usr/bin" + separator + "support" + separator + "' >> \"$GITHUB_PATH\""
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                    "support/helper": "#!/usr/bin/env python3\n" + block("python")}), None,
+                    "unsupported $GITHUB_PATH change affecting script resolution")
+
+    def test_review7_explicit_local_dependencies_precede_preparation_exemptions(self):
+        project = ('[project]\nname="probe"\nversion="1.0"\n[build-system]\nrequires=[]\n'
+                   'build-backend="backend"\nbackend-path=["support"]\n')
+        files = {"pyproject.toml": project, "support/backend.py": COPY}
+        for command in ("uv run --offline --no-project --with . python -c pass",
+                        "uv run --no-sync --with=. python -c pass", "uv run --no-project --with-editable . python -c pass"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], files), None,
+                                     "unsupported local dependency preparation")
+        for command in ("uv run --no-project --with packaging python -c pass",
+                        "uv run --no-sync --with 'packaging>=24' python -c pass"):
+            with self.subTest(public=command):
+                self.assertEqual(self.coverage_case([("bash", command, "")], files,
+                                                    modules=("Hexalith.Alpha",))["result"], "pass")
+        self.assert_coverage(self.coverage_case([("bash", "uv run python -c pass --no-project --with .", "")], files),
+                             None, "unsupported local project preparation with tracked build backend")
+
+    def test_review7_mutating_npm_audit_is_not_a_safe_probe(self):
+        files = {"package.json": '{"dependencies":{"hook":"file:./hooks"}}',
+                 "hooks/package.json": '{"name":"hook","scripts":{"install":"python3 -m helper"}}',
+                 "hooks/helper.py": COPY}
+        self.assert_coverage(self.coverage_case([("bash", "npm audit fix --offline --foreground-scripts", "")], files),
+                             None, "unsupported mutating npm audit operation")
+        for command in ("npm audit signatures", "npm audit --json"):
+            with self.subTest(probe=command):
+                self.assertEqual(self.coverage_case([("bash", command, "")], files,
+                                                    modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_project_recipes_shadow_interpreter_and_shell_names(self):
+        for name in ("python", "bash"):
+            with self.subTest(name=name):
+                self.assert_coverage(self.coverage_case([("bash", "poetry run " + name + " -c pass", "")], {
+                    "pyproject.toml": '[tool.poetry.scripts]\n' + name + '="helper:main"\n', "helper.py": COPY}), None,
+                    "unsupported task runner with tracked module recipes: poetry")
+
+    def test_review7_powershell_environment_output_uses_separate_lines(self):
+        command = 'Write-Output "MODE=fast" "PYTHONPATH=support" >> $env:GITHUB_ENV'
+        self.assert_coverage(self.coverage_case([("pwsh", command, "")], {"support/helper.py": COPY}), None,
+                             "unsupported $GITHUB_ENV write affecting script resolution")
+        # Bash echo emits one harmless MODE value containing the second word.
+        self.assertEqual(self.coverage_case([("bash", 'echo "MODE=fast" "PYTHONPATH=support" >> "$GITHUB_ENV"', "")], {},
+                                            modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_node_workspace_and_unmodeled_leading_value_options_fail(self):
+        files = {"package.json": '{"workspaces":["info"]}',
+                 "info/package.json": '{"name":"info","scripts":{"lint":"python3 -m helper"}}',
+                 "info/helper.py": COPY}
+        for command in ("npm --workspace info run lint", "npm --workspace=info run lint", "npm -w info run lint"):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", command, "")], files), None,
+                                     "unsupported task runner recipe location")
+        self.assert_coverage(self.coverage_case([("bash", "npm --registry info run lint", "")], files), None,
+                             "unsupported task runner leading option")
+        for command in ("npm info jscpd", "npm --ignore-scripts --version", "npm audit signatures"):
+            with self.subTest(probe=command):
+                self.assertEqual(self.coverage_case([("bash", command, "")], files,
+                                                    modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_outer_execution_string_limit_fails_for_unknown_python_consumer(self):
+        for command in ("python -c '" + "x=0;" * 1100 + " import helper'",
+                        "true;" * 1100 + "python -c 'import helper'"):
+            with self.subTest(command_suffix=command[-40:]):
+                source = "import runner\nrunner.run(" + repr(command) + ")\n"
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), None,
+                    "scripts/start.py:2: local-script discovery: execution literal coverage limit exceeded")
+        # A large literal without an execution-bearing command remains data.
+        for value in ("ordinary data " * 400, "notpython -c data " * 400):
+            with self.subTest(data_prefix=value[:20]):
+                self.assertEqual(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": "value = " + repr(value) + "\n"},
+                    modules=("Hexalith.Alpha",))["result"], "pass")
+
+    def test_review7_nested_process_dunder_invocation_fails(self):
+        for receiver in ("subprocess.run", "launch"):
+            with self.subTest(receiver=receiver):
+                source = ("import subprocess, sys\nlaunch = subprocess.run\n" + receiver +
+                          ".__call__(['python3','-m',sys.argv[1]])\n")
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py helper", "")], {
+                    "scripts/start.py": source, "helper.py": COPY}), None,
+                    "unsupported reflective use of a process/import API")
+
+    def test_review7_unsupported_heredoc_quoting_fails_without_hiding_later_commands(self):
+        for delimiter in ("$'EOF'", '$"EOF"'):
+            with self.subTest(delimiter=delimiter):
+                command = 'cat <<' + delimiter + '\ndata\nEOF\npython3 "$SCRIPT"'
+                self.assert_coverage(self.coverage_case([("bash", command, "")], {"support/helper.py": COPY}), None,
+                                     "unsupported heredoc delimiter syntax: ANSI/locale quoting")
+
+    def test_unknown_python_consumer_preserves_literal_child_cwd(self):
+        source = "import runner\nrunner.run(['bash','../scripts/start.sh'], cwd='work')\n"
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+            "scripts/start.py": source, "scripts/start.sh": "python -m helper\n", "work/helper.py": COPY})
+        self.assert_coverage(report, "work/helper.py", None)
+
     def test_each_central_policy_rule_fails_alone(self):
         # C16: one single-violation subtest per central-policy rule.
         policy = json.loads((ROOT / ".jscpd.json").read_bytes())

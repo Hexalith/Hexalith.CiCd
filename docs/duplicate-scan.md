@@ -50,7 +50,9 @@ Recognized forms supply the exact working directory, import roots and language:
 - Each composite step is discovered independently, and its diagnostics name the
   step's line. A local `uses:` names exactly one `action.yml`/`action.yaml` under
   `.github/actions/`; any other `uses:` must pin a full commit SHA. Literal
-  `working-directory` and literal Bash `cd` set the working directory.
+  `working-directory` and literal Bash `cd` establish candidate working
+  directories. Each later `cd` extends every preceding candidate, retaining
+  both before/after contexts, including successive conditional changes.
 - Workspace and action path expressions, their environment-variable forms
   (only at a variable-name boundary) and PowerShell `$PSScriptRoot`.
 - Direct script paths; `bash`, `sh`, `dash`, `zsh`, `ksh`, `pwsh` and
@@ -99,6 +101,10 @@ References resolve against every candidate base:
 
 Every match is included, and over-inclusion is acceptable. A literal never pulls
 in YAML outside `.github/actions`, and a literal that names nothing is data.
+Selected children are traversed under every established working directory,
+including when an earlier reference already selected that child. Selection does
+not erase an additional invocation context. Traversal remains bounded at 8,000
+distinct file/context combinations; exceeding that bound fails coverage.
 
 Module names follow the same rule. In any literal sequence (a line's shell words,
 a heredoc body line, a Python string, a list, tuple or set, or a call's
@@ -111,7 +117,10 @@ import root; its file, its package initializer and `__main__.py`, and every
 enclosing `__init__.py` are included. So `xvfb-run python -m tool`,
 `Start-Job { python -m tool }` and
 `sys.modules['subprocess'].run(['python', '-m', 'tool'])` include a local
-`tool.py` even though the consumer is unrecognized.
+`tool.py` across the precise and conservative discovery paths.
+Ancestor initializers are included even when the exact imported namespace has
+neither `__init__.py` nor `__main__.py`. Action input defaults and step `with`
+scalars participate in literal reference discovery as well.
 
 From an execution position (a command word, interpreter operand, sourced path or
 `runpy.run_path` target), a literal is resolved precisely first. When that exact
@@ -131,7 +140,10 @@ importing file's directory, the working directory and the workspace root. Every
 match is included. A required `python -m` module fails as missing only when its
 top-level package exists locally; otherwise, as with `pip`, it is an installed
 tool. A `from module import name` of a non-local module never selects a local
-file named `name`.
+file named `name`. Every precise import and literal-module fallback checks the
+leaf, each intermediate package-path component and all ancestor initializers.
+Tracked symlinks and gitlinks fail as unsafe; an unsafe package directory or
+initializer cannot disappear as a non-local import.
 
 ### Rule 2: unmodeled indirection fails
 
@@ -147,7 +159,15 @@ These fail coverage with a diagnostic naming the source file and line:
   `find -execdir`/`-okdir` and `-exec {}`, `Start-Process` and `Invoke-Command`.
   Options that redirect execution fail as well: `pwsh -WorkingDirectory`,
   `-EncodedCommand` and `-CommandWithArgs`, `uv --directory`/`-C`, unknown `uv`
-  options, wrapper options and task-runner options.
+  options, `uv --project` recipe-root selection, wrapper options and task-runner
+  options. Bash `--rcfile` and `--init-file` startup sources fail explicitly.
+  An interpreter behind an unknown consumer still establishes execution
+  positions: `xvfb-run python "$TARGET"` fails. An unknown consumer also cannot
+  certify a computed operand as nonexecuting data, so `xvfb-run "$COMMAND"`
+  fails. Ordinary quoted data under recognized data commands such as `echo`
+  and `printf` stays data. An execution-bearing inline
+  literal over the 4,096-character discovery limit fails visibly, including
+  `-c` programs in literal sequences behind unrecognized Python consumers.
 - An interpreter fed from stdin or a heredoc, such as `bash <<EOF`,
   `python - <<'EOF'`, `pwsh -Command -`, `bash -s`, `python -` or
   `cat x.py | python`.
@@ -162,20 +182,44 @@ These fail coverage with a diagnostic naming the source file and line:
   - an env file through `uv --env-file` or python-dotenv's `load_dotenv`;
   - a `$GITHUB_ENV` write.
 
-  A computed environment name in `export`/`declare` fails too.
+  A computed environment name in `export`/`declare` fails too, as does shell
+  `read` assigning a resolution-affecting or computed variable name, including
+  indexed destinations such as `PATH[0]`.
 - A `PATH` value, or a `$GITHUB_PATH` write, that adds a relative, workspace or
   action-path directory, or any computed component other than `$PATH` and
   `$HOME`. Absolute literal directories and `$HOME/...` pass. Python `PATH`
-  writes and subprocess `PATH` overrides always fail.
-- A `$GITHUB_ENV` write with a computed key, meaning that line has no literal
-  `NAME=` or `NAME<<`. Python code that names `GITHUB_ENV` or `GITHUB_PATH` fails
-  too.
+  writes and subprocess `PATH` overrides always fail. Path-file writes use the
+  same bounded literal-producer checks as environment-file writes: only the
+  actual destination is exempt, and every emitted path line is checked.
+  Path-file records split on CRLF, lone CR and LF, matching the runner's path
+  reader. Source line numbers and Linux environment-file parsing keep LF semantics.
+  A word containing `GITHUB_PATH` cannot conceal computed emitted output.
+- A `$GITHUB_ENV` write with a computed key or unmodeled computed emitted output.
+  Only an exact understood redirection target is a destination. A word such as
+  `$CONFIG$GITHUB_ENV` or `GITHUB_ENV$CONFIG` remains computed emitted output.
+  Every output argument is checked: a harmless literal `MODE=fast` does not
+  certify a second computed argument or a command's heredoc body. The scanner
+  accepts literal `echo`/`Write-Output` writes and a bounded `printf` subset
+  (`%s`, `%%`, and newline/tab/carriage-return/backslash format escapes). It
+  validates the complete derived output. PowerShell `Write-Output` and its
+  `echo` alias emit one line per argument; Bash `echo` joins its arguments.
+  Other producers, `%b`, octal/hex
+  escapes and unmodeled formatting fail; no module command runs to derive
+  output. Fully understood harmless writes pass. Python code that names `GITHUB_ENV` or
+  `GITHUB_PATH` fails too.
 - Reflective use of a process or import API. That means storing it in an
   attribute, a class body, a tuple or a container; passing it as an argument;
   using it as a default, a return value or a walrus target; or fetching it with
   `getattr`. A plain name alias is followed instead, and type annotations,
   comparisons and `isinstance`-style inspection are not uses. The following
   fail too:
+  - reflective `builtins`/`__builtins__` namespace access, such as
+    `builtins.__dict__['__import__']`, and reflective use of a process/import
+    namespace returned by `__import__` or `importlib.import_module`, such as
+    `getattr(__import__('subprocess'), 'run')` or
+    `builtins.__dict__.get('__import__')`. Direct supported calls through a
+    literal imported namespace or `sys.modules['subprocess']` use the same
+    operand validation as ordinary calls; computed targets still fail;
   - `eval`, `exec`, `compile` and the file-location import loaders;
   - `os.exec*`, `os.spawn*`, `os.posix_spawn*`, `asyncio.create_subprocess_*` and
     `pty.spawn`;
@@ -191,12 +235,28 @@ These fail coverage with a diagnostic naming the source file and line:
   - `pytest`, `py.test`, `python -m pytest`, `python -m unittest` or
     `python -m nose2` when the module tracks `conftest.py` or a file named
     `test*.py` or `*_test.py`;
-  - `npm`, `pnpm`, `yarn` or `bun` with a tracked `package.json`, unless
-    `--ignore-scripts` is given or the subcommand runs no scripts;
+  - `npm`, `pnpm`, `yarn` or `bun` with a tracked `package.json`, unless the
+    subcommand runs no scripts. `--ignore-scripts` disables lifecycle hooks for
+    dependency installation, but never exempts explicitly named `run` scripts;
   - `uv`, `poetry`, `pipenv`, `pdm` or `hatch run` of a script name defined in a
-    tracked `pyproject.toml`, `Pipfile` or `hatch.toml`.
+    tracked `pyproject.toml`, `Pipfile` or `hatch.toml`, including installed
+    module forms such as `python -m poetry run lint`;
+  - other project operations with tracked project configuration, such as
+    `uv build`, because they can execute a local build backend. The scanner
+    also rejects `run` preparation when `pyproject.toml` declares a build system,
+    including a standard backend executing tracked `setup.py`, even if the
+    visible child is harmless. An actual uv
+    `--no-project` or `--no-sync` option before the child disables that
+    project preparation check; the child's arguments cannot do so. Explicit
+    local dependency sources, such as `uv run --no-project --with .`, still
+    require preparation and fail before those exemptions. Public-package
+    `--with` operands remain supported. The scanner never imports or executes
+    a backend.
 
-  An explicit recipe file or directory option fails as well.
+  An explicit recipe file or directory option fails before its value can be
+  mistaken for a safe subcommand. This includes leading selectors in module
+  forms such as `python -m poetry --directory tools run lint`. Plain
+  nonexecuting npm info/version/audit and runner version probes remain supported.
 
 ### Lines, comments and data
 
@@ -205,13 +265,21 @@ Other separators, such as U+2028, form feed or a lone CR, stay inside the line.
 The continuation character is a backslash in shell and a backtick in PowerShell,
 and nothing else. A logical line keeps its first physical line number in
 diagnostics. A comment starts only at a word boundary, so `$#` and `a#b` are
-words. PowerShell `<# ... #>` comments are removed wherever they occur, without
-changing line numbers. A UTF-8 byte-order mark is ignored for parsing.
+words. PowerShell `<# ... #>` comments are removed wherever they occur outside
+quoted strings, without changing line numbers. Quoted `<#` and `#>` are data.
+A UTF-8 byte-order mark is ignored for parsing.
 
-Heredoc bodies fed to any command other than an interpreter are data, and so are
-PowerShell here-string bodies. They are scanned for literal references and never
-parsed as commands. Quoted ordinary data stays data, including text that
-resembles the failing forms above.
+Heredoc bodies fed to any command other than an interpreter are scanned for
+literal references and never parsed as commands. A heredoc writing an environment
+file fails when its full output producer is unmodeled. An unquoted shell heredoc
+additionally performs expansions: backslash-newline continuations are removed
+before checking command substitutions and backticks, which fail coverage with
+physical source positions. The complete delimiter word undergoes quote removal,
+so `E'OF'` terminates at `EOF`; unsupported delimiter syntax fails visibly.
+Quoting any part of the delimiter suppresses body expansion. PowerShell
+double-quoted here-strings also expand, and their unmodeled subexpressions fail;
+single-quoted here-strings remain literal-reference data. Ordinary quoted data
+stays data, including text that resembles the failing forms above.
 
 ### Conservative failures and limits
 

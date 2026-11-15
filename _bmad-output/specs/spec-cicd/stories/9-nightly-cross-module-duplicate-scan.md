@@ -2,10 +2,11 @@
 title: 'Nightly cross-module duplicate scan'
 type: 'feature'
 created: '2026-11-15'
-status: 'in-review'
+status: 'done'
 baseline_revision: '23e1c39cf387151467cac4636267c780098a388d'
-review_loop_iteration: 1
-followup_review_recommended: true
+baseline_commit: 'cd20395ca6e2886c5d936c7ecc608f359277caa0'
+review_loop_iteration: 3
+followup_review_recommended: false
 context:
   - /home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/enforcement.md
   - /home/administrator/projects/hexalith/cicd/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
@@ -165,6 +166,22 @@ Every A1 reproduction in the probe log becomes a two-module real-detector regres
 5. **Keep existing tests.** Every existing test stays unless the amended model reverses one of its assertions. One known case: a data argument that names a tracked script is now included.
 6. **`docs/duplicate-scan.md`:** keep its scope, threshold, reporting and retuning sections, and rewrite its discovery section for the model.
 7. **Do not modify:** `_bmad-output/implementation-artifacts/deferred-work.md`, the investigation artifact, `<intent-contract>`, or the frontmatter `deferred` item.
+
+### 2026-11-15 — Resumed review 4 loopback (review_loop_iteration 2)
+
+**Trigger:** The coverage model is sound, but traversal loses candidate working-directory contexts, and several parsing/runner/reflection paths still certify incomplete scope. All three current review layers completed. Real-Git reproductions are in `story-9-review4-blind-probes.log` and `story-9-review4-edge-probes.log`; the latter's fixture source is `story-9-review4-edge-probes.py.log`. The YAML-scalar regression mutation is in `story-9-review4-verification-gap.log`.
+
+**Amended:** The non-frozen Design Notes below now specify the demonstrated cases D1–D17. Every case must either include the copied helper and produce a two-module real-detector finding or give the named source coverage failure. Do not silently skip any of these regressions.
+
+**Known-bad state avoided:** `errors: []` with executed tracked helper code omitted, including imports through a symlink; all 22 concrete review reproductions exhibit that outcome. The separate YAML-scalar test mutation makes the actual controller falsely pass.
+
+**KEEP and restoration:**
+
+1. The parent reverted only these seven story paths to `23e1c39cf387151467cac4636267c780098a388d`: `.github/workflows/nightly.yml`, `docs/duplicate-scan.md`, `docs/nightly.md`, `setup/README.md`, `tools/scan_discovery.py`, `tools/tests/test_nightly_workflow.py`, `tools/tests/test_scan.py`.
+2. Perform the previous change log's restore-from-`23e1c39cf387151467cac4636267c780098a388d` instruction for those paths first. Then restore the same seven paths from the reviewed source `cd20395ca6e2886c5d936c7ecc608f359277caa0` with `git restore --source=cd20395ca6e2886c5d936c7ecc608f359277caa0 --worktree -- <paths>`. This restores the completed coverage model and all C1–C16 fixes before re-derivation. Do not recreate them from scratch.
+3. Preserve every existing test, bounded traversal, literal/module inclusion, precise resolution, diagnostics, policy and calibration. Keep `.jscpd.json`, npm manifests/lock, `tools/scan.py` and its lock, test lock, workflow, workflow tests, nightly docs and setup README verbatim from that reviewed source. Changes in this re-derivation belong only in `tools/scan_discovery.py`, `tools/tests/test_scan.py` and discovery explanations in `docs/duplicate-scan.md`.
+4. Never restore or modify submodule gitlinks, the frozen `<intent-contract>`, the frontmatter `deferred` item, deferred-work ledger or detector investigation. The concurrent `/pushall` commit updated submodule pins independently; those are outside this story's changes.
+5. Keep regression fixtures quoted below, or faithful equivalents, so the demonstrated issue cannot be replaced by a nearby passing example. Ordinary quoted data must stay data; conservative failures for unmodeled execution stay explicit.
 
 ## Review Triage Log
 
@@ -355,6 +372,103 @@ Grouping produced these entries:
 
 `review_loop_iteration` is now 1. Code was reverted for re-derivation through step 3.
 
+### 2026-11-15 — Resumed review 4
+
+- Three required layers completed; none skipped. 24 findings: 23 high, 1 medium. Each is independently retained below; parent traced all cited functions and read the retained reproduction outputs.
+- Findings:
+  - `[high]` `[bad_spec]` B1: PowerShell block-comment removal is not quote-aware. A real-Git probe with `Write-Output '<#'; python -m helper; Write-Output '#>'` omits helper.py without errors; the unconditional regex deletes the command. D3.
+  - `[high]` `[bad_spec]` B2: An unknown wrapper can hide a computed interpreter operand: `xvfb-run python "${{ inputs.script }}"` returns no coverage error or helper. Rule 2 requires a diagnostic for this execution indirection. D4.
+  - `[high]` `[bad_spec]` B3: `import builtins; builtins.__dict__['__import__']('helper')` bypasses reflective identity checks and omits scripts/helper.py; names() strips the builtins namespace before reflective() recognizes it. D5.
+  - `[high]` `[bad_spec]` B4: A literal X=1 component masks the computed output in `printf "X=1\n%s" "$CONFIG" >> "$GITHUB_ENV"`; CONFIG can set PYTHONPATH while no diagnostic is emitted. environment() validates only the literal key it finds. D7.
+  - `[high]` `[patch]` B5: `npm run go --ignore-scripts` still executes the named tracked package recipe; the local execution proof prints its marker, while discovery returns no files/errors. The blanket ignore-scripts early return is wrong. D8.
+  - `[high]` `[bad_spec]` B6: `uv build` executes a tracked backend selected through build-system backend-path, proven by a synthetic backend marker; uv() returns None for non-run commands and omits that code. D9.
+  - `[high]` `[patch]` B7: `xvfb-run python -c "import pkg.ns"` omits pkg/__init__.py when pkg/ns is a namespace. include_modules() continues before walking ancestors unless the exact module has a py/init/main blob. D10.
+  - `[high]` `[bad_spec]` B8: After `cd support`, an unknown wrapper includes scripts/start.py using the initial cwd; its subprocess Python import omits support/helper.py without errors. include() passes cwds[0] and skips already-selected files. D1.
+  - `[high]` `[bad_spec]` B9: An unquoted cat heredoc executes `$(cd support; python -m helper)` during shell expansion, while logical()/commands() treat the body only as data and omit the helper without errors. D11.
+  - `[high]` `[bad_spec]` B10: `read -r PATH <<<support; helper` executes tracked support/helper (synthetic Bash proof), but the read builtin is unmodeled and emits no resolution-mutation diagnostic. D12.
+  - `[high]` `[bad_spec]` E1: The edge real-Git probe independently reproduces B8 with `cd work; xvfb-run ../scripts/start.sh`: child traversal loses work as a cwd and omits work/helper.py. Same context-loss defect, D1.
+  - `[high]` `[bad_spec]` E2: `if false; then cd a; fi` followed by `cd b; python -m helper` establishes only a/b in precise traversal, omitting actual b/helper.py. Each later literal cd must extend every possible preceding cwd. D2.
+  - `[high]` `[patch]` E3: The edge probe independently confirms B5 using `npm --ignore-scripts run lint`; the named script executes and its module is omitted. D8.
+  - `[high]` `[bad_spec]` E4: The edge probe independently confirms B1: quoted PowerShell comment delimiters delete the intervening import. D3.
+  - `[high]` `[bad_spec]` E5: The edge probe mixes MODE=fast with "$NAME=support" in a GITHUB_ENV write; the literal key prevents a computed-key failure. Same incomplete emitted-output validation as B4. D7.
+  - `[high]` `[bad_spec]` E6: A valid inline Python operand over 4096 bytes behind xvfb-run is silently ignored by module_references()/imported(), omitting its imported helper with errors empty. A resource bound must fail visibly. D13.
+  - `[high]` `[bad_spec]` E7: The edge unquoted heredoc computes its module through `$MODULE`; body expansion is ignored, giving no error. Same heredoc execution defect as B9. D11.
+  - `[high]` `[bad_spec]` E8: `python -m poetry run lint` bypasses the project-runner recipe checks even with tracked pyproject.toml; only task_runner() is called for absent non-local modules. D14.
+  - `[high]` `[patch]` E9: `bash --rcfile setup.rc -ic true` executes tracked startup source (local Bash proof); shell_options() discards the rcfile operand and discovery omits its helper without errors. D15.
+  - `[high]` `[patch]` E10: An imported scripts/helper.py symlink is found by import_module() but silently dropped by add_module() regular() checks; no unsafe-import error reaches the module. D16.
+  - `[high]` `[patch]` E11: `uv run --project tools lint` discards the project selector then searches only the caller recipe roots, omitting the tools/pyproject.toml recipe and its helper without errors. Reject this unmodeled recipe location. D17.
+  - `[high]` `[bad_spec]` E12: `getattr(__import__('subprocess'), 'run')(['python', '-m', argv[1]])` bypasses reflective checks because the import result is not represented in names(). The real-Git probe omits helper.py and emits no error. D6.
+  - `[high]` `[bad_spec]` E13: The edge claim-level finding aggregates its twelve no-error omissions, substantiated by the retained real-Git probes. It shares their verified causes D1–D3/D6–D8/D11/D13–D17; it is retained as its own row.
+  - `[medium]` `[patch]` G1: Pre-verified regression gap: removing only action() scalar include() in memory leaves all 52 ScanTests passing. Two real Git modules with inputs.script.default naming the copied helper then falsely pass. Add input-default and step-with scalar fixtures. D18.
+
+Grouping: B8/E1/E13 share lost child contexts; E2 is separate conditional-cd state loss; B1/E4 share quote-insensitive comment removal; B4/E5 share partial environment-output validation; B5/E3 share the npm bypass; B9/E7 share expanding heredoc handling. Other concrete rows have distinct roots. E13 also carries the verified members of its aggregate claim. G1 is an independent test gap. Context propagation and unresolved execution require nontrivial changes, so bad_spec entries trigger the loopback; patch entries are moot and carried as the D constraints. No new deferral or intent ambiguity exists.
+
+
+### 2026-11-15 — Resumed review 6
+
+All three required layers completed; none skipped. The 21 findings have individual verdicts below (20 high, one medium). The parent inspected the cited functions, callers and exact real-Git/runtime probe fixtures. Blind probes and their source are retained in `story-9-review6-blind-probes.log` and `story-9-review6-blind-probes.py.log`; edge evidence is retained in `story-9-review6-edge-*.log`; the verification mutation and pinned-detector proof are in `story-9-review6-verification-ancestor.log`.
+
+- `[high]` `[patch]` B1: Returned process namespaces bypass execution checks. The explicit ast.Attribute exemption allows `__import__('subprocess').run(['python3', '-m', sys.argv[1]])`; names() never resolves that call, and the probe executes omitted support/helper.py with errors empty. R1.
+- `[high]` `[bad_spec]` B2: An intermediate package-directory symlink is invisible to import_module(). `scripts/pkg -> ../support` with `import pkg.helper` executes support/helper.py; final-path lookups find no candidate and produce no unsafe-path diagnostic. R2.
+- `[high]` `[patch]` B3: include_modules() filters unsafe leaf imports before validation. `sys.modules['subprocess'].run(['python3', '-c', 'import helper'], cwd='scripts')` through scripts/helper.py symlink omits support/helper.py with no errors; the precise add_module() fix does not cover this caller. R3.
+- `[high]` `[bad_spec]` B4: uv run can build a tracked local backend before its child executes. The run exemption omits backend-path=['support']; the actual uv runtime proof prints the backend's copied content. R4.
+- `[high]` `[patch]` B5: npm --prefix info run lint treats the option operand info as a safe subcommand before checking recipe-location options. The actual npm proof executes omitted info/helper.py. R5.
+- `[high]` `[patch]` B6: environment() exempts an entire computed output word containing GITHUB_ENV. CONFIG can supply PYTHONPATH and the runtime proof emits a valid resolution-changing environment file while discovery has no errors. R6.
+- `[high]` `[bad_spec]` B7: A harmless command-prefix MODE=fast certifies a GITHUB_ENV heredoc body the validator never examines. The runtime output contains PYTHONPATH=support, and the subsequent helper remains omitted. R7.
+- `[high]` `[bad_spec]` B8: printf output escapes are checked only by source spelling. An octal-escaped P in PYTHONPATH emits the forbidden key beside harmless MODE=fast and passes without errors. R8.
+- `[high]` `[bad_spec]` B9: Backslash-newline removal in an expanding heredoc creates a command substitution across physical lines. Bash executes support/helper.py, while the per-line substitution check sees no executing construct. R9.
+- `[high]` `[patch]` B10: Double-quoted PowerShell here-string bodies are marked expands=False. The actual PowerShell proof executes $(Set-Location support; python3 -m helper), but discovery omits its helper without errors. R10.
+- `[high]` `[patch]` E1: The edge two-module/pinned-detector probe independently confirms B1 with computed -m sys.argv[1]. Both modules and overall report pass with the copied helper omitted. R1.
+- `[high]` `[patch]` E2: builtins.__dict__.get('__import__')('helper') bypasses reflection checks. The nested Attribute parent exemption hides __dict__, and the final resolved name is outside the exact namespace check. The pinned-detector probe passes with scripts/helper.py omitted. R11.
+- `[high]` `[patch]` E3: The edge probe uses a computed emitted word GITHUB_ENV$CONFIG to reproduce B6's substring exemption. The output can introduce PYTHONPATH; two modules pass without the copied helper. R6.
+- `[high]` `[bad_spec]` E4: printf '%b' emits hex-escaped newlines and a PYTHONPATH line that the source-spelling parser misses. The pinned-detector probe falsely passes; this shares B8's unmodeled formatted-output root cause. R8.
+- `[high]` `[patch]` E5: read PATH[0] writes the same Bash resolution variable as PATH, but the exact-name guard omits indexed destinations. Discovery has no errors and the actual Bash proof changes PATH. R12.
+- `[high]` `[bad_spec]` E6: An over-limit literal -c program behind sys.modules['subprocess'].run is silently dropped by module_references()/imported(). The 4,400-character program imports the copied helper, but the pinned-detector report passes with no errors or findings. R13.
+- `[high]` `[patch]` E7: python -m poetry --directory tools run lint silently returns from runner() before checking its project selector. The tracked tools recipe executes omitted tools/helper.py and the pinned-detector report passes. R14.
+- `[high]` `[bad_spec]` E8: A mixed-quoted heredoc delimiter E'OF' is parsed as E. The parser swallows subsequent real commands as data, including a computed interpreter target that must fail coverage. The actual shell terminates at EOF. R15.
+- `[high]` `[bad_spec]` E9: The edge direct-discovery/Bash proof independently confirms B9 with a computed -m operand across the continued heredoc lines. R9.
+- `[high]` `[bad_spec]` E10: Claim-level AC1 failure is demonstrated by six independent real-Git/two-module/pinned-detector probes with result=pass, findings=[] and errors=[] while executed copied helpers are absent. This aggregate carries R1/R6/R8/R11/R13/R14; it does not replace the individual findings.
+- `[medium]` `[patch]` G1: Pre-verified regression gap: changing only add_module()'s ancestor condition back to regular(init) leaves all 69 tests green. A two-module actual-detector proof falsely passes when a regular child has a symlink package initializer with copied code. Add explicit unsafe ancestor-initializer assertions. R16.
+
+Grouping retains every row above. B1/E1, B6/E3, B8/E4 and B9/E9 share their respective demonstrated causes; all other concrete findings remain separate. E10 is an aggregate of its verified members. The nontrivial unsafe import, project-build, emitted-output and heredoc parsing changes route to bad_spec and trigger a loopback. Patch entries are moot until re-derivation and carried as R constraints. No intent ambiguity and no new deferral exists. `review_loop_iteration` is now 3.
+
+
+### 2026-11-15 — Review 7
+
+All three required layers completed; none skipped. The parent inspected every cited function and its callers, all retained exact fixtures, and actual Bash/PowerShell/Python/uv/npm/Poetry runtime output. All 20 findings have individual verdicts below (19 high, one medium). Evidence: `story-9-review7-blind-hunter7-probes.py.log` / `.log`, `story-9-review7-edge-probes.py.log` / `.log`, `story-9-review7-edge-runtime.py.log` / `.log`, and `story-9-review7-verification-context.log`.
+
+- `[high]` `[patch]` B1: sys.modules.get('subprocess') bypasses subscript-only namespace normalization. The real-Git probe reports no errors and actual Python executes support/helper.py via a computed -m target. P1.
+- `[high]` `[patch]` B2: asyncio.subprocess.create_subprocess_exec and from-import aliases miss the unsupported API prefix. The actual async Python fixture executes the omitted helper; add the public qualified spelling to the existing prefix guard. P2.
+- `[high]` `[patch]` B3: from pkg import ns checks final child blobs before validating its intermediate directory. A regular pkg initializer plus symlink ns executes support/__init__.py and emits no error; use the existing import_path check on this child edge. P3.
+- `[high]` `[patch]` B4: printf -v PATH is treated as a data command. The actual Bash fixture mutates PATH and runs omitted support/helper; apply the existing resolution-write failure policy to this variable-writing form. P4.
+- `[high]` `[patch]` B5: declare -n indirect=PATH bypasses the read destination's direct-name check. Actual Bash resolves read indirect into PATH and executes the omitted helper. Explicitly fail this unmodeled alias declaration rather than implementing alias state. P5.
+- `[high]` `[patch]` B6: GITHUB_PATH output still skips every word containing the destination marker. The retained emitted file adds support and actual Bash executes its helper, while discovery reports no error. Apply the already implemented bounded output/destination checks to this producer. P6.
+- `[high]` `[patch]` B7: The preparation guard requires backend-path and omits conventional setuptools setup.py execution. Actual uv/setuptools reaches the fixture's setup marker with discovery errors empty. Fail unmodeled tracked build-system preparation instead of assuming absence of backend-path means no local execution. P7.
+- `[high]` `[patch]` B8: --no-project/--no-sync bypass preparation even with explicit --with . installation. Actual uv executes support/backend.py. Check the demonstrated local dependency source before applying synchronization exemptions. P8.
+- `[high]` `[patch]` B9: npm audit fix is classified as the read-only audit probe. The actual offline fixture executes its local file dependency's install hook and support/helper.py. Restrict the safe audit form. P9.
+- `[high]` `[patch]` B10: A tracked project recipe named python shadows the interpreter before the late recipe guard runs. Actual Poetry invokes support.helper:main, but discovery analyzes only pass. Move the existing recipe-name check before interpreter dispatch. P10.
+- `[high]` `[patch]` E1: PowerShell Write-Output emits arguments as separate lines; environment_output joins them with spaces. Actual PowerShell emits MODE=fast and PYTHONPATH=support as two lines, and both real-detector modules falsely pass. Use the producer's actual line semantics. P11.
+- `[high]` `[patch]` E2: npm --workspace info run lint mistakes the selector value for NODE_SAFE info. Actual npm runs omitted info/helper.py and both actual-detector modules pass. Reject unmodeled leading selector/options before classifying a safe subcommand. P12.
+- `[high]` `[patch]` E3: The edge two-module/pinned-detector and actual uv fixture independently confirm B7's setuptools setup.py omission. P7.
+- `[high]` `[patch]` E4: The edge real-detector and actual Bash fixture independently confirm B5's nameref PATH mutation. P5.
+- `[high]` `[patch]` E5: The edge real-detector fixture independently confirms B1's computed process execution through sys.modules.get. P1.
+- `[high]` `[patch]` E6: An unknown Python consumer's one long literal command string is discarded before nested -c tokenization. The copied helper is omitted with errors=[] in both real-detector modules. Report the execution-literal bound at this outer entry point. P13.
+- `[high]` `[patch]` E7: subprocess.run.__call__ evades a namespace-only dunder check. Both real-detector modules pass with a computed target's helper omitted. Apply the existing reflective API check to the nested dunder member. P14.
+- `[high]` `[patch]` E8: $'EOF' is parsed as literal $EOF, swallowing subsequent execution as data. Actual Bash executes the later computed interpreter target, and both detector modules falsely pass. Fail unsupported ANSI/locale-quoted delimiter syntax explicitly. P15.
+- `[high]` `[patch]` E9: Claim-level AC1 failure is demonstrated by all eight edge real-Git/two-module/pinned-detector fixtures returning pass with empty findings/errors and omitted copied code. This aggregate carries P1/P5/P7/P11/P12/P13/P14/P15 without replacing their individual rows.
+- `[medium]` `[patch]` G1: Pre-verified gap: deleting only Python traversal's cwds.append(directory) leaves all 84 tests green. The unknown-consumer child-cwd fixture changes from a work/helper.py finding to a false pass. Add the actual two-module transitive-child assertion. P16.
+
+Grouping produces 16 patch entries. B1/E5, B5/E4 and B7/E3 share their respective causes; E9 retains its proven members. Other concrete findings remain separate. Each smallest fix is an existing private predicate/check at a demonstrated edge, an explicit conservative failure, a normalization/spelling correction, or a test assertion. They introduce no public interface, runtime evaluation or new resolution state and do not change the captured intent or coverage model; no loopback is required. Re-engage the original implementation agent for these patches, preserving all 84 prior tests and adding real-Git/pinned-detector regressions for every reproduced case. No finding was deferred, and no new deferral was added.
+
+
+### Parent inspection after review 7
+
+- `[high]` `[patch]` P17: The new GITHUB_PATH output validator split only on LF, but AddPathFileCommand reads records with .NET File.ReadAllLines (CRLF, CR and LF). Parent discovery and actual Bash/.NET reproduction: `printf '/usr/bin\rsupport\r' >> "$GITHUB_PATH"` returned errors=[] and omitted support/helper; ReadAllLines returned /usr/bin and support, and the helper executed. Evidence: `story-9-parent-cr-path-probe.log`; primary source: [GitHub runner AddPathFileCommand](https://github.com/actions/runner/blob/main/src/Runner.Worker/FileCommandManager.cs). Split only emitted path records with the runner's line semantics and add a real-Git/two-module pinned-detector regression. Preserve source/detector LF semantics and the Linux GITHUB_ENV reader. This is a private one-line output-splitting correction at the demonstrated state, with no new interface or resolution model.
+
+- `[high]` `[patch]` P18 (P13 completion): Parent inspection reproduced an oversized unknown-consumer command string with 5,500 characters of `true;` padding before `python -c 'import helper'`. The prefix-only execution check returned errors=[] and omitted helper.py. Evidence: `story-9-parent-outer-limit-probe.log`. The existing literal-limit contract requires a source failure for this execution-bearing suffix; extend the bounded check and the existing P13 regression while keeping ordinary large data supported. No interface or resolution model changes.
+
+- `[high]` `[patch]` P19 (P1 completion): A stored namespace from `sp = sys.modules.get('subprocess')` followed by `sp.run(['python', '-m', sys.argv[1]])` still bypassed direct-expression normalization and omitted helper.py with errors=[]. Evidence: `story-9-parent-stored-module-get.log`. Apply the existing returned-process-namespace reflection guard to this known lookup and extend P1's detector regression, preserving direct literal calls. The smallest fix is one additional known call spelling in the existing predicate.
+
 ## Design Notes
 
 One supplied root per module plus `skipLocal` reduces same-module noise, but the wrapper remains authoritative for cross-module policy and validates every finding against its own manifest. Materialize only selected regular blobs into private scratch; neither module Git attributes nor action/script text is executed. Discovery can conservatively include ambiguous candidate files, but cannot report clean when a local-script call remains uncovered.
@@ -385,6 +499,30 @@ Calibrate minimum lines/tokens with the real pinned binary before finalizing pol
 
 Existing explicit failures stay conservative, for example substitutions, subshells, `pushd`/`Set-Location`, `uv --directory` and `Start-Process`. This model is what "cannot report clean when a local-script call remains uncovered" means for discovery.
 
+
+### Resumed review 4 re-derivation constraints
+
+The following demonstrated cases extend the existing model; they do not relax it. Implement in `tools/scan_discovery.py`, add real-Git/two-module pinned-detector regressions in `tools/tests/test_scan.py`, and update the affected discovery explanations in `docs/duplicate-scan.md`.
+
+- **D1 — context propagation:** Traverse every included child under all candidate established working directories, even if already selected; queue/visited bounds still apply. `cd support; xvfb-run python ../scripts/start.py` with a start subprocess importing support/helper.py, and the shell-child variant `cd work; xvfb-run ../scripts/start.sh`, must cover the helper or fail explicitly.
+- **D2 — successive conditional directories:** Resolve each literal cd from every possible preceding cwd, retaining before/after candidates. `if false; then cd a; fi` then `cd b; python -m helper` must include b/helper.py, even with a/b/helper.py as a decoy.
+- **D3 — PowerShell quoting:** `<#` and `#>` inside quoted strings are data, never comment delimiters. Preserve physical line diagnostics and actual inline/multiline block comments.
+- **D4 — hidden computed execution:** Unknown consumers must not bypass Rule 2. `xvfb-run python "${{ inputs.script }}"` must fail with a source coverage diagnostic; an unknown consumer of purely literal script/module operands stays included. Preserve ordinary quoted nonexecuting data.
+- **D5 — builtins reflection:** Fail reflective builtins/__builtins__ namespace access, including `builtins.__dict__['__import__']('helper')`; plain direct supported import APIs remain followed.
+- **D6 — reflected imported namespace:** Fail a process/import module namespace returned from `__import__`/`importlib.import_module` when it is reflectively used, including `getattr(__import__('subprocess'), 'run')` with a computed target.
+- **D7 — whole environment writes:** A harmless literal key cannot certify other computed output in a GITHUB_ENV write. Both `printf "X=1\n%s" "$CONFIG" >> "$GITHUB_ENV"` and `printf '%s\n' MODE=fast "$NAME=support" >> "$GITHUB_ENV"` must fail coverage. A completely literal harmless write can still pass.
+- **D8 — npm named scripts:** `--ignore-scripts` suppresses lifecycle hooks, not an explicitly selected script. `npm run go --ignore-scripts` and `npm --ignore-scripts run lint` with tracked package.json must fail coverage or include their recipe's executed scripts. Preserve safe nonexecuting npm probes.
+- **D9 — project build backends:** uv build (and equivalent handled project runners) with a tracked local build backend must not silently pass. Conservatively fail unmodeled tracked-project execution; do not execute or import its backend.
+- **D10 — namespace ancestors:** A literal -c import of a namespace package still includes every tracked regular ancestor initializer, even when that namespace has no __init__.py or __main__.py.
+- **D11 — expanding heredocs:** Unquoted heredocs perform shell expansions. Diagnose their unmodeled command substitution/backtick execution, including computed -m operands, while quoted heredoc bodies remain literal-reference data. Retain interpreter-fed-heredoc failures.
+- **D12 — read environment mutation:** Shell `read` assigning PATH or another resolution-affecting/computed name fails coverage, including `read -r PATH <<<support`; harmless literal variable names need no new failure.
+- **D13 — literal limits:** An execution-bearing literal over MAX_LITERAL cannot be silently ignored. Valid inline Python `x=0;` repeated 1100 times then `import helper`, behind xvfb-run, must include helper.py or report a coverage-limit failure. Preserve resource bounds and distinguish ordinary data as appropriate.
+- **D14 — module-form runners:** Apply the same project recipe guard to `python -m poetry run lint` and other recognized Python project-runner module forms as to direct runner commands.
+- **D15 — startup sources:** Shell --rcfile/--init-file cannot discard a tracked executing source; fail explicit coverage for unmodeled startup options, or include and traverse it.
+- **D16 — unsafe imports:** A recognized imported blob that is a symlink/gitlink must fail as unsafe, never disappear through regular() filtering. Regular modules and namespace ancestor traversal remain supported.
+- **D17 — project selectors:** Reject unmodeled uv --project recipe-root changes (or resolve them completely). `uv run --project tools lint` must not silently skip tools/pyproject.toml and its helper.
+- **D18 — YAML scalar tests:** Test action input-default and step-with scalars that are the sole references to substantial copied tracked helper scripts. Both module manifests and actual cross-module findings must prove inclusion. Keep all existing 52 tests.
+
 ## Verification
 
 **Commands:**
@@ -396,3 +534,63 @@ Existing explicit failures stay conservative, for example substitutions, subshel
 - `git diff --check` — no whitespace errors.
 
 **Pre-review results:** Parent scanner checks passed 22 tests on the current interpreter and 22 on Python 3.12. Behavioral nightly workflow checks passed 25 tests. The unchanged global gate passed all 14 suites / 308 tests plus committed render/input, immutable bootstrap, reproducibility, schemas/caller interfaces, acceptable Builds publication, actionlint 1.7.12 and online zizmor 1.32.0 checks. All 10 matrix rows have enabled passing coverage. Parent inspection additionally reproduced and repaired subprocess cwd resolution, function-local aliases and import search-path mutation gaps; regressions exercise real Git and the pinned detector. `git diff --check` passed. Useful logs are `story-9-parent-*.log` under implementation-artifacts (Git-ignored).
+
+## Review 5 verification and handoff (historical)
+
+D1–D18 are implemented in `tools/scan_discovery.py`, with 17 added regression methods in `tools/tests/test_scan.py` (all original 52 retained) and matching discovery documentation in `docs/duplicate-scan.md`. The parent inspected the complete code/docs diff at `story-9-review5.diff.log` and audited all ten acceptance-matrix rows against enabled passing tests (`story-9-rederive3-matrix-audit.log`).
+
+Final focused runs passed: 69 scanner tests on the current Python, 69 on Python 3.12, and 27 nightly workflow tests. Logs: `story-9-rederive3-scan.log`, `story-9-rederive3-scan-py312.log`, `story-9-rederive3-workflow.log`. The earlier parent global gate passed, including online actionlint/zizmor and 69 scanner tests, before the last D4/D3/D12 scanner refinements (`story-9-resumed-global.log`). A final global rerun remains pending; do not represent the earlier gate as verification of those final refinements.
+
+All three required final reviewers were launched against `story-9-review5.diff.log`; each failed before reviewing with: “Your access token could not be refreshed because you have since logged out or signed in to another account. Please sign in again.” Retrying the blind reviewer produced the same error. No final-review findings or clean verdict were produced. The step-04 unavailable-subagent fallback requires a halt and standalone review prompts.
+
+Standalone prompts, with their referenced diff, claims and reviewer instructions inlined, are retained as `story-9-review5-blind-hunter-prompt.log`, `story-9-review5-edge-case-hunter-prompt.log` and `story-9-review5-verification-gap-prompt.log` in implementation-artifacts. Resume this `in-review` story after restoring agent authentication, or run the three prompts in separate sessions and return all findings. Then triage, fix any surviving findings, run final verification and follow step 5. No new deferral was added. Concurrent submodule/gitlink changes belong to another workspace operation and were not modified by this story.
+
+
+## Resumed review 6 re-derivation constraints
+
+### 2026-11-15 — Review 6 loopback (review_loop_iteration 3)
+
+**Trigger:** Review 6 demonstrates incomplete coverage through unsafe intermediate imports, runner preparation, formatted environment output and heredoc parsing. The known-bad state is result=pass with errors=[] while executed copied helper/backend code is absent. The frozen intent and original acceptance criteria remain unchanged.
+
+**Amended model:** Safety validation covers every import-path component and every literal-module fallback. An execution coverage bound must fail visibly at every execution-bearing literal-sequence entry point. Environment-write validation examines the complete emitted output, including heredoc bodies and printf formatting, or fails as unmodeled; input source spelling and unrelated assignments cannot certify the output. Shell/heredoc parsing applies quote removal and continuation semantics before determining boundaries or executable expansion. Project-runner preparation can execute module code before the visible child and is part of scope.
+
+**Restoration and KEEP:** Before re-derivation the parent restores only tools/scan_discovery.py, tools/tests/test_scan.py and docs/duplicate-scan.md to baseline_commit cd20395ca6e2886c5d936c7ecc608f359277caa0. Restore the completed D1–D18 implementation first with `git apply --include=tools/scan_discovery.py --include=tools/tests/test_scan.py --include=docs/duplicate-scan.md _bmad-output/implementation-artifacts/story-9-review6.diff.log`, then implement the R constraints. This reviewed snapshot preserves every existing test (69), positive literal/candidate-context traversal, source diagnostics, safe nonexecuting probes, conservative failures and resource bounds. Do not recreate it from scratch. Preserve the scanner controller, policy, package/lock files, workflow and its tests, nightly/setup docs, frozen intent, frontmatter deferred item, deferred ledger, detector investigation and every submodule/gitlink. Scope changes to discovery, its focused tests and discovery documentation.
+
+- **R1 — returned namespaces:** A process/import namespace returned by __import__ or importlib.import_module cannot exempt attribute-based execution from reflection coverage. The exact computed-target reproduction above must fail explicitly or be fully resolved; direct supported local imports stay supported. Parent implementation inspection also reproduced `sys.modules['subprocess'].run(['python', '-m', sys.argv[1]])` with errors=[] and its helper omitted. The same execution-position rule must cover this known process namespace: resolve it or fail computed targets, while preserving literal targets and direct imports.
+- **R2 — intermediate unsafe imports:** Inspect tracked package-path components, not just final module filenames. Importing pkg.helper through a symlink/gitlink pkg must fail explicitly; do not follow the link or treat it as an installed non-local module.
+- **R3 — unsafe literal-module fallback:** Apply the same unsafe-leaf and unsafe-ancestor checks in include_modules(), including literal -c imports behind unrecognized consumers. Never silently filter an unsafe known candidate with regular().
+- **R4 — project preparation:** uv run with a tracked local build backend must not pass merely because its visible child is harmless. Diagnose unmodeled local project preparation before the child; do not execute or import the backend. Preserve the existing nonexecuting/version probes and fully supported runner forms.
+- **R5 — runner option order:** npm --prefix info run lint (and analogous recipe-location selectors) must fail for the unmodeled location before an option value can be classified as a safe subcommand. Keep plain nonexecuting npm info/version/audit probes supported.
+- **R6 — environment destinations:** A computed emitted word is never exempt merely because it contains the GITHUB_ENV marker. Both $CONFIG$GITHUB_ENV and GITHUB_ENV$CONFIG must fail; only an actual, understood destination is exempt.
+- **R7 — heredoc output:** MODE=fast cat >> "$GITHUB_ENV" <<EOF with body PYTHONPATH=support must fail coverage. A harmless command-prefix assignment cannot certify body output. Validate all output or fail the producer conservatively.
+- **R8 — formatted output:** Octal/hex escape expansion and printf %b must not hide environment keys or newlines. The two exact review fixtures must fail; completely understood harmless literal echo/printf writes can pass. Do not execute shell/module code to evaluate output.
+- **R9 — heredoc continuation:** Fold unquoted heredoc backslash-newline continuations before checking command substitutions, retaining physical source diagnostics. A dollar followed by backslash-newline then (python -m "$MODULE") must fail explicitly. Quoted bodies stay literal-reference data.
+- **R10 — PowerShell here-strings:** Double-quoted here-strings expand subexpressions; fail their unmodeled execution. Single-quoted here-strings remain data. Preserve line positions and existing comment/quote handling.
+- **R11 — nested builtins reflection:** Detect builtins.__dict__.get('__import__')('helper') and equivalent namespace reflection. Existing direct supported import calls and ordinary data remain supported.
+- **R12 — indexed read destinations:** read PATH[0] and indexed resolution-variable destinations fail as resolution-affecting writes, along with computed variable names. Preserve harmless literal destination names.
+- **R13 — literal fallback bounds:** Behind an unrecognized Python process consumer, the valid literal -c program `x=0;` repeated 1100 times followed by import helper must either include the copied helper or fail with a source coverage-limit diagnostic. Retain bounds and avoid silently discarding execution-bearing literals; ordinary large data need not fail.
+- **R14 — project selectors in module runners:** python -m poetry --directory tools run lint must fail for the unmodeled project location. Apply equivalent guarding to direct and module-form recognized project runners, including options before run.
+- **R15 — whole heredoc delimiter:** Parse the complete quoted/unquoted delimiter word, including E'OF', and stop at its quote-removed EOF boundary. Preserve subsequent execution diagnostics instead of swallowing the rest of the source as data. Unsupported delimiter syntax must fail visibly.
+- **R16 — unsafe initializer test:** Extend the real-Git/two-module pinned-detector tests with a regular imported child beneath symlink and gitlink __init__.py ancestors. Assert source coverage errors for both modules; mutation back to regular(init) must fail this regression.
+
+Every concrete reproduction above needs an enabled regression through real Git and the actual pinned detector, asserting either the copied target's finding or its named source diagnostic. Keep all prior 69 scanner tests and all 27 workflow tests. After implementation run focused current/Python-3.12 verification, inspect the complete diff, audit all ten matrix rows, then run the three review layers again. The earlier final-global run started before this loopback and must not be described as final verification unless it actually exercised the final implementation.
+
+
+## Review 7 handoff
+
+R1–R16 and the parent-discovered positional-uv and computed sys.modules cases are implemented. All 69 prior scanner tests remain, with 15 new methods (84 total). The parent read the complete 1,346-line implementation diff, checked the exact final implementation snapshot, and audited all ten matrix rows against enabled passing tests. The final original-offset, four-language, partial-failure, policy, empty-scope, live-main and nightly-continuation checks remain intact.
+
+Focused verification passed: 84 current-Python scanner tests (`story-9-rederive4-scan.log`), all 84 tests on Python 3.12 after the final fixture corrections (`story-9-final-r6-scan-py312.log`), and 27 workflow tests (`story-9-rederive4-workflow.log`). The R16 mutation was rejected by both symlink/gitlink initializer subtests (`story-9-rederive4-ancestor-mutation.log`). `git diff --check` passed. The earlier global gate passed 14 suites / 357 tests and online audits before R1–R16 (`story-9-pre-review6-global.log`); final global verification remains pending.
+
+A concurrent operation committed only builds-version at 95d74ced9fc9707ca6dd6961faf786d6d93ef6f5, advancing HEAD from baseline_commit. This story did not create that commit or edit builds-version or any gitlink. The review diff covers all story changes since the preserved baseline_commit and excludes that independently committed version bump and unrelated submodule work. Final global verification uses the current repository state. No new deferral was added.
+
+
+## Final verification and completion
+
+Story 9 is done. All three review layers completed in reviews 6 and 7; all verified findings and parent inspection variants were fixed. R1–R16 preserve the prior discovery model and its original 69 tests; P1–P19 add the remaining private guards and regressions. Final scanner coverage is 101 enabled methods, retaining all prior cases, including two-module real-Git/pinned-detector findings and named conservative failures.
+
+Final current-Python and Python 3.12 scanner runs each passed all 101 tests without skips (`story-9-verified-scan-current.log`, `story-9-verified-scan-py312.log`). All 27 workflow tests passed (`story-9-final-workflow.log`). The unchanged global gate exited 0: all eight gates, 14 suites / 389 tests, committed render/input/bootstrap, reproducibility, schemas/caller interfaces, acceptable Builds publication, actionlint and online zizmor passed (`story-9-final-global.log`). `git diff --check` passed. The parent verified every matrix row against enabled passing tests (`story-9-verified-matrix-audit.log`).
+
+The initial verification wrapper's source-fingerprint guard detected the known P18/P19 corrections made while unrelated integration suites were running. Both scanner suites were rerun after those corrections and passed with unchanged final source hashes; the global scanner suite ran afterward and also passed all 101 tests. That wrapper metadata check was the only nonzero exit; check_global.py itself exited 0. Final hashes and results are recorded in `story-9-final-verification.json.log`. Verification HEAD was 95d74ced9fc9707ca6dd6961faf786d6d93ef6f5; the original baseline_commit remains unchanged.
+
+No new work was deferred. The original unverified eligible-source accounting follow-up remains in frontmatter; no substantive detector omission was reproduced. The deferred-work ledger, detector investigation, policy/locks, workflow/controller/setup/nightly files and all submodule/gitlink work remain outside this completion commit.
