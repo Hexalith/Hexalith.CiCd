@@ -287,3 +287,21 @@ Confirmed bumps wait for delivery and every actually pushed module's first
 qualifying CI result, including repair pushes. Production setup remains empty;
 nightly fixtures do not adopt a module. See [nightly operation and rollback](../docs/nightly.md)
 and [hosted transport qualification](../docs/nightly-bump-qualification.md).
+
+## Nightly duplicate scan registry
+
+The committed setup filenames also register the nightly duplicate scan. Every
+registered module is scanned at its anonymous live `main`, including modules
+not yet adopted and dormant `.github/actions/**` directories. Builds is excluded,
+and the registry is capped at 17 modules. The scan recursively follows supported
+local YAML, shell, PowerShell and Python sources and Python imports. Missing,
+unsafe or unresolved local calls fail coverage with a source diagnostic.
+
+CiCd's committed jscpd 5.4.3 policy uses weak mode with 10 lines and 50 tokens;
+module detector config, ignore files and suppression directives cannot waive it.
+Only fragments crossing module boundaries fail the duplication gate. An empty
+registry or a successfully fetched module without actions reports explicit zero
+scope. Fetch, discovery, tooling and report failures remain red while healthy
+siblings still contribute observations. Scan failure preserves the report and
+summary and permits the later Builds bump and keepalive jobs. It never adopts or
+edits a module. See [scan scope, reports and threshold calibration](../docs/duplicate-scan.md).
