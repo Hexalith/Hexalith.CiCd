@@ -136,6 +136,14 @@ preserved. No dependent preparation, registration or remote operation ran;
 all execution tasks and migration acceptance remain outstanding pending the
 separate qualified shared release.
 
+The separately approved prerequisite source has now been implemented and
+reviewed under [its own spec](spec-26-platform-shared-build-preparation.md).
+Shared support and its failure paths passed local qualification; the
+[final packet](../specs/spec-cicd/evidence/26/final-verification/results.json)
+records the results. Story 26 still awaits the acceptable shared release and
+genuine Platform qualification. Its seven migration tasks remain open; no
+Platform product change, registration, adoption or CAP-16 claim was made here.
+
 ## Spec Change Log
 
 ## Review Triage Log

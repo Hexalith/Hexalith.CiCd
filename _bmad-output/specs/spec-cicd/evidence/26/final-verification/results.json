@@ -1,0 +1,205 @@
+{
+  "sourcesBefore": {
+    "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py": "aaba441e1649723b638dc27be776737c936376844d9f9e3b61f941d8eeedd29e",
+    "references/Hexalith.Builds/schemas/hexalith.ci.v1.json": "484bd6c761e150ee76613538331a35326e5bacd240d8fa20ab2eaf75aa677f79",
+    "references/Hexalith.Builds/Github/lib/release_publish.py": "d7d65b3cf6911e18eef7f66b523a8da84f8b2832bba0755b4f50e05fa5e3ee0a",
+    "references/Hexalith.Builds/Github/prepare-module-build/README.md": "c915eab13f6b461652cbcd705130c3f3ca4c4b15079645b5885689b674af8c2e",
+    "references/Hexalith.Builds/Github/lib/local_check.py": "b516a7de9ab80369f11bcc11466e33d61bd86923e8d472a9c12f44c9ab022039",
+    "references/Hexalith.Builds/Github/lib/module_preparation.py": "66753a9d8b814aa83f8ee2bf6889bb642bc451775bc3feed909448d2f5a05090",
+    "references/Hexalith.Builds/Github/lib/release_draft.py": "9da280411c89b8ebd6a385ba416e26ea03b5eb3eac498f798ee9ae9a9590b980",
+    "references/Hexalith.Builds/Github/lib/ci_pipeline.py": "6f813ceb3c11c882b9a68d35016089f2d7833168cc95284665a599cab5482956",
+    "references/Hexalith.Builds/Github/lib/build_projects.py": "fd95d9a4d97069a979bcc72a22a8040e4f97c9295d976e2793316c9822595c93",
+    "references/Hexalith.Builds/Github/lib/published_builds.py": "2524275f47364282be14f782efd99f7ed13a6a7ce96d5a482b005e0a8f25362b",
+    "tools/tests/test_render.py": "bb9b71ba7aef356963a4f824368e1225d15a7227fee46cc3fcc5dcaedc3f51f2",
+    "references/Hexalith.Builds/Github/lib/tests/test_ci_config.py": "2c3bf68814d2c7a2a377044f18496cac7c7fe12d5aefcb71054efa82f829705b",
+    "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md": "d5a5c340d291233caadc8d06649675209a4704e181decad39fc8d3120f00f74d",
+    "_bmad-output/specs/spec-cicd/evidence/26/shared-support.md": "b722eb8ec027c2ba7f8c52290bc1b5451017b2ef68ba6994cbde5a5cd1426c68",
+    "references/Hexalith.Builds/Github/publish/README.md": "7690e232a2175a74370f83b68e042abcb6c09e669b4780259fdf9ecfcecb15b3",
+    "references/Hexalith.Builds/Github/lib/release_build.py": "a7adbec348fc1c8ba4d9d232972b2bd4b68ed56c4a639db629972af5c41dbffd",
+    "references/Hexalith.Builds/Github/lib/package_archive.py": "a7ca8e496a50536b023cf6acb389a819811444b52544e475ae3daef0436c8cb3",
+    "tools/tests/test_validate.py": "7a5544f4e16d547be58bc5af41e12d3352bca95aecadb3246b64e42059528358",
+    "references/Hexalith.Builds/Github/lib/tests/test_platform_support.py": "6cde6a6a534488213f873e1a154ed2d45cfa557c92191283b77c80e45a06874e",
+    "_bmad-output/implementation-artifacts/spec-26-platform-shared-build-preparation.md": "3a2582354b5f5ed6426b400fee658d8d39894fac63b9750051ccee64c7747f7d",
+    "references/Hexalith.Builds/Github/lib/ci_config.py": "87775bec9d825636f00c177da7f8037ca8a62818cc24f1678e09cb3eb805c7bb",
+    "setup/README.md": "557a3002e22b6f46b835cf3a5bb931c4837a2685243d3ce8b6cd3f868e9d0870"
+  },
+  "sourcesUnchanged": true,
+  "changedDuringChecks": [],
+  "checks": [
+    {
+      "name": "pipeline",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "references/Hexalith.Builds/Github/lib/tests",
+        "-p",
+        "test_ci_pipeline.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "returncode": 0,
+      "tests": 51,
+      "log": "pipeline.txt",
+      "sha256": "8888d36e17263c9a9c18a2088b5d134102630b720544a026eefedd1a69ba1266"
+    },
+    {
+      "name": "local",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "references/Hexalith.Builds/Github/lib/tests",
+        "-p",
+        "test_local_check.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "returncode": 0,
+      "tests": 40,
+      "log": "local.txt",
+      "sha256": "5b9d76273245730f238669aa6fa563aa8f1705c8a011da09905df8eddafea51a"
+    },
+    {
+      "name": "release-build",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "test_release_build.BuildTests.test_real_multitarget_import_discovery_and_pack_stamp",
+        "test_release_build.BuildTests.test_none_payload_does_not_execute_sdk_or_submodules",
+        "test_release_build.BuildTests.test_audit_failure_suppresses_payload_manifest"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/Github/lib/tests",
+      "returncode": 0,
+      "tests": 3,
+      "log": "release-build.txt",
+      "sha256": "cddff0aeddd0e2748a96d8813028b62683533d2a3660e83240459b96e3b3805b"
+    },
+    {
+      "name": "publication",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "references/Hexalith.Builds/Github/lib/tests",
+        "-p",
+        "test_release_publish.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "returncode": 0,
+      "tests": 18,
+      "log": "publication.txt",
+      "sha256": "2d2b3c167fc0f4b94340b8e7f406da52b305f2dfdf55bae0a4684ab79348751f"
+    },
+    {
+      "name": "renderer",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_render.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "returncode": 0,
+      "tests": 44,
+      "log": "renderer.txt",
+      "sha256": "0dd2ef059d7fe08a4c25b4e42b0ee1f57372e87026ba1400d8a4dbeaf3d32f8d"
+    },
+    {
+      "name": "validator",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_validate.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "returncode": 0,
+      "tests": 53,
+      "log": "validator.txt",
+      "sha256": "36120d45008dc6908c00b65397b07abb690fba694ecefb3138e50ccac40c54c6"
+    },
+    {
+      "name": "render-check",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "returncode": 0,
+      "tests": null,
+      "log": "render-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "completedHeads": {
+    "cicd": "f76fe248bbaf5b12448f0acb959f762142567439",
+    "builds": "f12c37ad4265ea23bf2ed426a3c9c818f1fdf0e6"
+  },
+  "buildsSourceCommit": "f12c37ad4265ea23bf2ed426a3c9c818f1fdf0e6",
+  "commitValidation": [
+    {
+      "repository": "Hexalith.Builds",
+      "command": "run-with-temp node node_modules/@commitlint/cli/cli.js --config commitlint.config.mjs --edit <evidence>/builds-commit-message.txt",
+      "returncode": 0
+    },
+    {
+      "repository": "Hexalith.CiCd",
+      "command": "run-with-temp node references/Hexalith.Builds/node_modules/@commitlint/cli/cli.js --config references/Hexalith.Builds/commitlint.config.mjs --edit <evidence>/cicd-commit-message.txt",
+      "returncode": 0
+    }
+  ],
+  "finalSourceSha256": {
+    "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py": "aaba441e1649723b638dc27be776737c936376844d9f9e3b61f941d8eeedd29e",
+    "references/Hexalith.Builds/schemas/hexalith.ci.v1.json": "484bd6c761e150ee76613538331a35326e5bacd240d8fa20ab2eaf75aa677f79",
+    "references/Hexalith.Builds/Github/lib/release_publish.py": "d7d65b3cf6911e18eef7f66b523a8da84f8b2832bba0755b4f50e05fa5e3ee0a",
+    "references/Hexalith.Builds/Github/prepare-module-build/README.md": "c915eab13f6b461652cbcd705130c3f3ca4c4b15079645b5885689b674af8c2e",
+    "references/Hexalith.Builds/Github/lib/local_check.py": "b516a7de9ab80369f11bcc11466e33d61bd86923e8d472a9c12f44c9ab022039",
+    "references/Hexalith.Builds/Github/lib/module_preparation.py": "66753a9d8b814aa83f8ee2bf6889bb642bc451775bc3feed909448d2f5a05090",
+    "references/Hexalith.Builds/Github/lib/release_draft.py": "9da280411c89b8ebd6a385ba416e26ea03b5eb3eac498f798ee9ae9a9590b980",
+    "references/Hexalith.Builds/Github/lib/ci_pipeline.py": "6f813ceb3c11c882b9a68d35016089f2d7833168cc95284665a599cab5482956",
+    "references/Hexalith.Builds/Github/lib/build_projects.py": "fd95d9a4d97069a979bcc72a22a8040e4f97c9295d976e2793316c9822595c93",
+    "references/Hexalith.Builds/Github/lib/published_builds.py": "2524275f47364282be14f782efd99f7ed13a6a7ce96d5a482b005e0a8f25362b",
+    "tools/tests/test_render.py": "bb9b71ba7aef356963a4f824368e1225d15a7227fee46cc3fcc5dcaedc3f51f2",
+    "references/Hexalith.Builds/Github/lib/tests/test_ci_config.py": "2c3bf68814d2c7a2a377044f18496cac7c7fe12d5aefcb71054efa82f829705b",
+    "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md": "d5a5c340d291233caadc8d06649675209a4704e181decad39fc8d3120f00f74d",
+    "_bmad-output/specs/spec-cicd/evidence/26/shared-support.md": "b722eb8ec027c2ba7f8c52290bc1b5451017b2ef68ba6994cbde5a5cd1426c68",
+    "references/Hexalith.Builds/Github/publish/README.md": "7690e232a2175a74370f83b68e042abcb6c09e669b4780259fdf9ecfcecb15b3",
+    "references/Hexalith.Builds/Github/lib/release_build.py": "a7adbec348fc1c8ba4d9d232972b2bd4b68ed56c4a639db629972af5c41dbffd",
+    "references/Hexalith.Builds/Github/lib/package_archive.py": "a7ca8e496a50536b023cf6acb389a819811444b52544e475ae3daef0436c8cb3",
+    "tools/tests/test_validate.py": "7a5544f4e16d547be58bc5af41e12d3352bca95aecadb3246b64e42059528358",
+    "references/Hexalith.Builds/Github/lib/tests/test_platform_support.py": "6cde6a6a534488213f873e1a154ed2d45cfa557c92191283b77c80e45a06874e",
+    "_bmad-output/implementation-artifacts/spec-26-platform-shared-build-preparation.md": "311d71d16afb9d3e94b878ac319c55e8b0a9ffc202fa8afee80f7fe5b85a9bae",
+    "references/Hexalith.Builds/Github/lib/ci_config.py": "87775bec9d825636f00c177da7f8037ca8a62818cc24f1678e09cb3eb805c7bb",
+    "setup/README.md": "557a3002e22b6f46b835cf3a5bb931c4837a2685243d3ce8b6cd3f868e9d0870"
+  },
+  "review": {
+    "layers": [
+      "blind-hunter",
+      "edge-case-hunter",
+      "verification-gap"
+    ],
+    "findingRows": 17,
+    "fixed": 16,
+    "false": 1,
+    "deferred": 0
+  },
+  "qualificationBoundary": {
+    "sourceImplemented": true,
+    "centralReleasePublishedByThisSession": false,
+    "platformAdopted": false,
+    "productionBuildsVersion": "v6.0.6",
+    "platformHead": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2"
+  }
+}

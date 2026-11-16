@@ -1,0 +1,206 @@
+......  Determining projects to restore...
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Ordinary/Ordinary.csproj (in 0.8 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Z.Tests/Z.Tests.csproj (in 12 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj (in 12 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/A.Tests.csproj (in 12 ms).
+  A.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll
+  Ordinary -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Ordinary/bin/Release/net10.0/Ordinary.dll
+  Fixture.IntegrationTests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll
+  Z.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Z.Tests/bin/Release/net10.0/Z.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.33
+  Determining projects to restore...
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/Ordinary/Ordinary.csproj (in 0.4 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj (in 10 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/Z.Tests/Z.Tests.csproj (in 10 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/A.Tests.csproj (in 10 ms).
+  A.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll
+  Ordinary -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/Ordinary/bin/Release/net10.0/Ordinary.dll
+  Fixture.IntegrationTests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll
+  Z.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/Z.Tests/bin/Release/net10.0/Z.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.80
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  A.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll
+  Ordinary -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Ordinary/bin/Release/net10.0/Ordinary.dll
+  Z.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Z.Tests/bin/Release/net10.0/Z.Tests.dll
+  Fixture.IntegrationTests -> /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.81
+.{"unit": ["test dir/A.Tests/A.Tests.csproj", "test dir/Z.Tests/Z.Tests.csproj"], "integration": ["test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj"], "excluded": []}
+Unit tests: test dir/A.Tests/A.Tests.csproj
+Running tests from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64)
+failed ProbeTests.FailingTestCompletes (9ms)
+  from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64)
+  intentional product failure
+    at ProbeTests.FailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/ProbeTests.cs:8
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+failed ProbeTests.AnotherFailingTestCompletes (0ms)
+  from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64)
+  intentional product failure
+    at ProbeTests.AnotherFailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/ProbeTests.cs:19
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+/tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64) failed with 2 error(s) [+1/x2/?0] (525ms)
+Exit code: 2
+
+Test run summary: Failed!
+  total: 3
+  failed: 2
+  succeeded: 1
+  skipped: 0
+  duration: 670ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+{"unit": ["test dir/A.Tests/A.Tests.csproj", "test dir/Z.Tests/Z.Tests.csproj"], "integration": ["test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj"], "excluded": []}
+Unit tests: test dir/A.Tests/A.Tests.csproj
+Test run for /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.54]     ProbeTests.FailingTestCompletes [FAIL]
+[xUnit.net 00:00:00.56]     ProbeTests.AnotherFailingTestCompletes [FAIL]
+  Failed ProbeTests.FailingTestCompletes [10 ms]
+  Error Message:
+   intentional product failure
+  Stack Trace:
+     at ProbeTests.FailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/ProbeTests.cs:line 8
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ProbeTests.AnotherFailingTestCompletes [1 ms]
+  Error Message:
+   intentional product failure
+  Stack Trace:
+     at ProbeTests.AnotherFailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/ProbeTests.cs:line 19
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     2, Passed:     1, Skipped:     0, Total:     3, Duration: 57 ms - A.Tests.dll (net10.0)
+.{"unit": [], "integration": ["test dir/A.Tests/A.Tests.csproj", "test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj", "test dir/Z.Tests/Z.Tests.csproj"], "excluded": []}
+Integration tests: test dir/A.Tests/A.Tests.csproj
+Running tests from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64)
+failed ProbeTests.FailingTestCompletes (8ms)
+  from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64)
+  intentional product failure
+    at ProbeTests.FailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/ProbeTests.cs:8
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+failed ProbeTests.AnotherFailingTestCompletes (0ms)
+  from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64)
+  intentional product failure
+    at ProbeTests.AnotherFailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/ProbeTests.cs:19
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+/tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (net10.0|x64) failed with 2 error(s) [+1/x2/?0] (501ms)
+Exit code: 2
+
+Test run summary: Failed!
+  total: 3
+  failed: 2
+  succeeded: 1
+  skipped: 0
+  duration: 643ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+{"unit": [], "integration": ["test dir/A.Tests/A.Tests.csproj", "test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj", "test dir/Z.Tests/Z.Tests.csproj"], "excluded": []}
+Integration tests: test dir/A.Tests/A.Tests.csproj
+Test run for /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/bin/Release/net10.0/A.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.50]     ProbeTests.FailingTestCompletes [FAIL]
+[xUnit.net 00:00:00.52]     ProbeTests.AnotherFailingTestCompletes [FAIL]
+  Failed ProbeTests.FailingTestCompletes [9 ms]
+  Error Message:
+   intentional product failure
+  Stack Trace:
+     at ProbeTests.FailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/ProbeTests.cs:line 8
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed ProbeTests.AnotherFailingTestCompletes [1 ms]
+  Error Message:
+   intentional product failure
+  Stack Trace:
+     at ProbeTests.AnotherFailingTestCompletes() in /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/vstest/test dir/A.Tests/ProbeTests.cs:line 19
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     2, Passed:     1, Skipped:     0, Total:     3, Duration: 52 ms - A.Tests.dll (net10.0)
+.Qualification tests: test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj
+Running tests from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll (net10.0|x64)
+/tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll (net10.0|x64) passed [+3/x0/?0] (519ms)
+
+Test run summary: Passed!
+  total: 3
+  failed: 0
+  succeeded: 3
+  skipped: 0
+  duration: 659ms
+Qualification tests: test dir/Fixture.IntegrationTests/Fixture.IntegrationTests.csproj
+Running tests from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll (net10.0|x64)
+/tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Fixture.IntegrationTests/bin/Release/net10.0/Fixture.IntegrationTests.dll (net10.0|x64) passed [+3/x0/?0] (545ms)
+
+Test run summary: Minimum expected tests policy violation, tests ran 3, minimum expected 4
+  total: 3
+  failed: 0
+  succeeded: 3
+  skipped: 0
+  duration: 694ms
+Test run completed with non-success exit code: 9. Fewer tests ran than required by the minimum expected tests policy. See: https://aka.ms/testingplatform/exitcodes
+.Qualification tests: test dir/Z.Tests/Z.Tests.csproj
+Running tests from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Z.Tests/bin/Release/net10.0/Z.Tests.dll (net10.0|x64)
+failed ProbeTests.SkippedTest (0ms)
+  from /tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Z.Tests/bin/Release/net10.0/Z.Tests.dll (net10.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: FAIL_SKIP : intentional policy qualification
+/tmp/hexalith-job.FgHJiYQA/ci-real-sdk-01xlp8t4/test dir/Z.Tests/bin/Release/net10.0/Z.Tests.dll (net10.0|x64) failed with 1 error(s) [+3/x1/?0] (619ms)
+Exit code: 2
+
+Test run summary: Failed!
+  total: 4
+  failed: 1
+  succeeded: 3
+  skipped: 0
+  duration: 779ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+..  Determining projects to restore...
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/src/Product/Product.csproj (in 0.5 ms).
+  Restored /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/test/Product.Tests/Product.Tests.csproj (in 7 ms).
+  Product -> /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/src/Product/bin/Release/net10.0/Product.dll
+  Product.Tests -> /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/test/Product.Tests/bin/Release/net10.0/Product.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.66
+{"unit": ["test/Product.Tests/Product.Tests.csproj"], "integration": [], "excluded": []}
+Unit tests: test/Product.Tests/Product.Tests.csproj
+Running tests from /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/test/Product.Tests/bin/Release/net10.0/Product.Tests.dll (net10.0|x64)
+/tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/test/Product.Tests/bin/Release/net10.0/Product.Tests.dll (net10.0|x64) passed [+1/x0/?0] (980ms)
+
+  In process file artifacts produced:
+    - /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/TestResults/shared-ci/unit-5fp1l7jo/f4ffb8294f03309b7b24ecef495be6ac9e6b41bc637374f37cd3cf16082e6391/results.trx
+    - /tmp/hexalith-job.FgHJiYQA/ci-real-reports-kaw3mvh2/TestResults/shared-ci/unit-5fp1l7jo/f4ffb8294f03309b7b24ecef495be6ac9e6b41bc637374f37cd3cf16082e6391/coverage.cobertura.xml
+
+Test run summary: Passed!
+  total: 1
+  failed: 0
+  succeeded: 1
+  skipped: 0
+  duration: 1s 677ms
+Coverage: lines 100.00% (3/3); named branches 100.00% (2/2)
+{"unit": ["test/Product.Tests/Product.Tests.csproj"], "integration": [], "excluded": []}
+Coverage: lines 100.00% (3/3); named branches 100.00% (2/2)
+.......................................
+----------------------------------------------------------------------
+Ran 51 tests in 53.807s
+
+OK

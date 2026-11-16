@@ -103,3 +103,18 @@ Story 16's in-progress preparation work is a dependency to reuse, not duplicate.
 - Given an acceptable released Builds contract containing the required support,
   when story 26 resumes, then adoption can use it. Prerequisite fixture results
   do not establish Platform adoption or CAP-16 completion.
+
+
+## Source implementation status, 2026-11-16
+
+The separate [source implementation spec](spec-26-platform-shared-build-preparation.md)
+is complete after independent review and passing shared CI/local/release,
+renderer and validator qualification. See the
+[final verification packet](../specs/spec-cicd/evidence/26/final-verification/results.json).
+It supplies historical published producer preparation, finite shared compatibility
+builds and strict public archive verification. Original catalog views and legacy
+defaults remain intact.
+
+This is a reviewed source candidate. Central publication, an acceptable exact
+immutable bot release and genuine Platform producer/cohort/package qualification
+remain outstanding. Do not consume untagged source or mark story 26 adopted.
