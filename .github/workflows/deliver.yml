@@ -7,6 +7,12 @@ on:
   schedule:
     - cron: '47 * * * *'
   workflow_dispatch:
+    inputs:
+      delivery:
+        description: Delivery scope
+        type: choice
+        default: full
+        options: [full, projects-g6-catalog]
 
 permissions: {}
 cache-mode: none
@@ -23,6 +29,7 @@ jobs:
       contents: read
     outputs:
       verdict: ${{ steps.validate.outputs.verdict }}
+      g6_plan: ${{ steps.g6_qualify.outputs.plan }}
     steps:
       - name: Checkout CiCd candidate
         id: cicd
@@ -39,6 +46,7 @@ jobs:
           enable-cache: false
 
       - name: Checkout Builds objects and tags
+        if: ${{ inputs.delivery != 'projects-g6-catalog' }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: Hexalith/Hexalith.Builds
@@ -49,19 +57,56 @@ jobs:
           submodules: false
           persist-credentials: false
 
+      - name: Checkout only narrow delivery fixture tag
+        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Hexalith/Hexalith.Builds
+          ref: refs/tags/v5.1.0
+          path: references/Hexalith.Builds
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          persist-credentials: false
+
       - name: Validate candidate and modules
         id: validate
         # A failed Builds checkout must still permit a conservative verdict.
         # Its failed step keeps the job red even if validation can continue.
         # !cancelled(), unlike always(), lets a superseded or cancelled run stop.
-        if: ${{ !cancelled() && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
+        if: ${{ !cancelled() && inputs.delivery != 'projects-g6-catalog' && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: uv run --locked --script tools/validate.py
 
+      - name: Qualify narrow catalog delivery behavior without secrets
+        id: g6_tests
+        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
+        run: |
+          uv run --locked --script --python 3.12 tools/tests/test_prepare_g6_catalog.py
+          uv run --locked --script --python 3.12 tools/tests/test_deliver_g6_catalog.py
+          uv run --locked --script --python 3.12 tools/tests/test_delivery_workflow.py
+
+      - name: Bind narrow plan to current exact owner source and reviewed Projects tree
+        id: g6_qualify
+        if: ${{ !cancelled() && inputs.delivery == 'projects-g6-catalog' && steps.cicd.outcome == 'success' }}
+        env:
+          G6_OWNER_SOURCE: ${{ github.sha }}
+          G6_BEHAVIORAL_RESULT: ${{ steps.g6_tests.outcome }}
+        run: python3 -I tools/deliver_g6_catalog.py qualify --report g6-qualification.json
+
+      - name: Upload narrow qualification receipt
+        if: ${{ always() && inputs.delivery == 'projects-g6-catalog' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: projects-g6-qualification
+          path: g6-qualification.json
+          if-no-files-found: warn
+          retention-days: 90
+
   deliver:
     needs: validate
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: cicd-app
@@ -70,7 +115,56 @@ jobs:
     env:
       DELIVERY_DIRECTORY: ${{ github.workspace }}/.delivery-state-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
+      - name: Checkout exact qualified narrow owner source
+        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .g6-owner
+          sparse-checkout: |
+            tools/deliver_g6_catalog.py
+            tools/delivery_runtime.py
+            docs/proposals/projects-g6-catalog.json
+            docs/proposals/projects-g6-catalog.patch
+            .github/actions/prepare-g6-catalog
+          sparse-checkout-cone-mode: false
+          submodules: false
+          persist-credentials: false
+
+      - name: Mint only Projects catalog correction token
+        id: g6_token
+        timeout-minutes: 1
+        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.Projects
+          permission-contents: write
+          permission-workflows: write
+
+      - name: Deliver exact qualified Projects catalog correction
+        if: ${{ !cancelled() && inputs.delivery == 'projects-g6-catalog' }}
+        env:
+          G6_OWNER_SOURCE: ${{ github.sha }}
+          G6_QUALIFICATION: ${{ needs.validate.result }}
+          G6_PLAN: ${{ needs.validate.outputs.g6_plan }}
+          MODULE_TOKEN: ${{ steps.g6_token.outputs.token }}
+        run: python3 -I .g6-owner/tools/deliver_g6_catalog.py deliver --report projects-g6-delivery.json
+
+      - name: Upload narrow delivery receipt
+        if: ${{ always() && inputs.delivery == 'projects-g6-catalog' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: projects-g6-delivery
+          path: projects-g6-delivery.json
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Checkout immutable delivery bootstrap
+        if: ${{ inputs.delivery != 'projects-g6-catalog' }}
         timeout-minutes: 3
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -85,7 +179,7 @@ jobs:
 
       - name: Select trusted delivery source and initialize report
         id: select
-        if: ${{ always() }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && always() }}
         continue-on-error: true
         env:
           DELIVERY_VERDICT: ${{ needs.validate.outputs.verdict }}
@@ -94,7 +188,7 @@ jobs:
       - name: Mint CiCd accepted-ref and freshness token
         timeout-minutes: 1
         id: cicd_token
-        if: ${{ !cancelled() && steps.select.outputs.ready == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.ready == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -107,7 +201,7 @@ jobs:
           permission-actions: read
 
       - name: Initialize delivery and hourly freshness
-        if: ${{ !cancelled() }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -115,14 +209,14 @@ jobs:
 
       - name: Check module slot 01 time budget
         id: module_01_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 1
 
       - name: Mint module slot 01 token
         timeout-minutes: 1
         id: module_01_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -135,7 +229,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_01 == 'true' && 'read' || '' }}
 
       - name: Process module slot 01
-        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -144,14 +238,14 @@ jobs:
 
       - name: Check module slot 02 time budget
         id: module_02_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 2
 
       - name: Mint module slot 02 token
         timeout-minutes: 1
         id: module_02_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -164,7 +258,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_02 == 'true' && 'read' || '' }}
 
       - name: Process module slot 02
-        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -173,14 +267,14 @@ jobs:
 
       - name: Check module slot 03 time budget
         id: module_03_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 3
 
       - name: Mint module slot 03 token
         timeout-minutes: 1
         id: module_03_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -193,7 +287,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_03 == 'true' && 'read' || '' }}
 
       - name: Process module slot 03
-        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -202,14 +296,14 @@ jobs:
 
       - name: Check module slot 04 time budget
         id: module_04_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 4
 
       - name: Mint module slot 04 token
         timeout-minutes: 1
         id: module_04_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -222,7 +316,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_04 == 'true' && 'read' || '' }}
 
       - name: Process module slot 04
-        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -231,14 +325,14 @@ jobs:
 
       - name: Check module slot 05 time budget
         id: module_05_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 5
 
       - name: Mint module slot 05 token
         timeout-minutes: 1
         id: module_05_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -251,7 +345,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_05 == 'true' && 'read' || '' }}
 
       - name: Process module slot 05
-        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -260,14 +354,14 @@ jobs:
 
       - name: Check module slot 06 time budget
         id: module_06_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 6
 
       - name: Mint module slot 06 token
         timeout-minutes: 1
         id: module_06_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -280,7 +374,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_06 == 'true' && 'read' || '' }}
 
       - name: Process module slot 06
-        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -289,14 +383,14 @@ jobs:
 
       - name: Check module slot 07 time budget
         id: module_07_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 7
 
       - name: Mint module slot 07 token
         timeout-minutes: 1
         id: module_07_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -309,7 +403,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_07 == 'true' && 'read' || '' }}
 
       - name: Process module slot 07
-        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -318,14 +412,14 @@ jobs:
 
       - name: Check module slot 08 time budget
         id: module_08_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 8
 
       - name: Mint module slot 08 token
         timeout-minutes: 1
         id: module_08_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -338,7 +432,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_08 == 'true' && 'read' || '' }}
 
       - name: Process module slot 08
-        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -347,14 +441,14 @@ jobs:
 
       - name: Check module slot 09 time budget
         id: module_09_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 9
 
       - name: Mint module slot 09 token
         timeout-minutes: 1
         id: module_09_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -367,7 +461,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_09 == 'true' && 'read' || '' }}
 
       - name: Process module slot 09
-        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -376,14 +470,14 @@ jobs:
 
       - name: Check module slot 10 time budget
         id: module_10_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 10
 
       - name: Mint module slot 10 token
         timeout-minutes: 1
         id: module_10_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -396,7 +490,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_10 == 'true' && 'read' || '' }}
 
       - name: Process module slot 10
-        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -405,14 +499,14 @@ jobs:
 
       - name: Check module slot 11 time budget
         id: module_11_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 11
 
       - name: Mint module slot 11 token
         timeout-minutes: 1
         id: module_11_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -425,7 +519,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_11 == 'true' && 'read' || '' }}
 
       - name: Process module slot 11
-        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -434,14 +528,14 @@ jobs:
 
       - name: Check module slot 12 time budget
         id: module_12_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 12
 
       - name: Mint module slot 12 token
         timeout-minutes: 1
         id: module_12_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -454,7 +548,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_12 == 'true' && 'read' || '' }}
 
       - name: Process module slot 12
-        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -463,14 +557,14 @@ jobs:
 
       - name: Check module slot 13 time budget
         id: module_13_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 13
 
       - name: Mint module slot 13 token
         timeout-minutes: 1
         id: module_13_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -483,7 +577,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_13 == 'true' && 'read' || '' }}
 
       - name: Process module slot 13
-        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -492,14 +586,14 @@ jobs:
 
       - name: Check module slot 14 time budget
         id: module_14_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 14
 
       - name: Mint module slot 14 token
         timeout-minutes: 1
         id: module_14_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -512,7 +606,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_14 == 'true' && 'read' || '' }}
 
       - name: Process module slot 14
-        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -521,14 +615,14 @@ jobs:
 
       - name: Check module slot 15 time budget
         id: module_15_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 15
 
       - name: Mint module slot 15 token
         timeout-minutes: 1
         id: module_15_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -541,7 +635,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_15 == 'true' && 'read' || '' }}
 
       - name: Process module slot 15
-        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -550,14 +644,14 @@ jobs:
 
       - name: Check module slot 16 time budget
         id: module_16_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 16
 
       - name: Mint module slot 16 token
         timeout-minutes: 1
         id: module_16_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -570,7 +664,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_16 == 'true' && 'read' || '' }}
 
       - name: Process module slot 16
-        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -579,14 +673,14 @@ jobs:
 
       - name: Check module slot 17 time budget
         id: module_17_budget
-        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' }}
         continue-on-error: true
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 17
 
       - name: Mint module slot 17 token
         timeout-minutes: 1
         id: module_17_token
-        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
         continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -599,7 +693,7 @@ jobs:
           permission-administration: ${{ steps.select.outputs.check_17 == 'true' && 'read' || '' }}
 
       - name: Process module slot 17
-        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' }}
         continue-on-error: true
         env:
           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
@@ -607,12 +701,12 @@ jobs:
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 17
 
       - name: Finalize delivery report and aggregate result
-        if: ${{ always() }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && always() }}
         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py finalize
 
       - name: Upload delivery report
         timeout-minutes: 3
-        if: ${{ always() }}
+        if: ${{ inputs.delivery != 'projects-g6-catalog' && always() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hexalith-delivery
