@@ -67,7 +67,22 @@ context:
 
 ## Implementation Notes
 
+- Resume, 2026-11-16: implementation checkout is `/home/administrator/projects/hexalith/cicd-story-17-resume`, branch `story/17-migrate-folders-resume`, created from freshly fetched CiCd main `b836159cea272e5211333296936106cf82833a27`. Resolve `{project-root}` context paths to this checkout. Preserve the original baseline and frozen intent. The prior published Folders candidate and source evidence are available in the clean sibling checkout `/home/administrator/projects/hexalith/cicd-story-17`; use its Git objects read-only to populate local direct checkouts if needed. Continue local implementation and verification sequentially; no pushes, remote Git operations, provisioning, adoption, or credential changes in step 03. Preserve both earlier workspaces.
+
 - Implementation follows the rendered step-03 local-only boundary: no pushes, remote Git operations or external provisioning in this handoff. Prepare the concrete local candidate and verification; leave live rollout tasks unchecked until that boundary is explicitly resolved. This does not narrow final story acceptance. Read source dependencies from existing local Git objects rather than changing the original workspace.
+
+- Resume qualification, 2026-11-16: [current evidence](../specs/spec-cicd/evidence/17/resume.md)
+  revalidates the exact published local candidate against CiCd
+  `b836159cea272e5211333296936106cf82833a27`. Production and candidate render,
+  local validator boundaries, classification and all nine strict-runner
+  boundaries pass. The eight unchanged historical audit declarations and
+  940 unchanged discovery diagnostics still fail. Reconstructed prior source
+  proves that the retained failing tests and sprint controls are unchanged;
+  the evidence distinguishes required real component/owner/provider setup
+  from the frozen FR58 product prerequisites. No additional product edit,
+  production registration, remote operation or acceptance completion is claimed.
+
+- Publication authorization, 2026-11-16: after the local qualification handoff, the human requested `push all changes to main`. Publish this resume's spec update and verification evidence on current CiCd main, preserving the recorded failed gates and incomplete acceptance. The earlier local-only statements describe implementation; this subsequent request authorizes publication of the handoff.
 
 ## Spec Change Log
 

@@ -1,0 +1,170 @@
+{
+  "status": "in-progress; blockers reproduced",
+  "scope": "local-only; no remote Git, provisioning, adoption, credential changes, or release dispatch",
+  "commands": [
+    {
+      "label": "production-render-check",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-story-17-resume",
+      "exit_code": 0,
+      "output": "production-render-check.txt"
+    },
+    {
+      "label": "candidate-render",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py"
+      ],
+      "cwd": "/tmp/hexalith-job.XdaA5gwq/candidate-cicd",
+      "exit_code": 0,
+      "output": "candidate-render.txt"
+    },
+    {
+      "label": "candidate-render-check",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "cwd": "/tmp/hexalith-job.XdaA5gwq/candidate-cicd",
+      "exit_code": 0,
+      "output": "candidate-render-check.txt"
+    },
+    {
+      "label": "complete-project-runner-qualification",
+      "command": [
+        "python3",
+        "/tmp/hexalith-job.XdaA5gwq/qualify-complete-project-runner.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-story-17-resume",
+      "exit_code": 0,
+      "output": "complete-project-runner-qualification.txt"
+    }
+  ],
+  "revisions": {
+    "cicd": "b836159cea272e5211333296936106cf82833a27",
+    "folders": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+    "folders_tree": "447b78de825d385ddbb7123a3a2746271a26b9e5",
+    "folders_parent": "a448d20873dc9e809623f85da206e8d8a13bb9ab",
+    "builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "builds_tag": "v6.0.6"
+  },
+  "preserved_worktrees": {
+    "/home/administrator/projects/hexalith/cicd-story-17": "",
+    "/home/administrator/projects/hexalith/cicd-story-17/references/Hexalith.Folders": ""
+  },
+  "owned_tree_preserved": true,
+  "published_candidate_matches_saved_evidence": true,
+  "folders_worktree_clean": true,
+  "nested_submodules_uninitialized": true,
+  "policy_source_blobs": {
+    "tools/scan_discovery.py": "aca92cf3e02b48ddbebdb7e955335fc4bc0b7417",
+    "tools/render.py": "c0d81172750ea460691550b7b0316a23c9eac2fd",
+    "tools/check_global.py": "28061d979b6d17a9453a92841b23d57c539d63a4"
+  },
+  "policy_source_unchanged_since_prior_qualification": {
+    "tools/scan_discovery.py": true,
+    "tools/render.py": true,
+    "tools/check_global.py": true
+  },
+  "action_discovery": {
+    "files": 12,
+    "error_count": 940,
+    "diagnostics": "../action-discovery.json",
+    "matches_saved_diagnostics": true,
+    "diagnostics_sha256": "7e310cf5f8674fbc2879a25c711a7620a94512ddf53b9ff5ec0aa48bac7a07f2"
+  },
+  "audit_lint": {
+    "status": "failed",
+    "diagnostics": "audit-lint.txt",
+    "count": 8,
+    "all_failed_blobs_unchanged": true
+  },
+  "registration_render": {
+    "rendered/Hexalith.Folders/.github/dependabot.yml": {
+      "sha256": "779a7659ec7c86fb709cb6e77b43cb4ec26c871a96c588df0b0c655e376dec32",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders/.github/hexalith-ci.json": {
+      "sha256": "06f062f45c547b3015ddc50e0d1ad0e2c5014078c266ff598b40100f86d2f85d",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders/.github/workflows/ci.yml": {
+      "sha256": "3eece14ea457e207497702f423c5736d98796029c43b881ee4066809cb6b445d",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders/.github/workflows/release.yml": {
+      "sha256": "27c473b95e60024e1057678f90f4df276330df9ddf0412691699ec486eeb51c8",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders.perimeter.json": {
+      "sha256": "c3b7d77789497f3c0002b036443981bdcc3f897cd0405912aea3ab46e354873a",
+      "matches_archived_candidate": true
+    }
+  },
+  "shared_classification": {
+    "unit": [
+      "samples/Hexalith.Folders.Sample.Tests/Hexalith.Folders.Sample.Tests.csproj",
+      "tests/Hexalith.Folders.Cli.Tests/Hexalith.Folders.Cli.Tests.csproj",
+      "tests/Hexalith.Folders.EventStore.Tests/Hexalith.Folders.EventStore.Tests.csproj",
+      "tests/Hexalith.Folders.LoadTests.Tests/Hexalith.Folders.LoadTests.Tests.csproj",
+      "tests/Hexalith.Folders.Mcp.Tests/Hexalith.Folders.Mcp.Tests.csproj",
+      "tests/Hexalith.Folders.Testing.Tests/Hexalith.Folders.Testing.Tests.csproj",
+      "tests/Hexalith.Folders.UI.Tests/Hexalith.Folders.UI.Tests.csproj",
+      "tests/Hexalith.Folders.Workers.Tests/Hexalith.Folders.Workers.Tests.csproj"
+    ],
+    "integration": [
+      "tests/Hexalith.Folders.IntegrationTests/Hexalith.Folders.IntegrationTests.csproj"
+    ],
+    "excluded": [
+      "tests/Hexalith.Folders.AppHost.Tests/Hexalith.Folders.AppHost.Tests.csproj",
+      "tests/Hexalith.Folders.Client.Tests/Hexalith.Folders.Client.Tests.csproj",
+      "tests/Hexalith.Folders.Contracts.Tests/Hexalith.Folders.Contracts.Tests.csproj",
+      "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+      "tests/Hexalith.Folders.Tests/Hexalith.Folders.Tests.csproj",
+      "tests/Hexalith.Folders.UI.E2E.Tests/Hexalith.Folders.UI.E2E.Tests.csproj"
+    ]
+  },
+  "shared_classification_matches_prior": true,
+  "local_validator_boundaries": {
+    "status": "passed",
+    "checks": [
+      "production render determinism",
+      "committed production render",
+      "committed production inputs",
+      "candidate documents/schema",
+      "candidate Folders caller interfaces"
+    ]
+  },
+  "strict_runner_qualification": "complete-project-runner-qualification.json",
+  "not_executed": {
+    "full_validate": "It clones/fetches live module repositories, outside the explicit no-remote-Git boundary. Local validator boundaries were checked separately.",
+    "normal_module_checker": "Folders is unadopted and its nested Builds is intentionally absent. The approved exact preparation substitute still fails released audit lint.",
+    "unchanged_product_suites": "The exact published module tree has existing source-bound complete-suite, generator and real provider outcomes. The source and prerequisite failures are unchanged; suites were not duplicated.",
+    "live_rollout": "Predecessor checkpoint, AD-21, protected publication/adoption, credential retirement and the actual scheduled-night outcome remain gated."
+  },
+  "actual_product_prerequisites": {
+    "fr58_live_path_prerequisite": "unconditional false in Fr58PublicMutationSearchRoundTripTests.LivePathPrerequisitesSatisfied",
+    "server_workload_controls": "missing real Keycloak component manifest and source-bound EventStore proof binaries, per saved focused-product-prerequisites.json",
+    "apphost_workload_controls": "missing real component/run-owned manifests, per saved focused-product-prerequisites.json",
+    "prior_focused_evidence": "../focused-product-prerequisites.json",
+    "prior_complete_evidence": "../final-candidate.json and ../attempt-3/product-verification.json"
+  },
+  "production_setup_and_render_unchanged": true,
+  "scratch_roots_removed": true,
+  "strict_runner_qualification_matches_prior": true,
+  "product_blocker_analysis": "product-blocker-analysis.json"
+}
