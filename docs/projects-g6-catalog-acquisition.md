@@ -36,7 +36,7 @@ acquisition only; they do not execute the mapper, restore or runtime G-6.
 
 `docs/proposals/projects-g6-catalog.patch` is the retained reviewed owner proposal.
 It adds the local action and inserts its invocation before the existing restore
-step in Projects source `981ceef13a1abc88219925e73c51a23eb9ac50c2`. The revision is
+step in Projects source `4511105bb1f00b8cf762097523de74acc828a001`. The revision is
 derived at execution from Projects HEAD; the historical catalog commit is never
 hardcoded. All existing dependency pins and product gates are preserved.
 
@@ -64,9 +64,9 @@ creates an accepted ref, resolves a Builds version, or applies a rendered
 perimeter. The architecture document and Story 1.17 tracking are unchanged.
 
 The closed manifest `docs/proposals/projects-g6-catalog.json` binds Projects base
-`981ceef13a1abc88219925e73c51a23eb9ac50c2`, its entire tree, the reviewed patch
+`4511105bb1f00b8cf762097523de74acc828a001`, its entire tree, the reviewed patch
 SHA256, every input/output path and blob, and complete output tree
-`238d933a813d0453e950e1080175d74f12e82975`. The only output changes are
+`c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047`. The only output changes are
 `.github/workflows/ci.yml`, `.github/actions/prepare-g6-catalog/action.yml` and
 `.github/actions/prepare-g6-catalog/prepare.py`. The action bytes are reused
 unchanged. Acquisition precedes Conversations prepare-build; the mapper stays
@@ -158,3 +158,9 @@ Publishing, A8 audit, deployment and v2 activation remain outside this correctio
 Retained proof and full source identities are in Folders:
 `_bmad-output/implementation-artifacts/evidence/story-1-17-g6-catalog-acquisition-2026-11-16/`.
 The historical publication/audit/A8 work and Story 1.17 tracking are unchanged.
+
+## Hosted qualification and external delivery prerequisite — 2026-11-16
+
+[Owner run 43933951553](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43933951553) qualified exact source `6fe837f2fafa0952d21e1690c61cef7a11e6eeab`: 17 acquisition, 28 controller and 17 workflow tests passed. The original patch, action/workflow blobs and all gitlinks are unchanged. Current-source requalification preserves the concurrent product preparation that advanced Projects from `981ceef13a1abc88219925e73c51a23eb9ac50c2` to the current base above.
+
+Delivery then failed at App token creation: `GET /repos/Hexalith/Hexalith.Projects/installation` returned HTTP 404. The configured CiCd App needs an accessible installation covering Projects with its existing Contents/Workflows write capabilities. No App token or push was produced, no credentials/settings were broadened, and no corrected Projects CI/G-6 acceptance is claimed. The owner must resolve this external prerequisite, then use a fresh exact-source dispatch. Full retained receipts and continuation instructions are in `_bmad-output/implementation-artifacts/evidence/projects-g6-narrow-delivery-2026-11-16/authorized-resume-20261116T175933Z/README.md`.

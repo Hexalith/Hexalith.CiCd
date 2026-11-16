@@ -1,5 +1,7 @@
 # Projects G-6 narrow owner delivery — 2026-11-16
 
+**Latest outcome:** The gate decision is resolved and fresh hosted owner qualification passes. Actual delivery is blocked by HTTP 404 looking up the CiCd App installation for Projects. No module push occurred. See the [final authorized-resume handoff](authorized-resume-20261116T175933Z/README.md). The earlier status below is retained history.
+
 The CiCd-owned extension is implemented and independently reviewed. It uses a dispatch-only branch inside the existing Delivery workflow/job, preserving the `cicd-app` environment, shared delivery concurrency, scoped App token and normal delivery behavior. It never adopts Projects or writes an accepted ref.
 
 The exact proposal still targets Projects `981ceef13a1abc88219925e73c51a23eb9ac50c2`, base tree `b8a7a8b3b5532cb954f36835685d5b8dcd9577ab`. Its only changes are the existing acquisition action's two files and its invocation before Conversations prepare-build. The complete corrected tree is `238d933a813d0453e950e1080175d74f12e82975`; every other entry, mode, dependency pin and gitlink is preserved. [Independent proposal proof](proposal-qualification.json) includes exact blob bindings and the unchanged proposal SHA256. The acquisition helper, its tests, the proposal and the offline fail-closed mapper are unchanged.
