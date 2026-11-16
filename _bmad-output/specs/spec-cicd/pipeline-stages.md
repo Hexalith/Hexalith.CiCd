@@ -11,6 +11,7 @@ The stage order and step sequence of each pipeline. Serves CAP-2, 3, 5, 6, 12, 1
 
 Edge cases become knobs in the setup file or custom actions:
 - Dapr, browsers, and a registry login: the `dapr`, `browsers`, and `registry` knobs.
+- Optional locked npm workspaces and exact local .NET tools: `npmWorkspaces: []` and `dotnetTools: false`.
 - Aspire AppHost tests: shared stage 4.
 - Windows: an extra job.
 
@@ -21,7 +22,7 @@ Edge cases become knobs in the setup file or custom actions:
 | 1 | Guard (`enforcement.md`) plus the commit-format check (commitlint) | seconds |
 | 2 | Restore, then a Release build in package mode with `-warnaserror`, analyzers included, and NuGet audit off | minutes |
 | 3 | Unit tests, project by project. Stops at the first failing project; all tests inside that project still run. | — |
-| 4 | Environment setup, run once (Dapr, browsers, registry pull login, as enabled). Then the `after-unit-tests` hook, integration tests project by project, and the `after-integration-tests` hook. | — |
+| 4 | Environment setup, run once (locked npm workspaces, exact .NET tools, Dapr, browsers, registry pull login, as enabled). Then the `after-unit-tests` hook, integration tests project by project, and the `after-integration-tests` hook. | — |
 
 - **Order rule:** cheapest and most likely to fail first. Whenever a stage is added, review the order with the run-history method in `baseline-and-targets.md`.
 - **Test stages:** test projects are the solution's projects with `IsTestProject=true`. A name ending in `IntegrationTests`, `Integration.Tests`, or `AppHost.Tests`, or containing `E2E`, goes to stage 4. Everything else goes to stage 3. The setup file can only move a project to stage 4 or hand it to an enabled hook or job. There is never a plain skip (AD-13).
@@ -38,6 +39,14 @@ Edge cases become knobs in the setup file or custom actions:
     - Works: Platform, Parties (`IntegrationTests.csproj:37-63`).
   - The other 9 (AI.Tools, Agents, Conversations, EventStore, FrontComposer, McpCli, Memories, PolymorphicSerializations, Timesheets) are clean: their sibling references are gated by `'$(UseHexalithProjectReferences)' == 'true'` or by per-dependency `*FromSource` switches.
 - **SDK:** comes from `global.json`.
+
+Story 23's next compatible Builds contract adds `ciTimeoutMinutes` (1–360,
+default 30), forwarded to the existing shared CI job timeout. Its environment
+step records a private Dapr initialization receipt before the single init and
+exports its path only after successful initialization and metadata inspection.
+Product consumers must verify the receipt against the current job and backend
+before provisioning private material; the receipt does not certify an empty
+database. These additions require a published compatible pin before adoption.
 
 ## Hook points
 
@@ -112,3 +121,21 @@ Dependency review is dropped:
 - Audit waivers exist only in Builds' `Props/`. When a module is onboarded, a CiCd agent adds its waivers there, and adoption waits for a `builds-version` that contains them.
 
 What is lost: the license check and the npm coverage. Today dependency review runs only on PRs, so with direct pushes to `main` it rarely runs.
+
+
+Story 18 extends the additive CI contract at the next acceptable Builds release.
+The renderer materializes `npmWorkspaces: []` and `dotnetTools: false` from that
+pinned schema; strict readers still require every field. Both are disabled when
+`solution` is `none`. Existing tagged readers and rendered modules retain their
+unchanged contract until adoption. The nightly bump may add only default-valued
+keys; enabling a workspace/tool manifest requires an explicit setup change.
+
+Preparation validates contained committed package/lock inputs and exact local
+tool versions before installing anything. It performs `npm ci --ignore-scripts`,
+signature verification and trusted-config tool restore once after successful unit
+tests. The separate nightly-hook job prepares the same environment once. Node 24
+is supplied by the guard in CI and set up without caching in nightly preparation.
+Browsers use locked npm Playwright or existing built .NET Playwright tooling;
+requesting browsers without either fails. Module hooks inspect or run the shared
+Release/package outputs and contain no generic tool/browser setup or solution
+rebuilds. New API consumers remain distinct package product checks.

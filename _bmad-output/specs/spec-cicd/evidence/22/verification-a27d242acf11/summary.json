@@ -1,0 +1,397 @@
+{
+  "candidate": "a27d242acf11dbb4cee2f4f9cab92637608b5c0b",
+  "baseline": "c64e292a46858058f6764095c8e01c2faa0ff3e0",
+  "scope": "local preparation only; no hosted acceptance or push approval",
+  "dependencies": {
+    "references/Hexalith.AI.Tools": "17a37d83db193f0b7494c1b931fd1e82a67c1424",
+    "references/Hexalith.Builds": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+    "references/Hexalith.Commons": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+    "references/Hexalith.EventStore": "cbb3a867c773a0857001468062c1779ad9755b8d",
+    "references/Hexalith.Tenants": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+    "references/Hexalith.FrontComposer": "b22be84bdbb23d9263a8835496ad0c95adf1843f",
+    "references/Hexalith.McpCli": "55f8a02435c7faa7c4073bf22c78a5d04c466929",
+    "references/Hexalith.Platform": "0c3f55d1c4345f4952cbecbff92014251f484ef2"
+  },
+  "protectedContent": {
+    ".github/workflows": {
+      "unchanged": true,
+      "baselineTree": "100644 blob ecceeff27a39f57379ebbe7320fffe31ac4c3146\t.github/workflows/ci.yml\n100644 blob 3161aa6a7f977d246345cf47484c0f7506562a4b\t.github/workflows/codeql.yml\n100644 blob 091cb56dc64b5667cd5be77b1f6abc6b152753d2\t.github/workflows/commitlint.yml\n100644 blob ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb\t.github/workflows/dependency-review.yml\n100644 blob eb7149cb3e40d5773fb1c43492c08de9caaf9231\t.github/workflows/nightly.yml\n100644 blob e808d09ad797cfdd2a594ad9d8d035194a02a14e\t.github/workflows/qualify-builds-publication.yml\n100644 blob 0faa5f5d03255015ba94c9bb7f0cc3188620cadf\t.github/workflows/recover-partial-release.yml\n100644 blob bb0e482457080d74683fe7a1c5763c95a36b2671\t.github/workflows/release.yml",
+      "candidateTree": "100644 blob ecceeff27a39f57379ebbe7320fffe31ac4c3146\t.github/workflows/ci.yml\n100644 blob 3161aa6a7f977d246345cf47484c0f7506562a4b\t.github/workflows/codeql.yml\n100644 blob 091cb56dc64b5667cd5be77b1f6abc6b152753d2\t.github/workflows/commitlint.yml\n100644 blob ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb\t.github/workflows/dependency-review.yml\n100644 blob eb7149cb3e40d5773fb1c43492c08de9caaf9231\t.github/workflows/nightly.yml\n100644 blob e808d09ad797cfdd2a594ad9d8d035194a02a14e\t.github/workflows/qualify-builds-publication.yml\n100644 blob 0faa5f5d03255015ba94c9bb7f0cc3188620cadf\t.github/workflows/recover-partial-release.yml\n100644 blob bb0e482457080d74683fe7a1c5763c95a36b2671\t.github/workflows/release.yml"
+    },
+    ".github/hexalith-ci.json": {
+      "unchanged": true,
+      "baselineTree": "",
+      "candidateTree": ""
+    },
+    ".github/dependabot.yml": {
+      "unchanged": true,
+      "baselineTree": "100644 blob 67caebec2f39b687061e6c55c16bb70d9fd215df\t.github/dependabot.yml",
+      "candidateTree": "100644 blob 67caebec2f39b687061e6c55c16bb70d9fd215df\t.github/dependabot.yml"
+    },
+    "references/Hexalith.Builds": {
+      "unchanged": true,
+      "baselineTree": "160000 commit e2bbbd0893f586e4d447ef8358ff747ea3d34435\treferences/Hexalith.Builds",
+      "candidateTree": "160000 commit e2bbbd0893f586e4d447ef8358ff747ea3d34435\treferences/Hexalith.Builds"
+    },
+    ".gitmodules": {
+      "unchanged": true,
+      "baselineTree": "100644 blob 4d9b067ef0589e43114505fa04809939623e40f5\t.gitmodules",
+      "candidateTree": "100644 blob 4d9b067ef0589e43114505fa04809939623e40f5\t.gitmodules"
+    },
+    "AGENTS.md": {
+      "unchanged": true,
+      "baselineTree": "100644 blob e4d60afe736f26e7433d37b208c1e9464a8e3f50\tAGENTS.md",
+      "candidateTree": "100644 blob e4d60afe736f26e7433d37b208c1e9464a8e3f50\tAGENTS.md"
+    },
+    "CLAUDE.md": {
+      "unchanged": true,
+      "baselineTree": "100644 blob e4d60afe736f26e7433d37b208c1e9464a8e3f50\tCLAUDE.md",
+      "candidateTree": "100644 blob e4d60afe736f26e7433d37b208c1e9464a8e3f50\tCLAUDE.md"
+    },
+    ".github/copilot-instructions.md": {
+      "unchanged": true,
+      "baselineTree": "100644 blob e4d60afe736f26e7433d37b208c1e9464a8e3f50\t.github/copilot-instructions.md",
+      "candidateTree": "100644 blob e4d60afe736f26e7433d37b208c1e9464a8e3f50\t.github/copilot-instructions.md"
+    },
+    ".claude/settings.json": {
+      "unchanged": true,
+      "baselineTree": "100644 blob 46967a5aa152da8fa268bf969a04b71207334449\t.claude/settings.json",
+      "candidateTree": "100644 blob 46967a5aa152da8fa268bf969a04b71207334449\t.claude/settings.json"
+    },
+    ".claude/settings.local.json": {
+      "unchanged": true,
+      "baselineTree": "",
+      "candidateTree": ""
+    },
+    "global.json": {
+      "unchanged": true,
+      "baselineTree": "100644 blob 0fa611bc34c165fd6fab42e8559953e02f1493fd\tglobal.json",
+      "candidateTree": "100644 blob 0fa611bc34c165fd6fab42e8559953e02f1493fd\tglobal.json"
+    }
+  },
+  "commands": {
+    "ci-product-build": {
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Memories.slnx",
+        "--configuration",
+        "Release",
+        "-m:1",
+        "-warnaserror",
+        "--disable-build-servers",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false"
+      ],
+      "exitCode": 0,
+      "seconds": 156.34
+    },
+    "Hexalith.Memories.AccessTelemetry.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.AccessTelemetry.Tests/Hexalith.Memories.AccessTelemetry.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 18.39,
+      "testCounts": {
+        "total": 265,
+        "failed": 0,
+        "succeeded": 265,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.Cli.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.Cli.Tests/Hexalith.Memories.Cli.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 3.07,
+      "testCounts": {
+        "total": 455,
+        "failed": 0,
+        "succeeded": 455,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.Contracts.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.Contracts.Tests/Hexalith.Memories.Contracts.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 3.35,
+      "testCounts": {
+        "total": 599,
+        "failed": 0,
+        "succeeded": 599,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.DerivedStores.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.DerivedStores.Tests/Hexalith.Memories.DerivedStores.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 3.15,
+      "testCounts": {
+        "total": 14,
+        "failed": 0,
+        "succeeded": 14,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.DomainService.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.DomainService.Tests/Hexalith.Memories.DomainService.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 4.0,
+      "testCounts": {
+        "total": 13,
+        "failed": 0,
+        "succeeded": 13,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.EventStore.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.EventStore.Tests/Hexalith.Memories.EventStore.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 4.11,
+      "testCounts": {
+        "total": 150,
+        "failed": 0,
+        "succeeded": 150,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.Mcp.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.Mcp.Tests/Hexalith.Memories.Mcp.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 5.41,
+      "testCounts": {
+        "total": 120,
+        "failed": 0,
+        "succeeded": 120,
+        "skipped": 0
+      }
+    },
+    "Hexalith.Memories.Server.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.Server.Tests/Hexalith.Memories.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 85.55,
+      "testCounts": {
+        "total": 3193,
+        "failed": 0,
+        "succeeded": 3192,
+        "skipped": 1
+      }
+    },
+    "Hexalith.Memories.Web.Tests": {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Memories.Web.Tests/Hexalith.Memories.Web.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--stop-on-fail",
+        "off"
+      ],
+      "exitCode": 0,
+      "seconds": 8.97,
+      "testCounts": {
+        "total": 493,
+        "failed": 0,
+        "succeeded": 493,
+        "skipped": 0
+      }
+    },
+    "release-audit": {
+      "command": [
+        "dotnet",
+        "restore",
+        "Hexalith.Memories.slnx",
+        "--force",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true"
+      ],
+      "exitCode": 0,
+      "seconds": 5.78
+    },
+    "python-coverage_gate": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling/coverage_gate",
+        "-p",
+        "*test*.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.38
+    },
+    "python-release_dispatch": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling/release_dispatch",
+        "-p",
+        "*test*.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.58
+    },
+    "python-release_preflight": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling/release_preflight",
+        "-p",
+        "*test*.py"
+      ],
+      "exitCode": 0,
+      "seconds": 69.59
+    },
+    "python-builds_publication_qualification": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling/builds_publication_qualification",
+        "-p",
+        "*test*.py"
+      ],
+      "exitCode": 0,
+      "seconds": 57.66
+    },
+    "python-publish_containers": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling/publish_containers",
+        "-p",
+        "*test*.py"
+      ],
+      "exitCode": 0,
+      "seconds": 481.98
+    },
+    "python-access_telemetry_functional_retention": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling/access_telemetry_functional_retention",
+        "-p",
+        "*test*.py"
+      ],
+      "exitCode": 0,
+      "seconds": 193.02
+    }
+  },
+  "finalDisposableStatus": "",
+  "unexecuted": [
+    "stage-4 fast integration: prepared Dapr/composition environment unavailable",
+    "nightly slow/performance integration and complete benchmark project: prepared environment unavailable",
+    "browser runtime/typecheck/artifacts: shared npm Playwright preparation unavailable",
+    "real rollout and recovery: shared prepared OCI/tool inputs unavailable",
+    "Debug/source graph and complete source-selected catalog project: separately released support unavailable",
+    "hosted validation, adoption, cleanup, green CI and scheduled nightly: local-only stage"
+  ],
+  "completeAcceptance": false,
+  "attemptedCommandsSucceeded": true
+}

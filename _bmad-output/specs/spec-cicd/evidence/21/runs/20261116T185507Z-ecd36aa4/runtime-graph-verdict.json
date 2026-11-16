@@ -1,0 +1,65 @@
+{
+  "source_patch_sha256": "7638309159915298c7a1da4ba6f205906b89acdc9104a661490a92eff77ed305",
+  "source_dependencies": {
+    "Hexalith.Builds": "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee",
+    "Hexalith.EventStore": "fdb59895975e86a1e234325a01237f259cdbd53b",
+    "Hexalith.Tenants": "292dbf164f26bcf376ef86d749b149b075f8b502",
+    "Hexalith.Memories": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+    "Hexalith.Commons": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+    "Hexalith.FrontComposer": "bca9dff291ce42c57516598732340a80703dfb6d",
+    "Hexalith.Platform": "f6f85032598865b9123f16364448bfd02c0ff5b0",
+    "Hexalith.McpCli": "23072f04f423eea3f30456fe5af13d2d382624fe",
+    "Hexalith.PolymorphicSerializations": "e97b56930e213f674b64c157551f499b0473ec43",
+    "Hexalith.AI.Tools": "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+  },
+  "selected_builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "compiled_external_projects": [
+    {
+      "project": "references/Hexalith.EventStore/src/Hexalith.EventStore.Admin.Server.Host",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.EventStore/src/Hexalith.EventStore.Admin.UI",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.Tenants/src/Hexalith.Tenants",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.Memories/src/Hexalith.Memories.AccessTelemetry.Contracts",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.Memories/src/Hexalith.Memories.Server",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.Memories/src/Hexalith.Memories.DomainService",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample.Contracts",
+      "configuration": "Release"
+    },
+    {
+      "project": "references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample.BlazorUI",
+      "configuration": "Release"
+    }
+  ],
+  "only_declared_runtime_and_helpers_compiled": true,
+  "all_external_outputs_release": true,
+  "prepared_artifact_count": 13,
+  "public_archive_count": 28,
+  "sdk_version": "5.1.1",
+  "family_versions": {
+    "HexalithTenantsVersion": "8.0.0",
+    "HexalithMemoriesVersion": "4.0.0",
+    "HexalithFrontComposerVersion": "6.0.0",
+    "HexalithMcpCliVersion": "3.0.0"
+  },
+  "build_marker_matches": true,
+  "reuse_exit_code": 0,
+  "build_or_restore_output_during_reuse": false,
+  "limitations": "Preparation does not establish native/browser/cohort/OCI/hosted or adoption/nightly acceptance."
+}

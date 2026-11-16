@@ -1,0 +1,31 @@
+{
+  "scope": "synthetic SDK 11/net10 package only; not Timesheets acceptance",
+  "expected_unsigned_candidate_refusal": true,
+  "results": [
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "Fixture.Contracts.csproj",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/Github/lib/product_validation.py",
+        "--workspace",
+        "/tmp/hexalith-job.RNkweMcO/module",
+        "--contract",
+        "contract.json"
+      ],
+      "exit_code": 1
+    }
+  ]
+}

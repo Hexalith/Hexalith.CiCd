@@ -1,0 +1,354 @@
+{
+  "baseline": "a448d20873dc9e809623f85da206e8d8a13bb9ab",
+  "deleted_files": [
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/AccessibilityCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/BaselineCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ContractParityCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/E2eCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/HonestGreenGateBaselineConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/PinnedDomainCiWorkflow.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ScheduledDriftAndPolicyWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/SecurityRedactionCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/NfrTraceabilityConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10ConformanceSetTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10CandidateCoverage.cs",
+    "package.json",
+    "package-lock.json",
+    "tests/tools/run-scheduled-policy-conformance-gates.ps1",
+    "tests/tools/run-nfr-traceability-gates.ps1",
+    "scripts/tests/test_ci_cd_tooling.py",
+    "scripts/tests/test_prepare_ci_topology_projects.py",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.ApprovalDateTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.ReportTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.YamlCloneTests.cs"
+  ],
+  "removed_methods": {
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/AdrRunbookDocsConformanceTests.cs": [
+      "AdrRunbookGateScriptFailsClosedAndEmitsBoundedEvidence",
+      "ContractSpineWorkflowAndBaselineCiWireAdrRunbookGateOnlyInAllowedLanes",
+      "AdrRunbookLatestReportStaysMetadataOnlyAndMatchesInventory"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/CapacityCalibrationConformanceTests.cs": [
+      "CalibrationGateScriptShouldFailClosedAndRunReleaseProfile",
+      "CapacityCalibrationShouldRemainARepositoryGateWithoutCouplingPackagePublication",
+      "CalibrationLatestReportShouldBeMetadataOnlyWhenPresent",
+      "GovernanceEvidenceShouldPointC1C2C5AtCalibrationArtifacts"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/CapacitySmokeCiWorkflowConformanceTests.cs": [
+      "CapacitySmokeWorkflowShouldExposeStableBlockingJobWithBaselineSetupPosture",
+      "CapacitySmokeGateScriptShouldRunOnlyTheLoadHarnessAndFailClosed",
+      "CapacitySmokeGateScriptShouldValidateCriticalEvidenceFailureCases",
+      "CapacitySmokeReportShouldStayMetadataOnlyWhenPresent",
+      "CapacitySmokeArtifactsShouldNotIntroduceRecursiveSubmoduleSetup"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ConsumerDocsConformanceTests.cs": [
+      "ConsumerDocsGateScriptFailsClosedAndEmitsBoundedEvidence",
+      "ContractSpineWorkflowAndBaselineCiWireConsumerDocsGate",
+      "ConsumerDocsLatestReportStaysMetadataOnlyWhenPresent"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/OperationsAuditDocsConformanceTests.cs": [
+      "OperationsAuditDocsGateScriptFailsClosedAndEmitsBoundedEvidence",
+      "ContractSpineWorkflowAndBaselineCiWireOperationsAuditDocsGate",
+      "OperationsAuditDocsLatestReportStaysMetadataOnlyWhenPresent"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ProductionObservabilityConformanceTests.cs": [
+      "ProductionObservabilityGateScriptShouldFailClosedAndEmitBoundedEvidence",
+      "ContractSpineWorkflowAndBaselineCiShouldWireObservabilityGate",
+      "GovernanceEvidenceAndC2DocsShouldRecordStory712Ownership",
+      "ProductionObservabilityLatestReportShouldStayMetadataOnlyWhenPresent"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs": [
+      "ProviderErrorDocsGateScriptFailsClosedAndEmitsBoundedEvidence",
+      "ContractSpineWorkflowAndBaselineCiWireProviderErrorDocsGate",
+      "ProviderErrorDocsLatestReportStaysMetadataOnlyWhenPresent"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ReleasePackageConformanceTests.cs": [
+      "CiWorkflowShouldUseSharedReleaseMtpValidationAndRetainFoldersGates",
+      "ReleaseWorkflowShouldBeManualExactSourceProtectedAndImmutable",
+      "TrustedPublishingPolicyShouldGrantOnlyExistingInventoryToFoldersProduction",
+      "ReleaseToolingShouldSealValidateConsumeAndFailOnDuplicateVersions",
+      "ReleasePackageReportShouldStayMetadataOnlyWhenPresent",
+      "ReleaseDocumentationShouldDescribeTheGuardedOperatorHandoff"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/RetentionAndTenantDeletionConformanceTests.cs": [
+      "RetentionDeletionGateScriptShouldFailClosedAndEmitBoundedEvidence",
+      "RetentionDeletionEvidenceShouldRemainIndependentFromSealedPackagePublication",
+      "BaselineCiShouldRunRetentionDeletionConformanceTests",
+      "RetentionDeletionLatestReportShouldStayMetadataOnlyWhenPresent",
+      "GovernanceEvidenceShouldPointC3AtRetentionDeletionGate"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ContainerImageConformanceTests.cs": [
+      "ContainerImageGateShouldPublishArchivesAndEmitMetadataOnlyReport",
+      "NewContainerArtifactsShouldNotIntroduceRecursiveSubmoduleSetup"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/ContractSpineCiGateTests.cs": [
+      "WorkflowWiresFocusedContractGeneratedArtifactGatesOnly"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/DaprPolicyConformanceTests.cs": [
+      "WorkflowAndScriptShouldWireOfflineDaprPolicyConformanceGate"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.cs": [
+      "WorkflowAndScriptExposeOneOfflineGovernanceCompletenessCommand",
+      "ExitCriteriaEvidenceMapsEveryC0ThroughC13WithBoundedReferencePendingRows",
+      "ExitCriteriaNegativeControlsFailClosedWithBoundedDiagnostics",
+      "ApprovalBackedCriteriaCarryExactHistoricalApprovalRecords",
+      "ApprovalRecordNegativeControlsFailClosedWithBoundedDiagnostics",
+      "C7DecisionPackageBindsProfileVersionDigestAndExactApprovals",
+      "C7DecisionNegativeControlsFailClosedWithBoundedDiagnostics",
+      "Oq2FilePolicyPackageBindsVersionDigestApprovalsAndRuntimePosture",
+      "Oq2EvidenceNegativeControlsFailClosedForMissingMismatchedStaleExtraAndIncompleteEvidence",
+      "Oq3AuthorizationMatrixPackageBindsVersionDigestAndRuntimePosture",
+      "Oq3EvidenceNegativeControlsFailClosedForMissingMismatchedStaleExtraAndIncompleteEvidence",
+      "Oq4ProviderCompatibilityPackageBindsVersionDigestApprovalsAndRuntimePosture",
+      "Oq4EvidenceNegativeControlsFailClosedForMissingMismatchedStaleExtraAndIncompleteEvidence",
+      "Oq4CurrentEvidenceRefreshRejectsMissingTamperedAndUnreviewedBindings"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.cs": [
+      "WorkflowAndDocumentationExposeSameOfflineSafetyGate"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10V2ContractTests.cs": [
+      "ConformanceSetBindsEveryCandidateArtifactWithoutChangingReleaseAuthority"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.InputTests.cs": [
+      "DuplicateCriteriaProduceOneDiagnosticBeforeValidatingTheirMetadata"
+    ],
+    "tests/Hexalith.Folders.Tests/Providers/GitHub/GitHubDriftConformanceTests.cs": [
+      "NightlyDriftExpectedTestCountsMatchTheRealCaseCounts"
+    ],
+    "tests/Hexalith.Folders.Tests/Providers/Forgejo/ForgejoManifestAndDriftTests.cs": [
+      "ForgejoDriftReportScriptEmitsSanitizedMetadata"
+    ],
+    "tests/Hexalith.Folders.AppHost.Tests/Fr58PublicMutationSearchRoundTripTests.cs": [
+      "Task0BlockersShouldKeepLivePathPrerequisitesUnsatisfied"
+    ]
+  },
+  "retained_methods": {
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/AdrRunbookDocsConformanceTests.cs": [
+      "AdrRunbookManifestIsNonVacuousAndFilesExist",
+      "NewAdrsHaveRequiredSectionsAcceptedStatusNoPlaceholderAndRealDecisionIds",
+      "AdrTemplateAndExistingAdrArePreserved",
+      "RunbooksHaveExpectedSectionContractsAndGapContent",
+      "AdrAndRunbookIndexesMatchDirectoryInventories",
+      "AdrRunbookDocsStayMetadataOnly",
+      "NegativeControlsRejectAdrRunbookDocDriftAndUnsafeEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/CapacityCalibrationConformanceTests.cs": [
+      "ExitCriteriaArtifactsShouldPinNumericC1C2C5Targets",
+      "LoadHarnessShouldPreserveQuickSmokeAndExposeCalibrationProfile",
+      "CapacityCalibrationDocumentationShouldExplainMaintainerHandoff",
+      "CalibrationEvidenceShouldBeMetadataOnlyWhenPresent",
+      "MalformedCalibrationEvidenceJsonIsRejectedByTheParser",
+      "UnsafeDiagnosticContentIsRejectedByMetadataOnlyScan",
+      "FailedOrNonNumericTargetComparisonIsRejectedByConformanceCheck",
+      "PlaceholderAndUnsafeDiagnosticPatternsRejectKnownBadValues"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/CapacitySmokeCiWorkflowConformanceTests.cs": [
+      "CapacitySmokeEvidenceShouldStayMetadataOnlyWhenPresent",
+      "CapacitySmokeDocumentationShouldRecordMaintainerHandoff",
+      "CapacitySmokeHarnessShouldExposeRequiredMeasuredStepsAndEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ConsumerDocsConformanceTests.cs": [
+      "RequiredConsumerReferenceDocsExist",
+      "ApiReferenceOperationAndTagInventoryEqualsSpine",
+      "CliReferenceExitCodeRowsEqualFoldersExitCodes",
+      "McpReferenceEnumeratesAllFortyNineToolsAndTwoResources",
+      "McpReferenceFailureKindCatalogEqualsOraclePlusPreSdkKinds",
+      "AllPublishedConsumerDocsStayMetadataOnly",
+      "PatternExampleManifestRegistersCompilableGoldenLifecycleExample",
+      "ApiReferenceDocumentsSecurityHeadersAndProblemDetailsFromSpine",
+      "SdkReferencesPinGoldenLifecycleAndIdempotencyHelperTrap",
+      "CliReferencePinsCommandGroupsCredentialPrecedenceAndMutationRules",
+      "McpReferencePinsToolGroupCountsTransportDiscoveryAndFailureDrift",
+      "AuthenticationReferencePinsS2ClaimProvenanceAndCredentialSources",
+      "LifecycleDiagramsRenderThreeMermaidFencesWithExpectedDiagramTypes",
+      "WorkspaceLifecycleDiagramDispositionTableMatchesC6StateCatalog",
+      "WorkspaceLifecycleDiagramEventLabelsEqualC6EventVocabulary",
+      "WorkspaceLifecycleDiagramEdgesEqualArchitectureC6Matrix",
+      "FileCommitFlowDiagramNodesAreCanonicalSpineOperations",
+      "AuthAclDecisionFlowEncodesFixedSixLayerDenyByDefaultOrder",
+      "NegativeControlsRejectVacuousAndUnsafeConsumerDocsEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ContainerImageConformanceTests.cs": [
+      "ServiceProjectsShouldDeclareStableSdkContainerMetadata",
+      "ProductionServiceImageBindingsShouldMapRepositoriesToStableDaprAppIds",
+      "ProductionEventStoreDeploymentShouldCarryFolderDomainEventTopicOverride",
+      "ProductionCallbackHostsShouldBindOneAppTokenSecretToSidecarAndApplication",
+      "ProductionEventStoreAndFoldersShouldShareOneHumanReceiptSigningKeyReference",
+      "ContainerAndDeploymentArtifactsShouldNotContainSecretShapedMaterial"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/OperationsAuditDocsConformanceTests.cs": [
+      "RequiredOperationsAuditDocsExist",
+      "AuditDocOperationInventoryEqualsSpineAuditFamily",
+      "AuditDocFieldCatalogEqualsAuditRecordAndTimelineDtos",
+      "AuditDocOperationKindAndResultTaxonomyEqualsObservationEnums",
+      "ConsoleDocDispositionVocabularyAndTechnicalStatesEqualMapper",
+      "RedactionDocVocabulariesEqualWireAndPresentationEnums",
+      "AlertingDocSignalsEqualObservabilityManifest",
+      "RecoveryDocRetentionDispositionsEqualRetentionSources",
+      "ConsoleDocPinsRoutesJourneysTrustQuestionsAndPerceivedWait",
+      "IncidentDocPinsLastResortReadGuardrailsAndReferencePending",
+      "RecoveryDocPinsAuthoritativeRecordsAndNoAutomation",
+      "AllPublishedOperationsAuditDocsStayMetadataOnly",
+      "NegativeControlsRejectVacuousAndUnsafeOperationsAuditDocsEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ProductionObservabilityConformanceTests.cs": [
+      "ProductionObservabilityManifestShouldDeclareSanitizedExporterHealthAndSignalIntent",
+      "ServiceDefaultsShouldExportThreeSignalFamiliesAndSplitLivenessReadiness",
+      "OperationalSignalInstrumentsShouldBeBoundedAndCentralizedOnTheSingleMeter",
+      "DeadLetterTopicsShouldBeDeclaredInProductionPubSub",
+      "OperationsDocShouldDocumentValidationAndMetadataOnlyPolicy",
+      "NegativeControlsRejectVacuousAndUnsafeObservabilityEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs": [
+      "RequiredProviderErrorDocsExist",
+      "ProviderDocCapabilityOperationInventoryEqualsCatalog",
+      "ProviderDocCredentialModeInventoryEqualsEnum",
+      "ProviderDocReadinessResultCodeInventoryEqualsEnum",
+      "ProviderDocFailureCategoryInventoryEqualsEnumAndRetryability",
+      "ProviderDocForgejoSupportedVersionsEqualCatalogAndPinDrift",
+      "ProviderDocGitHubBehaviorAndCapabilityDifferencesArePinned",
+      "ProviderDocPinsKnownFailureHandlingAndNoSilentRetry",
+      "CanonicalErrorDocGeneratedCategoryInventoryEqualsClient",
+      "CanonicalErrorDocOracleCategoryInventoryEqualsParityContract",
+      "CanonicalErrorDocClientActionTokensEqualGeneratedEnum",
+      "CanonicalErrorDocCliExitCodesEqualFoldersExitCodes",
+      "CanonicalErrorDocMcpFailureKindProjectionRulesEqualSource",
+      "CanonicalErrorDocRetryAfterFieldsAreAdvisoryOnly",
+      "CanonicalErrorDocCrossLinksConsumerAndOpsDocsWithoutDuplication",
+      "AllPublishedProviderErrorDocsStayMetadataOnly",
+      "NegativeControlsRejectVacuousAndUnsafeProviderErrorDocsEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ReleasePackageConformanceTests.cs": [
+      "JsonManifestShouldBeTheSingleExactFivePackageInventory",
+      "StableReleaseShouldUseStableDaprIntegration",
+      "MtpAndSupplyChainConfigurationShouldRemainEnabled"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/RetentionAndTenantDeletionConformanceTests.cs": [
+      "C3PolicySourceShouldExposeRequiredRowsWithoutFalsifyingApproval",
+      "TenantDeletionRunbookShouldClassifyEveryRequiredClass",
+      "NegativeControlsRejectVacuousAndUnsafeEvidence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/ContractSpineCiGateTests.cs": [
+      "ServerVsSpineGateFailsClosedUntilSingleNonSelfServerSourceExists",
+      "ServerVsSpineSourceResolutionRejectsSelfReferenceAndAmbiguity",
+      "ServerVsSpineComparisonDetectsPublicContractDrift",
+      "PreviousSpineBaselinePinsCurrentOperationInventory",
+      "ContractSpineGateDocumentationRecordsPrerequisitesAndBoundedDiagnostics"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/DaprPolicyConformanceTests.cs": [
+      "ProductionAccessControlPolicyShouldBeDenyByDefaultAndMatchFixtureProvenance",
+      "ProductionDaprSystemConfigurationShouldEnableMtlsWithoutSecretMaterial",
+      "SecretScanRejectsLiteralSecretsAcrossPodBindings",
+      "ExternalProductionStateStoreContractRequiresSharedUnprefixedProjectionKeys",
+      "ProductionWorkersDeliveryUsesSerializedScopedComponentRetriesAndDeadLetters",
+      "ProductionWorkloadAndAdmissionCredentialsAreBoundByReferences",
+      "PolicyConformanceFixtureShouldCoverAllowedAndDeniedTriples",
+      "LocalDevelopmentAccessControlShouldRemainPermissiveAndMarkedLocalOnly",
+      "ProductionSidecarBindingsShouldAttachEveryAppToItsAccessControlConfiguration",
+      "ProductionPubSubComponentShouldConstrainTenantEventTopicScopes",
+      "MemoriesShouldStayDenyByDefaultAndAllowOnlyTheFoldersSearchInvokeAndMemoriesEventsSubscribe",
+      "ProductionSecretStoreArtifactsShouldBeReferenceOnlyAndDenyByDefault",
+      "PermissionRecoveryUsesAuthorizedApplicationConnectionAndKeepsDaprCallersDenied"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.cs": [
+      "Oq8DesignDocumentsIdempotencyContract",
+      "IdempotencyCorpusSchemaAndStableConsumptionMapCoverEverySample",
+      "IdempotencyConsumptionNegativeControlsCatchMissingDuplicateAndStaleMappings",
+      "PatternExampleManifestIsOptInAndCompilableProjectIsInSolution",
+      "CacheKeyExceptionManifestIsReviewedAndCurrentRepositoryHasNoTenantDataCacheKeysWithoutScope",
+      "CacheKeyExceptionApprovalStateFailsClosedForExpiredOrUnknownStatus",
+      "CacheKeyLintNegativeControlsClassifyTenantScopeAndExceptionsWithoutEchoingKeyValues",
+      "ParityCompletenessComparesStructuredOpenApiOperationsToGeneratedRows",
+      "ParityCompletenessNegativeControlsSeparateMissingStaleAndDuplicateRows"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10V2ContractTests.cs": [
+      "V2PublishesExactly49ProtectedOperationsWithClosedPreObservationOutcomes",
+      "FolderScopedDiagnosticsAndTaskStatusCarryExplicitFolderAuthorityAndTaskBinding",
+      "ErrorAndAdapterVocabulariesAreClosedForPd10",
+      "DirectCandidateRuntimeProblemsStayInsideTheClosedContractVocabulary",
+      "PreviousSpinePreservesHistoricalV1DigestAndV2StatusAndErrorFingerprints"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.cs": [
+      "SentinelCorpusDeclaresAuthoritativeSyntheticVocabulary",
+      "TelemetrySurfaceVocabularyIsExplicitAndInventoryAddressable",
+      "SentinelCorpusAvoidsRealDataAndKeepsNegativeControlsQuarantined",
+      "ChannelInventoryResolvesCoveredSourcesAndBoundsMissingChannels",
+      "DiagnosticChannelsResolveCurrentContractArtifacts",
+      "TelemetryChannelsAreCoveredByRuntimeArtifacts",
+      "MissingChannelDiagnosticsAreEmittedAsBoundedRuntimeEvidence",
+      "SafetyScansDetectQuarantinedControlsWithoutScanningQuarantineAsNormalArtifacts",
+      "OpenApiExamplesAndContextQueriesRemainMetadataOnly",
+      "SafeDenialAndDiagnosticStatesDoNotRevealResourceExistence"
+    ],
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.InputTests.cs": [
+      "OpenApiOperationsRejectMalformedDeclarationsWithBoundedDrift",
+      "OpenApiPathsRejectUnsupportedShapesWithBoundedDrift",
+      "OpenApiOperationsIgnorePathMetadataAndPreserveSortedOperationIds",
+      "OpenApiOperationIdsPreserveExplicitNullLikeStrings",
+      "GeneratedDirectorySegmentsAreExcludedRegardlessOfCasing",
+      "SourcePathsWithSimilarNamesRemainEligibleForScanning",
+      "RootTargetFrameworkUsesOneUnconditionalXmlDeclaration",
+      "RootTargetFrameworkRejectsMissingConditionalOrAmbiguousDeclarations",
+      "RootTargetFrameworkRejectsMalformedXmlWithoutParserDetails"
+    ],
+    "tests/Hexalith.Folders.Tests/Providers/GitHub/GitHubDriftConformanceTests.cs": [
+      "PinnedProfileManifestMatchesTheCatalogThePackagePinAndEveryProvingFixture",
+      "PinnedProfileDriftFailsClosedForUnmappedOrphanedAndMismatchedEvidence",
+      "PinnedProfileDoesNotContainNetworkEndpoints",
+      "CatalogClaimedCategoriesEqualTheFailureMapperCodomainAndEveryConditionIsHandled"
+    ],
+    "tests/Hexalith.Folders.Tests/Providers/Forgejo/ForgejoManifestAndDriftTests.cs": [
+      "SupportedVersionManifestPinsRequiredVersionClassesAndIntegrityEvidence",
+      "EverySupportedSnapshotParsesAndCoversProviderPortOperations",
+      "OperationCoverageMatrixMapsProviderOperationsToPinnedForgejoPaths",
+      "UsedOperationCountFixtureMatchesManifestCatalogAndSnapshots",
+      "OfficialForgejoBuildMetadataResolvesOnlyToTheExactPinnedRelease",
+      "ManifestValidationFailsClosedForDuplicateVersionsMissingSnapshotsAndStaleHashes",
+      "DriftClassificationFixturesAreHermeticAndSeverityMapped",
+      "ForgejoContractFixturesDoNotContainForbiddenSentinelValues"
+    ],
+    "tests/Hexalith.Folders.AppHost.Tests/Fr58PublicMutationSearchRoundTripTests.cs": [
+      "AuthenticatedPublicAddWorkspaceFileShouldConvergeOnPublicSearchAndStatus"
+    ]
+  },
+  "retired_safety_tooling_sources": [
+    ".github/workflows/contract-spine.yml",
+    "tests/tools/run-contract-spine-gates.ps1",
+    "tests/tools/run-safety-invariant-gates.ps1",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.Inputs.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.InputTests.cs"
+  ],
+  "retired_safety_tooling_channels": [
+    "assertion-messages",
+    "ci-logs",
+    "developer-diagnostics"
+  ],
+  "safety_negative_control_product_channels": {
+    "developer-diagnostics": "exception-metadata",
+    "ci-logs": "provider-diagnostics",
+    "assertion-messages": "exception-metadata"
+  },
+  "retained_product_operations": {
+    "source-whitespace": "Exact legacy dotnet format whitespace verification retained in after-unit-tests; compilation does not enforce it.",
+    "source-analyzers": "Exact legacy dotnet format analyzer verification, including existing CA1822/CA2007 exclusions, retained in after-unit-tests.",
+    "aspire-integration": "after-unit-tests exports the existing product opt-in for the shared integration stage; frozen FR58 failure and explicit component prerequisites remain blockers, never exemptions."
+  },
+  "runtime_fixture_alignment": [
+    "ClientGenerationTests.InputValidation resolves the net11.0 generator and NSwagExe_Net110; all input validation and nested-null/presence assertions are retained.",
+    "Published targets and global.json are unchanged. Canonical NSwag runtime inputs are Net110; actual regeneration preserves client behavior and records only provenance/version metadata changes."
+  ],
+  "strict_complete_project_owners": {
+    "after-unit-tests": [
+      "Hexalith.Folders.Contracts.Tests",
+      "Hexalith.Folders.Client.Tests",
+      "Hexalith.Folders.Tests",
+      "Hexalith.Folders.Server.Tests"
+    ],
+    "after-integration-tests": [
+      "Hexalith.Folders.AppHost.Tests",
+      "Hexalith.Folders.UI.E2E.Tests"
+    ]
+  },
+  "delegation_change_reason": "Released discovery trusts runner exit codes. Actual Server/AppHost/core runs returned zero with Not Run/Skipped cases. Delegate their complete projects to the same strict nonempty all-counter runner, enable explicit cases, and keep AppHost in stage 4. This is an owner assignment, never a per-case skip/exemption."
+}

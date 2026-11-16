@@ -13,6 +13,10 @@ jobs:
   ci:
     uses: [[ ci_workflow | tojson ]]
     permissions: [[ ci_permissions | tojson ]]
+[% if ci_timeout_minutes is not none %]
+    with:
+      job-timeout-minutes: [[ ci_timeout_minutes | tojson ]]
+[% endif %]
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}

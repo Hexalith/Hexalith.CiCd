@@ -1,0 +1,728 @@
+{
+  "recorded_at": "2026-11-16T15:54:04.954579+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": ""
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": null
+      },
+      "stderr": ""
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/git/ref/heads/main",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read"
+      ],
+      "data": {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDORf3mra9yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/git/refs/heads/main",
+        "object": {
+          "sha": "292dbf164f26bcf376ef86d749b149b075f8b502",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/git/commits/292dbf164f26bcf376ef86d749b149b075f8b502"
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read"
+      ],
+      "data": [],
+      "stderr": ""
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/environments",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: actions=read"
+      ],
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 18745236815,
+            "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-07-25T18:15:54Z",
+            "updated_at": "2026-07-25T18:15:54Z",
+            "can_admins_bypass": false,
+            "protection_rules": [
+              {
+                "id": 60898544,
+                "node_id": "GA_kwDORf3mrc4DoTzw",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 60898545,
+                "node_id": "GA_kwDORf3mrc4DoTzx",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Accepted-Github-Permissions: actions_variables=read"
+      ],
+      "data": {
+        "message": "Resource not accessible by personal access token",
+        "documentation_url": "https://docs.github.com/rest/actions/variables#list-repository-variables",
+        "status": "403"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/permissions/artifact-and-log-retention",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Accepted-Github-Permissions: administration=read"
+      ],
+      "data": {
+        "message": "Resource not accessible by personal access token",
+        "documentation_url": "https://docs.github.com/rest/actions/permissions#get-artifact-and-log-retention-settings-for-a-repository",
+        "status": "403"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/default-setup",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Accepted-Github-Permissions: administration=read"
+      ],
+      "data": {
+        "message": "Resource not accessible by personal access token",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-default-setup-configuration",
+        "status": "403"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/automated-security-fixes",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Accepted-Github-Permissions: administration=read"
+      ],
+      "data": {
+        "message": "Resource not accessible by personal access token",
+        "documentation_url": "https://docs.github.com/rest/repos/repos#check-if-dependabot-security-updates-are-enabled-for-a-repository",
+        "status": "403"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/immutable-releases",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Accepted-Github-Permissions: administration=read"
+      ],
+      "data": {
+        "message": "Resource not accessible by personal access token",
+        "documentation_url": "https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository",
+        "status": "403"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/releases?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read"
+      ],
+      "data": [
+        {
+          "id": 447133958,
+          "tag_name": "v8.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-16T14:15:19Z"
+        },
+        {
+          "id": 445435155,
+          "tag_name": "v8.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-14T16:37:30Z"
+        },
+        {
+          "id": 442026075,
+          "tag_name": "v7.0.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T17:49:51Z"
+        },
+        {
+          "id": 439285820,
+          "tag_name": "v7.0.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T15:13:47Z"
+        },
+        {
+          "id": 436700005,
+          "tag_name": "v7.0.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T15:56:23Z"
+        },
+        {
+          "id": 435288940,
+          "tag_name": "v7.0.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T14:12:41Z"
+        },
+        {
+          "id": 435173203,
+          "tag_name": "v7.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T12:26:54Z"
+        },
+        {
+          "id": 433517592,
+          "tag_name": "v7.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T04:35:37Z"
+        },
+        {
+          "id": 433493187,
+          "tag_name": "v7.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T03:53:44Z"
+        },
+        {
+          "id": 432416284,
+          "tag_name": "v7.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T08:07:01Z"
+        },
+        {
+          "id": 430055186,
+          "tag_name": "v6.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T16:39:33Z"
+        },
+        {
+          "id": 429766286,
+          "tag_name": "v5.11.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T06:33:54Z"
+        },
+        {
+          "id": 426492275,
+          "tag_name": "v5.11.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T09:54:25Z"
+        },
+        {
+          "id": 426307906,
+          "tag_name": "v5.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T05:54:23Z"
+        },
+        {
+          "id": 420307521,
+          "tag_name": "v5.10.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T04:27:22Z"
+        },
+        {
+          "id": 420119986,
+          "tag_name": "v5.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-21T22:33:12Z"
+        },
+        {
+          "id": 416751466,
+          "tag_name": "v5.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T22:36:03Z"
+        },
+        {
+          "id": 407076282,
+          "tag_name": "v5.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-08T17:07:47Z"
+        },
+        {
+          "id": 383266386,
+          "tag_name": "v5.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-05T14:14:17Z"
+        },
+        {
+          "id": 379235192,
+          "tag_name": "v5.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-30T09:27:21Z"
+        },
+        {
+          "id": 376589150,
+          "tag_name": "v5.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-25T17:34:16Z"
+        },
+        {
+          "id": 364611292,
+          "tag_name": "v5.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-04T03:56:14Z"
+        },
+        {
+          "id": 363509099,
+          "tag_name": "v5.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-01T11:29:04Z"
+        },
+        {
+          "id": 362247050,
+          "tag_name": "v5.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-30T07:14:09Z"
+        },
+        {
+          "id": 362150360,
+          "tag_name": "v5.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-30T02:23:55Z"
+        },
+        {
+          "id": 361510480,
+          "tag_name": "v5.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-29T04:42:10Z"
+        },
+        {
+          "id": 361002429,
+          "tag_name": "v5.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-28T10:25:23Z"
+        },
+        {
+          "id": 356090542,
+          "tag_name": "v3.2.18",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-18T11:54:27Z"
+        },
+        {
+          "id": 356087935,
+          "tag_name": "v3.2.17",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-18T11:38:35Z"
+        },
+        {
+          "id": 355810073,
+          "tag_name": "v3.2.16",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T16:55:38Z"
+        },
+        {
+          "id": 355777739,
+          "tag_name": "v3.2.15",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T15:48:43Z"
+        },
+        {
+          "id": 355717785,
+          "tag_name": "v3.2.14",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T14:01:08Z"
+        },
+        {
+          "id": 355154656,
+          "tag_name": "v3.2.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T14:42:09Z"
+        },
+        {
+          "id": 355111153,
+          "tag_name": "v3.2.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:32:59Z"
+        },
+        {
+          "id": 354829797,
+          "tag_name": "v3.2.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:15:11Z"
+        },
+        {
+          "id": 354140513,
+          "tag_name": "v3.2.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T00:25:24Z"
+        },
+        {
+          "id": 354066317,
+          "tag_name": "v3.2.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T20:46:29Z"
+        },
+        {
+          "id": 354005445,
+          "tag_name": "v3.2.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T18:45:41Z"
+        },
+        {
+          "id": 353833300,
+          "tag_name": "v3.2.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T13:55:37Z"
+        },
+        {
+          "id": 353761192,
+          "tag_name": "v3.2.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T11:51:19Z"
+        },
+        {
+          "id": 352711596,
+          "tag_name": "v3.2.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T09:03:14Z"
+        },
+        {
+          "id": 352708220,
+          "tag_name": "v3.2.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T08:42:36Z"
+        },
+        {
+          "id": 351459088,
+          "tag_name": "v3.2.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T10:18:52Z"
+        },
+        {
+          "id": 351386111,
+          "tag_name": "v3.2.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T07:55:08Z"
+        },
+        {
+          "id": 350953388,
+          "tag_name": "v2.4.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T13:39:57Z"
+        },
+        {
+          "id": 350936086,
+          "tag_name": "v2.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T13:10:56Z"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.Tenants",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Accepted-Github-Permissions: contents=read"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/git/refs#get-a-reference",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "credential": "module-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": ""
+    },
+    {
+      "credential": "module-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": null
+      },
+      "stderr": ""
+    }
+  ],
+  "remote_mutations": false,
+  "module_credential_file": {
+    "path": "/home/administrator/.config/gh-module-agent/token",
+    "exists": true,
+    "symlink": false,
+    "mode": "0o600",
+    "owned_by_current_user": true
+  },
+  "git": {
+    "cicd_head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-story-23",
+      "exit": 0,
+      "stdout": "66e3a5a3a0e9bb01dd161c19349953594e01a22f\n",
+      "stderr": ""
+    },
+    "tenants_head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 0,
+      "stdout": "292dbf164f26bcf376ef86d749b149b075f8b502\n",
+      "stderr": ""
+    },
+    "tenants_main": {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 0,
+      "stdout": "292dbf164f26bcf376ef86d749b149b075f8b502\n",
+      "stderr": ""
+    },
+    "tenants_committed_inputs": {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Builds",
+        ".github/hexalith-ci.json"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 0,
+      "stdout": "160000 commit fdda17c0a4538b0f7c99f813c20ca24b49006530\treferences/Hexalith.Builds\n",
+      "stderr": ""
+    },
+    "checker_command": {
+      "command": [
+        "run-with-temp",
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n"
+    }
+  },
+  "authentication_after": {
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "override_presence": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    }
+  },
+  "inventory_scope": "Initial read-only pages; paginate and refresh before any mutation."
+}

@@ -97,7 +97,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Binds:** CAP-1, CAP-2, CAP-3, CAP-5, CAP-12
 - **Prevents:** a SHA's CI or release result depending on CiCd's state at run time
 - **Rule:**
-  - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `codeql`, `tests`, `hooks` and `jobs`.
+  - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `npmWorkspaces`, `dotnetTools`, `codeql`, `tests`, `hooks`, `jobs` and `submodules`.
   - Builds' CI, Builds' release and `check.py` read it from the checkout, through the AD-4 loader.
   - It is complete: every knob is written out, so no reader applies a default or accepts a missing key.
   - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, the Windows jobs (which take `solution` from the `ci` job's output, AD-12) and the publish job with its environment.
@@ -118,10 +118,11 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - A setup file is `hexalith-ci.json` without `schema` and `buildsTag`; a setup file that contains either key fails.
   - The render adds `schema` (the `const` of the schema file at `builds-version`) and `buildsTag` (from `builds-version` only), and writes every knob explicitly: schema `default` values, plus the `codeql` rule below.
   - Validation checks that rendered `hexalith-ci.json` against Builds' `schemas/hexalith.ci.v<N>.json` at `builds-version`, never the raw setup file. Unknown keys fail.
-  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr` and `browsers` are `false`.
+  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr`, `browsers` and `dotnetTools` are `false`, and `npmWorkspaces` is empty.
   - **Knobs:**
     - `solution`: a repo-relative path, or `none`, which runs stage 1 only and releases a GitHub release only.
-    - `dapr`, `browsers`, `registry`.
+    - `dapr`, `browsers`, `registry`; default-disabled `dotnetTools` and `npmWorkspaces` (story 18).
+    - At the next compatible Builds release, `ciTimeoutMinutes`: an integer from 1 to 360, default 30, materialized in the complete document and forwarded to the existing numeric `job-timeout-minutes` workflow input. Earlier tags retain their own contract and callers (story 23).
     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
   - Adding an optional knob with a schema default is a minor Builds release (AD-10).
@@ -327,7 +328,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - Only the Builds submodule is checked out.
   - No CodeQL runs on a push or PR.
   - The module `ci.yml` triggers on `push` to `main`, `pull_request` and `workflow_dispatch`.
-  - A custom action that needs browsers or Dapr is a hook with that knob on.
+  - A custom action that needs browsers or Dapr is a hook with that knob on. Locked npm workspaces and exact local .NET tools are optional generic preparation knobs, run once after successful units and once in a separate nightly-hook job; hooks reuse Release/package outputs (story 18).
   - `jobs` exist only for Windows. The reusable `ci.yml` outputs every knob that Windows `prepare` uses, as the loader validated it: `solution` (workspace-relative, including `module-root` when set) and, once added, `submodules`. Each job is rendered with `needs: ci`, `runs-on: windows-latest` and two steps: `uses: Hexalith/Hexalith.Builds/Github/prepare@<tag>` with those outputs as inputs, then a literal `uses: ./.github/actions/<job-name>`.
   - On Windows, `prepare` checks out, sets up .NET, restores and builds, and sets up no environment. On Linux, it reads the knobs through the AD-4 loader and runs the environment setup after the build.
   - Optional `windowsCheckout` binds exact immutable archive tree IDs. Validated CI outputs also carry `global-json`, `module-manifest`, `module-authority`, `windows-checkout` and `source-revision`. The remote composite validates complete Git metadata, native ordinal path collisions and a protected temporary index for the materialized complement, computes a cone sparse-index checkout, and verifies exact tree/index identities. It never disables NTFS protection or expands the complete native index. Required direct gitlinks use contained separate exact checkouts, with no recursive or parent-helper initialization.
@@ -343,6 +344,12 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - The only overrides are `tests.integration` and `tests.exclude` (project → enabled hook or job). There is no plain skip.
   - Projects run in ordinal path order within a stage, each with `dotnet test --project <path>` when `global.json` selects Microsoft.Testing.Platform, positionally otherwise.
   - One classifier in Builds serves CI and the local check.
+  - Explicit `tests.minimumExpectedTests` maps discovered, nonexcluded project paths
+    to positive integer floors; `tests.failSkips` rejects skips. Renderer defaults
+    are `{}` and `false`, while tagged readers require both fields. The shared
+    executor supports this policy on Microsoft.Testing.Platform with xUnit and
+    rejects unsupported runners/frameworks before any tests run. Each project's
+    tests finish before a failure stops its successor; no suite is run twice.
 
 ### AD-14 — Custom-action contract
 
@@ -547,6 +554,14 @@ sequenceDiagram
 
 ### AD-21 — Onboarding sequence
 
+Agents story 14 is in local preparation only. Preserve its original five floors,
+SDK 11/net11/C#15, product checks and owned bytes. The approved preparation proof
+requires full package-mode verification, real package consumers, released audit
+and commit checks, and exact fresh-main base/head preservation before each push.
+After delivery, the normal standalone module checker is mandatory. A failed hook
+source scan blocks registration; no release, provisioned state or nightly result
+is inferred from local preparation.
+
 - **Binds:** CAP-4, CAP-7, CAP-10, CAP-12, CAP-16; every module onboarding
 - **Prevents:** migrations that need the App key in an agent session; deliveries rejected by rulesets; modules adopted with settings that bypass the ADs; legacy state misleading the new release; legacy credentials outliving their users; a first release failing on a waiver its tag lacks
 - **Rule:**
@@ -578,6 +593,27 @@ sequenceDiagram
      - deletes every other nuget.org policy for the repo;
      - removes the repo from every legacy org secret, removes its package IDs from the legacy `NUGET_API_KEY` scope, and revokes the legacy Zot identity's push on its repositories.
   4. **Done** when the module's CI is green and its next nightly release succeeds, or reports nothing to release.
+
+  **AI.Tools applicability and preparation decisions (human-approved 2026-11-16):**
+  - `Hexalith.AI.Tools` is a documentation/skills repository registered with
+    `solution: none`. It has no product tests, packages, containers, custom actions
+    or NuGet waivers. Keep the main-only `hexalith-release` environment, normal
+    organization grants, and normal GitHub release behavior, with
+    `HEXALITH_RELEASE_PUBLISH_ENABLED` set to exactly `true`. Omit unused module
+    Zot publishing credentials and package-scoped NuGet publishing policy. Those
+    prerequisites become mandatory before adding any package or container target;
+    an empty inventory does not imply a nothing-to-release result.
+  - Before this repository's adoption only, its unavailable normal Builds checker
+    may be replaced for the product preparation push by the released shared
+    commitlint and audit checks, exact preservation of owned bytes, modes and
+    gitlinks, documentation/removal consistency and normalized entrypoint checks.
+    Save exact base/head revisions and results before any push. Do not author an
+    owned bootstrap or initialize nested submodules. After delivery, require the
+    normal checker in a standalone clone with Builds as a direct dependency.
+  - Both decisions apply only to AI.Tools; they do not extend the pilots'
+    preparation exception or waive AD-21 requirements for any other module.
+    Adoption still waits for story 11's genuine scheduled-night checkpoint and
+    acceptance. Local preparation and an unpushed registration are not adoption.
 
   **CiCd itself needs:**
   - the App, and the environment `cicd-app` (AD-7) holding `HEXALITH_CICD_APP_PRIVATE_KEY` and `HEXALITH_CICD_APP_CLIENT_ID`;
@@ -748,3 +784,21 @@ Legacy producer modes and ordinary project-reference property guards are unchang
 The detailed interface/rationale and source-only evidence are recorded in
 `evidence/16/implementation-and-verification.md`; this is shared generic support,
 not a module-name exception or a qualification receipt that grants adoption.
+
+### Story 18 additive preparation and scan clarification (AD-3, AD-12, AD-14)
+
+`npmWorkspaces: []` and `dotnetTools: false` become complete required fields only
+at the next released schema/reader. Old tagged consumers remain unchanged. Paths,
+committed manifests/locks, exact tool versions and install failures fail closed.
+Node 24, locked npm without lifecycle scripts plus signature verification, trusted
+NuGet tool restore and locked npm/built .NET Playwright preparation belong to
+Builds. A hook adds only product inspection/execution and distinct consumer tests.
+The nightly bump retains the default-only new-key rule.
+
+Duplicate-scan closure adds JS/TS and literal npm/Playwright execution using a
+controller-owned locked TypeScript 6.0.3 static parser. It includes complete test
+workspaces and resolves relative/aliased imports and supported process literals,
+without executing module configuration. Unresolved execution and unsafe paths
+remain failures. Existing thresholds, limits, suppression rejection and
+cross-module-only semantics are unchanged; `docs/duplicate-scan.md` specifies the
+supported syntax and failure boundary.

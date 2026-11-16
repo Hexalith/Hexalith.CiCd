@@ -24,6 +24,7 @@ MAX_REPORT = 16 * 1024 * 1024
 MAX_EXPORT = 128 * 1024 * 1024
 MAX_FINDINGS = 1000
 VERSION = "5.4.3"
+TYPESCRIPT_VERSION = "6.0.3"
 
 
 def read_json(data):
@@ -59,10 +60,11 @@ class Detector:
                     "NPM_CONFIG_CACHE": str(self.root / "cache"), "JSCPD_NO_TIPS": "1"}
         for target in ("package.json", "package-lock.json"):
             (self.root / target).write_bytes(git.blob(revision, "tools/jscpd/" + target))
+        (self.root / "discover.cjs").write_bytes(git.blob(revision, "tools/jscpd/discover.cjs"))
         config = git.blob(revision, ".jscpd.json")
         self.policy = rt.json_read(config)
         if (not isinstance(self.policy, dict)
-                or self.policy.get("format") != ["yaml", "bash", "powershell", "python"]
+                or self.policy.get("format") != ["yaml", "bash", "powershell", "python", "javascript", "typescript"]
                 or self.policy.get("skipLocal") is not True or self.policy.get("noGitignore") is not True
                 or self.policy.get("absolute") is not True
                 or self.policy.get("reporters") != ["json"]
@@ -73,8 +75,9 @@ class Detector:
         self.policy_sha256 = hashlib.sha256(config).hexdigest()
         package = rt.json_read((self.root / "package.json").read_bytes())
         lock = rt.json_read((self.root / "package-lock.json").read_bytes())
-        if (package.get("dependencies") != {"jscpd": VERSION} or lock.get("lockfileVersion") != 3
-                or lock.get("packages", {}).get("node_modules/jscpd", {}).get("version") != VERSION):
+        if (package.get("dependencies") != {"jscpd": VERSION, "typescript": TYPESCRIPT_VERSION} or lock.get("lockfileVersion") != 3
+                or lock.get("packages", {}).get("node_modules/jscpd", {}).get("version") != VERSION
+                or lock.get("packages", {}).get("node_modules/typescript", {}).get("version") != TYPESCRIPT_VERSION):
             raise rt.DeliveryError("detector manifest/lock version mismatch")
         for key, value in lock.get("packages", {}).items():
             if key and (not isinstance(value.get("integrity"), str)
@@ -90,6 +93,24 @@ class Detector:
         version = self.run([str(self.binary), "--version"], "detector version verification", 20).decode().strip()
         if version != "jscpd " + VERSION:
             raise rt.DeliveryError("detector reported unexpected version")
+
+    def javascript(self, path, text):
+        """Parse trusted syntax in scratch, with module input only on stdin."""
+        node = shutil.which("node", path=self.tool_path)
+        if not node:
+            raise rt.DeliveryError("Node unavailable for trusted TypeScript parser")
+        try:
+            result = subprocess.run([node, str(self.root / "discover.cjs")], cwd=self.root, env=self.env,
+                                    input=json.dumps({"path": path, "text": text}),
+                                    text=True, capture_output=True, timeout=30, check=False)
+        except (OSError, subprocess.TimeoutExpired):
+            raise rt.DeliveryError("trusted TypeScript parser failed or timed out") from None
+        if result.returncode or len(result.stdout.encode()) > MAX_REPORT or len(result.stderr.encode()) > MAX_REPORT:
+            raise rt.DeliveryError("trusted TypeScript parser failed or exceeded output limit")
+        parsed = read_json(result.stdout)
+        if not isinstance(parsed, dict) or set(parsed) != {"imports", "literals", "commands", "errors"}:
+            raise rt.DeliveryError("unsupported trusted TypeScript parser output")
+        return parsed
 
     def run(self, command, operation, timeout):
         with tempfile.TemporaryFile(dir=self.root) as out, tempfile.TemporaryFile(dir=self.root) as err:
@@ -243,6 +264,13 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
         with tempfile.TemporaryDirectory(prefix="hexalith-duplicate-scan-") as temporary:
             scratch = Path(temporary)
             manifest, roots, total = {}, [], 0
+            detector = None
+            try:
+                detector = detector_factory(trusted, revision, scratch)
+                report["policy"] = detector.policy
+                report["detector"].update({"signatures": "verified", "policySha256": detector.policy_sha256})
+            except Exception as error:
+                report["errors"].append(rt.clean(error))
             for index, module in enumerate(modules):
                 row = {"module": module, "revision": "", "result": "fail", "files": [], "errors": []}
                 report["modules"].append(row)
@@ -250,7 +278,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                     git = git_factory(scratch / "git" / str(index))
                     git.init()
                     row["revision"] = rt.sha((transport or rt.Transport()).module(git, module))
-                    selected, row["errors"] = Discovery(git, row["revision"]).discover()
+                    selected, row["errors"] = Discovery(git, row["revision"],
+                        javascript_parser=getattr(detector, "javascript", None)).discover()
                     root = scratch / "sources" / module
                     for path, item in sorted(selected.items()):
                         data = item["text"].encode()
@@ -263,7 +292,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                         # A unique flat staged name prevents a literal source
                         # such as helper and helper.sh from overwriting each
                         # other when the shebang-only source needs an extension.
-                        extension = {"yaml": ".yml", "bash": ".sh", "python": ".py", "powershell": ".ps1"}[item["format"]]
+                        extension = {"yaml": ".yml", "bash": ".sh", "python": ".py", "powershell": ".ps1",
+                                     "javascript": ".js", "typescript": ".ts"}[item["format"]]
                         target = root / (str(len(row["files"])) + extension)
                         target.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
                         target.write_text(staged, encoding="utf-8")
@@ -278,10 +308,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
             # cannot be presented as a successful scan. No detector invocation is
             # needed for empty roots (jscpd otherwise scans its cwd).
             try:
-                detector = detector_factory(trusted, revision, scratch)
-                report["policy"] = detector.policy
-                report["detector"].update({"signatures": "verified", "policySha256": detector.policy_sha256})
-                if roots:
+                if roots and detector is not None:
                     report["findings"] = findings(detector.detect(roots), manifest)
             except Exception as error:
                 report["errors"].append(rt.clean(error))

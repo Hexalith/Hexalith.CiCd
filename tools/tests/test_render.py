@@ -197,6 +197,78 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(fixture.json()["codeql"], [])
             self.assertFalse(fixture.json()["dapr"])
 
+    def timeout_contract(self, fixture):
+        """Model the additive, complete contract at a future selected release."""
+        schema_path, loader_path = "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py"
+        schema = json.loads(git(fixture.builds, "show", f"{fixture.tag}:{schema_path}"))
+        schema["required"].append("ciTimeoutMinutes")
+        schema["properties"]["ciTimeoutMinutes"] = {
+            "type": "integer", "minimum": 1, "maximum": 360, "default": 30,
+        }
+        schema["properties"]["job-timeout-minutes"] = {
+            "type": "integer", "minimum": 1, "maximum": 360,
+        }
+        loader = git(fixture.builds, "show", f"{fixture.tag}:{loader_path}").decode()
+        original = '"tests", "hooks", "jobs", "submodules"))'
+        self.assertIn(original, loader)
+        loader = loader.replace(original, '"tests", "hooks", "jobs", "submodules", "ciTimeoutMinutes"))')
+        loader = loader.replace('frozenset(("buildsTag",))', 'frozenset(("buildsTag", "job-timeout-minutes"))')
+        loader = loader.replace("    return document\n", """    if type(document["ciTimeoutMinutes"]) is not int or not 1 <= document["ciTimeoutMinutes"] <= 360:
+        fail("$/ciTimeoutMinutes", "expected an integer from 1 to 360")
+    return document
+""", 1)
+        fixture.change_tag({schema_path: json.dumps(schema).encode(), loader_path: loader.encode()})
+
+    def test_timeout_materializes_and_forwards_only_from_the_selected_complete_contract(self):
+        with workspace() as fixture:
+            fixture.setup()
+            fixture.cli()
+            self.assertNotIn("ciTimeoutMinutes", fixture.json())
+            self.assertNotIn("with", fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"])
+            fixture.document({"ciTimeoutMinutes": 120})
+            self.assert_failure_unchanged(fixture, contains="ciTimeoutMinutes")
+            self.timeout_contract(fixture)
+            fixture.document({})
+            fixture.cli()
+            self.assertEqual(30, fixture.json()["ciTimeoutMinutes"])
+            self.assertEqual({"job-timeout-minutes": 30},
+                             fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
+            for allowance in (1, 120, 360):
+                fixture.document({"ciTimeoutMinutes": allowance})
+                fixture.cli()
+                self.assertEqual(allowance, fixture.json()["ciTimeoutMinutes"])
+                self.assertEqual({"job-timeout-minutes": allowance},
+                                 fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
+                fixture.cli("--check")
+            for invalid in (0, -1, 361, True, "60", 30.5, None):
+                with self.subTest(invalid=invalid):
+                    fixture.document({"ciTimeoutMinutes": invalid})
+                    self.assert_failure_unchanged(fixture, contains="ciTimeoutMinutes")
+
+    def test_timeout_requires_the_pinned_numeric_workflow_input(self):
+        with workspace() as fixture:
+            fixture.setup()
+            self.timeout_contract(fixture)
+            workflow_path = ".github/workflows/ci.yml"
+            workflow = git(fixture.builds, "show", f"{fixture.tag}:{workflow_path}")
+            declaration = renderer.yaml_document(workflow, workflow_path)
+            declaration["on"]["workflow_call"]["inputs"]["job-timeout-minutes"]["type"] = "string"
+            fixture.change_tag({workflow_path: json.dumps(declaration).encode()})
+            self.assert_failure_unchanged(fixture, contains="numeric job-timeout-minutes input")
+
+    def test_explicit_native_timeout_override_keeps_precedence(self):
+        with workspace() as fixture:
+            fixture.setup()
+            self.timeout_contract(fixture)
+            fixture.document({"ciTimeoutMinutes": 120, "job-timeout-minutes": 90})
+            fixture.cli()
+            self.assertEqual(120, fixture.json()["ciTimeoutMinutes"])
+            self.assertEqual(90, fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"]["job-timeout-minutes"])
+            for invalid in (0, 361, True, "90"):
+                with self.subTest(invalid=invalid):
+                    fixture.document({"job-timeout-minutes": invalid})
+                    self.assert_failure_unchanged(fixture, contains="job-timeout-minutes")
+
     def test_valid_quotes_spaces_unicode_are_data(self):
         with workspace() as fixture:
             setup = fixture.setup("quoted")
@@ -771,18 +843,32 @@ class RenderTests(unittest.TestCase):
         configuration = {"jobs": {"product-tests": {"runner": "windows-latest"}},
                          "moduleManifest": None, "windowsCheckout": None}
         context = {"config": configuration, "ci_workflow": "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@source-fixture",
-                   "ci_permissions": {"contents": "read"}, "prepare_action": "Hexalith/Hexalith.Builds/Github/prepare@source-fixture"}
+                   "ci_permissions": {"contents": "read"}, "ci_timeout_minutes": None,
+                   "prepare_action": "Hexalith/Hexalith.Builds/Github/prepare@source-fixture"}
         environment = renderer.templates(ROOT)
         rendered = renderer.rendered_bytes(environment, ".github/workflows/ci.yml.j2", context)
         workflow = renderer.yaml_document(rendered, "source Windows caller")
         forwarded = workflow["jobs"]["windows-product-tests"]["steps"][0]["with"]
         names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
         self.assertEqual({name: "${{ needs.ci.outputs." + name + " }}" for name in names}, forwarded)
-        source = ROOT / "references/Hexalith.Builds"
-        outputs = renderer.yaml_document((source / ".github/workflows/ci.yml").read_bytes(), "source producer")["on"]["workflow_call"]["outputs"]
-        inputs = renderer.yaml_document((source / "Github/prepare/action.yml").read_bytes(), "source prepare")["inputs"]
-        self.assertTrue(set(forwarded) <= outputs.keys())
-        self.assertTrue(set(forwarded) <= inputs.keys())
+        # Model the next released interface in tagged Git objects. The owning
+        # checkout may still be pinned to an older release during preparation.
+        with workspace() as fixture:
+            workflow_path = ".github/workflows/ci.yml"
+            action_path = "Github/prepare/action.yml"
+            producer = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{workflow_path}"), "tagged producer")
+            prepare = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{action_path}"), "tagged prepare")
+            for name in names[3:]:
+                producer["on"]["workflow_call"]["outputs"][name] = {
+                    "description": "Synthetic additive interface fixture.",
+                    "value": "${{ jobs.ci.outputs." + name + " }}"}
+                prepare["inputs"][name] = {"description": "Synthetic additive interface fixture.", "default": ""}
+            fixture.change_tag({workflow_path: json.dumps(producer).encode(), action_path: json.dumps(prepare).encode()})
+            with renderer.pinned_contract(fixture.root) as contract:
+                outputs = renderer.yaml_document((contract.root / workflow_path).read_bytes(), "tagged producer")["on"]["workflow_call"]["outputs"]
+                inputs = renderer.yaml_document((contract.root / action_path).read_bytes(), "tagged prepare")["inputs"]
+                self.assertTrue(set(forwarded) <= outputs.keys())
+                self.assert_arguments_supplied(forwarded, inputs)
         del configuration["moduleManifest"]
         del configuration["windowsCheckout"]
         legacy = renderer.yaml_document(renderer.rendered_bytes(environment, ".github/workflows/ci.yml.j2", context), "legacy caller")

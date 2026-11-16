@@ -1,0 +1,190 @@
+{
+  "module": {
+    "baseRevision": "895039d8513363424882b3b7d64bca574fddc43b",
+    "candidateTree": "c11d75c7d81d133e9a87a7d92b3e4316a1597ce4",
+    "changedPaths": [
+      ".github/actions/after-unit-tests/action.yml",
+      "Directory.Build.props",
+      "eng/package-authority-exclusions.txt",
+      "eng/verify-eventstore-package-floor.ps1",
+      "eng/verify-story-5.2.ps1",
+      "eng/verify-story.ps1",
+      "package-lock.json",
+      "package.json",
+      "scripts/check-built-packages.py",
+      "scripts/consumer_package_validation.py",
+      "scripts/nuget_package_validation.py",
+      "scripts/pack-release-packages.py",
+      "scripts/release_package_integrity.py",
+      "scripts/release_package_inventory.py",
+      "scripts/validate-consumer-package-references.py",
+      "scripts/validate-nuget-packages.py",
+      "scripts/verify-deferred-dependency-cohort.py",
+      "test/Hexalith.Agents.Server.Tests/BuildContractConformanceTests.cs",
+      "test/Hexalith.Agents.Server.Tests/ForbiddenHostingOwnershipTests.cs",
+      "test/Hexalith.Agents.Server.Tests/PackageInventoryTests.cs",
+      "test/Hexalith.Agents.Server.Tests/PackageVersionCentralizationTests.cs",
+      "test/Hexalith.Agents.Server.Tests/TraceabilityManifestTests.cs",
+      "tests/tooling/built_package_hook_test.py",
+      "tests/tooling/dependency_commit_contract_test.py",
+      "tests/tooling/nuget_package_fixtures.py",
+      "tests/tooling/package_authority_exclusions_test.py",
+      "tests/tooling/package_pack_test.py",
+      "tests/tooling/release_authentication_test.py",
+      "tests/tooling/story_52_verifier_test.py",
+      "tests/tooling/ui_consumer_assets_test.py",
+      "tests/tooling/verifier_audit_policy_test.py"
+    ]
+  },
+  "builds": {
+    "baseRevision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "candidateTree": "e4540657efe3d1eedc989398ae826c310f47eeda",
+    "changedPaths": [
+      ".github/hexalith-ci.json",
+      "Github/lib/ci_config.py",
+      "Github/lib/ci_pipeline.py",
+      "Github/lib/tests/fixtures/contract.json",
+      "Github/lib/tests/test_ci_config.py",
+      "Github/lib/tests/test_ci_environment.py",
+      "Github/lib/tests/test_ci_pipeline.py",
+      "Github/lib/tests/test_expected_state.py",
+      "Github/lib/tests/test_guard_adapter.py",
+      "Github/lib/tests/test_local_check.py",
+      "Github/lib/tests/test_release_adapters.py",
+      "Github/lib/tests/test_release_build.py",
+      "Github/lib/tests/test_release_state.py",
+      "Props/Directory.Packages.props",
+      "Samples/Hexalith.Sample/.github/hexalith-ci.json",
+      "Samples/Hexalith.Sample/expected-source/rendered/Hexalith.Sample/.github/hexalith-ci.json",
+      "schemas/hexalith.ci.v1.json"
+    ]
+  },
+  "qualificationLane": "full",
+  "matchesProductQualification": true,
+  "logs": {
+    "agents-build.log": {
+      "sha256": "43f6f88ac3de091b83a4b17d47d5a7aab837e208169f43ef70c7a0fd2e9bd303",
+      "bytes": 1770
+    },
+    "agents-built-hook-regressions.log": {
+      "sha256": "7d59a8fbca92ef540f42b6883247c3844892d23f501b6cf2621d0e535813fb81",
+      "bytes": 101
+    },
+    "agents-built-package-hook.log": {
+      "sha256": "69f9ead3172a326402ec4a1e23b1a263049e68e90e0523542f8fe31023bd04ba",
+      "bytes": 3665
+    },
+    "agents-consumer-assets-regressions.log": {
+      "sha256": "d094b1bd2c8318c96097f80c50da282add5b2972970a77046de8db6c8935f6ca",
+      "bytes": 102
+    },
+    "agents-pack-regressions.log": {
+      "sha256": "fef3fb5ba62af182928d1819198052d94378ae1171623f0e6236d87d70e463b1",
+      "bytes": 274
+    },
+    "agents-package-integrity-regressions.log": {
+      "sha256": "74202dc09a3347400de94f86db7081b0c92ff6270bca74570c143aa53888e576",
+      "bytes": 106
+    },
+    "agents-package-validation-regressions.log": {
+      "sha256": "e514409cc7baac2779013cda4240989b15dffc5a56aec4bfeafd713555c12514",
+      "bytes": 119
+    },
+    "agents-publish-package-regressions.log": {
+      "sha256": "3f6df030c2a749dfe4dd4e81b258bda6f29e96f1f3fe7879074c5c0a1a8eb0bf",
+      "bytes": 105
+    },
+    "agents-recovery-package-regressions.log": {
+      "sha256": "cdea94edcca004aece32f7a57c90340d6c1b55bf984241cd501353acec0fffe8",
+      "bytes": 112
+    },
+    "agents-restore.log": {
+      "sha256": "d8714a29056dc71239ea3e09558de1b18d04333887676a377f06d23befa71b93",
+      "bytes": 1460
+    },
+    "agents-tests-Client.log": {
+      "sha256": "386ffcc2a922e1e115cfcb28244442f439a9e3c16b79030e5ea82f64bc61ec1f",
+      "bytes": 411
+    },
+    "agents-tests-Contracts.log": {
+      "sha256": "4644ead3262b5c510bc31b8fb9b808b5e24bc69be7b5a405a0458642234f906f",
+      "bytes": 438
+    },
+    "agents-tests-Domain.log": {
+      "sha256": "56ded2bd4a166d467a7c4c57ac0a88fddb0472d09933ef051f7c12add8349b8c",
+      "bytes": 398
+    },
+    "agents-tests-Server.log": {
+      "sha256": "92f6352a0a82043e2d6bb59053a6d330c5b6b256457ebd191b1d303f5e7e5fc4",
+      "bytes": 132338
+    },
+    "agents-tests-UI.log": {
+      "sha256": "164d5088ec2249fd4dd03255173077b3e9eae0269770fe130432194571f37b5a",
+      "bytes": 410
+    },
+    "agents-ui-package-regressions.log": {
+      "sha256": "5df683edb1fe34bcd13fad4f7cece04b1dc88f256e76a8f9ef2c11322cd4b577",
+      "bytes": 106
+    },
+    "approved-exclusions-regression.log": {
+      "sha256": "48b359a2da53fd292906fa7275ecb13007f8978d06ee75930e8ffe3552ad50cc",
+      "bytes": 265
+    },
+    "builds-config-python312.log": {
+      "sha256": "2c37fd5e8997bf5ac87f33cae9fb03754e41e38b9cbf0475ac73f0ed79aaa5d9",
+      "bytes": 117
+    },
+    "builds-config-python314.log": {
+      "sha256": "4211d3500a644d96074b21dd145bec96af74a10b1a198952e574dca7912dd5fa",
+      "bytes": 146
+    },
+    "builds-local-check-python312.log": {
+      "sha256": "169b7ea0404d51eca88a91d8ebc81dc2dd7f5a521475f2e2c2720311887e1b67",
+      "bytes": 3389
+    },
+    "builds-local-check-python314.log": {
+      "sha256": "5ea2c7977c1e1cd7dcda053a6a3df5655a1e83973b5dff2a356154ae27474005",
+      "bytes": 3389
+    },
+    "builds-pipeline-python312.log": {
+      "sha256": "0c930b81e74ac3310a5a0b93a9aebf1b96693287722ccde888cb47fb6f9d0e6d",
+      "bytes": 11741
+    },
+    "builds-pipeline-python314.log": {
+      "sha256": "65d25f30958ac51b361d4b2f78b88c57ffc6650cf7c8a8f99449139b05164061",
+      "bytes": 11746
+    },
+    "full-suite-failed-authority.log": {
+      "sha256": "3c9858a4d917b9b84224943cdd3192ba0998483bf961918c811cc2355ef10dee",
+      "bytes": 160314
+    },
+    "hook-discovery.log": {
+      "sha256": "fedb6533e0ff4648fc1bd781609475814f32031728a7fd40fa4adcd42e6be627",
+      "bytes": 404
+    },
+    "local-boundaries.log": {
+      "sha256": "cad29812d65fdd61d8601290a70ef7305d727759062ea5df119bcb9da8cb68a6",
+      "bytes": 2986
+    },
+    "post-approval-capture-final-candidates.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "post-approval-check-local-boundaries.log": {
+      "sha256": "cad29812d65fdd61d8601290a70ef7305d727759062ea5df119bcb9da8cb68a6",
+      "bytes": 2986
+    },
+    "post-approval-discover-local.log": {
+      "sha256": "fedb6533e0ff4648fc1bd781609475814f32031728a7fd40fa4adcd42e6be627",
+      "bytes": 404
+    },
+    "post-approval-hosting-path-failure.log": {
+      "sha256": "78d0ad3e5d6bfd2ea62ef48abff63c332680cda7cce2edbffe56f3ff878187d0",
+      "bytes": 133561
+    },
+    "render-check.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

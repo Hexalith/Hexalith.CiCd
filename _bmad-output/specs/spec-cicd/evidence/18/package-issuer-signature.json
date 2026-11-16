@@ -1,0 +1,102 @@
+{
+  "namespace": "Hexalith.EventStore.ServiceDefaults.Authentication",
+  "name": "IWorkloadAssertionIssuer",
+  "metadata_name": "IWorkloadAssertionIssuer",
+  "definition_name": {
+    "namespace": "Hexalith.EventStore.ServiceDefaults.Authentication",
+    "segments": [
+      "IWorkloadAssertionIssuer"
+    ]
+  },
+  "introduced_type_parameter_counts": [
+    0
+  ],
+  "kind": "interface",
+  "attributes": [],
+  "layout": "Auto",
+  "layout_details": {
+    "module_version_id": "e2e5f5c6-11df-4be9-b8a0-71d43141302c",
+    "type_token": 33554581,
+    "size": 0,
+    "packing_size": 0
+  },
+  "memory_safety": {
+    "module_version_id": "e2e5f5c6-11df-4be9-b8a0-71d43141302c",
+    "rules": {
+      "kind": "available",
+      "state": 0,
+      "observations": []
+    }
+  },
+  "is_sealed": false,
+  "is_abstract": true,
+  "is_static": false,
+  "is_by_ref_like": false,
+  "is_read_only": false,
+  "interfaces": [],
+  "derived_types": [],
+  "type_parameters": [],
+  "members": [
+    {
+      "name": "IssueAsync",
+      "kind": "method",
+      "attributes": [],
+      "signature": "System.Threading.Tasks.ValueTask\u003Cstring?\u003E IssueAsync(Hexalith.EventStore.ServiceDefaults.Authentication.WorkloadAssertionRequest request, System.Threading.CancellationToken cancellationToken = default)",
+      "digest": "f371e1ab35",
+      "canonical_signature": "M:Hexalith.EventStore.ServiceDefaults.Authentication.IWorkloadAssertionIssuer.IssueAsync(Hexalith.EventStore.ServiceDefaults.Authentication.WorkloadAssertionRequest,System.Threading.CancellationToken)",
+      "metadata_token": 100664430,
+      "is_static": false,
+      "is_virtual": true,
+      "is_abstract": true,
+      "is_override": false,
+      "is_sealed": false,
+      "is_read_only": false,
+      "is_const": false,
+      "is_unsafe": false,
+      "is_async": false,
+      "memory_safety": {
+        "module_version_id": "e2e5f5c6-11df-4be9-b8a0-71d43141302c",
+        "caller_contract": {
+          "kind": "none",
+          "evidence": {
+            "member_token": 100664430,
+            "rules_state": 0,
+            "pointer": "Absent",
+            "fixed_buffer": 0,
+            "direct_attribute": {
+              "state": 1,
+              "valid_row_count": 0,
+              "has_malformed_row": false
+            },
+            "associated_attribute": {
+              "state": 1,
+              "valid_row_count": 0,
+              "has_malformed_row": false
+            }
+          }
+        },
+        "signature_pointer": "Absent"
+      },
+      "has_method_body": false,
+      "method_implementation": {
+        "module_version_id": "e2e5f5c6-11df-4be9-b8a0-71d43141302c",
+        "method_token": 100664430,
+        "attributes": "Public, Virtual, HideBySig, NewSlot, Abstract",
+        "impl_attributes": "IL",
+        "has_body_rva": false
+      },
+      "is_extension": false,
+      "is_obsolete": false,
+      "documentation": {
+        "samples": []
+      }
+    }
+  ],
+  "additional_source_files": [],
+  "is_partial_type": false,
+  "is_forwarded": false,
+  "full_name": "Hexalith.EventStore.ServiceDefaults.Authentication.IWorkloadAssertionIssuer",
+  "documentation": {
+    "samples": []
+  }
+}

@@ -1,0 +1,14 @@
+# Candidate only. Do not register before an acceptable shared release and clean hook qualification.
+solution: Hexalith.Agents.slnx
+codeql: [csharp, javascript-typescript]
+tests:
+  integration: []
+  exclude: {}
+  minimumExpectedTests:
+    test/Hexalith.Agents.Contracts.Tests/Hexalith.Agents.Contracts.Tests.csproj: 529
+    test/Hexalith.Agents.Client.Tests/Hexalith.Agents.Client.Tests.csproj: 6
+    test/Hexalith.Agents.Tests/Hexalith.Agents.Tests.csproj: 787
+    test/Hexalith.Agents.Server.Tests/Hexalith.Agents.Server.Tests.csproj: 549
+    test/Hexalith.Agents.UI.Tests/Hexalith.Agents.UI.Tests.csproj: 1073
+  failSkips: true
+hooks: [after-unit-tests]

@@ -1,0 +1,17 @@
+{
+  "revision": "d11ee24868f8b42d4edf678f31496b0a617b79a8",
+  "cicd_source": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+  "intended_literal_callees": {
+    ".github/actions/example/action.yml": [
+      "tests/tools/verify.ps1"
+    ],
+    "tests/tools/verify.ps1": []
+  },
+  "script": "param([string]$Label = 'folders')\n$ErrorActionPreference = 'Stop'\nWrite-Host $Label\n",
+  "selected": [
+    ".github/actions/example/action.yml",
+    "tests/tools/verify.ps1"
+  ],
+  "errors": [],
+  "classification": "Merged scanner: ordinary PowerShell syntax, zero diagnostics."
+}

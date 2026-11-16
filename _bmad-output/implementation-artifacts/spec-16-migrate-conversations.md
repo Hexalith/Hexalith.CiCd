@@ -158,6 +158,12 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   binds the verified executable/private runtime and labels owned resources;
   occupied user control planes refuse before mutation, and cleanup preserves
   foreign or ownership-replaced resources. No released-tool substitute exists.
+- The story remains in progress. Published prerequisites, live qualification,
+  adoption and scheduled-night acceptance are pending. The later explicit user
+  instruction authorizes publishing and merging source changes; it does not waive
+  product qualification or adoption gates. See the
+  [implementation handoff](../specs/spec-cicd/evidence/16/implementation-and-verification.md)
+  and [publication packet](../specs/spec-cicd/evidence/16/push-20261116T193523Z/README.md).
 
 ## Spec Change Log
 

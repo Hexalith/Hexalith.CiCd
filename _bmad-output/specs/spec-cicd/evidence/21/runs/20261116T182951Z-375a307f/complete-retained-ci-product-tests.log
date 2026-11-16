@@ -1,0 +1,65 @@
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 (64-bit .NET 11.0.0)
+  Discovering: Hexalith.Parties.Ci.Tests
+  Discovered:  Hexalith.Parties.Ci.Tests
+  Starting:    Hexalith.Parties.Ci.Tests
+    Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.CompletedRuntimeReceiptsRefuseDriftBeforeAnyRunner [FAIL]
+      System.Threading.Tasks.TaskCanceledException : A task was canceled.
+      Stack Trace:
+           at System.Diagnostics.Process.WaitForExitAsync(CancellationToken cancellationToken)
+        tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs(599,0): at Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.CompletedRuntimeReceiptsRefuseDriftBeforeAnyRunner()
+        tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs(600,0): at Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.CompletedRuntimeReceiptsRefuseDriftBeforeAnyRunner()
+        --- End of stack trace from previous location ---
+    Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.PackageRuntimeSettingsResolveOnlyTheSelectedOrRootDeclaredOwner(layout: "standalone", sampleHost: True) [FAIL]
+      Shouldly.ShouldAssertException : compiled
+          should be
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/SampleCatalog.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingCatalogDeclarations.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Program.cs"]
+          but was (case sensitive comparison)
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Program.cs"]
+          difference
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", *"/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs"*, *"/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-7c2999fb7acf4d0088797934c7635b97/parties/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Program.cs"*, *, *]
+      Stack Trace:
+        tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs(407,0): at Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.PackageRuntimeSettingsResolveOnlyTheSelectedOrRootDeclaredOwner(String layout, Boolean sampleHost)
+           at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+           at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+           at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+        --- End of stack trace from previous location ---
+           at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+           at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+           at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.PackageRuntimeSettingsResolveOnlyTheSelectedOrRootDeclaredOwner(layout: "umbrella", sampleHost: True) [FAIL]
+      Shouldly.ShouldAssertException : compiled
+          should be
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/SampleCatalog.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingCatalogDeclarations.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Program.cs"]
+          but was (case sensitive comparison)
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Program.cs"]
+          difference
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", *"/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs"*, *"/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-c3726b21665440648bae7d6b7e5531ad/references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Program.cs"*, *, *]
+      Stack Trace:
+        tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs(407,0): at Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.PackageRuntimeSettingsResolveOnlyTheSelectedOrRootDeclaredOwner(String layout, Boolean sampleHost)
+           at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+           at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+           at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+        --- End of stack trace from previous location ---
+           at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+           at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+           at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.PackageRuntimeSettingsResolveOnlyTheSelectedOrRootDeclaredOwner(layout: "explicit", sampleHost: True) [FAIL]
+      Shouldly.ShouldAssertException : compiled
+          should be
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Counter/SampleCatalog.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Greeting/GreetingCatalogDeclarations.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Program.cs"]
+          but was (case sensitive comparison)
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs", "/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Program.cs"]
+          difference
+      ["/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Counter/CounterAggregate.cs", *"/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Greeting/GreetingAggregate.cs"*, *"/tmp/hexalith-job.DmloA2ld/parties-gateway-settings-3e68e3d6634d4951a739f6604689ce87/tool-selected-eventstore/samples/Hexalith.EventStore.Sample/Program.cs"*, *, *]
+      Stack Trace:
+        tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs(407,0): at Hexalith.Parties.Ci.Tests.AspireRuntimePreparationTests.PackageRuntimeSettingsResolveOnlyTheSelectedOrRootDeclaredOwner(String layout, Boolean sampleHost)
+           at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+           at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+           at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+        --- End of stack trace from previous location ---
+           at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+           at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+           at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+  Finished:    Hexalith.Parties.Ci.Tests (ID = '8d2eac30a2d576c4933ed401ab12c88879f83f466c09b94cbe362d17d488e101')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Parties.Ci.Tests  Total: 421, Errors: 0, Failed: 4, Skipped: 0, Not Run: 0, Time: 528.592s

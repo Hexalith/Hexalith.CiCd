@@ -1,0 +1,183 @@
+{
+  "status": "blocked",
+  "base": "a448d20873dc9e809623f85da206e8d8a13bb9ab",
+  "commands": [
+    {
+      "label": "final-client-restore",
+      "arguments": [
+        "dotnet",
+        "restore",
+        "tests/Hexalith.Folders.Client.Tests/Hexalith.Folders.Client.Tests.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "exit_code": 0,
+      "log": "final-client-restore.log"
+    },
+    {
+      "label": "final-client-build",
+      "arguments": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Folders.Client.Tests/Hexalith.Folders.Client.Tests.csproj",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "exit_code": 0,
+      "log": "final-client-build.log"
+    },
+    {
+      "label": "final-client-complete",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-complete-project-tests.ps1",
+        "-ProjectName",
+        "Hexalith.Folders.Client.Tests"
+      ],
+      "exit_code": 0,
+      "log": "final-client-complete.log"
+    }
+  ],
+  "publication": "not attempted; local-only boundary",
+  "patch_sha256": "4fefa9496efc799d698ab47fdcd5202b3a89fea9d50e0f0ecf97b2a04e1a9ae8",
+  "tree": "447b78de825d385ddbb7123a3a2746271a26b9e5",
+  "candidate": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+  "changed_paths": [
+    ".github/actions/after-integration-tests/action.yml",
+    ".github/actions/after-unit-tests/action.yml",
+    ".github/actions/nightly/action.yml",
+    "Directory.Build.props",
+    "package-lock.json",
+    "package.json",
+    "scripts/pack-release-packages.py",
+    "scripts/release_package_contract.py",
+    "scripts/tests/test_ci_cd_tooling.py",
+    "scripts/tests/test_prepare_ci_topology_projects.py",
+    "scripts/tests/test_release_packages.py",
+    "src/Hexalith.Folders.Client/Generated/HexalithFoldersIdempotencyHelpers.g.cs",
+    "src/Hexalith.Folders.Client/Generated/HexalithFoldersNativeClient.g.cs",
+    "src/Hexalith.Folders.Client/Generation/Hexalith.Folders.Client.Generation.csproj",
+    "src/Hexalith.Folders.Client/Generation/Shared/Hexalith.Folders.Client.Generation.Shared.csproj",
+    "src/Hexalith.Folders.Client/Hexalith.Folders.Client.csproj",
+    "src/Hexalith.Folders.Client/nswag-native.json",
+    "src/Hexalith.Folders.Client/nswag.json",
+    "tests/Hexalith.Folders.AppHost.Tests/Fr58PublicMutationSearchRoundTripTests.cs",
+    "tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/AccessibilityCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/AdrRunbookDocsConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/BaselineCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/CapacityCalibrationConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/CapacitySmokeCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ConsumerDocsConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ContainerImageConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ContractParityCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/E2eCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/HonestGreenGateBaselineConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/NfrTraceabilityConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/OperationsAuditDocsConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/PinnedDomainCiWorkflow.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ProductionObservabilityConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ReleasePackageConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/RetentionAndTenantDeletionConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/ScheduledDriftAndPolicyWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/Deployment/SecurityRedactionCiWorkflowConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/ContractSpineCiGateTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/DaprPolicyConformanceTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.ApprovalDateTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.InputTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.ReportTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.YamlCloneTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/GovernanceCompletenessGateTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10CandidateCoverage.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10ConformanceSetTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10V2ContractTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.cs",
+    "tests/Hexalith.Folders.Contracts.Tests/OpenApi/TenantFolderProviderContractGroupTests.cs",
+    "tests/Hexalith.Folders.Tests/Providers/Forgejo/ForgejoManifestAndDriftTests.cs",
+    "tests/Hexalith.Folders.Tests/Providers/GitHub/GitHubDriftConformanceTests.cs",
+    "tests/fixtures/audit-leakage-corpus.json",
+    "tests/fixtures/quarantine/safety-negative-controls.json",
+    "tests/fixtures/safety-channel-inventory.json",
+    "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1",
+    "tests/tools/run-capacity-calibration-gates.ps1",
+    "tests/tools/run-capacity-smoke-ci-gates.ps1",
+    "tests/tools/run-complete-project-tests.ps1",
+    "tests/tools/run-forgejo-smart-http-alpine-smoke.ps1",
+    "tests/tools/run-nfr-traceability-gates.ps1",
+    "tests/tools/run-nightly-drift-gates.ps1",
+    "tests/tools/run-scheduled-policy-conformance-gates.ps1"
+  ],
+  "owned_tree_preserved": true,
+  "builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "candidate_configuration_sha256": "06f062f45c547b3015ddc50e0d1ad0e2c5014078c266ff598b40100f86d2f85d",
+  "action_discovery": {
+    "files": 12,
+    "error_count": 940,
+    "samples": [
+      "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1:100: local-script discovery: unresolved computed command: $outputDirectory",
+      "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1:101: local-script discovery: unresolved computed operand of unknown command: New-Item",
+      "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1:102: local-script discovery: unresolved computed command: $report",
+      "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1:12: local-script discovery: unsupported shell compound/subshell execution"
+    ],
+    "diagnostics": "action-discovery.json",
+    "python_errors": []
+  },
+  "audit_lint": "guard: _bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config: audit-lint: forbidden auditSources declaration\nCI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline.",
+  "released_action_commit_policy": "passed",
+  "shared_classification": {
+    "unit": [
+      "samples/Hexalith.Folders.Sample.Tests/Hexalith.Folders.Sample.Tests.csproj",
+      "tests/Hexalith.Folders.Cli.Tests/Hexalith.Folders.Cli.Tests.csproj",
+      "tests/Hexalith.Folders.EventStore.Tests/Hexalith.Folders.EventStore.Tests.csproj",
+      "tests/Hexalith.Folders.LoadTests.Tests/Hexalith.Folders.LoadTests.Tests.csproj",
+      "tests/Hexalith.Folders.Mcp.Tests/Hexalith.Folders.Mcp.Tests.csproj",
+      "tests/Hexalith.Folders.Testing.Tests/Hexalith.Folders.Testing.Tests.csproj",
+      "tests/Hexalith.Folders.UI.Tests/Hexalith.Folders.UI.Tests.csproj",
+      "tests/Hexalith.Folders.Workers.Tests/Hexalith.Folders.Workers.Tests.csproj"
+    ],
+    "integration": [
+      "tests/Hexalith.Folders.IntegrationTests/Hexalith.Folders.IntegrationTests.csproj"
+    ],
+    "excluded": [
+      "tests/Hexalith.Folders.AppHost.Tests/Hexalith.Folders.AppHost.Tests.csproj",
+      "tests/Hexalith.Folders.Client.Tests/Hexalith.Folders.Client.Tests.csproj",
+      "tests/Hexalith.Folders.Contracts.Tests/Hexalith.Folders.Contracts.Tests.csproj",
+      "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+      "tests/Hexalith.Folders.Tests/Hexalith.Folders.Tests.csproj",
+      "tests/Hexalith.Folders.UI.E2E.Tests/Hexalith.Folders.UI.E2E.Tests.csproj"
+    ]
+  },
+  "classification_basis": "Released evaluated IsTestProject inventory from attempt 3; project definitions, source dependency pins and SDK/package settings are unchanged. Final explicit exclusions now bind all six complete-project owners.",
+  "strict_runner_sha256": "afd89e5d58d14393559fe2831d7dcbdb792888b695970937ca4d844fe9ca17df",
+  "blockers": [
+    "Released audit lint rejects eight unchanged historical evidence auditSources declarations.",
+    "Current CiCd action discovery rejects ordinary PowerShell syntax; the minimal literal-callee repro is saved separately.",
+    "Retained real product prerequisites and frozen FR58 implementation are incomplete; strict delegated hooks remain red, with no skip/exemption.",
+    "Predecessor acceptance, AD-21 administration, protected-token publication, adoption and genuine scheduled release remain outside this local-only handoff."
+  ],
+  "complete_client_summary": {
+    "total": 392,
+    "errors": 0,
+    "failed": 0,
+    "skipped": 0,
+    "not_run": 0
+  },
+  "strict_runner_qualification": "complete-project-runner-qualification.json",
+  "working_candidate_matches_bundle": true,
+  "bundle_sha256": "38c56d67e0f45776df3a947b6fa8c8dd7bde58a6e045c69d9dc2186326e5f5b6"
+}

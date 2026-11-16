@@ -1,0 +1,1 @@
+This diagnostic run was interrupted to switch to sequential execution and the improved child-process cleanup. Its Python logs are incomplete and include cancellation artifacts; do not use them as product failure or acceptance verdicts. The completed 455-test CLI result and initial compilation diagnostics remain useful. The current exact candidate is verified separately.

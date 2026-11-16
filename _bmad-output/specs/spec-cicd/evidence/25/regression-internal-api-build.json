@@ -1,0 +1,38 @@
+{
+  "scope": "unreleased source catalog qualification only; no owned module edits, registration or pre-push acceptance",
+  "revisions": {
+    "module": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+    "builds_source": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+  "catalog_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537",
+  "results": [
+    {
+      "job": "final-catalog-candidate-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Timesheets.slnx",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 1,
+      "log": "final-catalog-candidate-build.log"
+    }
+  ],
+  "live_catalog_still_matches_source": true,
+  "complete": true,
+  "inputs": {
+    "module_patch_sha256": "06f63738bcfc739a8a93b80933a1432c04f51de05b587881857f40b89675aaad",
+    "runner_sha256": "295f89c1f0a8dca6cefe7cfa682baf23761e1164189a0826822f0f37f064f9ab",
+    "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+    "catalog_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537"
+  }
+}

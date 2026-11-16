@@ -1,0 +1,17 @@
+{
+  "recordedUtc": "2026-11-16T19:59:44.594418+00:00",
+  "incomingMain": "237569373e14b63bb501214cbf81efd9a0659dde",
+  "sourceCheckpoint": "6f3f9230a498de74ac6121f78930a2e400dd8e3b",
+  "checks": [
+    "merged-renderer-final.json",
+    "merged-validator.json",
+    "merged-conversations-qualification-locked.json",
+    "merged-render-check.json"
+  ],
+  "publishedGitlinksUnchanged": true,
+  "sourceFixtureChecks": "Four protocol-reader controls passed against the local unpublished Conversations product candidate; these are not production qualification.",
+  "rendererFixes": [
+    "Use tagged Git interface fixture independent of the local Builds checkout",
+    "Include upstream ci_timeout_minutes in explicit template context"
+  ]
+}

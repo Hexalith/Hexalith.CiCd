@@ -32,11 +32,11 @@ acquires it, compares exact catalog bytes, and checks unchanged HEAD/index,
 gitlinks and refs plus an idempotent second invocation. These tests qualify
 acquisition only; they do not execute the mapper, restore or runtime G-6.
 
-## Integration and delivery blocker
+## Reviewed integration
 
-`docs/proposals/projects-g6-catalog.patch` is an **unapplied owner proposal**.
+`docs/proposals/projects-g6-catalog.patch` is the retained reviewed owner proposal.
 It adds the local action and inserts its invocation before the existing restore
-step in Projects source `981ceef13a1abc88219925e73c51a23eb9ac50c2`. The revision is
+step in Projects source `4511105bb1f00b8cf762097523de74acc828a001`. The revision is
 derived at execution from Projects HEAD; the historical catalog commit is never
 hardcoded. All existing dependency pins and product gates are preserved.
 
@@ -48,12 +48,119 @@ whole workflows directory and enforces the Builds pin from `builds-version`
 (currently `v6.0.6`); enabling that delivery would perform the separately planned
 Projects adoption in CiCd Story 18 and change policy/pins beyond this correction.
 
-An owner-supported delivery path for this pre-adoption source-preparation change
-is therefore required. Do not apply the patch directly in a module checkout,
-register Projects to bypass this gap, or edit delivered workflows with a different
-credential. No delivery, push, dispatch or rerun was performed. Fresh corrected
-exact-source hosted CI/G-6 remains blocked until that owner path is available.
+## Closed pre-adoption delivery exception
+
+The `projects-g6-catalog` dispatch choice in the existing `deliver.yml` is a
+task-specific AD-6 exception for this source-preparation correction. It keeps
+AD-7's existing main-only `deliver` job, `cicd-app` environment and pinned App
+action. Only main + workflow_dispatch + projects-g6-catalog uses the scoped
+`deliver-projects-g6-catalog` concurrency group. Normal main/default runs retain
+`deliver`; non-main validation groups and cancellation behavior stay unchanged.
+Validation lanes run independently. Both modes' existing `deliver` job uses the
+shared `deliver-owned-writes` job mutex with cancellation disabled, so their write
+phases serialize. This key differs from the workflow-level `deliver` key.
+It neither registers Projects nor
+creates an accepted ref, resolves a Builds version, or applies a rendered
+perimeter. The architecture document and Story 1.17 tracking are unchanged.
+
+The closed manifest `docs/proposals/projects-g6-catalog.json` binds Projects base
+`4511105bb1f00b8cf762097523de74acc828a001`, its entire tree, the reviewed patch
+SHA256, every input/output path and blob, and complete output tree
+`c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047`. The only output changes are
+`.github/workflows/ci.yml`, `.github/actions/prepare-g6-catalog/action.yml` and
+`.github/actions/prepare-g6-catalog/prepare.py`. The action bytes are reused
+unchanged. Acquisition precedes Conversations prepare-build; the mapper stays
+offline and fail-closed. All pins, product gates and other tree entries survive
+byte for byte.
+
+The manifest also binds `pre_push_gate`. On 2026-11-16 the owner responded
+“fix” to the explicit request to authorize the reviewed-tree gate for this exact
+three-file correction. Its production value is therefore
+`reviewed-tree-owner-authorized`. That decision applies only to the base,
+proposal and complete result tree above. It does not alter the normal checker,
+adoption policy, dependency pins, credentials or any module product gate.
+Any unexpected source or proposal still fails closed before delivery.
+
+The secret-free validation job runs the acquisition, narrow delivery and existing
+workflow behavioral suites, then constructs a plan from current exact CiCd main
+and current Projects main in private bare Git repositories. That JSON output
+binds qualification to the writer's source, manifest, patch, base and result
+tree. Failed qualification, a missing plan or a non-main/non-dispatch invocation
+prevents the narrow write job from running. Normal triggers and the default
+`full` choice retain the existing delivery behavior.
+
+Qualification proves that Projects is absent from both full-writer selectors:
+the exact committed `setup/*.yml` registry and live `refs/heads/delivered/*` heads,
+including case variants of its repository name. Only committed tree metadata and
+a bounded anonymous `ls-remote` against the approved CiCd origin are read. That
+single advertisement includes owner main and accepted heads together and requires
+exactly one main SHA equal to the reviewed owner source. Accepted histories and
+dependencies are never acquired. After the final owner/module source rereads,
+the controller repeats those checks, then checks Projects main again after the
+advertisement before a push or successful no-op. Any registration, accepted ref,
+changed main or unavailable/malformed advertisement fails closed without a write.
+Receipts retain each phase, exact owner and advertised main, advertisement and
+registry/ref inventory hashes/counts, and both absence results. This exclusion keeps
+the isolated pre-adoption correction from overlapping a full Projects writer.
+
+The narrow write branch checks out the exact qualified CiCd source and mints
+only Projects Contents/Workflows write. It skips normal selection, accepted-ref
+and freshness tokens, module slots, report finalization and the normal artifact.
+Only stdlib CiCd Python and bounded Git run with that token; no module code,
+build, tests, dependency initialization or mapper runs there. Proposal application
+uses a private bare object store and index, never a module working tree. The
+controller requires the reviewed workflow, action, manifest and patch blobs to
+be available and verified. Unchanged promised blob contents may remain missing;
+the complete committed tree and three-path output checks still apply. It rejects
+changed source, bytes, trees, missing required blobs, symlinks,
+unexpected modes or extra paths before writing. It rereads owner and module main,
+makes one non-forced push, then rereads the actual main SHA/tree. Refusal or a
+race is retained with the exact failed operation, without retry, force, rebase
+or automatic reapplication. An exact delivered tree with the reviewed base as
+its sole direct parent is an idempotent no-op.
+
+The owner invocation, after publishing and qualifying the task-owned CiCd source
+and recording the exact-source owner authorization, is:
+
+```bash
+gh workflow run deliver.yml --repo Hexalith/Hexalith.CiCd --ref main \
+  -f delivery=projects-g6-catalog
+```
+
+Dispatch through the existing scoped CiCd profile. If the App installation cannot
+mint the Projects token, retain GitHub's failed mint step and the failed delivery
+receipt; do not broaden credentials. Qualification and delivery retain separate
+`projects-g6-qualification` and `projects-g6-delivery` JSON artifacts for 90 days.
+Receipts identify the owner source, proposal binding, observed main, actual
+delivered SHA/tree, push result and exact failed operation.
+
+Local qualification is available with:
+
+```bash
+run-with-temp python3 -B tools/tests/test_deliver_g6_catalog.py
+run-with-temp uv run --locked --script --python 3.12 tools/tests/test_deliver_g6_catalog.py
+run-with-temp uv run --locked --script --python 3.12 tools/tests/test_delivery_workflow.py
+```
+
+These tests qualify the delivery mechanism; they do not establish actual delivery
+or hosted acquisition/G-6 acceptance. The normal exact pinned Builds checker
+is unchanged. On the clean proposed pre-adoption Projects source,
+`python3 references/Hexalith.Builds/check.py` exits 1 because
+`.github/hexalith-ci.json` is absent; the original failure remains retained.
+The owner's exact-source exception permits this pre-adoption CiCd operation to
+use its qualified reviewed-tree gate. It does not authorize adding adoption
+configuration, suppressing the normal checker, or weakening a product gate.
+After successful delivery, inspect Projects' exact three-path
+diff and collect fresh CI/G-6 logs and artifacts tied to its delivered SHA.
+Diagnose any subsequent hosted failure separately from catalog acquisition.
+Publishing, A8 audit, deployment and v2 activation remain outside this correction.
 
 Retained proof and full source identities are in Folders:
 `_bmad-output/implementation-artifacts/evidence/story-1-17-g6-catalog-acquisition-2026-11-16/`.
 The historical publication/audit/A8 work and Story 1.17 tracking are unchanged.
+
+## Hosted qualification and external delivery prerequisite — 2026-11-16
+
+[Owner run 43933951553](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43933951553) qualified exact source `6fe837f2fafa0952d21e1690c61cef7a11e6eeab`: 17 acquisition, 28 controller and 17 workflow tests passed. The original patch, action/workflow blobs and all gitlinks are unchanged. Current-source requalification preserves the concurrent product preparation that advanced Projects from `981ceef13a1abc88219925e73c51a23eb9ac50c2` to the current base above.
+
+Delivery then failed at App token creation: `GET /repos/Hexalith/Hexalith.Projects/installation` returned HTTP 404. The configured CiCd App needs an accessible installation covering Projects with its existing Contents/Workflows write capabilities. No App token or push was produced, no credentials/settings were broadened, and no corrected Projects CI/G-6 acceptance is claimed. The owner must resolve this external prerequisite, then use a fresh exact-source dispatch. Full retained receipts and continuation instructions are in `_bmad-output/implementation-artifacts/evidence/projects-g6-narrow-delivery-2026-11-16/authorized-resume-20261116T175933Z/README.md`.

@@ -1,0 +1,27 @@
+# Local gate classification and preservation
+
+Apply CAP-10 to what a check asserts, not its language or old CI presence.
+The local preparation changes product-owned files only. Workflows, the Builds
+gitlink/section, delivered instructions and settings remain unchanged.
+
+| Check | Disposition and concrete reason |
+| --- | --- |
+| `Cli.Tests/Ci/CiTestInventoryTests.cs` | Remove CI inventory, workflow/action pin, story/deferred-ledger and release-tooling assertions. Extract unchanged `BackendProjects_ShouldNotUseRedisCompatibilityPackageAsDependencyFacade` and `ContainerBaseImage_IsDigestPinnedAndInheritedByEveryProject` into `Packaging/ProductPackagingTests.cs`: these enforce actual product dependency and immutable container-content inputs. |
+| `builds_publication_qualification` | Remove committed story-capture/approval assertions, dedicated shared-CI pin tests, synthetic checkpoint documents and qualification harness/seam tests. Keep full-set publication, set drift, partial recovery, occupied destinations, exact ten-package/five-image inventory, and actual member evidence analysis. |
+| `ci_alignment`, `commitlint`, `story_scope`, `story_slice_scope`, `story_review_readiness`, `tenant_isolation_evidence`, `bmad_customization` | Remove dedicated CI/agent/story governance suites and their obsolete local tooling. Root semantic-release/commitlint manifests/configuration and story hooks are retired; commit format remains enforced by the shared guard. |
+| `coverage_gate/coverage_contract_test.py` | Remove workflow YAML, job and contributor-doc assertions. Keep the actual 76.5% production coverage scope, collector/report contract and validator behavior. Add DerivedStores' ninth required report when its dedicated project becomes the sole owner of that source; no new collector package is needed because MTP is inherited. |
+| `coverage_gate/test_runner_contract_test.py` | Remove CI runner/wrapper qualification. CiCd's local evidence separately exercises the changed module entrypoints with controlled dotnet; the module does not grow tests of its own pipeline. |
+| `publish_containers/partial_release_completion_test.py` | Remove workflow-text assertions, retain execution of staged publisher tools with missing/present inventories and all release completion behavior. |
+| `publish_containers/partial_release_recovery_test.py` | Remove workflow extraction, protection-step YAML and catalog-alias setup qualification. Exercise retained bundle production/download/recovery/provenance CLIs directly; preserve destination safety, exact retained bytes, partial progress, idempotency and evidence assertions. |
+| `publish_containers/publication_contract_test.py` | Keep product publication/content/health assertions. Workflow identity strings in frozen publication provenance are product authorization inputs; the file does not read/assert workflow YAML at the selected revision. |
+| `release_dispatch/release_dispatch_test.py` | Remove workflow/settings/root-release-config qualification. Retain source/destination wrapper behavior, ten-package/five-image destination scope, pinned publisher helper trust, and actual publishing orchestration checks. |
+| `release_preflight/release_preflight_test.py` | Keep product version/destination/tag conflict parsing and failure behavior. The cited mixed method at this selected revision executes the preflight directly; its `release.yml` comment is not a workflow-YAML assertion. |
+| `access_telemetry_c1` mixed files | Keep domain/operator authorization and Production restrictions. Remove story/sprint/ledger assertions from the mixed runtime identity test, and root commitlint installation from disposable-source fixture setup. Keep all six telemetry suite trees. Profile-dependent execution remains blocked on unchanged baseline approval/input drift; no approval hash or overlay is edited. |
+| `OpenBaoTopologyTraits_FastSlowAndPerformanceLanesRemainSeparated` | Remove CI inventory/trait selection, retaining all seven real OpenBao scenarios and their unchanged assertions. Integration preservation evidence discloses this one removal: 478 source methods before, 477 product methods after. |
+| `Server.Tests/Architecture/IntegrationStubClosureGuardTests.cs` | Remove its test-source/no-op/skip scanner and structured deferred-ID/owner requirements. Its dedicated `integration_stub_closure` Python suite, verifier and target manifest qualify CI/story governance, not product behavior, and are removed too. Actual integration scenarios remain unchanged. |
+| `integration_fast_coverage` | Remove the suite, TRX inventory checker and required-surface manifest. These enforce registration/outcome inventories of other tests rather than execute or assert the product. The complete separated project execution is retained. The mixed operator runbook's exact graph-isolation citation is preserved directly, decoupled from the retired CI manifest. |
+| `line_endings` | Remove the dedicated repository-formatting policy suite. Its Git attribute/checkout normalization and localized-diff checks do not test rendered product behavior. `.gitattributes`, `.editorconfig`, Razor sources, browser assertions and binary assets remain unchanged. |
+
+No product scenario is replaced by a skip or a permissive result. These
+classifications do not establish that integration/browser/SQL/rollout checks
+have executed; prepared environment support and hosted acceptance remain gates.

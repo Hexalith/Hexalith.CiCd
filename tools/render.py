@@ -435,6 +435,15 @@ def desired_tree(project: Path, registrations: list[tuple[str, Path]],
         if document["buildsTag"] != contract.tag:
             raise RenderError(f"{path} -> .github/hexalith-ci.json: buildsTag must equal builds-version")
         context["config"] = document
+        # Only the selected release's complete contract may introduce this
+        # knob. Older pins retain their original configuration and caller.
+        # Preserve the explicit native override introduced by newer Builds
+        # contracts while materializing the default-backed timeout knob.
+        context["ci_timeout_minutes"] = document.get("job-timeout-minutes", document.get("ciTimeoutMinutes"))
+        if context["ci_timeout_minutes"] is not None:
+            inputs = ci_declaration.get("on", {}).get("workflow_call", {}).get("inputs", {})
+            if inputs.get("job-timeout-minutes", {}).get("type") != "number":
+                raise RenderError(f"{source}: ciTimeoutMinutes requires the numeric job-timeout-minutes input")
         context["ownership_block"] = rendered_bytes(environment, PARTIALS[0], context).decode("utf-8")
         context["deny_entries"] = json_document(rendered_bytes(environment, PARTIALS[1], context), PARTIALS[1])
         for output, template in TEMPLATES.items():

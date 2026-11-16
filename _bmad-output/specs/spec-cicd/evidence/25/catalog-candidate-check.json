@@ -1,0 +1,79 @@
+{
+  "scope": "unreleased source catalog qualification only; no owned module edits, registration or pre-push acceptance",
+  "revisions": {
+    "module": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+    "builds_source": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+  "catalog_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537",
+  "results": [
+    {
+      "job": "catalog-candidate-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Timesheets.slnx",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 0,
+      "log": "catalog-candidate-build.log"
+    },
+    {
+      "job": "Hexalith.Timesheets.ArchitectureTests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.ArchitectureTests/Hexalith.Timesheets.ArchitectureTests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "Hexalith.Timesheets.ArchitectureTests.log"
+    },
+    {
+      "job": "Hexalith.Timesheets.Contracts.Tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Contracts.Tests/Hexalith.Timesheets.Contracts.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "Hexalith.Timesheets.Contracts.Tests.log"
+    },
+    {
+      "job": "Hexalith.Timesheets.Projections.Tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Projections.Tests/Hexalith.Timesheets.Projections.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 3,
+      "log": "Hexalith.Timesheets.Projections.Tests.log"
+    }
+  ],
+  "live_catalog_still_matches_source": true
+}

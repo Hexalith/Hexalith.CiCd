@@ -1,0 +1,208 @@
+  Discovering: Hexalith.Folders.Client.Tests
+  Discovered:  Hexalith.Folders.Client.Tests
+  Starting:    Hexalith.Folders.Client.Tests
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.StaleGeneratedOutputDetectionUsesAllContentHashes [FAIL]
+      Shouldly.ShouldAssertException : False
+          should be
+      True
+          but was not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.cs(319,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.StaleGeneratedOutputDetectionUsesAllContentHashes()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: " ") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/parameters/") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/parameters/ ") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/parameters/FolderId/extra") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/schemas/FolderId") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "external.yaml#/components/parameters/FolderId") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "name", value: "") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "name", value: " ") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "description", value: "missing name and reference") [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(60,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMissingParameterReferenceTargets [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(346,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RunInputValidationGenerator(String temp, String repositoryRoot, String contractPath)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(100,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c.<GeneratorRejectsMissingParameterReferenceTargets>b__68_0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(96,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMissingParameterReferenceTargets()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.HelperGenerationTargetRegeneratesWhenContractSpineChanges [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersIdempotencyHelpers.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.cs(432,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.HelperGenerationTargetRegeneratesWhenContractSpineChanges()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.RequiredNonNullableEnumFieldsDoNotEmitNullChecks [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersIdempotencyHelpers.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.cs(150,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.RequiredNonNullableEnumFieldsDoNotEmitNullChecks()
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedOutputCarriesStableSafeProvenance [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersIdempotencyHelpers.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.cs(122,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedOutputCarriesStableSafeProvenance()
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedClientAndHelpersMatchIsolatedRegeneration [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersIdempotencyHelpers.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.cs(373,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedClientAndHelpersMatchIsolatedRegeneration()
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Finished:    Hexalith.Folders.Client.Tests (ID = '6e954075589af04cac4c345fe70b6ee858a95d5d09f9c9f3caf20b217344fb5c')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.Client.Tests  Total: 392, Errors: 0, Failed: 16, Skipped: 0, Not Run: 0, Time: 25.528s

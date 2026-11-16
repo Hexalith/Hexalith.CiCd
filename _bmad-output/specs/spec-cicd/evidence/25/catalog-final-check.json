@@ -1,0 +1,198 @@
+{
+  "scope": "unreleased source catalog qualification only; no owned module edits, registration or pre-push acceptance",
+  "revisions": {
+    "module": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+    "builds_source": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+  "catalog_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537",
+  "results": [
+    {
+      "job": "final-catalog-candidate-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Timesheets.slnx",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 0,
+      "log": "final-catalog-candidate-build.log"
+    },
+    {
+      "job": "bootstrap-latency-after-fix",
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Timesheets.Projections.Tests/bin/Release/net10.0/Hexalith.Timesheets.Projections.Tests.dll",
+        "-method",
+        "Hexalith.Timesheets.Projections.Tests.MagicLinkBootstrapLatencyTests.DelayedCombinedInventoryPersistsV7WithinGatewayAttemptBudget",
+        "-xml",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/bootstrap-latency-after-fix.xml"
+      ],
+      "exit_code": 0,
+      "log": "bootstrap-latency-after-fix.log"
+    },
+    {
+      "job": "bootstrap-reservation-regressions",
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Timesheets.Projections.Tests/bin/Release/net10.0/Hexalith.Timesheets.Projections.Tests.dll",
+        "-method",
+        "Hexalith.Timesheets.Projections.Tests.MagicLinkGlobalIndexEpochTests.StreamedBootstrapRefusesReservationChangesDuringSelectedInventory",
+        "-xml",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/bootstrap-reservation-regressions.xml"
+      ],
+      "exit_code": 0,
+      "log": "bootstrap-reservation-regressions.log"
+    },
+    {
+      "job": "final-Hexalith.Timesheets.ArchitectureTests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.ArchitectureTests/Hexalith.Timesheets.ArchitectureTests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "final-Hexalith.Timesheets.ArchitectureTests.log"
+    },
+    {
+      "job": "final-Hexalith.Timesheets.Contracts.Tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Contracts.Tests/Hexalith.Timesheets.Contracts.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "final-Hexalith.Timesheets.Contracts.Tests.log"
+    },
+    {
+      "job": "final-Hexalith.Timesheets.Projections.Tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Projections.Tests/Hexalith.Timesheets.Projections.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "final-Hexalith.Timesheets.Projections.Tests.log"
+    },
+    {
+      "job": "final-Hexalith.Timesheets.Server.Tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Server.Tests/Hexalith.Timesheets.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 2,
+      "log": "final-Hexalith.Timesheets.Server.Tests.log"
+    },
+    {
+      "job": "final-Hexalith.Timesheets.Works.Tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Works.Tests/Hexalith.Timesheets.Works.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "final-Hexalith.Timesheets.Works.Tests.log"
+    },
+    {
+      "job": "final-Hexalith.Timesheets.IntegrationTests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.IntegrationTests/Hexalith.Timesheets.IntegrationTests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "final-Hexalith.Timesheets.IntegrationTests.log"
+    },
+    {
+      "job": "final-apphost-configuration",
+      "command": [
+        "python3",
+        "scripts/check_magic_link_apphost_guards.py",
+        "--configuration-only",
+        "--configuration",
+        "Release",
+        "--log-directory",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/apphost-configuration"
+      ],
+      "exit_code": 0,
+      "log": "final-apphost-configuration.log"
+    },
+    {
+      "job": "final-fixture-privacy-tests",
+      "command": [
+        "python3",
+        "scripts/test_isolated_magic_link_dapr.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "log": "final-fixture-privacy-tests.log"
+    },
+    {
+      "job": "final-real-package-validation",
+      "command": [
+        "python3",
+        "-I",
+        "/tmp/hexalith-job.5jFSMJLa/Timesheets/references/Hexalith.Builds/Github/lib/product_validation.py",
+        "--workspace",
+        "/tmp/hexalith-job.5jFSMJLa/Timesheets",
+        "--contract",
+        "tools/product-validation.json"
+      ],
+      "exit_code": 1,
+      "log": "final-real-package-validation.log"
+    }
+  ],
+  "live_catalog_still_matches_source": true,
+  "complete": true,
+  "inputs": {
+    "module_patch_sha256": "d0d8dd0a20aede189a90a3b7ff0dd947374b4bead9aed2e7429b0eb8e86f4edf",
+    "runner_sha256": "295f89c1f0a8dca6cefe7cfa682baf23761e1164189a0826822f0f37f064f9ab",
+    "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+    "catalog_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537"
+  }
+}

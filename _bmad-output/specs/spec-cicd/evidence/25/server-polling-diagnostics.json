@@ -1,0 +1,29 @@
+{
+  "scope": "sequential focused and complete rerun of unchanged Server binaries after the original wall-clock read-count failure; copied test output only, no main rebuild or source change",
+  "results": [
+    {
+      "job": "server-polling-focused",
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.7qf5Ha8g/server-tests/Hexalith.Timesheets.Server.Tests.dll",
+        "-method",
+        "Hexalith.Timesheets.Server.Tests.MagicLinkDurableSubmissionServiceTests.ProcessingStatusIsPolledToTheConfiguredDeadlineAndDenied",
+        "-xml",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/server-polling-focused.xml"
+      ],
+      "exit_code": 0,
+      "log": "server-polling-focused.log"
+    },
+    {
+      "job": "server-suite-rerun",
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.7qf5Ha8g/server-tests/Hexalith.Timesheets.Server.Tests.dll",
+        "-xml",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/server-suite-rerun.xml"
+      ],
+      "exit_code": 1,
+      "log": "server-suite-rerun.log"
+    }
+  ]
+}

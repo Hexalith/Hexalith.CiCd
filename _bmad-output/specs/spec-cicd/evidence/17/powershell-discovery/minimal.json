@@ -1,0 +1,17 @@
+{
+  "revision": "440d9268d1f7da9fdd7f29273214017e5618bc73",
+  "cicd_source": "2adf156b24e0a8053de42d7d4bf9b7c15a8b82e4",
+  "intended_literal_callees": {
+    ".github/actions/example/action.yml": [
+      "tests/tools/verify.ps1"
+    ],
+    "tests/tools/verify.ps1": []
+  },
+  "script": "param([string]$Label = 'folders')\n$ErrorActionPreference = 'Stop'\nWrite-Host $Label\n",
+  "selected": [
+    ".github/actions/example/action.yml",
+    "tests/tools/verify.ps1"
+  ],
+  "errors": [],
+  "classification": "Ordinary PowerShell parameters and assignment; no child execution or discovery diagnostics."
+}

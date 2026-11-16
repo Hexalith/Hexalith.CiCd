@@ -1,0 +1,36 @@
+  Discovering: Hexalith.Folders.AppHost.Tests
+  Discovered:  Hexalith.Folders.AppHost.Tests
+  Starting:    Hexalith.Folders.AppHost.Tests
+    Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(fault: "none") [FAIL]
+      System.InvalidOperationException : Run through Platform verify_component.py --apphost-assembly <Debug assembly>.
+      Stack Trace:
+        /_/tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs(43,0): at Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(String fault)
+        --- End of stack trace from previous location ---
+    Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(fault: "probe") [FAIL]
+      System.InvalidOperationException : Run through Platform verify_component.py --apphost-assembly <Debug assembly>.
+      Stack Trace:
+        /_/tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs(43,0): at Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(String fault)
+        --- End of stack trace from previous location ---
+    Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(fault: "tls") [FAIL]
+      System.InvalidOperationException : Run through Platform verify_component.py --apphost-assembly <Debug assembly>.
+      Stack Trace:
+        /_/tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs(43,0): at Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(String fault)
+        --- End of stack trace from previous location ---
+    Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(fault: "signer") [FAIL]
+      System.InvalidOperationException : Run through Platform verify_component.py --apphost-assembly <Debug assembly>.
+      Stack Trace:
+        /_/tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs(43,0): at Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(String fault)
+        --- End of stack trace from previous location ---
+    Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(fault: "permissions") [FAIL]
+      System.InvalidOperationException : Run through Platform verify_component.py --apphost-assembly <Debug assembly>.
+      Stack Trace:
+        /_/tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs(43,0): at Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.ActualIssuerVerifiesCompleteConsumerCohortBeforeActivation(String fault)
+        --- End of stack trace from previous location ---
+    Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.RunOwnedAuthorityVerifiesFinalCohortAndAllRefusals [FAIL]
+      System.InvalidOperationException : Run Platform verify_component.py --run-owned --apphost-assembly <Debug assembly>.
+      Stack Trace:
+        /_/tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs(103,0): at Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests.RunOwnedAuthorityVerifiesFinalCohortAndAllRefusals()
+        --- End of stack trace from previous location ---
+  Finished:    Hexalith.Folders.AppHost.Tests (ID = '3646b5ef4abffe0b61425780ae0d405d530f4a74c1a732369810a929318a2076')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.AppHost.Tests  Total: 6, Errors: 0, Failed: 6, Skipped: 0, Not Run: 0, Time: 0.135s

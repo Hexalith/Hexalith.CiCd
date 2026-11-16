@@ -32,9 +32,10 @@ Repository configuration is never a detector input: `.jscpd*`, `.gitignore`,
 
 ## Discovery coverage model
 
-Initial sources are the YAML, shell, PowerShell and Python files beneath
+Initial sources are the YAML, shell, PowerShell, Python, JavaScript and TypeScript files beneath
 `.github/actions/**`, including dormant action directories. The selected
-extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1` and `.py`. An
+extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1`, `.py`,
+`.js`, `.mjs`, `.cjs`, `.ts`, `.mts` and `.cts`. An
 extensionless file with a shebang is selected too, and fails as an unsupported
 language unless the shebang names a shell, PowerShell or Python. A dormant file's
 action context, which `$GITHUB_ACTION_PATH` names, is its nearest ancestor
@@ -58,6 +59,8 @@ Recognized forms supply the exact working directory, import roots and language:
 - Direct script paths; `bash`, `sh`, `dash`, `zsh`, `ksh`, `pwsh` and
   `powershell`; `source` and dot sourcing; literal `-c` and `-Command` strings;
   PowerShell `Import-Module` (directly or through `-Name`) and `using module`.
+  Literal local modules in PowerShell `#requires -Modules` are traversed too.
+  Literal attached parameter values such as `-Command:` retain their AST type.
   Interpreter options are read positionally, so later words are script
   arguments. Versioned and `.exe` interpreter spellings are recognized.
 - The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
@@ -79,6 +82,13 @@ Recognized forms supply the exact working directory, import roots and language:
   APIs, and `sys.executable` (or an alias of it) as argv[0]. A literal subprocess
   `cwd` applies to its child. File invocations keep the script's import root;
   `-m`, `-c` and inline Python action shells start from the working directory.
+- Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
+  `tool run NAME` prefix consumes project, output and property data at the
+  compiled-language boundary. The executable, operation and tool name must be
+  literal, with no argv expansion. Fixed `git -C DIRECTORY rev-parse HEAD` is
+  a provenance read. Literal script references in these data operands still
+  enter discovery. Computed executable/operation, shell, working-directory or
+  resolution-environment changes remain failures.
 
 ### Rule 1: literal references are included
 
@@ -152,8 +162,13 @@ These fail coverage with a diagnostic naming the source file and line:
 - A computed value in an execution position: a command word, interpreter
   operand, sourced path, import or process-API target, or working directory.
   The structural forms are command substitution (`$(...)` and backticks),
-  subshells and other parenthesized syntax, and shell function definitions. So
-  are brace groups that start a list, PowerShell script blocks (`& { ... }`),
+  Bash subshells and other parenthesized syntax, and Bash function definitions.
+  PowerShell declarations, assignments, conditions and function bodies are
+  parsed with PowerShell's AST parser; every nested command is inspected,
+  including commands in assignment values and interpolated subexpressions.
+  Computed PowerShell invocations, argument expressions, argument splatting,
+  method calls, and pipeline-fed `Invoke-Expression` remain unsupported. So
+  are brace groups that start a Bash list, PowerShell script blocks (`& { ... }`),
   `pushd`/`popd`/`Set-Location` and their aliases, and PowerShell `cd`. Also
   covered: a sourced or evaluated script that changes the caller's directory,
   `find -execdir`/`-okdir` and `-exec {}`, `Start-Process` and `Invoke-Command`.
@@ -175,7 +190,8 @@ These fail coverage with a diagnostic naming the source file and line:
   or the name-based lookup paths `PSModulePath` and `CDPATH`, set by any means:
   - a shell assignment, including `+=`, or `export`/`declare`;
   - a composite step `env` entry, or a non-mapping step `env`;
-  - PowerShell `$env:` or `Set-Item env:`;
+  - PowerShell `$env:` (including compound assignments and increment/decrement)
+    or `Set-Item env:`;
   - Python `os.environ` or `os.environb` (a computed or resolution key, or
     replacing or merging into the mapping with `=` or `|=`), `os.putenv` or a
     subprocess `env`;
@@ -235,8 +251,9 @@ These fail coverage with a diagnostic naming the source file and line:
   - `pytest`, `py.test`, `python -m pytest`, `python -m unittest` or
     `python -m nose2` when the module tracks `conftest.py` or a file named
     `test*.py` or `*_test.py`;
-  - `npm`, `pnpm`, `yarn` or `bun` with a tracked `package.json`, unless the
-    subcommand runs no scripts. `--ignore-scripts` disables lifecycle hooks for
+  - unmodeled `npm` execution forms, or `pnpm`, `yarn` or `bun` with a tracked
+    `package.json`, unless the subcommand runs no scripts. Supported literal npm
+    recipes are described below. `--ignore-scripts` disables lifecycle hooks for
     dependency installation, but never exempts explicitly named `run` scripts;
   - `uv`, `poetry`, `pipenv`, `pdm` or `hatch run` of a script name defined in a
     tracked `pyproject.toml`, `Pipfile` or `hatch.toml`, including installed
@@ -284,8 +301,13 @@ stays data, including text that resembles the failing forms above.
 ### Conservative failures and limits
 
 Some ordinary constructs that call no local script still fail, because their
-structure is unmodeled: `$(date)`, parenthesized `case` patterns, PowerShell
-variable assignments, and PowerShell `if (...)` or `foreach (...)` blocks. Make
+structure is unmodeled: Bash `$(date)` and parenthesized `case` patterns,
+PowerShell method calls, and computed operands of unknown commands. PowerShell
+`param(...)`, variable assignments, arrays, hashtables, functions, `if (...)`
+and `foreach (...)` are parsed as syntax rather than executable command names.
+Direct, literal `&` and dot-source calls inside those constructs are followed.
+Property/index assignment targets and writes affecting PowerShell command
+resolution, including alias mutation, remain unsupported. Make
 such a call statically identifiable, or extend central discovery and its
 fixtures before onboarding a module whose actions rely on them. Never hide a
 call through a module-specific exclusion. The scanner does not prove that
@@ -334,7 +356,13 @@ For a local scan, retain outputs outside disposable scratch:
 SCAN_DIRECTORY="$PWD/../cicd-duplicate-scan-observations" run-with-temp uv run --locked tools/scan.py
 ```
 
-Use Node 24 and Python 3.12 or later. Run from a checkout containing the committed
+Use Node 24 and Python 3.12 or later, plus PowerShell 7 (`pwsh`) when PowerShell
+sources are reachable. A fixed parser helper reads source on stdin through
+the native parser's `ModuleAnalysis` mode, avoiding host module lookup and type
+resolution. It never evaluates, imports or dot-sources module text. The internal
+analysis API must be present; incompatible PowerShell versions fail explicitly.
+An unavailable parser, timeout, parse error or malformed parser output fails
+coverage explicitly. Profiles are disabled. Run from a checkout containing the committed
 policy and registry. The production registry is intentionally empty until
 onboarding; local synthetic registrations belong in temporary test repositories.
 
@@ -395,3 +423,27 @@ Save useful results and logs outside the wrapper's temporary directory. No test
 may silently skip detector integration. Moving shared code into Builds and
 deleting module copies is a separate authorized change after inspecting the
 reported fragments.
+
+
+## Literal npm and JavaScript/TypeScript reachability
+
+Story 18 adds JavaScript and TypeScript without changing the 10-line/50-token
+threshold, bounds, suppression rejection or cross-module-only failure policy.
+A literal `npm --prefix <directory> run <script>` or declared literal npm
+workspace follows its named recipe and applicable lifecycle recipes. The selected
+workspace must have regular committed `package.json` and `package-lock.json`
+inputs. All tracked JavaScript/TypeScript in that workspace is selected, including
+Playwright configuration, global setup and reporters. Fixed installed Playwright
+CLI invocations use this same scope; discovery never calls npx or evaluates a
+module's configuration to determine files.
+
+The controller's integrity-locked TypeScript 6.0.3 parser reads source through
+stdin and emits syntax facts. Relative imports, literal tsconfig baseUrl/path
+aliases and supported cross-language process literals extend closure beyond the
+workspace. Bare package imports must be in its lock; Node builtins are external.
+Computed imports, process commands, process resolution changes, indirect
+TypeScript configuration and computed setup/configuration paths fail with source
+diagnostics. A conservative whole-workspace selection does not excuse an unsafe
+path or unresolved execution. Unmodeled package managers and recipe forms remain
+fail-closed. The parser and detector are installed and signature-verified in
+controller scratch before discovery, including zero-scope scans.

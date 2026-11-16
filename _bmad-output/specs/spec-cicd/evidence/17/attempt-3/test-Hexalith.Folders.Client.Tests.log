@@ -1,0 +1,32 @@
+  Discovering: Hexalith.Folders.Client.Tests
+  Discovered:  Hexalith.Folders.Client.Tests
+  Starting:    Hexalith.Folders.Client.Tests
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedNestedHelperHandlesNullAtEveryDepthAndRetainsPresenceSemantics [FAIL]
+      Shouldly.ShouldAssertException : 255
+          should be
+      0
+          but was not
+      
+      Additional Info:
+          NSwag command line tool for .NET Core Net100, toolchain v14.8.0.0 (NJsonSchema v11.6.2.0 (Newtonsoft.Json v13.0.0.0))
+      Visit http://NSwag.org for more information.
+      NSwag bin directory: /home/administrator/.nuget/packages/nswag.msbuild/14.8.0/tools/Net100
+      
+      Executing file '<TEMP_ROOT>/nswag.json' with variables ''...
+      System.InvalidOperationException: The specified runtime in the document (Net110) differs from the current process runtime (Net100). Change the runtime with the '/runtime:Net110' parameter or run the file with the correct command line binary.
+         at NSwag.Commands.Document.ExecuteDocumentCommand.ExecuteDocumentAsync(IConsoleHost host, String filePath) in /_/src/NSwag.Commands/Commands/Document/ExecuteDocumentCommand.cs:line 65
+         at NSwag.Commands.Document.ExecuteDocumentCommand.RunAsync(CommandLineProcessor processor, IConsoleHost host) in /_/src/NSwag.Commands/Commands/Document/ExecuteDocumentCommand.cs:line 29
+         at NConsole.CommandLineProcessor.ProcessSingleAsync(String[] args, Object input) in /_/src/NSwag.Commands/NConsole/CommandLineProcessor.cs:line 184
+         at NConsole.CommandLineProcessor.ProcessAsync(String[] args, Object input) in /_/src/NSwag.Commands/NConsole/CommandLineProcessor.cs:line 120
+         at NSwag.Commands.NSwagCommandProcessor.ProcessAsync(String[] args) in /_/src/NSwag.Commands/NSwagCommandProcessor.cs:line 61
+      
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(317,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GenerateNestedProbeDtos(String temp, YamlMappingNode contract, YamlMappingNode schemas)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(251,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c.<GeneratedNestedHelperHandlesNullAtEveryDepthAndRetainsPresenceSemantics>b__74_0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(183,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedNestedHelperHandlesNullAtEveryDepthAndRetainsPresenceSemantics()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Finished:    Hexalith.Folders.Client.Tests (ID = 'ae143971a182ccd2a581a0483c8bde6c231be98b2fbe24dffa195acad3f91795')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.Client.Tests  Total: 392, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 52.820s

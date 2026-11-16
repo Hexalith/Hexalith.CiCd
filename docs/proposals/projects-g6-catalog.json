@@ -1,0 +1,35 @@
+{
+  "schema": "hexalith.projects-g6-catalog.v1",
+  "repository": "Hexalith.Projects",
+  "pre_push_gate": "reviewed-tree-owner-authorized",
+  "base_commit": "4511105bb1f00b8cf762097523de74acc828a001",
+  "base_tree": "24c52776922ecca9eca63720347f32ecee64694c",
+  "patch_sha256": "3b4e5540391f585c778f21953f4b2a37be1a87aa9df9ae7e2b56b6e05cefb588",
+  "result_tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+  "before": {
+    ".github/workflows/ci.yml": [
+      "100644",
+      "blob",
+      "66ab41495043051c5ffe9b51bf8fdb1eb5c5f2ff"
+    ],
+    ".github/actions/prepare-g6-catalog/action.yml": null,
+    ".github/actions/prepare-g6-catalog/prepare.py": null
+  },
+  "after": {
+    ".github/workflows/ci.yml": [
+      "100644",
+      "blob",
+      "960a63947bc9584454a7a3dca080a9c1664231f3"
+    ],
+    ".github/actions/prepare-g6-catalog/action.yml": [
+      "100644",
+      "blob",
+      "e50095bcb31b192cb09c628ce58f2c5ace698cde"
+    ],
+    ".github/actions/prepare-g6-catalog/prepare.py": [
+      "100644",
+      "blob",
+      "7bc405449d0060084cb84b02cba62d31e36bfe72"
+    ]
+  }
+}

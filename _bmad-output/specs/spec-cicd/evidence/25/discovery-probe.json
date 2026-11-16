@@ -1,0 +1,128 @@
+{
+  "module_commit": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+  "probe": "hypothetical action supplied in memory only; no module tree or registration modified",
+  "checks": [
+    {
+      "case": "compiled-apphost",
+      "command": "python3 scripts/check_magic_link_apphost_guards.py --configuration-only --configuration Release",
+      "candidate_action_sha256": "a9331590dbcc4ab12930aa6533f585af6d50ac353cc304495d21df03333ac6d0",
+      "selected_sources": [
+        ".github/actions/after-unit-tests/action.yml",
+        "scripts/check_magic_link_apphost_guards.py",
+        "scripts/local_runtime_admission.py",
+        "scripts/run_isolated_magic_link_dapr.py"
+      ],
+      "diagnostics": [
+        "scripts/run_isolated_magic_link_dapr.py:2218: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/run_isolated_magic_link_dapr.py:2226: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/run_isolated_magic_link_dapr.py:826: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "passes": false
+    },
+    {
+      "case": "selected-index",
+      "command": "python3 scripts/test_magic_link_index_selection.py -v",
+      "candidate_action_sha256": "7d2fdcc499a27dd2834e81a4c0b856b66c0659d75396811cdc17f1fb70347a31",
+      "selected_sources": [
+        ".github/actions/after-unit-tests/action.yml",
+        "scripts/magic_link_index_selection.py",
+        "scripts/test_magic_link_index_selection.py"
+      ],
+      "diagnostics": [],
+      "passes": true
+    },
+    {
+      "case": "isolated-fixture-discovery",
+      "command": "python3 -m unittest discover -s scripts -p test_isolated_magic_link_dapr.py -v",
+      "candidate_action_sha256": "3e2e35ca73f2f4a1dab3233aa2eca7ee503e460374abd39583ded084ed6b6769",
+      "selected_sources": [
+        ".github/actions/after-unit-tests/action.yml"
+      ],
+      "diagnostics": [
+        ".github/actions/after-unit-tests/action.yml:6: local-script discovery: unsupported test runner with tracked module tests: unittest"
+      ],
+      "passes": false
+    },
+    {
+      "case": "isolated-fixture-direct",
+      "command": "python3 scripts/test_isolated_magic_link_dapr.py -v",
+      "candidate_action_sha256": "14d83ad6cf13e5d90a8ad549a96483ee282b169c403c6f4b7e684550c964af26",
+      "selected_sources": [
+        ".github/actions/after-unit-tests/action.yml",
+        "scripts/check_magic_link_apphost_guards.py",
+        "scripts/local_aspire_magic_link_journey.py",
+        "scripts/local_aspire_projection_probe.py",
+        "scripts/local_runtime_admission.py",
+        "scripts/magic_link_evidence_lineage.py",
+        "scripts/magic_link_index_selection.py",
+        "scripts/run_isolated_magic_link_dapr.py",
+        "scripts/test_isolated_magic_link_dapr.py"
+      ],
+      "diagnostics": [
+        "scripts/local_aspire_magic_link_journey.py:101: local-script discovery: unresolved computed Python script invocation",
+        "scripts/local_aspire_magic_link_journey.py:105: local-script discovery: unresolved computed Python script invocation",
+        "scripts/local_aspire_magic_link_journey.py:69: local-script discovery: unresolved computed operand of unknown command: pgrep",
+        "scripts/local_aspire_projection_probe.py:22: local-script discovery: unresolved computed operand of unknown command: pgrep",
+        "scripts/run_isolated_magic_link_dapr.py:2218: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/run_isolated_magic_link_dapr.py:2226: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/run_isolated_magic_link_dapr.py:826: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:1027: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:1031: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:1106: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:1592: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:1596: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:2658: local-script discovery: unresolved computed subprocess env",
+        "scripts/test_isolated_magic_link_dapr.py:2733: local-script discovery: unresolved computed subprocess env",
+        "scripts/test_isolated_magic_link_dapr.py:2737: local-script discovery: unresolved computed subprocess env",
+        "scripts/test_isolated_magic_link_dapr.py:3047: local-script discovery: unsupported reflective use of a process/import API: subprocess.Popen",
+        "scripts/test_isolated_magic_link_dapr.py:3053: local-script discovery: unsupported reflective use of a process/import API: subprocess",
+        "scripts/test_isolated_magic_link_dapr.py:3071: local-script discovery: unresolved computed Python script invocation",
+        "scripts/test_isolated_magic_link_dapr.py:3110: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:3110: local-script discovery: unsupported Python process/import API: exec",
+        "scripts/test_isolated_magic_link_dapr.py:3132: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:3132: local-script discovery: unsupported Python process/import API: exec",
+        "scripts/test_isolated_magic_link_dapr.py:353: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:353: local-script discovery: unsupported Python process/import API: exec",
+        "scripts/test_isolated_magic_link_dapr.py:359: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:359: local-script discovery: unsupported Python process/import API: eval",
+        "scripts/test_isolated_magic_link_dapr.py:377: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:377: local-script discovery: unsupported Python process/import API: exec",
+        "scripts/test_isolated_magic_link_dapr.py:3794: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:3814: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:402: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:402: local-script discovery: unsupported Python process/import API: eval",
+        "scripts/test_isolated_magic_link_dapr.py:415: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:415: local-script discovery: unsupported Python process/import API: eval",
+        "scripts/test_isolated_magic_link_dapr.py:433: local-script discovery: unsupported Python process/import API: compile",
+        "scripts/test_isolated_magic_link_dapr.py:433: local-script discovery: unsupported Python process/import API: exec",
+        "scripts/test_isolated_magic_link_dapr.py:4414: local-script discovery: unresolved computed Python script invocation",
+        "scripts/test_isolated_magic_link_dapr.py:653: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:6717: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/test_isolated_magic_link_dapr.py:675: local-script discovery: unresolved computed subprocess env",
+        "scripts/test_isolated_magic_link_dapr.py:6914: local-script discovery: unresolved computed Python script invocation",
+        "scripts/test_isolated_magic_link_dapr.py:7228: local-script discovery: unresolved computed subprocess env",
+        "scripts/test_isolated_magic_link_dapr.py:743: local-script discovery: unresolved computed Python script invocation"
+      ],
+      "passes": false
+    },
+    {
+      "case": "candidate-packages",
+      "command": "python3 scripts/pack-release-packages.py\npython3 scripts/validate-nuget-packages.py\npython3 scripts/validate-consumer-package-references.py",
+      "candidate_action_sha256": "ba1d43a8dbff1dfe3de1a648c4ef637562da16b31bed6b3a7a98104d330ad843",
+      "selected_sources": [
+        ".github/actions/after-unit-tests/action.yml",
+        "scripts/pack-release-packages.py",
+        "scripts/release_common.py",
+        "scripts/validate-consumer-package-references.py",
+        "scripts/validate-nuget-packages.py"
+      ],
+      "diagnostics": [
+        "scripts/pack-release-packages.py:23: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:126: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:130: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:132: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "passes": false
+    }
+  ]
+}

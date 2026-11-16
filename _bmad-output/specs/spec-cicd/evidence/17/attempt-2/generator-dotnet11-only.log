@@ -1,0 +1,12 @@
+  NSwag command line tool for .NET Core Net110, toolchain v14.8.0.0 (NJsonSchema v11.6.2.0 (Newtonsoft.Json v13.0.0.0))
+  Visit http://NSwag.org for more information.
+  NSwag bin directory: /home/administrator/.nuget/packages/nswag.msbuild/14.8.0/tools/Net100
+  
+  Executing file 'nswag.json' with variables 'Configuration=Release'...
+  System.InvalidOperationException: The specified runtime in the document (Net100) differs from the current process runtime (Net110). Change the runtime with the '/runtime:Net100' parameter or run the file with the correct command line binary.
+     at NSwag.Commands.Document.ExecuteDocumentCommand.ExecuteDocumentAsync(IConsoleHost host, String filePath) in /_/src/NSwag.Commands/Commands/Document/ExecuteDocumentCommand.cs:line 65
+     at NSwag.Commands.Document.ExecuteDocumentCommand.RunAsync(CommandLineProcessor processor, IConsoleHost host) in /_/src/NSwag.Commands/Commands/Document/ExecuteDocumentCommand.cs:line 29
+     at NConsole.CommandLineProcessor.ProcessSingleAsync(String[] args, Object input) in /_/src/NSwag.Commands/NConsole/CommandLineProcessor.cs:line 184
+     at NConsole.CommandLineProcessor.ProcessAsync(String[] args, Object input) in /_/src/NSwag.Commands/NConsole/CommandLineProcessor.cs:line 120
+     at NSwag.Commands.NSwagCommandProcessor.ProcessAsync(String[] args) in /_/src/NSwag.Commands/NSwagCommandProcessor.cs:line 61
+/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Hexalith.Folders.Client.csproj(39,5): error MSB3073: The command "dotnet "/home/administrator/.nuget/packages/nswag.msbuild/14.8.0/buildTransitive/../tools/Net100/dotnet-nswag.dll" run nswag.json /variables:Configuration=Release" exited with code 255.

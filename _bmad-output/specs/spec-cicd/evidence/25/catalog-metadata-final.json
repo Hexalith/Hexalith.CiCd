@@ -1,0 +1,165 @@
+{
+  "scope": "metadata-only final proposal; no live catalog edits or production qualification",
+  "frozen_full_run_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537",
+  "proposal_sha256": "e87d7a01991f41e5fe693f3f4f945019038c6c3e73d0ef12e9740f52a8188e23",
+  "concurrent_live_catalog_sha256": "a5bbe3e7bfd78903ba3b7282885c087fc5cfda09e70dd53ca9ec0583066e2ccd",
+  "concurrent_live_catalog_matches_proposal": false,
+  "delta_from_frozen_run": "Timesheets negative exclusion added to the initial Tenants 8 default; selected package mode now evaluates Tenants 7.0.7",
+  "consumed_graph_affected": false,
+  "graph_evidence": "All 16 frozen candidate project.assets.json files inspected while the candidate existed; none consumes Hexalith.Tenants, Hexalith.Memories or Hexalith.McpCli",
+  "cases": [
+    {
+      "role": "Hexalith.Timesheets.Works",
+      "source_mode": false,
+      "explicit_overrides": {},
+      "properties": {
+        "MSBuildProjectName": "Hexalith.Timesheets.Works",
+        "HexalithTimesheetsNet10CatalogView": "true",
+        "HexalithEventStoreVersion": "4.2.0",
+        "HexalithCommonsVersion": "2.30.11",
+        "HexalithPolymorphicSerializationsVersion": "1.19.9",
+        "HexalithTenantsVersion": "7.0.7",
+        "HexalithMemoriesVersion": "3.0.27",
+        "HexalithMcpCliVersion": "2.0.1",
+        "HexalithAspNetCoreOpenApiVersion": "10.0.15",
+        "HexalithOpenApiVersion": "2.13.0"
+      },
+      "selected_packages": {
+        "Microsoft.AspNetCore.Mvc.Testing": "10.0.15",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
+        "Microsoft.AspNetCore.TestHost": "10.0.15",
+        "Microsoft.AspNetCore.OpenApi": "10.0.15",
+        "Microsoft.OpenApi": "2.13.0"
+      }
+    },
+    {
+      "role": "Hexalith.Timesheets.Works.Tests",
+      "source_mode": false,
+      "explicit_overrides": {},
+      "properties": {
+        "MSBuildProjectName": "Hexalith.Timesheets.Works.Tests",
+        "HexalithTimesheetsNet10CatalogView": "true",
+        "HexalithEventStoreVersion": "4.2.0",
+        "HexalithCommonsVersion": "2.30.11",
+        "HexalithPolymorphicSerializationsVersion": "1.19.9",
+        "HexalithTenantsVersion": "7.0.7",
+        "HexalithMemoriesVersion": "3.0.27",
+        "HexalithMcpCliVersion": "2.0.1",
+        "HexalithAspNetCoreOpenApiVersion": "10.0.15",
+        "HexalithOpenApiVersion": "2.13.0"
+      },
+      "selected_packages": {
+        "Microsoft.AspNetCore.Mvc.Testing": "10.0.15",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
+        "Microsoft.AspNetCore.TestHost": "10.0.15",
+        "Microsoft.AspNetCore.OpenApi": "10.0.15",
+        "Microsoft.OpenApi": "2.13.0"
+      }
+    },
+    {
+      "role": "Unrelated",
+      "source_mode": false,
+      "explicit_overrides": {},
+      "properties": {
+        "MSBuildProjectName": "Unrelated",
+        "HexalithTimesheetsNet10CatalogView": "false",
+        "HexalithEventStoreVersion": "5.1.1",
+        "HexalithCommonsVersion": "3.0.0",
+        "HexalithPolymorphicSerializationsVersion": "2.0.0",
+        "HexalithTenantsVersion": "8.0.0",
+        "HexalithMemoriesVersion": "4.0.0",
+        "HexalithMcpCliVersion": "3.0.0",
+        "HexalithAspNetCoreOpenApiVersion": "11.0.0",
+        "HexalithOpenApiVersion": "3.11.0"
+      },
+      "selected_packages": {
+        "Microsoft.AspNetCore.Mvc.Testing": "11.0.0",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "11.0.0",
+        "Microsoft.AspNetCore.TestHost": "11.0.0",
+        "Microsoft.AspNetCore.OpenApi": "11.0.0",
+        "Microsoft.OpenApi": "3.11.0"
+      }
+    },
+    {
+      "role": "Hexalith.Works.Contracts",
+      "source_mode": false,
+      "explicit_overrides": {},
+      "properties": {
+        "MSBuildProjectName": "Hexalith.Works.Contracts",
+        "HexalithTimesheetsNet10CatalogView": "false",
+        "HexalithEventStoreVersion": "5.1.1",
+        "HexalithCommonsVersion": "3.0.0",
+        "HexalithPolymorphicSerializationsVersion": "2.0.0",
+        "HexalithTenantsVersion": "8.0.0",
+        "HexalithMemoriesVersion": "4.0.0",
+        "HexalithMcpCliVersion": "3.0.0",
+        "HexalithAspNetCoreOpenApiVersion": "11.0.0",
+        "HexalithOpenApiVersion": "3.11.0"
+      },
+      "selected_packages": {
+        "Microsoft.AspNetCore.Mvc.Testing": "11.0.0",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "11.0.0",
+        "Microsoft.AspNetCore.TestHost": "11.0.0",
+        "Microsoft.AspNetCore.OpenApi": "11.0.0",
+        "Microsoft.OpenApi": "3.11.0"
+      }
+    },
+    {
+      "role": "Hexalith.Timesheets.Works",
+      "source_mode": true,
+      "explicit_overrides": {},
+      "properties": {
+        "MSBuildProjectName": "Hexalith.Timesheets.Works",
+        "HexalithTimesheetsNet10CatalogView": "true",
+        "HexalithEventStoreVersion": "5.1.1",
+        "HexalithCommonsVersion": "2.30.11",
+        "HexalithPolymorphicSerializationsVersion": "1.19.9",
+        "HexalithTenantsVersion": "8.0.0",
+        "HexalithMemoriesVersion": "4.0.0",
+        "HexalithMcpCliVersion": "3.0.0",
+        "HexalithAspNetCoreOpenApiVersion": "11.0.0",
+        "HexalithOpenApiVersion": "3.11.0"
+      },
+      "selected_packages": {
+        "Microsoft.AspNetCore.Mvc.Testing": "10.0.15",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
+        "Microsoft.AspNetCore.TestHost": "10.0.15",
+        "Microsoft.AspNetCore.OpenApi": "11.0.0",
+        "Microsoft.OpenApi": "3.11.0"
+      }
+    },
+    {
+      "role": "Hexalith.Timesheets.Works",
+      "source_mode": false,
+      "explicit_overrides": {
+        "HexalithEventStoreVersion": "99.1.0",
+        "HexalithCommonsVersion": "99.2.0",
+        "HexalithPolymorphicSerializationsVersion": "99.3.0",
+        "HexalithTenantsVersion": "99.4.0",
+        "HexalithMemoriesVersion": "99.5.0",
+        "HexalithMcpCliVersion": "99.6.0",
+        "HexalithAspNetCoreOpenApiVersion": "99.7.0",
+        "HexalithOpenApiVersion": "99.8.0"
+      },
+      "properties": {
+        "MSBuildProjectName": "Hexalith.Timesheets.Works",
+        "HexalithTimesheetsNet10CatalogView": "true",
+        "HexalithEventStoreVersion": "99.1.0",
+        "HexalithCommonsVersion": "99.2.0",
+        "HexalithPolymorphicSerializationsVersion": "99.3.0",
+        "HexalithTenantsVersion": "99.4.0",
+        "HexalithMemoriesVersion": "99.5.0",
+        "HexalithMcpCliVersion": "99.6.0",
+        "HexalithAspNetCoreOpenApiVersion": "99.7.0",
+        "HexalithOpenApiVersion": "99.8.0"
+      },
+      "selected_packages": {
+        "Microsoft.AspNetCore.Mvc.Testing": "10.0.15",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
+        "Microsoft.AspNetCore.TestHost": "10.0.15",
+        "Microsoft.AspNetCore.OpenApi": "99.7.0",
+        "Microsoft.OpenApi": "99.8.0"
+      }
+    }
+  ]
+}

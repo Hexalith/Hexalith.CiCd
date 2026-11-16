@@ -1,0 +1,13 @@
+{
+  "head": "44cb6dbc869c4d84713278d9c861c6f5ba60bec6",
+  "command": [
+    "pwsh",
+    "-NoProfile",
+    "-File",
+    "Tools/validate-package-version-audit.ps1"
+  ],
+  "exitCode": 0,
+  "regressionEvidence": "builds-audit-qualification.json",
+  "scope": "exact final generated catalog audit; prior fixture failures remain separate",
+  "result": "pass"
+}

@@ -1,0 +1,297 @@
+  Discovering: Hexalith.Folders.Client.Tests
+  Discovered:  Hexalith.Folders.Client.Tests
+  Starting:    Hexalith.Folders.Client.Tests
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMissingParameterReferenceTargets [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "could not be resolved"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(102,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c.<GeneratorRejectsMissingParameterReferenceTargets>b__68_0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(96,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMissingParameterReferenceTargets()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers(name: "_") [FAIL]
+      Shouldly.ShouldAssertException : 1
+          should be
+      0
+          but was not
+      
+      Additional Info:
+          Could not execute because the specified command or file was not found.
+      Possible reasons for this include:
+        * You misspelled a built-in dotnet command.
+        * You intended to execute a .NET program, but dotnet-<REPOSITORY_ROOT>/src/Hexalith.Folders.Client/Generation/bin/Release/net10.0/Hexalith.Folders.Client.Generation.dll does not exist.
+        * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.
+      
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(123,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass69_0.<GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(112,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers(String name)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers(name: "---") [FAIL]
+      Shouldly.ShouldAssertException : 1
+          should be
+      0
+          but was not
+      
+      Additional Info:
+          Possible reasons for this include:
+        * You misspelled a built-in dotnet command.
+        * You intended to execute a .NET program, but dotnet-<REPOSITORY_ROOT>/src/Hexalith.Folders.Client/Generation/bin/Release/net10.0/Hexalith.Folders.Client.Generation.dll does not exist.
+        * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.
+      Could not execute because the specified command or file was not found.
+      
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(123,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass69_0.<GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(112,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers(String name)
+           at InvokeStub_ClientGenerationTests.GeneratorPreservesLegalUnusedParametersWithoutHelperIdentifiers(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedNestedHelperHandlesNullAtEveryDepthAndRetainsPresenceSemantics [FAIL]
+      Shouldly.ShouldAssertException : 1
+          should be
+      0
+          but was not
+      
+      Additional Info:
+          Could not execute because the specified command or file was not found.
+      Possible reasons for this include:
+        * You misspelled a built-in dotnet command.
+        * You intended to execute a .NET program, but dotnet-<REPOSITORY_ROOT>/src/Hexalith.Folders.Client/Generation/bin/Release/net10.0/Hexalith.Folders.Client.Generation.dll does not exist.
+        * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.
+      
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(239,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c.<GeneratedNestedHelperHandlesNullAtEveryDepthAndRetainsPresenceSemantics>b__74_0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(183,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratedNestedHelperHandlesNullAtEveryDepthAndRetainsPresenceSemantics()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(name: null) [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter name must be non-empty."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(88,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass67_0.<GeneratorRejectsReferencedParametersWithoutNames>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(73,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(String name)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(name: "") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter name must be non-empty."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(88,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass67_0.<GeneratorRejectsReferencedParametersWithoutNames>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(73,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(String name)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(name: " ") [FAIL]
+      Shouldly.ShouldAssertException : "Possible reasons for this include:
+        * You misspelled a built-in dotnet command.
+      Could not execute b..."
+          should contain (case insensitive comparison)
+      "Parameter name must be non-empty."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(88,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass67_0.<GeneratorRejectsReferencedParametersWithoutNames>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(73,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(String name)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsReferencedParametersWithoutNames(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: " ") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/parameters/") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/parameters/ ") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/parameters/FolderId/extra") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "#/components/schemas/FolderId") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "$ref", value: "external.yaml#/components/parameters/FolderId") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "name", value: "") [FAIL]
+      Shouldly.ShouldAssertException : "Possible reasons for this include:
+        * You misspelled a built-in dotnet command.
+        * You intended to..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "name", value: " ") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(key: "description", value: "missing name and reference") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "Parameter"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(62,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass66_0.<GeneratorRejectsMalformedParametersBeforePublishing>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(51,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(String key, String value)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsMalformedParametersBeforePublishing(Object, Span`1)
+           at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(repositoryRoot: "") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "--repository-root must be a fully qualified path."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(33,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass65_0.<GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(29,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(String repositoryRoot)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(repositoryRoot: " ") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "--repository-root must be a fully qualified path."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(33,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass65_0.<GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(29,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(String repositoryRoot)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(Object, Span`1)
+           at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(repositoryRoot: ".") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "--repository-root must be a fully qualified path."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(33,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass65_0.<GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(29,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(String repositoryRoot)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(Object, Span`1)
+           at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(repositoryRoot: "relative/repository") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "--repository-root must be a fully qualified path."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(33,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass65_0.<GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(29,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(String repositoryRoot)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(Object, Span`1)
+           at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(repositoryRoot: "../repository") [FAIL]
+      Shouldly.ShouldAssertException : "Could not execute because the specified command or file was not found.
+      Possible reasons for this inc..."
+          should contain (case insensitive comparison)
+      "--repository-root must be a fully qualified path."
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(33,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.<>c__DisplayClass65_0.<GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs>b__0(String temp)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(367,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.WithInputValidationDirectory(Action`1 action)
+        /_/tests/Hexalith.Folders.Client.Tests/ClientGenerationTests.InputValidation.cs(29,0): at Hexalith.Folders.Client.Tests.ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(String repositoryRoot)
+           at InvokeStub_ClientGenerationTests.GeneratorRejectsNonAbsoluteRepositoryRootBeforeReadingInputs(Object, Span`1)
+           at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Finished:    Hexalith.Folders.Client.Tests (ID = '1de66391dd2e8a7c707d4f4e6b867b12f052a355c27aea2afda7c6f5a278a23c')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.Client.Tests  Total: 392, Errors: 0, Failed: 22, Skipped: 0, Not Run: 0, Time: 19.122s

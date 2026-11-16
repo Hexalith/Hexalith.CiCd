@@ -1,0 +1,68 @@
+{
+  "started_at": "2026-11-16T18:14:19.204829+00:00",
+  "revisions": {
+    "module": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+    "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "module_patch_sha256": "bb0018bbba0649c9c425594d587da752d6b7c666f6b6b384708dc544f3d848e5",
+  "additions": {
+    "scripts/tests/test_product_packages.py": "9beb8cf9bcae776e5fa49b385c5159f8be5aeed88f11f113689f2a2e747fe3e1",
+    "tests/Hexalith.Timesheets.ArchitectureTests/FitnessTests/AppHostDependencyTests.cs": "4a0e4cf3329e4558df46b8a59e6cccd61319a254ab061ba1fa830339d3f53512",
+    "tests/Hexalith.Timesheets.Server.Tests/PollingTestTimeProvider.cs": "c573cb9897da723a005022df0f281048cf931557212fd8e6f7d3f4e894000459",
+    "tools/package-consumers/Client.cs": "88e8fe10a85963be6ac72cf05938a8213948f4a0f49414cacbc81d0541a5cd61",
+    "tools/package-consumers/Contracts.cs": "c04e0c36b7636c5ed5324caa977e4af70bfc2a9ab05b142f68531f18f92017ee",
+    "tools/package-consumers/Projections.cs": "5b11833fb06b92d7bdd6c4f0c5805e5e3a4eaa02db35f5c2aab138571b95cbaa",
+    "tools/package-consumers/ReadModels.cs": "eeb6e85521ce0710b181f07c7d0eeeee2494406f01c2cdbb9c4a670decad231d",
+    "tools/package-consumers/Server.cs": "58f7aa20b941b7ff53894d2e5c3b016d75f4c3dac7f41a024d6642f624ae9a63",
+    "tools/package-consumers/Testing.cs": "022b10270c768af039bdd8e921ede70451707c10ba2e069d240f6cb53c8e6b90",
+    "tools/product-validation.json": "055b8fe3c76095876c182b72b3ea652f9aaa67deeea0fd8482ee45e5faf4ead4"
+  },
+  "catalog_sha256": "e87d7a01991f41e5fe693f3f4f945019038c6c3e73d0ef12e9740f52a8188e23",
+  "results": [
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Timesheets.Server.Tests/Hexalith.Timesheets.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "-noAutoResponse",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.pE237T1W/Timesheets/references/Hexalith.Builds/NuGet.ci.Config"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Timesheets.Server.Tests/bin/Release/net10.0/Hexalith.Timesheets.Server.Tests.dll",
+        "-class",
+        "Hexalith.Timesheets.Server.Tests.MagicLinkDurableSubmissionServiceTests",
+        "-noColor"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Server.Tests/Hexalith.Timesheets.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit": 0
+    }
+  ],
+  "remote_operations": false,
+  "adoption": false,
+  "complete": true
+}
