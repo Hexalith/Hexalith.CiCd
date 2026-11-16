@@ -28,5 +28,11 @@ jobs:
           solution: ${{ needs.ci.outputs.solution }}
           submodules: ${{ needs.ci.outputs.submodules }}
           global-json: ${{ needs.ci.outputs.global-json }}
+[% if 'moduleManifest' in config and 'windowsCheckout' in config %]
+          module-manifest: ${{ needs.ci.outputs.module-manifest }}
+          windows-checkout: ${{ needs.ci.outputs.windows-checkout }}
+          source-revision: ${{ needs.ci.outputs.source-revision }}
+          module-authority: ${{ needs.ci.outputs.module-authority }}
+[% endif %]
       - uses: [[ ('./.github/actions/' ~ job) | tojson ]]
 [% endfor %]

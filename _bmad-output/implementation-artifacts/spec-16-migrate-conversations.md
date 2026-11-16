@@ -2,7 +2,7 @@
 title: '16 — Migrate Conversations'
 type: 'chore'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
 baseline_commit: 'd04c9ab7a8fa43dc6dac1f15d34135aba8e79551'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -82,7 +82,7 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   gate inventory, shared design and native Windows feasibility probes.
 - [ ] `evidence/16/` — verify/provision AD-21 preconditions in order, preserving
   existing access until adoption and recording exact readbacks/access failures.
-- [ ] Builds `schemas/`, `Github/lib/module_preparation.py`, producer/CLI,
+- [x] Builds `schemas/`, `Github/lib/module_preparation.py`, producer/CLI,
   orchestration and `Github/prepare/` — implement companion contracts and tests
   for managed/candidate authority, one preparation lifetime and protected checkout.
 - [ ] Architecture spine, `setup/README.md`, `templates/.github/workflows/ci.yml.j2`
@@ -122,17 +122,87 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
 
 ## Implementation Notes
 
+- All changes are isolated in `/home/administrator/projects/hexalith/cicd-story-16`.
+  The original workspace's concurrent onboarding work is preserved. No product
+  push, release publication, remote administration, registration or adoption was
+  performed during this local implementation phase.
+- Builds now implements nullable manifest/protected-checkout inputs, validated
+  caller outputs, managed and explicitly separate candidate producer commands,
+  truthful Platform provenance versus the actual active catalog, and one verified
+  preparation lifetime across CI, local checking, Windows and release source.
+  Managed results admit only status/outcome/diagnostics/buildPreparation before
+  exporting the seven verified values. Legacy absent-authority hashes remain
+  unchanged. Normal Git HTTPS origins and native Windows root spellings are
+  normalized without accepting credentials, alternate origins or reparse roots.
+- Protected Windows bootstrap keeps NTFS protection and the complete logical
+  tree in cone sparse-index form, binds omitted archive trees, validates the
+  materialized complement, fetches complete source ancestry and initializes
+  only explicit direct identities. It never invokes the parent submodule helper.
+- The managed-only `HexalithIsolatedBuildContract` / `hexalith.isolated-build.v1`
+  interface admits a nonshipping build-order graph with authenticated source
+  roots, exact globals, locked restore, the actual catalog and preserved audited
+  release targets. SDK-generated NuGet imports/assets must match an independent
+  private locked restore. Arbitrary obj imports, SDK policy namespaces and
+  additional properties remain refused. Setup/architecture notes document it.
+- Module source retires the inventoried nonproduct gates, extracts the retained
+  runtime/API assertions, adds both product actions, wires only the non-test
+  adapter into the root solution, and validates five built package/symbol pairs
+  plus isolated consumers. Historical fixture projects and original locks are
+  unchanged; external successor locks were deliberately qualified.
+- Root npm files are preserved byte-for-byte during preparation. App delivery
+  removes owned semantic-release/commitlint selectors first; a post-adoption
+  product cleanup may then remove remaining npm files after selector absence and
+  normal checker success. No owned-JSON qualification exception was added.
+- Candidate orchestration binds the canonical perimeter, exact committed inputs,
+  real released-tool provenance and a source-bound receipt. Local Dapr setup
+  binds the verified executable/private runtime and labels owned resources;
+  occupied user control planes refuse before mutation, and cleanup preserves
+  foreign or ownership-replaced resources. No released-tool substitute exists.
+
 ## Spec Change Log
 
 ## Review Triage Log
 
 ## Verification
 
-- Companion-defined .NET/CLI and Python 3.12/runner regressions; actual package
-  builds, classified tests, five-package consumers, browser/Dapr/AppHost, seven-test
-  fixture and native Windows execution without added skips or root rebuilds.
-- `run-with-temp uv run --locked --script tools/render.py --check` — no diff.
-- `run-with-temp uv run --locked --script tools/validate.py` — committed candidate
-  passes global and live-module checks before the delivery-triggering push.
-- Normal `python3 references/Hexalith.Builds/check.py` from an adopted, correctly
-  initialized module workspace; authenticated delivery/CI/nightly observations.
+Performed local source qualification (all disposable work used `run-with-temp`):
+
+- Strict SDK 11 build: zero warnings/errors; privately pack/install/invoke both
+  new commands. Twelve new producer/authority/isolation cases and 138 selected
+  legacy producer/root/Platform cases passed with zero skips.
+- Actual producer-selected adapter restore/build with shared release audit
+  targets passed; all seven fixture assertions and all three overlay assertions
+  passed. Changed generated policy imports and restored assets graphs refused.
+- Conformance, Portable and TestSupport product test projects compiled strictly
+  with zero warnings/errors; the projection-key case and twenty retained portable
+  API/dependency/artifact assertions passed.
+- Five package/symbol pairs passed payload validation; fresh package-only public
+  and testing consumers restored, built and ran successfully.
+- Native Windows protected sparse-index qualification passed. The complete
+  unfiltered built TestSupport DLL passed on native Windows: 44 tests, zero
+  failures/skips/not-run, using exact .NET 11.0.0 installed only in private NTFS
+  scratch and verified against Microsoft's published SHA-512. Existing machine
+  runtimes and the user's Dapr containers were preserved.
+- Python 3.12.13 and 3.14.4 each passed 233 cases across thirteen standalone
+  groups, including ten preparation controls, ten protected-checkout/history
+  controls and seven Dapr ownership/cleanup controls. Offline renderer (33) and
+  validator (51) suites, render reproducibility and the qualification lock check
+  passed. The broad Workspace run did not pass (HXR021 failures, three contextual
+  skips, terminated after twenty minutes); causality remains unverified and it
+  contributes no passing coverage.
+
+Exact commands, retained logs and final counts are in
+`evidence/16/implementation-and-verification.md` and `verification-results.json`.
+The source-only private tool version is not a published release or production pin.
+
+Still pending, and **not** claimed as performed acceptance:
+
+- AD-21 administrative preflight/provisioning, acceptable published Builds/CLI
+  release, real module tool/Platform prerequisites and protected preparation push.
+- Committed registration/render against that release, full `tools/validate.py`
+  live-module qualification, App delivery and authenticated preservation.
+- Genuine released-input Linux/browser/Dapr/AppHost and full module Windows CI,
+  adopted normal `python3 references/Hexalith.Builds/check.py`, immutable release
+  readback, legacy access retirement and the next scheduled nightly outcome.
+- Genuine local Dapr integration also needs an unused host control plane; this
+  workspace has four existing user Dapr containers and correctly refused setup.

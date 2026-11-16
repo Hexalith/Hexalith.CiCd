@@ -45,6 +45,33 @@ additional direct dependencies. With `solution: none`, tests/hooks/jobs must be
 empty and Dapr/browsers false. YAML uses the JSON/GitHub `true`/`false` spelling,
 string mapping keys, no duplicate keys and JSON-compatible values.
 
+The producer-preparation interface adds two optional nullable fields. Old complete
+documents may omit them; the renderer materializes the defaults from the selected
+released schema. `moduleManifest` selects a regular repository-relative JSON
+manifest and prepares the exact pinned module CLI before the first project
+evaluation. Its active package catalog is the accepted delivered Builds release.
+Platform's actual released identity, supported tool range and historical catalog
+pin remain independently verified provenance. Legacy producer source/package
+commands retain their original tuple checks.
+
+`windowsCheckout` contains `exclude: [{path: archive/directory, tree: <full-tree-oid>}]`.
+This centrally reviewed setting binds immutable non-product archive directories.
+The loader rejects unsafe Windows paths, aliases, overlaps and exclusions of
+solution, SDK, manifest, actions or direct dependencies. Shared CI exports the
+validated paths, accepted authority, exact source revision and compact checkout
+JSON to Windows. Remote `prepare` consumes those outputs, qualifies the full
+materialized complement using native protected Git and uses cone sparse-index
+checkout. It keeps NTFS protection enabled and initializes direct dependencies
+without the parent submodule helper. Null preserves ordinary checkout. Windows
+uses native Python 3.12+ already on the runner and installs no extra environment.
+
+Preparation persists one private producer workspace through evaluation, restore,
+build, tests and hooks. Every reuse verifies source identities and import bytes.
+Local checking fetches and initializes nothing and removes scratch on completion.
+Nightly release prepares before publication discovery while retaining its audited
+restore and release targets. The separate candidate-qualification authority is
+local product proof only; CI, the normal checker, Windows and release reject it.
+
 Prerequisites: `uv`, and an initialized `references/Hexalith.Builds` submodule
 whose local objects include the `builds-version` tag; rendering never fetches it.
 `--lint` also requires Linux x86_64 and network access, and downloads the pinned
@@ -337,3 +364,34 @@ scope. Fetch, discovery, tooling and report failures remain red while healthy
 siblings still contribute observations. Scan failure preserves the report and
 summary and permits the later Builds bump and keepalive jobs. It never adopts or
 edits a module. See [scan scope, reports and threshold calibration](../docs/duplicate-scan.md).
+
+### Isolated build-order references
+
+The managed package producer supports an additive `HexalithIsolatedBuildContract`
+metadata marker on a `ReferenceOutputAssembly=false` project reference. It names
+a tracked, closed `hexalith.isolated-build.v1` JSON declaration containing
+`owner`, `projects`, `roots`, `framework`, `propertyPrefix`, `properties`, `props`
+and `targets` (plus the `schema` identifier). The owner must be non-test,
+non-packable, non-publishable and disable default compilation. The declaration
+binds the exact source/import roots and child graph to the authenticated module
+revision and actual active catalog; ordinary legacy references retain their
+existing closed-property checks.
+
+This interface admits only Release package mode, locked restore, exact declared
+imports, the preserved inherited common-targets chain, empty warning demotions
+and options under a nonreserved namespace. The producer verifies source Git
+identities and independently regenerates the SDK's exact NuGet imports/assets
+in private scratch against the tracked successor lock. It admits no arbitrary
+obj files or unrestricted AdditionalProperties. See the [source qualification
+contract](../_bmad-output/specs/spec-cicd/evidence/16/implementation-and-verification.md).
+
+Protected source checkout fetches the exact selected commit with complete ancestor
+history, without recursively initializing dependencies. This preserves retained
+product assertions that read genuine historical objects. Archive exclusions limit
+materialization; they do not truncate Git history. Direct identity checkouts remain
+limited to their explicitly recorded pins and required release tags.
+
+Windows callers forward the additive preparation outputs when the selected
+released schema defines both nullable knobs. Older pinned contracts retain their
+original caller inputs, so introducing this source interface does not change
+existing module defaults before the supporting release is selected.

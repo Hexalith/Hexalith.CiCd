@@ -1,0 +1,81 @@
+{
+  "status": "local source audit; full story acceptance pending",
+  "scope": "Staged source changes and retained verification evidence; not a completed review phase or live migration acceptance.",
+  "pythonLogCrossCheck": {
+    "3.12.13": {
+      "groups": 13,
+      "tests": 233
+    },
+    "3.14.4": {
+      "groups": 13,
+      "tests": 233
+    }
+  },
+  "nativeWindowsLogCrossCheck": {
+    "passed": 44,
+    "failedSkippedNotRunOrErrors": 0
+  },
+  "dotnetLogCrossCheck": {
+    "newContracts": 12,
+    "legacy": 138
+  },
+  "deletionInventory": {
+    "deletedFiles": 48,
+    "allNamedInApprovedInventory": true,
+    "mixedProductAssertionsInspected": true
+  },
+  "preservation": {
+    "noConservativeOwnedPathChanges": true,
+    "noFrozenFixtureChanges": true,
+    "npmFilesUnchanged": true,
+    "frozenSpecUnchanged": true
+  },
+  "whitespaceChecks": "passed in all three staged repositories",
+  "diffArchives": {
+    "parent-builds-staged.diff.log": {
+      "bytes": 249940,
+      "sha256": "95603fab6cc941bfdcc112794bdae5300dd0e9ac7ddc4e1d76bd0f48ecec37f4"
+    },
+    "parent-conversations-staged.diff.log": {
+      "bytes": 121675,
+      "sha256": "4a54cada7b7d6af7c637406acb912048f17896066d95ad40a740c8501d859d72"
+    },
+    "parent-cicd-staged.diff.log": {
+      "bytes": 1124749,
+      "sha256": "02c6d759ff5ba2a7434629bb942141c373f437373e746338ee53170e5fe979e0"
+    },
+    "parent-baseline-staged.diff.log": {
+      "bytes": 1496366,
+      "sha256": "18a626ed46d812fec99e797ecc46b05d63eb28b34ff388336982f688107570ee"
+    }
+  },
+  "matrix": [
+    {
+      "row": "Missing prerequisite or denied administrative read",
+      "status": "source refusal controls passed; live AD-21 preflight not performed"
+    },
+    {
+      "row": "Producer imports unavailable before evaluation",
+      "status": "source package and failure controls passed; genuine released-input qualification pending"
+    },
+    {
+      "row": "Unsafe Windows archive paths",
+      "status": "native protected checkout and full TestSupport source tests passed; full adopted module CI pending"
+    },
+    {
+      "row": "Fixture catalog/lock mismatch",
+      "status": "locked restore, adapter, seven assertions and tampering controls passed against v6.0.6 catalog; actual new release requalification pending"
+    },
+    {
+      "row": "Failed delivery or no releasable change",
+      "status": "shared release regressions passed; live delivery and genuine scheduled-night outcome not performed"
+    }
+  ],
+  "workflow": "Still step-03: tasks and acceptance are incomplete. No transition to step-04 review, no completed-story claim.",
+  "blockers": [
+    "The active bmad-build implementation step explicitly prohibits pushes and remote operations.",
+    "Genuine Dapr qualification requires an available control plane; four existing user containers were preserved.",
+    "The broad Workspace run failed/incomplete with unverified causality; excluded from passing evidence."
+  ],
+  "sourceCommitsOrPushes": false
+}

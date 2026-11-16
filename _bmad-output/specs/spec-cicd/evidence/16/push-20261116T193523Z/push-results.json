@@ -1,0 +1,34 @@
+{
+  "recordedUtc": "2026-11-16T19:45:51.965240+00:00",
+  "scope": "Story 16 changes only; concurrent original-workspace work preserved",
+  "Builds": {
+    "pushed": true,
+    "branch": "feat/story-16-managed-preparation",
+    "head": "dc66c537ae06f7b56bf652025d71c6b464198b4e",
+    "draftPrCreated": false,
+    "draftPrError": "GraphQL: Resource not accessible by personal access token (createPullRequest)"
+  },
+  "Conversations": {
+    "committed": true,
+    "branch": "build/story-16-product-preparation",
+    "head": "5dab3a9bfc2c277b62d7bc0190c2c441686b971e",
+    "base": "dbf1a1c1734c34ca20740c2880cdfb4a2dd436f3",
+    "pushed": false,
+    "gateCommand": [
+      "python3",
+      "references/Hexalith.Builds/check.py"
+    ],
+    "gateExitCode": 1,
+    "gateError": "/tmp/hexalith-job.w6goNGxA/Conversations/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.w6goNGxA/Conversations/.github/hexalith-ci.json'\n",
+    "preAdoptionAlternative": "requires acceptable published new Builds/CLI prerequisites and genuine exact-input qualification; neither is established by source-only tests"
+  },
+  "CiCd": {
+    "branch": "story/16-migrate-conversations",
+    "committed": false,
+    "pushed": false,
+    "reason": "Parent commit held because required module push qualification did not pass; no unpublished product gitlinks recorded"
+  },
+  "credentialFallback": false,
+  "forcePush": false,
+  "skipMarkersOrTrailers": false
+}

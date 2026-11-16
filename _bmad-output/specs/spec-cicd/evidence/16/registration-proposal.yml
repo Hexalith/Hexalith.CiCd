@@ -1,0 +1,39 @@
+# Prospective registration only. Activate with the actual qualified released Builds pin and published product head.
+solution: Hexalith.Conversations.slnx
+moduleManifest: module/hexalith.module-manifest.v2.json
+dapr: true
+browsers: true
+registry: false
+codeql:
+- csharp
+tests:
+  integration:
+  - tests/Hexalith.Conversations.Admin.Web.Tests/Hexalith.Conversations.Admin.Web.Tests.csproj
+  exclude: {}
+hooks:
+- after-unit-tests
+jobs:
+  testsupport-windows:
+    runner: windows-latest
+submodules:
+- references/Hexalith.Platform
+windowsCheckout:
+  exclude:
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-01/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-02/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-03/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-04/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-05/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-code/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-source/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-verified/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
+  - path: module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-measured/isolated/http-cache
+    tree: 482386e46eca707fda8582051cbde288cdb77d0d
