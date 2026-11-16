@@ -156,6 +156,23 @@ def action(root: Path, name: str, tools) -> None:
         subprocess.run(["bash", "--noprofile", "--norc", "-e", "-o", "pipefail", "-c", step["run"]], cwd=root, check=True)
 
 
+def qualify_fixture_results(candidate_root: Path, module: Path) -> dict:
+    """Run all protocol controls against the actual cloned product candidate."""
+    result = subprocess.run([sys.executable, "-I", "-B",
+        str(candidate_root / "tools/qualification/conversations_fixture_results.py"),
+        "--module-root", str(module)], cwd=module, env=delivery.environment(),
+        capture_output=True, timeout=60, check=False)
+    if result.returncode:
+        raise delivery.DeliveryError("qualification fixture result protocol failed: " + delivery.clean(
+            result.stdout.decode("utf-8", "backslashreplace") + result.stderr.decode("utf-8", "backslashreplace")))
+    receipt = delivery.json_read(result.stdout)
+    if receipt != {"result": "passed", "checks": 4}:
+        raise delivery.DeliveryError("qualification fixture result protocol did not complete all four controls")
+    if result.stderr:
+        print(result.stderr.decode("utf-8", "backslashreplace"), end="", file=sys.stderr)
+    return receipt
+
+
 def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, output: Path) -> dict:
     candidate, product_head, baseline = map(delivery.sha, (candidate, product_head, baseline))
     scratch = Path(os.environ["TMPDIR"]).resolve(strict=True)
@@ -269,6 +286,7 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
                         "--config", str(legacy_config), "--color=false"], "owning module commitlint", guard_commitlint.message(source_git, revision))
                     if result.returncode:
                         raise delivery.DeliveryError("owning module commit policy refused a preparation commit")
+                report["fixtureResultProtocol"] = qualify_fixture_results(candidate_root, module)
                 with private_environment(work):
                     environment = module_preparation.prepare_qualified_environment(prepared, authority, work)
                     with module_preparation.applied_qualification(prepared, authority, environment):

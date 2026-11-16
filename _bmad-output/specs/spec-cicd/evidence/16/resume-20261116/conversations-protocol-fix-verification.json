@@ -1,0 +1,69 @@
+{
+  "baseCommit": "5da249288476d21095c3c677563974bf90dccbbe",
+  "cleanOwnerChecks": {
+    "authenticatedAcceptableBuildsPublication": "passed",
+    "authenticatedBootstrap": "passed",
+    "authenticatedWorkflowAudits": {
+      "actionlint": "1.7.12",
+      "result": "passed",
+      "workflows": 9,
+      "zizmor": "1.32.0"
+    },
+    "buildsCheckout": "05bda4e01d70afacb5048d5c336f383a301c0974",
+    "committedInputs": "passed",
+    "committedRender": "passed",
+    "conversationsInitialized": false,
+    "onlineReadbackLogSha256": "d2760c81c94f3971f33f98ded3d056de8ad52d5c20fe0e2d13ad26e67dd454e2",
+    "renderReproducibility": "passed",
+    "schemasAndInterfaces": "passed"
+  },
+  "failure": {
+    "cause": "generic tool discovery imported a fixture reader absent from the published Conversations gitlink",
+    "job": 133605230526,
+    "run": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43951071774"
+  },
+  "focusedChecks": {
+    "actualCandidateProtocol": {
+      "productHead": "47e8dde1600b7a72b86532e22644dca5d952a4ff",
+      "result": "passed",
+      "tests": 4
+    },
+    "realSubprocessNegativeControls": [
+      "missing candidate reader refused",
+      "always-accept candidate reader refused"
+    ],
+    "standaloneLockedPython3.12": {
+      "result": "passed",
+      "tests": 5
+    },
+    "standaloneLockedPython3.14": {
+      "result": "passed",
+      "tests": 5
+    }
+  },
+  "globalToolLane": {
+    "fullLocalGlobalPassClaimed": false,
+    "initialOnlineEnvironment": "Initial full invocation lacked an inherited read token; all three online checks were rerun successfully against the same clean owner snapshot with the existing CiCd-agent profile.",
+    "localLimitation": "Unchanged tools/tests/test_deliver.py exceeded the normal 600-second bound on the shared host. Its child and the remaining scripts are being awaited. No timeout or gate was changed.",
+    "normalHostedGlobalGateRequired": true,
+    "scripts": 18,
+    "status": "running-with-known-local-timeout"
+  },
+  "implementation": "All four protocol controls moved outside generic discovery; exact-input qualifier runs the committed helper unconditionally against its actual cloned product after policy checks and before product execution.",
+  "protocolPredicatesPreserved": {
+    "test_discovery_and_assembly_counters_are_bound": true,
+    "test_exact_seven_distinct_passes": true,
+    "test_failed_skipped_not_run_and_cleanup_errors_are_rejected": true,
+    "test_missing_duplicate_and_unexpected_results_are_rejected": true
+  },
+  "result": "focused-passed-hosted-global-required",
+  "schema": "hexalith.conversations-protocol-fix-verification.v1",
+  "scope": "No module source, owned module policy, gitlinks, frozen intent or baseline changed. This is fixture protocol verification, not released-input product/adoption qualification.",
+  "sourceSha256": {
+    "tools/qualification/conversations_fixture_results.py": "581fe2f5f027c12af4d2f8c0d05ad382a858713878ccc1f8bdbdde622ceafda0",
+    "tools/qualify_conversations.py": "afc6fcb55236b82ba2920cf24db6f4b52b69d5e62de62a3e55d0f0aa7612e18c",
+    "tools/tests/test_conversations_qualification.py": "16b04168daecc7e146330471e08be5587a5ac29b59e8cb4d333af54b997d38ea",
+    "tools/tests/test_conversations_qualification.py.lock": "f3457ceee82406783682b4a94e0bbae036a79a8b6116854530e2af59117c7162"
+  },
+  "temporaryOwnerSnapshot": "3ba8fed1cbc398efc066eb3075c2291ccea15919"
+}

@@ -12,9 +12,11 @@ See the [catalog receipt](catalog-preservation.json),
 
 Supporting source now also contains path guard fix
 `27e8fba9736a4825d44c40c638c5e6f9b65ab81e`; its
-[current CI](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43956522607)
-is in progress. Unsafe scratch spellings fail before tag fetching or output/tool
-work. All 152 finalized preparation/Windows/local/release controls passed with
+[linked CI](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43956522607)
+exposed a catalog lookup failure: the unmaterialized Tenants default reader
+selected the conditional 7.0.7 compatibility value instead of the owning 8.0.1
+default. Remediation remains pending. Unsafe scratch spellings fail before tag
+fetching or output/tool work. All 152 finalized preparation/Windows/local/release controls passed with
 zero skips, and the eleven preparation cases also passed on Python 3.12.13.
 Concurrent catalog updates were preserved; the eventual released catalog must
 drive a fresh successor-lock qualification.
@@ -44,6 +46,15 @@ real daemon and exact SDK 11.0.100 container sharing its network namespace. The
 SDK reached an inner service on private IPv4 port 6379 while the user's existing
 Dapr IDs stayed unchanged. Owned daemon resources were removed. This establishes
 an available isolation approach; it does not claim actual Dapr or product execution.
+
+
+The [fixture-protocol fix receipt](conversations-protocol-fix-verification.json)
+records five locked qualifier controls passing on Python 3.12 and 3.14, all four
+unchanged protocol controls passing against the actual held product, and clean
+owner checks with Conversations uninitialized. All authenticated online checks
+passed. The unchanged delivery tool suite exceeded its local 600-second bound;
+the full local global lane is not claimed passed and the normal hosted global
+gate remains required. No timeout or gate was changed.
 
 Raw authenticated API/UI observations, failed probes and useful logs are retained
 locally outside the repository. These receipts contain sanitized state and exact

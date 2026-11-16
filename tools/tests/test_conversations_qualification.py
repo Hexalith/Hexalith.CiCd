@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["Jinja2==3.1.6", "PyYAML==6.0.3", "jsonschema==4.26.0"]
+# ///
 """Refusal and canonical-mask controls for the explicit local qualification path."""
 
 from __future__ import annotations
@@ -5,6 +10,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import shutil
 from pathlib import Path
 import sys
 import tempfile
@@ -70,6 +76,23 @@ class QualificationTests(unittest.TestCase):
             receipt = json.loads(output.read_text())
             self.assertEqual("failed", receipt["result"])
             self.assertIn("exact committed CiCd", receipt["reason"])
+
+    def test_fixture_protocol_requires_the_actual_candidate_reader(self):
+        with tempfile.TemporaryDirectory(prefix="qualification-protocol-") as temporary:
+            root = Path(temporary)
+            helper = root / "owner/tools/qualification/conversations_fixture_results.py"
+            helper.parent.mkdir(parents=True)
+            shutil.copyfile(ROOT / "tools/qualification/conversations_fixture_results.py", helper)
+            module = root / "candidate"
+            fixture = module / "tests/compatibility/MinimalModule"
+            fixture.mkdir(parents=True)
+            with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "fixture result protocol failed"):
+                QUALIFY.qualify_fixture_results(root / "owner", module)
+            (fixture / "run_compatibility.py").write_text(
+                "def expected_tests():\n    return {str(index) for index in range(7)}\n"
+                "def verify_records(records):\n    pass\n")
+            with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "fixture result protocol failed"):
+                QUALIFY.qualify_fixture_results(root / "owner", module)
 
     def test_receipts_cannot_replace_product_or_existing_files(self):
         with tempfile.TemporaryDirectory(prefix="qualification-controls-") as temporary:
