@@ -294,6 +294,44 @@ class API:
         return status == 429 or status == 403 and (
             values.get("retry-after") is not None or str(values.get("x-ratelimit-remaining", "")).strip() == "0")
 
+    def _http_diagnostic(self, error, token, attempt, deadline):
+        """Retain bounded response evidence without exposing credentials or URLs."""
+        details = {"authentication": "anonymous" if token is None else "scoped",
+                   "attempts": attempt + 1, "body_status": "budget-exhausted"}
+        def field(value, limit):
+            value = clean(value)
+            return value if len(value) <= limit else value[:limit - 14] + "...[truncated]"
+        headers = {str(key).lower(): value for key, value in (error.headers or {}).items()}
+        for key in ("x-github-request-id", "x-ratelimit-limit", "x-ratelimit-remaining",
+                    "x-ratelimit-reset", "retry-after", "x-accepted-github-permissions"):
+            value = headers.get(key)
+            if isinstance(value, str):
+                details[key] = field(value, 80)
+        # HTTPError owns a response stream. Bound both its size and total read
+        # time; an unreadable error body must never obscure the original status.
+        try:
+            remaining = self._remaining(token, deadline)
+            if remaining >= 1:
+                details["body_status"] = "unreadable"
+                with whole_operation(min(2, remaining)):
+                    payload = error.read(4097)
+                details["body_status"] = "oversized"
+                if len(payload) <= 4096:
+                    details["body_status"] = "invalid-json"
+                    value = json_read(payload)
+                    details["body_status"] = "no-message"
+                    if isinstance(value, dict) and isinstance(value.get("message"), str):
+                        # Response text can contain links. Never retain signed
+                        # URLs or unfamiliar query credentials in diagnostics.
+                        message = re.sub(r"https?://[^\s]+", "[URL omitted]", value["message"], flags=re.I)
+                        details["message"] = field(message, 240)
+                        details["body_status"] = "message"
+        except (NightlyError, OSError, ValueError, http.client.HTTPException):
+            pass
+        # Keep the complete object below clean's 2,000-character ceiling even
+        # when every allowed field contains escaped controls or astral Unicode.
+        return clean(json.dumps(details, ensure_ascii=False, separators=(",", ":")))
+
     def _request(self, method, path, token=None, document=None, *, deadline=None):
         self._path(path, method)
         parsed = urlsplit(path)
@@ -346,18 +384,31 @@ class API:
                             raise NightlyError("GitHub API request deadline exhausted")
                 return value
             except HTTPError as error:
-                status = error.code
-                response_headers = error.headers
-                error.close()
-                limited = self._limited(status, response_headers)
-                if method == "GET" and (limited or status in {500, 502, 503, 504}) and attempt < 2:
-                    delay = self._retry_delay(response_headers, attempt) if limited else attempt + 1
-                    if self._remaining(token, deadline) < delay + 2:
-                        raise NightlyError("GitHub API retry budget exhausted") from None
-                    self.sleep(delay)
-                    continue
-                qualifier = "rejected" if method != "GET" and status in {400, 401, 403, 404, 409, 422} else "failed"
-                raise NightlyError(f"GitHub API {method} {self._path(path, method)} {qualifier}: HTTP {status}") from None
+                try:
+                    status = error.code
+                    response_headers = error.headers
+                    limited = self._limited(status, response_headers)
+                    if method == "GET" and (limited or status in {500, 502, 503, 504}) and attempt < 2:
+                        try:
+                            delay = self._retry_delay(response_headers, attempt) if limited else attempt + 1
+                        except NightlyError as failure:
+                            diagnostic = self._http_diagnostic(error, token, attempt, deadline)
+                            raise NightlyError(f"{clean(failure)}: HTTP {status}; {diagnostic}") from None
+                        if self._remaining(token, deadline) < delay + 2:
+                            diagnostic = self._http_diagnostic(error, token, attempt, deadline)
+                            raise NightlyError("GitHub API retry budget exhausted: "
+                                               f"HTTP {status}; {diagnostic}") from None
+                        # Close before sleeping, without changing the retry or
+                        # credential policy for any read or uncertain write.
+                        error.close()
+                        self.sleep(delay)
+                        continue
+                    qualifier = "rejected" if method != "GET" and status in {400, 401, 403, 404, 409, 422} else "failed"
+                    diagnostic = self._http_diagnostic(error, token, attempt, deadline)
+                    raise NightlyError(f"GitHub API {method} {self._path(path, method)} {qualifier}: "
+                                       f"HTTP {status}; {diagnostic}") from None
+                finally:
+                    error.close()
             except (URLError, OSError, http.client.HTTPException):
                 # An idempotent read survives one transient reset or timeout.
                 if method == "GET" and attempt < 2:

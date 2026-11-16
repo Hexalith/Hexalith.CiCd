@@ -221,6 +221,178 @@ class RuntimeTests(unittest.TestCase):
             api.dispatch(rt.BUILDS, "builds-release.yml", {}, "inert")
         self.assertEqual(len(opener.requests), 1)
 
+    def test_terminal_403_retains_actual_response_and_authentication_context(self):
+        path = "/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG
+        headers = {"X-RateLimit-Limit": "60", "X-RateLimit-Remaining": "0",
+                   "X-RateLimit-Reset": str(int(Clock()() + 9)), "X-GitHub-Request-Id": "ABCD:1234"}
+        errors = [HTTPError("https://api.github.com" + path, 403, "Forbidden", headers,
+                            io.BytesIO(b'{"message":"API rate limit exceeded"}')) for _ in range(3)]
+        api, opener, clock = self.api(errors)
+        with self.assertRaises(rt.NightlyError) as failure:
+            api.get(path)
+        diagnostic = json.loads(str(failure.exception).split("; ", 1)[1])
+        self.assertEqual(diagnostic, {"authentication": "anonymous", "attempts": 3, "body_status": "message",
+            "x-ratelimit-limit": "60", "x-ratelimit-remaining": "0",
+            "x-ratelimit-reset": headers["X-RateLimit-Reset"], "x-github-request-id": "ABCD:1234",
+            "message": "API rate limit exceeded"})
+        self.assertEqual((clock.sleeps, len(opener.requests)), ([9, 0], 3))
+        self.assertTrue(all(request.get_header("Authorization") is None for request, _ in opener.requests))
+        self.assertTrue(all(error.closed for error in errors))
+
+        error = HTTPError("https://api.github.com" + path, 403, "Forbidden",
+            {"X-RateLimit-Remaining": "4999", "X-Accepted-GitHub-Permissions": "contents=read"},
+            io.BytesIO(b'{"message":"Resource not accessible by integration"}'))
+        api, opener, clock = self.api([error, {}])
+        with self.assertRaises(rt.NightlyError) as failure:
+            api.get(path, "inert")
+        diagnostic = json.loads(str(failure.exception).split("; ", 1)[1])
+        self.assertEqual(diagnostic, {"authentication": "scoped", "attempts": 1, "body_status": "message",
+            "x-ratelimit-remaining": "4999", "x-accepted-github-permissions": "contents=read",
+            "message": "Resource not accessible by integration"})
+        self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+
+    def test_error_diagnostics_are_bounded_redacted_and_do_not_retry_writes(self):
+        secret = "diagnostic-test-token"
+        other_secret = "diagnostic-poll-token"
+        rt.delivery._SECRETS.append(other_secret)
+        error = HTTPError("https://api.github.com/?secret=" + secret, 403, secret,
+            {"X-GitHub-Request-Id": secret + "\nrequest", "Location": "https://example.com/" + secret},
+            io.BytesIO(json.dumps({"message": secret + " " + other_secret + " https://example.com/?sig=unfamiliar-secret\n" + "x" * 500,
+                                   "other": secret}).encode()))
+        api, opener, clock = self.api([error, {}])
+        with self.assertRaises(rt.NightlyError) as failure:
+            api.dispatch(rt.BUILDS, "builds-release.yml", {}, secret)
+        message = str(failure.exception)
+        self.assertNotIn(secret, message)
+        self.assertNotIn(other_secret, message)
+        self.assertNotIn("Location", message)
+        self.assertNotIn("example.com", message)
+        self.assertNotIn("unfamiliar-secret", message)
+        self.assertNotIn("\n", message)
+        diagnostic = json.loads(message.split("; ", 1)[1])
+        self.assertLessEqual(len(diagnostic["message"]), 240)
+        self.assertIn("[redacted]", diagnostic["message"])
+        self.assertIn("[URL omitted]", diagnostic["message"])
+        self.assertTrue(diagnostic["message"].endswith("...[truncated]"))
+        self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+        self.assertTrue(error.closed)
+
+    def test_unreadable_error_body_preserves_http_failure_and_retry_budget(self):
+        class Unreadable(io.BytesIO):
+            def read(self, size):
+                raise OSError("private response failure")
+
+        for payload, expected_status in ((b"not JSON", "invalid-json"), (b"x" * 4097, "oversized"),
+                                         (b'{"message":null}', "no-message"), (Unreadable(), "unreadable")):
+            with self.subTest(payload=type(payload).__name__):
+                stream = io.BytesIO(payload) if isinstance(payload, bytes) else payload
+                error = HTTPError("https://api.github.com/private", 403, "Forbidden", {}, stream)
+                api, opener, clock = self.api([error])
+                with self.assertRaisesRegex(rt.NightlyError, "failed: HTTP 403") as failure:
+                    api.get("/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG)
+                diagnostic = json.loads(str(failure.exception).split("; ", 1)[1])
+                self.assertNotIn("message", diagnostic)
+                self.assertEqual(diagnostic["body_status"], expected_status)
+                self.assertEqual(len(opener.requests), 1)
+                self.assertTrue(error.closed)
+
+        for method, path in (("PUT", "/repos/Hexalith/Hexalith.CiCd/actions/workflows/nightly.yml/enable"),
+                             ("PATCH", "/repos/Hexalith/Hexalith.Builds/releases/123")):
+            error = HTTPError("https://api.github.com/private", 403, "Forbidden", {}, Unreadable())
+            api, opener, clock = self.api([error, {}])
+            with self.assertRaisesRegex(rt.NightlyError, "rejected: HTTP 403") as failure:
+                api._request(method, path, "inert")
+            self.assertIn('"body_status":"unreadable"', str(failure.exception))
+            self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+        api, opener, clock = self.api([(403, {}, {"Retry-After": "600"})])
+        api.budget.job_seconds = 300
+        with self.assertRaisesRegex(rt.NightlyError, "retry budget exhausted: HTTP 403") as failure:
+            api.get("/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG)
+        self.assertIn('"retry-after":"600"', str(failure.exception))
+        self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+
+    def test_error_body_cannot_extend_the_whole_operation_deadline(self):
+        class Slow(io.BytesIO):
+            def read(self, size):
+                time.sleep(10)
+                raise AssertionError("diagnostic read exceeded its deadline")
+
+        error = HTTPError("https://api.github.com/private", 403, "Forbidden", {}, Slow())
+        api, opener, _ = self.api([error])
+        started = time.monotonic()
+        with self.assertRaisesRegex(rt.NightlyError, "failed: HTTP 403"):
+            api.get("/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG)
+        self.assertLess(time.monotonic() - started, 4)
+        self.assertEqual(len(opener.requests), 1)
+        self.assertTrue(error.closed)
+
+    def test_unicode_and_malformed_retry_headers_retain_complete_diagnostics(self):
+        headers = {key: "\U0001f600\n" * 100 for key in (
+            "X-GitHub-Request-Id", "X-RateLimit-Limit", "X-RateLimit-Remaining",
+            "X-RateLimit-Reset", "Retry-After", "X-Accepted-GitHub-Permissions")}
+        for replacement in ({}, {"Retry-After": "9" * 21},
+                            {"X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "9" * 21}):
+            with self.subTest(replacement=replacement):
+                error = HTTPError("https://api.github.com/private", 403, "Forbidden", headers | replacement,
+                    io.BytesIO(json.dumps({"message": "\U0001f600" * 240}).encode()))
+                api, opener, clock = self.api([error])
+                # A budget refusal or an invalid delay must retain evidence
+                # rather than sleeping or silently discarding the response.
+                api.budget.job_seconds = 60
+                with self.assertRaisesRegex(rt.NightlyError, "HTTP 403") as failure:
+                    api.get("/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG)
+                diagnostic = json.loads(str(failure.exception).split("; ", 1)[1])
+                self.assertEqual(diagnostic["message"], "\U0001f600" * 240)
+                self.assertEqual(diagnostic["authentication"], "anonymous")
+                self.assertEqual(diagnostic["attempts"], 1)
+                self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+                self.assertTrue(error.closed)
+
+    def test_diagnostic_read_respects_short_job_token_and_caller_budgets(self):
+        class Slow(io.BytesIO):
+            def read(self, size):
+                time.sleep(10)
+                raise AssertionError("read escaped its enclosing budget")
+
+        for limit in ("job", "token", "caller"):
+            with self.subTest(limit=limit):
+                error = HTTPError("https://api.github.com/private", 403, "Forbidden", {}, Slow())
+                api, opener, _ = self.api([error])
+                now = time.time()
+                api.budget = rt.Budget(now, token_epoch=now)
+                deadline = None
+                if limit == "job":
+                    api.budget.job_seconds = 31.1
+                elif limit == "token":
+                    api.budget.token_epoch = now - (50 * 60 - 30 - 1.1)
+                else:
+                    deadline = now + 1.1
+                started = time.monotonic()
+                with self.assertRaisesRegex(rt.NightlyError, "failed: HTTP 403"):
+                    api.get("/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG, "inert", deadline=deadline)
+                self.assertLess(time.monotonic() - started, 2)
+                self.assertEqual(len(opener.requests), 1)
+                self.assertTrue(error.closed)
+        error = HTTPError("https://api.github.com/private", 403, "Forbidden", {}, Slow())
+        api, _, clock = self.api([])
+        diagnostic = json.loads(api._http_diagnostic(error, None, 0, clock() - 1))
+        self.assertEqual(diagnostic["body_status"], "budget-exhausted")
+        self.assertEqual(error.tell(), 0)
+        error.close()
+
+    def test_terminal_429_and_5xx_keep_final_response_evidence(self):
+        for status in (429, 503):
+            errors = [HTTPError("https://api.github.com/private", status, "error", {"X-GitHub-Request-Id": str(i)},
+                                io.BytesIO(b'{"message":"final response"}')) for i in range(3)]
+            api, opener, clock = self.api(errors)
+            with self.assertRaisesRegex(rt.NightlyError, "HTTP " + str(status)) as failure:
+                api.get("/repos/Hexalith/Hexalith.Builds/releases/tags/" + TAG)
+            diagnostic = json.loads(str(failure.exception).split("; ", 1)[1])
+            self.assertEqual((diagnostic["attempts"], diagnostic["x-github-request-id"]), (3, "2"))
+            self.assertEqual(clock.sleeps, [60, 120] if status == 429 else [1, 2])
+            self.assertEqual(len(opener.requests), 3)
+            self.assertTrue(all(error.closed for error in errors))
+
     def test_transient_artifact_download_failures_retry_with_a_fresh_redirect(self):
         payload = zip_document("outcome.json", {"ok": True})
         info = metadata(8, "x", payload, 9, "a" * 40)
