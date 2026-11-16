@@ -1,0 +1,65 @@
+{
+  "observed_at": "2026-11-16T13:12:15.677123+00:00",
+  "result": "pass",
+  "frozen_story11": "only exact human-approved paragraph delta; every other frozen byte identical",
+  "historical_stories": {
+    "10-1-module-agent-token.md": "entire original story text preserved; qualification appended outside history",
+    "10-2-agent-instructions-and-deny-entries.md": "entire original story text preserved; qualification appended outside history"
+  },
+  "reviewed_candidate": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "published_production_blob_and_mode_matches": [
+    "AGENTS.md",
+    "builds-version",
+    "rendered/Hexalith.Commons.perimeter.json",
+    "rendered/Hexalith.Commons/.github/dependabot.yml",
+    "rendered/Hexalith.Commons/.github/hexalith-ci.json",
+    "rendered/Hexalith.Commons/.github/workflows/ci.yml",
+    "rendered/Hexalith.Commons/.github/workflows/release.yml",
+    "rendered/Hexalith.PolymorphicSerializations.perimeter.json",
+    "rendered/Hexalith.PolymorphicSerializations/.github/dependabot.yml",
+    "rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json",
+    "rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml",
+    "rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml",
+    "setup/Hexalith.Commons.yml",
+    "setup/Hexalith.PolymorphicSerializations.yml",
+    "templates/partials/ownership-block.txt.j2",
+    "tools/deliver.py",
+    "tools/delivery_runtime.py",
+    "tools/tests/test_deliver.py",
+    "tools/tests/test_delivery_runtime.py",
+    "tools/tests/test_render.py"
+  ],
+  "original_cicd_head": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+  "original_cicd_staging_sha256": "51d905e7ddd474ded73c896be00dee06552036931adc6cbca6fad9688006ba89",
+  "original_cicd_staging_preserved": true,
+  "modules": {
+    "Hexalith.Commons": {
+      "head": "49187d47da882d5470deac982bb383486c90202c",
+      "branch": "main",
+      "clean": true,
+      "nested_builds_empty": true,
+      "all_local_probe_and_tracking_refs_absent": true,
+      "no_probe_document_on_main": true,
+      "final_ci_run": 43871882227
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "head": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+      "branch": "main",
+      "clean": true,
+      "nested_builds_empty": true,
+      "all_local_probe_and_tracking_refs_absent": true,
+      "no_probe_document_on_main": true,
+      "final_ci_run": 43871975251
+    }
+  },
+  "whitespace": "working and cached diffs pass in root and all three touched direct repositories",
+  "all_temporary_worktree_metadata_removed": true,
+  "credential_scan_files": 289,
+  "credential_scan_hits": [],
+  "evidence_python_syntax_count": 33,
+  "active_local_child_jobs": [],
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "inherited_token_overrides_present": false,
+  "remaining_acceptance": "genuine scheduled nightly only; status remains in-progress and composite acceptance task unchecked",
+  "pending_record": "nightly-checkpoint-pending.json"
+}

@@ -1,0 +1,30 @@
+{
+  "started_at": "2026-11-16T08:43:10.555946+00:00",
+  "command": [
+    "python3",
+    "-u",
+    "Github/lib/tests/test_release_complete.py",
+    "CompleteCompositeTests.test_original_recovery_handoff_retries_actual_publisher_with_identical_package_bytes",
+    "-v"
+  ],
+  "source_sha256": "a09ee8290e4d83c5a7338702ce8f2b09e5e1dec214d08c2645f15b3c49e2563f",
+  "timeout_seconds": 40,
+  "observations": [
+    {
+      "pid": 1114198,
+      "command": [
+        "python3",
+        "-I",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/Github/publish/../lib/release_publish.py",
+        "publish"
+      ],
+      "wait_channel": "hrtimer_nanosleep"
+    }
+  ],
+  "exit": -15,
+  "timeout": true,
+  "process_group_terminated": true,
+  "elapsed_seconds": 40.048,
+  "stdout": "",
+  "stderr": "test_original_recovery_handoff_retries_actual_publisher_with_identical_package_bytes (__main__.CompleteCompositeTests.test_original_recovery_handoff_retries_actual_publisher_with_identical_package_bytes) ... "
+}

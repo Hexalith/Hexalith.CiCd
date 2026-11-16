@@ -1,0 +1,125 @@
+{
+  "started_at": "2026-11-16T08:49:36.949430+00:00",
+  "base": "65fd22f37b9fad64b595841923cdbe050563ab99",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "source_sha256": {
+    "Github/lib/tests/test_release_complete.py": "1209418b072091fd41eb65672a8c9188d128e1baa49724a9ce6f9492c0a0b763",
+    "Github/lib/tests/test_release_publish.py": "1e5fa4363c5fbd91891528590c26817df67a20a75c1e9353536ea8315f47cf71"
+  },
+  "verification": {
+    "builds-publish-fixture-python312.log": {
+      "tests": 17,
+      "result": "pass",
+      "sha256": "c88f9bbcb07d8006fc57b07d716a9657def79e6f2ad48fd206c4193888ad043e"
+    },
+    "builds-publish-fixture-python314.log": {
+      "tests": 17,
+      "result": "pass",
+      "sha256": "182509503af599bfbf765652e8e67f0a70dbb47618cd3d4af941d5f08daadaf6"
+    },
+    "builds-complete-fixture-python312.log": {
+      "tests": 22,
+      "result": "pass",
+      "sha256": "92fa168bac4738cc20b46399c3bde23750f29a809236faa580da7627a191ef28"
+    },
+    "builds-complete-fixture-python314.log": {
+      "tests": 22,
+      "result": "pass",
+      "sha256": "0e002788a11a51f14ee18c82255dacbb47e69ddf61a547556d825fb37b56d7bc"
+    }
+  },
+  "operations": [
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "Github/lib/tests/test_release_complete.py",
+        "Github/lib/tests/test_release_publish.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-F",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/../../_bmad-output/specs/spec-cicd/evidence/11/builds-recovery-commit-message.txt"
+      ],
+      "exit": 0,
+      "stdout": "[main fdda17c0] test(release): keep recovery verification on the local feed\n 2 files changed, 41 insertions(+), 21 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Builds\n * branch              main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "exit": 0,
+      "stdout": "65fd22f37b9fad64b595841923cdbe050563ab99\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "HEAD:refs/heads/main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "To https://github.com/Hexalith/Hexalith.Builds.git\n   65fd22f3..fdda17c0  HEAD -> main\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/main"
+      ],
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\trefs/heads/main\n",
+      "stderr": ""
+    }
+  ],
+  "head": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "committed_range_lint": "pass",
+  "production_verifier_unchanged": true,
+  "completed_at": "2026-11-16T08:49:48.781246+00:00",
+  "result": "pass"
+}

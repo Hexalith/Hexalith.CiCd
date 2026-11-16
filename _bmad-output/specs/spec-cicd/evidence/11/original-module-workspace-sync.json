@@ -1,0 +1,456 @@
+{
+  "started_at": "2026-11-16T13:05:00.851182+00:00",
+  "candidate": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "operation": "ordinary checkout and fast-forward of clean task preparation/main workspaces only",
+  "earlier_preservation_proofs_retained": true,
+  "operations": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "37e73a99dfe82c3b7741554d6f4ff2207711644b\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "symbolic-ref",
+        "--quiet",
+        "--short",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "cicd-pilot-preparation-commons-20261116\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.Commons/git/ref/heads/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/main\",\"node_id\":\"REF_kwDOOM0ElK9yZWZzL2hlYWRzL21haW4\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.Commons/git/refs/heads/main\",\"object\":{\"sha\":\"49187d47da882d5470deac982bb383486c90202c\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.Commons/git/commits/49187d47da882d5470deac982bb383486c90202c\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "49187d47da882d5470deac982bb383486c90202c\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+        "49187d47da882d5470deac982bb383486c90202c"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+        "49187d47da882d5470deac982bb383486c90202c"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "refs/heads/main",
+        "49187d47da882d5470deac982bb383486c90202c"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--no-recurse-submodules",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "Your branch is behind 'origin/main' by 3 commits, and can be fast-forwarded.\n  (use \"git pull\" to update your local branch)\n",
+      "stderr": "Switched to branch 'main'\n"
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "submodule.recurse=false",
+        "merge",
+        "--ff-only",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "Updating ab5e92f..49187d4\nFast-forward\n .claude/settings.json                           |   26 +-\n .github/actions/after-unit-tests/action.yml     |   13 +\n .github/copilot-instructions.md                 |   41 +\n .github/dependabot.yml                          |   25 +-\n .github/hexalith-ci.json                        |   20 +\n .github/workflows/ci.yml                        |   42 +-\n .github/workflows/codeql.yml                    |   21 -\n .github/workflows/commitlint.yml                |   19 -\n .github/workflows/dependency-review.yml         |   15 -\n .github/workflows/release.yml                   |  156 +-\n .releaserc.json                                 |   29 -\n AGENTS.md                                       |   41 +\n CLAUDE.md                                       |   41 +\n commitlint.config.mjs                           |    7 -\n package-lock.json                               | 4143 -----------------------\n package.json                                    |   26 -\n references/Hexalith.Builds                      |    2 +-\n scripts/pack-release-packages.py                |    9 +\n scripts/validate-consumer-package-references.py |   12 +-\n tools/release-packages.json                     |   52 -\n tools/test_verify_nuget_release.py              |   77 -\n tools/verify_nuget_release.py                   |   74 -\n 22 files changed, 245 insertions(+), 4646 deletions(-)\n create mode 100644 .github/actions/after-unit-tests/action.yml\n create mode 100644 .github/hexalith-ci.json\n delete mode 100644 .github/workflows/codeql.yml\n delete mode 100644 .github/workflows/commitlint.yml\n delete mode 100644 .github/workflows/dependency-review.yml\n delete mode 100644 .releaserc.json\n delete mode 100644 commitlint.config.mjs\n delete mode 100644 package-lock.json\n delete mode 100644 package.json\n delete mode 100644 tools/release-packages.json\n delete mode 100644 tools/test_verify_nuget_release.py\n delete mode 100644 tools/verify_nuget_release.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "49187d47da882d5470deac982bb383486c90202c\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "symbolic-ref",
+        "--short",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "main\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "symbolic-ref",
+        "--quiet",
+        "--short",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "cicd-pilot-preparation-poly-20261116\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.PolymorphicSerializations/git/ref/heads/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/main\",\"node_id\":\"REF_kwDOOQ0N_q9yZWZzL2hlYWRzL21haW4\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/git/refs/heads/main\",\"object\":{\"sha\":\"2cbec6a66e2174adc7c5d431c1b1f0d28abd5647\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/2cbec6a66e2174adc7c5d431c1b1f0d28abd5647\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.PolymorphicSerializations\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+        "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+        "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "refs/heads/main",
+        "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--no-recurse-submodules",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "Your branch is behind 'origin/main' by 3 commits, and can be fast-forwarded.\n  (use \"git pull\" to update your local branch)\n",
+      "stderr": "Switched to branch 'main'\n"
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "submodule.recurse=false",
+        "merge",
+        "--ff-only",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "Updating 476cfcc..2cbec6a\nFast-forward\n .claude/settings.json                   |   10 +\n .github/copilot-instructions.md         |   41 +\n .github/dependabot.yml                  |   25 +-\n .github/hexalith-ci.json                |   18 +\n .github/workflows/build-release.yml     |   48 -\n .github/workflows/ci.yml                |   18 +\n .github/workflows/codeql.yml            |   21 -\n .github/workflows/commitlint.yml        |   12 -\n .github/workflows/dependency-review.yml |   15 -\n .github/workflows/release.yml           |  149 +-\n AGENTS.md                               |   41 +\n CLAUDE.md                               |   41 +\n commitlint.config.mjs                   |    3 -\n package-lock.json                       | 4157 -------------------------------\n package.json                            |   41 -\n references/Hexalith.Builds              |    2 +-\n tools/release-packages.json             |   12 -\n tools/test_verify_nuget_release.py      |   75 -\n tools/verify_nuget_release.py           |   70 -\n 19 files changed, 211 insertions(+), 4588 deletions(-)\n create mode 100644 .claude/settings.json\n create mode 100644 .github/copilot-instructions.md\n create mode 100644 .github/hexalith-ci.json\n delete mode 100644 .github/workflows/build-release.yml\n create mode 100644 .github/workflows/ci.yml\n delete mode 100644 .github/workflows/codeql.yml\n delete mode 100644 .github/workflows/commitlint.yml\n delete mode 100644 .github/workflows/dependency-review.yml\n delete mode 100644 commitlint.config.mjs\n delete mode 100644 package-lock.json\n delete mode 100644 package.json\n delete mode 100644 tools/release-packages.json\n delete mode 100644 tools/test_verify_nuget_release.py\n delete mode 100644 tools/verify_nuget_release.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "symbolic-ref",
+        "--short",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "main\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "37e73a99dfe82c3b7741554d6f4ff2207711644b\n",
+      "stderr": ""
+    }
+  ],
+  "modules": {
+    "Hexalith.Commons": {
+      "before_head": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+      "before_branch": "cicd-pilot-preparation-commons-20261116",
+      "target": "49187d47da882d5470deac982bb383486c90202c",
+      "nested_builds_contents_before": [],
+      "result": "synced",
+      "ancestor_checks": {
+        "preparation": true,
+        "current_head": true,
+        "local_main": true
+      },
+      "after_head": "49187d47da882d5470deac982bb383486c90202c",
+      "after_branch": "main",
+      "clean_after": true,
+      "nested_builds_contents_after": [],
+      "no_nested_initialization": true
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "before_head": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+      "before_branch": "cicd-pilot-preparation-poly-20261116",
+      "target": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+      "nested_builds_contents_before": [],
+      "result": "synced",
+      "ancestor_checks": {
+        "preparation": true,
+        "current_head": true,
+        "local_main": true
+      },
+      "after_head": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+      "after_branch": "main",
+      "clean_after": true,
+      "nested_builds_contents_after": [],
+      "no_nested_initialization": true
+    }
+  },
+  "result": "pass",
+  "original_cicd_head_before": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+  "original_cicd_staging_sha256": "51d905e7ddd474ded73c896be00dee06552036931adc6cbca6fad9688006ba89",
+  "original_cicd_staging_preserved": true,
+  "original_cicd_head_after": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+  "completed_at": "2026-11-16T13:05:02.912590+00:00"
+}

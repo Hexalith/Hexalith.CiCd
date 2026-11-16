@@ -1,7 +1,23 @@
 # Story 11 implementation readiness
 
-This is an incomplete implementation checkpoint. No pilot has been adopted and
-no delivery, release, branch probe or scheduled-night result is claimed.
+This is an incomplete implementation checkpoint, current at 2026-11-16
+13:06 UTC. Shared release `v6.0.6`, both real authenticated App adoptions,
+immediate settings/legacy-policy cleanup, bounded credential no-ops and both
+green adopted-main CI runs are evidenced. The exact normal checker and both
+restricted-token fresh-main pushes pass. Both meaningful Update branch requests
+returned 202 and imported the delivered owned trees; both PRs are closed without
+merging and all probe refs removed. The factual scoped canonical policy
+candidate `3427f041c5f686c460c1fa027cf6f835791209c1` passes its required full
+gate and is pushed. Actual delivery `43869480499`, its sole artifact, refs,
+parents and complete owned/foreign trees are authenticated. Final-main CI runs
+`43871882227`/`43871975251` pass all 372 tests and the real Commons hook. Both
+original module workspaces are intentionally synced to their delivered mains
+using guarded ordinary checkout/fast-forward; nested Builds paths remain empty
+and CiCd HEAD/index remain unchanged. Only the genuine scheduled night remains
+incomplete; `nightly-checkpoint-pending.json` records its required observations.
+Global Zot key mapping remains unverified; both administrators and every other
+module's access are preserved under the accepted pilot-specific no-op. Earlier
+sections are historical checkpoints.
 
 ## Initial prerequisites and live access, 2026-11-15
 
@@ -48,7 +64,7 @@ no delivery, release, branch probe or scheduled-night result is claimed.
   used to bypass either requirement. The successful disposable product checks
   are independent evidence; they do not satisfy the mandated pre-push command.
 
-## Exact source revisions
+## Initial local source revisions
 
 | Repository | Source revision |
 | --- | --- |
@@ -62,7 +78,7 @@ pilot checkouts were fast-forwarded to those remote mains, preserving the
 intervening manifest/lock changes and Poly README change. No product branch,
 probe ref/PR, commit or push was created. No nested submodule was initialized.
 
-## Completed local changes
+## Initial local source work
 
 - Delivery accepts a strictly boolean disabled security-update response or
   the legacy 404 after the successful Administration-protected preflight.
@@ -178,21 +194,102 @@ restriction is proved. Both legacy policies remain. Later settings and org
 grant writes are deferred to preserve AD-21 ordering. The separate pre-push
 requirement remains unchanged; authentication does not approve its exception.
 
-## Remaining execution
+## Current checkpoint, 2026-11-16
 
-After the human completes the displayed Microsoft/NuGet authentication,
-refresh the policy inventory, add both scoped policies beside their legacy
-policies and complete the remaining AD-21 settings/grants in order. Resolve
-the separate pre-adoption check decision before any module product push.
-The source change still needs a
-validated Builds commit and interactive shared release; wait for an acceptable
-published immutable tag before removing either module's duplicated verification
-or tool-only npm files. Publish the Commons product hook with the protected
-module credential after resolving the pre-adoption check/bootstrap prerequisite
-and passing the required command. Create the disposable product
-probe/PR before adoption. Register/render both modules with the released Builds
-pin and validate a committed candidate before pushing it. Authenticate both
-actual delivery results, perform the immediate policy/credential cleanup, test
-fresh-main branching and meaningful Update branch, clean all probes, and await
-green pilot CI plus one real scheduled nightly. Fixtures and this checkpoint
-cannot satisfy those live acceptance criteria.
+Both new Active NuGet policies and all ordered provisioning checks pass. All
+legacy publication access remains preserved; no actual adoption or immediate
+post-adoption cleanup is claimed.
+
+The shared verifier is released as stable immutable bot-authored `v6.0.6`,
+source/tag `fdda17c0a4538b0f7c99f813c20ca24b49006530`. Corrected CI
+`43834424445` and interactive release `43838534329` completed success. The
+sole outcome artifact is authenticated by producing run/head, exact ZIP
+size/digest and closed schema, with `published`/`6.0.6`/that source. Sanitized
+completed-publisher logs prove both new package pushes and both live feed
+identity verifications before GitHub finalization. See `builds-released-pin.json`,
+`builds-release-outcome.json` and `builds-publisher-live-verification.json`.
+
+Both complete verification sets use that released pin, exact committed inputs
+and full output logs. Each builds both modules, passes all 372 C# tests across
+nine suites with zero skipped, validates twelve Commons payload/symbol pairs
+and a real isolated consumer, validates owning/shared commit and action/audit
+policy, and compares every byte/mode/gitlink outside its narrow product
+allowlist against freshly fetched main. Both mains are rechecked after both
+builds. `pre-adoption-{probe-,}verification.{json,log}` retains exact results.
+
+| Purpose | Commons head | Poly head | Current remote state |
+| --- | --- | --- | --- |
+| Retained-tooling probe | `e3d4da366a2e8c6b6216f4a7b57c15241313da79` | `dbea7efd64ec75e2b92920665cb1ebffda15fa88` | Protected-token pushes and PRs succeeded; Commons [#52](https://github.com/Hexalith/Hexalith.Commons/pull/52), Poly [#19](https://github.com/Hexalith/Hexalith.PolymorphicSerializations/pull/19). Open and unmerged. |
+| Product retirement | `a83959832ebdad9fe5a5ea268fb0224c49cfa8ea` | `c547c763a20e1fbf6b7a5c9d3b4791260fb61149` | Local-only preparation branches; no preparation main push. |
+
+The common respective bases remain Commons
+`ab5e92faa3bab1fa43b8ecadd423432dfe652bb2` and Poly
+`476cfccac3c5ba694a8e0ef11b1157728b9ec093`. Probe branches are
+`cicd-pilot-update-commons-20261116` and `cicd-pilot-update-poly-20261116`;
+local preparation branches are `cicd-pilot-preparation-commons-20261116` and
+`cicd-pilot-preparation-poly-20261116`. `pre-delivery-probes.json` records each
+additional immediate pre-push base/head/clean check, actual server response and
+PR identity. Every temporary worktree registration was removed. Original nested
+Builds paths remain empty; no nested initialization or owned edit occurred.
+Probe PRs must never be merged and their remote/local probe refs remain to clean
+only after the actual post-delivery Update branch observation.
+
+The final legacy PR checks are not uniformly green. Poly's product Verify,
+CodeQL and dependency review pass, but old owned commitlint fails because its
+caller omits `pull-request-title`: the completed job explicitly reports that
+required input absent. This is a saved pipeline contract defect, not a product
+message rejection; both owning/shared pinned local policy checks passed.
+`legacy-poly-commitlint-failure.json` preserves the sanitized diagnostic.
+Commons CI, verifier tests, commitlint, CodeQL and dependency review pass.
+Codacy's current output/annotation classifies its `action_required`: one new
+minor-or-higher issue against a zero-issue threshold, warning at
+`scripts/validate-consumer-package-references.py:159`, “subprocess call - check
+for execution of untrusted input.” This is the explicit-list `dotnet` call with
+the required flags and no enabled shell. `legacy-commons-codacy-check.json`
+retains the exact check metadata and annotation. Exploitability or a waiver is
+not established; no authentication/settings flow or suppression occurred. No
+check was weakened, edited, skipped or rerun. These legacy probe checks do not
+establish green adopted-main CI.
+
+Local `builds-version` now pins `v6.0.6`. Two local setup files select the exact
+`.slnx` solutions; Commons enables only `after-unit-tests`, and omitted CodeQL
+renders C#. Ten generated paths pass render reproducibility, tagged schemas,
+caller interfaces and the actual acceptable-release check. Exact input/render
+hashes, modes and desired direct gitlinks are in
+`local-registration-preparation.json`. Root staging is byte-identical before
+and after this work. No CiCd adoption-candidate commit or delivery-triggering
+push was made. Full committed-candidate/global/live-module validation is not
+claimed: it still requires the live preparation mains and committed inputs.
+
+## Scoped Zot disposition and remaining execution
+
+The human cannot attest to global administrator key usage. The accepted
+`zot-pilot-legacy-disposition.md` supersedes that overly broad blocker with a
+pilot-specific no-op: full tracked histories/container scope and fresh complete
+secret inventories identify no legacy Zot publisher path or credential grant
+for either package-only pilot. Recheck that scope and exclusion at cleanup.
+Global key mapping stays unverified; preserve both administrators and all four
+remaining legacy-selected modules. Current logs positively show administrator
+containerd pulls for Memories. The documented key-metadata route initially
+reached login, and the bounded later attempt obtained no metadata or reachable
+SSO control; no credential, key, cookie or storage was extracted or changed.
+
+Legacy workflow inspection in `legacy-intermediate-state.json` proves that the
+soon-retired tools/npm files remain referenced by legacy CI/publication. Keep
+preparation main pushes local until the coherent candidate is ready for prompt adoption.
+Before each eventual main push, freshly fetch and require both the recorded
+base and tested local head; rerun affected checks if either changed. Then publish
+only with the protected module token, commit one coherent CiCd candidate and run
+the required locked global/full live verdict before pushing adoption. Preserve
+all pre-existing root staging during this checkpoint.
+
+After authenticated actual adoption, enable immutable releases and perform the
+exact legacy policy/credential cleanup. Observe meaningful Update branch on the
+two existing probe PRs and fresh-main product branching using the protected
+module token; use the exact normal shared checker after adoption. The prepared
+`post-adoption-check.py` supplies standalone module job roots with direct Builds
+worktrees, cleans every temporary worktree registration, and checks original
+nested paths remain untouched. It has not been executed against an adoption.
+Close/delete all probes without merging, confirm/correct 10-2 restrictions, and
+await green pilot CI plus one real scheduled nightly. No fixture, manual release
+or local checkpoint can satisfy that final live-night acceptance.

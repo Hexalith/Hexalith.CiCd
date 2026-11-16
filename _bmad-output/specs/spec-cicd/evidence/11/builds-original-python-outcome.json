@@ -1,0 +1,686 @@
+{
+  "recorded_at": "2026-11-16T08:55:42.912401+00:00",
+  "run_id": 43830524672,
+  "jobs": [
+    {
+      "id": 133174495473,
+      "name": "Python contract tests (runner)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-11-16T08:22:16Z",
+      "completed_at": "2026-11-16T08:52:31Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T08:22:17Z",
+          "completed_at": "2026-11-16T08:22:17Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T08:22:17Z",
+          "completed_at": "2026-11-16T08:22:20Z"
+        },
+        {
+          "name": "Capture runner Python before setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T08:22:20Z",
+          "completed_at": "2026-11-16T08:22:20Z"
+        },
+        {
+          "name": "Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T08:22:20Z",
+          "completed_at": "2026-11-16T08:22:20Z"
+        },
+        {
+          "name": "Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T08:22:20Z",
+          "completed_at": "2026-11-16T08:22:21Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T08:22:21Z",
+          "completed_at": "2026-11-16T08:22:24Z"
+        },
+        {
+          "name": "Install Node.js dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T08:22:24Z",
+          "completed_at": "2026-11-16T08:22:29Z"
+        },
+        {
+          "name": "Verify npm dependency provenance and signatures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T08:22:29Z",
+          "completed_at": "2026-11-16T08:22:33Z"
+        },
+        {
+          "name": "Install integrity-checked CI tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-16T08:22:33Z",
+          "completed_at": "2026-11-16T08:22:34Z"
+        },
+        {
+          "name": "Run the shared Python suite and CI and perimeter contract validators",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "number": 10,
+          "started_at": "2026-11-16T08:22:34Z",
+          "completed_at": "2026-11-16T08:52:29Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-11-16T08:52:29Z",
+          "completed_at": "2026-11-16T08:52:29Z"
+        },
+        {
+          "name": "Post Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-16T08:52:29Z",
+          "completed_at": "2026-11-16T08:52:29Z"
+        },
+        {
+          "name": "Post Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-16T08:52:29Z",
+          "completed_at": "2026-11-16T08:52:29Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-16T08:52:29Z",
+          "completed_at": "2026-11-16T08:52:29Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-16T08:52:29Z",
+          "completed_at": "2026-11-16T08:52:29Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/133174495473",
+      "log_exit": 1,
+      "log_error": "run 43830524672 is still in progress; logs will be available when it is complete",
+      "annotations_exit": 0,
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The job has exceeded the maximum execution time of 30m0s",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 896,
+          "start_column": null,
+          "end_line": 896,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The operation was canceled.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "notice",
+          "title": "",
+          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+          "raw_details": ""
+        }
+      ]
+    },
+    {
+      "id": 133174495603,
+      "name": "Python contract tests (3.12)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-11-16T08:21:35Z",
+      "completed_at": "2026-11-16T08:51:50Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T08:21:36Z",
+          "completed_at": "2026-11-16T08:21:36Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T08:21:36Z",
+          "completed_at": "2026-11-16T08:21:39Z"
+        },
+        {
+          "name": "Capture runner Python before setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T08:21:39Z",
+          "completed_at": "2026-11-16T08:21:39Z"
+        },
+        {
+          "name": "Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T08:21:39Z",
+          "completed_at": "2026-11-16T08:21:39Z"
+        },
+        {
+          "name": "Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T08:21:39Z",
+          "completed_at": "2026-11-16T08:21:40Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T08:21:40Z",
+          "completed_at": "2026-11-16T08:21:41Z"
+        },
+        {
+          "name": "Install Node.js dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T08:21:41Z",
+          "completed_at": "2026-11-16T08:21:45Z"
+        },
+        {
+          "name": "Verify npm dependency provenance and signatures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T08:21:45Z",
+          "completed_at": "2026-11-16T08:21:49Z"
+        },
+        {
+          "name": "Install integrity-checked CI tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-16T08:21:49Z",
+          "completed_at": "2026-11-16T08:21:50Z"
+        },
+        {
+          "name": "Run the shared Python suite and CI and perimeter contract validators",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "number": 10,
+          "started_at": "2026-11-16T08:21:50Z",
+          "completed_at": "2026-11-16T08:51:48Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-11-16T08:51:48Z",
+          "completed_at": "2026-11-16T08:51:48Z"
+        },
+        {
+          "name": "Post Initialize .NET SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-16T08:51:48Z",
+          "completed_at": "2026-11-16T08:51:48Z"
+        },
+        {
+          "name": "Post Setup Python 3.12",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-16T08:51:48Z",
+          "completed_at": "2026-11-16T08:51:48Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-16T08:51:48Z",
+          "completed_at": "2026-11-16T08:51:48Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-16T08:51:48Z",
+          "completed_at": "2026-11-16T08:51:48Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/check-runs/133174495603",
+      "log_exit": 1,
+      "log_error": "run 43830524672 is still in progress; logs will be available when it is complete",
+      "annotations_exit": 0,
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The job has exceeded the maximum execution time of 30m0s",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 896,
+          "start_column": null,
+          "end_line": 896,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The operation was canceled.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 3,
+          "start_column": 5,
+          "end_line": 3,
+          "end_column": 5,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Deterministic SDK audit warning control.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/Hexalith/Hexalith.Builds/blob/65fd22f37b9fad64b595841923cdbe050563ab99/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "notice",
+          "title": "",
+          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+          "raw_details": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-11-16T10:32:55.316270+00:00",
+  "profile": "/home/administrator/.config/gh",
+  "inherited_token_overrides_present": false,
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons",
+      "exit": 0,
+      "response_headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 952960148,
+        "full_name": "Hexalith/Hexalith.Commons",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/audit-log?per_page=100&phrase=action:org.update_actions_secret",
+      "exit": 1,
+      "response_headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/orgs#get-the-audit-log-for-an-organization"
+      }
+    }
+  ]
+}

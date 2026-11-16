@@ -1,0 +1,2406 @@
+{
+  "started_at": "2026-11-16T08:23:16.517795+00:00",
+  "run_id": 43830524672,
+  "expected_sha": "65fd22f37b9fad64b595841923cdbe050563ab99",
+  "workflow": ".github/workflows/builds-ci.yml",
+  "observations": [
+    {
+      "id": 43830524672,
+      "head_sha": "65fd22f37b9fad64b595841923cdbe050563ab99",
+      "head_branch": "main",
+      "path": ".github/workflows/builds-ci.yml",
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "run_attempt": 1,
+      "created_at": "2026-11-16T08:21:14Z",
+      "updated_at": "2026-11-16T08:21:14Z",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43830524672",
+      "observed_at": "2026-11-16T08:23:17.004219+00:00",
+      "jobs": [
+        {
+          "id": 133174495221,
+          "name": "Workflow lint and public API",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:22:48Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:49Z",
+              "completed_at": "2026-11-16T08:22:52Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:52Z",
+              "completed_at": "2026-11-16T08:23:03Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:03Z",
+              "completed_at": "2026-11-16T08:23:04Z"
+            },
+            {
+              "name": "Lint workflows and composite actions with online audits",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:04Z",
+              "completed_at": "2026-11-16T08:23:13Z"
+            },
+            {
+              "name": "Check public API against the reachable stable release",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:13Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495473,
+          "name": "Python contract tests (runner)",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:22:16Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:17Z",
+              "completed_at": "2026-11-16T08:22:17Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:17Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Capture runner Python before setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:21Z"
+            },
+            {
+              "name": "Setup Node.js",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:22:21Z",
+              "completed_at": "2026-11-16T08:22:24Z"
+            },
+            {
+              "name": "Install Node.js dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:22:24Z",
+              "completed_at": "2026-11-16T08:22:29Z"
+            },
+            {
+              "name": "Verify npm dependency provenance and signatures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:22:29Z",
+              "completed_at": "2026-11-16T08:22:33Z"
+            },
+            {
+              "name": "Install integrity-checked CI tools",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:22:33Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "Run the shared Python suite and CI and perimeter contract validators",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 10,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Node.js",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Initialize .NET SDK",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133174495544,
+          "name": "Sample module / Build and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:21:45Z",
+          "completed_at": "2026-11-16T08:22:45Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:21:46Z",
+              "completed_at": "2026-11-16T08:21:50Z"
+            },
+            {
+              "name": "Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:21:50Z",
+              "completed_at": "2026-11-16T08:21:59Z"
+            },
+            {
+              "name": "Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:21:59Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Validate and prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Stage 2 restore and Release build",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:26Z"
+            },
+            {
+              "name": "Stage 3 unit tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:22:26Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "Stage 4 environment setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "After unit tests hook",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:22:36Z"
+            },
+            {
+              "name": "Stage 4 integration tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:22:36Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "After integration tests hook",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 11,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495603,
+          "name": "Python contract tests (3.12)",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:21:35Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:21:36Z",
+              "completed_at": "2026-11-16T08:21:36Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:21:36Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Capture runner Python before setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:40Z"
+            },
+            {
+              "name": "Setup Node.js",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:21:40Z",
+              "completed_at": "2026-11-16T08:21:41Z"
+            },
+            {
+              "name": "Install Node.js dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:21:41Z",
+              "completed_at": "2026-11-16T08:21:45Z"
+            },
+            {
+              "name": "Verify npm dependency provenance and signatures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:21:45Z",
+              "completed_at": "2026-11-16T08:21:49Z"
+            },
+            {
+              "name": "Install integrity-checked CI tools",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:21:49Z",
+              "completed_at": "2026-11-16T08:21:50Z"
+            },
+            {
+              "name": "Run the shared Python suite and CI and perimeter contract validators",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 10,
+              "started_at": "2026-11-16T08:21:50Z",
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Node.js",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Initialize .NET SDK",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133174498138,
+          "name": "Package catalog contracts",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:22:55Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:56Z",
+              "completed_at": "2026-11-16T08:22:57Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:57Z",
+              "completed_at": "2026-11-16T08:23:06Z"
+            },
+            {
+              "name": "Initialize .NET",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:06Z",
+              "completed_at": "2026-11-16T08:23:08Z"
+            },
+            {
+              "name": "Install .NET 10 targeting packs for offline catalog fixtures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:08Z",
+              "completed_at": "2026-11-16T08:23:09Z"
+            },
+            {
+              "name": "Validate central package versions",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 5,
+              "started_at": "2026-11-16T08:23:09Z",
+              "completed_at": null
+            },
+            {
+              "name": "Test authoritative package catalog",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test logging generator selection",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test FrontComposer Immutable consumer view",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test central package version validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate package version audit",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test package version audit generator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 11,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test package version audit validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 12,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate Builds consumer package authority",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test consumer package authority validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate package version exception inventory",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test package version exception validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate Platform version catalog and hosting compatibility",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test Platform version catalog contracts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate Dapr package versions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test Dapr package validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Install .NET 10 targeting packs for offline catalog fixtures",
+              "status": "pending",
+              "conclusion": null,
+              "number": 38,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Initialize .NET",
+              "status": "pending",
+              "conclusion": null,
+              "number": 39,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "pending",
+              "conclusion": null,
+              "number": 40,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133174501958,
+          "name": ".NET tests / Build and tests",
+          "status": "queued",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:21:16Z",
+          "completed_at": null,
+          "steps": []
+        },
+        {
+          "id": 133175134476,
+          "name": "Sample Windows tests",
+          "status": "queued",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:22:45Z",
+          "completed_at": null,
+          "steps": []
+        },
+        {
+          "id": 133175136130,
+          "name": "Sample module / Restore owned CI/CD content",
+          "status": "completed",
+          "conclusion": "skipped",
+          "started_at": "2026-11-16T08:22:45Z",
+          "completed_at": "2026-11-16T08:22:45Z",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "id": 43830524672,
+      "head_sha": "65fd22f37b9fad64b595841923cdbe050563ab99",
+      "head_branch": "main",
+      "path": ".github/workflows/builds-ci.yml",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "created_at": "2026-11-16T08:21:14Z",
+      "updated_at": "2026-11-16T08:23:30Z",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43830524672",
+      "observed_at": "2026-11-16T08:23:48.232845+00:00",
+      "jobs": [
+        {
+          "id": 133174495221,
+          "name": "Workflow lint and public API",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:22:48Z",
+          "completed_at": "2026-11-16T08:23:17Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:49Z",
+              "completed_at": "2026-11-16T08:22:52Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:52Z",
+              "completed_at": "2026-11-16T08:23:03Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:03Z",
+              "completed_at": "2026-11-16T08:23:04Z"
+            },
+            {
+              "name": "Lint workflows and composite actions with online audits",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:04Z",
+              "completed_at": "2026-11-16T08:23:13Z"
+            },
+            {
+              "name": "Check public API against the reachable stable release",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:13Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495473,
+          "name": "Python contract tests (runner)",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:22:16Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:17Z",
+              "completed_at": "2026-11-16T08:22:17Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:17Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Capture runner Python before setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:21Z"
+            },
+            {
+              "name": "Setup Node.js",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:22:21Z",
+              "completed_at": "2026-11-16T08:22:24Z"
+            },
+            {
+              "name": "Install Node.js dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:22:24Z",
+              "completed_at": "2026-11-16T08:22:29Z"
+            },
+            {
+              "name": "Verify npm dependency provenance and signatures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:22:29Z",
+              "completed_at": "2026-11-16T08:22:33Z"
+            },
+            {
+              "name": "Install integrity-checked CI tools",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:22:33Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "Run the shared Python suite and CI and perimeter contract validators",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 10,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Node.js",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Initialize .NET SDK",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133174495544,
+          "name": "Sample module / Build and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:21:45Z",
+          "completed_at": "2026-11-16T08:22:45Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:21:46Z",
+              "completed_at": "2026-11-16T08:21:50Z"
+            },
+            {
+              "name": "Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:21:50Z",
+              "completed_at": "2026-11-16T08:21:59Z"
+            },
+            {
+              "name": "Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:21:59Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Validate and prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Stage 2 restore and Release build",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:26Z"
+            },
+            {
+              "name": "Stage 3 unit tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:22:26Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "Stage 4 environment setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "After unit tests hook",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:22:36Z"
+            },
+            {
+              "name": "Stage 4 integration tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:22:36Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "After integration tests hook",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 11,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495603,
+          "name": "Python contract tests (3.12)",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:21:35Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:21:36Z",
+              "completed_at": "2026-11-16T08:21:36Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:21:36Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Capture runner Python before setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:40Z"
+            },
+            {
+              "name": "Setup Node.js",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:21:40Z",
+              "completed_at": "2026-11-16T08:21:41Z"
+            },
+            {
+              "name": "Install Node.js dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:21:41Z",
+              "completed_at": "2026-11-16T08:21:45Z"
+            },
+            {
+              "name": "Verify npm dependency provenance and signatures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:21:45Z",
+              "completed_at": "2026-11-16T08:21:49Z"
+            },
+            {
+              "name": "Install integrity-checked CI tools",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:21:49Z",
+              "completed_at": "2026-11-16T08:21:50Z"
+            },
+            {
+              "name": "Run the shared Python suite and CI and perimeter contract validators",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 10,
+              "started_at": "2026-11-16T08:21:50Z",
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Node.js",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Initialize .NET SDK",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133174498138,
+          "name": "Package catalog contracts",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:22:55Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:56Z",
+              "completed_at": "2026-11-16T08:22:57Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:57Z",
+              "completed_at": "2026-11-16T08:23:06Z"
+            },
+            {
+              "name": "Initialize .NET",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:06Z",
+              "completed_at": "2026-11-16T08:23:08Z"
+            },
+            {
+              "name": "Install .NET 10 targeting packs for offline catalog fixtures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:08Z",
+              "completed_at": "2026-11-16T08:23:09Z"
+            },
+            {
+              "name": "Validate central package versions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:09Z",
+              "completed_at": "2026-11-16T08:23:23Z"
+            },
+            {
+              "name": "Test authoritative package catalog",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 6,
+              "started_at": "2026-11-16T08:23:23Z",
+              "completed_at": null
+            },
+            {
+              "name": "Test logging generator selection",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test FrontComposer Immutable consumer view",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test central package version validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate package version audit",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test package version audit generator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 11,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test package version audit validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 12,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate Builds consumer package authority",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test consumer package authority validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate package version exception inventory",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test package version exception validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate Platform version catalog and hosting compatibility",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test Platform version catalog contracts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Validate Dapr package versions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Test Dapr package validator",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Install .NET 10 targeting packs for offline catalog fixtures",
+              "status": "pending",
+              "conclusion": null,
+              "number": 38,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Initialize .NET",
+              "status": "pending",
+              "conclusion": null,
+              "number": 39,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "pending",
+              "conclusion": null,
+              "number": 40,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133174501958,
+          "name": ".NET tests / Build and tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:23:29Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:23:30Z",
+              "completed_at": "2026-11-16T08:23:34Z"
+            },
+            {
+              "name": "Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:23:34Z",
+              "completed_at": "2026-11-16T08:23:45Z"
+            },
+            {
+              "name": "Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:45Z",
+              "completed_at": "2026-11-16T08:23:45Z"
+            },
+            {
+              "name": "Validate and prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:45Z",
+              "completed_at": "2026-11-16T08:23:45Z"
+            },
+            {
+              "name": "Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:45Z",
+              "completed_at": "2026-11-16T08:23:46Z"
+            },
+            {
+              "name": "Stage 2 restore and Release build",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 6,
+              "started_at": "2026-11-16T08:23:46Z",
+              "completed_at": null
+            },
+            {
+              "name": "Stage 3 unit tests",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Stage 4 environment setup",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "After unit tests hook",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Stage 4 integration tests",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "After integration tests hook",
+              "status": "pending",
+              "conclusion": null,
+              "number": 11,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Setup module SDK",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Stage 1 guard owned CI/CD content",
+              "status": "pending",
+              "conclusion": null,
+              "number": 21,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Checkout module",
+              "status": "pending",
+              "conclusion": null,
+              "number": 22,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133175134476,
+          "name": "Sample Windows tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T08:23:20Z",
+          "completed_at": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:23:21Z",
+              "completed_at": "2026-11-16T08:23:26Z"
+            },
+            {
+              "name": "Prepare module",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 2,
+              "started_at": "2026-11-16T08:23:26Z",
+              "completed_at": null
+            },
+            {
+              "name": "Run module action",
+              "status": "pending",
+              "conclusion": null,
+              "number": 3,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Prepare module",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6,
+              "started_at": null,
+              "completed_at": null
+            }
+          ]
+        },
+        {
+          "id": 133175136130,
+          "name": "Sample module / Restore owned CI/CD content",
+          "status": "completed",
+          "conclusion": "skipped",
+          "started_at": "2026-11-16T08:22:45Z",
+          "completed_at": "2026-11-16T08:22:45Z",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "id": 43830524672,
+      "head_sha": "65fd22f37b9fad64b595841923cdbe050563ab99",
+      "head_branch": "main",
+      "path": ".github/workflows/builds-ci.yml",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "run_attempt": 1,
+      "created_at": "2026-11-16T08:21:14Z",
+      "updated_at": "2026-11-16T08:57:17Z",
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43830524672",
+      "observed_at": "2026-11-16T08:57:18.117627+00:00",
+      "jobs": [
+        {
+          "id": 133174495221,
+          "name": "Workflow lint and public API",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:22:48Z",
+          "completed_at": "2026-11-16T08:23:17Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:49Z",
+              "completed_at": "2026-11-16T08:22:52Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:52Z",
+              "completed_at": "2026-11-16T08:23:03Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:03Z",
+              "completed_at": "2026-11-16T08:23:04Z"
+            },
+            {
+              "name": "Lint workflows and composite actions with online audits",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:04Z",
+              "completed_at": "2026-11-16T08:23:13Z"
+            },
+            {
+              "name": "Check public API against the reachable stable release",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:13Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-16T08:23:14Z",
+              "completed_at": "2026-11-16T08:23:14Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495473,
+          "name": "Python contract tests (runner)",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "started_at": "2026-11-16T08:22:16Z",
+          "completed_at": "2026-11-16T08:52:31Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:17Z",
+              "completed_at": "2026-11-16T08:22:17Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:17Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Capture runner Python before setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:20Z"
+            },
+            {
+              "name": "Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:22:20Z",
+              "completed_at": "2026-11-16T08:22:21Z"
+            },
+            {
+              "name": "Setup Node.js",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:22:21Z",
+              "completed_at": "2026-11-16T08:22:24Z"
+            },
+            {
+              "name": "Install Node.js dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:22:24Z",
+              "completed_at": "2026-11-16T08:22:29Z"
+            },
+            {
+              "name": "Verify npm dependency provenance and signatures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:22:29Z",
+              "completed_at": "2026-11-16T08:22:33Z"
+            },
+            {
+              "name": "Install integrity-checked CI tools",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:22:33Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "Run the shared Python suite and CI and perimeter contract validators",
+              "status": "completed",
+              "conclusion": "cancelled",
+              "number": 10,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:52:29Z"
+            },
+            {
+              "name": "Post Setup Node.js",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 17,
+              "started_at": "2026-11-16T08:52:29Z",
+              "completed_at": "2026-11-16T08:52:29Z"
+            },
+            {
+              "name": "Post Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18,
+              "started_at": "2026-11-16T08:52:29Z",
+              "completed_at": "2026-11-16T08:52:29Z"
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 19,
+              "started_at": "2026-11-16T08:52:29Z",
+              "completed_at": "2026-11-16T08:52:29Z"
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:52:29Z",
+              "completed_at": "2026-11-16T08:52:29Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-16T08:52:29Z",
+              "completed_at": "2026-11-16T08:52:29Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495544,
+          "name": "Sample module / Build and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:21:45Z",
+          "completed_at": "2026-11-16T08:22:45Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:21:46Z",
+              "completed_at": "2026-11-16T08:21:50Z"
+            },
+            {
+              "name": "Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:21:50Z",
+              "completed_at": "2026-11-16T08:21:59Z"
+            },
+            {
+              "name": "Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:21:59Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Validate and prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:06Z"
+            },
+            {
+              "name": "Stage 2 restore and Release build",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:22:06Z",
+              "completed_at": "2026-11-16T08:22:26Z"
+            },
+            {
+              "name": "Stage 3 unit tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:22:26Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "Stage 4 environment setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:22:34Z"
+            },
+            {
+              "name": "After unit tests hook",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:22:34Z",
+              "completed_at": "2026-11-16T08:22:36Z"
+            },
+            {
+              "name": "Stage 4 integration tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:22:36Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "After integration tests hook",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 11,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Post Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23,
+              "started_at": "2026-11-16T08:22:42Z",
+              "completed_at": "2026-11-16T08:22:42Z"
+            }
+          ]
+        },
+        {
+          "id": 133174495603,
+          "name": "Python contract tests (3.12)",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "started_at": "2026-11-16T08:21:35Z",
+          "completed_at": "2026-11-16T08:51:50Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:21:36Z",
+              "completed_at": "2026-11-16T08:21:36Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:21:36Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Capture runner Python before setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:39Z"
+            },
+            {
+              "name": "Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:21:39Z",
+              "completed_at": "2026-11-16T08:21:40Z"
+            },
+            {
+              "name": "Setup Node.js",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:21:40Z",
+              "completed_at": "2026-11-16T08:21:41Z"
+            },
+            {
+              "name": "Install Node.js dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:21:41Z",
+              "completed_at": "2026-11-16T08:21:45Z"
+            },
+            {
+              "name": "Verify npm dependency provenance and signatures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:21:45Z",
+              "completed_at": "2026-11-16T08:21:49Z"
+            },
+            {
+              "name": "Install integrity-checked CI tools",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:21:49Z",
+              "completed_at": "2026-11-16T08:21:50Z"
+            },
+            {
+              "name": "Run the shared Python suite and CI and perimeter contract validators",
+              "status": "completed",
+              "conclusion": "cancelled",
+              "number": 10,
+              "started_at": "2026-11-16T08:21:50Z",
+              "completed_at": "2026-11-16T08:51:48Z"
+            },
+            {
+              "name": "Post Setup Node.js",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 17,
+              "started_at": "2026-11-16T08:51:48Z",
+              "completed_at": "2026-11-16T08:51:48Z"
+            },
+            {
+              "name": "Post Initialize .NET SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18,
+              "started_at": "2026-11-16T08:51:48Z",
+              "completed_at": "2026-11-16T08:51:48Z"
+            },
+            {
+              "name": "Post Setup Python 3.12",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 19,
+              "started_at": "2026-11-16T08:51:48Z",
+              "completed_at": "2026-11-16T08:51:48Z"
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:51:48Z",
+              "completed_at": "2026-11-16T08:51:48Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-16T08:51:48Z",
+              "completed_at": "2026-11-16T08:51:48Z"
+            }
+          ]
+        },
+        {
+          "id": 133174498138,
+          "name": "Package catalog contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:22:55Z",
+          "completed_at": "2026-11-16T08:57:17Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:22:56Z",
+              "completed_at": "2026-11-16T08:22:57Z"
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:22:57Z",
+              "completed_at": "2026-11-16T08:23:06Z"
+            },
+            {
+              "name": "Initialize .NET",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:06Z",
+              "completed_at": "2026-11-16T08:23:08Z"
+            },
+            {
+              "name": "Install .NET 10 targeting packs for offline catalog fixtures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:08Z",
+              "completed_at": "2026-11-16T08:23:09Z"
+            },
+            {
+              "name": "Validate central package versions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:09Z",
+              "completed_at": "2026-11-16T08:23:23Z"
+            },
+            {
+              "name": "Test authoritative package catalog",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:23:23Z",
+              "completed_at": "2026-11-16T08:30:44Z"
+            },
+            {
+              "name": "Test logging generator selection",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:30:44Z",
+              "completed_at": "2026-11-16T08:30:47Z"
+            },
+            {
+              "name": "Test FrontComposer Immutable consumer view",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:30:47Z",
+              "completed_at": "2026-11-16T08:31:34Z"
+            },
+            {
+              "name": "Test central package version validator",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-16T08:31:34Z",
+              "completed_at": "2026-11-16T08:32:02Z"
+            },
+            {
+              "name": "Validate package version audit",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:32:02Z",
+              "completed_at": "2026-11-16T08:32:53Z"
+            },
+            {
+              "name": "Test package version audit generator",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-16T08:32:53Z",
+              "completed_at": "2026-11-16T08:33:49Z"
+            },
+            {
+              "name": "Test package version audit validator",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12,
+              "started_at": "2026-11-16T08:33:49Z",
+              "completed_at": "2026-11-16T08:46:34Z"
+            },
+            {
+              "name": "Validate Builds consumer package authority",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13,
+              "started_at": "2026-11-16T08:46:34Z",
+              "completed_at": "2026-11-16T08:47:46Z"
+            },
+            {
+              "name": "Test consumer package authority validator",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-11-16T08:47:46Z",
+              "completed_at": "2026-11-16T08:48:57Z"
+            },
+            {
+              "name": "Validate package version exception inventory",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-11-16T08:48:57Z",
+              "completed_at": "2026-11-16T08:48:59Z"
+            },
+            {
+              "name": "Test package version exception validator",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-11-16T08:48:59Z",
+              "completed_at": "2026-11-16T08:50:26Z"
+            },
+            {
+              "name": "Validate Platform version catalog and hosting compatibility",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-11-16T08:50:26Z",
+              "completed_at": "2026-11-16T08:50:31Z"
+            },
+            {
+              "name": "Test Platform version catalog contracts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18,
+              "started_at": "2026-11-16T08:50:31Z",
+              "completed_at": "2026-11-16T08:56:30Z"
+            },
+            {
+              "name": "Validate Dapr package versions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19,
+              "started_at": "2026-11-16T08:56:30Z",
+              "completed_at": "2026-11-16T08:56:32Z"
+            },
+            {
+              "name": "Test Dapr package validator",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:56:32Z",
+              "completed_at": "2026-11-16T08:57:13Z"
+            },
+            {
+              "name": "Post Install .NET 10 targeting packs for offline catalog fixtures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 38,
+              "started_at": "2026-11-16T08:57:13Z",
+              "completed_at": "2026-11-16T08:57:13Z"
+            },
+            {
+              "name": "Post Initialize .NET",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 39,
+              "started_at": "2026-11-16T08:57:13Z",
+              "completed_at": "2026-11-16T08:57:13Z"
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 40,
+              "started_at": "2026-11-16T08:57:13Z",
+              "completed_at": "2026-11-16T08:57:13Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 41,
+              "started_at": "2026-11-16T08:57:13Z",
+              "completed_at": "2026-11-16T08:57:13Z"
+            }
+          ]
+        },
+        {
+          "id": 133174501958,
+          "name": ".NET tests / Build and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:23:29Z",
+          "completed_at": "2026-11-16T08:44:46Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:23:30Z",
+              "completed_at": "2026-11-16T08:23:34Z"
+            },
+            {
+              "name": "Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:23:34Z",
+              "completed_at": "2026-11-16T08:23:45Z"
+            },
+            {
+              "name": "Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:23:45Z",
+              "completed_at": "2026-11-16T08:23:45Z"
+            },
+            {
+              "name": "Validate and prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-16T08:23:45Z",
+              "completed_at": "2026-11-16T08:23:45Z"
+            },
+            {
+              "name": "Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-16T08:23:45Z",
+              "completed_at": "2026-11-16T08:23:46Z"
+            },
+            {
+              "name": "Stage 2 restore and Release build",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:23:46Z",
+              "completed_at": "2026-11-16T08:25:29Z"
+            },
+            {
+              "name": "Stage 3 unit tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:25:29Z",
+              "completed_at": "2026-11-16T08:44:33Z"
+            },
+            {
+              "name": "Stage 4 environment setup",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-16T08:44:33Z",
+              "completed_at": "2026-11-16T08:44:33Z"
+            },
+            {
+              "name": "After unit tests hook",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 9,
+              "started_at": "2026-11-16T08:44:33Z",
+              "completed_at": "2026-11-16T08:44:33Z"
+            },
+            {
+              "name": "Stage 4 integration tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-16T08:44:33Z",
+              "completed_at": "2026-11-16T08:44:45Z"
+            },
+            {
+              "name": "After integration tests hook",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 11,
+              "started_at": "2026-11-16T08:44:45Z",
+              "completed_at": "2026-11-16T08:44:45Z"
+            },
+            {
+              "name": "Post Setup module SDK",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-16T08:44:45Z",
+              "completed_at": "2026-11-16T08:44:45Z"
+            },
+            {
+              "name": "Post Stage 1 guard owned CI/CD content",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-16T08:44:45Z",
+              "completed_at": "2026-11-16T08:44:45Z"
+            },
+            {
+              "name": "Post Checkout module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22,
+              "started_at": "2026-11-16T08:44:45Z",
+              "completed_at": "2026-11-16T08:44:45Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23,
+              "started_at": "2026-11-16T08:44:45Z",
+              "completed_at": "2026-11-16T08:44:45Z"
+            }
+          ]
+        },
+        {
+          "id": 133175134476,
+          "name": "Sample Windows tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T08:23:20Z",
+          "completed_at": "2026-11-16T08:24:30Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-16T08:23:21Z",
+              "completed_at": "2026-11-16T08:23:26Z"
+            },
+            {
+              "name": "Prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-16T08:23:26Z",
+              "completed_at": "2026-11-16T08:24:21Z"
+            },
+            {
+              "name": "Run module action",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-16T08:24:21Z",
+              "completed_at": "2026-11-16T08:24:26Z"
+            },
+            {
+              "name": "Post Prepare module",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-16T08:24:26Z",
+              "completed_at": "2026-11-16T08:24:29Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-16T08:24:29Z",
+              "completed_at": "2026-11-16T08:24:29Z"
+            }
+          ]
+        },
+        {
+          "id": 133175136130,
+          "name": "Sample module / Restore owned CI/CD content",
+          "status": "completed",
+          "conclusion": "skipped",
+          "started_at": "2026-11-16T08:22:45Z",
+          "completed_at": "2026-11-16T08:22:45Z",
+          "steps": []
+        },
+        {
+          "id": 133185068655,
+          "name": ".NET tests / Restore owned CI/CD content",
+          "status": "completed",
+          "conclusion": "skipped",
+          "started_at": "2026-11-16T08:44:47Z",
+          "completed_at": "2026-11-16T08:44:46Z",
+          "steps": []
+        }
+      ]
+    }
+  ],
+  "completed_at": "2026-11-16T08:57:18.739365+00:00",
+  "result": "fail"
+}

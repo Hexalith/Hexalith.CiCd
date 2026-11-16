@@ -1,0 +1,330 @@
+{
+  "recorded_at": "2026-11-16T08:55:42.993888+00:00",
+  "command": [
+    "kubectl",
+    "--context",
+    "jpiquot@local",
+    "-n",
+    "registry-distribution",
+    "get",
+    "configmap",
+    "distribution-registry-config",
+    "-o",
+    "json"
+  ],
+  "exit": 0,
+  "resourceVersion": "46533286",
+  "scope": "read-only configured access-control metadata; no secret or credential material",
+  "accessControl": {
+    "repositories": {
+      "**": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          }
+        ]
+      },
+      "cicd-publish-spike-3-1": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "cicd-publish-spike-3-1"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      },
+      "commons": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-commons-publish"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      },
+      "commons/**": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-commons-publish"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      },
+      "polymorphicserializations": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-polymorphicserializations-publish"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      },
+      "polymorphicserializations/**": {
+        "anonymousPolicy": [],
+        "policies": [
+          {
+            "users": [
+              "jpiquot",
+              "jpiquot@itaneo.com"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          {
+            "users": [
+              "cluster-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "ci-reader"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-registry-pull"
+            ],
+            "actions": [
+              "read"
+            ]
+          },
+          {
+            "users": [
+              "hexalith-polymorphicserializations-publish"
+            ],
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ]
+      }
+    },
+    "adminPolicy": {
+      "users": [
+        "jpiquot",
+        "jpiquot@itaneo.com"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update",
+        "delete"
+      ]
+    }
+  }
+}

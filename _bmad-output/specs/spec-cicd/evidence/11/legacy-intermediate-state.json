@@ -1,0 +1,73 @@
+{
+  "observed_at": "2026-11-16T09:22:20.016735+00:00",
+  "conclusion": "Keep retirement preparation main pushes local until adoption can follow promptly. Probe branches retain every legacy tool/npm file.",
+  "modules": {
+    "Hexalith.Commons": {
+      "source": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "tools_directory_tracked_files": [
+        "tools/release-packages.json",
+        "tools/test_verify_nuget_release.py",
+        "tools/verify_nuget_release.py"
+      ],
+      "legacy_workflow_dependencies": {
+        ".github/workflows/ci.yml": {
+          "sha256": "28455dd20db3cb0ff2a04c805829c605cf0199f6b05fd6eafe33503e6f24ddb9",
+          "dependent_lines": [
+            {
+              "line": 26,
+              "text": "      - run: python3 -m unittest discover -s tools -p 'test_verify_nuget_release.py' -v"
+            }
+          ]
+        },
+        ".github/workflows/release.yml": {
+          "sha256": "fe7dbd7821bc417c39becd44f089424305b3828669fa34b12a640ae25cd4f237",
+          "dependent_lines": [
+            {
+              "line": 117,
+              "text": "        run: npm exec --no -- semantic-release"
+            },
+            {
+              "line": 127,
+              "text": "          python3 tools/verify_nuget_release.py \"${tag#v}\" --commit \"$RELEASE_SOURCE\""
+            },
+            {
+              "line": 132,
+              "text": "          name: release-packages-${{ github.run_id }}-${{ github.run_attempt }}"
+            }
+          ]
+        }
+      }
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "source": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "tools_directory_tracked_files": [
+        "tools/release-packages.json",
+        "tools/test_verify_nuget_release.py",
+        "tools/verify_nuget_release.py"
+      ],
+      "legacy_workflow_dependencies": {
+        ".github/workflows/release.yml": {
+          "sha256": "8bab8803e43c75ff0338c7ef6cacd1edd3eadc7f6030ae50ae5ac199dc825caa",
+          "dependent_lines": [
+            {
+              "line": 68,
+              "text": "        package-manifest: tools/release-packages.json"
+            },
+            {
+              "line": 96,
+              "text": "        python3 tools/verify_nuget_release.py \"${tag#v}\" --commit \"$RELEASE_SOURCE\""
+            },
+            {
+              "line": 102,
+              "text": "        name: release-packages-${{ github.run_id }}-${{ github.run_attempt }}"
+            },
+            {
+              "line": 134,
+              "text": "        python3 tools/verify_nuget_release.py \"$VERSION\" --commit \"$source\""
+            }
+          ]
+        }
+      }
+    }
+  }
+}

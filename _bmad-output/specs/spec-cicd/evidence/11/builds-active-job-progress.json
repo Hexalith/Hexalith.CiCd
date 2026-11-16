@@ -1,0 +1,103 @@
+{
+  "recorded_at": "2026-11-16T08:40:13.651967+00:00",
+  "run_id": 43830524672,
+  "scope": "read-only active job timing and log availability; no cancellation/rerun or settings changes",
+  "jobs": [
+    {
+      "job_id": 133174495473,
+      "name": "Python contract tests (runner)",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "--repo",
+        "Hexalith/Hexalith.Builds",
+        "--job",
+        "133174495473",
+        "--log"
+      ],
+      "exit": 1,
+      "stderr": "job 133174495473 is still in progress; logs will be available when it is complete",
+      "started_at": "2026-11-16T08:22:16Z",
+      "active_steps": [
+        {
+          "name": "Run the shared Python suite and CI and perimeter contract validators",
+          "started_at": "2026-11-16T08:22:34Z",
+          "status": "in_progress"
+        }
+      ]
+    },
+    {
+      "job_id": 133174495603,
+      "name": "Python contract tests (3.12)",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "--repo",
+        "Hexalith/Hexalith.Builds",
+        "--job",
+        "133174495603",
+        "--log"
+      ],
+      "exit": 1,
+      "stderr": "job 133174495603 is still in progress; logs will be available when it is complete",
+      "started_at": "2026-11-16T08:21:35Z",
+      "active_steps": [
+        {
+          "name": "Run the shared Python suite and CI and perimeter contract validators",
+          "started_at": "2026-11-16T08:21:50Z",
+          "status": "in_progress"
+        }
+      ]
+    },
+    {
+      "job_id": 133174498138,
+      "name": "Package catalog contracts",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "--repo",
+        "Hexalith/Hexalith.Builds",
+        "--job",
+        "133174498138",
+        "--log"
+      ],
+      "exit": 1,
+      "stderr": "job 133174498138 is still in progress; logs will be available when it is complete",
+      "started_at": "2026-11-16T08:22:55Z",
+      "active_steps": [
+        {
+          "name": "Test package version audit validator",
+          "started_at": "2026-11-16T08:33:49Z",
+          "status": "in_progress"
+        }
+      ]
+    },
+    {
+      "job_id": 133174501958,
+      "name": ".NET tests / Build and tests",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "--repo",
+        "Hexalith/Hexalith.Builds",
+        "--job",
+        "133174501958",
+        "--log"
+      ],
+      "exit": 1,
+      "stderr": "job 133174501958 is still in progress; logs will be available when it is complete",
+      "started_at": "2026-11-16T08:23:29Z",
+      "active_steps": [
+        {
+          "name": "Stage 3 unit tests",
+          "started_at": "2026-11-16T08:25:29Z",
+          "status": "in_progress"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,725 @@
+{
+  "observed_at": "2026-11-16T10:40:31.406823+00:00",
+  "scope": "complete local main ancestry matching fresh authenticated live refs; tracked automation/container inputs only",
+  "modules": {
+    "Hexalith.Commons": {
+      "main": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "shallow": "false",
+      "main_ancestry_commit_count": 448,
+      "registry_workflow_change_commits": [],
+      "secret_inheritance_change_commits": [],
+      "current_workflow_secret_names": [
+        "GITHUB_TOKEN"
+      ],
+      "workflow_snapshots": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "28455dd20db3cb0ff2a04c805829c605cf0199f6b05fd6eafe33503e6f24ddb9",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec"
+          ]
+        },
+        {
+          "path": ".github/workflows/codeql.yml",
+          "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/codeql.yml@main"
+          ]
+        },
+        {
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "b38cf3d2e387d9e95e51cbe33329cc3d5f600dbe0879e76fa5ad13d0e9f0b4bb",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@main"
+          ]
+        },
+        {
+          "path": ".github/workflows/dependency-review.yml",
+          "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/dependency-review.yml@main"
+          ]
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "sha256": "fe7dbd7821bc417c39becd44f089424305b3828669fa34b12a640ae25cd4f237",
+          "secret_names": [
+            "GITHUB_TOKEN"
+          ],
+          "secrets_inherit": false,
+          "uses": [
+            "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73",
+            "Hexalith/Hexalith.Builds/Github/prepare-domain-release@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "NuGet/login@8d196754b4036150537f80ac539e15c2f1028841",
+            "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+          ]
+        }
+      ],
+      "current_container_input_files": [],
+      "container_file_history_commits": [],
+      "project_inventory": [
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/Hexalith.Commons.Aspire.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/Hexalith.Commons.Configurations.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/Hexalith.Commons.Diagnostics.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/Hexalith.Commons.Http.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/Hexalith.Commons.Metadatas.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/Hexalith.Commons.Publication.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/Hexalith.Commons.Serialization.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.ServiceDefaults/Hexalith.Commons.ServiceDefaults.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.StringEncoders/Hexalith.Commons.StringEncoders.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/Hexalith.Commons.TenantAccess.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.UniqueIds/Hexalith.Commons.UniqueIds.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Hexalith.Commons.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.Aspire.Tests/Hexalith.Commons.Aspire.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.Diagnostics.Tests/Hexalith.Commons.Diagnostics.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/Hexalith.Commons.Http.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.Publication.Tests/Hexalith.Commons.Publication.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.Serialization.Tests/Hexalith.Commons.Serialization.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.ServiceDefaults.Tests/Hexalith.Commons.ServiceDefaults.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.TenantAccess.Tests/Hexalith.Commons.TenantAccess.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Hexalith.Commons.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        }
+      ],
+      "locally_rendered_registry_flag": false,
+      "historical_workflow_blobs_scanned": 71,
+      "case_insensitive_historical_registry_matches": [],
+      "historical_secret_inheritance_blobs": [],
+      "historical_dynamic_secret_indexing_blobs": [],
+      "historical_workflow_blob_inventory": [
+        {
+          "blob": "005b8b3b3c93c1c00a4ca0ad790e3e7af1de81f6",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "0a375782e68485fb728637365136fd0b2ea2597ac1f81012eb098058f9aadba0"
+        },
+        {
+          "blob": "00f5fb1c5ad35086fb328f0f62c9efb9d0734a25",
+          "path": ".github/workflows/release.yml",
+          "sha256": "e0d605e17a9117d097a4eccfee837bcc2454bcec27388dde5e5d1f7571718f20"
+        },
+        {
+          "blob": "01877cdc34680b1142a93e7c83986d203906dab3",
+          "path": ".github/workflows/release.yml",
+          "sha256": "b30d309f5aeed1ce51cd69b59945f190af27c3f2f4ba7a8f3c5e6abdb4e8457b"
+        },
+        {
+          "blob": "03694687e401412cb0d6da315404050d46ca4e3c",
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "6944d252f5c7e6791b32e7e5eeb586fbddc4a69083aa8f72aaa1a65da3153a33"
+        },
+        {
+          "blob": "06c68b4bfc6f2f379fc42ac2c95ea6b700a671c1",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "7536c09234a53ee6c4ac96759119e2b79389ce34b89ea72c4988e97e0d0f98bf"
+        },
+        {
+          "blob": "0826aab51c638f990ab2d4ffb43265dc33d7f2c5",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "b8852a612194a38949b5dc8b0914c4d8fb92d95e15008fcd53e61ebf48e674ec"
+        },
+        {
+          "blob": "099a29bdbb4bdd21d101e447193e3cd515ad0ad5",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "cf71a3201a6a90a7c32c56cb5d3c923ea90f64b95fb9bf2adeaa2ba2710ef45f"
+        },
+        {
+          "blob": "15836b66a295f0c7228ab1557d12093c341bd04d",
+          "path": ".github/workflows/release.yml",
+          "sha256": "35f3890bfa833f6dcf36bce12120421e14d3dff050f29250d34ada64fccd3296"
+        },
+        {
+          "blob": "1836c370902b739ce6a098666503a886d5153e0b",
+          "path": ".github/workflows/release.yml",
+          "sha256": "524a460b03dd8f41d69c7c6ea634a7a3c610be3eb0245060c00a2376c7e3532f"
+        },
+        {
+          "blob": "195fd70b79e9796f881b83eab3b29dbed5d3d3a8",
+          "path": ".github/workflows/release.yml",
+          "sha256": "1034f6ae93b1036835a5bcb65ffa3a26af6a651a29a69fccbc71b29a3ae4e99a"
+        },
+        {
+          "blob": "1c16b19c3c12c6ded59e82c631fdf685f7b7da64",
+          "path": ".github/workflows/release.yml",
+          "sha256": "95fdf499a37fdc0d6f6ea4cf90f067a4d88f88a6e491db8d804129bf5f7c8e09"
+        },
+        {
+          "blob": "26fa729bb44d34c87c912e0ef7798cd0ef14780a",
+          "path": ".github/workflows/release.yml",
+          "sha256": "136faf5e17f80a03480e256a0f3e6ac2f4dfdddf681538704dd799e9653c7c23"
+        },
+        {
+          "blob": "28ec346226a150506e2f6eba06f452891ddaeb10",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "faab137dc26bc54a4ac96758937015b626dea3c59caca5a5d01e5aa260a52a55"
+        },
+        {
+          "blob": "293b6d954df8614bf33fab4a6e7d7d7cd5d06547",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "7cb7f33bd6766172546a8d61fcd0c262cd150760a408b3c74dc7d98af02fbfae"
+        },
+        {
+          "blob": "2a2124021ca1f1d968905b10fd65dad7f48e56f0",
+          "path": ".github/workflows/releases.yml",
+          "sha256": "a5d7fc8524c82227ac57b4025de7445964a22f40834604485f79c0318640562b"
+        },
+        {
+          "blob": "2aa7d4dc331ad9f46204c7272363e1845d4a848d",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "87e6ffafb01d7f78a3fd4c47e78c4a8ebc1622115f3b5c5b367dd1d4447070e3"
+        },
+        {
+          "blob": "3161aa6a7f977d246345cf47484c0f7506562a4b",
+          "path": ".github/workflows/codeql.yml",
+          "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1"
+        },
+        {
+          "blob": "3253418e94c60b83ed160560cd21ede9fb8785ec",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "9b0d47b190a94b3fdb41d06d2572b21962d00389cd45d6e497e25db5c7de5c44"
+        },
+        {
+          "blob": "337d826f2336ebf1ad4930c2ac1b8c37feb73ed0",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "51cf27808e7835bdcb6b254c3f30e8fe503c8e7801f7b494045a79e37215c1e3"
+        },
+        {
+          "blob": "3f01ea9ffa9ac926a37fdbfac52f3c24752bec04",
+          "path": ".github/workflows/releases.yml",
+          "sha256": "19090cfac4ff98e83ae735df3f5a655a1754ea0b24a339d31baf5afb3af6c976"
+        },
+        {
+          "blob": "4432c4c82545c705ab55231089aac790b824748e",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "4f0247f3188732c35d7561092007c2d99d24bb81637471131f8472d4982f3a64"
+        },
+        {
+          "blob": "44424e0df38b7f85daf61266defdecb21898875b",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "48c52e52eea02a6d9c16f8a04fe48083c05ed7227a23daaddd021ea5076b8529"
+        },
+        {
+          "blob": "45a2e7bb3836f77224f828b2d95737c1869225bd",
+          "path": ".github/workflows/release.yml",
+          "sha256": "99b7d09228720ef8bceb6d9565053acc829922b31a102fcbf9fd1340f448264d"
+        },
+        {
+          "blob": "4651c0783d9be55f5af1779c6af9403fcebb8c18",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "87e66c0517663138db7fd73254deb30e56f3aa507dbbd0c33a73907d43086114"
+        },
+        {
+          "blob": "47b63bb4d355bd7fea721e58bedf49b8a6d63030",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "26e5e227bfac5b252b1dc80ae3257711a1edfc889f56336c354569aa05022ecb"
+        },
+        {
+          "blob": "4ab6c0aa7dc2273ec687b52c2110fd7bb1fdef61",
+          "path": ".github/workflows/release.yml",
+          "sha256": "5e42d4979822ccc31cf8cf7aa08b2bf0a67d4e353ad288b43bcc1e2345937414"
+        },
+        {
+          "blob": "4db38d3577ce9283b43d0ef2996db9c355e71619",
+          "path": ".github/workflows/release.yml",
+          "sha256": "180f0f2683ff3557a58ed6cbfd41b1ab334280bd1aeeb86f1584c94ad412f4ef"
+        },
+        {
+          "blob": "4fdb0432f3b5ca0f4d3809174bca6d1c5fc3289b",
+          "path": ".github/workflows/release.yml",
+          "sha256": "a1335812f848b486cf54353b2ca6ca7dd7e7d0cae363379a7de65a6b889c2b80"
+        },
+        {
+          "blob": "59202065d248e0c4ec8ad784d4ebff6c9d0db271",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "661870817846e1a5ab560a963512068aad319e9a21931fbcbab7b0256e377868"
+        },
+        {
+          "blob": "5e212c39ace7d7ba996d3449f238207bc5a7086d",
+          "path": ".github/workflows/release.yml",
+          "sha256": "09ddd6c0c939ef484bfe25639a8a205649bf80587510163f59381874af9b8d0d"
+        },
+        {
+          "blob": "5ea6b9aa5269b85ed25d4e00b9a31d4edb3b9524",
+          "path": ".github/workflows/release.yml",
+          "sha256": "2bbc983c79299d07f8a3f84d25ec014fa7c623fba6705a41666f4a9e755e40f3"
+        },
+        {
+          "blob": "5fa0cd04a74dd33ad24abc374cea0d9ea0aae56f",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "5e3c676df27caf99472bf0ddd5a1b58c63b489ea6fb273755c04dd0a8945facb"
+        },
+        {
+          "blob": "64d0ffd7bd68bdd03b32dd842c0eef29116415bb",
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "b38cf3d2e387d9e95e51cbe33329cc3d5f600dbe0879e76fa5ad13d0e9f0b4bb"
+        },
+        {
+          "blob": "6812aa09b7e70770c2e495d966beacfa1a4d121b",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "79b6ae6b8d06e4fecf7d8cc4072f054b8965c9f884bd3df014a14f852c4ee39a"
+        },
+        {
+          "blob": "6a7def2c672deb75ac413b6874cba42e55a06175",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "2c0b191b8e8938988ddf6afcafc602ef461ecc06bcabdb78691df6197b6b0412"
+        },
+        {
+          "blob": "6e551a5c46c06c4a13f855a5ddbca9abcd33485e",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "e02428cfcd06e79c0ed6a568c6e12a78dd7698fb9f03266f4267bb0428e75c4f"
+        },
+        {
+          "blob": "765dd6ccd65ca76c14df591ee5f036c88179fafb",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "30cc370e0f76cf7305914779a0c3fd4a0c6141d140751d403d9c9b1765a88867"
+        },
+        {
+          "blob": "77c96d39a4d1893c789465bc1ad74f8ac473b546",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "0e9809d33f25da12ed9283088ca4e687b3fc208dff0ade925b4bff3ad4a1f788"
+        },
+        {
+          "blob": "7ea05a1a6e84d2f110012415a1913aa08b225272",
+          "path": ".github/workflows/ci.yml",
+          "sha256": "28455dd20db3cb0ff2a04c805829c605cf0199f6b05fd6eafe33503e6f24ddb9"
+        },
+        {
+          "blob": "8443140ce569fbea7a4bc4c23d95a4bbf6af226c",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "77c3b172be3f2323d8eaac43ced941c714a7560ff379a66c2e886f16e70bb5d5"
+        },
+        {
+          "blob": "87b2a727368b94eb790b456516641d7e526ad4e6",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "04179b5fd1198bb0be44538f70904b21260f052c6c42a49258499edb28da0233"
+        },
+        {
+          "blob": "89f77d3ed1a02a719aecd0d3451014bee168fb94",
+          "path": ".github/workflows/release.yml",
+          "sha256": "f826a9de30b0680890260d10cc62512973857fe0a900512012e930a76e670759"
+        },
+        {
+          "blob": "8dbfd5ffeb7cd7997d635029dc544ee63b7f94b0",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "c4e68d8a04da881242b63b37160f7bd76c0597d4c4e99e610d93ba8b30548e71"
+        },
+        {
+          "blob": "926a89c11083953d8df36ea51379144c5e1f5ca9",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "debf16be314dfe83a963b85f282948d9b262bbaa74e00ec60269908e265c7358"
+        },
+        {
+          "blob": "932957818e69c9ac066c843cbf742abb7b631c94",
+          "path": ".github/workflows/update-version.yml",
+          "sha256": "e2f71b6b01d0de71a3b9ab71163afa982af1979e69188e9a21085215eeda93f0"
+        },
+        {
+          "blob": "9d480cffc6919ff401a51c670cc0665d5f908d3a",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "26aab9b026c96b76e7af54a6cb901e8a0914d14ffb444bd6cca6039ce78831dd"
+        },
+        {
+          "blob": "9d6d52304873afe61038b850c0832a4a3ad4287b",
+          "path": ".github/workflows/release.yml",
+          "sha256": "2b74f9a31ac641c2325719aba134b4b13d30edbaa35cac19b174f748a7b8f735"
+        },
+        {
+          "blob": "9de2135f42d0abd3ae2a86ae2366cf865cb0e68c",
+          "path": ".github/workflows/releases.yml",
+          "sha256": "5615bad91be4a6ad25c8f389a9cba88474f96eafbb7c02a690bcfa7ba233160a"
+        },
+        {
+          "blob": "a0c509d1dbb65416be25748e32ab2c8d4c957a6c",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "c9636764d0ec4e6f96afa14537299dac2d5da13bf8c1c37b30c4f116d0137bd2"
+        },
+        {
+          "blob": "ad796a771091ff297352ccee317ec84ea663ebe5",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "de57c42e50aa5b355e174a32c42436852a7ace2b1c0e8f65114306d98aee23e2"
+        },
+        {
+          "blob": "af78ba53883aeebf1daa4d2a1df7df04c4b011d8",
+          "path": ".github/workflows/release.yml",
+          "sha256": "417cb455112b2550e4d25ed77dd53dc969e76932aa20653b17217e98be6baa50"
+        },
+        {
+          "blob": "b196cd6fd1aad510b326a41c921a97322265aaca",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "68a61d58f24a67f0e35b8539be987072ef3711e322cffb579015f37419cfd385"
+        },
+        {
+          "blob": "b4a4e69c00e68260baffeafbd74fedbb3285c539",
+          "path": ".github/workflows/release.yml",
+          "sha256": "688c1a871354f9e08b4f26b92438e71bf274194bd82aa3a5f4224d4c28788e3b"
+        },
+        {
+          "blob": "bb5b9180329ff17a6c82506e06c2ed5277f2c48f",
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "bbf52d1fe85889872885a2dbe6343ec562a94bd8f5e09fcce5e330c0fa04bcb9"
+        },
+        {
+          "blob": "c807323bfaa8a3fc6a63f6247238023765a3f778",
+          "path": ".github/workflows/release.yml",
+          "sha256": "d3e39378488c318ce31beb6bf33d7f53174851b43b2036d9e37117435bef5883"
+        },
+        {
+          "blob": "c8acaeaf6582cc88b330a91cdb615f79b34f89e1",
+          "path": ".github/workflows/release.yml",
+          "sha256": "cc6a5e6a5a3155061aa5dfde9da5909e3b56ff339465f5695fde156153529870"
+        },
+        {
+          "blob": "cf6f52e1ddb3dc981033ac792ed2ae4b7bce5407",
+          "path": ".github/workflows/release.yml",
+          "sha256": "29e49e474c434ea6d98ad2719ac3cfe672a0cf84e5509df7fa17446446dd92d1"
+        },
+        {
+          "blob": "d5b5600cf328cc77dee64ef8104ed00f052b247d",
+          "path": ".github/workflows/release.yml",
+          "sha256": "4e4f731ca1c608d0e84b06c10de6ba273a919932cfe282f67fa3425f2f8f5db8"
+        },
+        {
+          "blob": "daecab8f3873c9c5f5f29001d285db6409829e5d",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "47f0decdda123cd8d745061d42531769bfa00ecf4f39eb151cedd9ba08e433c6"
+        },
+        {
+          "blob": "e580dc8e26c4920287fa14e492aa96739b2d73c7",
+          "path": ".github/workflows/release.yml",
+          "sha256": "24634bdacf0d14c0e74a1080625270e6b66b5f09b45aa8f2cb77a44f8e931733"
+        },
+        {
+          "blob": "e7ad13a4abf19e7f61da6e497af23796d3587cbb",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "c04b6160fcb9fb1cd4487fd58aad335fe37dc4cebf0a1d461b69fa7833623376"
+        },
+        {
+          "blob": "ebd86fc2b2fab7dfd7d50028d52ed033bd7fd47f",
+          "path": ".github/workflows/dependency-review.yml",
+          "sha256": "5d4067da3354c87240c991980b20f69dcad0a7b84405d1ec035a1ed0ee422c2d"
+        },
+        {
+          "blob": "ed62f33bef04ef44dba82878f4acf7f7a0365824",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "fe3a8069d02785d3e14b48eb0fe911eabca415b925a75821f9e9f947836b94bd"
+        },
+        {
+          "blob": "ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb",
+          "path": ".github/workflows/dependency-review.yml",
+          "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc"
+        },
+        {
+          "blob": "f15df87ef2e1e67214b515c323fb6f8934930550",
+          "path": ".github/workflows/release.yml",
+          "sha256": "8339e1595a54e6eeb6f056f6f84d0f16592984253753a556fc0cac82ffeddee2"
+        },
+        {
+          "blob": "f2b2fb983535f7ff8d93392a7e439cd476f045c9",
+          "path": ".github/workflows/release.yml",
+          "sha256": "6629244f796ef578e7aa590f8124011c7510f735f05889a35dd486e6d6940851"
+        },
+        {
+          "blob": "f8968309d345e34c731f39d25fa5951d438808ff",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "3f6dc720f9801e4afe453ed64a36ea87a16621a7d94b264e6584eb3337ff2339"
+        },
+        {
+          "blob": "f8f6e7f7afc38a4058ecabe6d3481e0321921098",
+          "path": ".github/workflows/release.yml",
+          "sha256": "f44902278390bfcb135b8adc4eb8a22ab27ae7ea880f176765cdd29518993019"
+        },
+        {
+          "blob": "f948775d65c77f585dcf801d55e271175ad0cd40",
+          "path": ".github/workflows/release.yml",
+          "sha256": "fe7dbd7821bc417c39becd44f089424305b3828669fa34b12a640ae25cd4f237"
+        },
+        {
+          "blob": "faf894a82ab90b0925398dccf60ca546fccb54e6",
+          "path": ".github/workflows/packages.yml",
+          "sha256": "1a32a3c6674973a528b319ee260a984d7b616ce652fa0c2d97a54d5bbf47be3c"
+        },
+        {
+          "blob": "fe215cdd7845c3940d49926d32a76acebf3688ac",
+          "path": ".github/workflows/releases.yml",
+          "sha256": "64c3f5234026b18a7facb75248eece87e2047b8536450c7f91a1a76728e94cb7"
+        }
+      ]
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "main": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "shallow": "false",
+      "main_ancestry_commit_count": 190,
+      "registry_workflow_change_commits": [],
+      "secret_inheritance_change_commits": [],
+      "current_workflow_secret_names": [
+        "GITHUB_TOKEN"
+      ],
+      "workflow_snapshots": [
+        {
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "f2efc3d60d64f67fbb05d5681760501cd0c854db79065b7435d74295e77d6f90",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73"
+          ]
+        },
+        {
+          "path": ".github/workflows/codeql.yml",
+          "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/codeql.yml@main"
+          ]
+        },
+        {
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "f7d3ff9e5304cc6599527c1c3aef2265aff9313d75221d7c4b37000237da3f50",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec"
+          ]
+        },
+        {
+          "path": ".github/workflows/dependency-review.yml",
+          "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc",
+          "secret_names": [],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/.github/workflows/dependency-review.yml@main"
+          ]
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "sha256": "8bab8803e43c75ff0338c7ef6cacd1edd3eadc7f6030ae50ae5ac199dc825caa",
+          "secret_names": [
+            "GITHUB_TOKEN"
+          ],
+          "secrets_inherit": false,
+          "uses": [
+            "Hexalith/Hexalith.Builds/Github/prepare-domain-release@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "NuGet/login@8d196754b4036150537f80ac539e15c2f1028841",
+            "Hexalith/Hexalith.Builds/Github/create-release@9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+            "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+          ]
+        }
+      ],
+      "current_container_input_files": [],
+      "container_file_history_commits": [],
+      "project_inventory": [
+        {
+          "path": "examples/DeserializeFileMessages/DeserializeFileMessages.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations.CodeGenerators/Hexalith.PolymorphicSerializations.CodeGenerators.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/Hexalith.PolymorphicSerializations.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Hexalith.PolymorphicSerializations.Tests.csproj",
+          "sdk": "Microsoft.NET.Sdk",
+          "container_properties": []
+        }
+      ],
+      "locally_rendered_registry_flag": false,
+      "historical_workflow_blobs_scanned": 19,
+      "case_insensitive_historical_registry_matches": [],
+      "historical_secret_inheritance_blobs": [],
+      "historical_dynamic_secret_indexing_blobs": [],
+      "historical_workflow_blob_inventory": [
+        {
+          "blob": "0c0dfe61b29cfb2d714907778a4627f0b85ea1b3",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "6d374e85f2be50075966d9432c859580118950ccaaa7700538ae22c6ec1fd330"
+        },
+        {
+          "blob": "10c687e793bfb7da1d08e6d38bf47143f9925ca4",
+          "path": ".github/workflows/release.yml",
+          "sha256": "1eb5a90cf41bb787f558e11ab8b29b06e2735f3f1e3badbd409d60d0ab0ca239"
+        },
+        {
+          "blob": "3161aa6a7f977d246345cf47484c0f7506562a4b",
+          "path": ".github/workflows/codeql.yml",
+          "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1"
+        },
+        {
+          "blob": "44424e0df38b7f85daf61266defdecb21898875b",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "48c52e52eea02a6d9c16f8a04fe48083c05ed7227a23daaddd021ea5076b8529"
+        },
+        {
+          "blob": "6d09c09136ffdc72a5e1b1a3a3caab2f4043fbab",
+          "path": ".github/workflows/release.yml",
+          "sha256": "24b8c247900f7dea0ebc68f5f35e2f66b91c732e9b3f12372496b402ccf2d95c"
+        },
+        {
+          "blob": "7e131f023565a4efdfcbf4293218f0c7800dbecd",
+          "path": ".github/workflows/release.yml",
+          "sha256": "8bab8803e43c75ff0338c7ef6cacd1edd3eadc7f6030ae50ae5ac199dc825caa"
+        },
+        {
+          "blob": "926a89c11083953d8df36ea51379144c5e1f5ca9",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "debf16be314dfe83a963b85f282948d9b262bbaa74e00ec60269908e265c7358"
+        },
+        {
+          "blob": "95f0523ab0be7169ba548392c257bd096aeb51fa",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "670b505e2b2847153ac691f2a6da33c670e1cf0fc75396ce270be37c863d7078"
+        },
+        {
+          "blob": "b4083c0a506185521df8d2a11a6074c3d63d1427",
+          "path": ".github/workflows/release.yml",
+          "sha256": "73a0f8144e5f1aba495cdcc940f673455d4ead283859c912498eff27cce5308f"
+        },
+        {
+          "blob": "bb5b9180329ff17a6c82506e06c2ed5277f2c48f",
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "bbf52d1fe85889872885a2dbe6343ec562a94bd8f5e09fcce5e330c0fa04bcb9"
+        },
+        {
+          "blob": "bf3b5f01b750cae833a52d3d96145ba703125af7",
+          "path": ".github/workflows/commitlint.yml",
+          "sha256": "f7d3ff9e5304cc6599527c1c3aef2265aff9313d75221d7c4b37000237da3f50"
+        },
+        {
+          "blob": "cec1677227241002ab0b33a79ea631149fd542fb",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "b319cdab868309a24e330de09eea7cb103b0aab61995591dc6859be258f6fee1"
+        },
+        {
+          "blob": "daecab8f3873c9c5f5f29001d285db6409829e5d",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "47f0decdda123cd8d745061d42531769bfa00ecf4f39eb151cedd9ba08e433c6"
+        },
+        {
+          "blob": "e4c3fbd66b5f68d9e34e82eb1b5c20ac5eef052b",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "f2efc3d60d64f67fbb05d5681760501cd0c854db79065b7435d74295e77d6f90"
+        },
+        {
+          "blob": "eba92c22ddba5df6e4f702fcb34787fe3fe8b3b1",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "76d808e0a5701f68d2aa799c341e02ecd44922e347a3d5090f7b71d0ab70c638"
+        },
+        {
+          "blob": "ebd86fc2b2fab7dfd7d50028d52ed033bd7fd47f",
+          "path": ".github/workflows/dependency-review.yml",
+          "sha256": "5d4067da3354c87240c991980b20f69dcad0a7b84405d1ec035a1ed0ee422c2d"
+        },
+        {
+          "blob": "ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb",
+          "path": ".github/workflows/dependency-review.yml",
+          "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc"
+        },
+        {
+          "blob": "ef6b5664d8fa5b812b50fef4b692fe170139a27e",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "50f7bcad1636b978d1118197b7686eebfbd5ca118e7df7473c8dac0ed9b01a6e"
+        },
+        {
+          "blob": "f2b3d45f3119aca49ac7e831d1cb60467020d561",
+          "path": ".github/workflows/build-release.yml",
+          "sha256": "f68199b726ace5a971d2eddfbef1935f57281b75920723ef596cf759bd7b5be0"
+        }
+      ]
+    }
+  },
+  "historical_blob_scan_at": "2026-11-16T10:45:03.936801+00:00"
+}

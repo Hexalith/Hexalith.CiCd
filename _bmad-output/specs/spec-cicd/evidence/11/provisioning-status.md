@@ -1,9 +1,10 @@
 # Pilot provisioning checkpoint — 2026-11-16
 
-Provisioning is partly complete. Neither pilot is adopted. The first story
-execution checkbox remains open because scoped NuGet policies and the later
-org grants are not complete. No module product push or shared release has
-occurred, and no pre-adoption verification exception has been assumed.
+Provisioning is complete. Neither pilot is adopted. The first story execution
+checkbox is complete. Shared publication is now complete as `v6.0.6`;
+preparation main publication and actual pilot acceptance remain open. The human subsequently approved the narrow
+pre-adoption verification path recorded in the frozen story; its exact-input
+checks must pass before any product-preparation push.
 
 | AD-21 step | Current result | Evidence |
 | --- | --- | --- |
@@ -13,8 +14,8 @@ occurred, and no pre-adoption verification exception has been assumed.
 | Exact rulesets | Commons IDs `27356310`/`27356311`; Poly IDs `27356312`/`27356313`. Active `refs/heads/main` deletion/non-fast-forward and `refs/tags/v*` update/deletion rules, with no bypass actors or extra conditions. | `provision-rulesets.{json,log}`, `provisioning-after.json` |
 | Main-only release environments | Both `hexalith-release` environments have exactly one branch policy, `main`, without required reviewers or wait timers. Both own registry-secret pairs are installed. | `provision-environments.{json,log}`, `provision-registry.json`, `provisioning-after.json` |
 | Own Zot identities | Distinct `hexalith-commons-publish` and `hexalith-polymorphicserializations-publish`, scoped respectively to `commons`/`commons/**` and `polymorphicserializations`/`polymorphicserializations/**`, with read/create/update and no administrator/delete grant. | `provision-registry.{py,json,log}` |
-| Scoped NuGet policy beside each legacy policy | **Incomplete.** The first Commons submission showed a generic creation error; no new card appeared. Refresh redirected to NuGet Sign In. Ordinary Microsoft sign-in reached the human face/fingerprint/PIN/security-key boundary for `jpiquot@itaneo.com`. No credentials entered. | `nuget-commons-{proposed,submit,readback}.json`, `nuget-session-expired.json`, `nuget-signin-result.json` |
-| Later settings and org grants | Deferred until both NuGet policies exist, preserving AD-21 order. Read-only checks record the existing disabled default setup/security updates, 90-day retention, kill switches and org grant selection. | `provisioning-after.json` |
+| Scoped NuGet policy beside each legacy policy | After human authentication, created and verified Active policies `27048` (Commons) and `27049` (Poly), exact owner/repository IDs, workflow `release.yml`, environment `hexalith-release`, respective package-prefix globs, and push packages/versions only. All existing policy IDs remain. | `nuget-policy-verification.json`, `nuget-commons-readback-6.json` |
+| Later settings and org grants | Completed after both policies. Existing default setup/security updates remain disabled, retention is 90 days, kill switches remain exactly `true`; Actions and Dependabot pull-secret grants and the NuGet variable select Builds and both pilots. | `provision-settings-grants.{json,log}` |
 
 The CodeQL operation used GitHub's documented newest-to-oldest analysis
 deletion, restricted to the previously assessed legacy CodeQL configuration.
@@ -33,22 +34,42 @@ upload creation in the other pilot's or an unrelated namespace. Own namespace
 grants are confirmed by the preserved live ACL and restarted workload; no
 package, image or upload was created as a qualification fixture.
 
-The prepared Commons policy has owner `Hexalith`, workflow `release.yml`,
+The saved Commons policy has owner `Hexalith`, workflow `release.yml`,
 environment `hexalith-release`, package glob `Hexalith.Commons*`, and only push
 of packages/versions. These fields follow the
 [NuGet policy setup](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing).
-No successful policy creation is claimed. The generic creation error followed
-by an expired session does not establish a duplicate-name, definition or
-permission constraint, nor prove the internal cause of the original error.
-After human authentication, refresh the policy inventory before retrying so a
-successful concurrent creation cannot be duplicated. Preserve all legacy
-policies until actual adoption.
+The original generic creation error followed by an expired session did not
+establish a duplicate-name, definition or permission constraint, nor prove the
+internal cause of that error. After the human authenticated, fresh inventory
+showed no new policy. A subsequent Commons readback showed the new policy with
+extra Stage/Unlist scopes; only that new policy was narrowed, and a real reload
+confirmed the push-only result. The explicit later submit guard found the
+already closed form and therefore does not establish how the original create
+was submitted. The helper now selects the native owner control without Enter,
+and Poly's separately guarded explicit submission produced the correct scopes.
+Both legacy policies and every other existing policy ID are preserved.
 
 The existing main workflows can produce new legacy CodeQL analyses while
 product preparation is pending. Recheck stale configuration state before
 adoption; do not disable or weaken those scans to keep an inventory empty.
 
-The independent mandatory pre-push gap remains as documented in
-`pre-adoption-check-resolution.md`. Human authentication does not select or
-approve that proposed verification path. No nested submodule, owned-file
-bootstrap, alternative credential or direct module-owned change was used.
+The human separately and explicitly approved the limited pre-adoption
+verification path in `pre-adoption-check-resolution.md`. Authentication alone
+was not treated as that decision. The approved exact-input checks remain
+required before module pushes. No nested submodule, owned-file bootstrap,
+alternative credential or direct module-owned change was used.
+
+The current execution state is in `implementation-readiness.md`: both full
+released-pin product verification sets pass; Commons PR #52 and Poly PR #19 are
+open and unmerged, with exact protected-token pre-push checks recorded. Product
+retirement commits and registration/render/pin inputs are prepared locally.
+Neither preparation main nor a delivery-triggering CiCd candidate was pushed.
+
+Adoption still requires this exact identity answer: identify any remaining
+legacy Zot automation principal and its pilot scope, or attest that the global
+admins `jpiquot` and `jpiquot@itaneo.com` are maintainer-only and no legacy pilot
+publisher remains. Neither pilot currently receives a legacy GitHub secret/key
+grant, but that inventory does not establish a Zot principal mapping. Namespace
+edits cannot revoke global admins. All concrete immediate cleanup targets are
+saved in `post-adoption-cleanup-plan.md`; no legacy credential or shared admin
+was removed before actual adoption.

@@ -1,0 +1,378 @@
+{
+  "observed_at": "2026-11-16T13:14:10.342833+00:00",
+  "story_status": "in-progress",
+  "current_checkpoint": "implementation and both authenticated policy redeliveries complete; final-main CI green, probe cleanup and original-module sync complete; genuine scheduled night pending",
+  "shared_release": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "ci_run": 43834424445,
+    "release_run": 43838534329,
+    "published_immutable_bot_tag": true
+  },
+  "candidate": {
+    "sha": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+    "base": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+    "full_locked_gate_exit": 0,
+    "verdict": {
+      "global": true,
+      "modules": [
+        "Hexalith.Commons",
+        "Hexalith.PolymorphicSerializations"
+      ]
+    },
+    "tool_suites": 14,
+    "tool_tests_passed": 392,
+    "push_confirmed": true,
+    "delivery_run": {
+      "conclusion": "success",
+      "created_at": "2026-11-16T11:48:32Z",
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43860977581",
+      "id": 43860977581,
+      "path": ".github/workflows/deliver.yml",
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-16T12:11:52Z"
+    },
+    "all_temporary_worktree_metadata_removed": true
+  },
+  "modules": {
+    "Hexalith.Commons": {
+      "preparation_main": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+      "preparation_parent": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "preparation_push_confirmed": true,
+      "pre_adoption_full_product_proof": "pass both preparation and probe sets:372tests/zero skipped, twelve Commons payload/symbol pairs and isolated consumer",
+      "pre_delivery_probe": {
+        "head": "e3d4da366a2e8c6b6216f4a7b57c15241313da79",
+        "branch": "cicd-pilot-update-commons-20261116",
+        "pull_request": 52,
+        "open_unmerged": false,
+        "state": "closed",
+        "merged": false,
+        "remote_probe_ref_deleted": true,
+        "local_probe_ref_deleted": true
+      },
+      "adoption": {
+        "adoption_sha": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+        "sole_parent": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+        "accepted_sha": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+        "tree": "e1bfdb71421d68e5fd9e706afc5dd255f5bc8a40",
+        "message": "build(cicd): apply f002539f6fbaddaa9b621a9cbf75a1263eee5dea from Hexalith.CiCd",
+        "perimeter_match": true,
+        "foreign_tree_preserved": true,
+        "unchanged_paths": 212,
+        "unchanged_path_list_sha256": "f4aabbab637bab85bf245b2bc680d1a076a52a42723f013a4e3e3ae0b292b567",
+        "owned_repair_paths": [
+          ".claude/settings.json",
+          ".github/copilot-instructions.md",
+          ".github/dependabot.yml",
+          ".github/hexalith-ci.json",
+          ".github/workflows/ci.yml",
+          ".github/workflows/codeql.yml",
+          ".github/workflows/commitlint.yml",
+          ".github/workflows/dependency-review.yml",
+          ".github/workflows/release.yml",
+          ".releaserc.json",
+          "AGENTS.md",
+          "CLAUDE.md",
+          "commitlint.config.mjs",
+          "references/Hexalith.Builds"
+        ],
+        "csharp_files_unchanged": 143,
+        "sdk_pin_unchanged": true,
+        "original_nested_builds_empty": true
+      },
+      "cleanup": {
+        "immutable_releases": true,
+        "adoption_sha": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+        "legacy_secret_and_deploy_key_cleanup": "no-op: no pilot grant exists",
+        "legacy_zot_cleanup": "no-op: package-only pilot has no legacy container publisher path or credential grant",
+        "registry_enabled": false,
+        "container_input_files": [],
+        "current_release_secret_pair_preserved": true
+      },
+      "adopted_main_ci": [
+        {
+          "id": 43864267698,
+          "head_sha": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+          "path": ".github/workflows/ci.yml",
+          "event": "push",
+          "head_branch": "main",
+          "status": "completed",
+          "conclusion": "success",
+          "run_attempt": 1,
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43864267698"
+        }
+      ],
+      "post_delivery_probe_outcome": {
+        "fresh_product_push": "pass after exact normal checker",
+        "meaningful_update_branch": "HTTP202; real delivered owned tree imported, PR never merged",
+        "all_probe_refs_cleaned": true
+      },
+      "final_policy_application": {
+        "adoption_sha": "49187d47da882d5470deac982bb383486c90202c",
+        "application_sha": "49187d47da882d5470deac982bb383486c90202c",
+        "sole_parent": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+        "accepted_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+        "tree": "8fba6782916a09284ad975c3bb4271838552c12b",
+        "message": "build(cicd): apply 3427f041c5f686c460c1fa027cf6f835791209c1 from Hexalith.CiCd",
+        "perimeter_match": true,
+        "foreign_tree_preserved": true,
+        "unchanged_paths": 218,
+        "unchanged_path_list_sha256": "b7122c7cb4300d8bec8db0941f5387e1ea21d662d7e32a16795da318434c4341",
+        "owned_repair_paths": [
+          ".github/copilot-instructions.md",
+          "AGENTS.md",
+          "CLAUDE.md"
+        ],
+        "csharp_files_unchanged": 143,
+        "sdk_pin_unchanged": true,
+        "original_nested_builds_empty": true
+      },
+      "final_main_ci": {
+        "run_id": 43871882227,
+        "run_attempt": 1,
+        "run_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43871882227",
+        "head": "49187d47da882d5470deac982bb383486c90202c",
+        "result": "success",
+        "test_suite_pass_counts": [
+          9,
+          16,
+          16,
+          9,
+          21,
+          14,
+          70,
+          202
+        ],
+        "skipped_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "package_consumer_observations": [
+          "2026-11-16T13:03:24.2686860Z Validated 12 Hexalith.Commons packages at version 0.0.0.",
+          "2026-11-16T13:03:32.0840467Z Validated isolated package-only consumer build."
+        ]
+      },
+      "local_workspace": {
+        "before_head": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+        "before_branch": "cicd-pilot-preparation-commons-20261116",
+        "target": "49187d47da882d5470deac982bb383486c90202c",
+        "nested_builds_contents_before": [],
+        "result": "synced",
+        "ancestor_checks": {
+          "preparation": true,
+          "current_head": true,
+          "local_main": true
+        },
+        "after_head": "49187d47da882d5470deac982bb383486c90202c",
+        "after_branch": "main",
+        "clean_after": true,
+        "nested_builds_contents_after": [],
+        "no_nested_initialization": true
+      }
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "preparation_main": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+      "preparation_parent": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "preparation_push_confirmed": true,
+      "pre_adoption_full_product_proof": "pass both preparation and probe sets:372tests/zero skipped, twelve Commons payload/symbol pairs and isolated consumer",
+      "pre_delivery_probe": {
+        "head": "dbea7efd64ec75e2b92920665cb1ebffda15fa88",
+        "branch": "cicd-pilot-update-poly-20261116",
+        "pull_request": 19,
+        "open_unmerged": false,
+        "state": "closed",
+        "merged": false,
+        "remote_probe_ref_deleted": true,
+        "local_probe_ref_deleted": true
+      },
+      "adoption": {
+        "adoption_sha": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+        "sole_parent": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+        "accepted_sha": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+        "tree": "704aa5df44841f882e45b77f9110cdb10e80222d",
+        "message": "build(cicd): apply f002539f6fbaddaa9b621a9cbf75a1263eee5dea from Hexalith.CiCd",
+        "perimeter_match": true,
+        "foreign_tree_preserved": true,
+        "unchanged_paths": 55,
+        "unchanged_path_list_sha256": "355e2d37f9430d3490ceaa7ad4d762c16e1aa125d6fb6e1dc3d9a5360a727027",
+        "owned_repair_paths": [
+          ".claude/settings.json",
+          ".github/copilot-instructions.md",
+          ".github/dependabot.yml",
+          ".github/hexalith-ci.json",
+          ".github/workflows/build-release.yml",
+          ".github/workflows/ci.yml",
+          ".github/workflows/codeql.yml",
+          ".github/workflows/commitlint.yml",
+          ".github/workflows/dependency-review.yml",
+          ".github/workflows/release.yml",
+          "AGENTS.md",
+          "CLAUDE.md",
+          "commitlint.config.mjs",
+          "references/Hexalith.Builds"
+        ],
+        "csharp_files_unchanged": 24,
+        "sdk_pin_unchanged": true,
+        "original_nested_builds_empty": true
+      },
+      "cleanup": {
+        "immutable_releases": true,
+        "adoption_sha": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+        "legacy_secret_and_deploy_key_cleanup": "no-op: no pilot grant exists",
+        "legacy_zot_cleanup": "no-op: package-only pilot has no legacy container publisher path or credential grant",
+        "registry_enabled": false,
+        "container_input_files": [],
+        "current_release_secret_pair_preserved": true
+      },
+      "adopted_main_ci": [
+        {
+          "id": 43864363785,
+          "head_sha": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+          "path": ".github/workflows/ci.yml",
+          "event": "push",
+          "head_branch": "main",
+          "status": "completed",
+          "conclusion": "success",
+          "run_attempt": 1,
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43864363785"
+        }
+      ],
+      "post_delivery_probe_outcome": {
+        "fresh_product_push": "pass after exact normal checker",
+        "meaningful_update_branch": "HTTP202; real delivered owned tree imported, PR never merged",
+        "all_probe_refs_cleaned": true
+      },
+      "final_policy_application": {
+        "adoption_sha": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+        "application_sha": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+        "sole_parent": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+        "accepted_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+        "tree": "a85a86c86091151956a454b6c5f30fddc44a139f",
+        "message": "build(cicd): apply 3427f041c5f686c460c1fa027cf6f835791209c1 from Hexalith.CiCd",
+        "perimeter_match": true,
+        "foreign_tree_preserved": true,
+        "unchanged_paths": 61,
+        "unchanged_path_list_sha256": "95ec1e3394b75d4bbdc1a6139ee254eed5ba07a4eaf0547a02b88d52a44ad922",
+        "owned_repair_paths": [
+          ".github/copilot-instructions.md",
+          "AGENTS.md",
+          "CLAUDE.md"
+        ],
+        "csharp_files_unchanged": 24,
+        "sdk_pin_unchanged": true,
+        "original_nested_builds_empty": true
+      },
+      "final_main_ci": {
+        "run_id": 43871975251,
+        "run_attempt": 1,
+        "run_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43871975251",
+        "head": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+        "result": "success",
+        "test_suite_pass_counts": [
+          15
+        ],
+        "skipped_counts": [
+          0
+        ],
+        "package_consumer_observations": []
+      },
+      "local_workspace": {
+        "before_head": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+        "before_branch": "cicd-pilot-preparation-poly-20261116",
+        "target": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+        "nested_builds_contents_before": [],
+        "result": "synced",
+        "ancestor_checks": {
+          "preparation": true,
+          "current_head": true,
+          "local_main": true
+        },
+        "after_head": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+        "after_branch": "main",
+        "clean_after": true,
+        "nested_builds_contents_after": [],
+        "no_nested_initialization": true
+      }
+    }
+  },
+  "legacy_zot_disposition": "verified pilot-specific no-op: both package-only pilots have no legacy container-publisher path or legacy secret grant; post-adoption scope/exclusion rechecked; both administrators and all other-module access preserved",
+  "global_api_key_mapping": "unverified; no global absence or maintainer-automation guarantee",
+  "pending_human_identity_question": null,
+  "actual_adoption_authenticated": true,
+  "immediate_legacy_cleanup_complete": true,
+  "post_delivery_probes_complete": true,
+  "real_scheduled_nightly_checkpoint": "pending genuine scheduled main run after final policy; manual dispatch is not a substitute",
+  "temporary_update_branch_rule": "superseded by authenticated delivered guidance: GitHub permits Update branch to import changed workflows with the restricted credential; importing owned CI/CD changes remains prohibited; create a fresh current-main branch and reapply only product changes",
+  "original_root_staging_preserved": true,
+  "active_local_work": "none; all implementation, verification, observation and sync child processes finished",
+  "quality_findings": {
+    "legacy_poly_caller": "required pull-request-title missing; pipeline diagnostic retained",
+    "legacy_commons_codacy": "historical warning retained without waiver; actual updated PR Codacy checks both pass",
+    "post_update_prs": "both Codacy checks pass; Stage1 strict commit-format guard rejects GitHub-generated merge message; no product build/test ran on those probe merges; full diagnostics saved"
+  },
+  "nuget_cleanup": {
+    "removed_exact_legacy_ids": [
+      20233,
+      20232
+    ],
+    "new_policy_ids_retained": [
+      27048,
+      27049
+    ],
+    "all_other_ids_preserved": true
+  },
+  "canonical_policy_followup": {
+    "candidate": "3427f041c5f686c460c1fa027cf6f835791209c1",
+    "state": "full gate, actual source push/redelivery, full tree/foreign preservation and final-main CI verified",
+    "minimum_interpreter_renderer_tests": 32,
+    "minimum_interpreter_result": "pass",
+    "full_gate": {
+      "global": true,
+      "modules": [
+        "Hexalith.Commons",
+        "Hexalith.PolymorphicSerializations"
+      ],
+      "tool_tests_passed": 392,
+      "tool_suites": 14
+    },
+    "delivery_run": {
+      "conclusion": "success",
+      "created_at": "2026-11-16T12:45:36Z",
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "id": 43869480499,
+      "path": ".github/workflows/deliver.yml",
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-16T13:02:17Z"
+    },
+    "all_temporary_worktree_metadata_removed": true,
+    "actual_delivery_run": 43869480499,
+    "artifact_id": 14228292488,
+    "authenticated_redelivery": true
+  },
+  "only_remaining_acceptance": "one genuine scheduled nightly: CodeQL, authenticated release/no-release outcomes, duplicate scan, Builds bump/no-bump and delivery",
+  "original_module_workspace_sync": {
+    "result": "pass",
+    "separate_from_earlier_preservation_proofs": true,
+    "ordinary_checkout_fast_forward_only": true,
+    "hooks_suppressed": true,
+    "submodule_recursion_disabled": true,
+    "original_cicd_head": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+    "original_cicd_staging_preserved": true,
+    "original_cicd_staging_sha256": "51d905e7ddd474ded73c896be00dee06552036931adc6cbca6fad9688006ba89"
+  },
+  "terminal_delivery_states_rechecked": true
+}

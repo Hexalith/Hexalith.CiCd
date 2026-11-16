@@ -1,0 +1,42 @@
+{
+  "observed_at": "2026-11-16T10:33:40.553019+00:00",
+  "configmap_resourceVersion": "46533286",
+  "htpasswd_secret_resourceVersion": "46533285",
+  "basic_auth_usernames_only": [
+    "cluster-reader",
+    "ci-reader",
+    "hexalith-registry-pull",
+    "cicd-publish-spike-3-1",
+    "hexalith-builds-publish",
+    "hexalith-commons-publish",
+    "hexalith-polymorphicserializations-publish"
+  ],
+  "credential_values_or_hashes_saved": false,
+  "authentication_methods": [
+    "apikey",
+    "sessionKeysFile",
+    "secureSession",
+    "openid",
+    "failDelay",
+    "htpasswd"
+  ],
+  "htpasswd_path": "/etc/zot/htpasswd/htpasswd",
+  "openid_provider_names": [
+    "oidc"
+  ],
+  "admin_policy": {
+    "users": [
+      "jpiquot",
+      "jpiquot@itaneo.com"
+    ],
+    "actions": [
+      "read",
+      "create",
+      "update",
+      "delete"
+    ]
+  },
+  "log_configuration": {
+    "level": "info"
+  }
+}

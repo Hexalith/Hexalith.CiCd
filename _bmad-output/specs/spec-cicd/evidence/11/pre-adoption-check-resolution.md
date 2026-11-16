@@ -1,5 +1,25 @@
 # Pre-adoption check gap
 
+## Approved resolution, 2026-11-16
+
+The human explicitly approved the proposal below with **"1 done, 2 approve"**
+after being asked to complete Microsoft/NuGet authentication and select the
+pre-adoption verification path. This resolves the decision; it does not claim
+that the replacement verification has run.
+
+For product-preparation pushes to Commons and PolymorphicSerializations before
+actual App adoption only, require package-mode product builds/tests and all
+applicable package/consumer checks, policy and commit validation, and exact
+byte/mode/gitlink comparisons proving owned content unchanged from freshly
+fetched main. Save the exact input revisions and results before every push.
+After App adoption, require the normal
+`python3 references/Hexalith.Builds/check.py` command. Ownership boundaries,
+credential identities, product tests and the ban on nested initialization
+remain unchanged. No exception applies to another module or a post-adoption
+push.
+
+## Diagnosis and proposal before approval
+
 The 2026-11-16 read-only refresh in `resume-prerequisites.json` confirms that
 the required command exits 2 in both pilot roots:
 

@@ -1,0 +1,223 @@
+{
+  "recorded_at": "2026-11-16T08:32:53.655641+00:00",
+  "scope": "read-only existing shared release prerequisites",
+  "nuget_policy": [
+    {
+      "type": "ControlType.Text",
+      "name": "Hexalith.Builds builds-release",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": " Active",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "Package owner:",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": " ",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "Hexalith",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "\n",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "Scopes:",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": " ",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "Push new packages and package versions",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "\n",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "Glob Patterns and Packages:",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Text",
+      "name": "Hexalith.Builds*",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ListItem",
+      "name": "Publisher: GitHubActions",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ListItem",
+      "name": "Repository Owner: Hexalith#80614290\ue946A permanent GitHub ID assigned to a user, organization, or repository when it's created. Used for trusted publishing validation.",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Button",
+      "name": "\ue946 A permanent GitHub ID assigned to a user, organization, or repository when it's created. Used for trusted publishing validation.",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ToolTip",
+      "name": "A permanent GitHub ID assigned to a user, organization, or repository when it's created. Used for trusted publishing validation.",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ListItem",
+      "name": "Repository: Hexalith.Builds#952945989\ue946A permanent GitHub ID assigned to a user, organization, or repository when it's created. Used for trusted publishing validation.",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Button",
+      "name": "\ue946 A permanent GitHub ID assigned to a user, organization, or repository when it's created. Used for trusted publishing validation.",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ToolTip",
+      "name": "A permanent GitHub ID assigned to a user, organization, or repository when it's created. Used for trusted publishing validation.",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ListItem",
+      "name": "Workflow: builds-release.yml",
+      "id": ""
+    },
+    {
+      "type": "ControlType.ListItem",
+      "name": "Environment: hexalith-release",
+      "id": ""
+    },
+    {
+      "type": "ControlType.Button",
+      "name": "Edit",
+      "id": "__start-edit-26029"
+    },
+    {
+      "type": "ControlType.Button",
+      "name": "Delete",
+      "id": ""
+    }
+  ],
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release",
+      "exit": 0,
+      "data": {
+        "id": 26805500201,
+        "node_id": "EN_kwDOOMzNRc8AAAAGPbt5KQ",
+        "name": "hexalith-release",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/environments/hexalith-release",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/deployments/activity_log?environments_filter=hexalith-release",
+        "created_at": "2026-11-10T08:14:40Z",
+        "updated_at": "2026-11-10T08:14:40Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 71918817,
+            "node_id": "GA_kwDOOMzNRc4ESWTh",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release/deployment-branch-policies",
+      "exit": 0,
+      "data": {
+        "total_count": 1,
+        "branch_policies": [
+          {
+            "id": 66158063,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjE1ODA2Mw==",
+            "name": "main",
+            "type": "branch"
+          }
+        ]
+      },
+      "error": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/environments/hexalith-release/secrets",
+      "exit": 0,
+      "data": {
+        "total_count": 4,
+        "secrets": [
+          {
+            "name": "HEXALITH_REGISTRY_PASSWORD",
+            "created_at": "2026-11-12T12:58:37Z",
+            "updated_at": "2026-11-12T12:58:37Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PUSH_PASSWORD",
+            "created_at": "2026-11-10T08:31:36Z",
+            "updated_at": "2026-11-10T08:31:36Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PUSH_USERNAME",
+            "created_at": "2026-11-10T08:31:35Z",
+            "updated_at": "2026-11-10T08:31:35Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_USERNAME",
+            "created_at": "2026-11-12T12:58:36Z",
+            "updated_at": "2026-11-12T12:58:36Z"
+          }
+        ]
+      },
+      "error": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/actions/variables",
+      "exit": 0,
+      "data": {
+        "variables": [
+          {
+            "name": "HEXALITH_NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-11-12T07:27:38Z",
+            "updated_at": "2026-11-12T07:27:38Z"
+          },
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true",
+            "created_at": "2026-11-12T07:27:38Z",
+            "updated_at": "2026-11-12T07:27:38Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-09-25T11:45:53Z",
+            "updated_at": "2026-09-25T11:45:53Z"
+          }
+        ],
+        "total_count": 3
+      },
+      "error": ""
+    }
+  ]
+}

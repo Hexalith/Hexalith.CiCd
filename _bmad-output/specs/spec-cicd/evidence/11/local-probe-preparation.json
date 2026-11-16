@@ -1,0 +1,2075 @@
+{
+  "started_at": "2026-11-16T09:21:13.351734+00:00",
+  "purpose": "pre-delivery Update branch qualification",
+  "remote_push_performed": false,
+  "pull_request_created": false,
+  "full_approved_product_verification": "required before each eventual push",
+  "modules": {
+    "Hexalith.Commons": {
+      "branch": "cicd-pilot-update-commons-20261116",
+      "base": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "head": "e3d4da366a2e8c6b6216f4a7b57c15241313da79",
+      "allowed_changed_paths": [
+        ".github/actions/after-unit-tests/action.yml",
+        "pilot-ci-probe.md",
+        "scripts/pack-release-packages.py",
+        "scripts/validate-consumer-package-references.py"
+      ],
+      "changed_paths": [
+        ".github/actions/after-unit-tests/action.yml",
+        "pilot-ci-probe.md",
+        "scripts/pack-release-packages.py",
+        "scripts/validate-consumer-package-references.py"
+      ],
+      "unchanged_byte_mode_gitlink_records": [
+        {
+          "path": ".agents/skills/pushall/SKILL.md",
+          "mode": "100644",
+          "oid": "f342c943f47624fffa356b81a9331278540f9873",
+          "sha256": "ebe2fdc2abdf7115a927378f307aa2fadaff6067f20fc4de0398172467bec6f3"
+        },
+        {
+          "path": ".claude/settings.json",
+          "mode": "100644",
+          "oid": "83c0cd3aadba855bd32c9bfe9dcb95315703c7e9",
+          "sha256": "7c6ec2789e6ccfd21d8261a73b37b4fbe6235f43f34daf8b2896c2b2cd8e7991"
+        },
+        {
+          "path": ".claude/settings.local.json",
+          "mode": "100644",
+          "oid": "5c084899b942279bdfedafc4613451c3de68368b",
+          "sha256": "4e976d01babc3c95112b8cd97f14301813edabe8087f90135ac778f440a92802"
+        },
+        {
+          "path": ".claude/skills/pushall/SKILL.md",
+          "mode": "100644",
+          "oid": "f342c943f47624fffa356b81a9331278540f9873",
+          "sha256": "ebe2fdc2abdf7115a927378f307aa2fadaff6067f20fc4de0398172467bec6f3"
+        },
+        {
+          "path": ".clinerules",
+          "mode": "120000",
+          "oid": "a245fc1c6c2d522ea2aa0ecabf1583917087b51c",
+          "sha256": "24d3bb676c595c4a2190c03a2622c07cec5bcd7764be34f34d734d3ca72bd4c5"
+        },
+        {
+          "path": ".cursorrules",
+          "mode": "120000",
+          "oid": "86da7cdc6d0e98a2fdd8711088cb375badd093ec",
+          "sha256": "e0481847a0bfab5567d71e28682f989096b88d7541990dbc6dcecd35610f89bf"
+        },
+        {
+          "path": ".editorconfig",
+          "mode": "100644",
+          "oid": "e1cc1af143c4810427781852ae28ab3d421db152",
+          "sha256": "06ae89e580e6220f2377ac12dda53e74c32dd03ba14c414a43f2ea94ebcf45bd"
+        },
+        {
+          "path": ".gitattributes",
+          "mode": "100644",
+          "oid": "35f713a1830d06db3ed012a697c3f0a693b2862c",
+          "sha256": "ebf4e28b8fe85b0cd9206bb09a24af5c51faada2dbe0a7b70a84117443d65d6c"
+        },
+        {
+          "path": ".github/copilot-instructions.md",
+          "mode": "100644",
+          "oid": "f636f6e802a35ceb58b0c12eea83938fb52c1b5c",
+          "sha256": "e4271eccb138725c4f199e4fa66ccdea603566e1347447f29bd2a859b9a8c9a6"
+        },
+        {
+          "path": ".github/dependabot.yml",
+          "mode": "100644",
+          "oid": "67caebec2f39b687061e6c55c16bb70d9fd215df",
+          "sha256": "03c96e8927c30ac4d6fb275aec6f466d9d2202cc6d97760ac364f409e2788350"
+        },
+        {
+          "path": ".github/skills/pushall/SKILL.md",
+          "mode": "100644",
+          "oid": "f342c943f47624fffa356b81a9331278540f9873",
+          "sha256": "ebe2fdc2abdf7115a927378f307aa2fadaff6067f20fc4de0398172467bec6f3"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "mode": "100644",
+          "oid": "7ea05a1a6e84d2f110012415a1913aa08b225272",
+          "sha256": "28455dd20db3cb0ff2a04c805829c605cf0199f6b05fd6eafe33503e6f24ddb9"
+        },
+        {
+          "path": ".github/workflows/codeql.yml",
+          "mode": "100644",
+          "oid": "3161aa6a7f977d246345cf47484c0f7506562a4b",
+          "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1"
+        },
+        {
+          "path": ".github/workflows/commitlint.yml",
+          "mode": "100644",
+          "oid": "64d0ffd7bd68bdd03b32dd842c0eef29116415bb",
+          "sha256": "b38cf3d2e387d9e95e51cbe33329cc3d5f600dbe0879e76fa5ad13d0e9f0b4bb"
+        },
+        {
+          "path": ".github/workflows/dependency-review.yml",
+          "mode": "100644",
+          "oid": "ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb",
+          "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc"
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "mode": "100644",
+          "oid": "f948775d65c77f585dcf801d55e271175ad0cd40",
+          "sha256": "fe7dbd7821bc417c39becd44f089424305b3828669fa34b12a640ae25cd4f237"
+        },
+        {
+          "path": ".gitignore",
+          "mode": "100644",
+          "oid": "e05dd98961c543248de6bc112657b5d3bc51f6e9",
+          "sha256": "fa1e52a18366037fd970366f3b3125b23eb363f00aab6d309002da9cc33feeb8"
+        },
+        {
+          "path": ".gitmodules",
+          "mode": "100644",
+          "oid": "779472d6c353501dc496eb914b44adfc34758ca0",
+          "sha256": "a6de538d38b39cbee613a1e7f5731b50c9365f211aa24d3a7756f7108397a4a3"
+        },
+        {
+          "path": ".releaserc.json",
+          "mode": "100644",
+          "oid": "2d7d8500f723e838bebf665407c8473c3bd67432",
+          "sha256": "0d0ff38286d690ea320a0e41aec7ac362a5dfdf780067e5a10d247e1eb130489"
+        },
+        {
+          "path": "AGENTS.md",
+          "mode": "100644",
+          "oid": "f636f6e802a35ceb58b0c12eea83938fb52c1b5c",
+          "sha256": "e4271eccb138725c4f199e4fa66ccdea603566e1347447f29bd2a859b9a8c9a6"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "mode": "100644",
+          "oid": "bd07d3a3f3e9b4df38d3d752356902c9432e0b02",
+          "sha256": "a38b0e659824137e724b848a5e150d2d58a57a804d90fdb77043b995593f8f5c"
+        },
+        {
+          "path": "CLAUDE.md",
+          "mode": "100644",
+          "oid": "f636f6e802a35ceb58b0c12eea83938fb52c1b5c",
+          "sha256": "e4271eccb138725c4f199e4fa66ccdea603566e1347447f29bd2a859b9a8c9a6"
+        },
+        {
+          "path": "Directory.Build.props",
+          "mode": "100644",
+          "oid": "86c6ca3095668742169815e396123a96ca15645f",
+          "sha256": "ffb19d377edfe0a607849724609af381d33387916c6e7d3b67fb9aba9af22064"
+        },
+        {
+          "path": "Directory.Packages.props",
+          "mode": "100644",
+          "oid": "03241777d0599b3ef1f63387bddbd85a32f528eb",
+          "sha256": "760cdba154a0ee038d86e05ab7b6b01d9bf909167d9b6aa94a523cd2010f369a"
+        },
+        {
+          "path": "Hexalith.Commons.Standalone.slnx",
+          "mode": "100644",
+          "oid": "609acdf0312af739e9a98d8039252ade8aaa7cc9",
+          "sha256": "490a9087fc985468eb59cb07fa068b80b28beea1cb015ffbfff2f74f2469ef24"
+        },
+        {
+          "path": "Hexalith.Commons.slnx",
+          "mode": "100644",
+          "oid": "5e5d45b6c9e0c66e58b26685cbce9c1cad789959",
+          "sha256": "d409a774d55bb90942d4c3594658b0d38d14a35e1d2b9ee3e6bba2ef0f5665c9"
+        },
+        {
+          "path": "LICENSE",
+          "mode": "100644",
+          "oid": "b2e039fb578131be41dd873b2920f15f9adb3493",
+          "sha256": "f3576df556117df1c2fbd08d43d275cee934e9a136d2e2e0b21a8f37910ecc6a"
+        },
+        {
+          "path": "README.md",
+          "mode": "100644",
+          "oid": "a79b9921cf4025f9df14a5fc6593a24c622cb23d",
+          "sha256": "4a9d3edc31e364cbadba4555e5c188f097d485d557ac4d6eebcdfc400c52047d"
+        },
+        {
+          "path": "builds-submodule-init.ps1",
+          "mode": "100644",
+          "oid": "521dc815df7335461e2199a9521f7f73f46ce99d",
+          "sha256": "daa3c13ad896456530fab1b4a63c494b46d9ed175e235531e847b233fe061d06"
+        },
+        {
+          "path": "commitlint.config.mjs",
+          "mode": "100644",
+          "oid": "12adfbbf7e66cb8be4a4c7ec13dd09e2d17dc5a3",
+          "sha256": "7d7a89db3a7e3a78567ce79408fad48f414e1d487e93a39990e82822f850666b"
+        },
+        {
+          "path": "global.json",
+          "mode": "100644",
+          "oid": "701104b3d54283ad578b7e1e71aca01d1a59d523",
+          "sha256": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05"
+        },
+        {
+          "path": "hexalith-build.yml",
+          "mode": "100644",
+          "oid": "7e7fffd93d906be215ae7888baa3e6603db015a6",
+          "sha256": "8ebef21aafd2f11573bc3e42ea366d10a37b6b6961f12ad895e3d38260fd34f4"
+        },
+        {
+          "path": "package-lock.json",
+          "mode": "100644",
+          "oid": "df817da8aa6741ea7212a5eaa86bb3fe02a366ed",
+          "sha256": "34c34890cf89b1a19999818fa93f61257d91f6584c055db060f95d81054b36a1"
+        },
+        {
+          "path": "package.json",
+          "mode": "100644",
+          "oid": "ba666cbc408aab255628eff5a30b56ea70fda3b1",
+          "sha256": "0c986bf014b45771e013519cf959cb311f5c0fbc61f0455f0ee7a8372ed24b53"
+        },
+        {
+          "path": "references/Hexalith.AI.Tools",
+          "mode": "160000",
+          "oid": "1745b6663ad32bb1288167135ed0f979366c53a0"
+        },
+        {
+          "path": "references/Hexalith.Builds",
+          "mode": "160000",
+          "oid": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec"
+        },
+        {
+          "path": "references/Hexalith.PolymorphicSerializations",
+          "mode": "160000",
+          "oid": "52282d023156725c811fa21299f349a6fd62d989"
+        },
+        {
+          "path": "references/README.md",
+          "mode": "100644",
+          "oid": "7a7dbe373cf108daa7a76287cf922fee78367c36",
+          "sha256": "7eb1498fde2af01b1d30fcf9fc94e2fcb155bf83ddb87318fded46f3fffccb6c"
+        },
+        {
+          "path": "scripts/validate-nuget-packages.py",
+          "mode": "100644",
+          "oid": "55597d434369b2fac11d4227e01aa5937242987b",
+          "sha256": "4efd5dbce2a1f71c59c01992904d8c7118600e2e0958092cdc4806ec9ed9adc8"
+        },
+        {
+          "path": "src/Directory.Build.props",
+          "mode": "100644",
+          "oid": "52ab36fa3abf21bbfbc8079918ea19db28c39ea9",
+          "sha256": "a716ce14aad8f409617519ea94462a722196b55050e409d3cbac84f37496e2bf"
+        },
+        {
+          "path": "src/README.md",
+          "mode": "100644",
+          "oid": "e4a73336e0a657dddd9a02a9ce34f94350ed4489",
+          "sha256": "6c583462ec9f574004d8b8c0d7ed10e663af4f96d19d6105806f1fcbc5fc18f7"
+        },
+        {
+          "path": "src/libraries/Directory.Build.props",
+          "mode": "100644",
+          "oid": "1df854afeaf91da63329357da045aaca3c180f33",
+          "sha256": "da8f769dd2490f0e4018e7c6e206300204157065f45911005054685e099e22c7"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/AspireDaprDomainModuleExtensions.cs",
+          "mode": "100644",
+          "oid": "d567080d27959aff5bccc226457acfc92e555031",
+          "sha256": "c1e2f1e713d0ff01e73aab5430420a243b52782981d79e594dfbd62d88e1ba67"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/AspireDaprDomainModuleOptions.cs",
+          "mode": "100644",
+          "oid": "bfa7092d224cbc0a6d157c2de32f35487302d944",
+          "sha256": "a09c5f868f0edbbcae265665c92f974c40e5c0f9f73104cd65b0d3266e6504d6"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/AspireDaprDomainModuleResource.cs",
+          "mode": "100644",
+          "oid": "0048f8ca38f51856db09b1c8e90af6a2489fba8d",
+          "sha256": "3b01409525ceb542e9f112b03a71a02f4f8d676947bf28158ba90f4cc8086bf8"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/AspireDaprInfrastructureMode.cs",
+          "mode": "100644",
+          "oid": "06de405af2d252f67e9013a7f72e7d7df3cd5614",
+          "sha256": "1c2bfb1a85b3385889138825fdf7eff60afe5576fdc13251a6fd0d618a999756"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/AspireDaprLocalServiceEndpoints.cs",
+          "mode": "100644",
+          "oid": "70a7fea1357aea172e70e540cbbb4e40c8613dad",
+          "sha256": "d5bc951b96ea5e1970db8c76604020510cf4f35e175b7558d0cab0580b4a939c"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/AspireDaprSharedComponents.cs",
+          "mode": "100644",
+          "oid": "d2bf55cd41b4766dc2fba3d181f1fd5be72b4b2d",
+          "sha256": "edb45c674be6a3f169f7c1d8fadc4f39f090f6721dbf099da4af6ef91e4bac7b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/Directory.Build.props",
+          "mode": "100644",
+          "oid": "214651c044f873a25d9522dd3d253346a692749d",
+          "sha256": "708de6e1f0912258ddcb707940c4b33fd752e25569205be4e64349feb746e092"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Aspire/Hexalith.Commons.Aspire.csproj",
+          "mode": "100644",
+          "oid": "46508cc65577b716c3f03e14d70544a90c766e2e",
+          "sha256": "bbf9d36d6e074e16b9d22272c77ef15f54e59bb8f816089e941ce81360283841"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/FluentValidateOptions.cs",
+          "mode": "100644",
+          "oid": "e00e1903177ac7ad8fba2f1f69c19dfbace0cd93",
+          "sha256": "5e46148f1b98db59974fcd636df019f50348685865716387c63a45c50dd9a22a"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/Hexalith.Commons.Configurations.csproj",
+          "mode": "100644",
+          "oid": "d4b6401adc4f78b3c66efdd5b8a66f14e11ec4fb",
+          "sha256": "c79d36d6afa29d6985f669230bf2230ff66ae55201b25e74981922109ae88df4"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/ISettings.cs",
+          "mode": "100644",
+          "oid": "074c70b2276485fed69020c8c4e57adf0745200b",
+          "sha256": "95c71f928689523480cedd39a00d9895cf68d1801d7c1b1dc8cbde3066e27959"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/OptionsHelper.cs",
+          "mode": "100644",
+          "oid": "8a5cde36c82bd4105457333a75733d9b883e4d15",
+          "sha256": "8e64d640bbef1805f122433b75f687b64273f87a997b53c1dcd6a2063d86568e"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "7dd2d7c1b0da11d914d4fff177766798b31aa2d4",
+          "sha256": "1e566ee884e3633a2487d845fb469faa00f3b49c498cbc8f94f262a02871dc35"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/README.md",
+          "mode": "100644",
+          "oid": "39fd49a07dc490866e11cd93935221f8c4db5251",
+          "sha256": "6872baa11a5fb4ac63a7239a6d0e193901ac27ff64baf1c43e9b6a290444a96b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/SettingsException.cs",
+          "mode": "100644",
+          "oid": "f12cb9864942916b6da56a39a3e9caca2c8085fe",
+          "sha256": "7f09be27acb9dfdd154868c6850f0606c49acd5786417431e4b7c06cff99c0f6"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/SettingsException{TSettings}.cs",
+          "mode": "100644",
+          "oid": "f2983805dd4edc36c8540e3e60c14c42335cea3a",
+          "sha256": "dba583663365bab31e411d7319923409025c99bb160cd6650a1222cfe68b32d9"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Configurations/SettingsHelper.cs",
+          "mode": "100644",
+          "oid": "4a0d422ae6165b0b36fbcb4431a077646736c2cc",
+          "sha256": "34cd66a9c78791d41395407a1d0b2a40e2c08c1ac3638b14564fec24770ee4ea"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/BoundedMetricDimension.cs",
+          "mode": "100644",
+          "oid": "29a6788a6a4f52c1c23de3a7d3f50895b8d394f5",
+          "sha256": "ffb8dc111800c8a9a7b7b387220e2602d6bc55772673b46f9c988d2e59051206"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/BoundedTelemetryCounter.cs",
+          "mode": "100644",
+          "oid": "99582a7e7d5a9da56177c196c66f5e20f6231d29",
+          "sha256": "4cf2718d481868bd84a578358327fea17310a3ec501bd5f130d882278b9f07b5"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/BoundedTelemetryCounterDefinition.cs",
+          "mode": "100644",
+          "oid": "a6aa2a0e2dd948eadf46eada946f107f215a1c93",
+          "sha256": "644a766535922c26323ba2b1a4fdf163d87a72046e4695bd0930a1ac911f18a9"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/BoundedTelemetryLog.cs",
+          "mode": "100644",
+          "oid": "1e1e4e937cb55d50a8905b0052f76bbf2887baea",
+          "sha256": "4697dec299ee081df6c07c293b12d2498728d52de50bfeb114fb0d379d9691bb"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/BoundedTelemetryMeter.cs",
+          "mode": "100644",
+          "oid": "a6e7080b2a8a20709b579cb29a650aed98519153",
+          "sha256": "f47ef607002ab9e63abf8ad4c46779a1f7e0b8cdc8d874b8a22603e4ef8b80c3"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/Directory.Build.props",
+          "mode": "100644",
+          "oid": "53d1c1d82973a235aaab16f230f843923f5d5c61",
+          "sha256": "84f92785da53f23f405e572d5225f8afd323332b5c35aa839eccd89add705785"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Diagnostics/Hexalith.Commons.Diagnostics.csproj",
+          "mode": "100644",
+          "oid": "add494d27fb134d40d503d9b58b2bec3bc7b3711",
+          "sha256": "38027a22bf827af2478fac8bf87a0e0e5c56d8bf7eee0f1ec418feeb77084804"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/BoundedProblemDetails.cs",
+          "mode": "100644",
+          "oid": "f5317d660d6031730338f751337ff0dfee435042",
+          "sha256": "6faf9f00cbad43f8c8d3ed016df9095cc5cc6c5066bcfa723ba8b4695e63fa48"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/BoundedProblemDetailsFactory.cs",
+          "mode": "100644",
+          "oid": "eaf7bced9ffa812cffcf7269d7c597566f693e6c",
+          "sha256": "a41a9ed5f333166d7e06715a356d484120c4e62809c644c21225d3595bc1e445"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/BoundedProblemDetailsReader.cs",
+          "mode": "100644",
+          "oid": "42972c5a2bd62e6f98d0cd63e7745a50ad37bdac",
+          "sha256": "79463ed98211f7961f8db51205d84f306061dd746e688e9578ddd753de1c0bd1"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/CorrelationContextAccessor.cs",
+          "mode": "100644",
+          "oid": "cdb9678147622e5222dde11b81aee03c0fab17bc",
+          "sha256": "7fac5fe1beecb143e59c0db095f9880dc0ac5eea3089588633ecd766b8cd43e7"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/Directory.Build.props",
+          "mode": "100644",
+          "oid": "84b5a24814345738677f0f3c3135d150605be8d8",
+          "sha256": "456696e4b495b5e6dda7677d1e1788b4ef89cb012f89d9511a69779821c89432"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/Hexalith.Commons.Http.csproj",
+          "mode": "100644",
+          "oid": "6244e13e2ce75937dc7c352ded00e2cfd711ef74",
+          "sha256": "91d4cab7827927054deeafe9f64333691134071d84321c4c25fb4882cea1be04"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/HttpClientEndpointValidation.cs",
+          "mode": "100644",
+          "oid": "95e4565f2ca2618fe38b487bbe0fcc032959f739",
+          "sha256": "2368265ae0d9570f65735808198eead4991e763f9b353a546d1a53fb853aff8b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/HttpClientRegistration.cs",
+          "mode": "100644",
+          "oid": "27dcbcf7ea39eb60aea7a160997f3d7b136799ea",
+          "sha256": "daa3d833f94f5b926b9d624b1f03b3d849c79984b9b5297888032d11ba6ac631"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/HttpCorrelation.cs",
+          "mode": "100644",
+          "oid": "decbb20f046df6bfa79f461b894189b0e647612c",
+          "sha256": "ed4e1c27a0707074d075eade28a8b4e2c5299c4d41b10c8b2c0796c4e808472b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/ICorrelationContextAccessor.cs",
+          "mode": "100644",
+          "oid": "3fbc585809b73bcbe57f7058951892555697184a",
+          "sha256": "4d6651593e4d268b283d49761210dc1a942cadbf5662a0481e6efdc845779e82"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/PagedResult.cs",
+          "mode": "100644",
+          "oid": "75391b416d23fed9fafb41a4861575a949660eb1",
+          "sha256": "12e49e1b77794ad0918d0d709444c2401289387364d903e73a7decd64c8cd6e0"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Http/README.md",
+          "mode": "100644",
+          "oid": "a9397970c78547c8f2da800c1fe05e69fbbab714",
+          "sha256": "6a2a9ddfdd279f235deea487cdffd86e14bd0f7e6c595bb0320ab7cecc1e9ed5"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/ContextMetadata.cs",
+          "mode": "100644",
+          "oid": "b6eb8ff52a9ff60d7da18a4372e145963bedeacc",
+          "sha256": "2764eca3c7410f22f26b99a09714f512c5cafd6d023ae563aae05e4873b3c83a"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/DomainMetadata.cs",
+          "mode": "100644",
+          "oid": "c302af2876babe8c8dde1e1e5932b58c2c6d051f",
+          "sha256": "3a77782e342103291836820cd45f2453139561ad84309fd0e8e51bf0e32b69f3"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/Hexalith.Commons.Metadatas.csproj",
+          "mode": "100644",
+          "oid": "1f38c74f436c729a57c904596d31be6cf725c36e",
+          "sha256": "b86c064d4be88f082f8097451e243fa428dd10262e5894bd2f64463faa29e251"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/MessageMetadata.cs",
+          "mode": "100644",
+          "oid": "31030c82dd3ba1f50554ad81df87ab65b61ec3a3",
+          "sha256": "aee12e8c2477b0e8e1c66bb3e075ef16ca3a1badcaea0408a7a3fd8db8049617"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/Metadata.cs",
+          "mode": "100644",
+          "oid": "4e79afec2056021772fa71f181675348b02cad72",
+          "sha256": "3bbd310d811dc6d7943444d5ba4695d607d7310a23c59a77222c60bb6a22a484"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/MetadataHelpers.cs",
+          "mode": "100644",
+          "oid": "f2f41b4119cf8c4d2d9592f381982c36954f3e7b",
+          "sha256": "a05c39d956b4fea6c57744dfc7acee3093743d67458b2961659c63071e94a6f3"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "7dd2d7c1b0da11d914d4fff177766798b31aa2d4",
+          "sha256": "1e566ee884e3633a2487d845fb469faa00f3b49c498cbc8f94f262a02871dc35"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Metadatas/README.md",
+          "mode": "100644",
+          "oid": "2952a2aa3ca68b6a488bdecbb045529d15e97306",
+          "sha256": "416d14f98b27cd844ed90253b283a0a6d21e71017f2a27497e2afc3bd0df3793"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/Directory.Build.props",
+          "mode": "100644",
+          "oid": "a29bd8afcf42c168f1a37868c49bef63ae1ce67a",
+          "sha256": "9f0e0243bf0918b05c635dde87f83d12ed017b43884305e747b906338b6c11ab"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/Hexalith.Commons.Publication.csproj",
+          "mode": "100644",
+          "oid": "f281e3812abf500d9325381752472a44476696c9",
+          "sha256": "9f3a95a197235ce076809128740775265ad04b33d2ce12da0249ebd0aec400ea"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PersistedPublicationCandidate.cs",
+          "mode": "100644",
+          "oid": "2aa362ab0b58e7354cc5b82520ebddeaa987b529",
+          "sha256": "9ecf181e2b702b4fc14e4cc29f86cb092dde59fb120a2018ae6c8d2d80220df1"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PublicationDeduplicationSet.cs",
+          "mode": "100644",
+          "oid": "99b8eec3e314ee7f8fb14a6cf2cb1e9e8e4b3739",
+          "sha256": "50fd169138ea45076cf5a3f196794f4b8b98feb2bd0602ef518d0edeb268e851"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PublicationFailureTelemetry.cs",
+          "mode": "100644",
+          "oid": "6af9ce596e4e3c94e08c9b8b2f1036e4e23ab9db",
+          "sha256": "a3f51c8d5d68ced50d92db73a72235870ec80cf6db1dd62281e3057917eb1955"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PublicationMappingDecision.cs",
+          "mode": "100644",
+          "oid": "0491b797b6c7ae9273580f2ba915bf4bc0d220bc",
+          "sha256": "6d284210842bff66798be8b3c97c4ae27b7dd96113304b9b28e9f22ef0c2bd90"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PublicationMappingPipeline.cs",
+          "mode": "100644",
+          "oid": "fc299ea6042c22b22fc98ead5b6d4b4b46662305",
+          "sha256": "652cb7bc28f5c30df89457a7beda2162f2dddf94ac49f081bcdc9e37a2204cc7"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PublicationTransportMetadata.cs",
+          "mode": "100644",
+          "oid": "c9965b8f177df27fed263dc4af903b68ddcd400e",
+          "sha256": "1b86b26f3e326acd73429185c327a59e745dd9efeefc26f8e12416c59a71ac98"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Publication/PublicationTransportMetadataComposer.cs",
+          "mode": "100644",
+          "oid": "53b9d30de44eab500b8ab0dec31dd631ff6ed7f0",
+          "sha256": "d6dd34f8f19b6a2c3a8a2ef1a9f9830f518f92e0c13c961978ef9a54d0735c2d"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/Directory.Build.props",
+          "mode": "100644",
+          "oid": "ea64ab06dbd2c9a5ea121743d5cb47fcb839c263",
+          "sha256": "b00e65275bb4ec6d912b51e768f702dbaa24b7053ee9901c81953a7ad6d9f362"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/Hexalith.Commons.Serialization.csproj",
+          "mode": "100644",
+          "oid": "b12bde3339d883d9fe899ac38ad48c4626ae83a3",
+          "sha256": "7ab3d2e5d663b6e524ce1295573bac164b7d4a5dca9c9471fe67d2d069723556"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/IntValueJsonConverter.cs",
+          "mode": "100644",
+          "oid": "7ca7d4fb8a68f477aa6fb07cb033e9f2ede85e2d",
+          "sha256": "09f582b3555bcc898e344d363d22ffe98b814456d9bc01fadf6928b228592873"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/JsonSerializationOptions.cs",
+          "mode": "100644",
+          "oid": "367ab07bd2a49be1f743c83e7fad8b81ea2d6747",
+          "sha256": "d4ffe6f13f58a569fd696ac0e4cccb543fa7fa83037b7973f5f770622d642b4f"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/PolymorphicTypeRegistration.cs",
+          "mode": "100644",
+          "oid": "582be7ce0bfb1aef16df59d1876db0f65fe0a055",
+          "sha256": "668f072746c429e20ef61090cc07c870fd0420c86c7f84cc47f2c412cd38fb6c"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/PolymorphicTypeRegistry.cs",
+          "mode": "100644",
+          "oid": "837773005b6d37e19be02655f47f190fa05f4691",
+          "sha256": "88c48edde3eba9f582a9168759666faeee0e126f2225d6c10801e0be4569fec7"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.Serialization/StringValueJsonConverter.cs",
+          "mode": "100644",
+          "oid": "ddc0d216006d39b921c35ada7260e8b122f8b21e",
+          "sha256": "4c4ad158d43288adc2112429f1211440422ee5e1303b61293dc5576a23fb431b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.ServiceDefaults/Directory.Build.props",
+          "mode": "100644",
+          "oid": "d9ed20285a39ac6723bd3142a1d6536eb8b82773",
+          "sha256": "d4af8112a161c1aa1fcf4dd941f41a35200d5c4fd886b442315447e89daee3f5"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.ServiceDefaults/Hexalith.Commons.ServiceDefaults.csproj",
+          "mode": "100644",
+          "oid": "275f7903382b6c816cd6d78d40a7f34ba09e6f9f",
+          "sha256": "2c1b110841cd6879f981de03fe5ba163a4cbeb45f171187448f06ae6b67e7cfb"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.ServiceDefaults/HexalithServiceDefaults.cs",
+          "mode": "100644",
+          "oid": "b08dc487adb99936cbc8df65d89366c20c6dde54",
+          "sha256": "06c1c3022709566360cccd083c63fed3d7cbdd1c2a9c3bbd0918be4a8c2f5dd5"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.ServiceDefaults/HexalithServiceDefaultsOptions.cs",
+          "mode": "100644",
+          "oid": "1029113b910814a82717704878ea4a476ef03465",
+          "sha256": "9789e27180ee193c709abc0d16cb9c7ec023fc079d0c3c531b8c0866bb241891"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.StringEncoders/Hexalith.Commons.StringEncoders.csproj",
+          "mode": "100644",
+          "oid": "6304da173637650e71db608f43d7b1bc7b2c5fdc",
+          "sha256": "1356b0759bbf35ea8468615cefa20f4559bc6bf0f9b1fbc7aaa336f4aeaef849"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.StringEncoders/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "7dd2d7c1b0da11d914d4fff177766798b31aa2d4",
+          "sha256": "1e566ee884e3633a2487d845fb469faa00f3b49c498cbc8f94f262a02871dc35"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.StringEncoders/README.md",
+          "mode": "100644",
+          "oid": "bbe45180d2791a25f0c2a38e882fa3b0ae683abb",
+          "sha256": "b8f70565038875c5ff42e98900bae8134b482011835e4d8a06c3366cc1194a43"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.StringEncoders/Rfc1123StringExtensions.cs",
+          "mode": "100644",
+          "oid": "f0b99e3abc221532dab0914f67ffc3b36bff793b",
+          "sha256": "7a126a44f6f1272ad552cec39d171b6f8cd1ecc659abcbf38e2561c5fd03c149"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/Directory.Build.props",
+          "mode": "100644",
+          "oid": "32c76e1fbbd9b3c40c93b9a3ad43b5199f0dacfc",
+          "sha256": "5a428b72970a77d997902c7300e96041cc44f3bf76827807ffa6169a1ae1f9f1"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/Hexalith.Commons.TenantAccess.csproj",
+          "mode": "100644",
+          "oid": "feb0743ed8ba8eed60f08d694d48d31be4e0cf42",
+          "sha256": "7ff1b7ad7f534da84f614f6849fc8474f4d41b30de74f38ce321b4356ba0fb82"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/ITenantAccessClock.cs",
+          "mode": "100644",
+          "oid": "d6c1d2560d636c203d296a394ccbe5aaf4776294",
+          "sha256": "884ec1805857c4328fcf092249c8520e57aeb9e6c8fbd04008a8e152ae4a6503"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/ITenantAccessProjectionHealthProvider.cs",
+          "mode": "100644",
+          "oid": "3c4db9dda025fcb93f9845ab8545cfa00de33a64",
+          "sha256": "395265907f3c6e4e5b114000d196b29decef5970b64905972cc3ff5174c7cedf"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/ITenantAccessProjectionStore.cs",
+          "mode": "100644",
+          "oid": "81da113cdf3c9c52d2d54236a671d310ec2475c4",
+          "sha256": "ae907557826d35ce630015d316722910a2983913f0da06d422322839ae274beb"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/ITenantAccessStateStore.cs",
+          "mode": "100644",
+          "oid": "f4802e440bd8898079acbfd16967739362773904",
+          "sha256": "b1277a7a11c41765e784ee2a07248c4f56cb84ec93ba6e341d02f67196d6acd9"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessDenialKind.cs",
+          "mode": "100644",
+          "oid": "8fed44ceb9b04c37c13b5f9c66d2c25ba321b63b",
+          "sha256": "5e11afbb24d63758e1265dfb86214c72ea870dab5e19838bc571bddd7e456882"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessEvaluation.cs",
+          "mode": "100644",
+          "oid": "41e62af440c12a963cfe119e3284bc16bd041d79",
+          "sha256": "3e1dafd3ba7717cfd2dd66e96faa908a1b666dc5a7afde43ae77ae55465ec730"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessEvaluator.cs",
+          "mode": "100644",
+          "oid": "bdad0f928ed1077eacc094450536c9ee8efe5929",
+          "sha256": "0ce89e385db66952b366900f8cbd787c42eee03e81597236029fa94e2c6cc16b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessPrincipalEvidence.cs",
+          "mode": "100644",
+          "oid": "86185537636fbb3caa1cc068e5f5127fa7600fe5",
+          "sha256": "900b087aba3999c21f5dad131140b6adf55564ed93b854e2873ab14f58dbaf8b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionEvent.cs",
+          "mode": "100644",
+          "oid": "ae9ec45bc87be46d1f4f08f5717b3fe1756f290c",
+          "sha256": "d5de1b1b8be7e6a683d70c12212c28beed7a4c788b9506926796df46176d9b03"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionEventKind.cs",
+          "mode": "100644",
+          "oid": "6f4aacef71cddcb77617aad6ba74564f5e775692",
+          "sha256": "6c2648f5a2d28942ef044c4578fb67e59c05c33292d2bb14b6a63c5d34195a39"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionEvidence.cs",
+          "mode": "100644",
+          "oid": "2ad85c188af467e65d817eeab0d6f8d25aba17a8",
+          "sha256": "0a2e019b5c2095f0f1f6c051d46f5c62a12b59b1bd75901307ac4574b9bdf2d3"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionHandler.cs",
+          "mode": "100644",
+          "oid": "dd677c8789eca8cc6ba194fd23651659b7750208",
+          "sha256": "a8a5d41b527b8c9590843b90b4f9cc13c768a4a93d70f418b06e5100939d69cb"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionHandlerOptions.cs",
+          "mode": "100644",
+          "oid": "8cff70f595556c9fc7cf1d5818e31f46eb128552",
+          "sha256": "e77e3443696c1d00400c33a94f204d0df0c93d6a5e205e81ca14c5f86da17acf"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionHealth.cs",
+          "mode": "100644",
+          "oid": "8147a23554bbc91a2d0749666f899541feccdc07",
+          "sha256": "c185f193a380c13508f2e72b0ea3ddc78c6d1f2cb5bb8cfdb3699a90cb6b82d9"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessProjectionState.cs",
+          "mode": "100644",
+          "oid": "8a674741ce0bc35f4ab151b50f851ebbbe713493",
+          "sha256": "93e661b5c183e6ee114a49567fee1f4dc960991cbedf168f4b9dfe3a06a6b7c6"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessRegistration.cs",
+          "mode": "100644",
+          "oid": "84f644852b11a1a24170092bef9a2b7158a546c2",
+          "sha256": "c33ca9bd4cc2fa06f87ed50272ea8a81116bb71ed07557beadfe7ea6c6170389"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.TenantAccess/TenantAccessState.cs",
+          "mode": "100644",
+          "oid": "97bf3c85c27c31517c3593d8d4b4a75ad92112eb",
+          "sha256": "5dd919be4c65a633cd49253a8258be292bd9f082caaaa70baf052d41a76f65b4"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.UniqueIds/Directory.Build.props",
+          "mode": "100644",
+          "oid": "e92d2cf81217136baa9ea277c0606a150364015e",
+          "sha256": "a7e82adadf37a9eaa36e6009167d94ac28057775d46c1a7891df779c0edba323"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.UniqueIds/Hexalith.Commons.UniqueIds.csproj",
+          "mode": "100644",
+          "oid": "0e4bcb4bed09d2a9b3ebbcbfbea501cf291bfed4",
+          "sha256": "1b26e7312bcde1caee75851d6fba7081a3a1e888e55bd09d27d30029a5c6bce3"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.UniqueIds/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "1011127b482ea7a9402d968aa7f3ce0ffa85fb88",
+          "sha256": "a0ffa9a449c8efa302cab06d65011ed550316fdcb87edcf68131399e92f1b7a0"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.UniqueIds/README.md",
+          "mode": "100644",
+          "oid": "4ee50161d38131f987e9dc498952b54405d516d8",
+          "sha256": "d439c633ebcd5881b294f5a871f8bc1261fc6f87d43f7a76ded0ff4d064592e3"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons.UniqueIds/UniqueIdHelper.cs",
+          "mode": "100644",
+          "oid": "af86c886de162db83de34976aed6fb48b49d48d5",
+          "sha256": "1b591eb4c6babff6a38504c4557f97eedfa32737f7ac6dac55bc006c81347291"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Assemblies/VersionHelper.cs",
+          "mode": "100644",
+          "oid": "b01264ea7c0aefe3d5ad0b4bfb4046c7d9410445",
+          "sha256": "8875348cf681f1d6f36aeb369a4ef85323ba7bb39476f5c8a72cd82da299ba08"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Common/ExampleNameAttribute.cs",
+          "mode": "100644",
+          "oid": "876004ae41f4a5f79a2ae79e5a6c8b114276e459",
+          "sha256": "5fcd8b53075e68676256aa30a509419d719c71b2e308e207b7c29d85b1949e14"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Common/ExampleValueAttribute.cs",
+          "mode": "100644",
+          "oid": "5ac13a4a8229a0199f90ab93147eb6a7488b9e2c",
+          "sha256": "9a9b039961ed3abb573cd88125f109b1b329e69c4ef98198d02d672076672dde"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Configuration/README..md",
+          "mode": "100644",
+          "oid": "39f3132bf6e953d94c57611d1f58402d244c0466",
+          "sha256": "0403badd244b3722eb8e24a9da0ca55fae2d4beb2ff246d08c435ff1ef9d4d98"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Dates/DateHelper.cs",
+          "mode": "100644",
+          "oid": "b7287f45d377424548254cfdeea1ae78fcaea5a0",
+          "sha256": "96074935478141dd08ef57ea8d51530a213a038561449ed92fc025e3cdac622b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Dates/Month.cs",
+          "mode": "100644",
+          "oid": "a7c22cd68f2da37dc4af9ad4eca24945f310f75e",
+          "sha256": "f0845dff7cb7e810fb859ed5cdaf2e1dc7a61e60f2003aefe3baefb186387572"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ApplicationError.cs",
+          "mode": "100644",
+          "oid": "6b24bb2bd88654dbec4f4e5f0f1656defa527451",
+          "sha256": "09af5290c0431169f92feb0a136cefd7bb2f95c58e16a6edb3c5984661435f2d"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ApplicationErrorException.cs",
+          "mode": "100644",
+          "oid": "48a9a6b953869b99bf4bdcf9ecdab452ece51b8e",
+          "sha256": "b46865000f2d45eda2f7eca88602eef719506eebdae76754480f6a0eb86eb42a"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ConditionalValue.cs",
+          "mode": "100644",
+          "oid": "d7468b0d806d614f3f46a4005eb4aca2a748bd0b",
+          "sha256": "475b567ac937476cc90006d4ea454afc00a3b5e13259d862dd8d2bfa4a921355"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ErrorCategory.cs",
+          "mode": "100644",
+          "oid": "7f5c5739bddd0c9d842b6d32e2420bb0377ae95d",
+          "sha256": "4d50a67bdf4031722e4ae9e097247be8b6f93fd8a2be637f446edd908cf33c66"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ExceptionHelper.cs",
+          "mode": "100644",
+          "oid": "d3e9e70ded05845f6e98c5037283538c3033c85a",
+          "sha256": "357bb94b0dfda3b7ceda45955e361847de69f8c1e0ed01448c9df33f82e2b656"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ValueOrError.cs",
+          "mode": "100644",
+          "oid": "98eee79495aff675415b47eeed3813550d7c6d21",
+          "sha256": "243fd361c67f7435de17bd727df25bb3b20157d69f521136c2b3081c6059e686"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Errors/ValueOrError{T}.cs",
+          "mode": "100644",
+          "oid": "b920b05d7a31042afb356a354a4cfbbade0f445c",
+          "sha256": "56390273576246d8876bcc9472305da9557526cd3398fcd1f901817402527b09"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Hexalith.Commons.csproj",
+          "mode": "100644",
+          "oid": "571598bc5d6430324f42d8535822820e883c6354",
+          "sha256": "c31b1d55de14769647c1038c415c4e009d4b3f0654982e7d4f72a99c869ad9d5"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Loggings/LoggerHelper.cs",
+          "mode": "100644",
+          "oid": "a6bb9aaff9cacabef5f73a0c69784f1623503b31",
+          "sha256": "58e04eb9f4b26be92279dd3a70a7c66cec674daa11d529384af20bd93372d993"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Maths/FibonacciSequence.cs",
+          "mode": "100644",
+          "oid": "44b7153a8fb8f0f4f3d8ce83c3070e845c99f2cc",
+          "sha256": "c09215c62b9085bcdb08bd38ab5c901344e31da29820e529dc16ddf38eab7408"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Objects/EquatableHelper.cs",
+          "mode": "100644",
+          "oid": "9e3666731deb0ea3d2dd2f8359a7cf186c98633c",
+          "sha256": "ce2d3843c83e8626c38be98917b6544fc62cb8e194b1c7c1060ce20a1bd3184d"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Objects/ExampleHelper.cs",
+          "mode": "100644",
+          "oid": "170b96d9b8b9b940f0834c56968a03ae5f311645",
+          "sha256": "44968d74f213b950337b53a20b4b680875b428a8e10c5402bdb6be86093235df"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Objects/IEquatableObject.cs",
+          "mode": "100644",
+          "oid": "61f0cc45bdd009d8fae544c354e844fde9f87c5f",
+          "sha256": "fcbcbb609f9d98a5c4bd9866a5621a9e7fde1c280bc58561147b4ac610f3e085"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Objects/IIdempotent.cs",
+          "mode": "100644",
+          "oid": "702f119b92e12c9517eca7d0436cca593ebdd546",
+          "sha256": "9441d421733a9d0d322b93bbdd614290a07c4c0005e1efd2234c4c8da9a23813"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Objects/ObjectDescriptionHelper.cs",
+          "mode": "100644",
+          "oid": "063a3ab6043da405537f26809bea89d865dde604",
+          "sha256": "6052d14397335d3f84000072074b19a5a3c5e4ec55fbff1876e03a4ea46303f0"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Paging/PagedResult.cs",
+          "mode": "100644",
+          "oid": "78660d4c6151909273ec1ee6976b732f90a14d34",
+          "sha256": "8b6e1b5dc8650af3a8a97530d302e43a8bf66b625a813299bac2e70134ffaac4"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "7dd2d7c1b0da11d914d4fff177766798b31aa2d4",
+          "sha256": "1e566ee884e3633a2487d845fb469faa00f3b49c498cbc8f94f262a02871dc35"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/README.md",
+          "mode": "100644",
+          "oid": "5bb0365c637808bf2bda3420fff08f15e901da61",
+          "sha256": "d8a2c4d6e7a4b2c02a4a5c6960d3698f978fcbe0f276538bf88be373bdc9e98a"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Reflections/IMappableType.cs",
+          "mode": "100644",
+          "oid": "eb4e88757bf595026b489fc07b69ea419317dba1",
+          "sha256": "43e679a858a6db0631509a4f0f78f424eac061cd382ad3546050bdc8831a3e87"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Reflections/NameTypeMapper{TMappable}.cs",
+          "mode": "100644",
+          "oid": "42143fe885ae3cb31be62cb82e1e35655b89b4aa",
+          "sha256": "a63544f44395ece21a65d196bd193043a87332f0bd04f568193543495f438c6b"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Reflections/ObjectDifferenceHelper.cs",
+          "mode": "100644",
+          "oid": "e6c13449644e8fc29b914b87abf22da73edb2667",
+          "sha256": "399a90a0a308ae07ea6a0bfd81a5ca98c6118264f22904bbf8eb77c57868f4fd"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Reflections/ReflectionHelper.cs",
+          "mode": "100644",
+          "oid": "76582d857bbe9cdd3797f10433f2b2fc6445fc43",
+          "sha256": "397e192db0bf078a0185254b1860be4a8f299000267caaae97faa0750c8bcaa6"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Reflections/TypeMapper.cs",
+          "mode": "100644",
+          "oid": "5d2d2eeeb66e3542c1497514d51c6171a4fc81b4",
+          "sha256": "bdc7c1ebe41212f478d141538e3ce78fdaf2cafaff0c090b6804e50a3941a0fb"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Strings/README..md",
+          "mode": "100644",
+          "oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Strings/StringHelper.cs",
+          "mode": "100644",
+          "oid": "073faa20ffcdfe6906ece12d56e2e45682750bb3",
+          "sha256": "408fb376be85d39e736bc5d26350d0cd2040615b5ec692bd4fc2910ba0e59a46"
+        },
+        {
+          "path": "src/libraries/Hexalith.Commons/Tests/TestHelper.cs",
+          "mode": "100644",
+          "oid": "c1c8018e2b76e2db00b7a880989b19042c3a9be4",
+          "sha256": "ac287d93a496fdaee2cfff86b5c2196a3fb2fa69d59c3def59dddeac5afe70c5"
+        },
+        {
+          "path": "src/libraries/README.md",
+          "mode": "100644",
+          "oid": "fd32ef333df627e98d6f1d474b1fcd16b962770f",
+          "sha256": "5ea5b87223842838d75b183357487e17e4b1148b61ebcbc8ad68ecf87efd2e13"
+        },
+        {
+          "path": "test/Directory.Build.props",
+          "mode": "100644",
+          "oid": "52ab36fa3abf21bbfbc8079918ea19db28c39ea9",
+          "sha256": "a716ce14aad8f409617519ea94462a722196b55050e409d3cbac84f37496e2bf"
+        },
+        {
+          "path": "test/Hexalith.Commons.Aspire.Tests/AspireDaprDomainModuleTest.cs",
+          "mode": "100644",
+          "oid": "0bafe6ad9782ce15e58dd6317a7b6d6d0a93b304",
+          "sha256": "8844f3d8ca3d9fb40f9d7efe1ec749a272a30e90759ebb38ee384b3b93542359"
+        },
+        {
+          "path": "test/Hexalith.Commons.Aspire.Tests/AspireDaprLocalServiceEndpointsTest.cs",
+          "mode": "100644",
+          "oid": "99c3d82441691db3310a2022218c15a45bc11aca",
+          "sha256": "e787b9a5db483a98d2f8fe2efffa25996a6edaafb9c0806d3b8b04edcfc7e7d5"
+        },
+        {
+          "path": "test/Hexalith.Commons.Aspire.Tests/Hexalith.Commons.Aspire.Tests.csproj",
+          "mode": "100644",
+          "oid": "ccd627e2d9421b4bc5ba3f2fe15bf70c53a61237",
+          "sha256": "d586048cb9dc7ed07f1249c50a94a3409198b5a0661e192ea8ecdf9603a22edb"
+        },
+        {
+          "path": "test/Hexalith.Commons.Diagnostics.Tests/BoundedTelemetryCounterTest.cs",
+          "mode": "100644",
+          "oid": "b9a23e90a29eb85f0990309175a49477daeddf3d",
+          "sha256": "160acf44cfa5bf025aaf22aa017a9e54da0d676ff3fa4a6a23ac159a54ad5d43"
+        },
+        {
+          "path": "test/Hexalith.Commons.Diagnostics.Tests/BoundedTelemetryHelperTest.cs",
+          "mode": "100644",
+          "oid": "412f977d1ae5e0b773365d692f678282fa54d172",
+          "sha256": "95261c27cd0e641a18628570e3ab08c5fd0f7783bb1b0865a12fbaeacf6483e5"
+        },
+        {
+          "path": "test/Hexalith.Commons.Diagnostics.Tests/Hexalith.Commons.Diagnostics.Tests.csproj",
+          "mode": "100644",
+          "oid": "ecd6f3dad93488a76ea1f47dcd14ff8c86f551c4",
+          "sha256": "dfe665854c1e8144317dc6c37081aca7bf07ce8e7a76d3df835821049b48e6a0"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/BoundedProblemDetailsFactoryTest.cs",
+          "mode": "100644",
+          "oid": "7df6c446c33863503d823d47d2f6c2f5a533540d",
+          "sha256": "466a5abb27080bdac52911eba3c28f984a15fec34425d9f415ccfe6b73175936"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/BoundedProblemDetailsReaderTest.cs",
+          "mode": "100644",
+          "oid": "225199faf428fad03518b8afb36acbf284aa81c0",
+          "sha256": "c4b911df48f648186ab43b228b0588e4a3734ae99925bc0e7dc79ba240ff293d"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/Hexalith.Commons.Http.Tests.csproj",
+          "mode": "100644",
+          "oid": "e995c1406a604e0ef3733a2957ba670a212fee7c",
+          "sha256": "80a4df2b9f010bc3c5fb93aa42a0eecdfcd4dd8f3949bbc9db999fa8b11fa1e9"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/HttpClientRegistrationTest.cs",
+          "mode": "100644",
+          "oid": "f61e474d160b92ffd8f3af73111f39e0fbdd740d",
+          "sha256": "4c22d01b53c4a80b32844e03ce167de87dbecc422a38630645263d2ca9a1d772"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/HttpCorrelationTest.cs",
+          "mode": "100644",
+          "oid": "305adef1ba2ba23e55b6e2433acb56bad667a2a9",
+          "sha256": "ebefeb40cfdbe96f7b70542bcffa7955a031c86c36a0589e016cc2c440299868"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/ITestClient.cs",
+          "mode": "100644",
+          "oid": "5345f99622ee0fb05766a9c80b02236303a6d3bd",
+          "sha256": "2841603b2cda9549c68926a72623c308176fff7e404a55f8af125d3f1efcf7c3"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/MarkerHandler.cs",
+          "mode": "100644",
+          "oid": "8cce47b94d24f137f629189c60002be122d086c0",
+          "sha256": "4c26949f37c8be4c8792ed17ae924c8796875ee1c5b01d4c00b6ae2e001c8ddf"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/PagedResultTest.cs",
+          "mode": "100644",
+          "oid": "02bf06c468324cd4356d959ba9ce36e01eb472f8",
+          "sha256": "ec2f2bdcd82b160d516a9d5641ac89cdbcdffe6bfae1fe5119f7ead8432bd44a"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "8e338a5cc5a520836268b6eaf83601391f71ff18",
+          "sha256": "18965e2a565282913829a8aca8ea81507e118b2ed30d31efd174c5772bcf0088"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/TestClient.cs",
+          "mode": "100644",
+          "oid": "d1052d5e2ea7d87c23b392488347e2f0e9d57a2f",
+          "sha256": "fdb9fba8c9bda3a3135996a9cb69864eacc57071c93932f4bd8465911656f8e2"
+        },
+        {
+          "path": "test/Hexalith.Commons.Http.Tests/TestClientOptions.cs",
+          "mode": "100644",
+          "oid": "fb9afb9210fb09f43d01e23f14b7ab1a0407e1d1",
+          "sha256": "3b2e4d04d90671341a02a882be5c36f06b09040f1510068531d14889778b9633"
+        },
+        {
+          "path": "test/Hexalith.Commons.Publication.Tests/Hexalith.Commons.Publication.Tests.csproj",
+          "mode": "100644",
+          "oid": "9ec5472fdd4d43a493cdb0561d3a2c4b310a33cc",
+          "sha256": "f1b2b60168f266072c4ba36b859779d1bf3b941861973c60a81c3378b8904a2e"
+        },
+        {
+          "path": "test/Hexalith.Commons.Publication.Tests/PublicationHelperTest.cs",
+          "mode": "100644",
+          "oid": "599a1a61f7830234e6a76b7d007df3d3eaaffab9",
+          "sha256": "22a779df9054cf8a44321bb8ce5e20573bb2f05ead0fe98c1cae33dd9f154283"
+        },
+        {
+          "path": "test/Hexalith.Commons.Serialization.Tests/Hexalith.Commons.Serialization.Tests.csproj",
+          "mode": "100644",
+          "oid": "1a04878c661fec8dc1ffaff397763ea935917255",
+          "sha256": "76123332d8067ceb7e7aec13d636452bd651e9b747c6185031ba3570d5b89796"
+        },
+        {
+          "path": "test/Hexalith.Commons.Serialization.Tests/JsonSerializationOptionsTest.cs",
+          "mode": "100644",
+          "oid": "786fa51e21ed5a6ac3ef195a85e44d30fa24ca0a",
+          "sha256": "1b4283381f57f1aa29c589bee75d0545b264b3e885987ca3bd6c318ee442c6a2"
+        },
+        {
+          "path": "test/Hexalith.Commons.Serialization.Tests/PolymorphicTypeRegistryTest.cs",
+          "mode": "100644",
+          "oid": "5729aed1d77b61c7e5534d728a6b073db490f5e0",
+          "sha256": "2ec114b3cfdca2a422a1365683ca2043adb1723eff5219cc4a2053b3157d8b42"
+        },
+        {
+          "path": "test/Hexalith.Commons.Serialization.Tests/ValueJsonConverterTest.cs",
+          "mode": "100644",
+          "oid": "39fab6d3d0535c192fc603132806f14c5587fc95",
+          "sha256": "3251f9b7e965fa8b46b64fa2ab5adf55304f18f7c499f3f156631c592a72a3fd"
+        },
+        {
+          "path": "test/Hexalith.Commons.ServiceDefaults.Tests/Hexalith.Commons.ServiceDefaults.Tests.csproj",
+          "mode": "100644",
+          "oid": "78ff31288915dc034efd16fbe85b0f677e8c3d05",
+          "sha256": "84e6a52bd7fd9b591e11c816a3ad81fb31ec66caae7ca376db050a116dcbac4b"
+        },
+        {
+          "path": "test/Hexalith.Commons.ServiceDefaults.Tests/HexalithServiceDefaultsTest.cs",
+          "mode": "100644",
+          "oid": "55757658ef79946abfa8e4421093315b5ebecc51",
+          "sha256": "fca4a51dcc2fe8c5310aeb701532d0c6b440dbfa60f35ddc373c46ab5be8ca81"
+        },
+        {
+          "path": "test/Hexalith.Commons.TenantAccess.Tests/Hexalith.Commons.TenantAccess.Tests.csproj",
+          "mode": "100644",
+          "oid": "101b2014a0b8980fd09f7df5d8dfda246d2f9694",
+          "sha256": "f70572406368a2a239e67d1dacf40e273e0ccb470dc950b07904bdcaedbae62e"
+        },
+        {
+          "path": "test/Hexalith.Commons.TenantAccess.Tests/TenantAccessEvaluatorContractTest.cs",
+          "mode": "100644",
+          "oid": "95fd86ab2b0d7502e6226f56f15d2e81816a7f1a",
+          "sha256": "e57f414cb105899b06aa5863dd39cae6af83800ae4ae7a2b6a6f37f67d4a9ed5"
+        },
+        {
+          "path": "test/Hexalith.Commons.TenantAccess.Tests/TenantAccessEvaluatorTest.cs",
+          "mode": "100644",
+          "oid": "9b63889bb0558deb8649fca97182d6c8d629e6e5",
+          "sha256": "afe113eef4999c175318534cb6db1055a2b7d68d71474e33a27368232ffc2bdd"
+        },
+        {
+          "path": "test/Hexalith.Commons.TenantAccess.Tests/TenantAccessProjectionHandlerReplayToleranceTest.cs",
+          "mode": "100644",
+          "oid": "829d4674728df428b4a9fa39612f046f4aa19cc3",
+          "sha256": "6b7ae4c0b5f9e5a867c1332806944db3d0d2c1e3d72d207065a3816c8108671d"
+        },
+        {
+          "path": "test/Hexalith.Commons.TenantAccess.Tests/TenantAccessProjectionHandlerTest.cs",
+          "mode": "100644",
+          "oid": "5291a40a24ba68108b30a281085be2b8558d86ff",
+          "sha256": "53e238ce0b11ba27b7e8e51cd8c2517c78c3bf0f3f119795a38e7ab6f3688a8a"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/AreSameEnumerationTest.cs",
+          "mode": "100644",
+          "oid": "371ad7d0a2d1b3bc82054c85116a4c5676513b4b",
+          "sha256": "fe23c11667018d131a6f8c6fdea3d415054df7f0aef8a9a46a77c59c27cf983b"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/AreSameTest.cs",
+          "mode": "100644",
+          "oid": "c24172a7606e80c3c7511b6d7288ef3b54e0719d",
+          "sha256": "2885d7d08c6331d492bec383e312ead7952e11d55b86e4017da3b243c660374d"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/ConditionalValueTest.cs",
+          "mode": "100644",
+          "oid": "6cc06d074aa6115876cffee253dbe9a09aba4d29",
+          "sha256": "c36b07d9cd5ad5ec4ca55000d970943abe2f28f0e92b4185d449385419d5b227"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/DummyEmbeddedEquatable.cs",
+          "mode": "100644",
+          "oid": "6477e7138dc149da378ca05e61a1888c51bba089",
+          "sha256": "79d9f8c72c3b9c374344ce0de60603b00ad43827fc34f253d9860317e6f385a3"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/DummyEquatable.cs",
+          "mode": "100644",
+          "oid": "51f5396c25eb2a7fc3db508d63badb4593f100a9",
+          "sha256": "0eb58194ddc72f74995929bb8bc16b4c7066039fa08c626e4046283ac5d26a74"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/DummyNonEquatable.cs",
+          "mode": "100644",
+          "oid": "0e1d7ee2065e105b9ae2023ff5972882fb5b00a9",
+          "sha256": "38abf14e57b55dcd09729c689f3df6c98abb7fc87bd59a8770fb588ea5e36caa"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Common/PagedResultTest.cs",
+          "mode": "100644",
+          "oid": "ba2f5aa9255ac49ac60556f93c157efca3251906",
+          "sha256": "c2bcdf6e70f556aa6f4805c7432ee3ca61dd6922d2ae82009b9173bb82f2f987"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Dates/DateHelperTest.cs",
+          "mode": "100644",
+          "oid": "c003c7774a5b6615aa4e69dd8f67d4cf22a314ae",
+          "sha256": "18934163953b2762986d00ca46c7e11d0f6eecaa6471581dca9bf80282cdc239"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Errors/ApplicationErrorTest.cs",
+          "mode": "100644",
+          "oid": "edaef17c45e652c6e2718aaa914b4b560f029174",
+          "sha256": "fbcd6eab9be412e0c1e80f2055078ff0e9dca7c7bc8f66ec2d5798779a18acb0"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Errors/ValueOrErrorTest.cs",
+          "mode": "100644",
+          "oid": "9f33b0f3d6b5829fcfb1378328941ff3077b38e7",
+          "sha256": "1236bb135649e6103c02f8594d5ba2eabb986c5a7f17f6f7afd8a611163ef579"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Exceptions/ExceptionHelperTest.cs",
+          "mode": "100644",
+          "oid": "12b73704a21a0c3948831943a66931d291b74e48",
+          "sha256": "d0a774ba1456545218addc7575fe96684eabd41237dfb84c57b416c20595fc35"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Exceptions/SettingsExceptionTest.cs",
+          "mode": "100644",
+          "oid": "c3dc0d7feed0cf1a9d91ba699320ebe298fb6530",
+          "sha256": "7d8e85afb07d67a26abfdd5f9fc0baf5662a34fb3dae7ad0add18eba3e59df60"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Helpers/ExampleTest.cs",
+          "mode": "100644",
+          "oid": "db00ccf5d3989d6ca955a5d408318207211c3e3a",
+          "sha256": "f015184f3697302514c759480585317217b7a0dba12f307895565dfe4905b94f"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Helpers/ExceptionHelperTest.cs",
+          "mode": "100644",
+          "oid": "9723ab340ba04bbd9e6da98368d615deb5ab57f1",
+          "sha256": "564874e03503f4965687a39c9335a4ab9432b3bab434004ef20b761751d94882"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Helpers/ObjectDescriptionHelperTest.cs",
+          "mode": "100644",
+          "oid": "be5f49cdffaa9fe3e3116dffdacf65f35faf9c76",
+          "sha256": "252afe3dbebd3fe7ec0d1091344d6f1f23e6563c901722508e06c9788ebcadf3"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Helpers/ObjectPropertyDescriptionHelperTest.cs",
+          "mode": "100644",
+          "oid": "0ace199ad2a63853e95157a3080c2d71866fe34d",
+          "sha256": "4f1c6b614e2180a23bedef09876a8fb7c59c1898a9f0820f5cd8e3dffc00d4c4"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Helpers/ObjectToDictionaryHelper.cs",
+          "mode": "100644",
+          "oid": "7ed0bc5b254ba3f497eacdb72aaa338144322967",
+          "sha256": "2f7e5dbffb99f89c866605a59e526f0cf8fef7c581269f362d7dbd44c91e93ff"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Helpers/StringHelperTest.cs",
+          "mode": "100644",
+          "oid": "eaa79a9802d070ee46edd24b6ea6f9e95ae3699a",
+          "sha256": "7ae7ebc5a9ee4544d67b30654bd6b6b67c4eb6da6e8be983b4d9477fcf7452aa"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Hexalith.Commons.Tests.csproj",
+          "mode": "100644",
+          "oid": "2faf98a97bfb61f0eccf0fc245e62722f4e0b6a8",
+          "sha256": "eff4a6ccd44a837cd30345d0e54b545f4e98eed8fefe88541e17b92ed9915e73"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Maths/FibonacciTest.cs",
+          "mode": "100644",
+          "oid": "32bac68cc36ef1e1b88d048d45b58afa627222fe",
+          "sha256": "c6193487dd0173607d664b96a0c900063014e241fe65cb1b552f784d8c7d73dd"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Metadatas/MetadataTest.cs",
+          "mode": "100644",
+          "oid": "34704e487a063693ff01b3b8f2b7b742f98ea879",
+          "sha256": "de2c4509a6926a3784357353b32b7637281441122558c12d3f91283a36a03812"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/Properties/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "8e338a5cc5a520836268b6eaf83601391f71ff18",
+          "sha256": "18965e2a565282913829a8aca8ea81507e118b2ed30d31efd174c5772bcf0088"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/README.md",
+          "mode": "100644",
+          "oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/SolutionInventoryTest.cs",
+          "mode": "100644",
+          "oid": "d469b03fa3db29cacb3c2b311f7e408d699de729",
+          "sha256": "c67f891737b807f1345caae97b7557a15ad3a856182f934c829ce6cf5f921097"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/StringEncoders/Rfc1123StringExtensionsTest.cs",
+          "mode": "100644",
+          "oid": "414569e7451ca18886d4ae8aa12763c1d94fe3f3",
+          "sha256": "61e3c4dd6e9c6870b745e04ba9f0809f2cb753c07c29a022fb38678db0d5b437"
+        },
+        {
+          "path": "test/Hexalith.Commons.Tests/UniqueIds/UniqueHelperTest.cs",
+          "mode": "100644",
+          "oid": "84f8065b3402161b8cdc4372603248f4ef5e9f31",
+          "sha256": "9088c79bc990e26a4d7bef028a8d75f652c0a2df13f14df143405dbdb82f3e3f"
+        },
+        {
+          "path": "tools/release-packages.json",
+          "mode": "100644",
+          "oid": "b11b8ea088ea8cca11d88f5e3a725a0bf7fbf2cf",
+          "sha256": "5a3283066c63b25a6070e81736bbc430946b76100887f5edb59c695f36d51cfc"
+        },
+        {
+          "path": "tools/test_verify_nuget_release.py",
+          "mode": "100644",
+          "oid": "701caa669dd846b3555c579440261b61c486b339",
+          "sha256": "9e7774b5e8a8bad9cd42fd41b70ff2082673b3ecc1cf81fb584eb40652ef04c3"
+        },
+        {
+          "path": "tools/verify_nuget_release.py",
+          "mode": "100644",
+          "oid": "90c9c312fb952799789f004fe66533081d1ba20b",
+          "sha256": "e39c5646e2589face84924e396a5e0c45dc91e8210d7be296763470994f225a3"
+        }
+      ],
+      "owning_and_shared_commit_policy": "pass",
+      "legacy_tooling_retained": true,
+      "temporary_worktree_metadata_removed": true
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "branch": "cicd-pilot-update-poly-20261116",
+      "base": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "head": "dbea7efd64ec75e2b92920665cb1ebffda15fa88",
+      "allowed_changed_paths": [
+        "pilot-ci-probe.md"
+      ],
+      "changed_paths": [
+        "pilot-ci-probe.md"
+      ],
+      "unchanged_byte_mode_gitlink_records": [
+        {
+          "path": ".agents/skills/pushall/SKILL.md",
+          "mode": "100644",
+          "oid": "f342c943f47624fffa356b81a9331278540f9873",
+          "sha256": "ebe2fdc2abdf7115a927378f307aa2fadaff6067f20fc4de0398172467bec6f3"
+        },
+        {
+          "path": ".claude/settings.local.json",
+          "mode": "100644",
+          "oid": "296e5921a6f4c0f17a02f4b9b1d8746581fc645e",
+          "sha256": "63df4c3a82a02e6d149bb20851fb9019dd3c2ddd9f1bd09fe8932cf3eb1783bb"
+        },
+        {
+          "path": ".claude/skills/pushall/SKILL.md",
+          "mode": "100644",
+          "oid": "f342c943f47624fffa356b81a9331278540f9873",
+          "sha256": "ebe2fdc2abdf7115a927378f307aa2fadaff6067f20fc4de0398172467bec6f3"
+        },
+        {
+          "path": ".editorconfig",
+          "mode": "100644",
+          "oid": "b9e30936e0a04c3c1dd4003bc9be0bbb2ad46203",
+          "sha256": "09a63945b656d5dbb5d3ac73ec70de36cb7f9d34bfd56718f3a3813a0632fc19"
+        },
+        {
+          "path": ".github/dependabot.yml",
+          "mode": "100644",
+          "oid": "67caebec2f39b687061e6c55c16bb70d9fd215df",
+          "sha256": "03c96e8927c30ac4d6fb275aec6f466d9d2202cc6d97760ac364f409e2788350"
+        },
+        {
+          "path": ".github/instructions/codacy.instructions.md",
+          "mode": "100644",
+          "oid": "cb073c46b53148621667e869ad9c6c58a4b66a93",
+          "sha256": "d45a3281ea3021d6899b3c29fe2d2e04e73c48fec65acbbe9303baa2e3e1e9fd"
+        },
+        {
+          "path": ".github/skills/pushall/SKILL.md",
+          "mode": "100644",
+          "oid": "f342c943f47624fffa356b81a9331278540f9873",
+          "sha256": "ebe2fdc2abdf7115a927378f307aa2fadaff6067f20fc4de0398172467bec6f3"
+        },
+        {
+          "path": ".github/workflows/build-release.yml",
+          "mode": "100644",
+          "oid": "e4c3fbd66b5f68d9e34e82eb1b5c20ac5eef052b",
+          "sha256": "f2efc3d60d64f67fbb05d5681760501cd0c854db79065b7435d74295e77d6f90"
+        },
+        {
+          "path": ".github/workflows/codeql.yml",
+          "mode": "100644",
+          "oid": "3161aa6a7f977d246345cf47484c0f7506562a4b",
+          "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1"
+        },
+        {
+          "path": ".github/workflows/commitlint.yml",
+          "mode": "100644",
+          "oid": "bf3b5f01b750cae833a52d3d96145ba703125af7",
+          "sha256": "f7d3ff9e5304cc6599527c1c3aef2265aff9313d75221d7c4b37000237da3f50"
+        },
+        {
+          "path": ".github/workflows/dependency-review.yml",
+          "mode": "100644",
+          "oid": "ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb",
+          "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc"
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "mode": "100644",
+          "oid": "7e131f023565a4efdfcbf4293218f0c7800dbecd",
+          "sha256": "8bab8803e43c75ff0338c7ef6cacd1edd3eadc7f6030ae50ae5ac199dc825caa"
+        },
+        {
+          "path": ".gitignore",
+          "mode": "100644",
+          "oid": "effc51c3cb57ba0b04caee16f56cfc305f7f52d7",
+          "sha256": "904bbc4121df7041978dfe4828c975dc8835f7ba32d190d176d9f0a0f5c8aca0"
+        },
+        {
+          "path": ".gitmodules",
+          "mode": "100644",
+          "oid": "5bdda438d467d92e5a0d1b624be1d67146009d06",
+          "sha256": "310bbe873f1da813535a30fe4ff598f5a5f059cacaddd2079447f30d9e6888a2"
+        },
+        {
+          "path": "AGENTS.md",
+          "mode": "100644",
+          "oid": "c78bca3114a359f86bcd24742f425e0ff8fc2e72",
+          "sha256": "4c59ec61f9012466b778bc1ed0438387f621986a8678aca34eefca719ab1825d"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "mode": "100644",
+          "oid": "01b8305a668129cf7abca24ae52cfb6bf9716821",
+          "sha256": "7267e3e7bf10f734559fcb632f06264cb40a4680c3c857ced402adbf0be447f1"
+        },
+        {
+          "path": "CLAUDE.md",
+          "mode": "100644",
+          "oid": "c78bca3114a359f86bcd24742f425e0ff8fc2e72",
+          "sha256": "4c59ec61f9012466b778bc1ed0438387f621986a8678aca34eefca719ab1825d"
+        },
+        {
+          "path": "Directory.Build.props",
+          "mode": "100644",
+          "oid": "be6ed7d593e0a7529c743e45643c02b87bd434ae",
+          "sha256": "f60bcdefad1b54da5d0733bcad38c25c275d5b3a654bcde991e4a25325241991"
+        },
+        {
+          "path": "Directory.Packages.props",
+          "mode": "100644",
+          "oid": "bbceb4ee73446785f824ff35a739b54d8e4c5541",
+          "sha256": "097ea10e0c553cc868ddf1509a8e664ba0188414dc9e78406179c80864ad4db3"
+        },
+        {
+          "path": "Hexalith.PolymorphicSerializations.slnx",
+          "mode": "100644",
+          "oid": "0a90db9d01c0cfd8550ef9f7fc5d9031e7366126",
+          "sha256": "913af4a5501acf28b4481bd6e024162524965e9571d68578fb995301da24c62a"
+        },
+        {
+          "path": "LICENSE",
+          "mode": "100644",
+          "oid": "a54cddb6190a10da3ccfdb47eba1a30828b878a8",
+          "sha256": "f629edc6f074826bbb59e9ba4ff8b2cd44423c5e7c0dce03deb4410209d40957"
+        },
+        {
+          "path": "README.md",
+          "mode": "100644",
+          "oid": "b8a8d149ffea31d9ea14a2a95d8fa34b98b6b996",
+          "sha256": "1b32abd24e217fa17a19e6c29920bfc419521244a513557a3e7952c281813cc1"
+        },
+        {
+          "path": "commitlint.config.mjs",
+          "mode": "100644",
+          "oid": "0616fb937bb77b75355c94334276f9aa337b7c1f",
+          "sha256": "b0acbdafc17f8ffc98a1858f0be9b9453f4e359800b7ca7b0a11e7dc0cf2bcee"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/DeserializeFileMessages.csproj",
+          "mode": "100644",
+          "oid": "05f7399f0274730d710ebc83781019327d8eb90a",
+          "sha256": "f1a614e38004ea56cbdf28459739873e58a4f33f3be35a0f1032605a2a091808"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/Messages/Move.cs",
+          "mode": "100644",
+          "oid": "b6a9f8e9b67c436797a19e5df44fb3e6691d9ba8",
+          "sha256": "b579c2999c00a8194f844eecfcd6680662e5ac92cfcb49f84010134121d7cbcf"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/Messages/Say.cs",
+          "mode": "100644",
+          "oid": "341b3eda54b86ed08e42a4074082511998c423a4",
+          "sha256": "a0692f9d88be6ac9220b9b13a461752f7d7a8ce677ff329a7f6d58eec220dfa6"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/Messages/SayByeVersion2.cs",
+          "mode": "100644",
+          "oid": "347e5878b6a5e31860bd9cf1224fadb37e172b25",
+          "sha256": "2795eaeb666f9aaf2cb841e8ac88b641c3bd5e4c86cb7665081aaabfe0439faa"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/Messages/SayHello.cs",
+          "mode": "100644",
+          "oid": "c9cec4c116ac11703f15da07f04349b9e1ca1094",
+          "sha256": "09d88897278a12e794009fb2c501572707ff810b05af114626f7815f69f54d7d"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/Program.cs",
+          "mode": "100644",
+          "oid": "420c16ecb2ea04492b86b813d8171e8154cdbb39",
+          "sha256": "80dc97d6bdd4d0722972addc7224b5b0037a6a8fab86371f1162732e818788ec"
+        },
+        {
+          "path": "examples/DeserializeFileMessages/README.md",
+          "mode": "100644",
+          "oid": "3de1e70327a294b5877e5a70f5bd9e9ac56d5e50",
+          "sha256": "91b679ebdb99b963dd82c31b215e4618598e0660824da5598591dba9c6af8d5b"
+        },
+        {
+          "path": "examples/Directory.Build.Props",
+          "mode": "100644",
+          "oid": "57711a8bfad535473ade65c0f4d7950ec6819ff6",
+          "sha256": "4b4abaff66fbc2420b251b4cfe4aef8ca46c24c526e7f5d5150aa58f648f43dd"
+        },
+        {
+          "path": "examples/README.md",
+          "mode": "100644",
+          "oid": "3b269125fec55f91ab9e08db07fb5e0c3956b646",
+          "sha256": "ec4c36c69cbed39e15561e76032bb7427c7d7d75cdf8fa96a16db7e9beec96c3"
+        },
+        {
+          "path": "global.json",
+          "mode": "100644",
+          "oid": "701104b3d54283ad578b7e1e71aca01d1a59d523",
+          "sha256": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05"
+        },
+        {
+          "path": "package-lock.json",
+          "mode": "100644",
+          "oid": "62b2289234913adbdd33cee8ca9af92787f009c2",
+          "sha256": "75723610d9e7b8c3cfdf53b264f1e123e3ec461c831a1c2acefc1993da0c47df"
+        },
+        {
+          "path": "package.json",
+          "mode": "100644",
+          "oid": "72e48e4abd410921a1c304127effd50cbce995ec",
+          "sha256": "fc4a2fc2b2ae0f25553a9eea3df6a838d969b903508daacc7d1d663602e7f54f"
+        },
+        {
+          "path": "references/Hexalith.AI.Tools",
+          "mode": "160000",
+          "oid": "9b78aa008cfc62cd88ad0ea4b39b1f07311956ce"
+        },
+        {
+          "path": "references/Hexalith.Builds",
+          "mode": "160000",
+          "oid": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec"
+        },
+        {
+          "path": "references/README.md",
+          "mode": "100644",
+          "oid": "9b0dcc80236fb7d062bb78327eae8f6873f7e1e5",
+          "sha256": "e6ac28d184ebe57d721e7db1b6b1946c3895b8d0b41aaa825891f82ea2ab4a0b"
+        },
+        {
+          "path": "src/Directory.Build.props",
+          "mode": "100644",
+          "oid": "0a8a35ff33cda48dd7c2c5498f75b07aa1e33609",
+          "sha256": "932175dae8133ddb48a702e90325abecc03a05907876a99613f036d880d4276a"
+        },
+        {
+          "path": "src/README.md",
+          "mode": "100644",
+          "oid": "35f192e92ce6bf7cb3f2125cef803912b3d767eb",
+          "sha256": "7919bfe14f0686d59f8ce1be613b37a57d4b4bd7c5d0d2fa97327d14044ad5f0"
+        },
+        {
+          "path": "src/libraries/Directory.Build.props",
+          "mode": "100644",
+          "oid": "37f8efed2dfa481af5a813a6a319399db6c0b4d9",
+          "sha256": "af18b898853b294c02f8efd397370e4a6bd459ee9bd1a3596bc6c3e308bfba02"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations.CodeGenerators/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "e1f810320582c2cdcb36eb198801df7c86740077",
+          "sha256": "4da9bcccc4ae53eb133db17d37d57d64a762157c5bafe6c4458c877eaa59a985"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations.CodeGenerators/Hexalith.PolymorphicSerializations.CodeGenerators.csproj",
+          "mode": "100644",
+          "oid": "2142e657c6187d51580ed75a0654d9fc788c8586",
+          "sha256": "804052ff9176356ebf672590d9bb34e554a12e950faa99d330a879b472fd8955"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations.CodeGenerators/Hexalith.PolymorphicSerializations.CodeGenerators.props",
+          "mode": "100644",
+          "oid": "4d977fa775d05b8449e9640ad958be142c82f20d",
+          "sha256": "e8b2886163a957380aca91d858c6cfd335f7f8b287f932eb38e66525a3b0a170"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations.CodeGenerators/SerializationMapperSourceGenerator.cs",
+          "mode": "100644",
+          "oid": "ba7556b0d80a63295002b50b5a9f487c2b73e9c1",
+          "sha256": "9f0dc517ef9b71d937f29893a8d4063a1f10673e403a71e4b23bf2a2de489fb7"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/AssemblyInfo.cs",
+          "mode": "100644",
+          "oid": "0e18265ab6907d4c5a449965ac6e7aa65b7cfe00",
+          "sha256": "702bb775b9cd398d18e3b58dab13c0a7fb567f6f335f98847fde2231f3565854"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/Hexalith.PolymorphicSerializations.csproj",
+          "mode": "100644",
+          "oid": "ca151ec3a7359741cb05e1bbf58bea4a0d33c455",
+          "sha256": "d5a81674a6dd8951043ad5d008af83e35734e95ee0f3b89b396047fb0fe634e1"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/IPolymorphicSerializationMapper.cs",
+          "mode": "100644",
+          "oid": "ce6c1a1b29ae9a21a1dd89e53944f13bb3fa3ff0",
+          "sha256": "f1bca4958d724c77d98ad75f1d14d4bf413eef82fef3467c4ec27bdc57e72956"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/IsExternalInit.cs",
+          "mode": "100644",
+          "oid": "6ef6de03a4da5f170156959e7a5c0e2a579f17df",
+          "sha256": "cb7bc0256352f3c999ef79b9ca5e6b9a789bbafa53290f4ccb4a34afdf8ba186"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/Polymorphic.cs",
+          "mode": "100644",
+          "oid": "68053e52bb347a3b3d75770f421647c78c3adbdb",
+          "sha256": "43b2ba8a9cb2378a1d0a3e938a63d8a0e497e382d533ceb4da6e227a23dfe619"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/PolymorphicHelper.cs",
+          "mode": "100644",
+          "oid": "4f69fce8ea83ee43841bb1eb63d2a8f5924b3ae5",
+          "sha256": "7914c00b3fd0ea3bfa07249e1ab6fff6b68154b4de56975ece5c7b71bd1ca0f1"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/PolymorphicSerializationAttribute.cs",
+          "mode": "100644",
+          "oid": "a6be602a73e63d2d813da72bace24ac37ecc85f3",
+          "sha256": "7d60540eafc98db90ce9af470f0ade659f08d59bfd0469477d998489a52b2c2b"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/PolymorphicSerializationMapper.cs",
+          "mode": "100644",
+          "oid": "2b339509eb0ab01baaf5dda46ae786bac48f0e35",
+          "sha256": "18ee40842946aa962b67332f7920777bbad78269a6fb97a4aabc11018b763eb6"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/PolymorphicSerializationResolver.cs",
+          "mode": "100644",
+          "oid": "bc5351c01ecb88932a3251b5e9f26026a8d8953f",
+          "sha256": "0495e8e02b7260bcbf29850c8f79b71aa55f2a75d58ff37461238554351423e6"
+        },
+        {
+          "path": "src/libraries/Hexalith.PolymorphicSerializations/PolymorphicSerializationResolverBuilder.cs",
+          "mode": "100644",
+          "oid": "f06d97b9d2d3fc307c051e4db24be723bbfdfa40",
+          "sha256": "fe1b16ffedee364880b7ddd6d7804307de4173c8382b0141a80aaa0189605a0d"
+        },
+        {
+          "path": "test/Directory.Build.props",
+          "mode": "100644",
+          "oid": "57711a8bfad535473ade65c0f4d7950ec6819ff6",
+          "sha256": "4b4abaff66fbc2420b251b4cfe4aef8ca46c24c526e7f5d5150aa58f648f43dd"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Hexalith.PolymorphicSerializations.Tests.csproj",
+          "mode": "100644",
+          "oid": "ecae2834765e0e41f19ad9ccb04af255cf8f4943",
+          "sha256": "484e1ae4231ed0c37796158b28ab7a1fc9bcd7bfaf9dd4ac1f77a9856cdaabd0"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Objects/AttributeNonRegisteredType.cs",
+          "mode": "100644",
+          "oid": "d2ceaf4d8c97f47b2d7bd3b7b45aec877ac8c7e6",
+          "sha256": "3508e0f8f6d79c55ae75faa3212302500db6918c6c03b12056400a6b727d2c8a"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Objects/AttributeTestBase.cs",
+          "mode": "100644",
+          "oid": "7032ca67e93a7a8a548eee82b212da76ff2318a6",
+          "sha256": "0f067a9173b8e85bdf0c7a58249359cb1d3e273f3c01377d42de752de72cec37"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Objects/AttributeTestType1.cs",
+          "mode": "100644",
+          "oid": "8409e7153f32997d48c5b91a2f3785c81a83aeb4",
+          "sha256": "06f3f5e2debe80cc4f15590c4aafbb18d3e9ce6075eb3bec70b98ed3fc2c7636"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Objects/AttributeTestType2.cs",
+          "mode": "100644",
+          "oid": "83548c88ed65bc8e502ff3a83febe222de230d9d",
+          "sha256": "0235ca2034cc160fd2477dfa06638af8a43640d480837da6dc436eda148245d6"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Objects/NonRegisteredType.cs",
+          "mode": "100644",
+          "oid": "8d1508c8e4b5027d460ac9d1278d83f7007fda04",
+          "sha256": "a7e03d7d206e60ab1dabec7d53fe798106f7949456724bab7d180cfa5b4a2e3d"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/Objects/TestType1.cs",
+          "mode": "100644",
+          "oid": "6fd96e9b8aea809bfba3229377e80a259449ea25",
+          "sha256": "a41058a1d629295f0cfb4ffd727ee77a743c288b1308d37f3b4739d53785f2bb"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/PolymorphicSerializationAttributeTests.cs",
+          "mode": "100644",
+          "oid": "82e1441fc054ce05ac2e96587e8494abbf07c243",
+          "sha256": "6cac8fa98f2121fba5176402dfe099ddc3f5a573abcdeb6ad033396d8494a739"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/PolymorphicSerializationTests.cs",
+          "mode": "100644",
+          "oid": "8016a5f530b2be3b8e5450963b46c901953103c9",
+          "sha256": "2bfeaafe50eb4fd8da486298c3b1c8884547e477588d1cf26f3fdf08e42d20b4"
+        },
+        {
+          "path": "test/Hexalith.PolymorphicSerializations.Tests/README.md",
+          "mode": "100644",
+          "oid": "6c3e5a59882c1faedb368db6a14791a9f97a0755",
+          "sha256": "06a930194c4bf9a4989caeddae686fe22720374553a4c5c35a8cfac9acb4f5b7"
+        },
+        {
+          "path": "test/README.md",
+          "mode": "100644",
+          "oid": "206277474a71c3c03f21a79c9d30a3e57a790d31",
+          "sha256": "1178429f0f014c791385247b5c1869d3e79a7d9fd7afa9c1d757f11184e71a7f"
+        },
+        {
+          "path": "tools/release-packages.json",
+          "mode": "100644",
+          "oid": "373d95f91f6ad43d0474f266900d537fccf4a7c0",
+          "sha256": "86b8aaee04bf3a855537b47f09fd6bc3a21a644377fe2a888e543c0c753ac60a"
+        },
+        {
+          "path": "tools/test_verify_nuget_release.py",
+          "mode": "100644",
+          "oid": "f191dd9043ddd8d2280eb73626534274c89c3f8b",
+          "sha256": "fccc326f71d027dfaee9a9f77329ad200a4b46a3d7c748057fda18a4d6109233"
+        },
+        {
+          "path": "tools/verify_nuget_release.py",
+          "mode": "100644",
+          "oid": "56a457e6bc5e588e118df1675bbca7847c5acac3",
+          "sha256": "7bcb55b12e67437f31dfcb32a371707f86d0e63ebd7d4b9c4376fdf5b36c7fd8"
+        }
+      ],
+      "owning_and_shared_commit_policy": "pass",
+      "legacy_tooling_retained": true,
+      "temporary_worktree_metadata_removed": true
+    }
+  },
+  "operations": [
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "-b",
+        "cicd-pilot-update-commons-20261116",
+        "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons",
+        "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "HEAD is now at ab5e92f build(deps): refresh release publisher\n",
+      "stderr": "Preparing worktree (new branch 'cicd-pilot-update-commons-20261116')\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        ".github/actions/after-unit-tests/action.yml",
+        "pilot-ci-probe.md",
+        "scripts/pack-release-packages.py",
+        "scripts/validate-consumer-package-references.py"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "--file",
+        "-"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "[cicd-pilot-update-commons-20261116 e3d4da3] test(cicd): prepare pilot branch qualification\n 4 files changed, 36 insertions(+), 2 deletions(-)\n create mode 100644 .github/actions/after-unit-tests/action.yml\n create mode 100644 pilot-ci-probe.md\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "e3d4da366a2e8c6b6216f4a7b57c15241313da79\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "remove",
+        "--force",
+        "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.Commons"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Commons\nHEAD ab5e92faa3bab1fa43b8ecadd423432dfe652bb2\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.PolymorphicSerializations\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "476cfccac3c5ba694a8e0ef11b1157728b9ec093\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "-b",
+        "cicd-pilot-update-poly-20261116",
+        "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations",
+        "476cfccac3c5ba694a8e0ef11b1157728b9ec093"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "HEAD is now at 476cfcc build(deps): refresh nuget release tooling\n",
+      "stderr": "Preparing worktree (new branch 'cicd-pilot-update-poly-20261116')\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "pilot-ci-probe.md"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "--file",
+        "-"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "[cicd-pilot-update-poly-20261116 dbea7ef] test(cicd): prepare pilot branch qualification\n 1 file changed, 4 insertions(+)\n create mode 100644 pilot-ci-probe.md\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "dbea7efd64ec75e2b92920665cb1ebffda15fa88\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "476cfccac3c5ba694a8e0ef11b1157728b9ec093\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "cwd": "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "remove",
+        "--force",
+        "/tmp/hexalith-job.ML0F6vKe/local-probe-preparation/Hexalith.PolymorphicSerializations"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.PolymorphicSerializations\nHEAD 476cfccac3c5ba694a8e0ef11b1157728b9ec093\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    }
+  ],
+  "completed_at": "2026-11-16T09:21:15.969852+00:00",
+  "result": "local candidates prepared; full verification and remote operations still pending"
+}

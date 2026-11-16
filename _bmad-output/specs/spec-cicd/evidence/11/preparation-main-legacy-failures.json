@@ -1,0 +1,218 @@
+{
+  "observed_at": "2026-11-16T11:01:13.669043+00:00",
+  "scope": "exact completed legacy preparation-main failures; sanitized diagnostics only; no mutation or rerun",
+  "runs": [
+    {
+      "repository": "Hexalith.Commons",
+      "run_id": 43852958099,
+      "failed_jobs": [
+        {
+          "id": 133249939636,
+          "name": "Test NuGet publication verification",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43852958099/job/133249939636",
+          "failed_steps": [
+            {
+              "number": 3,
+              "name": "Run python3 -m unittest discover -s tools -p 'test_verify_nuget_release.py' -v",
+              "conclusion": "failure"
+            }
+          ],
+          "log_get_exit": 0,
+          "diagnostic_lines": [
+            "2026-11-16T10:54:21.2092283Z     raise ImportError('Start directory is not importable: %r' % start_dir)",
+            "2026-11-16T10:54:21.2094044Z ImportError: Start directory is not importable: 'tools'",
+            "2026-11-16T10:54:21.2249877Z ##[error]Process completed with exit code 1."
+          ],
+          "raw_log_saved": false
+        }
+      ]
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "run_id": 43852958059,
+      "failed_jobs": [
+        {
+          "id": 133249938664,
+          "name": "commitlint / commitlint",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43852958059/job/133249938664",
+          "failed_steps": [
+            {
+              "number": 4,
+              "name": "Install dependencies",
+              "conclusion": "failure"
+            }
+          ],
+          "log_get_exit": 0,
+          "diagnostic_lines": [
+            "2026-11-16T10:54:24.3280014Z npm error [--strict-allow-scripts] [--dangerously-allow-all-scripts] [--no-audit]",
+            "2026-11-16T10:54:24.3280570Z npm error [--no-bin-links] [--no-fund] [--dry-run]",
+            "2026-11-16T10:54:24.3281391Z npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]",
+            "2026-11-16T10:54:24.3282042Z npm error [--workspaces] [--include-workspace-root] [--install-links]",
+            "2026-11-16T10:54:24.3282580Z npm error",
+            "2026-11-16T10:54:24.3283063Z npm error   --install-strategy",
+            "2026-11-16T10:54:24.3283773Z npm error     Sets the strategy for installing packages in node_modules.",
+            "2026-11-16T10:54:24.3284193Z npm error",
+            "2026-11-16T10:54:24.3284432Z npm error   --legacy-bundling",
+            "2026-11-16T10:54:24.3284935Z npm error     Instead of hoisting package installs in `node_modules`, install packages",
+            "2026-11-16T10:54:24.3285373Z npm error",
+            "2026-11-16T10:54:24.3285600Z npm error   --global-style",
+            "2026-11-16T10:54:24.3286059Z npm error     Only install direct dependencies in the top level `node_modules`,",
+            "2026-11-16T10:54:24.3286457Z npm error",
+            "2026-11-16T10:54:24.3286668Z npm error   --omit",
+            "2026-11-16T10:54:24.3287093Z npm error     Dependency types to omit from the installation tree on disk.",
+            "2026-11-16T10:54:24.3287476Z npm error",
+            "2026-11-16T10:54:24.3287692Z npm error   --include",
+            "2026-11-16T10:54:24.3288161Z npm error     Option that allows for defining which types of dependencies to install.",
+            "2026-11-16T10:54:24.3288586Z npm error",
+            "2026-11-16T10:54:24.3288838Z npm error   --strict-peer-deps",
+            "2026-11-16T10:54:24.3289301Z npm error     If set to `true`, and `--legacy-peer-deps` is not set, then _any_",
+            "2026-11-16T10:54:24.3289689Z npm error",
+            "2026-11-16T10:54:24.3289945Z npm error   --foreground-scripts",
+            "2026-11-16T10:54:24.3290377Z npm error     Run all build scripts (ie, `preinstall`, `install`, and",
+            "2026-11-16T10:54:24.3290742Z npm error",
+            "2026-11-16T10:54:24.3291480Z npm error   --ignore-scripts",
+            "2026-11-16T10:54:24.3292405Z npm error     If true, npm does not run scripts specified in package.json files.",
+            "2026-11-16T10:54:24.3292891Z npm error",
+            "2026-11-16T10:54:24.3293137Z npm error   --allow-directory",
+            "2026-11-16T10:54:24.3293989Z npm error     Limits the ability for npm to install dependencies from directories.",
+            "2026-11-16T10:54:24.3294418Z npm error",
+            "2026-11-16T10:54:24.3294647Z npm error   --allow-file",
+            "2026-11-16T10:54:24.3295307Z npm error     Limits the ability for npm to install dependencies from tarball files.",
+            "2026-11-16T10:54:24.3295749Z npm error",
+            "2026-11-16T10:54:24.3295980Z npm error   --allow-git",
+            "2026-11-16T10:54:24.3296447Z npm error     Limits the ability for npm to fetch dependencies from git references.",
+            "2026-11-16T10:54:24.3296862Z npm error",
+            "2026-11-16T10:54:24.3297094Z npm error   --allow-remote",
+            "2026-11-16T10:54:24.3297542Z npm error     Limits the ability for npm to fetch dependencies from urls.",
+            "2026-11-16T10:54:24.3297927Z npm error",
+            "2026-11-16T10:54:24.3298157Z npm error   --allow-scripts",
+            "2026-11-16T10:54:24.3298653Z npm error     Comma-separated list of packages whose install-time lifecycle scripts",
+            "2026-11-16T10:54:24.3299085Z npm error",
+            "2026-11-16T10:54:24.3299348Z npm error   --strict-allow-scripts",
+            "2026-11-16T10:54:24.3299842Z npm error     If `true`, turn the install-script policy from a warning into a hard",
+            "2026-11-16T10:54:24.3300239Z npm error",
+            "2026-11-16T10:54:24.3300527Z npm error   --dangerously-allow-all-scripts",
+            "2026-11-16T10:54:24.3301297Z npm error     If `true`, bypass the `allowScripts` policy entirely and run every",
+            "2026-11-16T10:54:24.3301716Z npm error",
+            "2026-11-16T10:54:24.3301931Z npm error   --audit",
+            "2026-11-16T10:54:24.3302399Z npm error     When \"true\" submit audit reports alongside the current npm command to the",
+            "2026-11-16T10:54:24.3302815Z npm error",
+            "2026-11-16T10:54:24.3303034Z npm error   --bin-links",
+            "2026-11-16T10:54:24.3303520Z npm error     Tells npm to create symlinks (or `.cmd` shims on Windows) for package",
+            "2026-11-16T10:54:24.3303925Z npm error",
+            "2026-11-16T10:54:24.3304137Z npm error   --fund",
+            "2026-11-16T10:54:24.3304558Z npm error     When \"true\" displays the message at the end of each `npm install`",
+            "2026-11-16T10:54:24.3304949Z npm error",
+            "2026-11-16T10:54:24.3305162Z npm error   --dry-run",
+            "2026-11-16T10:54:24.3305628Z npm error     Indicates that you don't want npm to make any changes and that it should",
+            "2026-11-16T10:54:24.3306053Z npm error",
+            "2026-11-16T10:54:24.3306276Z npm error   -w|--workspace",
+            "2026-11-16T10:54:24.3306773Z npm error     Enable running a command in the context of the configured workspaces of the",
+            "2026-11-16T10:54:24.3307202Z npm error",
+            "2026-11-16T10:54:24.3307425Z npm error   --workspaces",
+            "2026-11-16T10:54:24.3307871Z npm error     Set to true to run the command in the context of **all** configured",
+            "2026-11-16T10:54:24.3308269Z npm error",
+            "2026-11-16T10:54:24.3308536Z npm error   --include-workspace-root",
+            "2026-11-16T10:54:24.3309042Z npm error     Include the workspace root when workspaces are enabled for a command.",
+            "2026-11-16T10:54:24.3309447Z npm error",
+            "2026-11-16T10:54:24.3309679Z npm error   --install-links",
+            "2026-11-16T10:54:24.3310164Z npm error     When set file: protocol dependencies will be packed and installed as",
+            "2026-11-16T10:54:24.3310586Z npm error",
+            "2026-11-16T10:54:24.3310784Z npm error",
+            "2026-11-16T10:54:24.3311415Z npm error aliases: clean-install, ic, install-clean, isntall-clean",
+            "2026-11-16T10:54:24.3311789Z npm error",
+            "2026-11-16T10:54:24.3312059Z npm error Run \"npm help ci\" for more info",
+            "2026-11-16T10:54:24.3312703Z npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-11-16T10_54_23_042Z-debug-0.log",
+            "2026-11-16T10:54:24.3666132Z ##[error]Process completed with exit code 1."
+          ],
+          "raw_log_saved": false
+        }
+      ]
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "run_id": 43852970890,
+      "failed_jobs": [
+        {
+          "id": 133249983791,
+          "name": "Verify",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43852970890/job/133249983791",
+          "failed_steps": [
+            {
+              "number": 7,
+              "name": "Test NuGet publication verification",
+              "conclusion": "failure"
+            }
+          ],
+          "log_get_exit": 0,
+          "diagnostic_lines": [
+            "2026-11-16T10:54:44.9999596Z     0 Error(s)",
+            "2026-11-16T10:54:45.5459817Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"26b2e796d7dc2b7f3e0c6e0c0bd945ff35a51eda003435b36daa2e7b7036161b\",\"TestCaseUniqueID\":\"ff0208fd1410a583bbc0656447e8f7fb061506216ac856d9aad03513c3c79244\",\"ExecutionTime\":0.023,\"FinishTime\":\"2026-11-16T10:54:45.5447618+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5485783Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"26b2e796d7dc2b7f3e0c6e0c0bd945ff35a51eda003435b36daa2e7b7036161b\",\"ExecutionTime\":0.023,\"FinishTime\":\"2026-11-16T10:54:45.5469558+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5557428Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"37fb1d349d98d71f6d0a4590df5b3c6ff5ca75ef5207f1a3ad5a3dda6e6316fd\",\"TestCaseUniqueID\":\"1db4a68ccc8f7f1c381d6b303adfae876e722d8e1ff82f7651e284c85e91e44e\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5480679+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5560997Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"37fb1d349d98d71f6d0a4590df5b3c6ff5ca75ef5207f1a3ad5a3dda6e6316fd\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5481069+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5636705Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"ba02c9368ae3ba553a58948adfc08788d94d348986d0c69bacbc4c1b9b6779bc\",\"TestCaseUniqueID\":\"7d179f3d51cec619dd0279ff92057eb805f4ce3a7921f0fcbb515d16b8af4a34\",\"ExecutionTime\":0.002,\"FinishTime\":\"2026-11-16T10:54:45.5504843+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5640465Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"ba02c9368ae3ba553a58948adfc08788d94d348986d0c69bacbc4c1b9b6779bc\",\"ExecutionTime\":0.002,\"FinishTime\":\"2026-11-16T10:54:45.5505152+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5677881Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"c1ae9aa5dc252a24b281beae9740708811f49a5be46fe67c56806b3673e402d8\",\"TestCaseUniqueID\":\"34cdae1cc352e919cd5d7a371d2a219ffbd8ad826adc463d466eb313b1539804\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5516295+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5681664Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"c1ae9aa5dc252a24b281beae9740708811f49a5be46fe67c56806b3673e402d8\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5516529+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5720564Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"ca6f70fa33aefd64676fc7dd4dcfaebf0a8b5e5e3684b34ba570484fc475dac8\",\"TestCaseUniqueID\":\"ee8ad53751182ba7586f11655803c59e1d2da3e005850ca7a488070c6c73b9a2\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5519847+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5724310Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"ca6f70fa33aefd64676fc7dd4dcfaebf0a8b5e5e3684b34ba570484fc475dac8\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5520053+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5762999Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"d643f3606ec4f81dc47fed65a76765476a02d1121d8dbd35b4e986b5a828d813\",\"TestCaseUniqueID\":\"df583c3ab9d79c09fe42849848b3fe80bad666488ed1fe7b5901b28f2fc098d6\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5523801+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5766943Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"d643f3606ec4f81dc47fed65a76765476a02d1121d8dbd35b4e986b5a828d813\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5524218+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5812338Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"e5c36eaf76ecf5df949ebf5daf5f60aef9487b4ab6b12ef2116935f1c4db0cc1\",\"TestCaseUniqueID\":\"d36f5079c55afc8f45429501f6a6860bccd5201ad1e8263773ae4b2e5d72b239\",\"ExecutionTime\":0.001,\"FinishTime\":\"2026-11-16T10:54:45.5542606+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5814415Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"e5c36eaf76ecf5df949ebf5daf5f60aef9487b4ab6b12ef2116935f1c4db0cc1\",\"ExecutionTime\":0.001,\"FinishTime\":\"2026-11-16T10:54:45.5543015+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5836102Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"f19ad9e7276987a6db429bbcdf04bdcf0f9a447c3adec6ca1e16091eea71f917\",\"TestCaseUniqueID\":\"2340c456b509dd93a4460fad3f09607f9c2437ec5568de03a45d2cafc95b7132\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5548983+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5838068Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"TestMethodUniqueID\":\"f19ad9e7276987a6db429bbcdf04bdcf0f9a447c3adec6ca1e16091eea71f917\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5549373+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5847261Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"5782e25c66d7f20341a2ea189351a3806e0a2c2dd6c16769610c265c4f72a32d\",\"TestCaseUniqueID\":\"6579e13a504ac321e5fc51f0d82e6f5b59c8393a3abccf9f8bc5dc1ba8e662e5\",\"ExecutionTime\":0.04,\"FinishTime\":\"2026-11-16T10:54:45.5566121+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5849241Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"5782e25c66d7f20341a2ea189351a3806e0a2c2dd6c16769610c265c4f72a32d\",\"ExecutionTime\":0.04,\"FinishTime\":\"2026-11-16T10:54:45.5566439+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5851094Z {\"$type\":\"test-method-starting\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"89c0f703a8faf831b7813540d71852e1d585ccdb3672d6bc2230a6260ae37cea\",\"MethodArity\":0,\"MethodName\":\"DeserializeMissingDiscriminatorReturnsBaseType\",\"StartTime\":\"2026-11-16T10:54:45.5566712+00:00\"}",
+            "2026-11-16T10:54:45.5858857Z {\"$type\":\"test-starting\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"89c0f703a8faf831b7813540d71852e1d585ccdb3672d6bc2230a6260ae37cea\",\"TestCaseUniqueID\":\"b0cc0cc7a64214479bfe7647e5131cef781b86880170c5e17e3b337e52b0196c\",\"TestUniqueID\":\"fe88016f6371dd6ffc37777e71b188d82626c4fd9fbef47d6cedc5451f6d5a79\",\"Explicit\":false,\"StartTime\":\"2026-11-16T10:54:45.5568417+00:00\",\"TestDisplayName\":\"Hexalith.PolymorphicSerializations.Tests.PolymorphicSerializationTests.DeserializeMissingDiscriminatorReturnsBaseType\",\"Timeout\":0}",
+            "2026-11-16T10:54:45.5863242Z {\"$type\":\"test-class-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"TestClassUniqueID\":\"15d9b95898c972e9a44863781c0950527fb2adf6f675c92168c7029f7c3ebd5f\",\"ExecutionTime\":0.026,\"FinishTime\":\"2026-11-16T10:54:45.5568108+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":8}",
+            "2026-11-16T10:54:45.5866817Z {\"$type\":\"test-collection-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"7eb37a2a667a883e85e346dfc7ceb4bbe52a7c5f4eb163ad5395b7952245e5b4\",\"ExecutionTime\":0.026,\"FinishTime\":\"2026-11-16T10:54:45.5587402+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":8}",
+            "2026-11-16T10:54:45.5873035Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"89c0f703a8faf831b7813540d71852e1d585ccdb3672d6bc2230a6260ae37cea\",\"TestCaseUniqueID\":\"b0cc0cc7a64214479bfe7647e5131cef781b86880170c5e17e3b337e52b0196c\",\"ExecutionTime\":0.007,\"FinishTime\":\"2026-11-16T10:54:45.5640754+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5875133Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"89c0f703a8faf831b7813540d71852e1d585ccdb3672d6bc2230a6260ae37cea\",\"ExecutionTime\":0.007,\"FinishTime\":\"2026-11-16T10:54:45.5641061+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5896076Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"90ad48268d5b0d9f0e35bbf89f337c70f548336142ce39a77ed6f26e5b8c91dd\",\"TestCaseUniqueID\":\"a12508bf8c2787f633df4485051c098ecb1a381e0c9ea5203ab3c8b730d7e2c0\",\"ExecutionTime\":0.001,\"FinishTime\":\"2026-11-16T10:54:45.5661284+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5898133Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"90ad48268d5b0d9f0e35bbf89f337c70f548336142ce39a77ed6f26e5b8c91dd\",\"ExecutionTime\":0.001,\"FinishTime\":\"2026-11-16T10:54:45.5661740+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5919041Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"966a0907e38593c35beb9f2f82ecf450ddcf6121a864b31416f1f16ae11da31f\",\"TestCaseUniqueID\":\"7e25db8180aa8b5ff12c6758feb016914f4746730dc997f4b421474f37befab4\",\"ExecutionTime\":0.001,\"FinishTime\":\"2026-11-16T10:54:45.5677935+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5921102Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"966a0907e38593c35beb9f2f82ecf450ddcf6121a864b31416f1f16ae11da31f\",\"ExecutionTime\":0.001,\"FinishTime\":\"2026-11-16T10:54:45.5678178+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5941682Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"9883035b1d31d74a44427f248d84ef280103d653c50073a617db7efb33de46a3\",\"TestCaseUniqueID\":\"d478b4ebbe31004e5e79c77416b525c46451c0275e8bddf41a9519804b5e9674\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5684594+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5943650Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"9883035b1d31d74a44427f248d84ef280103d653c50073a617db7efb33de46a3\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5684849+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5964331Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"ca23d4b35f75904e7c8095ce32e1a65c97ed0c36c5b224e79ceb2e0f1ac3d0d5\",\"TestCaseUniqueID\":\"d5ba101354c38e063cea46078533084890b33e4093c97e30fdd5c103f165c296\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5695476+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5966528Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"ca23d4b35f75904e7c8095ce32e1a65c97ed0c36c5b224e79ceb2e0f1ac3d0d5\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5696470+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5987780Z {\"$type\":\"test-case-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"fc63575c449b2be9c82e816b5b8afaf460d04a396b200142fd2cdda162788307\",\"TestCaseUniqueID\":\"4378e48de39f7b3df05262b3166269d2fbb283cafa951edc514c508de34028de\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5703484+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5989759Z {\"$type\":\"test-method-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"TestMethodUniqueID\":\"fc63575c449b2be9c82e816b5b8afaf460d04a396b200142fd2cdda162788307\",\"ExecutionTime\":0,\"FinishTime\":\"2026-11-16T10:54:45.5703689+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":1}",
+            "2026-11-16T10:54:45.5991421Z {\"$type\":\"test-class-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"TestClassUniqueID\":\"2d0c33013cdf3afc12dd15041cbac767efe31e775096edd3cb8e64eb65bd2598\",\"ExecutionTime\":0.049,\"FinishTime\":\"2026-11-16T10:54:45.5703866+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":7}",
+            "2026-11-16T10:54:45.5992775Z {\"$type\":\"test-collection-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"TestCollectionUniqueID\":\"5c1b7d6cb995019cc12fc98e3318d918000784ba38df2b7c8e51ef7a303532e8\",\"ExecutionTime\":0.049,\"FinishTime\":\"2026-11-16T10:54:45.5704379+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":7}",
+            "2026-11-16T10:54:45.5993904Z {\"$type\":\"test-assembly-finished\",\"AssemblyUniqueID\":\"dec48e05687a51e1a6626565ad22454cdb4192fa514d6a3b76cffa09d9c50e92\",\"ExecutionTime\":0.146,\"FinishTime\":\"2026-11-16T10:54:45.5727532+00:00\",\"TestsFailed\":0,\"TestsNotRun\":0,\"TestsSkipped\":0,\"TestsTotal\":15}",
+            "2026-11-16T10:54:45.7361753Z     raise ImportError('Start directory is not importable: %r' % start_dir)",
+            "2026-11-16T10:54:45.7362147Z ImportError: Start directory is not importable: 'tools'",
+            "2026-11-16T10:54:45.7482669Z ##[error]Process completed with exit code 1."
+          ],
+          "raw_log_saved": false
+        }
+      ]
+    }
+  ],
+  "concise_classification": {
+    "Commons CI": "owned legacy workflow still discovers the now-shared verifier tools directory; ImportError",
+    "Poly Verify": "15 C# tests passed, then owned legacy verifier discovery raises ImportError for tools",
+    "Commons commitlint": {
+      "classification": "owned legacy workflow still performs npm ci after authorized retirement of npm files",
+      "exact_lines": [
+        "2026-11-16T10:54:24.3234484Z npm error code EUSAGE",
+        "2026-11-16T10:54:24.3268772Z npm error The `npm ci` command can only install with an existing package-lock.json or",
+        "2026-11-16T10:54:24.3270049Z npm error npm-shrinkwrap.json with lockfileVersion >= 1. Run an install with npm@5 or",
+        "2026-11-16T10:54:24.3271316Z npm error later to generate a package-lock.json file, then try again.",
+        "2026-11-16T10:54:24.3666132Z ##[error]Process completed with exit code 1."
+      ]
+    },
+    "gate_edited_weakened_or_rerun": false
+  },
+  "classification_at": "2026-11-16T11:02:53.745268+00:00"
+}

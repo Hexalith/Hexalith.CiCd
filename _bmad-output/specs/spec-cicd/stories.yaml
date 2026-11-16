@@ -349,10 +349,12 @@
     branch is deferred to story 11 by the human's 2026-11-15 decision after
     GitHub refused its historical-head fixture. Use existing real history on
     a declared module; prior delivery is not required. Record the verified
-    findings and unverified update for 10-2's block, distinguishing GitHub
-    mechanics from actual delivery proof. Story 11 confirms post-delivery
-    branching and tests the deferred update. Until then 10-2 prohibits Update
-    branch. Clean up all probe refs/PRs.
+    findings separately from actual delivery proof. Story 11 subsequently
+    qualified both post-delivery fresh-main pushes and both meaningful Update
+    branch operations: GitHub allowed the latter to import owned workflows.
+    10-2's qualified instruction forbids importing owned CI/CD changes through
+    that operation and directs product-only reapplication from current main.
+    The pilot probe PRs/refs are cleaned up without merging.
   invoke_dev_with: >-
     Use the dedicated token from the protected credential file
     /home/administrator/.config/gh-module-agent/token, not a gh profile;
@@ -368,7 +370,8 @@
     Write the CI/CD-ownership block text and the .claude/settings.json
     deny-entry list in this repo's templates (run check.py before pushing, no
     YAML-asserting tests, no skip markers, fresh-main product branches and a
-    temporary prohibition of Update branch pending story 11's live test),
+    the qualified prohibition of using Update branch to import owned CI/CD
+    changes, with product-only reapplication from current main),
     make AI.Tools' shared guide link to the block and drop the
     release-on-merge line, and add the gate rule to this repo's AGENTS.md
     (CAP-11; enforcement.md, gate-classification.md).

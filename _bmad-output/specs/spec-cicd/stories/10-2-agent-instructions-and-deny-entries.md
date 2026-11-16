@@ -208,3 +208,38 @@ or adopted. Meaningful PR Update branch qualification remains intentionally
 assigned to story 11. Five review follow-ups are recorded in the deferred-work
 ledger, including the pre-existing malformed-marker preservation risk to settle
 before relying on preservation for malformed pilot input.
+
+
+## Story 11 policy qualification — 2026-11-16
+
+The actual two-pilot result supersedes the temporary unverified wording outside
+this story's historical frozen contract. GitHub accepted both meaningful Update
+branch operations with the same restricted credential and imported the real
+delivered owned trees. Fresh-main product pushes also succeeded after normal
+shared checks; both probe PRs closed without merging and all probe refs were
+removed. [Story 11's exact proof](../evidence/11/post-delivery-update-branch.json)
+and [cleanup](../evidence/11/product-probe-cleanup.json) retain revisions and
+server responses.
+
+The factual canonical policy now prohibits using Update branch to import owned
+CI/CD changes and directs agents to current-main branches with only product
+changes reapplied. It states the verified server allowance, without claiming a
+refusal or banning unrelated product-only updates. The corresponding template,
+renderer policy assertions and generated perimeters are authored in CiCd;
+qualification and actual redelivery remain tracked by story 11. No module-owned
+block, machine-wide deny or token permission was edited directly.
+
+The completed updated-PR checks additionally establish a compatibility limit:
+Codacy passed on both server merge heads, but the mandatory commit-format guard
+rejected their service-generated `Merge branch 'main' ...` subjects with
+`subject-empty` and `type-empty`. Product build/test stages did not run on those
+probe merges. This is an observed operation/input result, not a token refusal or
+product-code regression. [Exact messages and failed-job logs](../evidence/11/post-update-pr-failure-evidence.json)
+are retained; the strict guard, closed PRs and cleaned refs remain unchanged.
+
+The qualified scoped rule is now published in CiCd commit
+`3427f041c5f686c460c1fa027cf6f835791209c1` and actually redelivered by successful
+run `43869480499`; both resulting module trees and final-main CI are verified.
+See [authenticated policy redelivery](../evidence/11/authenticated-policy-redelivery.json)
+and [final CI proof](../evidence/11/final-main-ci-proof.json). Story 11 remains
+in progress solely for its genuine scheduled-night checkpoint.

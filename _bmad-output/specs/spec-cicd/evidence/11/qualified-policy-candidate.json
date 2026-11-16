@@ -1,0 +1,351 @@
+{
+  "started_at": "2026-11-16T12:25:57.570484+00:00",
+  "base": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+  "branch": "cicd-pilot-qualified-policy-20261116",
+  "source_file_sha256": {
+    "AGENTS.md": "70ce8986ca44f9f31272d300f6c890ca4ce82083828a6b045c3388b2611de5db",
+    "templates/partials/ownership-block.txt.j2": "5a4cda3deffbe6b83b8302ba059a0425940cb00390a38d9154f9164c20ffc51a",
+    "tools/tests/test_render.py": "81199174f627e3e36247147bfe65bc52a333ac03be1675d04c7fbfdb1a34a2b6",
+    "rendered/Hexalith.Commons.perimeter.json": "c3b7d77789497f3c0002b036443981bdcc3f897cd0405912aea3ab46e354873a",
+    "rendered/Hexalith.PolymorphicSerializations.perimeter.json": "c3b7d77789497f3c0002b036443981bdcc3f897cd0405912aea3ab46e354873a"
+  },
+  "direct_gitlinks": {
+    "Hexalith.Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Hexalith.Commons": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+    "Hexalith.PolymorphicSerializations": "49fbe97f7224e2795ffb3293330d9efde6c0f561"
+  },
+  "operations": [
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.CiCd\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.Commons/git/ref/heads/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/main\",\"node_id\":\"REF_kwDOOM0ElK9yZWZzL2hlYWRzL21haW4\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.Commons/git/refs/heads/main\",\"object\":{\"sha\":\"5169f6b6165482d4b1499ccc5958eb897101be4f\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.Commons/git/commits/5169f6b6165482d4b1499ccc5958eb897101be4f\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.Commons"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/delivered/Hexalith.Commons\",\"node_id\":\"REF_kwDOUjhxY9oAJXJlZnMvaGVhZHMvZGVsaXZlcmVkL0hleGFsaXRoLkNvbW1vbnM\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/refs/heads/delivered/Hexalith.Commons\",\"object\":{\"sha\":\"f002539f6fbaddaa9b621a9cbf75a1263eee5dea\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/commits/f002539f6fbaddaa9b621a9cbf75a1263eee5dea\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.PolymorphicSerializations/git/ref/heads/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/main\",\"node_id\":\"REF_kwDOOQ0N_q9yZWZzL2hlYWRzL21haW4\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/git/refs/heads/main\",\"object\":{\"sha\":\"49fbe97f7224e2795ffb3293330d9efde6c0f561\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/49fbe97f7224e2795ffb3293330d9efde6c0f561\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.PolymorphicSerializations"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/delivered/Hexalith.PolymorphicSerializations\",\"node_id\":\"REF_kwDOUjhxY9oAN3JlZnMvaGVhZHMvZGVsaXZlcmVkL0hleGFsaXRoLlBvbHltb3JwaGljU2VyaWFsaXphdGlvbnM\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/refs/heads/delivered/Hexalith.PolymorphicSerializations\",\"object\":{\"sha\":\"f002539f6fbaddaa9b621a9cbf75a1263eee5dea\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/commits/f002539f6fbaddaa9b621a9cbf75a1263eee5dea\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+        "f002539f6fbaddaa9b621a9cbf75a1263eee5dea"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "HEAD is now at f002539 test(render): make permission contract fixtures explicit\n",
+      "stderr": "Preparing worktree (detached HEAD f002539)\n"
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd/references/Hexalith.Builds",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "HEAD is now at fdda17c0 test(release): keep recovery verification on the local feed\n",
+      "stderr": "Preparing worktree (detached HEAD fdda17c0)\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "AGENTS.md",
+        "templates/partials/ownership-block.txt.j2",
+        "tools/tests/test_render.py",
+        "rendered/Hexalith.Commons.perimeter.json",
+        "rendered/Hexalith.PolymorphicSerializations.perimeter.json"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000,5169f6b6165482d4b1499ccc5958eb897101be4f,references/Hexalith.Commons"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000,49fbe97f7224e2795ffb3293330d9efde6c0f561,references/Hexalith.PolymorphicSerializations"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "--file",
+        "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/message.txt"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "[detached HEAD 3427f04] docs(cicd): document verified Update branch ownership boundary\n 7 files changed, 20 insertions(+), 14 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "3427f041c5f686c460c1fa027cf6f835791209c1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only",
+        "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+        "3427f041c5f686c460c1fa027cf6f835791209c1"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "AGENTS.md\nreferences/Hexalith.Commons\nreferences/Hexalith.PolymorphicSerializations\nrendered/Hexalith.Commons.perimeter.json\nrendered/Hexalith.PolymorphicSerializations.perimeter.json\ntemplates/partials/ownership-block.txt.j2\ntools/tests/test_render.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "update-ref",
+        "refs/heads/cicd-pilot-qualified-policy-20261116",
+        "3427f041c5f686c460c1fa027cf6f835791209c1"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.Commons/git/ref/heads/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/main\",\"node_id\":\"REF_kwDOOM0ElK9yZWZzL2hlYWRzL21haW4\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.Commons/git/refs/heads/main\",\"object\":{\"sha\":\"5169f6b6165482d4b1499ccc5958eb897101be4f\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.Commons/git/commits/5169f6b6165482d4b1499ccc5958eb897101be4f\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Hexalith/Hexalith.PolymorphicSerializations/git/ref/heads/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "{\"ref\":\"refs/heads/main\",\"node_id\":\"REF_kwDOOQ0N_q9yZWZzL2hlYWRzL21haW4\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/git/refs/heads/main\",\"object\":{\"sha\":\"49fbe97f7224e2795ffb3293330d9efde6c0f561\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/49fbe97f7224e2795ffb3293330d9efde6c0f561\"}}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "3427f041c5f686c460c1fa027cf6f835791209c1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "repository": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd\nHEAD 37e73a99dfe82c3b7741554d6f4ff2207711644b\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Builds\nHEAD fdda17c0a4538b0f7c99f813c20ca24b49006530\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    }
+  ],
+  "phase": "complete",
+  "result": "exact qualified-policy candidate passed full locked gate",
+  "push_performed": false,
+  "original_staging_sha256": "51d905e7ddd474ded73c896be00dee06552036931adc6cbca6fad9688006ba89",
+  "head": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "changed_paths": [
+    "AGENTS.md",
+    "references/Hexalith.Commons",
+    "references/Hexalith.PolymorphicSerializations",
+    "rendered/Hexalith.Commons.perimeter.json",
+    "rendered/Hexalith.PolymorphicSerializations.perimeter.json",
+    "templates/partials/ownership-block.txt.j2",
+    "tools/tests/test_render.py"
+  ],
+  "validation_started_at": "2026-11-16T12:26:06.314883+00:00",
+  "validation_pid": 3673116,
+  "validation_exit": 0,
+  "validation_log_sha256": "1f78943bf2b394d0ba3bdae7e9b29b6b5ee363a5232b65a6aad8d825b4a6680c",
+  "validation_completed_at": "2026-11-16T12:44:47.048181+00:00",
+  "verdict": {
+    "global": true,
+    "modules": [
+      "Hexalith.Commons",
+      "Hexalith.PolymorphicSerializations"
+    ]
+  },
+  "worktree_cleanup": [
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "path": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "path": "/tmp/hexalith-job.9Q9N6b82/qualified-policy-candidate/cicd",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "original_staging_preserved": true,
+  "completed_at": "2026-11-16T12:44:48.016644+00:00",
+  "all_temporary_worktree_metadata_removed": true
+}

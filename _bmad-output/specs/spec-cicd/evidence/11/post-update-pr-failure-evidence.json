@@ -1,0 +1,181 @@
+{
+  "observed_at": "2026-11-16T12:31:29.654527+00:00",
+  "modules": {
+    "Hexalith.Commons": {
+      "head": "517c1af6036e7a0074a8ea5cf081f1046c6f58fe",
+      "job_id": 133292717985,
+      "run_id": 43865456231,
+      "result": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout module",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Stage 1 guard owned CI/CD content",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Validate and prepare module",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Setup module SDK",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 2 restore and Release build",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 3 unit tests",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 4 environment setup",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "After unit tests hook",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 4 integration tests",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "After integration tests hook",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Stage 1 guard owned CI/CD content",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout module",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "selected_diagnostics": [
+        "2026-11-16T12:21:36.2912602Z guard: commit 517c1af6036e7a0074a8ea5cf081f1046c6f58fe: commitlint subject-empty, type-empty",
+        "2026-11-16T12:21:36.3018851Z ##[error]Process completed with exit code 1."
+      ],
+      "full_log": "post-update-commons-failed-ci.log",
+      "full_log_sha256": "9e6d8f94d599c282d7ba6ab9d14de73ec790d6329b6bcd55f56a1c47fc57f024",
+      "server_generated_commit_message": "Merge branch 'main' into cicd-pilot-update-commons-20261116",
+      "classification": "mandatory commit-format guard rejected the server-generated merge message (subject-empty,type-empty); product build/tests never ran on the probe merge",
+      "not_a_server_permission_refusal": true,
+      "policy_or_tests_weakened": false
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "head": "e571f080f58f80519786063ada4f60a236cf1efb",
+      "job_id": 133292811155,
+      "run_id": 43865484004,
+      "result": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout module",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Stage 1 guard owned CI/CD content",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Validate and prepare module",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Setup module SDK",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 2 restore and Release build",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 3 unit tests",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 4 environment setup",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "After unit tests hook",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Stage 4 integration tests",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "After integration tests hook",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Stage 1 guard owned CI/CD content",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout module",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "selected_diagnostics": [
+        "2026-11-16T12:21:58.4125777Z guard: commit e571f080f58f80519786063ada4f60a236cf1efb: commitlint subject-empty, type-empty",
+        "2026-11-16T12:21:58.4255457Z ##[error]Process completed with exit code 1."
+      ],
+      "full_log": "post-update-poly-failed-ci.log",
+      "full_log_sha256": "c93a457c3565ae1eefd0e091669202aa203b0838d048ccaadf4c24c295fcb973",
+      "server_generated_commit_message": "Merge branch 'main' into cicd-pilot-update-poly-20261116",
+      "classification": "mandatory commit-format guard rejected the server-generated merge message (subject-empty,type-empty); product build/tests never ran on the probe merge",
+      "not_a_server_permission_refusal": true,
+      "policy_or_tests_weakened": false
+    }
+  }
+}

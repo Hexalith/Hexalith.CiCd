@@ -1,0 +1,524 @@
+{
+  "started_at": "2026-11-16T10:52:07.381060+00:00",
+  "branch": "cicd-pilot-adoption-20261116",
+  "builds_tag": "v6.0.6",
+  "push_performed": false,
+  "operations": [
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.CiCd\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "37e73a99dfe82c3b7741554d6f4ff2207711644b\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "37e73a99dfe82c3b7741554d6f4ff2207711644b\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "v6.0.6^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "-b",
+        "cicd-pilot-adoption-20261116",
+        "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+        "37e73a99dfe82c3b7741554d6f4ff2207711644b"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "HEAD is now at 37e73a9 docs: complete module-agent token qualification\n",
+      "stderr": "Preparing worktree (new branch 'cicd-pilot-adoption-20261116')\nUpdating files:  84% (3170/3745)\nUpdating files:  85% (3184/3745)\nUpdating files:  86% (3221/3745)\nUpdating files:  87% (3259/3745)\nUpdating files:  88% (3296/3745)\nUpdating files:  89% (3334/3745)\nUpdating files:  90% (3371/3745)\nUpdating files:  91% (3408/3745)\nUpdating files:  92% (3446/3745)\nUpdating files:  93% (3483/3745)\nUpdating files:  94% (3521/3745)\nUpdating files:  95% (3558/3745)\nUpdating files:  96% (3596/3745)\nUpdating files:  97% (3633/3745)\nUpdating files:  98% (3671/3745)\nUpdating files:  99% (3708/3745)\nUpdating files: 100% (3745/3745)\nUpdating files: 100% (3745/3745), done.\n"
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd/references/Hexalith.Builds",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "HEAD is now at fdda17c0 test(release): keep recovery verification on the local feed\n",
+      "stderr": "Preparing worktree (detached HEAD fdda17c0)\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "builds-version",
+        "tools/deliver.py",
+        "tools/delivery_runtime.py",
+        "tools/tests/test_deliver.py",
+        "tools/tests/test_delivery_runtime.py",
+        "setup/Hexalith.Commons.yml",
+        "setup/Hexalith.PolymorphicSerializations.yml",
+        "rendered/Hexalith.Commons.perimeter.json",
+        "rendered/Hexalith.PolymorphicSerializations.perimeter.json",
+        "rendered/Hexalith.PolymorphicSerializations/.github/dependabot.yml",
+        "rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json",
+        "rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml",
+        "rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml",
+        "rendered/Hexalith.Commons/.github/dependabot.yml",
+        "rendered/Hexalith.Commons/.github/hexalith-ci.json",
+        "rendered/Hexalith.Commons/.github/workflows/ci.yml",
+        "rendered/Hexalith.Commons/.github/workflows/release.yml"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+        "references/Hexalith.Builds"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000",
+        "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+        "references/Hexalith.Commons"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000",
+        "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+        "references/Hexalith.PolymorphicSerializations"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "--file",
+        "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/message.txt"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "[cicd-pilot-adoption-20261116 ba62ae7] build(cicd): adopt Commons and PolymorphicSerializations\n 20 files changed, 330 insertions(+), 8 deletions(-)\n create mode 100644 rendered/Hexalith.Commons.perimeter.json\n create mode 100644 rendered/Hexalith.Commons/.github/dependabot.yml\n create mode 100644 rendered/Hexalith.Commons/.github/hexalith-ci.json\n create mode 100644 rendered/Hexalith.Commons/.github/workflows/ci.yml\n create mode 100644 rendered/Hexalith.Commons/.github/workflows/release.yml\n create mode 100644 rendered/Hexalith.PolymorphicSerializations.perimeter.json\n create mode 100644 rendered/Hexalith.PolymorphicSerializations/.github/dependabot.yml\n create mode 100644 rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json\n create mode 100644 rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml\n create mode 100644 rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml\n create mode 100644 setup/Hexalith.Commons.yml\n create mode 100644 setup/Hexalith.PolymorphicSerializations.yml\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+        "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858",
+        "--",
+        ".gitmodules"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Installed 8 packages in 22ms\n"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/committed-check.py",
+        "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "Committed inputs/render and tagged schema/caller contracts: pass\n",
+      "stderr": "Installed 8 packages in 8ms\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only",
+        "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+        "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858"
+      ],
+      "cwd": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stdout": "builds-version\nreferences/Hexalith.Builds\nreferences/Hexalith.Commons\nreferences/Hexalith.PolymorphicSerializations\nrendered/Hexalith.Commons.perimeter.json\nrendered/Hexalith.Commons/.github/dependabot.yml\nrendered/Hexalith.Commons/.github/hexalith-ci.json\nrendered/Hexalith.Commons/.github/workflows/ci.yml\nrendered/Hexalith.Commons/.github/workflows/release.yml\nrendered/Hexalith.PolymorphicSerializations.perimeter.json\nrendered/Hexalith.PolymorphicSerializations/.github/dependabot.yml\nrendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json\nrendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml\nrendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml\nsetup/Hexalith.Commons.yml\nsetup/Hexalith.PolymorphicSerializations.yml\ntools/deliver.py\ntools/delivery_runtime.py\ntools/tests/test_deliver.py\ntools/tests/test_delivery_runtime.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd\nHEAD 37e73a99dfe82c3b7741554d6f4ff2207711644b\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Builds\nHEAD fdda17c0a4538b0f7c99f813c20ca24b49006530\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    }
+  ],
+  "original_staging_sha256": "51d905e7ddd474ded73c896be00dee06552036931adc6cbca6fad9688006ba89",
+  "base": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+  "head": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+  "direct_gitlinks": {
+    "Hexalith.Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Hexalith.Commons": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+    "Hexalith.PolymorphicSerializations": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149"
+  },
+  "changed_paths": [
+    "builds-version",
+    "references/Hexalith.Builds",
+    "references/Hexalith.Commons",
+    "references/Hexalith.PolymorphicSerializations",
+    "rendered/Hexalith.Commons.perimeter.json",
+    "rendered/Hexalith.Commons/.github/dependabot.yml",
+    "rendered/Hexalith.Commons/.github/hexalith-ci.json",
+    "rendered/Hexalith.Commons/.github/workflows/ci.yml",
+    "rendered/Hexalith.Commons/.github/workflows/release.yml",
+    "rendered/Hexalith.PolymorphicSerializations.perimeter.json",
+    "rendered/Hexalith.PolymorphicSerializations/.github/dependabot.yml",
+    "rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json",
+    "rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml",
+    "rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml",
+    "setup/Hexalith.Commons.yml",
+    "setup/Hexalith.PolymorphicSerializations.yml",
+    "tools/deliver.py",
+    "tools/delivery_runtime.py",
+    "tools/tests/test_deliver.py",
+    "tools/tests/test_delivery_runtime.py",
+    "tools/tests/test_render.py"
+  ],
+  "committed_render_input_contract_checks": "pass",
+  "commit_and_range_policy": "pass",
+  "source_file_sha256": {
+    "tools/deliver.py": "b7f0cad7f3513a29ce513d4e11755b68fae63c412570e21b55dbf3dade3ea967",
+    "tools/delivery_runtime.py": "dba53df3c84ee14f046cdf7b67ab8631b5e0b0b4d63510379764fe7c44b7dd65",
+    "tools/tests/test_deliver.py": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+    "tools/tests/test_delivery_runtime.py": "46f149d945acfef97ec6cf1fc78640b8adf167a6fe681d50fd23e00388e5ceb2",
+    "tools/tests/test_render.py": "c28593f2d3511dbcfa7cd8e811e5da61ba3995ba6a9674afaebdeb3102943362"
+  },
+  "full_live_candidate_verdict": "pending revised full gate",
+  "result": "fixture-only revised candidate ready",
+  "temporary_worktree_cleanup": [
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "path": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "path": "/tmp/hexalith-job.GgPVmS1G/adoption-candidate-preparation/cicd",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "original_staging_preserved": true,
+  "completed_at": "2026-11-16T10:52:22.050546+00:00",
+  "all_temporary_worktree_metadata_removed": true,
+  "revised_at": "2026-11-16T11:25:47.596421+00:00",
+  "parent_candidate": "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858",
+  "prior_failed_verdict": "preparation-publication-and-candidate-validation.json",
+  "fixture_correction": {
+    "changed_path": "tools/tests/test_render.py",
+    "qualification": {
+      "source_sha256": "c28593f2d3511dbcfa7cd8e811e5da61ba3995ba6a9674afaebdeb3102943362",
+      "interpreters": {
+        "312": {
+          "tests": 32,
+          "result": "pass",
+          "log_sha256": "1ec7fa8bcd90bc7bda8dd673876924f41ccfb0d9e8e65ec551afc1cf045a6694"
+        },
+        "314": {
+          "tests": 32,
+          "result": "pass",
+          "log_sha256": "62a3587f580e1a8d7b50061cef40f9f5acd2247e53d18dc0be642cbf8ecee496"
+        }
+      }
+    },
+    "production_renderer_validator_unchanged": true,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "fetch",
+          "--no-recurse-submodules",
+          "origin",
+          "main"
+        ],
+        "cwd": "/home/administrator/projects/hexalith/cicd",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/Hexalith/Hexalith.CiCd\n * branch            main       -> FETCH_HEAD\n"
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "origin/main"
+        ],
+        "cwd": "/home/administrator/projects/hexalith/cicd",
+        "exit": 0,
+        "stdout": "37e73a99dfe82c3b7741554d6f4ff2207711644b\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "refs/heads/cicd-pilot-adoption-20261116"
+        ],
+        "cwd": "/home/administrator/projects/hexalith/cicd",
+        "exit": 0,
+        "stdout": "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "worktree",
+          "add",
+          "--detach",
+          "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+          "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858"
+        ],
+        "cwd": "/home/administrator/projects/hexalith/cicd",
+        "exit": 0,
+        "stdout": "HEAD is now at ba62ae7 build(cicd): adopt Commons and PolymorphicSerializations\n",
+        "stderr": "Preparing worktree (detached HEAD ba62ae7)\n"
+      },
+      {
+        "command": [
+          "git",
+          "add",
+          "--",
+          "tools/tests/test_render.py"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "commit",
+          "--file",
+          "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/message.txt"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "[detached HEAD f002539] test(render): make permission contract fixtures explicit\n 1 file changed, 14 insertions(+), 1 deletion(-)\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD^"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--name-only",
+          "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858",
+          "f002539f6fbaddaa9b621a9cbf75a1263eee5dea"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "tools/tests/test_render.py\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain",
+          "--ignore-submodules=all"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "update-ref",
+          "refs/heads/cicd-pilot-adoption-20261116",
+          "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+          "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858"
+        ],
+        "cwd": "/home/administrator/projects/hexalith/cicd",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--name-only",
+          "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+          "f002539f6fbaddaa9b621a9cbf75a1263eee5dea"
+        ],
+        "cwd": "/tmp/hexalith-job.62277jd3/candidate-fixture-correction/cicd",
+        "exit": 0,
+        "stdout": "builds-version\nreferences/Hexalith.Builds\nreferences/Hexalith.Commons\nreferences/Hexalith.PolymorphicSerializations\nrendered/Hexalith.Commons.perimeter.json\nrendered/Hexalith.Commons/.github/dependabot.yml\nrendered/Hexalith.Commons/.github/hexalith-ci.json\nrendered/Hexalith.Commons/.github/workflows/ci.yml\nrendered/Hexalith.Commons/.github/workflows/release.yml\nrendered/Hexalith.PolymorphicSerializations.perimeter.json\nrendered/Hexalith.PolymorphicSerializations/.github/dependabot.yml\nrendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json\nrendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml\nrendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml\nsetup/Hexalith.Commons.yml\nsetup/Hexalith.PolymorphicSerializations.yml\ntools/deliver.py\ntools/delivery_runtime.py\ntools/tests/test_deliver.py\ntools/tests/test_delivery_runtime.py\ntools/tests/test_render.py\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "revision_original_staging_preserved": true,
+  "revision_temporary_worktree_metadata_removed": true
+}

@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-11-16T09:52:52.366506+00:00",
+  "scope": "read-only current check output and metadata only",
+  "check": {
+    "id": 133212144912,
+    "name": "Codacy Static Code Analysis",
+    "head_sha": "e3d4da366a2e8c6b6216f4a7b57c15241313da79",
+    "status": "completed",
+    "conclusion": "action_required",
+    "details_url": "https://app.codacy.com/gh/Hexalith/Hexalith.Commons/pull-requests/52",
+    "external_id": "",
+    "started_at": "2026-11-16T09:40:21Z",
+    "completed_at": "2026-11-16T09:40:21Z",
+    "html_url": "https://github.com/Hexalith/Hexalith.Commons/runs/133212144912"
+  },
+  "output": {
+    "title": "1 new issue (0 max.) of at least minor severity.",
+    "summary": "\n![Codacy](https://app.codacy.com/assets/images/favicon.png) Here is an overview of what got changed by this pull request:\n\n\n```diff\n\nIssues\n======\n+ Solved 1\n- Added 1\n           \n```\n\n\nSee the complete overview on [Codacy](https://app.codacy.com/gh/Hexalith/Hexalith.Commons/pull-requests/52)\n        ",
+    "text": null,
+    "annotations_count": 1
+  },
+  "app": {
+    "id": 56611,
+    "slug": "codacy-production",
+    "name": "Codacy Production"
+  },
+  "settings_or_authentication_flow_started": false,
+  "annotations_get_exit": 0,
+  "annotations": [
+    {
+      "path": "scripts/validate-consumer-package-references.py",
+      "start_line": 159,
+      "end_line": 159,
+      "annotation_level": "warning",
+      "title": "scripts/validate-consumer-package-references.py#L159",
+      "message": "subprocess call - check for execution of untrusted input.",
+      "raw_details": null
+    }
+  ],
+  "annotations_observed_at": "2026-11-16T09:53:13.092712+00:00"
+}

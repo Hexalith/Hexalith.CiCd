@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-11-16T09:59:07.760779+00:00",
+  "result": "pass",
+  "approved_only_frozen_delta": true,
+  "authenticated_release_evidence": "pass",
+  "both_372_test_proof_sets_and_logs": "pass",
+  "candidate_render_inputs_hashes": "pass",
+  "preparation_changed_paths": {
+    "Hexalith.Commons": {
+      "head": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+      "changed_paths": [
+        ".github/actions/after-unit-tests/action.yml",
+        "package-lock.json",
+        "package.json",
+        "scripts/pack-release-packages.py",
+        "scripts/validate-consumer-package-references.py",
+        "tools/release-packages.json",
+        "tools/test_verify_nuget_release.py",
+        "tools/verify_nuget_release.py"
+      ]
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "head": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+      "changed_paths": [
+        "package-lock.json",
+        "package.json",
+        "tools/release-packages.json",
+        "tools/test_verify_nuget_release.py",
+        "tools/verify_nuget_release.py"
+      ]
+    }
+  },
+  "original_staging_preserved": true,
+  "credential_scan_files": 147,
+  "credential_hits": 0,
+  "whitespace": "pass",
+  "codacy_disposition": "open; source assessment saved, no suppression",
+  "zot_identity_disposition": "pending human answer",
+  "actual_adoption": false
+}

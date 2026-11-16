@@ -1,0 +1,348 @@
+{
+  "started_at": "2026-11-16T12:16:54.700867+00:00",
+  "builds_tag": "v6.0.6",
+  "layout": "standalone module job root with direct Builds worktree from root-declared repository",
+  "product_output_log": "post-adoption-check.log",
+  "modules": {
+    "Hexalith.Commons": {
+      "base": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+      "head": "47d51c025ec2413ad758d74b552772fcd275e446",
+      "job_root": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.Commons",
+      "builds_direct_dependency": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.Commons/references/Hexalith.Builds",
+      "builds_sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "checker_command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "checker_exit": 0,
+      "final_all_module_freshness": "pass"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "base": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+      "head": "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591",
+      "job_root": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.PolymorphicSerializations",
+      "builds_direct_dependency": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.PolymorphicSerializations/references/Hexalith.Builds",
+      "builds_sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "checker_command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "checker_exit": 0,
+      "final_all_module_freshness": "pass"
+    }
+  },
+  "operations": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "v6.0.6^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "5169f6b6165482d4b1499ccc5958eb897101be4f\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "47d51c025ec2413ad758d74b552772fcd275e446^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "47d51c025ec2413ad758d74b552772fcd275e446\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.Commons",
+        "47d51c025ec2413ad758d74b552772fcd275e446"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "HEAD is now at 47d51c0 test(cicd): qualify fresh-main product branching\n",
+      "stderr": "Preparing worktree (detached HEAD 47d51c0)\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "47d51c025ec2413ad758d74b552772fcd275e446",
+        "references/Hexalith.Builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "160000 commit fdda17c0a4538b0f7c99f813c20ca24b49006530\treferences/Hexalith.Builds\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.Commons/references/Hexalith.Builds",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "HEAD is now at fdda17c0 test(release): keep recovery verification on the local feed\n",
+      "stderr": "Preparing worktree (detached HEAD fdda17c0)\n"
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.PolymorphicSerializations\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "49fbe97f7224e2795ffb3293330d9efde6c0f561\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.PolymorphicSerializations",
+        "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "HEAD is now at 1a2e079 test(cicd): qualify fresh-main product branching\n",
+      "stderr": "Preparing worktree (detached HEAD 1a2e079)\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591",
+        "references/Hexalith.Builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "160000 commit fdda17c0a4538b0f7c99f813c20ca24b49006530\treferences/Hexalith.Builds\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.PolymorphicSerializations/references/Hexalith.Builds",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "HEAD is now at fdda17c0 test(release): keep recovery verification on the local feed\n",
+      "stderr": "Preparing worktree (detached HEAD fdda17c0)\n"
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "5169f6b6165482d4b1499ccc5958eb897101be4f\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.PolymorphicSerializations\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "49fbe97f7224e2795ffb3293330d9efde6c0f561\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Commons\nHEAD a83959832ebdad9fe5a5ea268fb0224c49cfa8ea\nbranch refs/heads/cicd-pilot-preparation-commons-20261116\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Builds\nHEAD fdda17c0a4538b0f7c99f813c20ca24b49006530\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.PolymorphicSerializations\nHEAD c547c763a20e1fbf6b7a5c9d3b4791260fb61149\nbranch refs/heads/cicd-pilot-preparation-poly-20261116\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Builds\nHEAD fdda17c0a4538b0f7c99f813c20ca24b49006530\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    }
+  ],
+  "nested_submodule_initialization": false,
+  "original_nested_paths_before": {
+    "Hexalith.Commons": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons/references/Hexalith.Builds",
+      "exists": true,
+      "contents": []
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations/references/Hexalith.Builds",
+      "exists": true,
+      "contents": []
+    }
+  },
+  "builds_sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "result": "pass",
+  "worktree_cleanup": [
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "path": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.PolymorphicSerializations/references/Hexalith.Builds",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "path": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "path": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.Commons/references/Hexalith.Builds",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "path": "/tmp/hexalith-job.YI7BkFkF/standalone-pilot-checks/Hexalith.Commons",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "original_nested_paths_after": {
+    "Hexalith.Commons": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons/references/Hexalith.Builds",
+      "exists": true,
+      "contents": []
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations/references/Hexalith.Builds",
+      "exists": true,
+      "contents": []
+    }
+  },
+  "completed_at": "2026-11-16T12:18:07.439111+00:00",
+  "all_temporary_worktree_metadata_removed": true
+}

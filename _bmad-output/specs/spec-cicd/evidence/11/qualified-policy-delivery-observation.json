@@ -1,0 +1,185 @@
+{
+  "started_at": "2026-11-16T12:45:45.625457+00:00",
+  "run_id": 43869480499,
+  "candidate": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "observations": [
+    {
+      "observed_at": "2026-11-16T12:45:46.456255+00:00",
+      "id": 43869480499,
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "path": ".github/workflows/deliver.yml",
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "jobs": [
+        {
+          "id": 133306529642,
+          "name": "validate",
+          "status": "queued",
+          "conclusion": null,
+          "started_at": "2026-11-16T12:45:37Z",
+          "completed_at": null,
+          "active_steps": []
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-11-16T12:47:19.073186+00:00",
+      "id": 43869480499,
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "path": ".github/workflows/deliver.yml",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "jobs": [
+        {
+          "id": 133306529642,
+          "name": "validate",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T12:46:48Z",
+          "completed_at": null,
+          "active_steps": [
+            "Validate candidate and modules"
+          ]
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-11-16T13:00:42.674606+00:00",
+      "id": 43869480499,
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "path": ".github/workflows/deliver.yml",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "jobs": [
+        {
+          "id": 133306529642,
+          "name": "validate",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T12:46:48Z",
+          "completed_at": "2026-11-16T13:00:29Z",
+          "active_steps": []
+        },
+        {
+          "id": 133314293356,
+          "name": "deliver",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T13:00:35Z",
+          "completed_at": null,
+          "active_steps": [
+            "Select trusted delivery source and initialize report"
+          ]
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-11-16T13:01:16.388940+00:00",
+      "id": 43869480499,
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "path": ".github/workflows/deliver.yml",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "jobs": [
+        {
+          "id": 133306529642,
+          "name": "validate",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T12:46:48Z",
+          "completed_at": "2026-11-16T13:00:29Z",
+          "active_steps": []
+        },
+        {
+          "id": 133314293356,
+          "name": "deliver",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T13:00:35Z",
+          "completed_at": null,
+          "active_steps": [
+            "Process module slot 01"
+          ]
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-11-16T13:01:47.329246+00:00",
+      "id": 43869480499,
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "path": ".github/workflows/deliver.yml",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "jobs": [
+        {
+          "id": 133306529642,
+          "name": "validate",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T12:46:48Z",
+          "completed_at": "2026-11-16T13:00:29Z",
+          "active_steps": []
+        },
+        {
+          "id": 133314293356,
+          "name": "deliver",
+          "status": "in_progress",
+          "conclusion": null,
+          "started_at": "2026-11-16T13:00:35Z",
+          "completed_at": null,
+          "active_steps": [
+            "Process module slot 02"
+          ]
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-11-16T13:02:18.504849+00:00",
+      "id": 43869480499,
+      "head_sha": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "path": ".github/workflows/deliver.yml",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "jobs": [
+        {
+          "id": 133306529642,
+          "name": "validate",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T12:46:48Z",
+          "completed_at": "2026-11-16T13:00:29Z",
+          "active_steps": []
+        },
+        {
+          "id": 133314293356,
+          "name": "deliver",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T13:00:35Z",
+          "completed_at": "2026-11-16T13:02:16Z",
+          "active_steps": []
+        }
+      ]
+    }
+  ],
+  "completed_at": "2026-11-16T13:02:18.505127+00:00",
+  "result": "pass"
+}

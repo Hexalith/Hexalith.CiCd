@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("action", choices=("prepare", "submit", "readback"))
+parser.add_argument("action", choices=("prepare", "submit", "readback", "reload"))
 parser.add_argument("module", choices=("Commons", "PolymorphicSerializations"))
 parser.add_argument("--attempt", type=int, default=2)
 arguments = parser.parse_args()
@@ -35,6 +35,15 @@ $docs=$root.FindAll([System.Windows.Automation.TreeScope]::Descendants,(New-Obje
 $doc=$null
 foreach($candidate in $docs){if($candidate.Current.Name -like 'NuGet Gallery*Trusted Publishing*' -and -not $candidate.Current.IsOffscreen){$doc=$candidate;break}}
 if($null -eq $doc){throw 'Existing authenticated Trusted Publishing document unavailable'}
+if($action -eq 'reload'){
+ $window=$doc;$walker=[System.Windows.Automation.TreeWalker]::ControlViewWalker
+ while($window.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window){$window=$walker.GetParent($window)}
+ $reload=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty,'Actualiser')))
+ if($null -eq $reload){throw 'Observed browser Reload control unavailable'}
+ $reload.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+ [pscustomobject]@{action='Reload current authenticated policy page';reload_invoked=$true} | ConvertTo-Json -Compress
+ exit
+}
 function Control($id){return $doc.FindFirst([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,$id)))}
 $expected=@{'__policy-name-0'=($module+' hexalith-release');'__package-owner-0'='Hexalith';'__provider-0'='GitHub Actions';'__github-repository-owner-0'='Hexalith';'__github-repository-0'=$module;'__github-workflow-file-0'='release.yml';'__github-environment-0'='hexalith-release';'__scope-subjects-input-0'=($module+'*')}
 if($action -eq 'prepare'){
@@ -44,21 +53,23 @@ if($action -eq 'prepare'){
  [void][NugetWindow]::SetForegroundWindow([IntPtr]$window.Current.NativeWindowHandle)
  if($null -eq (Control '__policy-name-0')){
   $create=Control 'show-create-container'
-  $create.SetFocus()
-  [System.Windows.Forms.SendKeys]::SendWait(' ')
+  $create.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
+  Start-Sleep -Milliseconds 500
   for($i=0;$i -lt 100 -and $null -eq (Control '__policy-name-0');$i++){Start-Sleep -Milliseconds 100}
  }
  if($null -eq (Control '__policy-name-0')){throw 'New policy form did not open'}
  $owner=Control '__package-owner-0'
  $owner.SetFocus()
- [System.Windows.Forms.SendKeys]::SendWait('{HOME}h{ENTER}')
+ for($i=0;$i -lt 100 -and [System.Windows.Automation.AutomationElement]::FocusedElement.Current.AutomationId -ne '__package-owner-0';$i++){Start-Sleep -Milliseconds 100}
+ if([System.Windows.Automation.AutomationElement]::FocusedElement.Current.AutomationId -ne '__package-owner-0'){throw 'Package owner did not receive foreground focus'}
+ [System.Windows.Forms.SendKeys]::SendWait('{HOME}h{TAB}')
  for($i=0;$i -lt 100 -and $owner.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne 'Hexalith';$i++){Start-Sleep -Milliseconds 100}
  if($owner.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne 'Hexalith'){throw 'Package owner selection failed'}
  foreach($id in $expected.Keys){if($id -notin @('__package-owner-0','__provider-0')){(Control $id).GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($expected[$id])}}
  foreach($id in @('__push-scope-checked-0','__unlist-scope-checked-0','__stage-scope-checked-0')){
   $pattern=(Control $id).GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
   $desired=if($id -eq '__push-scope-checked-0'){[System.Windows.Automation.ToggleState]::On}else{[System.Windows.Automation.ToggleState]::Off}
-  if($pattern.Current.ToggleState -ne $desired){$pattern.Toggle()}
+  if($pattern.Current.ToggleState -ne $desired){$pattern.Toggle();Start-Sleep -Milliseconds 300}
  }
  (Control '__package-push-scope-0').GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
  (Control '__github-environment-0').SetFocus()

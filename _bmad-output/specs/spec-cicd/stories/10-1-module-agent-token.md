@@ -277,3 +277,38 @@ Three live results are retained: the product-only push from current main succeed
 The parent independently inspected the complete scoped staged diff, verified the frozen intent contract and local Commons owned-state snapshots, and repeated read-only cleanup/run queries with the dedicated credential. The final saved read at `2026-11-15T17:57:33.514512+00:00` still found only Commons main, no probe refs/PRs, and zero matching dispatch runs. Commons main had advanced externally after the implementation snapshot from `fbf4e94233821f6ca336af91a06feaaeb7a16855` to `ab5e92faa3bab1fa43b8ecadd423432dfe652bb2` (`build(deps): refresh release publisher`, parent the probe main; changes only `package.json` and `package-lock.json`). Git `ls-remote` independently confirmed the full new revision. See [parent final read-only responses](../evidence/10-1/parent-final-read-only.json). These snapshots support unchanged Commons main at the probe checkpoints, not a globally frozen main throughout concurrent work.
 
 After repairing transcript whitespace, the complete scoped staged whitespace check passes; private credential scans cover the story and all 41 evidence files. No implementation build applies. The story/evidence write set is staged, without a superproject commit or push; unrelated story-11 files are excluded. The missing live Update branch outcome prevents advancing to completed implementation/review. Actual post-CiCd-delivery branch confirmation remains pending at story 11's checkpoint.
+
+
+## Story 11 live qualification — 2026-11-16
+
+The deferred post-delivery operations are now qualified by actual App adoption.
+Both restricted-token fresh-main product pushes succeeded after the exact normal
+shared checker passed. Both meaningful PR Update branch requests returned HTTP
+202 and produced server merge commits importing the real delivered workflows.
+The resulting trees differ from their respective adopted mains only by the
+probe document. Neither PR was merged; both PRs and all local/remote probe refs
+are cleaned up. See [the exact outcomes](../evidence/11/post-delivery-update-branch.json),
+[fresh-main proof](../evidence/11/post-adoption-check.json) and
+[cleanup](../evidence/11/product-probe-cleanup.json).
+
+This supersedes the provisional unverified state outside the historical frozen
+contract. Direct workflow-changing pushes and dispatch refusals remain their
+recorded findings; Update branch is an allowed server operation despite that
+token boundary. Story 11 corrects the canonical ownership instruction to forbid
+using it to import owned CI/CD changes and to reapply only product changes on a
+branch from current main. Token permissions are unchanged.
+
+The completed updated-PR checks additionally establish a compatibility limit:
+Codacy passed on both server merge heads, but the mandatory commit-format guard
+rejected their service-generated `Merge branch 'main' ...` subjects with
+`subject-empty` and `type-empty`. Product build/test stages did not run on those
+probe merges. This is an observed operation/input result, not a token refusal or
+product-code regression. [Exact messages and failed-job logs](../evidence/11/post-update-pr-failure-evidence.json)
+are retained; the strict guard, closed PRs and cleaned refs remain unchanged.
+
+The qualified scoped rule is now published in CiCd commit
+`3427f041c5f686c460c1fa027cf6f835791209c1` and actually redelivered by successful
+run `43869480499`; both resulting module trees and final-main CI are verified.
+See [authenticated policy redelivery](../evidence/11/authenticated-policy-redelivery.json)
+and [final CI proof](../evidence/11/final-main-ci-proof.json). Story 11 remains
+in progress solely for its genuine scheduled-night checkpoint.

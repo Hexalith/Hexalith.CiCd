@@ -1,0 +1,221 @@
+{
+  "recorded_at": "2026-11-16T08:19:38.916063+00:00",
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "credential_source": "/home/administrator/.config/gh-module-agent/token",
+  "results": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "--method",
+        "GET",
+        "user"
+      ],
+      "exit": 0,
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "error": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "--method",
+        "GET",
+        "repos/Hexalith/Hexalith.Commons"
+      ],
+      "exit": 0,
+      "data": {
+        "id": 952960148,
+        "full_name": "Hexalith/Hexalith.Commons",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "--method",
+        "GET",
+        "repos/Hexalith/Hexalith.PolymorphicSerializations"
+      ],
+      "exit": 0,
+      "data": {
+        "id": 957156862,
+        "full_name": "Hexalith/Hexalith.PolymorphicSerializations",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "command": [
+        "git",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "exit": 0,
+      "stdout": "## main...origin/main\nA  .github/actions/after-unit-tests/action.yml\nM  scripts/pack-release-packages.py\nM  scripts/validate-consumer-package-references.py\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "command": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "exit": 0,
+      "stdout": "origin\thttps://github.com/Hexalith/Hexalith.Commons.git (fetch)\norigin\thttps://github.com/Hexalith/Hexalith.Commons.git (push)\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "command": [
+        "git",
+        "log",
+        "-4",
+        "--oneline"
+      ],
+      "exit": 0,
+      "stdout": "ab5e92f build(deps): refresh release publisher\nfbf4e94 chore(release): 3.0.0 [skip ci]\n1705ebc feat!: require .NET 11 for common libraries\n5f9d783 chore(release): 2.30.11 [skip ci]\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "origin/main"
+      ],
+      "exit": 0,
+      "stdout": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2\nab5e92faa3bab1fa43b8ecadd423432dfe652bb2\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "command": [
+        "git",
+        "diff",
+        "--name-status",
+        "HEAD..origin/main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "exit": 0,
+      "stdout": "## main...origin/main\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "exit": 0,
+      "stdout": "origin\thttps://github.com/Hexalith/Hexalith.PolymorphicSerializations.git (fetch)\norigin\thttps://github.com/Hexalith/Hexalith.PolymorphicSerializations.git (push)\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "log",
+        "-4",
+        "--oneline"
+      ],
+      "exit": 0,
+      "stdout": "476cfcc build(deps): refresh nuget release tooling\ne97b569 build: merge setup-dotnet-6.1.0 dependabot branch via /pushall\n322cb6b ci(deps): bump actions/setup-dotnet from 6.0.0 to 6.1.0\n4d58b8b chore(release): 2.0.0 [skip ci]\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.PolymorphicSerializations\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "origin/main"
+      ],
+      "exit": 0,
+      "stdout": "476cfccac3c5ba694a8e0ef11b1157728b9ec093\n476cfccac3c5ba694a8e0ef11b1157728b9ec093\n",
+      "stderr": ""
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "diff",
+        "--name-status",
+        "HEAD..origin/main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "completed_at": "2026-11-16T08:19:41.223212+00:00"
+}

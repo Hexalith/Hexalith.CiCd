@@ -1,0 +1,171 @@
+{
+  "observed_at": "2026-11-16T09:49:54.397820+00:00",
+  "story_status": "in-progress",
+  "shared_release": {
+    "tag": "v6.0.6",
+    "source": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "ci_run": 43834424445,
+    "release_run": 43838534329,
+    "outcome": "published"
+  },
+  "modules": {
+    "Hexalith.Commons": {
+      "remote_main": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "local_preparation_head": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+      "local_preparation_branch": "cicd-pilot-preparation-commons-20261116",
+      "probe_branch": "cicd-pilot-update-commons-20261116",
+      "probe_head": "e3d4da366a2e8c6b6216f4a7b57c15241313da79",
+      "probe_pr": 52,
+      "probe_pr_url": "https://github.com/Hexalith/Hexalith.Commons/pull/52",
+      "probe_state": "open",
+      "probe_merged": false,
+      "original_nested_builds_empty": true,
+      "worktrees": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Commons\nHEAD a83959832ebdad9fe5a5ea268fb0224c49cfa8ea\nbranch refs/heads/cicd-pilot-preparation-commons-20261116",
+      "legacy_probe_checks": [
+        {
+          "id": 133212144912,
+          "name": "Codacy Static Code Analysis",
+          "status": "completed",
+          "conclusion": "action_required",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/runs/133212144912"
+        },
+        {
+          "id": 133211745278,
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/runs/133211745278"
+        },
+        {
+          "id": 133211516995,
+          "name": "ci / aspire-tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841453231/job/133211516995"
+        },
+        {
+          "id": 133211516807,
+          "name": "ci / performance-tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841453231/job/133211516807"
+        },
+        {
+          "id": 133210863407,
+          "name": "ci / build-and-test",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841453231/job/133210863407"
+        },
+        {
+          "id": 133210863319,
+          "name": "Test NuGet publication verification",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841453231/job/133210863319"
+        },
+        {
+          "id": 133210862302,
+          "name": "dependency-review / dependency-review",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841453247/job/133210862302"
+        },
+        {
+          "id": 133210861303,
+          "name": "codeql / analyze",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841452815/job/133210861303"
+        },
+        {
+          "id": 133210860587,
+          "name": "commitlint / commitlint",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/43841452831/job/133210860587"
+        }
+      ]
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "remote_main": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "local_preparation_head": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+      "local_preparation_branch": "cicd-pilot-preparation-poly-20261116",
+      "probe_branch": "cicd-pilot-update-poly-20261116",
+      "probe_head": "dbea7efd64ec75e2b92920665cb1ebffda15fa88",
+      "probe_pr": 19,
+      "probe_pr_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/pull/19",
+      "probe_state": "open",
+      "probe_merged": false,
+      "original_nested_builds_empty": true,
+      "worktrees": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.PolymorphicSerializations\nHEAD c547c763a20e1fbf6b7a5c9d3b4791260fb61149\nbranch refs/heads/cicd-pilot-preparation-poly-20261116",
+      "legacy_probe_checks": [
+        {
+          "id": 133212189336,
+          "name": "Codacy Static Code Analysis",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/runs/133212189336"
+        },
+        {
+          "id": 133211762813,
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/runs/133211762813"
+        },
+        {
+          "id": 133210926279,
+          "name": "commitlint / commitlint",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43841472243/job/133210926279"
+        },
+        {
+          "id": 133210925885,
+          "name": "codeql / analyze",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43841472166/job/133210925885"
+        },
+        {
+          "id": 133210925698,
+          "name": "dependency-review / dependency-review",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43841472145/job/133210925698"
+        },
+        {
+          "id": 133210924859,
+          "name": "Verify",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/43841471519/job/133210924859"
+        }
+      ]
+    }
+  },
+  "local_registration": "render/contract/published-pin checks pass; no candidate commit/push",
+  "full_committed_live_candidate_verdict": "not performed",
+  "pending_identity_question": "Identify any remaining legacy Zot automation principal and its pilot scope, or attest that jpiquot and jpiquot@itaneo.com are maintainer-only and no legacy pilot publisher remains.",
+  "preparation_main_push_performed": false,
+  "actual_adoption_performed": false,
+  "immediate_legacy_cleanup_performed": false,
+  "post_delivery_probe_outcomes": "not performed",
+  "real_scheduled_nightly_checkpoint": "not performed",
+  "legacy_probe_check_classification": {
+    "Hexalith.PolymorphicSerializations": {
+      "commitlint": "pipeline contract defect: owned caller omits required pull-request-title input",
+      "evidence": "legacy-poly-commitlint-failure.json",
+      "product_verify": "success"
+    },
+    "Hexalith.Commons": {
+      "Codacy Static Code Analysis": "action_required: one new minor-or-higher issue at zero-new-issue threshold; subprocess-input warning at consumer script line 159",
+      "product_ci": "success",
+      "evidence": "legacy-commons-codacy-check.json",
+      "exploitability_or_waiver_established": false,
+      "settings_or_authentication_flow_started": false
+    },
+    "gate_mutation_or_rerun_performed": false
+  }
+}

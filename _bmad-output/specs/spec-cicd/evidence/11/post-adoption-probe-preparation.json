@@ -1,0 +1,270 @@
+{
+  "started_at": "2026-11-16T12:16:24.717159+00:00",
+  "candidate": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+  "purpose": "restricted-token fresh-main product branching after actual App delivery; never merge",
+  "modules": {
+    "Hexalith.Commons": {
+      "base": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+      "head": "47d51c025ec2413ad758d74b552772fcd275e446",
+      "branch": "cicd-pilot-fresh-commons-20261116",
+      "changed_paths": [
+        "pilot-fresh-main-probe.md"
+      ],
+      "owned_bytes_modes_gitlinks_preserved": true,
+      "remote_push_performed": false
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "base": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+      "head": "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591",
+      "branch": "cicd-pilot-fresh-poly-20261116",
+      "changed_paths": [
+        "pilot-fresh-main-probe.md"
+      ],
+      "owned_bytes_modes_gitlinks_preserved": true,
+      "remote_push_performed": false
+    }
+  },
+  "operations": [
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "5169f6b6165482d4b1499ccc5958eb897101be4f\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "-b",
+        "cicd-pilot-fresh-commons-20261116",
+        "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+        "5169f6b6165482d4b1499ccc5958eb897101be4f"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "HEAD is now at 5169f6b build(cicd): apply f002539f6fbaddaa9b621a9cbf75a1263eee5dea from Hexalith.CiCd\n",
+      "stderr": "Preparing worktree (new branch 'cicd-pilot-fresh-commons-20261116')\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "pilot-fresh-main-probe.md"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "test(cicd): qualify fresh-main product branching"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "[cicd-pilot-fresh-commons-20261116 47d51c0] test(cicd): qualify fresh-main product branching\n 1 file changed, 4 insertions(+)\n create mode 100644 pilot-fresh-main-probe.md\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "47d51c025ec2413ad758d74b552772fcd275e446\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only",
+        "5169f6b6165482d4b1499ccc5958eb897101be4f",
+        "47d51c025ec2413ad758d74b552772fcd275e446"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "pilot-fresh-main-probe.md\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "show",
+        "-s",
+        "--format=%P",
+        "47d51c025ec2413ad758d74b552772fcd275e446"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "5169f6b6165482d4b1499ccc5958eb897101be4f\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.PolymorphicSerializations\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "49fbe97f7224e2795ffb3293330d9efde6c0f561\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "-b",
+        "cicd-pilot-fresh-poly-20261116",
+        "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+        "49fbe97f7224e2795ffb3293330d9efde6c0f561"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "HEAD is now at 49fbe97 build(cicd): apply f002539f6fbaddaa9b621a9cbf75a1263eee5dea from Hexalith.CiCd\n",
+      "stderr": "Preparing worktree (new branch 'cicd-pilot-fresh-poly-20261116')\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "pilot-fresh-main-probe.md"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "test(cicd): qualify fresh-main product branching"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "[cicd-pilot-fresh-poly-20261116 1a2e079] test(cicd): qualify fresh-main product branching\n 1 file changed, 4 insertions(+)\n create mode 100644 pilot-fresh-main-probe.md\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only",
+        "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+        "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "pilot-fresh-main-probe.md\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "show",
+        "-s",
+        "--format=%P",
+        "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591"
+      ],
+      "repository": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "49fbe97f7224e2795ffb3293330d9efde6c0f561\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.Commons\nHEAD a83959832ebdad9fe5a5ea268fb0224c49cfa8ea\nbranch refs/heads/cicd-pilot-preparation-commons-20261116\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stdout": "worktree /home/administrator/projects/hexalith/cicd/.git/modules/references/Hexalith.PolymorphicSerializations\nHEAD c547c763a20e1fbf6b7a5c9d3b4791260fb61149\nbranch refs/heads/cicd-pilot-preparation-poly-20261116\n\n",
+      "stderr": ""
+    }
+  ],
+  "result": "prepared; exact normal checker still required before push",
+  "worktree_cleanup": [
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "path": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.PolymorphicSerializations",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "path": "/tmp/hexalith-job.2CCT6BjQ/fresh-main-pilot-probes/Hexalith.Commons",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "completed_at": "2026-11-16T12:16:25.615440+00:00",
+  "all_temporary_worktree_metadata_removed": true
+}
