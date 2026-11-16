@@ -1,5 +1,12 @@
 # Local implementation result
 
+This document records the initial local preparation stage. Later publication
+of that preparation as work in progress is recorded in
+[publication.md](publication.md) and the authoritative
+[workspace-publication.json](workspace-publication.json). The
+[resumed local assessment](resumed-implementation.md) keeps publication
+separate from the still-incomplete implementation and adoption acceptance.
+
 The authorized local preparation stage is complete. Memories is **not
 registered or adopted**, and story acceptance remains incomplete. No GitHub
 API calls, remote repository operations, pushes, delivery, settings changes or
