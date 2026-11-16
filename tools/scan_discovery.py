@@ -1677,7 +1677,7 @@ class Discovery:
                                                             path=path, cwd=base, action=action))
                     if not targets:
                         # Bare imports must come from the locked workspace or Node's builtins.
-                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process"}:
+                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process", "process"}:
                             continue
                         package = "/".join(imported.split("/")[:2]) if imported.startswith("@") else imported.split("/")[0]
                         lock = self.json(posixpath.join(root, "package-lock.json"))
