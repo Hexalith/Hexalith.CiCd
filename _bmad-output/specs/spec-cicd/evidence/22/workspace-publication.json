@@ -477,7 +477,7 @@
   "submodulePointers": [
     {
       "path": "references/Hexalith.Builds",
-      "commit": "3546c4f973624efbbfdecee5913c23cb25b95ce7",
+      "commit": "44cb6dbc869c4d84713278d9c861c6f5ba60bec6",
       "availableOnOriginMain": true
     },
     {
@@ -601,5 +601,12 @@
     "strengthenedNoopAssertion": "1 passed",
     "duplicateScan": "incomplete: 240-second timeout; no assertion failures observed before termination",
     "deliveryWorkflow": "incomplete: 240-second timeout; no assertion failures observed before termination"
+  },
+  "concurrentMainIntegration": {
+    "source": "77e41824d475dbc618606b9f46c952869ca94729",
+    "preservedAgentsCommit": "c5c22620cafaa0af2625896cf41022e614e9b490",
+    "preservedBuildsCommit": "44cb6dbc869c4d84713278d9c861c6f5ba60bec6",
+    "buildsChangeAfterLocalTests": "Two upstream audit-report refresh commits only; the tested runtime and schemas are unchanged.",
+    "originalBuildsCandidate": "3546c4f973624efbbfdecee5913c23cb25b95ce7"
   }
 }

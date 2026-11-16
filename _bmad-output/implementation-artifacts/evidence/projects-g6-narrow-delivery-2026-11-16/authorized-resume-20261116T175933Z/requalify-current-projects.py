@@ -3,7 +3,7 @@ import hashlib,importlib.util,json,os,subprocess
 from pathlib import Path
 root=Path('/home/administrator/projects/hexalith/cicd');e=Path(__file__).parent
 spec=importlib.util.spec_from_file_location('proof_runtime',root/'tools/delivery_runtime.py');rt=importlib.util.module_from_spec(spec);spec.loader.exec_module(rt)
-manifest=json.loads((root/'docs/proposals/projects-g6-catalog.json').read_bytes());old=manifest['base_commit'];expected='49f0a9e31482891fe8c1376d2ccdb1637f1f20dd';assert old=='981ceef13a1abc88219925e73c51a23eb9ac50c2'
+manifest=json.loads((root/'docs/proposals/projects-g6-catalog.json').read_bytes());old=manifest['base_commit'];expected='4511105bb1f00b8cf762097523de74acc828a001';assert old=='981ceef13a1abc88219925e73c51a23eb9ac50c2'
 transport=rt.Transport();git=rt.Git(Path(os.environ['TMPDIR'])/'projects.git',index=Path(os.environ['TMPDIR'])/'index');git.init();current=transport.module(git,'Hexalith.Projects');assert current==expected,'Projects advanced; inspect new source first'
 git.run('fetch','--depth=1','--no-recurse-submodules','--no-tags',transport.remote('Hexalith.Projects'),old)
 before=git.items(current);previous=git.items(old);paths=set(manifest['after'])
