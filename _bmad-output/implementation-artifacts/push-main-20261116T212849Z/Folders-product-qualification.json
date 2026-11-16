@@ -1,0 +1,66 @@
+{
+  "candidateTree": "af10a0b011c9e696c9d1a1d276757015958ef08e",
+  "freshMain": "f2bf547b457a4db3e7eb65d425a22f62dfb9f09a",
+  "commands": [
+    {
+      "label": "Folders-server-package-build",
+      "argv": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1",
+        "-p:UseSharedCompilation=false",
+        "-nr:false"
+      ],
+      "exitCode": 0,
+      "log": "Folders-server-package-build.txt"
+    },
+    {
+      "label": "Folders-explicit-component-prerequisite",
+      "argv": [
+        "dotnet",
+        "tests/Hexalith.Folders.Server.Tests/bin/Release/net11.0/Hexalith.Folders.Server.Tests.dll",
+        "-class",
+        "Hexalith.Folders.Server.Tests.EnrolledWorkloadSourceBoundaryTests",
+        "-explicit",
+        "on",
+        "-noLogo",
+        "-noColor",
+        "-failSkips"
+      ],
+      "exitCode": 1,
+      "log": "Folders-explicit-component-prerequisite.txt"
+    }
+  ],
+  "scope": "Focused prerequisite for required strict Server hook; no complete qualification claimed",
+  "commitsCreated": false,
+  "pushesAttempted": false,
+  "dependencies": {
+    "references/Hexalith.AI.Tools": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+    "references/Hexalith.Builds": "a397feeb774e8644f5dcc4d361a25f14d4a42b0b",
+    "references/Hexalith.Commons": "49187d47da882d5470deac982bb383486c90202c",
+    "references/Hexalith.EventStore": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41",
+    "references/Hexalith.FrontComposer": "bc9dbedc6141b750ca92f01b40ac840dc2066704",
+    "references/Hexalith.McpCli": "e2e3db7ba2d45d61feacc39c41b3051310fbc57f",
+    "references/Hexalith.Memories": "c64e292a46858058f6764095c8e01c2faa0ff3e0",
+    "references/Hexalith.Parties": "a575021fc97a8eda664711089270b60f5e570ded",
+    "references/Hexalith.Platform": "575aa1889b0dc654b36de2e6958878c5eadbc871",
+    "references/Hexalith.PolymorphicSerializations": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+    "references/Hexalith.Projects": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+    "references/Hexalith.Tenants": "292dbf164f26bcf376ef86d749b149b075f8b502"
+  },
+  "candidatePatchSha256": "aaa9ac917573e950d52613249d68140c186d2c89310949881e6896e402e44481",
+  "componentFixtureSupplied": false,
+  "exitCode": 1,
+  "status": "failed required product prerequisite"
+}

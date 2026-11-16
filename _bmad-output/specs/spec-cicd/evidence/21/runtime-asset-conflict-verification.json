@@ -1,0 +1,40 @@
+{
+  "phase": "local-only preparation; no push, adoption or acceptance credit",
+  "source": "a575021fc97a8eda664711089270b60f5e570ded",
+  "sourceDiffSha256": "b58f58b223285685306f27e4c5e57eade50b6a1f1bd3e8ef69055ac9eb8dac53",
+  "buildsVersion": "v6.0.6",
+  "dependencies": {
+    "Hexalith.Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Hexalith.EventStore": "fdb59895975e86a1e234325a01237f259cdbd53b",
+    "Hexalith.Tenants": "292dbf164f26bcf376ef86d749b149b075f8b502",
+    "Hexalith.Memories": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+    "Hexalith.Platform": "f6f85032598865b9123f16364448bfd02c0ff5b0",
+    "Hexalith.Commons": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+    "Hexalith.FrontComposer": "bca9dff291ce42c57516598732340a80703dfb6d",
+    "Hexalith.McpCli": "23072f04f423eea3f30456fe5af13d2d382624fe",
+    "Hexalith.PolymorphicSerializations": "e97b56930e213f674b64c157551f499b0473ec43",
+    "Hexalith.AI.Tools": "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+  },
+  "commands": [
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "Hexalith.Parties.Standalone.slnx",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-m:1",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-p:HexalithEventStoreVersion=5.1.1"
+      ],
+      "exitCode": 1,
+      "durationSeconds": 261.366
+    }
+  ]
+}

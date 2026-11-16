@@ -2,9 +2,10 @@
 title: '26: Migrate Platform'
 type: 'chore'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
+baseline_commit: 'f95d46357e5378f2ed8a3da186fb4a543dc7b7ff'
 context:
   - '{project-root}/_bmad-output/specs/spec-cicd/evidence/26/investigation.md'
 ---
@@ -119,6 +120,21 @@ security upgrades. After adoption require the standard checker before pushes.
   finish, then the owned perimeter is correct, CI is green and CAP-16 is met.
 
 ## Implementation Notes
+
+Current bmad-build implementation step permits local work only: no pushes or
+remote operations. Preserve the pre-existing dirty CiCd tree and concurrent
+module work. Establish prerequisite availability from local release evidence;
+do not implement the separately scoped shared prerequisite in this story.
+
+Local prerequisite assessment, 2026-11-16:
+[`evidence/26/local-readiness.md`](../specs/spec-cicd/evidence/26/local-readiness.md)
+records the exact selected `v6.0.6` contract, which lacks the required shared
+preparation; newer local Builds source is untagged. The renderer check passed,
+the Platform normal checker exited 2 because its nested executable is absent,
+and all 29,700 tracked Platform entries and nested initialization states were
+preserved. No dependent preparation, registration or remote operation ran;
+all execution tasks and migration acceptance remain outstanding pending the
+separate qualified shared release.
 
 ## Spec Change Log
 

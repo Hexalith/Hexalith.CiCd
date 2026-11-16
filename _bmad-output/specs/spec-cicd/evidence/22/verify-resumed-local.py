@@ -12,16 +12,21 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--cicd-root", type=Path, required=True)
+parser.add_argument("--published-objects", type=Path,
+                    help="Existing local Memories repository containing the publication receipt revisions; never fetched")
+parser.add_argument("--builds-objects", type=Path,
+                    help="Existing local Builds repository containing the selected release tag; never fetched")
 args = parser.parse_args()
 root = args.cicd_root.resolve()
 evidence = root / "_bmad-output/specs/spec-cicd/evidence/22"
 product = root.parent / "memories-story-22"
-published_objects = root / "references/Hexalith.Memories"
-builds = root / "references/Hexalith.Builds"
+published_objects = (args.published_objects or root / "references/Hexalith.Memories").resolve()
+builds = (args.builds_objects or root / "references/Hexalith.Builds").resolve()
 environment = dict(os.environ, GIT_NO_LAZY_FETCH="1", GIT_NO_REPLACE_OBJECTS="1",
                    GIT_OPTIONAL_LOCKS="0")
 
@@ -52,6 +57,12 @@ publication = next(row for row in receipt["records"]["module-push-results.json"]
                    if row["repository"] == "Hexalith.Memories")
 published_base, published = publication["base"], publication["commit"]
 assert publication["pushExitCode"] == 0 and not publication["qualificationComplete"]
+for revision in (published_base, published):
+    available = subprocess.run(["git", "-C", str(published_objects), "cat-file", "-e", revision + "^{commit}"],
+                               env=environment, capture_output=True, check=False)
+    if available.returncode:
+        parser.error(f"publication commit {revision} is unavailable in local repository {published_objects}; "
+                     "supply --published-objects with an existing object repository; this job does not fetch")
 paths = git(product, "diff", "--name-only", "-z", baseline, final).split(b"\0")
 paths = [path.decode() for path in paths if path]
 published_paths = git(published_objects, "diff", "--name-only", "-z",
@@ -87,6 +98,10 @@ result = {
     "recordedAt": datetime.now(timezone.utc).isoformat(),
     "scope": "local object integrity and preservation only; no new runtime or hosted qualification",
     "cicdCommittedSource": git(root, "rev-parse", "HEAD").decode().strip(),
+    "verifierSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    "invocation": [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]],
+    "localObjectRepositories": {"product": str(product), "publication": str(published_objects),
+                                "builds": str(builds)},
     "localCandidate": final,
     "localProductWorktreeClean": True,
     "bundle": {"bytes": bundle.stat().st_size, "sha256": candidate["bundleSha256"],

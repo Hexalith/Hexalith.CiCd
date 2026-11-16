@@ -1,0 +1,362 @@
+{
+  "scope": "real SDK 11/net10 trust, payload and negative candidates; no machine trust mutation",
+  "passed": true,
+  "fingerprints": {
+    "job": "5A69B1CAE02880B8E43A587F31EBF4EBD670B34317CA1C624C05A059FABB4453",
+    "wrong": "42CA6216BA1AE0C1D427AF61C499721184F4B059101411CE4B48377C67286627",
+    "expired": "9A0B7E894CAF387C77FC956A210D718CBCEB6979C93B7AA1D3BE5BED9A13F3AA"
+  },
+  "results": [
+    {
+      "command": [
+        "dotnet",
+        "pack",
+        "Fixture.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "/tmp/hexalith-job.y2K3LwYK/unsigned",
+        "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/NuGet.ci.Config",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:3072",
+        "-noenc",
+        "-sha256",
+        "-keyout",
+        "/tmp/hexalith-job.y2K3LwYK/job/key.pem",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/job/cert.pem",
+        "-subj",
+        "/CN=Private candidate validation",
+        "-days",
+        "1",
+        "-addext",
+        "basicConstraints=critical,CA:FALSE",
+        "-addext",
+        "keyUsage=critical,digitalSignature",
+        "-addext",
+        "extendedKeyUsage=codeSigning"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "pkcs12",
+        "-export",
+        "-inkey",
+        "/tmp/hexalith-job.y2K3LwYK/job/key.pem",
+        "-in",
+        "/tmp/hexalith-job.y2K3LwYK/job/cert.pem",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/job/signer.pfx",
+        "-passout",
+        "pass:"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "x509",
+        "-in",
+        "/tmp/hexalith-job.y2K3LwYK/job/cert.pem",
+        "-outform",
+        "DER",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/job/cert.der"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "sign",
+        "/tmp/hexalith-job.y2K3LwYK/job/Fixture.1.2.3.nupkg",
+        "--certificate-path",
+        "/tmp/hexalith-job.y2K3LwYK/job/signer.pfx",
+        "--allow-untrusted-root",
+        "--timestamper",
+        "http://timestamp.digicert.com",
+        "--timestamp-hash-algorithm",
+        "SHA256",
+        "--verbosity",
+        "minimal"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:3072",
+        "-noenc",
+        "-sha256",
+        "-keyout",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/key.pem",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/cert.pem",
+        "-subj",
+        "/CN=Private candidate validation",
+        "-days",
+        "1",
+        "-addext",
+        "basicConstraints=critical,CA:FALSE",
+        "-addext",
+        "keyUsage=critical,digitalSignature",
+        "-addext",
+        "extendedKeyUsage=codeSigning"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "pkcs12",
+        "-export",
+        "-inkey",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/key.pem",
+        "-in",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/cert.pem",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/signer.pfx",
+        "-passout",
+        "pass:"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "x509",
+        "-in",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/cert.pem",
+        "-outform",
+        "DER",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/cert.der"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "sign",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/Fixture.1.2.3.nupkg",
+        "--certificate-path",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/signer.pfx",
+        "--allow-untrusted-root",
+        "--timestamper",
+        "http://timestamp.digicert.com",
+        "--timestamp-hash-algorithm",
+        "SHA256",
+        "--verbosity",
+        "minimal"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:3072",
+        "-noenc",
+        "-sha256",
+        "-keyout",
+        "/tmp/hexalith-job.y2K3LwYK/expired/key.pem",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/expired/cert.pem",
+        "-subj",
+        "/CN=Private candidate validation",
+        "-days",
+        "1",
+        "-addext",
+        "basicConstraints=critical,CA:FALSE",
+        "-addext",
+        "keyUsage=critical,digitalSignature",
+        "-addext",
+        "extendedKeyUsage=codeSigning",
+        "-not_before",
+        "20261116200115Z",
+        "-not_after",
+        "20261116200300Z"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "pkcs12",
+        "-export",
+        "-inkey",
+        "/tmp/hexalith-job.y2K3LwYK/expired/key.pem",
+        "-in",
+        "/tmp/hexalith-job.y2K3LwYK/expired/cert.pem",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/expired/signer.pfx",
+        "-passout",
+        "pass:"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "x509",
+        "-in",
+        "/tmp/hexalith-job.y2K3LwYK/expired/cert.pem",
+        "-outform",
+        "DER",
+        "-out",
+        "/tmp/hexalith-job.y2K3LwYK/expired/cert.der"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "sign",
+        "/tmp/hexalith-job.y2K3LwYK/expired/Fixture.1.2.3.nupkg",
+        "--certificate-path",
+        "/tmp/hexalith-job.y2K3LwYK/expired/signer.pfx",
+        "--allow-untrusted-root",
+        "--timestamper",
+        "http://timestamp.digicert.com",
+        "--timestamp-hash-algorithm",
+        "SHA256",
+        "--verbosity",
+        "minimal"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "verify",
+        "--all",
+        "--certificate-fingerprint",
+        "5A69B1CAE02880B8E43A587F31EBF4EBD670B34317CA1C624C05A059FABB4453",
+        "--configfile",
+        "/tmp/hexalith-job.y2K3LwYK/job/NuGet.Config",
+        "/tmp/hexalith-job.y2K3LwYK/job/Fixture.1.2.3.nupkg"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "verify",
+        "--all",
+        "--certificate-fingerprint",
+        "5A69B1CAE02880B8E43A587F31EBF4EBD670B34317CA1C624C05A059FABB4453",
+        "--configfile",
+        "/tmp/hexalith-job.y2K3LwYK/job/NuGet.Config",
+        "/tmp/hexalith-job.y2K3LwYK/unsigned/Fixture.1.2.3.nupkg"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "verify",
+        "--all",
+        "--certificate-fingerprint",
+        "5A69B1CAE02880B8E43A587F31EBF4EBD670B34317CA1C624C05A059FABB4453",
+        "--configfile",
+        "/tmp/hexalith-job.y2K3LwYK/job/NuGet.Config",
+        "/tmp/hexalith-job.y2K3LwYK/wrong/Fixture.1.2.3.nupkg"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "verify",
+        "--all",
+        "--certificate-fingerprint",
+        "5A69B1CAE02880B8E43A587F31EBF4EBD670B34317CA1C624C05A059FABB4453",
+        "--configfile",
+        "/tmp/hexalith-job.y2K3LwYK/job/NuGet.Config",
+        "/tmp/hexalith-job.y2K3LwYK/tampered.nupkg"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "verify",
+        "/tmp/hexalith-job.y2K3LwYK/expired/Fixture.1.2.3.nupkg",
+        "--all",
+        "--certificate-fingerprint",
+        "9A0B7E894CAF387C77FC956A210D718CBCEB6979C93B7AA1D3BE5BED9A13F3AA",
+        "--configfile",
+        "/tmp/hexalith-job.y2K3LwYK/expired/NuGet.Config"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "verify",
+        "-trusted",
+        "/tmp/hexalith-job.y2K3LwYK/expired/cert.pem",
+        "-check_ss_sig",
+        "/tmp/hexalith-job.y2K3LwYK/expired/cert.pem"
+      ],
+      "exit": 2,
+      "expected": 1
+    },
+    {
+      "command": [
+        "openssl",
+        "verify",
+        "-trusted",
+        "/tmp/hexalith-job.y2K3LwYK/job/cert.pem",
+        "-check_ss_sig",
+        "/tmp/hexalith-job.y2K3LwYK/job/cert.pem"
+      ],
+      "exit": 0,
+      "expected": 0
+    }
+  ]
+}

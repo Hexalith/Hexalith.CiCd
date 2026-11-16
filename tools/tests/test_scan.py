@@ -417,6 +417,16 @@ class ScanTests(unittest.TestCase):
             ("globalThis.require('node:child_process').exec(process.env.CMD);", "inline JavaScript process-module require"),
             ("globalThis.process.getBuiltinModule('child_process').spawn(process.env.TOOL, []);", "reflective JavaScript execution"),
             ("const runtime = globalThis.process; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("import runtime from 'node:process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("import runtime = require('node:process'); runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("import runtime from 'node:process'; function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(runtime);", "API escape"),
+            ("process[process.env.API]('child_process').exec(process.env.CMD);", "reflective JavaScript process/import API"),
+
+            ("import * as runtime from 'process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("import {getBuiltinModule as load} from 'node:process'; load('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("const runtime = require('node:process'); runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(process);", "API escape"),
+            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis.process);", "API escape"),
             ("import {exec} from 'node:child_process'; setTimeout(exec, 0, process.env.CMD);", "API escape"),
             ("import {spawn} from 'node:child_process'; spawn(process.env.TOOL, []);", "computed JavaScript process"),
             ("export default {globalSetup:process.env.SETUP};", "computed JavaScript test configuration"),
@@ -429,6 +439,19 @@ class ScanTests(unittest.TestCase):
                 report = self.coverage_case([("bash", "node script.js", "")], {"script.js":source})
                 self.assertEqual("fail", report["result"])
                 self.assertTrue(all(any(diagnostic in message for message in row["errors"]) for row in report["modules"]), report)
+
+    def test_builtin_process_imports_preserve_ordinary_environment_and_argument_reads(self):
+        for source in (
+            "import runtime from 'node:process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+            "import * as runtime from 'process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+            "import {env, argv} from 'node:process'; const mode = env.CI; const args = argv.slice(2);\n",
+            "const runtime = require('process'); const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+            "const runtime = globalThis.process; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+        ):
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "node script.js", "")], {"script.js": source})
+                self.assertTrue(all(not row["errors"] for row in report["modules"]), report)
+                self.assert_coverage(report, "script.js", None)
 
     def test_npm_later_flags_cannot_enable_unscanned_lifecycle_scripts(self):
         for command in ("npm ci --ignore-scripts --ignore-scripts=false",

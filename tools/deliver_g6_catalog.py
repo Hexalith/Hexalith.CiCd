@@ -1,4 +1,4 @@
-"""Closed, pre-adoption Projects catalog correction; no module code is executed.
+"""Closed, pre-adoption Projects corrections; no module code is executed.
 
 The committed manifest binds the complete input/output trees and proposal bytes.
 Only the network transport is replaceable by real-Git qualification fixtures.
@@ -31,6 +31,35 @@ ACTION = ".github/actions/prepare-g6-catalog/"
 PATHS = (WORKFLOW, ACTION + "action.yml", ACTION + "prepare.py")
 SOURCES = ("tools/deliver_g6_catalog.py", "tools/delivery_runtime.py", MANIFEST, PATCH,
            ACTION + "action.yml", ACTION + "prepare.py")
+
+GATES_MANIFEST = "docs/proposals/projects-ci-gates.json"
+GATES_PATCH = "docs/proposals/projects-ci-gates.patch"
+GATES_VALIDATION = "docs/proposals/projects-ci-gates-validation.json"
+GATES_CHECKS = frozenset({"focused_suites", "workflow_gates", "npm_install", "npm_signatures",
+                          "commit_policy", "npm_vulnerabilities"})
+GATES_WORKFLOW = ".github/workflows/deliver-projects-ci-gates.yml"
+GATES_PATHS = ("tests/tools/test_render_skill.py", "tests/tools/test_release_workflow.py",
+               "tests/tools/test_run_g6_candidate_gate.py", "tests/tools/test_g6_mapper_build.py",
+               "package.json", "package-lock.json", "tests/tools/run-frontcomposer-inspect-gate.ps1",
+               "tests/tools/run-ci-workflow-gates.ps1", "tests/tools/test_run_ci_workflow_gates.py")
+GATES_SOURCES = ("tools/deliver_g6_catalog.py", "tools/delivery_runtime.py", GATES_MANIFEST,
+                 GATES_PATCH, GATES_WORKFLOW, GATES_VALIDATION)
+
+
+def configuration(name):
+    """Select one reviewed, fixed perimeter; never accept caller-supplied paths."""
+    require(name in {"catalog", "ci-gates"}, "unknown closed Projects delivery profile")
+    if name == "catalog":
+        return {"manifest": MANIFEST, "patch": PATCH, "paths": PATHS, "sources": SOURCES,
+                "existing": {WORKFLOW}, "schema": "hexalith.projects-g6-catalog.v1",
+                "plan_schema": "hexalith.projects-g6-catalog-plan.v1",
+                "receipt_schema": "hexalith.projects-g6-catalog-delivery.v1",
+                "message": b"build(cicd): acquire reviewed Projects G-6 catalog\n"}
+    return {"manifest": GATES_MANIFEST, "patch": GATES_PATCH, "paths": GATES_PATHS,
+            "sources": GATES_SOURCES, "existing": {GATES_PATHS[0], *GATES_PATHS[6:]},
+            "schema": "hexalith.projects-ci-gates.v1", "plan_schema": "hexalith.projects-ci-gates-plan.v1",
+            "receipt_schema": "hexalith.projects-ci-gates-delivery.v1",
+            "message": b"build(cicd): restore reviewed Projects gate prerequisites\n"}
 
 
 class Git(rt.Git):
@@ -79,12 +108,14 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def manifest(data):
+def manifest(data, profile="catalog"):
+    config = configuration(profile)
     value = rt.json_read(data)
-    require(isinstance(value, dict) and set(value) == {
-        "schema", "repository", "base_commit", "base_tree", "patch_sha256", "result_tree", "before", "after", "pre_push_gate"},
-        "invalid closed catalog delivery manifest")
-    require(value["schema"] == "hexalith.projects-g6-catalog.v1" and value["repository"] == PROJECTS,
+    keys = {"schema", "repository", "base_commit", "base_tree", "patch_sha256", "result_tree", "before", "after", "pre_push_gate"}
+    if profile == "ci-gates":
+        keys.add("validation_sha256")
+    require(isinstance(value, dict) and set(value) == keys, "invalid closed catalog delivery manifest")
+    require(value["schema"] == config["schema"] and value["repository"] == PROJECTS,
             "catalog delivery repository/schema mismatch")
     require(value["pre_push_gate"] in {"pending-owner-decision", "reviewed-tree-owner-authorized"},
             "invalid closed pre-push owner gate")
@@ -92,16 +123,42 @@ def manifest(data):
         rt.sha(value[key])
     require(isinstance(value["patch_sha256"], str) and re.fullmatch(r"[0-9a-f]{64}", value["patch_sha256"]),
             "invalid proposal SHA256")
+    if profile == "ci-gates":
+        require(isinstance(value["validation_sha256"], str) and re.fullmatch(r"[0-9a-f]{64}", value["validation_sha256"]),
+                "invalid reviewed module validation SHA256")
     for key in ("before", "after"):
-        require(isinstance(value[key], dict) and set(value[key]) == set(PATHS), "unexpected manifest path")
+        require(isinstance(value[key], dict) and set(value[key]) == set(config["paths"]), "unexpected manifest path")
         for path, item in value[key].items():
-            if key == "before" and path != WORKFLOW:
-                require(item is None, "catalog action must be absent at reviewed base")
+            if key == "before" and path not in config["existing"]:
+                require(item is None, "catalog action must be absent at reviewed base" if profile == "catalog"
+                        else "new gate-repair paths must be absent at reviewed base")
             else:
                 require(isinstance(item, list) and len(item) == 3 and item[:2] == ["100644", "blob"],
                         "catalog delivery requires regular nonexecutable blobs")
                 rt.sha(item[2])
     return value
+
+
+def module_validation(data, value):
+    """Bind independently reviewed secret-free checks to this exact module result."""
+    require(digest(data) == value["validation_sha256"], "reviewed module validation SHA256 mismatch")
+    proof = rt.json_read(data)
+    require(isinstance(proof, dict) and set(proof) == {
+        "schema", "status", "base_commit", "base_tree", "result_tree", "patch_sha256", "checks"},
+        "invalid closed reviewed module validation proof")
+    require(proof["schema"] == "hexalith.projects-ci-gates-validation.v1" and proof["status"] == "passed",
+            "reviewed module validation did not pass")
+    for field in ("base_commit", "base_tree", "result_tree", "patch_sha256"):
+        require(proof[field] == value[field], "reviewed module validation source/proposal mismatch: " + field)
+    checks = proof["checks"]
+    require(isinstance(checks, dict) and set(checks) == GATES_CHECKS,
+            "reviewed module validation required checks differ")
+    for name in GATES_CHECKS:
+        check = checks[name]
+        require(isinstance(check, dict) and set(check) == {"status", "log_sha256"} and check["status"] == "passed" and
+                isinstance(check["log_sha256"], str) and re.fullmatch(r"[0-9a-f]{64}", check["log_sha256"]),
+                "reviewed module validation check did not pass: " + name)
+    return proof
 
 
 def entries(git, revision, expected):
@@ -111,8 +168,9 @@ def entries(git, revision, expected):
     return actual
 
 
-def proposal(owner, source, target, value):
-    patch = owner.blob(source, PATCH)
+def proposal(owner, source, target, value, profile="catalog"):
+    config = configuration(profile)
+    patch = owner.blob(source, config["patch"])
     require(digest(patch) == value["patch_sha256"], "reviewed proposal SHA256 mismatch")
     base = value["base_commit"]
     require(target.resolve(base + "^{tree}") == value["base_tree"], "reviewed base tree mismatch")
@@ -123,18 +181,27 @@ def proposal(owner, source, target, value):
     require(tree == value["result_tree"], "complete proposal output tree mismatch")
     after = entries(target, tree, value["after"])
     changed = {path for path in set(before) | set(after) if before.get(path) != after.get(path)}
-    require(changed == set(PATHS), "proposal changed paths outside the three-path correction")
-    for path in PATHS[1:]:
-        require(target.blob(tree, path) == owner.blob(source, path), "catalog action differs from owner payload")
+    require(changed == set(config["paths"]), "proposal changed paths outside the three-path correction"
+            if profile == "catalog" else "proposal changed paths outside the closed nine-path gate repair")
+    if profile == "catalog":
+        for path in PATHS[1:]:
+            require(target.blob(tree, path) == owner.blob(source, path), "catalog action differs from owner payload")
+    else:
+        for path in GATES_PATHS:
+            require(target.blob(tree, path), "repaired gate payload is missing or empty")
     return tree
 
 
-def plan(source, value, manifest_bytes, live):
-    return {"schema": "hexalith.projects-g6-catalog-plan.v1", "owner_source": source,
+def plan(source, value, manifest_bytes, live, profile="catalog"):
+    binding = {"schema": configuration(profile)["plan_schema"], "owner_source": source,
             "manifest_sha256": digest(manifest_bytes), "patch_sha256": value["patch_sha256"],
             "pre_push_gate": value["pre_push_gate"],
             "base_commit": value["base_commit"], "base_tree": value["base_tree"],
             "result_tree": value["result_tree"], "observed_main": live}
+    if profile == "ci-gates":
+        binding["profile"] = profile
+        binding["module_validation_sha256"] = value["validation_sha256"]
+    return binding
 
 
 def parents(git, revision):
@@ -179,7 +246,7 @@ def exclude_full_writer(owner, source, transport, receipt, phase):
     require(proof["accepted_ref_absent"], "Projects has a live full-delivery accepted ref")
 
 
-def execute(operation, context, report_path, *, transport=None, token="", scratch=None, local_root=None):
+def execute(operation, context, report_path, *, transport=None, token="", scratch=None, local_root=None, profile="catalog"):
     """Qualify or deliver using private objects/index, retaining bounded failure receipts."""
     rt._SECRETS.extend([token] if token else [])
     receipt = {"schema": "hexalith.projects-g6-catalog-delivery.v1", "operation": operation,
@@ -189,8 +256,19 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
                "candidate_sha": None, "candidate_tree": None, "push_attempted": False, "plan": None,
                "full_writer_exclusion": []}
     try:
+        config = configuration(profile)
+        receipt["schema"] = config["receipt_schema"]
+        require(operation in {"qualify", "deliver"}, "unsupported closed delivery operation")
+        require(context.get("G6_PROFILE", profile) == profile, "delivery profile differs from invocation")
+        if profile == "ci-gates":
+            require(context.get("G6_PROFILE") == profile, "gate-repair profile is required")
+            require(context.get("GITHUB_WORKFLOW_REF") ==
+                    "Hexalith/Hexalith.CiCd/" + GATES_WORKFLOW + "@refs/heads/main",
+                    "ineligible gate-repair owner workflow")
         receipt["failed_operation"] = "verify secret-free behavioral suites"
-        require(context.get("G6_BEHAVIORAL_RESULT", "success") == "success", "secret-free behavioral qualification failed or was skipped")
+        behavioral_default = None if profile == "ci-gates" and operation == "qualify" else "success"
+        require(context.get("G6_BEHAVIORAL_RESULT", behavioral_default) == "success",
+                "secret-free behavioral qualification failed or was skipped")
         receipt["failed_operation"] = "authorize owner invocation"
         require(context.get("GITHUB_REPOSITORY") == "Hexalith/Hexalith.CiCd" and
                 context.get("GITHUB_REF") == "refs/heads/main" and
@@ -215,12 +293,15 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
             require(transport.module(owner, rt.CICD) == source, "owner source is not current exact CiCd main")
             receipt["failed_operation"] = "verify committed owner source and manifest"
             source_root = Path(local_root) if local_root else Path(__file__).resolve().parents[1]
-            for path in SOURCES:
+            for path in config["sources"]:
                 require((source_root / path).is_file() and not (source_root / path).is_symlink() and
                         (source_root / path).read_bytes() == owner.blob(source, path),
                         "local owner payload differs from exact committed source: " + path)
-            raw = owner.blob(source, MANIFEST)
-            value = manifest(raw)
+            raw = owner.blob(source, config["manifest"])
+            value = manifest(raw, profile)
+            if profile == "ci-gates":
+                receipt["failed_operation"] = "verify exact reviewed module validation proof"
+                module_validation(owner.blob(source, GATES_VALIDATION), value)
             receipt["failed_operation"] = "verify source-bound pre-push owner gate"
             require(value["pre_push_gate"] == "reviewed-tree-owner-authorized", "pre-push gate is pending owner decision")
             exclude_full_writer(owner, source, transport, receipt, "qualification" if operation == "qualify" else "delivery source verification")
@@ -238,8 +319,8 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
                 target.run("fetch", "--depth=1", "--no-tags", "--no-recurse-submodules",
                            transport.remote(PROJECTS), value["base_commit"])
             receipt["failed_operation"] = "construct exact reviewed proposal"
-            tree = proposal(owner, source, target, value)
-            binding = plan(source, value, raw, live)
+            tree = proposal(owner, source, target, value, profile)
+            binding = plan(source, value, raw, live, profile)
             receipt["plan"] = binding
             if operation == "deliver":
                 receipt["failed_operation"] = "verify qualified source/proposal/main binding"
@@ -258,7 +339,7 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
             else:
                 receipt["failed_operation"] = "create direct child commit"
                 commit = rt.sha(target.run("commit-tree", tree, "-p", live,
-                    data=b"build(cicd): acquire reviewed Projects G-6 catalog\n").decode().strip())
+                    data=config["message"]).decode().strip())
                 require(parents(target, commit) == [live], "delivery commit parent mismatch")
                 receipt.update(candidate_sha=commit, candidate_tree=tree)
                 receipt["failed_operation"] = "reread exact CiCd main before push"
@@ -305,11 +386,12 @@ def main(argv=None, *, transport=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("operation", choices=("qualify", "deliver"))
     parser.add_argument("--report", required=True)
+    parser.add_argument("--profile", choices=("catalog", "ci-gates"), default="catalog")
     args = parser.parse_args(argv)
     context = os.environ.copy()
     tokens = rt.sanitize()
     result = execute(args.operation, context, args.report, transport=transport,
-                     token=tokens["MODULE_TOKEN"], scratch=context.get("TMPDIR"))
+                     token=tokens["MODULE_TOKEN"], scratch=context.get("TMPDIR"), profile=args.profile)
     if args.operation == "qualify" and result["status"] == "qualified" and context.get("GITHUB_OUTPUT"):
         with open(context["GITHUB_OUTPUT"], "a", encoding="utf-8") as stream:
             stream.write("plan=" + json.dumps(result["plan"], separators=(",", ":")) + "\n")

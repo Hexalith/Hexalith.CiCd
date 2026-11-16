@@ -1,0 +1,63 @@
+{
+  "observedAt": "2026-11-16T19:37:38.502393+00:00",
+  "scope": "local Git objects and saved evidence only; no remote reads or writes",
+  "controllerRevision": "0f25d19ba712eee9aae59d118251b854bbffd120",
+  "agents": {
+    "revision": "c5c22620cafaa0af2625896cf41022e614e9b490",
+    "worktreeChanges": [],
+    "recordedFullProof": "../publication/agents-qualification.json",
+    "recordedProofSourceStillCurrent": true,
+    "recordedPreparationBase": "805b35da01efe4d3ac5f1402e611950ac282d0a1",
+    "ownedDifferenceFromRecordedBase": [],
+    "ordinaryCheckerAfterDelivery": "required; no adoption or post-delivery check claimed"
+  },
+  "builds": {
+    "revision": "6db97d4e9da392ef691ed3f367e73f1b7d2ef318",
+    "worktreeChanges": [
+      " M Github/lib/product_validation.py",
+      " M Github/lib/tests/test_product_validation.py",
+      " M Github/product-validation/README.md"
+    ],
+    "selectedTag": "v6.0.6",
+    "selectedTagRevision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "selectedTagTestFields": {
+      "minimumExpectedTests": false,
+      "failSkips": false
+    },
+    "selectedTagWarningsNotAsErrors": [],
+    "preparedWarningsNotAsErrors": [
+      "$(WarningsNotAsErrors);NU1901;NU1902"
+    ],
+    "preparedFilesUnchangedFromRecordedProof": {
+      "schemas/hexalith.ci.v1.json": false,
+      "Github/lib/ci_config.py": false,
+      "Github/lib/ci_pipeline.py": false,
+      "Github/lib/local_check.py": true,
+      "Props/Directory.Packages.props": false
+    },
+    "locallyKnownTagsContainingSharedPolicyCommit": [],
+    "acceptableRelease": "not established by local evidence; remote release inventory was not refreshed"
+  },
+  "pilot": {
+    "spec": "_bmad-output/implementation-artifacts/spec-11-pilot-migration-commons-and-polymorphicserializations.md",
+    "status": "in-progress",
+    "acceptance": "pending genuine scheduled-night checkpoint; no acceptance inferred"
+  },
+  "registration": {
+    "productionSetupExists": false,
+    "candidate": "../local-implementation/Hexalith.Agents.yml",
+    "enabled": false
+  },
+  "pending": [
+    "pilot acceptance",
+    "acceptable Builds release containing shared test/audit policy",
+    "fresh authenticated AD-21 prerequisite/provisioning evidence",
+    "fresh live-main duplicate qualification",
+    "committed production registration/render and global/live validation",
+    "authenticated App adoption",
+    "ordinary standalone checker and immediate legacy credential cleanup",
+    "green adopted CI",
+    "Agents next genuine scheduled nightly including both CodeQL languages"
+  ],
+  "result": "local preparation only; story remains in progress"
+}

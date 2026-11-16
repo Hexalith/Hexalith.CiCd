@@ -1,0 +1,48 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "tests/tools/test_run_ci_workflow_gates.py",
+    "-v"
+  ],
+  "exit": 0,
+  "tests": 17,
+  "seconds": 69.10584622700117,
+  "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/final-workflow-regressions.log",
+  "source": {
+    "tests/tools/run-frontcomposer-inspect-gate.ps1": {
+      "bytes": 1974,
+      "sha256": "af3dbd23b213aebfad41d2e5742357c17b27839f98adfc8b45f5d85e3a074480",
+      "blob": "e196444f877ef203f5960860f4b949da55cbd34f"
+    },
+    "tests/tools/run-ci-workflow-gates.ps1": {
+      "bytes": 71498,
+      "sha256": "dc523f343660858e4a82474c03ac96903196688449c87a543d1235cea1bea164",
+      "blob": "9aba921c3acc352904b52fc834b39403fad7160e"
+    },
+    "tests/tools/test_run_ci_workflow_gates.py": {
+      "bytes": 17234,
+      "sha256": "f749fb002a6fcee12a5cae8bd622f86a9d2ac92ee3b734f7bf83f57ff77502b9",
+      "blob": "4a204162aada59bd2a722f205bdf75d70104231a"
+    }
+  },
+  "actual_invariant": {
+    "name": "repaired-ci-invariants",
+    "command": [
+      "pwsh",
+      "-NoLogo",
+      "-NoProfile",
+      "-NonInteractive",
+      "-File",
+      "./tests/tools/run-ci-workflow-gates.ps1"
+    ],
+    "exit": 0,
+    "seconds": 1.4938511190121062,
+    "tests": null,
+    "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/repaired-ci-invariants.log"
+  },
+  "no_csproj_package_or_pin_changes": true,
+  "source_stage_commit_push_performed": false
+}

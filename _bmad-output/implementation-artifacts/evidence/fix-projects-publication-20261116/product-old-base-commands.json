@@ -1,0 +1,157 @@
+[
+  {
+    "check": "restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "Hexalith.Projects.CI.slnx",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "build",
+    "command": [
+      "dotnet",
+      "build",
+      "Hexalith.Projects.CI.slnx",
+      "--no-restore",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "tools",
+    "command": [
+      "dotnet",
+      "tool",
+      "restore",
+      "--tool-manifest",
+      ".config/dotnet-tools.json",
+      "--configfile",
+      "/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "generator-output",
+    "command": [
+      "python3",
+      "scripts/check-frontcomposer-output.py"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "package-consumers",
+    "command": [
+      "python3",
+      "scripts/check-package-dependencies.py"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "package-regressions",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests/tools",
+      "-p",
+      "test_release_package_tools.py",
+      "-v"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "npm-locked",
+    "command": [
+      "npm",
+      "ci",
+      "--ignore-scripts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "npm-signatures",
+    "command": [
+      "npm",
+      "audit",
+      "signatures"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "browser-typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "browser-configuration",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "specs/browser-configuration.spec.ts",
+      "--project",
+      "chromium",
+      "--workers",
+      "1",
+      "--retries",
+      "0"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "browser-install",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "install"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "browser-product",
+    "command": [
+      "npm",
+      "run",
+      "test:package"
+    ],
+    "exitCode": 1
+  },
+  {
+    "check": "owning-g6",
+    "exitCode": 0
+  }
+]

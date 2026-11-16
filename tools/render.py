@@ -46,6 +46,7 @@ TEMPLATES = {
     ".github/dependabot.yml": ".github/dependabot.yml.j2",
 }
 PERIMETER = "perimeter.json.j2"
+QUALIFICATION = ".github/workflows/qualification.yml.j2"
 PARTIALS = ("partials/ownership-block.txt.j2", "partials/deny-entries.json.j2")
 EXPORT_PATHS = (
     "schemas", "Github/lib", ".github/workflows/ci.yml", ".github/workflows/release.yml",
@@ -345,7 +346,7 @@ def registry(project: Path) -> list[tuple[str, Path]]:
 
 def templates(project: Path) -> Environment:
     sources = {}
-    for name in (*TEMPLATES.values(), PERIMETER, *PARTIALS):
+    for name in (*TEMPLATES.values(), QUALIFICATION, PERIMETER, *PARTIALS):
         path = safe_path(project, f"templates/{name}")
         try:
             sources[name] = path.read_text(encoding="utf-8")
@@ -369,6 +370,11 @@ def templates(project: Path) -> Environment:
         return json.dumps(value, default=unsupported, **kwargs)
     environment.policies["json.dumps_function"] = encode_json
     environment.policies["json.dumps_kwargs"] = {"sort_keys": True, "allow_nan": False}
+    # Workflow expressions must remain ordinary YAML scalars. Jinja's HTML-safe
+    # JSON filter escapes apostrophes and &&, preventing security tools from
+    # analyzing the expression even though a YAML reader decodes the string.
+    environment.filters["toyaml"] = lambda value: yaml.safe_dump(
+        value, sort_keys=True, allow_unicode=False, width=1_000_000).rstrip("\n")
     for name in sources:
         try:
             environment.get_template(name)
@@ -400,12 +406,180 @@ def permission_union(document: dict) -> dict:
     return union
 
 
+def shared_ci_call(config: dict, interfaces: dict | None = None) -> dict:
+    """Construct one caller from capabilities declared by the exact tagged API."""
+    arguments = {}
+    timeout = config.get("job-timeout-minutes", config.get("ciTimeoutMinutes"))
+    if timeout is not None:
+        arguments["job-timeout-minutes"] = timeout
+    if "additionalSdkVersion" in config:
+        arguments["additional-sdk-version"] = config["additionalSdkVersion"]
+    if interfaces is not None:
+        for key, value in arguments.items():
+            expected = "number" if key == "job-timeout-minutes" else "string"
+            if interfaces["ci_inputs"].get(key, {}).get("type") != expected:
+                if key == "job-timeout-minutes":
+                    raise RenderError("ciTimeoutMinutes requires the numeric job-timeout-minutes input")
+                raise RenderError(f"selected Builds contract lacks the {expected} {key} input")
+    job = {"uses": f"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{config['buildsTag']}",
+           "permissions": interfaces["ci_permissions"] if interfaces is not None else {"contents": "read"},
+           "secrets": {"registry-pull-username": "${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}",
+                       "registry-pull-password": "${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}"}}
+    if arguments:
+        job["with"] = arguments
+    return job
+
+
+def execution_jobs(config: dict, schema: dict, interfaces: dict | None = None) -> tuple[dict, dict, dict]:
+    """Render fresh product jobs; private fixtures require green-source authority."""
+    configured = config["jobs"]
+    legacy, ci, qualification = {}, {}, {}
+    identifiers = {name: ("windows-" if options["runner"] in ("windows-latest", "macos-latest")
+                          else "custom-") + name for name, options in configured.items()}
+    manual = sorted(name for name, options in configured.items() if options.get("trigger", "ci") == "manual")
+    closures = {}
+    for target in manual:
+        pending, seen = [target], set()
+        while pending:
+            current = pending.pop()
+            if current not in seen:
+                seen.add(current)
+                pending.extend(configured[current].get("needs", []))
+        closures[target] = seen
+    platform_fields = []
+    if interfaces is not None:
+        platform_fields = [key for key in ("module-manifest", "windows-checkout", "source-revision", "module-authority")
+                           if key in interfaces["ci_outputs"] and key in interfaces["prepare_inputs"]]
+        required = set()
+        if config.get("moduleManifest"):
+            required.update(("module-manifest", "module-authority"))
+        if config.get("windowsCheckout"):
+            required.update(("windows-checkout", "source-revision"))
+        if any(options["runner"] in ("windows-latest", "macos-latest") for options in configured.values()):
+            if not required <= set(platform_fields):
+                raise RenderError("selected Builds contract lacks matched CI outputs and prepare inputs for platform authority")
+            if config["tests"].get("additional") and ("additional-test-projects" not in interfaces["ci_outputs"]
+                                                       or "additional-test-projects" not in interfaces["prepare_inputs"]):
+                raise RenderError("selected Builds contract lacks additional-test-projects platform preparation")
+    green_manual, green_nightly = set(), False
+    for name, options in sorted(configured.items()):
+        private = isinstance(options["runner"], dict)
+        platform = options["runner"] in ("windows-latest", "macos-latest")
+        trigger = options.get("trigger", "ci")
+        authority = private or (platform and trigger != "ci" and bool(config.get("moduleManifest") or config.get("windowsCheckout")))
+        extended_platform = platform_fields or config.get("additionalSdkVersion") or config.get("tests", {}).get("additional")
+        if set(options) == {"runner"} and platform and not extended_platform:
+            legacy[name] = options
+            continue
+        dependencies = options.get("needs", [])
+        job = {"runs-on": options["runner"], "permissions": {"contents": "read"},
+               "timeout-minutes": options.get("timeoutMinutes", 30)}
+        if trigger == "ci":
+            job["needs"] = ["ci", *(identifiers[item] for item in dependencies)]
+            if options.get("runAfterFailure"):
+                job["if"] = "${{ !cancelled() && needs.ci.result == 'success' }}"
+        else:
+            if dependencies:
+                job["needs"] = [identifiers[item] for item in dependencies]
+            if trigger == "nightly":
+                condition = "(github.event_name == 'schedule' || inputs.job == 'nightly')"
+                green_nightly = green_nightly or authority
+            else:
+                selected = sorted(target for target, closure in closures.items() if name in closure)
+                condition = "(github.event_name == 'workflow_dispatch' && contains(fromJSON('" + json.dumps(selected) + "'), inputs.job))"
+                if authority:
+                    green_manual.update(selected)
+            if options.get("runAfterFailure"):
+                condition = "!cancelled() && " + condition
+            if authority:
+                job["needs"] = ["qualification-ci", *job.get("needs", [])]
+                condition = "needs.qualification-ci.result == 'success' && " + condition
+            job["if"] = "${{ github.ref == 'refs/heads/main' && " + condition + " }}"
+        if "environment" in options:
+            job["environment"] = options["environment"]
+        if "matrix" in options:
+            job["strategy"] = {"fail-fast": False, "matrix": options["matrix"]}
+            if "maxParallel" in options:
+                job["strategy"]["max-parallel"] = options["maxParallel"]
+        if "resourceProfile" in options:
+            profile = schema.get("x-resource-profiles", {}).get(options["resourceProfile"])
+            if (not isinstance(profile, dict) or set(profile) != {"container", "env"}
+                    or not isinstance(profile["container"], dict) or set(profile["container"]) != {"image", "options"}
+                    or re.fullmatch(r"[a-z0-9./-]+@sha256:[0-9a-f]{64}", profile["container"]["image"]) is None
+                    or re.fullmatch(r"--cpus=[1-9][0-9]* --memory=[1-9][0-9]*g --memory-swap=[1-9][0-9]*g", profile["container"]["options"]) is None
+                    or not isinstance(profile["env"], dict)
+                    or any(not isinstance(key, str) or not isinstance(value, str)
+                           or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key) is None or "${{" in value
+                           or any(ord(char) < 32 for char in value) for key, value in profile["env"].items())):
+                raise RenderError(f"jobs/{name}: selected Builds contract has no valid resource profile")
+            job["container"] = profile["container"]
+            job["env"] = profile["env"]
+            job["defaults"] = {"run": {"shell": "bash"}}
+        prepare = {"uses": f"Hexalith/Hexalith.Builds/Github/prepare@{config['buildsTag']}"}
+        linux = private or options["runner"].startswith("ubuntu-")
+        if private:
+            prepare["with"] = {"environment": "preserve", "authority-sha256": "${{ inputs.authority-sha256 }}",
+                               "source-sha": "${{ needs.qualification-ci.outputs.source-sha }}"}
+        elif linux:
+            prepare["with"] = {"job-name": name}
+            if "resourceProfile" in options:
+                prepare["with"]["resource-profile"] = options["resourceProfile"]
+            if options.get("setup", {}).get("registry", config["registry"]):
+                prepare["env"] = {"REGISTRY_PULL_USERNAME": "${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}",
+                                  "REGISTRY_PULL_PASSWORD": "${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}"}
+        elif trigger == "ci" or authority:
+            producer = "ci" if trigger == "ci" else "qualification-ci"
+            prepare["with"] = {key: "${{ needs." + producer + ".outputs." + key + " }}"
+                               for key in ("solution", "submodules", "global-json", *platform_fields)}
+        else:
+            prepare["with"] = {"solution": config["solution"], "submodules": json.dumps(config["submodules"]),
+                               "global-json": "global.json"}
+        if platform and config.get("tests", {}).get("additional"):
+            prepare["with"]["additional-test-projects"] = ("${{ needs.ci.outputs.additional-test-projects }}" if trigger == "ci"
+                                                          else json.dumps(config["tests"]["additional"]))
+        if "additionalSdkVersion" in config:
+            prepare["with"]["additional-sdk-version"] = config["additionalSdkVersion"]
+        if interfaces is not None:
+            unsupported = prepare.get("with", {}).keys() - interfaces["prepare_inputs"].keys()
+            if unsupported:
+                raise RenderError(f"jobs/{name}: selected Builds prepare lacks inputs {sorted(unsupported)}")
+        action_environment = {"HEXALITH_JOB_NAME": name,
+                              "HEXALITH_JOB_PARAMETERS": "${{ toJSON(matrix) }}" if "matrix" in options else "{}",
+                              "HEXALITH_JOB_NEEDS": "${{ toJSON(needs) }}",
+                              "HEXALITH_QUALIFICATION_PARAMETERS": "${{ inputs.parameters || '{}' }}" if trigger == "manual" else "{}"}
+        if private:
+            action_environment.update(HEXALITH_AUTHORITY_SHA256="${{ inputs.authority-sha256 }}",
+                                      HEXALITH_SOURCE_SHA="${{ needs.qualification-ci.outputs.source-sha }}")
+        secrets = options.get("secrets", {})
+        for variable, secret in (secrets.items() if isinstance(secrets, dict) else ((value, value) for value in secrets)):
+            action_environment[variable] = "${{ secrets." + secret + " }}"
+        action = {"uses": f"./.github/actions/{name}", "env": action_environment}
+        job["steps"] = [prepare, action]
+        (ci if trigger == "ci" else qualification)[identifiers[name]] = job
+    if green_manual or green_nightly:
+        if interfaces is not None and "source-sha" not in interfaces["ci_outputs"]:
+            raise RenderError("private qualification requires the selected Builds CI source-sha output")
+        green = shared_ci_call(config, interfaces)
+        conditions = []
+        if green_manual:
+            conditions.append("(github.event_name == 'workflow_dispatch' && contains(fromJSON('" + json.dumps(sorted(green_manual)) + "'), inputs.job))")
+        if green_nightly:
+            conditions.append("(github.event_name == 'schedule' || inputs.job == 'nightly')")
+        green["if"] = "${{ github.ref == 'refs/heads/main' && (" + " || ".join(conditions) + ") }}"
+        qualification = {"qualification-ci": green, **qualification}
+    return legacy, ci, qualification
+
+
 def desired_tree(project: Path, registrations: list[tuple[str, Path]],
                  environment: Environment, contract: Contract) -> dict[str, bytes]:
     result = {}
     source = f"Builds {contract.tag}/.github/workflows/ci.yml"
     ci_declaration = yaml_document((contract.root / ".github/workflows/ci.yml").read_bytes(), source)
     ci_permissions = permission_union(ci_declaration)
+    prepare_declaration = yaml_document((contract.root / "Github/prepare/action.yml").read_bytes(), source)
+    interfaces = {"ci_inputs": ci_declaration.get("on", {}).get("workflow_call", {}).get("inputs", {}),
+                  "ci_outputs": ci_declaration.get("on", {}).get("workflow_call", {}).get("outputs", {}),
+                  "prepare_inputs": prepare_declaration.get("inputs", {}), "ci_permissions": ci_permissions}
     for repository, path in registrations:
         setup = yaml_document(path.read_bytes(), str(path))
         if not isinstance(setup, dict):
@@ -435,6 +609,20 @@ def desired_tree(project: Path, registrations: list[tuple[str, Path]],
         if document["buildsTag"] != contract.tag:
             raise RenderError(f"{path} -> .github/hexalith-ci.json: buildsTag must equal builds-version")
         context["config"] = document
+        legacy, custom, qualification = execution_jobs(document, contract.schemas["ci"], interfaces)
+        context.update(legacy_jobs=legacy, ci_custom_jobs=custom, qualification_jobs=qualification)
+        context["ci_arguments"] = shared_ci_call(document, interfaces).get("with", {})
+        context["qualification_choices"] = ["nightly", *sorted(name for name, options in document["jobs"].items()
+                                                              if options.get("trigger", "ci") == "manual")]
+        release_declaration = yaml_document((contract.root / ".github/workflows/release.yml").read_bytes(), source)
+        context["release_timeouts"] = {}
+        for field, argument in (("releaseTimeoutMinutes", "release-timeout-minutes"),
+                                ("nightlyTimeoutMinutes", "nightly-timeout-minutes")):
+            if field in document:
+                inputs = release_declaration.get("on", {}).get("workflow_call", {}).get("inputs", {})
+                if inputs.get(argument, {}).get("type") != "number":
+                    raise RenderError(f"{source}: {field} requires the numeric {argument} input")
+                context["release_timeouts"][argument] = document[field]
         # Only the selected release's complete contract may introduce this
         # knob. Older pins retain their original configuration and caller.
         # Preserve the explicit native override introduced by newer Builds
@@ -453,6 +641,10 @@ def desired_tree(project: Path, registrations: list[tuple[str, Path]],
                 if not isinstance(document, dict):
                     raise RenderError(f"{path} -> {output}: expected a YAML object")
             result[f"{repository}/{output}"] = data
+        if qualification:
+            data = rendered_bytes(environment, QUALIFICATION, context)
+            yaml_document(data, f"{path} -> qualification.yml")
+            result[f"{repository}/.github/workflows/qualification.yml"] = data
         perimeter = rendered_bytes(environment, PERIMETER, context)
         contract.validate("perimeter", perimeter, f"{path} -> perimeter.json")
         result[f"{repository}.perimeter.json"] = perimeter

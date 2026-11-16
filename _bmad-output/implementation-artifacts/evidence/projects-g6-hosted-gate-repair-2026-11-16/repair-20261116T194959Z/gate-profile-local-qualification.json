@@ -1,0 +1,55 @@
+{
+  "scope": "Separate closed ci-gates profile; no shared checkout edits, staging, commits or pushes",
+  "files": {
+    "tools/deliver_g6_catalog.py": "2996ad61e472f655cf5579a2e3f160cb71fdbb7e521bfa6b9d158a239228af3f",
+    "tools/tests/test_deliver_projects_ci_gates.py": "e9783da6a2b1d4f44f9273b839f47d6b89a930560bc0d3d6d11cf9146ae0722e",
+    "tools/tests/test_deliver_projects_ci_gates.py.lock": "c59e3d361f8f175c3d661018029aeb9df00761b74d70f79d6d1e3971fcc59082",
+    ".github/workflows/deliver-projects-ci-gates.yml": "c21ab15ed3cada6a5d7f1584c85fab7085b19c200e65dbd871181dfe7d57f941"
+  },
+  "unchanged_original_catalog_assets": [
+    "docs/proposals/projects-g6-catalog.json",
+    "docs/proposals/projects-g6-catalog.patch",
+    ".github/actions/prepare-g6-catalog/action.yml",
+    ".github/actions/prepare-g6-catalog/prepare.py",
+    ".github/workflows/deliver.yml",
+    "tools/delivery_runtime.py"
+  ],
+  "checks": {
+    "catalog_controller_python312": {
+      "tests": 28,
+      "passed": true,
+      "log": "catalog-controller-tests.log"
+    },
+    "ci_gates_python312": {
+      "tests": 8,
+      "passed": true,
+      "log": "gate-profile-tests.log"
+    },
+    "ci_gates_python314": {
+      "tests": 8,
+      "passed": true
+    },
+    "actionlint": {
+      "exit": 0,
+      "log": "gate-profile-actionlint.log"
+    },
+    "git_diff_check": {
+      "exit": 0
+    }
+  },
+  "profile": "ci-gates",
+  "paths": [
+    "tests/tools/test_render_skill.py",
+    "tests/tools/test_release_workflow.py",
+    "tests/tools/test_run_g6_candidate_gate.py",
+    "tests/tools/test_g6_mapper_build.py",
+    "package.json",
+    "package-lock.json"
+  ],
+  "app_permission_request": "Projects contents:write only",
+  "write_mutex": "deliver-owned-writes",
+  "manifest_schema": "hexalith.projects-ci-gates.v1",
+  "plan_schema": "hexalith.projects-ci-gates-plan.v1",
+  "plan_explicit_profile_binding": true,
+  "owner_workflow_ref": "Hexalith/Hexalith.CiCd/.github/workflows/deliver-projects-ci-gates.yml@refs/heads/main"
+}

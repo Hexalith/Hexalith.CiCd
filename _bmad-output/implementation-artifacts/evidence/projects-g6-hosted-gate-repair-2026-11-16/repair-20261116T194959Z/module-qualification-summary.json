@@ -1,0 +1,55 @@
+{
+  "six_authorized_source_files_only": true,
+  "six_file_proof": "module-six-file-repair.json",
+  "focused_suites": {
+    "tests": 61,
+    "exit": 0
+  },
+  "remaining_workflow_gates_passed": [
+    "production-authority",
+    "bmad-loop-hook",
+    "git-whitespace",
+    "workspace-ownership",
+    "cleanup-legacy",
+    "merge-atomicity",
+    "release-package-tools",
+    "archived-g6-packet",
+    "current-g6-selection"
+  ],
+  "existing_followup_blockers": {
+    "workflow_regression_failed_tests": [
+      "test_archived_project_copies_are_ignored_but_active_copies_remain_checked (tests.tools.test_run_ci_workflow_gates.WorkflowGateTests.test_archived_project_copies_are_ignored_but_active_copies_remain_checked)",
+      "test_harmless_comments_and_unrelated_properties_and_packages_pass (tests.tools.test_run_ci_workflow_gates.WorkflowGateTests.test_harmless_comments_and_unrelated_properties_and_packages_pass)"
+    ],
+    "actual_invariant_command": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "./tests/tools/run-ci-workflow-gates.ps1"
+    ],
+    "actual_invariant_exit": 1,
+    "diagnostics": [
+      "ci-workflow-gate: FrontComposer gate must build its own inspection inputs.",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference: $(HexalithEventStoreRoot)/src/Hexalith.EventStore/Hexalith.EventStore.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has no package-mode Hexalith.EventStore reference for sibling project $(HexalithEventStoreRoot)/src/Hexalith.EventStore/Hexalith.EventStore.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference: $(HexalithTenantsRoot)/src/Hexalith.Tenants/Hexalith.Tenants.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has no package-mode Hexalith.Tenants reference for sibling project $(HexalithTenantsRoot)/src/Hexalith.Tenants/Hexalith.Tenants.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference: $(HexalithFoldersRoot)/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has no package-mode Hexalith.Folders.Server reference for sibling project $(HexalithFoldersRoot)/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference: $(HexalithFoldersRoot)/src/Hexalith.Folders.Workers/Hexalith.Folders.Workers.csproj",
+      "ci-workflow-gate: tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj has no package-mode Hexalith.Folders.Workers reference for sibling project $(HexalithFoldersRoot)/src/Hexalith.Folders.Workers/Hexalith.Folders.Workers.csproj"
+    ],
+    "root_causes": [
+      "Unchanged invariant requires FrontComposer inspection to build its own inputs (--build), while preparation changed the helper to inspect retained output only.",
+      "Preparation added four unconditional sibling ProjectReferences in PackageFixtures.AppHost without matching package-mode references; unchanged product-boundary invariant refuses them."
+    ]
+  },
+  "no_publication_configuration_restored": true,
+  "no_workflow_or_pin_changes": true,
+  "direct_builds_pin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "nested_submodules_initialized": false,
+  "children_finished": true,
+  "source_changes_beyond_six": false,
+  "shared_workspaces_changed": false,
+  "stage_commit_push_performed_by_agent": false
+}

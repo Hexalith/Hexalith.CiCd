@@ -1,0 +1,3794 @@
+{
+  "recorded_at": "2026-11-16T21:31:46.129092+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4826",
+        "X-Ratelimit-Reset: 1794866090",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 174"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Builds",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4825",
+        "X-Ratelimit-Reset: 1794866090",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 175"
+      ],
+      "data": {
+        "id": 952945989,
+        "node_id": "R_kgDOOMzNRQ",
+        "name": "Hexalith.Builds",
+        "full_name": "Hexalith/Hexalith.Builds",
+        "private": false,
+        "owner": {
+          "login": "Hexalith",
+          "id": 80614290,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+          "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/Hexalith",
+          "html_url": "https://github.com/Hexalith",
+          "followers_url": "https://api.github.com/users/Hexalith/followers",
+          "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+          "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+          "repos_url": "https://api.github.com/users/Hexalith/repos",
+          "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds",
+        "description": "Common project for building Hexalith applications, modules and libraries",
+        "fork": false,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds",
+        "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/forks",
+        "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/teams",
+        "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/hooks",
+        "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/events",
+        "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tags",
+        "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/languages",
+        "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/stargazers",
+        "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contributors",
+        "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscribers",
+        "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/subscription",
+        "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues/comments{/number}",
+        "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/merges",
+        "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/downloads",
+        "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/labels{/name}",
+        "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases{/id}",
+        "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/deployments",
+        "created_at": "2025-03-22T07:56:09Z",
+        "updated_at": "2026-11-12T14:59:43Z",
+        "pushed_at": "2026-11-16T21:18:53Z",
+        "git_url": "git://github.com/Hexalith/Hexalith.Builds.git",
+        "ssh_url": "git@github.com:Hexalith/Hexalith.Builds.git",
+        "clone_url": "https://github.com/Hexalith/Hexalith.Builds.git",
+        "svn_url": "https://github.com/Hexalith/Hexalith.Builds",
+        "homepage": null,
+        "size": 119885,
+        "stargazers_count": 0,
+        "watchers_count": 0,
+        "language": "C#",
+        "has_issues": true,
+        "has_projects": true,
+        "has_downloads": false,
+        "has_wiki": true,
+        "has_pages": false,
+        "has_discussions": false,
+        "forks_count": 0,
+        "mirror_url": null,
+        "archived": false,
+        "disabled": false,
+        "open_issues_count": 1,
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        },
+        "allow_forking": true,
+        "is_template": false,
+        "web_commit_signoff_required": false,
+        "has_pull_requests": true,
+        "pull_request_creation_policy": "all",
+        "topics": [],
+        "visibility": "public",
+        "forks": 0,
+        "open_issues": 1,
+        "watchers": 0,
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "allow_squash_merge": true,
+        "allow_merge_commit": true,
+        "allow_rebase_merge": true,
+        "allow_auto_merge": true,
+        "delete_branch_on_merge": true,
+        "allow_update_branch": true,
+        "use_squash_pr_title_as_default": true,
+        "squash_merge_commit_message": "COMMIT_MESSAGES",
+        "squash_merge_commit_title": "PR_TITLE",
+        "merge_commit_message": "PR_TITLE",
+        "merge_commit_title": "MERGE_MESSAGE",
+        "custom_properties": {},
+        "organization": {
+          "login": "Hexalith",
+          "id": 80614290,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+          "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/Hexalith",
+          "html_url": "https://github.com/Hexalith",
+          "followers_url": "https://api.github.com/users/Hexalith/followers",
+          "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+          "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+          "repos_url": "https://api.github.com/users/Hexalith/repos",
+          "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "network_count": 0,
+        "subscribers_count": 1
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repositories/952945989/releases?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "Link: <https://api.github.com/repositories/952945989/releases?per_page=100&page=2>; rel=\"next\", <https://api.github.com/repositories/952945989/releases?per_page=100&page=3>; rel=\"last\"",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4824",
+        "X-Ratelimit-Reset: 1794866090",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 176"
+      ],
+      "data": [
+        {
+          "id": 441591623,
+          "tag_name": "v4.47.1",
+          "draft": true,
+          "immutable": false,
+          "target_commitish": "75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+          "published_at": "2026-11-11T11:22:37Z"
+        },
+        {
+          "id": 446824101,
+          "tag_name": "v6.0.6",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "published_at": "2026-11-16T09:34:49Z"
+        },
+        {
+          "id": 446092346,
+          "tag_name": "v6.0.5",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+          "published_at": "2026-11-15T13:47:16Z"
+        },
+        {
+          "id": 445941752,
+          "tag_name": "v6.0.4",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee",
+          "published_at": "2026-11-15T09:27:56Z"
+        },
+        {
+          "id": 445516831,
+          "tag_name": "v6.0.3",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "99f7c86072ca7b35e3fbbaee4606a559a847805a",
+          "published_at": "2026-11-14T18:53:53Z"
+        },
+        {
+          "id": 445387362,
+          "tag_name": "v6.0.2",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "60ce7967607dc8b703fff11f4fc13cabb09c090a",
+          "published_at": "2026-11-14T15:20:43Z"
+        },
+        {
+          "id": 445339242,
+          "tag_name": "v6.0.1",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "c91beec60ce5eaa8cd62bf055d07fa6ca3890e89",
+          "published_at": "2026-11-14T14:09:04Z"
+        },
+        {
+          "id": 445269620,
+          "tag_name": "v6.0.0",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "1ebc5b84ff2c8afd21a87d80ef3d9c9048eaf5e5",
+          "published_at": "2026-11-14T12:13:47Z"
+        },
+        {
+          "id": 444421185,
+          "tag_name": "v5.2.2",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "02ed624aa19781cac75d2c9112940e9bd830441a",
+          "published_at": "2026-11-13T15:53:03Z"
+        },
+        {
+          "id": 444154251,
+          "tag_name": "v5.2.1",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "0e7424fdce6373920fb2019d1ad2a74d8fe5295c",
+          "published_at": "2026-11-13T11:36:25Z"
+        },
+        {
+          "id": 444116818,
+          "tag_name": "v5.2.0",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "7020b83dec668350c34fbfc2323828a40b535f0f",
+          "published_at": "2026-11-13T10:54:57Z"
+        },
+        {
+          "id": 443617691,
+          "tag_name": "v5.1.0",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+          "published_at": "2026-11-12T23:12:31Z"
+        },
+        {
+          "id": 443097864,
+          "tag_name": "v5.0.1",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "published_at": "2026-11-12T14:59:06Z"
+        },
+        {
+          "id": 442792929,
+          "tag_name": "v5.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "published_at": "2026-11-12T10:31:01Z"
+        },
+        {
+          "id": 442699245,
+          "tag_name": "v4.48.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "1ecbcd6c6f61629086d019c37557d10d4247b0c3",
+          "published_at": "2026-11-12T09:13:04Z"
+        },
+        {
+          "id": 442477512,
+          "tag_name": "v4.48.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-12T03:55:08Z"
+        },
+        {
+          "id": 442311765,
+          "tag_name": "v4.48.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T23:43:59Z"
+        },
+        {
+          "id": 441860349,
+          "tag_name": "v4.48.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T15:17:26Z"
+        },
+        {
+          "id": 439458657,
+          "tag_name": "v4.47.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T17:51:08Z"
+        },
+        {
+          "id": 438919870,
+          "tag_name": "v4.45.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T09:09:57Z"
+        },
+        {
+          "id": 438391885,
+          "tag_name": "v4.45.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-08T17:09:37Z"
+        },
+        {
+          "id": 437988798,
+          "tag_name": "v4.44.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-08T02:36:59Z"
+        },
+        {
+          "id": 437496102,
+          "tag_name": "v4.44.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-07T10:17:24Z"
+        },
+        {
+          "id": 436750505,
+          "tag_name": "v4.44.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T16:45:20Z"
+        },
+        {
+          "id": 436539655,
+          "tag_name": "v4.44.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T13:33:01Z"
+        },
+        {
+          "id": 436372587,
+          "tag_name": "v4.44.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T10:36:01Z"
+        },
+        {
+          "id": 436179232,
+          "tag_name": "v4.44.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T06:35:02Z"
+        },
+        {
+          "id": 436145584,
+          "tag_name": "v4.44.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T05:51:29Z"
+        },
+        {
+          "id": 435993075,
+          "tag_name": "v4.44.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T01:52:26Z"
+        },
+        {
+          "id": 435827343,
+          "tag_name": "v4.44.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T22:26:12Z"
+        },
+        {
+          "id": 435539280,
+          "tag_name": "v4.44.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T17:58:44Z"
+        },
+        {
+          "id": 435019009,
+          "tag_name": "v4.44.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T09:51:18Z"
+        },
+        {
+          "id": 433744499,
+          "tag_name": "v4.44.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T09:34:39Z"
+        },
+        {
+          "id": 433460805,
+          "tag_name": "v4.44.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T02:59:12Z"
+        },
+        {
+          "id": 433376662,
+          "tag_name": "v4.44.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T00:40:26Z"
+        },
+        {
+          "id": 432992916,
+          "tag_name": "v4.43.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T17:09:58Z"
+        },
+        {
+          "id": 432808868,
+          "tag_name": "v4.43.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T14:32:17Z"
+        },
+        {
+          "id": 432652555,
+          "tag_name": "v4.43.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T12:15:18Z"
+        },
+        {
+          "id": 432540613,
+          "tag_name": "v4.43.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T10:19:01Z"
+        },
+        {
+          "id": 432038624,
+          "tag_name": "v4.43.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T22:30:31Z"
+        },
+        {
+          "id": 431867325,
+          "tag_name": "v4.43.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T19:14:25Z"
+        },
+        {
+          "id": 431353664,
+          "tag_name": "v4.43.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T10:58:05Z"
+        },
+        {
+          "id": 431124081,
+          "tag_name": "v4.42.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T06:12:07Z"
+        },
+        {
+          "id": 431082052,
+          "tag_name": "v4.42.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T04:49:28Z"
+        },
+        {
+          "id": 430555277,
+          "tag_name": "v4.41.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-01T12:03:03Z"
+        },
+        {
+          "id": 430488613,
+          "tag_name": "v4.41.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-01T09:50:20Z"
+        },
+        {
+          "id": 430336929,
+          "tag_name": "v4.40.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-01T03:21:43Z"
+        },
+        {
+          "id": 429766617,
+          "tag_name": "v4.39.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T06:34:42Z"
+        },
+        {
+          "id": 426607113,
+          "tag_name": "v4.38.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T11:53:53Z"
+        },
+        {
+          "id": 426524030,
+          "tag_name": "v4.38.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T10:26:42Z"
+        },
+        {
+          "id": 426108808,
+          "tag_name": "v4.38.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-27T23:43:34Z"
+        },
+        {
+          "id": 423433449,
+          "tag_name": "v4.38.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-25T13:51:06Z"
+        },
+        {
+          "id": 421869978,
+          "tag_name": "v4.37.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-23T13:22:03Z"
+        },
+        {
+          "id": 421142671,
+          "tag_name": "v4.36.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T19:58:35Z"
+        },
+        {
+          "id": 420491407,
+          "tag_name": "v4.35.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T08:48:45Z"
+        },
+        {
+          "id": 419371566,
+          "tag_name": "v4.35.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-21T09:28:21Z"
+        },
+        {
+          "id": 418481556,
+          "tag_name": "v4.35.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-20T14:14:32Z"
+        },
+        {
+          "id": 418233600,
+          "tag_name": "v4.34.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-20T09:39:47Z"
+        },
+        {
+          "id": 416549032,
+          "tag_name": "v4.33.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T15:59:37Z"
+        },
+        {
+          "id": 416288898,
+          "tag_name": "v4.33.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T06:56:44Z"
+        },
+        {
+          "id": 415218534,
+          "tag_name": "v4.32.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-16T17:40:46Z"
+        },
+        {
+          "id": 412084485,
+          "tag_name": "v4.31.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-13T20:31:58Z"
+        },
+        {
+          "id": 406836482,
+          "tag_name": "v4.30.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-08T13:03:58Z"
+        },
+        {
+          "id": 405420205,
+          "tag_name": "v4.30.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-07T05:45:01Z"
+        },
+        {
+          "id": 400248435,
+          "tag_name": "v4.29.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-30T16:46:04Z"
+        },
+        {
+          "id": 392246194,
+          "tag_name": "v4.27.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-19T23:04:15Z"
+        },
+        {
+          "id": 387550668,
+          "tag_name": "v4.27.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-12T11:33:45Z"
+        },
+        {
+          "id": 384341963,
+          "tag_name": "v4.27.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-07T22:24:58Z"
+        },
+        {
+          "id": 383262298,
+          "tag_name": "v4.27.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-05T13:58:55Z"
+        },
+        {
+          "id": 379082399,
+          "tag_name": "v4.27.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T19:38:05Z"
+        },
+        {
+          "id": 378995741,
+          "tag_name": "v4.26.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T13:30:12Z"
+        },
+        {
+          "id": 378964373,
+          "tag_name": "v4.25.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T11:30:53Z"
+        },
+        {
+          "id": 378917154,
+          "tag_name": "v4.25.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T08:02:57Z"
+        },
+        {
+          "id": 372028012,
+          "tag_name": "v4.24.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-18T00:54:17Z"
+        },
+        {
+          "id": 360081643,
+          "tag_name": "v4.23.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-26T17:56:03Z"
+        },
+        {
+          "id": 355802866,
+          "tag_name": "v4.20.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T16:39:48Z"
+        },
+        {
+          "id": 355127526,
+          "tag_name": "v4.19.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:58:49Z"
+        },
+        {
+          "id": 355106622,
+          "tag_name": "v4.19.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:25:47Z"
+        },
+        {
+          "id": 354947911,
+          "tag_name": "v4.19.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T08:14:06Z"
+        },
+        {
+          "id": 354921038,
+          "tag_name": "v4.18.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T07:15:29Z"
+        },
+        {
+          "id": 354911454,
+          "tag_name": "v4.18.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T06:52:49Z"
+        },
+        {
+          "id": 354837524,
+          "tag_name": "v4.18.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:47:09Z"
+        },
+        {
+          "id": 354835335,
+          "tag_name": "v4.18.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:37:53Z"
+        },
+        {
+          "id": 354826341,
+          "tag_name": "v4.18.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:02:01Z"
+        },
+        {
+          "id": 354757370,
+          "tag_name": "v4.18.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T22:50:00Z"
+        },
+        {
+          "id": 354214379,
+          "tag_name": "v4.18.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T05:05:33Z"
+        },
+        {
+          "id": 354062386,
+          "tag_name": "v4.18.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T20:37:39Z"
+        },
+        {
+          "id": 353988490,
+          "tag_name": "v4.18.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T18:11:24Z"
+        },
+        {
+          "id": 353974694,
+          "tag_name": "v4.18.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T17:47:50Z"
+        },
+        {
+          "id": 353961160,
+          "tag_name": "v4.18.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T17:28:00Z"
+        },
+        {
+          "id": 353955467,
+          "tag_name": "v4.18.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T17:20:54Z"
+        },
+        {
+          "id": 353775298,
+          "tag_name": "v4.17.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T12:18:52Z"
+        },
+        {
+          "id": 353621978,
+          "tag_name": "v4.17.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T07:13:11Z"
+        },
+        {
+          "id": 353269233,
+          "tag_name": "v4.17.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-13T15:54:38Z"
+        },
+        {
+          "id": 353138130,
+          "tag_name": "v4.17.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-13T12:26:12Z"
+        },
+        {
+          "id": 352769895,
+          "tag_name": "v4.17.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T14:28:25Z"
+        },
+        {
+          "id": 352768973,
+          "tag_name": "v4.17.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T14:23:39Z"
+        },
+        {
+          "id": 352688889,
+          "tag_name": "v4.17.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T06:37:18Z"
+        },
+        {
+          "id": 352562377,
+          "tag_name": "v4.17.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-11T16:46:45Z"
+        },
+        {
+          "id": 352491553,
+          "tag_name": "v4.17.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-11T10:46:40Z"
+        }
+      ],
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repositories/952945989/releases?per_page=100&page=2",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "Link: <https://api.github.com/repositories/952945989/releases?per_page=100&page=1>; rel=\"prev\", <https://api.github.com/repositories/952945989/releases?per_page=100&page=3>; rel=\"next\", <https://api.github.com/repositories/952945989/releases?per_page=100&page=3>; rel=\"last\", <https://api.github.com/repositories/952945989/releases?per_page=100&page=1>; rel=\"first\"",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4823",
+        "X-Ratelimit-Reset: 1794866090",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 177"
+      ],
+      "data": [
+        {
+          "id": 351561121,
+          "tag_name": "v4.17.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T13:55:19Z"
+        },
+        {
+          "id": 351423122,
+          "tag_name": "v4.17.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T09:02:40Z"
+        },
+        {
+          "id": 351007745,
+          "tag_name": "v4.16.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T15:05:39Z"
+        },
+        {
+          "id": 351000080,
+          "tag_name": "v4.16.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T14:53:18Z"
+        },
+        {
+          "id": 347499244,
+          "tag_name": "v4.16.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T14:04:31Z"
+        },
+        {
+          "id": 347486690,
+          "tag_name": "v4.16.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T13:44:06Z"
+        },
+        {
+          "id": 347364188,
+          "tag_name": "v4.16.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T09:56:27Z"
+        },
+        {
+          "id": 347247903,
+          "tag_name": "v4.16.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T05:33:07Z"
+        },
+        {
+          "id": 346721999,
+          "tag_name": "v4.15.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-30T09:18:48Z"
+        },
+        {
+          "id": 346715008,
+          "tag_name": "v4.14.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-30T09:04:55Z"
+        },
+        {
+          "id": 334893480,
+          "tag_name": "v4.13.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-05T11:34:20Z"
+        },
+        {
+          "id": 334491714,
+          "tag_name": "v4.13.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-04T17:13:15Z"
+        },
+        {
+          "id": 324490587,
+          "tag_name": "v4.13.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-05-18T18:52:17Z"
+        },
+        {
+          "id": 324169230,
+          "tag_name": "v4.13.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-05-18T09:26:54Z"
+        },
+        {
+          "id": 322477558,
+          "tag_name": "v4.13.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-05-14T10:40:38Z"
+        },
+        {
+          "id": 274075615,
+          "tag_name": "v4.12.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-04T18:20:02Z"
+        },
+        {
+          "id": 274049387,
+          "tag_name": "v4.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-04T11:48:20Z"
+        },
+        {
+          "id": 273944676,
+          "tag_name": "v4.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-03T11:17:17Z"
+        },
+        {
+          "id": 273940913,
+          "tag_name": "v4.9.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-03T09:56:41Z"
+        },
+        {
+          "id": 273865786,
+          "tag_name": "v4.9.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-02T18:38:25Z"
+        },
+        {
+          "id": 273864875,
+          "tag_name": "v4.9.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-02T18:31:17Z"
+        },
+        {
+          "id": 272715213,
+          "tag_name": "v4.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-24T16:57:14Z"
+        },
+        {
+          "id": 272398806,
+          "tag_name": "v4.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-23T07:29:45Z"
+        },
+        {
+          "id": 272030179,
+          "tag_name": "v4.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-21T15:31:53Z"
+        },
+        {
+          "id": 267962784,
+          "tag_name": "v4.6.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-06T09:22:54Z"
+        },
+        {
+          "id": 267940861,
+          "tag_name": "v4.6.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-06T06:29:07Z"
+        },
+        {
+          "id": 267940626,
+          "tag_name": "v4.6.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-06T06:23:57Z"
+        },
+        {
+          "id": 266214777,
+          "tag_name": "v4.6.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-30T15:50:00Z"
+        },
+        {
+          "id": 266200631,
+          "tag_name": "v4.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-30T11:51:29Z"
+        },
+        {
+          "id": 266198127,
+          "tag_name": "v4.5.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-30T11:01:48Z"
+        },
+        {
+          "id": 266154621,
+          "tag_name": "v4.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-29T18:58:59Z"
+        },
+        {
+          "id": 264344379,
+          "tag_name": "v4.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-21T14:05:15Z"
+        },
+        {
+          "id": 263084163,
+          "tag_name": "v4.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-17T19:48:27Z"
+        },
+        {
+          "id": 262901208,
+          "tag_name": "v4.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-17T09:57:56Z"
+        },
+        {
+          "id": 253950677,
+          "tag_name": "v4.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-10-13T02:07:55Z"
+        },
+        {
+          "id": 248869724,
+          "tag_name": "v4.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-21T16:05:20Z"
+        },
+        {
+          "id": 248781195,
+          "tag_name": "v3.18.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-20T10:22:34Z"
+        },
+        {
+          "id": 248775197,
+          "tag_name": "v3.18.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-20T08:15:41Z"
+        },
+        {
+          "id": 248774564,
+          "tag_name": "v3.18.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-20T08:01:11Z"
+        },
+        {
+          "id": 238832303,
+          "tag_name": "v3.17.22",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-08-10T07:54:44Z"
+        },
+        {
+          "id": 238829770,
+          "tag_name": "v3.17.21",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-08-10T07:03:56Z"
+        },
+        {
+          "id": 237624182,
+          "tag_name": "v3.17.20",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-08-05T10:55:25Z"
+        },
+        {
+          "id": 236535804,
+          "tag_name": "v3.17.19",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T10:48:02Z"
+        },
+        {
+          "id": 236503789,
+          "tag_name": "v3.17.18",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T08:44:02Z"
+        },
+        {
+          "id": 236500908,
+          "tag_name": "v3.17.17",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T08:30:33Z"
+        },
+        {
+          "id": 236491372,
+          "tag_name": "v3.17.16",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T07:51:19Z"
+        },
+        {
+          "id": 236381399,
+          "tag_name": "v3.17.15",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T19:20:08Z"
+        },
+        {
+          "id": 236336841,
+          "tag_name": "v3.17.14",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T16:10:48Z"
+        },
+        {
+          "id": 236320758,
+          "tag_name": "v3.17.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T15:16:55Z"
+        },
+        {
+          "id": 236316801,
+          "tag_name": "v3.17.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T15:06:15Z"
+        },
+        {
+          "id": 235440177,
+          "tag_name": "v3.17.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-27T10:31:50Z"
+        },
+        {
+          "id": 234840092,
+          "tag_name": "v3.17.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-24T11:07:59Z"
+        },
+        {
+          "id": 234834241,
+          "tag_name": "v3.17.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-24T10:41:52Z"
+        },
+        {
+          "id": 234798316,
+          "tag_name": "v3.17.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-24T08:29:59Z"
+        },
+        {
+          "id": 234190531,
+          "tag_name": "v3.17.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-22T10:16:20Z"
+        },
+        {
+          "id": 234143163,
+          "tag_name": "v3.17.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-22T07:28:17Z"
+        },
+        {
+          "id": 234139138,
+          "tag_name": "v3.17.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-22T07:09:17Z"
+        },
+        {
+          "id": 233687594,
+          "tag_name": "v3.17.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-19T15:29:47Z"
+        },
+        {
+          "id": 233686329,
+          "tag_name": "v3.17.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-19T15:06:08Z"
+        },
+        {
+          "id": 233569678,
+          "tag_name": "v3.17.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-18T16:44:19Z"
+        },
+        {
+          "id": 230867420,
+          "tag_name": "v3.17.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-08T14:52:43Z"
+        },
+        {
+          "id": 230368768,
+          "tag_name": "v3.17.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-07T07:18:13Z"
+        },
+        {
+          "id": 230273458,
+          "tag_name": "v3.16.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-06T08:30:31Z"
+        },
+        {
+          "id": 230273021,
+          "tag_name": "v3.15.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-06T08:18:52Z"
+        },
+        {
+          "id": 230042890,
+          "tag_name": "v3.14.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-04T13:04:23Z"
+        },
+        {
+          "id": 229048942,
+          "tag_name": "v3.14.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-01T09:36:57Z"
+        },
+        {
+          "id": 228589075,
+          "tag_name": "v3.14.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-29T09:11:31Z"
+        },
+        {
+          "id": 228582148,
+          "tag_name": "v3.14.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-29T06:33:06Z"
+        },
+        {
+          "id": 228582062,
+          "tag_name": "v3.14.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-29T06:30:34Z"
+        },
+        {
+          "id": 227950847,
+          "tag_name": "v3.14.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-26T09:05:54Z"
+        },
+        {
+          "id": 227898781,
+          "tag_name": "v3.14.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-26T05:13:05Z"
+        },
+        {
+          "id": 227559284,
+          "tag_name": "v3.13.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-25T06:27:58Z"
+        },
+        {
+          "id": 227406793,
+          "tag_name": "v3.12.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-24T15:27:16Z"
+        },
+        {
+          "id": 227385039,
+          "tag_name": "v3.12.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-24T14:20:36Z"
+        },
+        {
+          "id": 226398083,
+          "tag_name": "v3.12.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-19T10:04:14Z"
+        },
+        {
+          "id": 226209496,
+          "tag_name": "v3.11.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-18T15:24:54Z"
+        },
+        {
+          "id": 225839860,
+          "tag_name": "v3.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-17T12:00:28Z"
+        },
+        {
+          "id": 225318938,
+          "tag_name": "v3.10.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-14T07:34:17Z"
+        },
+        {
+          "id": 225315048,
+          "tag_name": "v3.10.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-14T06:31:29Z"
+        },
+        {
+          "id": 225092579,
+          "tag_name": "v3.10.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-13T08:25:47Z"
+        },
+        {
+          "id": 224869219,
+          "tag_name": "v3.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-12T11:32:52Z"
+        },
+        {
+          "id": 214695015,
+          "tag_name": "v3.9.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-25T05:26:07Z"
+        },
+        {
+          "id": 214694208,
+          "tag_name": "v3.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-25T05:16:25Z"
+        },
+        {
+          "id": 214522630,
+          "tag_name": "v3.8.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-24T13:40:35Z"
+        },
+        {
+          "id": 213845935,
+          "tag_name": "v3.8.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-22T06:52:49Z"
+        },
+        {
+          "id": 213687292,
+          "tag_name": "v3.8.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-21T13:49:08Z"
+        },
+        {
+          "id": 213681272,
+          "tag_name": "v3.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-21T13:11:58Z"
+        },
+        {
+          "id": 213643183,
+          "tag_name": "v3.7.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-21T09:10:18Z"
+        },
+        {
+          "id": 213507192,
+          "tag_name": "v3.7.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T19:10:17Z"
+        },
+        {
+          "id": 213504942,
+          "tag_name": "v3.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T18:08:38Z"
+        },
+        {
+          "id": 213492649,
+          "tag_name": "v3.6.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T14:08:48Z"
+        },
+        {
+          "id": 213457702,
+          "tag_name": "v3.6.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T07:03:33Z"
+        },
+        {
+          "id": 213453838,
+          "tag_name": "v3.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T06:02:41Z"
+        },
+        {
+          "id": 213360220,
+          "tag_name": "v3.5.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-18T16:37:24Z"
+        },
+        {
+          "id": 213327830,
+          "tag_name": "v3.5.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-18T13:18:30Z"
+        },
+        {
+          "id": 213268403,
+          "tag_name": "v3.5.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-18T06:39:42Z"
+        },
+        {
+          "id": 213158977,
+          "tag_name": "v3.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-17T17:16:04Z"
+        },
+        {
+          "id": 212840726,
+          "tag_name": "v3.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T15:05:09Z"
+        },
+        {
+          "id": 212838386,
+          "tag_name": "v3.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T14:57:18Z"
+        },
+        {
+          "id": 212713025,
+          "tag_name": "v3.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T07:01:35Z"
+        }
+      ],
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repositories/952945989/releases?per_page=100&page=3",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "Link: <https://api.github.com/repositories/952945989/releases?per_page=100&page=2>; rel=\"prev\", <https://api.github.com/repositories/952945989/releases?per_page=100&page=1>; rel=\"first\"",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4822",
+        "X-Ratelimit-Reset: 1794866090",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 178"
+      ],
+      "data": [
+        {
+          "id": 212703382,
+          "tag_name": "v3.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T05:58:00Z"
+        },
+        {
+          "id": 212141547,
+          "tag_name": "v3.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-14T08:33:08Z"
+        },
+        {
+          "id": 212063962,
+          "tag_name": "v3.0.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-13T14:13:20Z"
+        },
+        {
+          "id": 212062670,
+          "tag_name": "v3.0.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-13T13:39:12Z"
+        },
+        {
+          "id": 212018845,
+          "tag_name": "v3.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T15:16:04Z"
+        },
+        {
+          "id": 212018574,
+          "tag_name": "v3.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T15:08:47Z"
+        },
+        {
+          "id": 212006583,
+          "tag_name": "v3.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T10:21:18Z"
+        },
+        {
+          "id": 212005887,
+          "tag_name": "v3.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T10:00:14Z"
+        },
+        {
+          "id": 212005566,
+          "tag_name": "v2.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T09:49:36Z"
+        },
+        {
+          "id": 211897062,
+          "tag_name": "v2.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-11T17:01:03Z"
+        },
+        {
+          "id": 209387071,
+          "tag_name": "v2.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-31T15:54:33Z"
+        },
+        {
+          "id": 209024440,
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T18:11:38Z"
+        },
+        {
+          "id": 209019932,
+          "tag_name": "v1.63.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T17:45:27Z"
+        },
+        {
+          "id": 208987461,
+          "tag_name": "v1.62.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T15:25:12Z"
+        },
+        {
+          "id": 208980411,
+          "tag_name": "v1.61.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T15:00:07Z"
+        },
+        {
+          "id": 207621446,
+          "tag_name": "v1.60.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-22T15:20:36Z"
+        }
+      ],
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/latest",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4953",
+        "X-Ratelimit-Reset: 1794866511",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 47"
+      ],
+      "data": {
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/446824101",
+        "assets_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/446824101/assets",
+        "upload_url": "https://uploads.github.com/repos/Hexalith/Hexalith.Builds/releases/446824101/assets{?name,label}",
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.0.6",
+        "id": 446824101,
+        "author": {
+          "login": "github-actions[bot]",
+          "id": 41898282,
+          "node_id": "MDM6Qm90NDE4OTgyODI=",
+          "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github-actions%5Bbot%5D",
+          "html_url": "https://github.com/apps/github-actions",
+          "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
+          "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
+          "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
+          "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
+          "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
+          "type": "Bot",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "node_id": "RE_kwDOOMzNRc4aof6l",
+        "tag_name": "v6.0.6",
+        "target_commitish": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+        "name": "v6.0.6",
+        "draft": false,
+        "immutable": true,
+        "prerelease": false,
+        "created_at": "2026-11-16T08:49:44Z",
+        "updated_at": "2026-11-16T09:34:49Z",
+        "published_at": "2026-11-16T09:34:49Z",
+        "assets": [],
+        "tarball_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/tarball/v6.0.6",
+        "zipball_url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/zipball/v6.0.6",
+        "body": "## [6.0.6](https://github.com/Hexalith/Hexalith.Builds/compare/v6.0.5...v6.0.6) (2026-11-16)\n\n\n### Bug Fixes\n\n* **catalog:** select published EventStore 5.1.1 ([fd8ace6](https://github.com/Hexalith/Hexalith.Builds/commit/fd8ace6e5f5107d44194f7822fafaceca3af5c01))\n* **catalog:** select published Folders 2.0.0 ([801f268](https://github.com/Hexalith/Hexalith.Builds/commit/801f268cd1b37ecae41d4fb20d115c055b4c5793))\n* **ci:** align catalog compatibility expectations ([f0f5007](https://github.com/Hexalith/Hexalith.Builds/commit/f0f5007cca1f9183d4f192e162071ba1c3282a63))\n* **ci:** align evaluated EventStore expectations ([264e17d](https://github.com/Hexalith/Hexalith.Builds/commit/264e17d3185c87b72b0757dd66a13040793756bb))\n* **ci:** allow the full Builds suite to finish ([04bdcaf](https://github.com/Hexalith/Hexalith.Builds/commit/04bdcaf929198e69321c226dda5ab40f7b3839ce))\n* **release:** verify published packages before finalization ([65fd22f](https://github.com/Hexalith/Hexalith.Builds/commit/65fd22f37b9fad64b595841923cdbe050563ab99))\n\nhexalith-release: fdda17c0a4538b0f7c99f813c20ca24b49006530\nhexalith-release-run: 43838534329\nhexalith-release-artifact: 14211933557 sha256:48506e9a0a9734f2119302035a84debd6dab328ef08f445505595c7c99ba45c0\nhexalith-release-packages: Hexalith.Builds.Evidence.Cli,Hexalith.Builds.Module.Cli\nhexalith-release-containers: \n"
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repositories/952945989/releases?per_page=100&page=1",
+      "item_key": null,
+      "pages": [
+        "repositories/952945989/releases?per_page=100&page=1",
+        "repositories/952945989/releases?per_page=100&page=2",
+        "repositories/952945989/releases?per_page=100&page=3"
+      ],
+      "successful_pages": 3,
+      "items": [
+        {
+          "id": 441591623,
+          "tag_name": "v4.47.1",
+          "draft": true,
+          "immutable": false,
+          "target_commitish": "75e1d4a3809b30684e67c7e9b2c8043720b49c53",
+          "published_at": "2026-11-11T11:22:37Z"
+        },
+        {
+          "id": 446824101,
+          "tag_name": "v6.0.6",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "published_at": "2026-11-16T09:34:49Z"
+        },
+        {
+          "id": 446092346,
+          "tag_name": "v6.0.5",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+          "published_at": "2026-11-15T13:47:16Z"
+        },
+        {
+          "id": 445941752,
+          "tag_name": "v6.0.4",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee",
+          "published_at": "2026-11-15T09:27:56Z"
+        },
+        {
+          "id": 445516831,
+          "tag_name": "v6.0.3",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "99f7c86072ca7b35e3fbbaee4606a559a847805a",
+          "published_at": "2026-11-14T18:53:53Z"
+        },
+        {
+          "id": 445387362,
+          "tag_name": "v6.0.2",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "60ce7967607dc8b703fff11f4fc13cabb09c090a",
+          "published_at": "2026-11-14T15:20:43Z"
+        },
+        {
+          "id": 445339242,
+          "tag_name": "v6.0.1",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "c91beec60ce5eaa8cd62bf055d07fa6ca3890e89",
+          "published_at": "2026-11-14T14:09:04Z"
+        },
+        {
+          "id": 445269620,
+          "tag_name": "v6.0.0",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "1ebc5b84ff2c8afd21a87d80ef3d9c9048eaf5e5",
+          "published_at": "2026-11-14T12:13:47Z"
+        },
+        {
+          "id": 444421185,
+          "tag_name": "v5.2.2",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "02ed624aa19781cac75d2c9112940e9bd830441a",
+          "published_at": "2026-11-13T15:53:03Z"
+        },
+        {
+          "id": 444154251,
+          "tag_name": "v5.2.1",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "0e7424fdce6373920fb2019d1ad2a74d8fe5295c",
+          "published_at": "2026-11-13T11:36:25Z"
+        },
+        {
+          "id": 444116818,
+          "tag_name": "v5.2.0",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "7020b83dec668350c34fbfc2323828a40b535f0f",
+          "published_at": "2026-11-13T10:54:57Z"
+        },
+        {
+          "id": 443617691,
+          "tag_name": "v5.1.0",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+          "published_at": "2026-11-12T23:12:31Z"
+        },
+        {
+          "id": 443097864,
+          "tag_name": "v5.0.1",
+          "draft": false,
+          "immutable": true,
+          "target_commitish": "3c2f5944aaa28dc7854a00a8a9df171aa810b0c7",
+          "published_at": "2026-11-12T14:59:06Z"
+        },
+        {
+          "id": 442792929,
+          "tag_name": "v5.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "published_at": "2026-11-12T10:31:01Z"
+        },
+        {
+          "id": 442699245,
+          "tag_name": "v4.48.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "1ecbcd6c6f61629086d019c37557d10d4247b0c3",
+          "published_at": "2026-11-12T09:13:04Z"
+        },
+        {
+          "id": 442477512,
+          "tag_name": "v4.48.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-12T03:55:08Z"
+        },
+        {
+          "id": 442311765,
+          "tag_name": "v4.48.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T23:43:59Z"
+        },
+        {
+          "id": 441860349,
+          "tag_name": "v4.48.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T15:17:26Z"
+        },
+        {
+          "id": 439458657,
+          "tag_name": "v4.47.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T17:51:08Z"
+        },
+        {
+          "id": 438919870,
+          "tag_name": "v4.45.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T09:09:57Z"
+        },
+        {
+          "id": 438391885,
+          "tag_name": "v4.45.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-08T17:09:37Z"
+        },
+        {
+          "id": 437988798,
+          "tag_name": "v4.44.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-08T02:36:59Z"
+        },
+        {
+          "id": 437496102,
+          "tag_name": "v4.44.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-07T10:17:24Z"
+        },
+        {
+          "id": 436750505,
+          "tag_name": "v4.44.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T16:45:20Z"
+        },
+        {
+          "id": 436539655,
+          "tag_name": "v4.44.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T13:33:01Z"
+        },
+        {
+          "id": 436372587,
+          "tag_name": "v4.44.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T10:36:01Z"
+        },
+        {
+          "id": 436179232,
+          "tag_name": "v4.44.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T06:35:02Z"
+        },
+        {
+          "id": 436145584,
+          "tag_name": "v4.44.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T05:51:29Z"
+        },
+        {
+          "id": 435993075,
+          "tag_name": "v4.44.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T01:52:26Z"
+        },
+        {
+          "id": 435827343,
+          "tag_name": "v4.44.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T22:26:12Z"
+        },
+        {
+          "id": 435539280,
+          "tag_name": "v4.44.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T17:58:44Z"
+        },
+        {
+          "id": 435019009,
+          "tag_name": "v4.44.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T09:51:18Z"
+        },
+        {
+          "id": 433744499,
+          "tag_name": "v4.44.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T09:34:39Z"
+        },
+        {
+          "id": 433460805,
+          "tag_name": "v4.44.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T02:59:12Z"
+        },
+        {
+          "id": 433376662,
+          "tag_name": "v4.44.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T00:40:26Z"
+        },
+        {
+          "id": 432992916,
+          "tag_name": "v4.43.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T17:09:58Z"
+        },
+        {
+          "id": 432808868,
+          "tag_name": "v4.43.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T14:32:17Z"
+        },
+        {
+          "id": 432652555,
+          "tag_name": "v4.43.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T12:15:18Z"
+        },
+        {
+          "id": 432540613,
+          "tag_name": "v4.43.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T10:19:01Z"
+        },
+        {
+          "id": 432038624,
+          "tag_name": "v4.43.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T22:30:31Z"
+        },
+        {
+          "id": 431867325,
+          "tag_name": "v4.43.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T19:14:25Z"
+        },
+        {
+          "id": 431353664,
+          "tag_name": "v4.43.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T10:58:05Z"
+        },
+        {
+          "id": 431124081,
+          "tag_name": "v4.42.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T06:12:07Z"
+        },
+        {
+          "id": 431082052,
+          "tag_name": "v4.42.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-02T04:49:28Z"
+        },
+        {
+          "id": 430555277,
+          "tag_name": "v4.41.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-01T12:03:03Z"
+        },
+        {
+          "id": 430488613,
+          "tag_name": "v4.41.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-01T09:50:20Z"
+        },
+        {
+          "id": 430336929,
+          "tag_name": "v4.40.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-01T03:21:43Z"
+        },
+        {
+          "id": 429766617,
+          "tag_name": "v4.39.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T06:34:42Z"
+        },
+        {
+          "id": 426607113,
+          "tag_name": "v4.38.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T11:53:53Z"
+        },
+        {
+          "id": 426524030,
+          "tag_name": "v4.38.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T10:26:42Z"
+        },
+        {
+          "id": 426108808,
+          "tag_name": "v4.38.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-27T23:43:34Z"
+        },
+        {
+          "id": 423433449,
+          "tag_name": "v4.38.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-25T13:51:06Z"
+        },
+        {
+          "id": 421869978,
+          "tag_name": "v4.37.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-23T13:22:03Z"
+        },
+        {
+          "id": 421142671,
+          "tag_name": "v4.36.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T19:58:35Z"
+        },
+        {
+          "id": 420491407,
+          "tag_name": "v4.35.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T08:48:45Z"
+        },
+        {
+          "id": 419371566,
+          "tag_name": "v4.35.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-21T09:28:21Z"
+        },
+        {
+          "id": 418481556,
+          "tag_name": "v4.35.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-20T14:14:32Z"
+        },
+        {
+          "id": 418233600,
+          "tag_name": "v4.34.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-20T09:39:47Z"
+        },
+        {
+          "id": 416549032,
+          "tag_name": "v4.33.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T15:59:37Z"
+        },
+        {
+          "id": 416288898,
+          "tag_name": "v4.33.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T06:56:44Z"
+        },
+        {
+          "id": 415218534,
+          "tag_name": "v4.32.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-16T17:40:46Z"
+        },
+        {
+          "id": 412084485,
+          "tag_name": "v4.31.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-13T20:31:58Z"
+        },
+        {
+          "id": 406836482,
+          "tag_name": "v4.30.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-08T13:03:58Z"
+        },
+        {
+          "id": 405420205,
+          "tag_name": "v4.30.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-07T05:45:01Z"
+        },
+        {
+          "id": 400248435,
+          "tag_name": "v4.29.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-30T16:46:04Z"
+        },
+        {
+          "id": 392246194,
+          "tag_name": "v4.27.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-19T23:04:15Z"
+        },
+        {
+          "id": 387550668,
+          "tag_name": "v4.27.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-12T11:33:45Z"
+        },
+        {
+          "id": 384341963,
+          "tag_name": "v4.27.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-07T22:24:58Z"
+        },
+        {
+          "id": 383262298,
+          "tag_name": "v4.27.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-05T13:58:55Z"
+        },
+        {
+          "id": 379082399,
+          "tag_name": "v4.27.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T19:38:05Z"
+        },
+        {
+          "id": 378995741,
+          "tag_name": "v4.26.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T13:30:12Z"
+        },
+        {
+          "id": 378964373,
+          "tag_name": "v4.25.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T11:30:53Z"
+        },
+        {
+          "id": 378917154,
+          "tag_name": "v4.25.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-29T08:02:57Z"
+        },
+        {
+          "id": 372028012,
+          "tag_name": "v4.24.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-18T00:54:17Z"
+        },
+        {
+          "id": 360081643,
+          "tag_name": "v4.23.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-26T17:56:03Z"
+        },
+        {
+          "id": 355802866,
+          "tag_name": "v4.20.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T16:39:48Z"
+        },
+        {
+          "id": 355127526,
+          "tag_name": "v4.19.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:58:49Z"
+        },
+        {
+          "id": 355106622,
+          "tag_name": "v4.19.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:25:47Z"
+        },
+        {
+          "id": 354947911,
+          "tag_name": "v4.19.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T08:14:06Z"
+        },
+        {
+          "id": 354921038,
+          "tag_name": "v4.18.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T07:15:29Z"
+        },
+        {
+          "id": 354911454,
+          "tag_name": "v4.18.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T06:52:49Z"
+        },
+        {
+          "id": 354837524,
+          "tag_name": "v4.18.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:47:09Z"
+        },
+        {
+          "id": 354835335,
+          "tag_name": "v4.18.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:37:53Z"
+        },
+        {
+          "id": 354826341,
+          "tag_name": "v4.18.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:02:01Z"
+        },
+        {
+          "id": 354757370,
+          "tag_name": "v4.18.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T22:50:00Z"
+        },
+        {
+          "id": 354214379,
+          "tag_name": "v4.18.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T05:05:33Z"
+        },
+        {
+          "id": 354062386,
+          "tag_name": "v4.18.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T20:37:39Z"
+        },
+        {
+          "id": 353988490,
+          "tag_name": "v4.18.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T18:11:24Z"
+        },
+        {
+          "id": 353974694,
+          "tag_name": "v4.18.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T17:47:50Z"
+        },
+        {
+          "id": 353961160,
+          "tag_name": "v4.18.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T17:28:00Z"
+        },
+        {
+          "id": 353955467,
+          "tag_name": "v4.18.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T17:20:54Z"
+        },
+        {
+          "id": 353775298,
+          "tag_name": "v4.17.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T12:18:52Z"
+        },
+        {
+          "id": 353621978,
+          "tag_name": "v4.17.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T07:13:11Z"
+        },
+        {
+          "id": 353269233,
+          "tag_name": "v4.17.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-13T15:54:38Z"
+        },
+        {
+          "id": 353138130,
+          "tag_name": "v4.17.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-13T12:26:12Z"
+        },
+        {
+          "id": 352769895,
+          "tag_name": "v4.17.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T14:28:25Z"
+        },
+        {
+          "id": 352768973,
+          "tag_name": "v4.17.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T14:23:39Z"
+        },
+        {
+          "id": 352688889,
+          "tag_name": "v4.17.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T06:37:18Z"
+        },
+        {
+          "id": 352562377,
+          "tag_name": "v4.17.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-11T16:46:45Z"
+        },
+        {
+          "id": 352491553,
+          "tag_name": "v4.17.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-11T10:46:40Z"
+        },
+        {
+          "id": 351561121,
+          "tag_name": "v4.17.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T13:55:19Z"
+        },
+        {
+          "id": 351423122,
+          "tag_name": "v4.17.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T09:02:40Z"
+        },
+        {
+          "id": 351007745,
+          "tag_name": "v4.16.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T15:05:39Z"
+        },
+        {
+          "id": 351000080,
+          "tag_name": "v4.16.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T14:53:18Z"
+        },
+        {
+          "id": 347499244,
+          "tag_name": "v4.16.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T14:04:31Z"
+        },
+        {
+          "id": 347486690,
+          "tag_name": "v4.16.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T13:44:06Z"
+        },
+        {
+          "id": 347364188,
+          "tag_name": "v4.16.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T09:56:27Z"
+        },
+        {
+          "id": 347247903,
+          "tag_name": "v4.16.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-01T05:33:07Z"
+        },
+        {
+          "id": 346721999,
+          "tag_name": "v4.15.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-30T09:18:48Z"
+        },
+        {
+          "id": 346715008,
+          "tag_name": "v4.14.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-30T09:04:55Z"
+        },
+        {
+          "id": 334893480,
+          "tag_name": "v4.13.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-05T11:34:20Z"
+        },
+        {
+          "id": 334491714,
+          "tag_name": "v4.13.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-06-04T17:13:15Z"
+        },
+        {
+          "id": 324490587,
+          "tag_name": "v4.13.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-05-18T18:52:17Z"
+        },
+        {
+          "id": 324169230,
+          "tag_name": "v4.13.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-05-18T09:26:54Z"
+        },
+        {
+          "id": 322477558,
+          "tag_name": "v4.13.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-05-14T10:40:38Z"
+        },
+        {
+          "id": 274075615,
+          "tag_name": "v4.12.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-04T18:20:02Z"
+        },
+        {
+          "id": 274049387,
+          "tag_name": "v4.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-04T11:48:20Z"
+        },
+        {
+          "id": 273944676,
+          "tag_name": "v4.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-03T11:17:17Z"
+        },
+        {
+          "id": 273940913,
+          "tag_name": "v4.9.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-03T09:56:41Z"
+        },
+        {
+          "id": 273865786,
+          "tag_name": "v4.9.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-02T18:38:25Z"
+        },
+        {
+          "id": 273864875,
+          "tag_name": "v4.9.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-01-02T18:31:17Z"
+        },
+        {
+          "id": 272715213,
+          "tag_name": "v4.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-24T16:57:14Z"
+        },
+        {
+          "id": 272398806,
+          "tag_name": "v4.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-23T07:29:45Z"
+        },
+        {
+          "id": 272030179,
+          "tag_name": "v4.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-21T15:31:53Z"
+        },
+        {
+          "id": 267962784,
+          "tag_name": "v4.6.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-06T09:22:54Z"
+        },
+        {
+          "id": 267940861,
+          "tag_name": "v4.6.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-06T06:29:07Z"
+        },
+        {
+          "id": 267940626,
+          "tag_name": "v4.6.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-12-06T06:23:57Z"
+        },
+        {
+          "id": 266214777,
+          "tag_name": "v4.6.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-30T15:50:00Z"
+        },
+        {
+          "id": 266200631,
+          "tag_name": "v4.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-30T11:51:29Z"
+        },
+        {
+          "id": 266198127,
+          "tag_name": "v4.5.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-30T11:01:48Z"
+        },
+        {
+          "id": 266154621,
+          "tag_name": "v4.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-29T18:58:59Z"
+        },
+        {
+          "id": 264344379,
+          "tag_name": "v4.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-21T14:05:15Z"
+        },
+        {
+          "id": 263084163,
+          "tag_name": "v4.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-17T19:48:27Z"
+        },
+        {
+          "id": 262901208,
+          "tag_name": "v4.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-11-17T09:57:56Z"
+        },
+        {
+          "id": 253950677,
+          "tag_name": "v4.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-10-13T02:07:55Z"
+        },
+        {
+          "id": 248869724,
+          "tag_name": "v4.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-21T16:05:20Z"
+        },
+        {
+          "id": 248781195,
+          "tag_name": "v3.18.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-20T10:22:34Z"
+        },
+        {
+          "id": 248775197,
+          "tag_name": "v3.18.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-20T08:15:41Z"
+        },
+        {
+          "id": 248774564,
+          "tag_name": "v3.18.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-09-20T08:01:11Z"
+        },
+        {
+          "id": 238832303,
+          "tag_name": "v3.17.22",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-08-10T07:54:44Z"
+        },
+        {
+          "id": 238829770,
+          "tag_name": "v3.17.21",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-08-10T07:03:56Z"
+        },
+        {
+          "id": 237624182,
+          "tag_name": "v3.17.20",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-08-05T10:55:25Z"
+        },
+        {
+          "id": 236535804,
+          "tag_name": "v3.17.19",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T10:48:02Z"
+        },
+        {
+          "id": 236503789,
+          "tag_name": "v3.17.18",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T08:44:02Z"
+        },
+        {
+          "id": 236500908,
+          "tag_name": "v3.17.17",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T08:30:33Z"
+        },
+        {
+          "id": 236491372,
+          "tag_name": "v3.17.16",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-31T07:51:19Z"
+        },
+        {
+          "id": 236381399,
+          "tag_name": "v3.17.15",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T19:20:08Z"
+        },
+        {
+          "id": 236336841,
+          "tag_name": "v3.17.14",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T16:10:48Z"
+        },
+        {
+          "id": 236320758,
+          "tag_name": "v3.17.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T15:16:55Z"
+        },
+        {
+          "id": 236316801,
+          "tag_name": "v3.17.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-30T15:06:15Z"
+        },
+        {
+          "id": 235440177,
+          "tag_name": "v3.17.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-27T10:31:50Z"
+        },
+        {
+          "id": 234840092,
+          "tag_name": "v3.17.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-24T11:07:59Z"
+        },
+        {
+          "id": 234834241,
+          "tag_name": "v3.17.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-24T10:41:52Z"
+        },
+        {
+          "id": 234798316,
+          "tag_name": "v3.17.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-24T08:29:59Z"
+        },
+        {
+          "id": 234190531,
+          "tag_name": "v3.17.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-22T10:16:20Z"
+        },
+        {
+          "id": 234143163,
+          "tag_name": "v3.17.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-22T07:28:17Z"
+        },
+        {
+          "id": 234139138,
+          "tag_name": "v3.17.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-22T07:09:17Z"
+        },
+        {
+          "id": 233687594,
+          "tag_name": "v3.17.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-19T15:29:47Z"
+        },
+        {
+          "id": 233686329,
+          "tag_name": "v3.17.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-19T15:06:08Z"
+        },
+        {
+          "id": 233569678,
+          "tag_name": "v3.17.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-18T16:44:19Z"
+        },
+        {
+          "id": 230867420,
+          "tag_name": "v3.17.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-08T14:52:43Z"
+        },
+        {
+          "id": 230368768,
+          "tag_name": "v3.17.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-07T07:18:13Z"
+        },
+        {
+          "id": 230273458,
+          "tag_name": "v3.16.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-06T08:30:31Z"
+        },
+        {
+          "id": 230273021,
+          "tag_name": "v3.15.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-06T08:18:52Z"
+        },
+        {
+          "id": 230042890,
+          "tag_name": "v3.14.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-04T13:04:23Z"
+        },
+        {
+          "id": 229048942,
+          "tag_name": "v3.14.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-07-01T09:36:57Z"
+        },
+        {
+          "id": 228589075,
+          "tag_name": "v3.14.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-29T09:11:31Z"
+        },
+        {
+          "id": 228582148,
+          "tag_name": "v3.14.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-29T06:33:06Z"
+        },
+        {
+          "id": 228582062,
+          "tag_name": "v3.14.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-29T06:30:34Z"
+        },
+        {
+          "id": 227950847,
+          "tag_name": "v3.14.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-26T09:05:54Z"
+        },
+        {
+          "id": 227898781,
+          "tag_name": "v3.14.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-26T05:13:05Z"
+        },
+        {
+          "id": 227559284,
+          "tag_name": "v3.13.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-25T06:27:58Z"
+        },
+        {
+          "id": 227406793,
+          "tag_name": "v3.12.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-24T15:27:16Z"
+        },
+        {
+          "id": 227385039,
+          "tag_name": "v3.12.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-24T14:20:36Z"
+        },
+        {
+          "id": 226398083,
+          "tag_name": "v3.12.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-19T10:04:14Z"
+        },
+        {
+          "id": 226209496,
+          "tag_name": "v3.11.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-18T15:24:54Z"
+        },
+        {
+          "id": 225839860,
+          "tag_name": "v3.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-17T12:00:28Z"
+        },
+        {
+          "id": 225318938,
+          "tag_name": "v3.10.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-14T07:34:17Z"
+        },
+        {
+          "id": 225315048,
+          "tag_name": "v3.10.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-14T06:31:29Z"
+        },
+        {
+          "id": 225092579,
+          "tag_name": "v3.10.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-13T08:25:47Z"
+        },
+        {
+          "id": 224869219,
+          "tag_name": "v3.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-06-12T11:32:52Z"
+        },
+        {
+          "id": 214695015,
+          "tag_name": "v3.9.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-25T05:26:07Z"
+        },
+        {
+          "id": 214694208,
+          "tag_name": "v3.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-25T05:16:25Z"
+        },
+        {
+          "id": 214522630,
+          "tag_name": "v3.8.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-24T13:40:35Z"
+        },
+        {
+          "id": 213845935,
+          "tag_name": "v3.8.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-22T06:52:49Z"
+        },
+        {
+          "id": 213687292,
+          "tag_name": "v3.8.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-21T13:49:08Z"
+        },
+        {
+          "id": 213681272,
+          "tag_name": "v3.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-21T13:11:58Z"
+        },
+        {
+          "id": 213643183,
+          "tag_name": "v3.7.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-21T09:10:18Z"
+        },
+        {
+          "id": 213507192,
+          "tag_name": "v3.7.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T19:10:17Z"
+        },
+        {
+          "id": 213504942,
+          "tag_name": "v3.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T18:08:38Z"
+        },
+        {
+          "id": 213492649,
+          "tag_name": "v3.6.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T14:08:48Z"
+        },
+        {
+          "id": 213457702,
+          "tag_name": "v3.6.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T07:03:33Z"
+        },
+        {
+          "id": 213453838,
+          "tag_name": "v3.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-19T06:02:41Z"
+        },
+        {
+          "id": 213360220,
+          "tag_name": "v3.5.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-18T16:37:24Z"
+        },
+        {
+          "id": 213327830,
+          "tag_name": "v3.5.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-18T13:18:30Z"
+        },
+        {
+          "id": 213268403,
+          "tag_name": "v3.5.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-18T06:39:42Z"
+        },
+        {
+          "id": 213158977,
+          "tag_name": "v3.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-17T17:16:04Z"
+        },
+        {
+          "id": 212840726,
+          "tag_name": "v3.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T15:05:09Z"
+        },
+        {
+          "id": 212838386,
+          "tag_name": "v3.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T14:57:18Z"
+        },
+        {
+          "id": 212713025,
+          "tag_name": "v3.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T07:01:35Z"
+        },
+        {
+          "id": 212703382,
+          "tag_name": "v3.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-16T05:58:00Z"
+        },
+        {
+          "id": 212141547,
+          "tag_name": "v3.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-14T08:33:08Z"
+        },
+        {
+          "id": 212063962,
+          "tag_name": "v3.0.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-13T14:13:20Z"
+        },
+        {
+          "id": 212062670,
+          "tag_name": "v3.0.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-13T13:39:12Z"
+        },
+        {
+          "id": 212018845,
+          "tag_name": "v3.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T15:16:04Z"
+        },
+        {
+          "id": 212018574,
+          "tag_name": "v3.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T15:08:47Z"
+        },
+        {
+          "id": 212006583,
+          "tag_name": "v3.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T10:21:18Z"
+        },
+        {
+          "id": 212005887,
+          "tag_name": "v3.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T10:00:14Z"
+        },
+        {
+          "id": 212005566,
+          "tag_name": "v2.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-12T09:49:36Z"
+        },
+        {
+          "id": 211897062,
+          "tag_name": "v2.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-04-11T17:01:03Z"
+        },
+        {
+          "id": 209387071,
+          "tag_name": "v2.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-31T15:54:33Z"
+        },
+        {
+          "id": 209024440,
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T18:11:38Z"
+        },
+        {
+          "id": 209019932,
+          "tag_name": "v1.63.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T17:45:27Z"
+        },
+        {
+          "id": 208987461,
+          "tag_name": "v1.62.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T15:25:12Z"
+        },
+        {
+          "id": 208980411,
+          "tag_name": "v1.61.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-28T15:00:07Z"
+        },
+        {
+          "id": 207621446,
+          "tag_name": "v1.60.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2025-03-22T15:20:36Z"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "observed_count": 216
+    }
+  ],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+}

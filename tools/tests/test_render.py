@@ -136,6 +136,126 @@ def workspace():
 
 
 class RenderTests(unittest.TestCase):
+    def execution_config(self, jobs):
+        return {"jobs": jobs, "buildsTag": "v9.8.7", "solution": "Fixture.slnx", "registry": False,
+                "submodules": [], "tests": {}}
+
+    def test_linux_matrix_is_fresh_jobs_with_independent_setup_and_json_parameters(self):
+        config = self.execution_config({"routes": {"runner": "ubuntu-latest", "timeoutMinutes": 90,
+            "matrix": {"include": [{"id": "route-a"}, {"id": "route-b", "engine": "firefox"}]}, "maxParallel": 2}})
+        legacy, jobs, qualification = renderer.execution_jobs(config, {})
+        self.assertEqual({}, legacy)
+        self.assertEqual({}, qualification)
+        job = jobs["custom-routes"]
+        self.assertEqual(["ci"], job["needs"])
+        self.assertEqual(90, job["timeout-minutes"])
+        self.assertEqual("ubuntu-latest", job["runs-on"])
+        self.assertFalse(job["strategy"]["fail-fast"])
+        self.assertEqual(2, job["strategy"]["max-parallel"])
+        self.assertEqual({"job-name": "routes"}, job["steps"][0]["with"])
+        self.assertEqual("${{ toJSON(matrix) }}", job["steps"][1]["env"]["HEXALITH_JOB_PARAMETERS"])
+        self.assertEqual({"contents": "read"}, job["permissions"])
+
+    def test_mutation_uses_the_selected_contract_resource_bytes_and_dependency_results(self):
+        config = self.execution_config({
+            "workers": {"runner": "ubuntu-24.04", "trigger": "nightly", "timeoutMinutes": 360,
+                        "resourceProfile": "mutation", "matrix": {"include": [{"id": "happy"}, {"id": "error"}]}},
+            "aggregate": {"runner": "ubuntu-24.04", "trigger": "nightly", "needs": ["workers"],
+                          "runAfterFailure": True}})
+        profile = {"container": {"image": "ghcr.io/example/sdk@sha256:" + "a" * 64,
+                                 "options": "--cpus=4 --memory=10g --memory-swap=10g"}, "env": {"DOTNET_PROCESSOR_COUNT": "2"}}
+        _, ci, jobs = renderer.execution_jobs(config, {"x-resource-profiles": {"mutation": profile}})
+        self.assertEqual({}, ci)
+        self.assertEqual(profile["container"], jobs["custom-workers"]["container"])
+        self.assertEqual(profile["env"], jobs["custom-workers"]["env"])
+        self.assertEqual(360, jobs["custom-workers"]["timeout-minutes"])
+        self.assertEqual(["custom-workers"], jobs["custom-aggregate"]["needs"])
+        self.assertIn("!cancelled()", jobs["custom-aggregate"]["if"])
+        self.assertEqual("${{ toJSON(needs) }}", jobs["custom-aggregate"]["steps"][1]["env"]["HEXALITH_JOB_NEEDS"])
+        with self.assertRaisesRegex(renderer.RenderError, "resource profile"):
+            renderer.execution_jobs(config, {})
+
+    def test_private_qualification_is_main_manual_only_with_action_step_secrets(self):
+        runner = {"group": "azure-private", "labels": ["self-hosted", "linux", "x64"]}
+        config = self.execution_config({"azure": {"runner": runner, "trigger": "manual", "environment": "azure-conformance",
+            "secrets": {"AUTHORITY_JSON": "PAYLOAD_AZURE_AUTHORITY_JSON"}}})
+        _, ci, jobs = renderer.execution_jobs(config, {})
+        self.assertFalse(ci)
+        job = jobs["custom-azure"]
+        self.assertEqual(["qualification-ci"], job["needs"])
+        self.assertIn("needs.qualification-ci.result == 'success'", job["if"])
+        self.assertEqual("Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v9.8.7", jobs["qualification-ci"]["uses"])
+        self.assertEqual(runner, job["runs-on"])
+        self.assertEqual("azure-conformance", job["environment"])
+        self.assertIn("github.ref == 'refs/heads/main'", job["if"])
+        self.assertIn("github.event_name == 'workflow_dispatch'", job["if"])
+        self.assertNotIn("env", job)
+        self.assertNotIn("env", job["steps"][0])
+        self.assertEqual({"environment": "preserve", "authority-sha256": "${{ inputs.authority-sha256 }}",
+                          "source-sha": "${{ needs.qualification-ci.outputs.source-sha }}"}, job["steps"][0]["with"])
+        self.assertEqual("${{ secrets.PAYLOAD_AZURE_AUTHORITY_JSON }}", job["steps"][1]["env"]["AUTHORITY_JSON"])
+
+    def test_legacy_private_array_form_keeps_the_same_green_source_and_preserved_fixture(self):
+        config = self.execution_config({"azure": {"runner": {"group": "private-ephemeral", "labels": ["self-hosted", "linux", "x64"]},
+            "trigger": "manual", "environment": "owner-approval", "preparation": "build-only", "timeoutMinutes": 180,
+            "secrets": ["AUTHORITY_JSON", "CUSTODY_JSON"]}})
+        _, ci, jobs = renderer.execution_jobs(config, {})
+        self.assertFalse(ci)
+        job = jobs["custom-azure"]
+        self.assertEqual(180, job["timeout-minutes"])
+        self.assertEqual(["qualification-ci"], job["needs"])
+        self.assertEqual("preserve", job["steps"][0]["with"]["environment"])
+        for name in ("AUTHORITY_JSON", "CUSTODY_JSON"):
+            self.assertEqual("${{ secrets." + name + " }}", job["steps"][1]["env"][name])
+        self.assertNotIn("env", job["steps"][0])
+        self.assertIn('"azure"', jobs["qualification-ci"]["if"])
+
+    def test_private_manual_aggregate_closure_runs_green_ci_before_private_workers(self):
+        config = self.execution_config({"private": {"runner": {"group": "private", "labels": ["self-hosted", "linux", "x64"]},
+            "trigger": "manual", "environment": "approval"}, "aggregate": {"runner": "ubuntu-latest", "trigger": "manual",
+            "needs": ["private"], "runAfterFailure": True}})
+        _, _, jobs = renderer.execution_jobs(config, {})
+        self.assertIn('"aggregate"', jobs["qualification-ci"]["if"])
+        self.assertIn('"aggregate"', jobs["custom-private"]["if"])
+        self.assertEqual(["custom-private"], jobs["custom-aggregate"]["needs"])
+
+    def test_platform_authority_and_additional_sdk_use_only_the_selected_complete_interface(self):
+        names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
+        config = self.execution_config({"windows": {"runner": "windows-latest"}})
+        config.update(moduleManifest="module.json", windowsCheckout={"exclude": []}, additionalSdkVersion="10.0.404")
+        config["tests"]["additional"] = ["test/Outside.csproj"]
+        interfaces = {"ci_outputs": {name: {} for name in (*names, "additional-test-projects")},
+                      "prepare_inputs": {name: {} for name in (*names, "additional-test-projects", "additional-sdk-version")},
+                      "ci_inputs": {"additional-sdk-version": {"type": "string"}}, "ci_permissions": {"contents": "read"}}
+        legacy, jobs, _ = renderer.execution_jobs(config, {}, interfaces)
+        self.assertFalse(legacy)
+        prepare = jobs["windows-windows"]["steps"][0]["with"]
+        for name in names:
+            self.assertEqual("${{ needs.ci.outputs." + name + " }}", prepare[name])
+        self.assertEqual("10.0.404", prepare["additional-sdk-version"])
+        self.assertEqual("${{ needs.ci.outputs.additional-test-projects }}", prepare["additional-test-projects"])
+        self.assertEqual({"additional-sdk-version": "10.0.404"}, renderer.shared_ci_call(config, interfaces)["with"])
+        del interfaces["prepare_inputs"]["module-authority"]
+        with self.assertRaisesRegex(renderer.RenderError, "platform authority"):
+            renderer.execution_jobs(config, {}, interfaces)
+
+    def test_qualification_template_has_no_publication_and_keeps_manual_dependencies(self):
+        config = self.execution_config({"worker": {"runner": "ubuntu-latest", "trigger": "manual"},
+            "aggregate": {"runner": "ubuntu-latest", "trigger": "manual", "needs": ["worker"], "runAfterFailure": True}})
+        _, _, jobs = renderer.execution_jobs(config, {})
+        self.assertIn('"aggregate"', jobs["custom-worker"]["if"])
+        data = renderer.rendered_bytes(renderer.templates(ROOT), renderer.QUALIFICATION,
+                                       {"qualification_jobs": jobs, "qualification_choices": ["nightly", "worker", "aggregate"]})
+        workflow = renderer.yaml_document(data, "qualification.yml")
+        self.assertEqual({"custom-worker", "custom-aggregate"}, set(workflow["jobs"]))
+        self.assertEqual(["schedule", "workflow_dispatch"], list(workflow["on"]))
+        self.assertFalse(workflow["permissions"])
+        self.assertNotIn("publish", data.decode())
+        self.assertNotIn(r"\u0027", data.decode())
+        self.assertNotIn(r"\u0026", data.decode())
+        self.assertEqual("${{ inputs.parameters || '{}' }}",
+                         workflow["jobs"]["custom-worker"]["steps"][1]["env"]["HEXALITH_QUALIFICATION_PARAMETERS"])
+
     def assert_arguments_supplied(self, supplied, declarations):
         self.assertLessEqual(set(supplied), set(declarations))
         required = {name for name, options in declarations.items() if options.get("required") is True}
@@ -840,20 +960,12 @@ class RenderTests(unittest.TestCase):
                              {"kind": "absent-line", "path": ".husky/commit-msg", "pattern": r"\bcommitlint\b"})
 
     def test_additive_windows_outputs_require_a_contract_that_defines_the_fields(self):
-        configuration = {"jobs": {"product-tests": {"runner": "windows-latest"}},
-                         "moduleManifest": None, "windowsCheckout": None}
-        context = {"config": configuration, "ci_workflow": "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@source-fixture",
-                   "ci_permissions": {"contents": "read"}, "ci_timeout_minutes": None,
-                   "prepare_action": "Hexalith/Hexalith.Builds/Github/prepare@source-fixture"}
-        environment = renderer.templates(ROOT)
-        rendered = renderer.rendered_bytes(environment, ".github/workflows/ci.yml.j2", context)
-        workflow = renderer.yaml_document(rendered, "source Windows caller")
-        forwarded = workflow["jobs"]["windows-product-tests"]["steps"][0]["with"]
         names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
-        self.assertEqual({name: "${{ needs.ci.outputs." + name + " }}" for name in names}, forwarded)
-        # Model the next released interface in tagged Git objects. The owning
-        # checkout may still be pinned to an older release during preparation.
         with workspace() as fixture:
+            fixture.document({"solution": "Fixture.slnx", "jobs": {"product-tests": {"runner": "windows-latest"}}})
+            fixture.cli()
+            legacy = fixture.yaml(".github/workflows/ci.yml")
+            self.assertEqual(set(names[:3]), set(legacy["jobs"]["windows-product-tests"]["steps"][0]["with"]))
             workflow_path = ".github/workflows/ci.yml"
             action_path = "Github/prepare/action.yml"
             producer = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{workflow_path}"), "tagged producer")
@@ -864,15 +976,11 @@ class RenderTests(unittest.TestCase):
                     "value": "${{ jobs.ci.outputs." + name + " }}"}
                 prepare["inputs"][name] = {"description": "Synthetic additive interface fixture.", "default": ""}
             fixture.change_tag({workflow_path: json.dumps(producer).encode(), action_path: json.dumps(prepare).encode()})
+            fixture.cli()
+            forwarded = fixture.yaml(".github/workflows/ci.yml")["jobs"]["windows-product-tests"]["steps"][0]["with"]
+            self.assertEqual({name: "${{ needs.ci.outputs." + name + " }}" for name in names}, forwarded)
             with renderer.pinned_contract(fixture.root) as contract:
-                outputs = renderer.yaml_document((contract.root / workflow_path).read_bytes(), "tagged producer")["on"]["workflow_call"]["outputs"]
-                inputs = renderer.yaml_document((contract.root / action_path).read_bytes(), "tagged prepare")["inputs"]
-                self.assertTrue(set(forwarded) <= outputs.keys())
-                self.assert_arguments_supplied(forwarded, inputs)
-        del configuration["moduleManifest"]
-        del configuration["windowsCheckout"]
-        legacy = renderer.yaml_document(renderer.rendered_bytes(environment, ".github/workflows/ci.yml.j2", context), "legacy caller")
-        self.assertEqual(set(names[:3]), set(legacy["jobs"]["windows-product-tests"]["steps"][0]["with"]))
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
 
     def test_callers_match_pinned_workflow_and_composite_interfaces(self):
         with workspace() as fixture, renderer.pinned_contract(fixture.root) as contract:
@@ -1163,6 +1271,27 @@ def lint_fixtures() -> None:
                        for path in (fixture.root / "rendered").glob("*/.github/workflows/*.yml"))
         if len(paths) != 8:
             raise ValueError("Expected eight nonempty representative caller paths")
+        # Syntax/security fixture for the future execution API. This does not
+        # assert that the currently published tag implements that API.
+        execution = RenderTests().execution_config({
+            "segments": {"runner": "ubuntu-24.04", "trigger": "nightly", "timeoutMinutes": 360,
+                         "matrix": {"include": [{"id": "happy-path"}, {"id": "error-handling"}]}},
+            "azure-map": {"runner": {"group": "private-ephemeral", "labels": ["self-hosted", "linux", "x64"]},
+                          "trigger": "manual", "environment": "approval",
+                          "secrets": {"AUTHORITY_JSON": "PAYLOAD_AZURE_AUTHORITY_JSON"}},
+            "azure-array": {"runner": {"group": "private-ephemeral", "labels": ["self-hosted", "linux", "x64"]},
+                            "trigger": "manual", "environment": "approval", "preparation": "build-only",
+                            "timeoutMinutes": 180, "secrets": ["AUTHORITY_JSON"]}})
+        execution["buildsTag"] = contract.tag
+        _, _, jobs = renderer.execution_jobs(execution, {})
+        jobs["qualification-ci"]["permissions"] = renderer.permission_union(renderer.yaml_document(
+            (contract.root / ".github/workflows/ci.yml").read_bytes(), "selected CI"))
+        relative = "rendered/Hexalith.Fixture-execution/.github/workflows/qualification.yml"
+        destination = fixture.root / relative
+        destination.parent.mkdir(parents=True)
+        destination.write_bytes(renderer.rendered_bytes(renderer.templates(ROOT), renderer.QUALIFICATION, {
+            "qualification_jobs": jobs, "qualification_choices": ["nightly", "azure-array", "azure-map"]}))
+        paths.append(relative)
         installer = load_module("_tagged_linter_installer", contract.root / "Tools/ci/lint_workflows.py")
         pins = json.loads((contract.root / "Tools/ci/tools.json").read_bytes())
         # A private per-run cache: no other local user can swap a binary that

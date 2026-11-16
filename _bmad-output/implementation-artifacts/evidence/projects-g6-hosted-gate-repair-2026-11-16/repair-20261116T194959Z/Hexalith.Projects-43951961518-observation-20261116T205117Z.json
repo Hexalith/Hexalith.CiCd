@@ -1,0 +1,1006 @@
+{
+  "observed_at": "2026-11-16T20:51:18.597500+00:00",
+  "run": {
+    "id": 43951961518,
+    "name": "CI",
+    "node_id": "WFR_kwLOM-u9Ks8AAAAKO721rg",
+    "head_branch": "main",
+    "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+    "path": ".github/workflows/ci.yml",
+    "display_title": "build(cicd): restore reviewed Projects gate prerequisites",
+    "run_number": 614,
+    "event": "push",
+    "status": "in_progress",
+    "conclusion": null,
+    "workflow_id": 305416542,
+    "check_suite_id": 118986022808,
+    "check_suite_node_id": "CS_kwDOM-u9Ks8AAAAbtB6fmA",
+    "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+    "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+    "pull_requests": [],
+    "created_at": "2026-11-16T20:38:59Z",
+    "updated_at": "2026-11-16T20:44:20Z",
+    "actor": {
+      "login": "hexalith-cicd[bot]",
+      "id": 354212241,
+      "node_id": "BOT_kgDOFRzZkQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D",
+      "html_url": "https://github.com/apps/hexalith-cicd",
+      "followers_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [
+      {
+        "path": "Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+        "sha": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b"
+      }
+    ],
+    "run_started_at": "2026-11-16T20:38:59Z",
+    "triggering_actor": {
+      "login": "hexalith-cicd[bot]",
+      "id": 354212241,
+      "node_id": "BOT_kgDOFRzZkQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D",
+      "html_url": "https://github.com/apps/hexalith-cicd",
+      "followers_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hexalith-cicd%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518/jobs",
+    "logs_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518/logs",
+    "check_suite_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-suites/118986022808",
+    "artifacts_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518/artifacts",
+    "cancel_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518/cancel",
+    "rerun_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/workflows/305416542",
+    "head_commit": {
+      "id": "7da7e95b670838de3181e946709e1246695a0e72",
+      "tree_id": "2a7fdf8f1559190d80257dbc5a79dc1c06069aeb",
+      "message": "build(cicd): restore reviewed Projects gate prerequisites",
+      "timestamp": "2026-11-16T20:38:54Z",
+      "author": {
+        "name": "github-actions[bot]",
+        "email": "41898282+github-actions[bot]@users.noreply.github.com"
+      },
+      "committer": {
+        "name": "github-actions[bot]",
+        "email": "41898282+github-actions[bot]@users.noreply.github.com"
+      }
+    },
+    "repository": {
+      "id": 871087402,
+      "node_id": "R_kgDOM-u9Kg",
+      "name": "Hexalith.Projects",
+      "full_name": "Hexalith/Hexalith.Projects",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/deployments"
+    },
+    "head_repository": {
+      "id": 871087402,
+      "node_id": "R_kgDOM-u9Kg",
+      "name": "Hexalith.Projects",
+      "full_name": "Hexalith/Hexalith.Projects",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/deployments"
+    }
+  },
+  "jobs": [
+    {
+      "id": 133596500181,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGvjQ1Q",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133596500181",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133596500181",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-16T20:39:00Z",
+      "started_at": "2026-11-16T20:39:03Z",
+      "completed_at": "2026-11-16T20:41:23Z",
+      "name": "Validate workflow policy",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T20:39:04Z",
+          "completed_at": "2026-11-16T20:39:04Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T20:39:04Z",
+          "completed_at": "2026-11-16T20:39:28Z"
+        },
+        {
+          "name": "Validate production-authority scheduling guard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T20:39:28Z",
+          "completed_at": "2026-11-16T20:39:49Z"
+        },
+        {
+          "name": "Validate BMAD Loop hook relay",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T20:39:49Z",
+          "completed_at": "2026-11-16T20:39:49Z"
+        },
+        {
+          "name": "Validate shared skill renderer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T20:39:49Z",
+          "completed_at": "2026-11-16T20:39:53Z"
+        },
+        {
+          "name": "Validate Git whitespace policy",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T20:39:53Z",
+          "completed_at": "2026-11-16T20:39:53Z"
+        },
+        {
+          "name": "Validate Build Auto workspace ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T20:39:53Z",
+          "completed_at": "2026-11-16T20:39:55Z"
+        },
+        {
+          "name": "Validate BMAD legacy cleanup atomicity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T20:39:55Z",
+          "completed_at": "2026-11-16T20:39:58Z"
+        },
+        {
+          "name": "Validate BMAD merge atomicity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-16T20:39:58Z",
+          "completed_at": "2026-11-16T20:40:36Z"
+        },
+        {
+          "name": "Validate release package tool fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-16T20:40:36Z",
+          "completed_at": "2026-11-16T20:40:40Z"
+        },
+        {
+          "name": "Validate release workflow shell behavior",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-16T20:40:40Z",
+          "completed_at": "2026-11-16T20:40:41Z"
+        },
+        {
+          "name": "Validate G-6 packet gitlink check fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-16T20:40:41Z",
+          "completed_at": "2026-11-16T20:40:41Z"
+        },
+        {
+          "name": "Validate status-aware G-6 gate fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-16T20:40:41Z",
+          "completed_at": "2026-11-16T20:40:41Z"
+        },
+        {
+          "name": "Initialize Builds for current G-6 policy fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-16T20:40:41Z",
+          "completed_at": "2026-11-16T20:40:48Z"
+        },
+        {
+          "name": "Validate current G-6 change selection",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-16T20:40:48Z",
+          "completed_at": "2026-11-16T20:40:48Z"
+        },
+        {
+          "name": "Validate workflow policy regression fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-16T20:40:48Z",
+          "completed_at": "2026-11-16T20:41:20Z"
+        },
+        {
+          "name": "Validate CI/CD invariants",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-16T20:41:20Z",
+          "completed_at": "2026-11-16T20:41:21Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 34,
+          "started_at": "2026-11-16T20:41:21Z",
+          "completed_at": "2026-11-16T20:41:21Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 35,
+          "started_at": "2026-11-16T20:41:21Z",
+          "completed_at": "2026-11-16T20:41:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133596500181",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000088095,
+      "runner_name": "GitHub Actions 1000088095",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 133597914014,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGw5jng",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133597914014",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133597914014",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-16T20:41:23Z",
+      "started_at": "2026-11-16T20:42:52Z",
+      "completed_at": "2026-11-16T20:47:22Z",
+      "name": "P1R candidate evidence replay",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T20:42:53Z",
+          "completed_at": "2026-11-16T20:42:56Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T20:42:56Z",
+          "completed_at": "2026-11-16T20:43:23Z"
+        },
+        {
+          "name": "Initialize root-declared submodules",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T20:43:23Z",
+          "completed_at": "2026-11-16T20:46:41Z"
+        },
+        {
+          "name": "Fetch EventStore history and tags read by the P1R evidence replay",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T20:46:41Z",
+          "completed_at": "2026-11-16T20:47:18Z"
+        },
+        {
+          "name": "Replay P1R candidate evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T20:47:18Z",
+          "completed_at": "2026-11-16T20:47:21Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-16T20:47:21Z",
+          "completed_at": "2026-11-16T20:47:21Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-16T20:47:21Z",
+          "completed_at": "2026-11-16T20:47:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133597914014",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000088105,
+      "runner_name": "GitHub Actions 1000088105",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 133597914034,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGw5jsg",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133597914034",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133597914034",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-11-16T20:41:23Z",
+      "started_at": "2026-11-16T20:44:19Z",
+      "completed_at": null,
+      "name": "G-6 current runtime qualification",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T20:44:19Z",
+          "completed_at": "2026-11-16T20:44:23Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T20:44:23Z",
+          "completed_at": "2026-11-16T20:44:39Z"
+        },
+        {
+          "name": "Initialize root-declared submodules",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T20:44:39Z",
+          "completed_at": "2026-11-16T20:46:37Z"
+        },
+        {
+          "name": "Initialize .NET",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T20:46:37Z",
+          "completed_at": "2026-11-16T20:46:38Z"
+        },
+        {
+          "name": "Validate current G-6 preflight",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T20:46:38Z",
+          "completed_at": "2026-11-16T20:49:21Z"
+        },
+        {
+          "name": "Validate source mapper and current tool boundaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T20:49:21Z",
+          "completed_at": "2026-11-16T20:49:21Z"
+        },
+        {
+          "name": "Pull pinned G-6 PostgreSQL fixture image",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T20:49:21Z",
+          "completed_at": "2026-11-16T20:49:25Z"
+        },
+        {
+          "name": "Resolve reviewed direct Platform revision",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T20:49:25Z",
+          "completed_at": "2026-11-16T20:49:25Z"
+        },
+        {
+          "name": "Acquire reviewed G-6 catalog",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-16T20:49:25Z",
+          "completed_at": "2026-11-16T20:49:26Z"
+        },
+        {
+          "name": "Restore effective G-6 package graphs",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-11-16T20:49:26Z",
+          "completed_at": "2026-11-16T20:51:18Z"
+        },
+        {
+          "name": "Audit and qualify current G-6 when required",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-16T20:51:18Z",
+          "completed_at": "2026-11-16T20:51:18Z"
+        },
+        {
+          "name": "Upload G-6 result and diagnostics",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 12,
+          "started_at": "2026-11-16T20:51:18Z",
+          "completed_at": null
+        },
+        {
+          "name": "Post Initialize .NET",
+          "status": "pending",
+          "conclusion": null,
+          "number": 23,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "pending",
+          "conclusion": null,
+          "number": 24,
+          "started_at": null,
+          "completed_at": null
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133597914034",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000088111,
+      "runner_name": "GitHub Actions 1000088111",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 133597914418,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGw5lMg",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133597914418",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133597914418",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-16T20:41:23Z",
+      "started_at": "2026-11-16T20:42:31Z",
+      "completed_at": "2026-11-16T20:45:31Z",
+      "name": "ci / build-and-test",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T20:42:32Z",
+          "completed_at": "2026-11-16T20:42:38Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T20:42:38Z",
+          "completed_at": "2026-11-16T20:42:55Z"
+        },
+        {
+          "name": "Validate governed CI contract",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-11-16T20:42:55Z",
+          "completed_at": "2026-11-16T20:42:55Z"
+        },
+        {
+          "name": "Checkout approved Builds actions",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-16T20:42:55Z",
+          "completed_at": "2026-11-16T20:42:55Z"
+        },
+        {
+          "name": "Evaluate governed workflow provenance",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5,
+          "started_at": "2026-11-16T20:42:55Z",
+          "completed_at": "2026-11-16T20:42:55Z"
+        },
+        {
+          "name": "Initialize root-declared submodules (governed)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-16T20:42:55Z",
+          "completed_at": "2026-11-16T20:42:55Z"
+        },
+        {
+          "name": "Initialize root-declared submodules",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T20:42:55Z",
+          "completed_at": "2026-11-16T20:44:49Z"
+        },
+        {
+          "name": "Initialize .NET",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T20:44:49Z",
+          "completed_at": "2026-11-16T20:44:51Z"
+        },
+        {
+          "name": "Checkout workflow-owned Builds preparation",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-16T20:44:51Z",
+          "completed_at": "2026-11-16T20:44:51Z"
+        },
+        {
+          "name": "Prepare module build",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-16T20:44:51Z",
+          "completed_at": "2026-11-16T20:44:51Z"
+        },
+        {
+          "name": "Cache NuGet packages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-16T20:44:51Z",
+          "completed_at": "2026-11-16T20:45:03Z"
+        },
+        {
+          "name": "Validate test platform input",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-16T20:45:03Z",
+          "completed_at": "2026-11-16T20:45:03Z"
+        },
+        {
+          "name": "Prepare package dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-16T20:45:03Z",
+          "completed_at": "2026-11-16T20:45:03Z"
+        },
+        {
+          "name": "Restore",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-16T20:45:03Z",
+          "completed_at": "2026-11-16T20:45:19Z"
+        },
+        {
+          "name": "Build",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 15,
+          "started_at": "2026-11-16T20:45:19Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Validate package consumer references",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Unit tests (Tier 1, VSTest)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Unit tests (Tier 1, Microsoft.Testing.Platform)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Install and initialize Dapr (governed)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Install and initialize Dapr",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Integration tests (Tier 2, VSTest)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Integration tests (Tier 2, Microsoft.Testing.Platform)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Validate coverage gates",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Fail on blocking test failures",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 24,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:28Z"
+        },
+        {
+          "name": "Upload test and coverage evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-11-16T20:45:28Z",
+          "completed_at": "2026-11-16T20:45:29Z"
+        },
+        {
+          "name": "Post Cache NuGet packages",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 48,
+          "started_at": "2026-11-16T20:45:29Z",
+          "completed_at": "2026-11-16T20:45:29Z"
+        },
+        {
+          "name": "Post Initialize .NET",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 49,
+          "started_at": "2026-11-16T20:45:29Z",
+          "completed_at": "2026-11-16T20:45:29Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 50,
+          "started_at": "2026-11-16T20:45:29Z",
+          "completed_at": "2026-11-16T20:45:30Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 51,
+          "started_at": "2026-11-16T20:45:30Z",
+          "completed_at": "2026-11-16T20:45:30Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133597914418",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000088103,
+      "runner_name": "GitHub Actions 1000088103",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 133600365760,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGzPMwA",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133600365760",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133600365760",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-16T20:45:32Z",
+      "started_at": "2026-11-16T20:45:32Z",
+      "completed_at": "2026-11-16T20:45:31Z",
+      "name": "ci / aspire-tests",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133600365760",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 133600366335,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGzPO_w",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133600366335",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133600366335",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-16T20:45:32Z",
+      "started_at": "2026-11-16T20:45:32Z",
+      "completed_at": "2026-11-16T20:45:31Z",
+      "name": "ci / performance-tests",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133600366335",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 133600368343,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGzPW1w",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133600368343",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133600368343",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-16T20:45:32Z",
+      "started_at": "2026-11-16T20:45:32Z",
+      "completed_at": "2026-11-16T20:45:32Z",
+      "name": "Projects generated-artifact gates",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133600368343",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 133600368530,
+      "run_id": 43951961518,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOM-u9Ks8AAAAfGzPXkg",
+      "head_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/jobs/133600368530",
+      "html_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518/job/133600368530",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-16T20:45:32Z",
+      "started_at": "2026-11-16T20:45:32Z",
+      "completed_at": "2026-11-16T20:45:32Z",
+      "name": "Scheduled managed AppHost E2E",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/check-runs/133600368530",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}

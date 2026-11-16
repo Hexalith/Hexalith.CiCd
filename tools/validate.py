@@ -118,6 +118,13 @@ def check_module(project: Path, repository: str, contract) -> None:
             required[f"{workspace}/{name}"] = "npm preparation input"
     if config.get("dotnetTools", False):
         required[".config/dotnet-tools.json"] = ".NET tool preparation input"
+    for options in config["jobs"].values():
+        setup = options.get("setup", {})
+        for workspace in setup.get("npmWorkspaces", []):
+            for name in ("package.json", "package-lock.json"):
+                required[f"{workspace}/{name}"] = "job npm preparation input"
+        if setup.get("dotnetTools", False):
+            required[".config/dotnet-tools.json"] = "job .NET tool preparation input"
     with tempfile.TemporaryDirectory(prefix="hexalith-validate-module-") as directory:
         clone = Path(directory) / "module"
         clone_module(repository, clone)

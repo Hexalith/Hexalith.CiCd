@@ -1,0 +1,148 @@
+"""Use the existing attended NuGet UI for an additive, scoped Tenants policy.
+
+No cookies, browser storage, hidden form values or credentials are read. The
+prepare action fills a reviewable form; submit checks every field and scope.
+"""
+import argparse
+import base64
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+import subprocess
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("action", choices=("prepare", "submit", "readback", "reload"))
+parser.add_argument("module", choices=("Tenants",))
+parser.add_argument("--attempt", type=int, default=1)
+arguments = parser.parse_args()
+module = "Hexalith." + arguments.module
+HERE = Path(__file__).resolve().parent
+if arguments.action in ("prepare", "submit"):
+    assert json.loads((HERE / 'provision-registry.json').read_text())['result'] == 'pass'
+destination = HERE / ("nuget-" + arguments.module.lower() + "-" + arguments.action + "-" + str(arguments.attempt) + ".json")
+assert not destination.exists(), 'Retain previous UI evidence; use a new attempt number' 
+code = r"""[Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+Add-Type -AssemblyName UIAutomationClient
+Add-Type -AssemblyName UIAutomationTypes
+$action='ACTION';$module='MODULE'
+$root=[System.Windows.Automation.AutomationElement]::RootElement
+$docs=$root.FindAll([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty,[System.Windows.Automation.ControlType]::Document)))
+$doc=$null
+foreach($candidate in $docs){if($candidate.Current.Name -like 'NuGet Gallery*Trusted Publishing*' -and -not $candidate.Current.IsOffscreen){$doc=$candidate;break}}
+if($null -eq $doc){throw 'Existing authenticated Trusted Publishing document unavailable'}
+$walker=[System.Windows.Automation.TreeWalker]::ControlViewWalker;$verifiedWindow=$doc
+while($verifiedWindow.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window){$verifiedWindow=$walker.GetParent($verifiedWindow)}
+$verifiedOrigin=$false
+$windowNodes=$verifiedWindow.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition)
+foreach($node in $windowNodes){if($node.Current.Name -in @('Address and search bar',"Barre d'adresse et de recherche")){
+ $address=$node.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+ if($address -match '^(https://)?(www\.)?nuget\.org/account/TrustedPublishing/?(?:\?|$)'){$verifiedOrigin=$true}
+}}
+if(-not $verifiedOrigin){throw 'NuGet Trusted Publishing origin not verified'}
+if($action -eq 'reload'){
+ $draft=$doc.FindFirst([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,'__policy-name-0')))
+ if($null -ne $draft -and $draft.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne ''){throw 'Preserve the unsaved policy form before reload'}
+ $window=$doc;$walker=[System.Windows.Automation.TreeWalker]::ControlViewWalker
+ while($window.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window){$window=$walker.GetParent($window)}
+ $reload=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty,'Actualiser')))
+ if($null -eq $reload){throw 'Observed browser Reload control unavailable'}
+ $reload.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+ [pscustomobject]@{action='Reload current authenticated policy page';reload_invoked=$true} | ConvertTo-Json -Compress
+ exit
+}
+function Control($id){return $doc.FindFirst([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,$id)))}
+$expected=@{'__policy-name-0'=($module+' hexalith-release');'__package-owner-0'='Hexalith';'__provider-0'='GitHub Actions';'__github-repository-owner-0'='Hexalith';'__github-repository-0'=$module;'__github-workflow-file-0'='release.yml';'__github-environment-0'='hexalith-release';'__scope-subjects-input-0'=($module+'*')}
+if($action -eq 'prepare'){
+ $existingName=Control '__policy-name-0'
+ if($null -ne $existingName){
+  $value=$existingName.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+  if($value -ne '' -and $value -ne ($module+' hexalith-release')){throw 'Preserve another unsaved policy form'}
+ }
+ if($null -eq (Control '__policy-name-0')){
+  $create=Control 'show-create-container'
+  $create.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
+  Start-Sleep -Milliseconds 500
+  for($i=0;$i -lt 100 -and $null -eq (Control '__policy-name-0');$i++){Start-Sleep -Milliseconds 100}
+ }
+ if($null -eq (Control '__policy-name-0')){throw 'New policy form did not open'}
+ $owner=Control '__package-owner-0'
+ if($owner.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne 'Hexalith'){
+  $ownerPattern=$owner.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+  if($ownerPattern.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed){$ownerPattern.Expand()}
+  $bounds=$owner.Current.BoundingRectangle
+  $options=$root.FindAll([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty,'Hexalith')))
+  $choices=@($options|Where-Object {
+   $r=$_.Current.BoundingRectangle
+   $_.Current.ControlType -eq [System.Windows.Automation.ControlType]::ListItem -and -not $_.Current.IsOffscreen -and
+   [Math]::Abs($r.Left-$bounds.Left) -lt 20 -and $r.Top -gt ($bounds.Top-500) -and $r.Top -lt ($bounds.Bottom+600)
+  })
+  if($choices.Count -ne 1){throw 'Exact native owner choice is not unique'}
+  $choices[0].GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+ }
+ for($i=0;$i -lt 100 -and $owner.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne 'Hexalith';$i++){Start-Sleep -Milliseconds 100}
+ if($owner.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne 'Hexalith'){throw 'Package owner selection failed'}
+ foreach($id in $expected.Keys){if($id -notin @('__package-owner-0','__provider-0')){(Control $id).GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($expected[$id])}}
+ foreach($id in @('__push-scope-checked-0','__unlist-scope-checked-0','__stage-scope-checked-0')){
+  $pattern=(Control $id).GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+  $desired=if($id -eq '__push-scope-checked-0'){[System.Windows.Automation.ToggleState]::On}else{[System.Windows.Automation.ToggleState]::Off}
+  if($pattern.Current.ToggleState -ne $desired){$pattern.Toggle();Start-Sleep -Milliseconds 300}
+ }
+ (Control '__package-push-scope-0').GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
+ (Control '__github-environment-0').SetFocus()
+}
+if($action -in @('prepare','submit')){
+ foreach($id in $expected.Keys){if((Control $id).GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value -ne $expected[$id]){throw ('Policy field mismatch: '+$id)}}
+ foreach($id in @('__push-scope-checked-0','__unlist-scope-checked-0','__stage-scope-checked-0')){
+  $actual=(Control $id).GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState
+  $desired=if($id -eq '__push-scope-checked-0'){[System.Windows.Automation.ToggleState]::On}else{[System.Windows.Automation.ToggleState]::Off}
+  if($actual -ne $desired){throw 'Policy scope mismatch'}
+ }
+ if(-not (Control '__package-push-scope-0').GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Current.IsSelected){throw 'Push scope mismatch'}
+ if($action -eq 'submit'){
+  $submit=$null
+  $buttons=$doc.FindAll([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty,[System.Windows.Automation.ControlType]::Button)))
+  foreach($button in $buttons){if($button.Current.Name -eq 'Create' -and $button.Current.AutomationId -eq ''){$submit=$button;break}}
+  if($null -eq $submit -or -not $submit.Current.IsEnabled){throw 'Policy submit unavailable'}
+  $submit.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+ }
+ [pscustomobject]@{action=$action;module=$module;expected_fields=$expected;push=$true;push_new_packages=$true;unlist=$false;stage=$false;legacy_policies_removed=$false} | ConvertTo-Json -Depth 4 -Compress
+}else{
+ for($i=0;$i -lt 100 -and $null -eq (Control '__start-edit-18796');$i++){Start-Sleep -Milliseconds 100}
+ if($null -eq (Control '__start-edit-18796')){throw 'Known baseline policy has not loaded; do not infer an empty inventory'}
+ $nodes=$doc.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition)
+ $rows=@()
+ foreach($node in $nodes){if($node.Current.Name){$rows+=[pscustomobject]@{type=$node.Current.ControlType.ProgrammaticName;name=$node.Current.Name;id=$node.Current.AutomationId}}}
+ ConvertTo-Json -InputObject @($rows) -Depth 4 -Compress
+}
+""".replace("'ACTION'", repr(arguments.action)).replace("'MODULE'", repr(module))
+result = subprocess.run([
+    "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", "-NoProfile",
+    "-NonInteractive", "-EncodedCommand",
+    base64.b64encode(code.encode("utf-16-le")).decode("ascii")], capture_output=True, timeout=45)
+assert result.returncode == 0, result.stderr.decode("utf-8", "replace")
+observation = json.loads(result.stdout.decode("utf-8-sig"))
+report = {"recorded_at": datetime.now(timezone.utc).isoformat(), "action": arguments.action,
+          "module": module, "attempt": arguments.attempt}
+if arguments.action == "readback":
+    rows, policies = observation, []
+    names = {name for pilot in ("Hexalith.Tenants",)
+             for name in (pilot, pilot + " hexalith-release")}
+    for index, row in enumerate(rows):
+        if row["type"] == "ControlType.Text" and row["name"] in names:
+            segment = []
+            for item in rows[index:index + 50]:
+                segment.append(item)
+                if item["type"] == "ControlType.Button" and item["name"] == "Delete":
+                    break
+            policies.append(segment)
+    report["policies"] = policies
+    report["all_policy_edit_ids"] = [row["id"] for row in rows if row["id"].startswith("__start-edit-")]
+    report["messages"] = [row for row in rows if any(value in row["name"].lower() for value in (
+        "successfully created", "policy has been", "is required", "error occurred", "already exists"))]
+else:
+    report["result"] = observation
+destination = Path(__file__).parent / ("nuget-" + arguments.module.lower() + "-"
+                                      + arguments.action + "-" + str(arguments.attempt) + ".json")
+destination.write_text(json.dumps(report, indent=2) + "\n")
+print(json.dumps(report, indent=2))

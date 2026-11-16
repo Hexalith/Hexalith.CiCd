@@ -1,0 +1,61 @@
+{
+  "status": "blocked before commits or pushes",
+  "commitsCreated": false,
+  "pushesAttempted": false,
+  "rootRenderCheck": "pass",
+  "releasedPolicy": {
+    "tag": "v6.0.6",
+    "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "releaseReadExitCode": 0,
+    "release": {
+      "draft": false,
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.0.6",
+      "immutable": true,
+      "prerelease": false,
+      "published_at": "2026-11-16T09:34:49Z",
+      "tag_name": "v6.0.6"
+    },
+    "toolLockSha256": "f243c4248fc4b43a00bd63f8492c5ae3e37bb7a211c14cc3c13fd8e9a9fd89e0",
+    "lockedToolsAndSignatureVerification": "pass"
+  },
+  "modulePolicyChecks": {
+    "Folders": {
+      "freshMainApplication": "pass",
+      "ownedContentPreserved": true,
+      "releasedAudit": "pass",
+      "releasedActions": "pass"
+    },
+    "Projects": {
+      "freshMainApplication": "pass",
+      "ownedContentPreserved": true,
+      "releasedAudit": "pass",
+      "releasedActions": "pass"
+    }
+  },
+  "blockingModule": "Hexalith.Folders",
+  "blockingGate": {
+    "label": "Folders-explicit-component-prerequisite",
+    "argv": [
+      "dotnet",
+      "tests/Hexalith.Folders.Server.Tests/bin/Release/net11.0/Hexalith.Folders.Server.Tests.dll",
+      "-class",
+      "Hexalith.Folders.Server.Tests.EnrolledWorkloadSourceBoundaryTests",
+      "-explicit",
+      "on",
+      "-noLogo",
+      "-noColor",
+      "-failSkips"
+    ],
+    "exitCode": 1,
+    "log": "Folders-explicit-component-prerequisite.txt"
+  },
+  "blockingReason": "Eleven explicit EnrolledWorkloadSourceBoundaryTests cases fail: HEXALITH_WORKLOAD_COMPONENT_FILE is missing. The required strict Server hook enables these controls.",
+  "sourceTree": "af10a0b011c9e696c9d1a1d276757015958ef08e",
+  "freshMain": "f2bf547b457a4db3e7eb65d425a22f62dfb9f09a",
+  "projectsProductQualification": "not completed; dependent Folders owner publication is blocked",
+  "parentCommit": "not created: Hexalith Git instructions stop superproject commits after a submodule qualification failure",
+  "archivedStory21Candidate": "preserved; not applied or published",
+  "credentials": "CiCd/Builds: configured CiCd-agent; other modules: intended module-agent; no fallback",
+  "childrenFinished": true,
+  "temporaryWorkspacesRemoved": true
+}

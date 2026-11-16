@@ -1,0 +1,164 @@
+{
+  "recorded_at": "2026-11-16T20:39:20.355070+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4117",
+        "X-Ratelimit-Reset: 1794862396",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 883"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4116",
+        "X-Ratelimit-Reset: 1794862396",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 884"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/default-setup",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4115",
+        "X-Ratelimit-Reset: 1794862396",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 885"
+      ],
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+      "exit": 1,
+      "http_status": 404,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4114",
+        "X-Ratelimit-Reset: 1794862396",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 886"
+      ],
+      "data": {
+        "message": "no analysis found",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+        "status": "404"
+      },
+      "stderr": "gh: no analysis found (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook",
+      "state": "not-found-or-inaccessible"
+    }
+  ],
+  "collections": [
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+      "item_key": null,
+      "pages": [
+        "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1"
+      ],
+      "successful_pages": 0,
+      "items": [],
+      "complete": false,
+      "state": "not-found-or-inaccessible",
+      "failure": {
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+        "reason": "not-found-or-inaccessible"
+      },
+      "observed_count": 0
+    }
+  ],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "verification": {
+    "analyses_complete": false,
+    "observed_count": 0,
+    "state": "not-found-or-inaccessible",
+    "legacy_key_absent": false
+  }
+}

@@ -1,0 +1,1366 @@
+{
+  "started_at": "2026-11-16T19:58:51.293928+00:00",
+  "administration_profile": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "target": "repos/Hexalith/Hexalith.Tenants",
+  "legacy_analysis_key": ".github/workflows/codeql.yml:analyze",
+  "app_selection_evidence": "app-selection-persisted-readback.json",
+  "requests": [
+    {
+      "recorded_at": "2026-11-16T19:58:51.727756+00:00",
+      "method": "GET",
+      "endpoint": "user",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:52.355157+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:52.891315+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=1",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2177434213,
+          2171069738,
+          2170982485,
+          2167587410,
+          2167132279,
+          2155690654,
+          2155667113,
+          2155655041,
+          2127248961,
+          2106856455,
+          2106836456,
+          2106820318
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:53.438154+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=2",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2081644574,
+          2080520898,
+          2080188576,
+          2075910364,
+          2075150859,
+          2070679482,
+          2069672766,
+          2069359551
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:54.048005+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=3",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2022372579
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:54.601894+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=4",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2014546740,
+          2001860982,
+          1987682834,
+          1976647993
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:55.206003+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=5",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:55.777093+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=6",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1879189349,
+          1871455976,
+          1868296992
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:56.348603+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=7",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1693459716,
+          1670418842,
+          1667728204,
+          1654562904,
+          1650163837,
+          1591539936,
+          1564432311
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:56.936989+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=8",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1536674050,
+          1536653434,
+          1536615950,
+          1536557109,
+          1530786478,
+          1530525424,
+          1529448085,
+          1527961456
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:57.477849+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=9",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 75,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1477147806,
+          1468358860
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:57.975102+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2177434213",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 2177434213,
+        "analysis_key": ".github/workflows/codeql.yml:analyze",
+        "category": ".github/workflows/codeql.yml:analyze",
+        "tool": {
+          "name": "CodeQL",
+          "guid": null,
+          "version": "2.27.4"
+        },
+        "deletable": true,
+        "ref": "refs/heads/main",
+        "commit_sha": "292dbf164f26bcf376ef86d749b149b075f8b502"
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:58.844075+00:00",
+      "method": "DELETE",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2177434213?confirm_delete=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "next_analysis_url": null,
+        "confirm_delete_url": null
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:59.395711+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=1",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2176903263,
+          2171069738,
+          2170982485,
+          2167587410,
+          2167132279,
+          2155690654,
+          2155667113,
+          2155655041,
+          2127248961,
+          2106856455,
+          2106836456,
+          2106820318
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:58:59.872039+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=2",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2081644574,
+          2080520898,
+          2080188576,
+          2075910364,
+          2075150859,
+          2070679482,
+          2069672766,
+          2069359551
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:00.331239+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=3",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2022372579
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:00.812424+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=4",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2014546740,
+          2001860982,
+          1987682834,
+          1976647993
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:01.235947+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=5",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:01.864168+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=6",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1879189349,
+          1871455976,
+          1868296992
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:02.449562+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=7",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1693459716,
+          1670418842,
+          1667728204,
+          1654562904,
+          1650163837,
+          1591539936,
+          1564432311
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:03.023357+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=8",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1536674050,
+          1536653434,
+          1536615950,
+          1536557109,
+          1530786478,
+          1530525424,
+          1529448085,
+          1527961456
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:03.645079+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=9",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 74,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1477147806,
+          1468358860
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:04.213392+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176903263",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 2176903263,
+        "analysis_key": ".github/workflows/codeql.yml:analyze",
+        "category": ".github/workflows/codeql.yml:analyze",
+        "tool": {
+          "name": "CodeQL",
+          "guid": null,
+          "version": "2.27.4"
+        },
+        "deletable": true,
+        "ref": "refs/heads/main",
+        "commit_sha": "ab67fd6bc308b5a641b0ca398d776e347193c168"
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:05.298201+00:00",
+      "method": "DELETE",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176903263?confirm_delete=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "next_analysis_url": null,
+        "confirm_delete_url": null
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:05.903281+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=1",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2176572494,
+          2171069738,
+          2170982485,
+          2167587410,
+          2167132279,
+          2155690654,
+          2155667113,
+          2155655041,
+          2127248961,
+          2106856455,
+          2106836456,
+          2106820318
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:06.449719+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=2",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2081644574,
+          2080520898,
+          2080188576,
+          2075910364,
+          2075150859,
+          2070679482,
+          2069672766,
+          2069359551
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:06.955743+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=3",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2022372579
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:07.437655+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=4",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2014546740,
+          2001860982,
+          1987682834,
+          1976647993
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:08.039402+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=5",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:08.690222+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=6",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1879189349,
+          1871455976,
+          1868296992
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:09.293902+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=7",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1693459716,
+          1670418842,
+          1667728204,
+          1654562904,
+          1650163837,
+          1591539936,
+          1564432311
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:09.836729+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=8",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1536674050,
+          1536653434,
+          1536615950,
+          1536557109,
+          1530786478,
+          1530525424,
+          1529448085,
+          1527961456
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:10.445351+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=9",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 73,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1477147806,
+          1468358860
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:11.028518+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176572494",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 2176572494,
+        "analysis_key": ".github/workflows/codeql.yml:analyze",
+        "category": ".github/workflows/codeql.yml:analyze",
+        "tool": {
+          "name": "CodeQL",
+          "guid": null,
+          "version": "2.27.4"
+        },
+        "deletable": true,
+        "ref": "refs/heads/main",
+        "commit_sha": "42d53e30eb117b26fa7c27e421d3910e1a4924eb"
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:11.913983+00:00",
+      "method": "DELETE",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176572494?confirm_delete=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "next_analysis_url": null,
+        "confirm_delete_url": null
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:12.566511+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=1",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2176500555,
+          2171069738,
+          2170982485,
+          2167587410,
+          2167132279,
+          2155690654,
+          2155667113,
+          2155655041,
+          2127248961,
+          2106856455,
+          2106836456,
+          2106820318
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:13.033437+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=2",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2081644574,
+          2080520898,
+          2080188576,
+          2075910364,
+          2075150859,
+          2070679482,
+          2069672766,
+          2069359551
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:13.485257+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=3",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2022372579,
+          2014546740
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:14.000837+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=4",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2001860982,
+          1987682834,
+          1976647993
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:14.547408+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=5",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:15.091841+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=6",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1879189349,
+          1871455976,
+          1868296992
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:15.713235+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=7",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1693459716,
+          1670418842,
+          1667728204,
+          1654562904,
+          1650163837,
+          1591539936,
+          1564432311
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:16.288036+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=8",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1536674050,
+          1536653434,
+          1536615950,
+          1536557109,
+          1530786478,
+          1530525424,
+          1529448085,
+          1527961456
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:16.869576+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=9",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 72,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1477147806,
+          1468358860
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:17.346686+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176500555",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 2176500555,
+        "analysis_key": ".github/workflows/codeql.yml:analyze",
+        "category": ".github/workflows/codeql.yml:analyze",
+        "tool": {
+          "name": "CodeQL",
+          "guid": null,
+          "version": "2.27.4"
+        },
+        "deletable": true,
+        "ref": "refs/heads/main",
+        "commit_sha": "b73cadc18f0b6736feafe1ea7d35c095b75be032"
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:18.061537+00:00",
+      "method": "DELETE",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176500555?confirm_delete=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "next_analysis_url": null,
+        "confirm_delete_url": null
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:18.631832+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=1",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2176500555,
+          2171069738,
+          2170982485,
+          2167587410,
+          2167132279,
+          2155690654,
+          2155667113,
+          2155655041,
+          2127248961,
+          2106856455,
+          2106836456,
+          2106820318
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:19.114229+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=2",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2081644574,
+          2080520898,
+          2080188576,
+          2075910364,
+          2075150859,
+          2070679482,
+          2069672766,
+          2069359551
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:19.553978+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=3",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2022372579,
+          2014546740
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:20.008335+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=4",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          2001860982,
+          1987682834,
+          1976647993
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:20.417415+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=5",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:21.015376+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=6",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1879189349,
+          1871455976,
+          1868296992
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:21.623702+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=7",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1693459716,
+          1670418842,
+          1667728204,
+          1654562904,
+          1650163837,
+          1591539936,
+          1564432311
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:22.203706+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=8",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 100,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1536674050,
+          1536653434,
+          1536615950,
+          1536557109,
+          1530786478,
+          1530525424,
+          1529448085,
+          1527961456
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:22.759107+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?tool_name=CodeQL&per_page=100&page=9",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "count": 71,
+        "analysis_keys": [
+          ".github/workflows/codeql.yml:analyze"
+        ],
+        "deletable_ids": [
+          1477147806,
+          1468358860
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-16T19:59:23.226503+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176500555",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": null,
+        "analysis_key": null,
+        "category": null,
+        "tool": null,
+        "deletable": null,
+        "ref": null,
+        "commit_sha": null
+      },
+      "error": "gh: No analysis found for analysis ID 2176500555 (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook"
+    }
+  ],
+  "deleted_ids": [
+    2177434213,
+    2176903263,
+    2176572494,
+    2176500555
+  ],
+  "result": "incomplete",
+  "error": "GET repos/Hexalith/Hexalith.Tenants/code-scanning/analyses/2176500555: gh: No analysis found for analysis ID 2176500555 (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook",
+  "stopped_at": "2026-11-16T19:59:23.227125+00:00"
+}

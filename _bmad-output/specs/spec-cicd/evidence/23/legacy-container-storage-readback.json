@@ -1,0 +1,19 @@
+{
+  "recorded_at": "2026-11-16T19:59:14.157041+00:00",
+  "operation": "read only OCI tag metadata through intended registry administration context",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "remote_mutations": false,
+  "repositories": [
+    {
+      "repository": "tenants",
+      "exit": 1,
+      "error": "error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec \"fc3deab92e8efc02effce23a4bc6a1cbe720821011d8a8397fe917874b5eda67\": OCI runtime exec failed: exec failed: unable to start container process: exec: \"cat\": executable file not found in $PATH\n"
+    },
+    {
+      "repository": "tenants-api",
+      "exit": 1,
+      "error": "error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec \"6d330eefe6aab6850cee436e0ac14b876e03e7a2295b26c8793d9275888eec0b\": OCI runtime exec failed: exec failed: unable to start container process: exec: \"cat\": executable file not found in $PATH\n"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "hexalith.projects-ci-gates.v1",
+  "repository": "Hexalith.Projects",
+  "pre_push_gate": "reviewed-tree-owner-authorized",
+  "base_commit": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+  "base_tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+  "patch_sha256": "8e8154e0197377e14d1c56ded3a2b47b05754ffc3bb8285b9bd7373e803fe35c",
+  "result_tree": "e41153231b15b1838a3a511b4021f8623ae0a3da",
+  "before": {
+    "tests/tools/test_render_skill.py": [
+      "100644",
+      "blob",
+      "b539b15c99f38b05e445b9a161ef35ffede9e4ec"
+    ],
+    "tests/tools/test_release_workflow.py": null,
+    "tests/tools/test_run_g6_candidate_gate.py": null,
+    "tests/tools/test_g6_mapper_build.py": null,
+    "package.json": null,
+    "package-lock.json": null
+  },
+  "after": {
+    "tests/tools/test_render_skill.py": [
+      "100644",
+      "blob",
+      "5eae32b210f88b73f3203c6cb7f0e76739a71683"
+    ],
+    "tests/tools/test_release_workflow.py": [
+      "100644",
+      "blob",
+      "45a73723232a59630c61f297f1a840ba98f46f21"
+    ],
+    "tests/tools/test_run_g6_candidate_gate.py": [
+      "100644",
+      "blob",
+      "80da3ddf221cf7f2af626160be3e3b02571929ef"
+    ],
+    "tests/tools/test_g6_mapper_build.py": [
+      "100644",
+      "blob",
+      "b7b69e3192475e2e95a88e2523c13618deb22527"
+    ],
+    "package.json": [
+      "100644",
+      "blob",
+      "a8fb9519669e87fd0e4f1ce29473ce45fb8f359b"
+    ],
+    "package-lock.json": [
+      "100644",
+      "blob",
+      "6565a1ac87f6d9f46e694c2066cbe017a65836be"
+    ]
+  }
+}

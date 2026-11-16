@@ -1,0 +1,74 @@
+{
+  "recordedAt": "2026-11-16T20:21:54.456669+00:00",
+  "correction": "Prior missing-config-only blockers are superseded by the existing approved preparation routes; no normal checker or adoption policy changed.",
+  "scope": "Local proposed-source policy checks only; no remote operation or publication.",
+  "moduleChecks": [
+    {
+      "repository": "Hexalith.Folders",
+      "approval": "_bmad-output/implementation-artifacts/spec-17-migrate-folders.md",
+      "frozenApprovalSha256": "192af4356fdd137c167c2bd1793a4790674f875c4d82a5d08b492fe521554ba3",
+      "route": "module-specific approved pre-adoption substitute",
+      "adoptionConfigPresentInSnapshot": false,
+      "snapshotBase": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+      "proposedTree": "156fbaeaf67aa4ac742536cdfa8df03f512f328f",
+      "releasedBuilds": {
+        "tag": "v6.0.6",
+        "commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      },
+      "conservativeWholeOwnedGroupComparisonPassed": true,
+      "releasedAuditLint": {
+        "exitCode": 1,
+        "result": "fail",
+        "output": "guard: _bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config: audit-lint: forbidden auditSources declaration\nguard: _bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config: audit-lint: forbidden auditSources declaration\nCI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline."
+      },
+      "fullPreparationQualificationComplete": false,
+      "freshRemoteBaseVerified": false,
+      "publicationAuthorizedByThisReport": false,
+      "qualificationBoundary": "Policy snapshot only. Existing runner passes do not qualify new source; complete exact-input product/action/commit checks and fresh-main verification remain required."
+    },
+    {
+      "repository": "Hexalith.Parties",
+      "approval": "_bmad-output/implementation-artifacts/spec-21-migrate-parties.md",
+      "frozenApprovalSha256": "1552b5c7ab64bc935e63bd30e8c25d23b7fe2ba4602785fb530cd883d8e259c0",
+      "route": "module-specific approved pre-adoption substitute",
+      "adoptionConfigPresentInSnapshot": false,
+      "snapshotBase": "a575021fc97a8eda664711089270b60f5e570ded",
+      "proposedTree": "394d7f8068d13061fa545448a97fe02fb3464aed",
+      "releasedBuilds": {
+        "tag": "v6.0.6",
+        "commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      },
+      "conservativeWholeOwnedGroupComparisonPassed": true,
+      "releasedAuditLint": {
+        "exitCode": 0,
+        "result": "pass"
+      },
+      "fullPreparationQualificationComplete": false,
+      "freshRemoteBaseVerified": false,
+      "publicationAuthorizedByThisReport": false,
+      "qualificationBoundary": "Policy snapshot only. Existing runner passes do not qualify new source; complete exact-input product/action/commit checks and fresh-main verification remain required."
+    },
+    {
+      "repository": "Hexalith.Projects",
+      "approval": "_bmad-output/implementation-artifacts/spec-18-migrate-projects.md",
+      "frozenApprovalSha256": "5ea1008da88c37cc4cd990bd0731e9e20c404b6a932e95b7f2337444be811fc6",
+      "route": "module-specific approved pre-adoption substitute",
+      "adoptionConfigPresentInSnapshot": false,
+      "snapshotBase": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+      "proposedTree": "1ed34163d0b4dee436c4ca9e6aa2216eebe71091",
+      "releasedBuilds": {
+        "tag": "v6.0.6",
+        "commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      },
+      "conservativeWholeOwnedGroupComparisonPassed": true,
+      "releasedAuditLint": {
+        "exitCode": 0,
+        "result": "pass"
+      },
+      "fullPreparationQualificationComplete": false,
+      "freshRemoteBaseVerified": false,
+      "publicationAuthorizedByThisReport": false,
+      "qualificationBoundary": "Policy snapshot only. Existing runner passes do not qualify new source; complete exact-input product/action/commit checks and fresh-main verification remain required."
+    }
+  ]
+}

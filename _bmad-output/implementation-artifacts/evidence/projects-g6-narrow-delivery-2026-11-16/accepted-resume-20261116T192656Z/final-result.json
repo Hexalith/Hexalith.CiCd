@@ -1,0 +1,72 @@
+{
+  "recorded_at": "2026-11-16T19:37:10.260702+00:00",
+  "owner_source": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+  "owner_run": 43939511545,
+  "owner_run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545",
+  "hosted_owner_qualification": "success",
+  "hosted_tests": {
+    "acquisition": 17,
+    "controller": 28,
+    "workflow": 17
+  },
+  "app_token_minted": true,
+  "actual_delivery": "success",
+  "push_attempted": true,
+  "push_exit_code": 0,
+  "delivered_sha": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+  "sole_parent": "4511105bb1f00b8cf762097523de74acc828a001",
+  "input_tree": "24c52776922ecca9eca63720347f32ecee64694c",
+  "result_tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+  "proposal_sha256": "3b4e5540391f585c778f21953f4b2a37be1a87aa9df9ae7e2b56b6e05cefb588",
+  "output_paths": [
+    ".github/actions/prepare-g6-catalog/action.yml",
+    ".github/actions/prepare-g6-catalog/prepare.py",
+    ".github/workflows/ci.yml"
+  ],
+  "all_other_entries_preserved": true,
+  "all_dependency_pins_and_gitlinks_preserved": true,
+  "acquisition_payload_unchanged": true,
+  "invocation_before_prepare_build": true,
+  "mapper_unchanged_offline_and_fail_closed": true,
+  "projects_ci": {
+    "run": 43940159468,
+    "url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43940159468",
+    "exact_source": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+    "conclusion": "failure",
+    "failed_step": "Validate shared skill renderer",
+    "exception": "AttributeError: 'function' object has no attribute '__mro__'"
+  },
+  "g6": {
+    "job_id": 133555960523,
+    "conclusion": "skipped",
+    "cause": "Unchanged needs: workflow-gates dependency failed.",
+    "acquisition_executed": false,
+    "prepare_build_executed": false,
+    "runtime_acceptance": false,
+    "artifact_count": 0
+  },
+  "commitlint": {
+    "run": 43940159230,
+    "url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43940159230",
+    "conclusion": "failure",
+    "job_id": 133555236833,
+    "failed_step": "Install dependencies",
+    "command": "npm ci --ignore-scripts",
+    "exit_code": 1,
+    "error": "EUSAGE: npm ci requires package-lock.json or npm-shrinkwrap.json; neither exists in Projects source.",
+    "package_metadata_absent_before_and_after": true,
+    "referenced_workflow": {
+      "path": "Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@main",
+      "sha": "6db97d4e9da392ef691ed3f367e73f1b7d2ef318",
+      "ref": "refs/heads/main"
+    },
+    "commit_message_validation_reached": false
+  },
+  "runtime_acceptance": false,
+  "subsequent_failures_retained_and_diagnosed": true,
+  "module_gates_changed_for_failure": false,
+  "full_adoption_performed": false,
+  "credentials_broadened_by_agent": false,
+  "nested_submodules_initialized": false,
+  "story_1_17_tracking_changed_by_task": false
+}

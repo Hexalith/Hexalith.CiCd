@@ -128,7 +128,7 @@ def check_committed_render(project: Path) -> None:
 def check_committed_inputs(project: Path) -> None:
     """The inputs that explain the render must belong to the candidate HEAD."""
     template_paths = {f"templates/{path}" for path in
-                      (*renderer.TEMPLATES.values(), renderer.PERIMETER, *renderer.PARTIALS)}
+                      (*renderer.TEMPLATES.values(), renderer.QUALIFICATION, renderer.PERIMETER, *renderer.PARTIALS)}
     paths = {"builds-version", *template_paths,
              *(path.relative_to(project).as_posix() for _, path in renderer.registry(project))}
     committed = {}
@@ -198,7 +198,10 @@ def check_interfaces(project: Path, repository: str, contract) -> None:
     for path in (".github/workflows/ci.yml", ".github/workflows/release.yml",
                  "Github/prepare/action.yml", "Github/publish/action.yml"):
         manifests[path] = renderer.yaml_document((contract.root / path).read_bytes(), f"Builds {contract.tag}/{path}")
-    for filename in ("ci.yml", "release.yml"):
+    filenames = ["ci.yml", "release.yml"]
+    if (project / "rendered" / repository / ".github/workflows/qualification.yml").is_file():
+        filenames.append("qualification.yml")
+    for filename in filenames:
         source = f"rendered/{repository}/.github/workflows/{filename}"
         path = renderer.safe_path(project, source)
         document = renderer.yaml_document(path.read_bytes(), source)

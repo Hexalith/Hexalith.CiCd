@@ -1,0 +1,100 @@
+{
+  "recorded_at": "2026-11-16T21:03:46.661088+00:00",
+  "owner_source": "194bdcb0481632499b7ed9d1e0730a47bfca2437",
+  "owner_run": 43951248000,
+  "owner_run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43951248000",
+  "owner_qualification": "success",
+  "actual_delivery": "success",
+  "module_commit": "7da7e95b670838de3181e946709e1246695a0e72",
+  "sole_parent": "e8fe81416f714c45f666dc3574c85c9b14b7aff9",
+  "module_result_tree": "2a7fdf8f1559190d80257dbc5a79dc1c06069aeb",
+  "reviewed_patch_sha256": "1ecac7ac770068d35269cd8cb1d4988bd62fc81e36392aba0ff1c1c12f2ef21e",
+  "reviewed_module_validation_sha256": "8f3a9ebe6e802c6ae813d2a07f099b0810eceae797fe98b65ef22e49571b7715",
+  "exact_changed_files": [
+    "package-lock.json",
+    "package.json",
+    "tests/tools/run-ci-workflow-gates.ps1",
+    "tests/tools/run-frontcomposer-inspect-gate.ps1",
+    "tests/tools/test_g6_mapper_build.py",
+    "tests/tools/test_release_workflow.py",
+    "tests/tools/test_render_skill.py",
+    "tests/tools/test_run_ci_workflow_gates.py",
+    "tests/tools/test_run_g6_candidate_gate.py"
+  ],
+  "all_12_gitlinks_preserved": true,
+  "all_workflows_and_acquisition_preserved": true,
+  "no_parent_story_tracking_change": true,
+  "hosted_workflow_policy": "success",
+  "hosted_commitlint": {
+    "run": 43951961491,
+    "conclusion": "success"
+  },
+  "hosted_p1r_replay": "success",
+  "hosted_codeql": {
+    "run": 43951961602,
+    "conclusion": "success"
+  },
+  "hosted_ci": {
+    "run": 43951961518,
+    "url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43951961518",
+    "conclusion": "failure"
+  },
+  "hosted_catalog_acquisition": {
+    "status": "prepared",
+    "acquired_missing_commit": true,
+    "source_revision": "7da7e95b670838de3181e946709e1246695a0e72",
+    "platform_revision": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "builds_revision": "c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+    "catalog_commit": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+    "catalog_sha256": "d098dab50977041a536508f6df7e934f95678a4a0abedd80b28e9bae19ee0637",
+    "catalog_bytes": 47367,
+    "heads_indices_refs_and_gitlinks_preserved": true
+  },
+  "hosted_conversations_prepare_build": {
+    "status": "prepared",
+    "mapping_hash": "e1d9564372afe94ef2a5eb1fc210502fe563e56c6477685175c01f035926224f"
+  },
+  "runtime_g6_acceptance": false,
+  "subsequent_failures": [
+    {
+      "job_id": 133597914418,
+      "step": "Build",
+      "command": "dotnet build Hexalith.Projects.CI.slnx --no-restore --configuration Release -warnaserror",
+      "exit": 1,
+      "error": "CS0234, 14 errors: QueryResultContractAttribute/QueryResultContract absent from Hexalith.EventStore.Contracts.Queries",
+      "pinned_EventStore_version": "5.1.1",
+      "api_query": {
+        "command": "dnx dotnet-inspect -y -- find \"*QueryResultContract*\" --package Hexalith.EventStore.Contracts@5.1.1 -n 20",
+        "exit": 0,
+        "result": "No types found matching the pattern."
+      },
+      "source_changes_outside_repair": "Preserved product query declarations outside the nine-file repair",
+      "missing_prerequisite": "Owner-provided package/API compatibility for the unchanged 5.1.1 consumer, or an approved source/package version-alignment decision preserving the contract."
+    },
+    {
+      "job_id": 133597914034,
+      "step": "Restore effective G-6 package graphs",
+      "command": "env -u CI dotnet restore references/Hexalith.McpCli/src/Hexalith.McpCli/Hexalith.McpCli.csproj -p:UseHexalithProjectReferences=true -p:HexalithConversationsFromSource=false",
+      "exit": 1,
+      "error": "NU1102: Hexalith.Projects.Contracts >= 2.0.0-story66.3 unavailable on configured nuget.org feed; nearest listed version 1.2.4",
+      "pinned_mcpcli_source": "5008de388c5e37257ca78e48d8afe899cf7aaa2a",
+      "version_owner": "Hexalith.McpCli Directory.Build.props blob89552fec5872844350d3e05634471051f0cf112b",
+      "missing_prerequisite": "Make the required Projects.Contracts artifact available from an approved feed, or obtain an approved dependency/catalog alignment decision."
+    }
+  ],
+  "constraints_preventing_automatic_next_action": [
+    "Preserve every dependency pin and concurrent product change",
+    "Do not repeat publication/audit/A8 work",
+    "Do not weaken existing gates or substitute source refs to hide package-mode failures"
+  ],
+  "no_publication_deployment_or_v2_activation": true,
+  "scoped_app_credentials_broadened": false,
+  "source_files_with_writer_token_executed": false,
+  "temporary_workspaces_removed": true,
+  "api_inspection_evidence": {
+    "pattern_query_log": "eventstore-5.1.1-api.final.log",
+    "pattern_query_exit": 0,
+    "type_listing_log": "eventstore-5.1.1-query-types.final.log",
+    "type_listing_exit": 0
+  }
+}

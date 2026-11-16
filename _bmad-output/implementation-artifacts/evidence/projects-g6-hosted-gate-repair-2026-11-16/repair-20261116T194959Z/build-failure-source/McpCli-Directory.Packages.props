@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <HexalithBuildPackageVersions1>$(MSBuildThisFileDirectory)references/Hexalith.Builds/Props/Directory.Packages.props</HexalithBuildPackageVersions1>
+    <HexalithBuildPackageVersions2>$(MSBuildThisFileDirectory)../Hexalith.Builds/Props/Directory.Packages.props</HexalithBuildPackageVersions2>
+    <HexalithBuildPackageVersions3>$(MSBuildThisFileDirectory)../../Hexalith.Builds/Props/Directory.Packages.props</HexalithBuildPackageVersions3>
+  </PropertyGroup>
+  <Import Project="$(HexalithBuildPackageVersions1)" Condition="Exists('$(HexalithBuildPackageVersions1)') And '$(HexalithVersionsLoaded)' != 'true'" />
+  <Import Project="$(HexalithBuildPackageVersions2)" Condition="Exists('$(HexalithBuildPackageVersions2)') And '$(HexalithVersionsLoaded)' != 'true'" />
+  <Import Project="$(HexalithBuildPackageVersions3)" Condition="Exists('$(HexalithBuildPackageVersions3)') And '$(HexalithVersionsLoaded)' != 'true'" />
+</Project>

@@ -1,0 +1,65 @@
+{
+  "scope": "Review safety corrections for the closed nine-path profile only",
+  "files": {
+    "tools/deliver_g6_catalog.py": "44a8ab213c505016c3e8915980496a556b261dd14c0f51bcdccd320ba2c8ed00",
+    "tools/tests/test_deliver_projects_ci_gates.py": "1e1ff123129e437554b3a82e1c911d0f17cf4b7b07cf24366aade00bf5a3118f",
+    "tools/tests/test_deliver_projects_ci_gates.py.lock": "193a1c2d048a060888ed3b414b2c2014a66dca572a0b7cd7c7e4685264980a93",
+    ".github/workflows/deliver-projects-ci-gates.yml": "5aeac94f881c3dfc64d51f3dab5c426f9a9b8ee622c2fbed81fa3dccc458a4de"
+  },
+  "checks": {
+    "catalog-controller-review-safety-tests.log": {
+      "tests": 28,
+      "seconds": 139.228,
+      "passed": true,
+      "sha256": "557afa1298585138cae404e4cd00e249688a0eeb186c687ac32aecb97f80bba4"
+    },
+    "gate-profile-review-safety-tests.log": {
+      "tests": 17,
+      "seconds": 46.873,
+      "passed": true,
+      "sha256": "eaefa04fbce8fb8cfc1611ec039fd441ae9855d6182bafb17c5ea7c15340a205"
+    },
+    "gate-profile-production-validation-test.log": {
+      "tests": 1,
+      "seconds": 1.447,
+      "passed": true,
+      "sha256": "ce6075e2ae6382f2037267ff0f28b635326e96eb1a502b6745d1d8d564809f4c"
+    },
+    "gate-profile-bound-wrong-tree-test.log": {
+      "tests": 1,
+      "seconds": 2.122,
+      "passed": true,
+      "sha256": "df2a9dad11b04de9231f671634707679b5f8c621b04df35b0a0ba655c12ba32b"
+    }
+  },
+  "actionlint_exit": 0,
+  "git_diff_check_exit": 0,
+  "unique_gate_profile_cases": 18,
+  "original_catalog_cases": 28,
+  "module_validation_sha256": "d3e37fd16f2bfffbc5dde1ae6b4e86d021d0e56ab8080861a5988052a62efa0f",
+  "result_tree": "acbbdb130ada835f00016d60402369182012c6c7",
+  "closed_proof_checks": [
+    "focused_suites",
+    "workflow_gates",
+    "npm_install",
+    "npm_signatures",
+    "commit_policy",
+    "npm_vulnerabilities"
+  ],
+  "explicit_success_required_for_gate_qualification": true,
+  "owner_workflow_job_timeout_minutes": 40,
+  "credentialed_poisoned_environment_cli_test": true,
+  "owner_workflow_actual_plan_to_writer_test": true,
+  "failed_suite_prevents_mint_test": true,
+  "missing_token_failure_retained_test": true,
+  "original_catalog_assets_unchanged": [
+    "docs/proposals/projects-g6-catalog.json",
+    "docs/proposals/projects-g6-catalog.patch",
+    ".github/actions/prepare-g6-catalog/action.yml",
+    ".github/actions/prepare-g6-catalog/prepare.py",
+    ".github/workflows/deliver.yml",
+    "tools/delivery_runtime.py"
+  ],
+  "all_child_processes_finished": true,
+  "staged_committed_or_pushed": false
+}

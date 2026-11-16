@@ -1,0 +1,459 @@
+diff --git a/_bmad-output/implementation-artifacts/evidence/audit-policy-history/README.md b/_bmad-output/implementation-artifacts/evidence/audit-policy-history/README.md
+new file mode 100644
+index 00000000..27f649db
+--- /dev/null
++++ b/_bmad-output/implementation-artifacts/evidence/audit-policy-history/README.md
+@@ -0,0 +1,5 @@
++# Historical configuration evidence
++
++The eight files in [manifest.json](manifest.json) preserve inactive historical NuGet inputs as deterministic gzip data. No active build configuration, audit rule or original receipt changed. Each archive decompresses to its original Git blob; the manifest preserves the original path, mode, size and SHA-256.
++
++Historical receipts still name the original paths. Reconstruct their exact layout only under the private TMPDIR of run-with-temp when inspecting or replaying them. These archives are evidence, not inputs for active restore, build or release.
+diff --git a/_bmad-output/implementation-artifacts/evidence/audit-policy-history/manifest.json b/_bmad-output/implementation-artifacts/evidence/audit-policy-history/manifest.json
+new file mode 100644
+index 00000000..a96df220
+--- /dev/null
++++ b/_bmad-output/implementation-artifacts/evidence/audit-policy-history/manifest.json
+@@ -0,0 +1,79 @@
++{
++  "format": "hexalith.historical-artifacts.v1",
++  "sourceCommit": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
++  "purpose": "Lossless archival of inactive historical configuration evidence; active audit enforcement is unchanged.",
++  "files": [
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "4c1a0a69f9ce7412f862ebab53e0980dd27da548",
++      "originalBytes": 241,
++      "originalSha256": "06b979a155f42546b3417c6fbc6f323aaae91e4cfa1ae14d5e8e2979f3c5b5ef",
++      "archiveSha256": "e468c1bc41279cc4610d0ac4d728dc91a710e28844c20b9e19f40be35a7626d8"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "4c1a0a69f9ce7412f862ebab53e0980dd27da548",
++      "originalBytes": 241,
++      "originalSha256": "06b979a155f42546b3417c6fbc6f323aaae91e4cfa1ae14d5e8e2979f3c5b5ef",
++      "archiveSha256": "e468c1bc41279cc4610d0ac4d728dc91a710e28844c20b9e19f40be35a7626d8"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "ff6f07e20dc16a805847653a690a63869aca20b2",
++      "originalBytes": 357,
++      "originalSha256": "c7ca922ef9704fdc393e1905783622c7f9eab417d6c4ec7f54d16cc0185603cf",
++      "archiveSha256": "5b7d54e8a61112ff720e2a0b61e7e63d2472f52a37a3250163ef001b5ebab0d6"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "f2515663e4b40be52dc4917aed5f63a1e56909d9",
++      "originalBytes": 357,
++      "originalSha256": "9b181c42822217b35d537aab440122fb659182508d828b93d111e7365138e8f2",
++      "archiveSha256": "b8bffce98e5d5cc75c9cdec395a4484f076d89348d0b642fdb2d89e3e6a0a1e9"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "4a104a404498d9ef774dc709726798dfc0d7cbb2",
++      "originalBytes": 284,
++      "originalSha256": "0f7ca71050dbe4ec33d9da6c2c388e037f7a64d44dd0bb71391ff4c7a27170c2",
++      "archiveSha256": "24e46f5f2d8a39afeeb8e384f331de6ac298ff66b7afeb394a4472c2466f76ca"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "9548831e9a78b07c762f295953a6a9f34a18c085",
++      "originalBytes": 355,
++      "originalSha256": "6569251c86c3f4da30c6361edf5b9de8f393f3d51f657df5d89e9d6e42f99cd1",
++      "archiveSha256": "35dc422c373408a96e7ea862b73ec5bcdab10bcd75fc4a769e664b04b56a9b92"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "34a5bff134112d4788d6e53ed82e434e3d937666",
++      "originalBytes": 427,
++      "originalSha256": "89edd15b8cdd0b1346ee914dcb293d91d23fffad1d20aedd9e1b42c6874bd6e8",
++      "archiveSha256": "20054d0f122d11615746a8dbad297946164ee5e0ca2fbb3dc60a9480881e9dad"
++    },
++    {
++      "originalPath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config",
++      "archivePath": "_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config.gz",
++      "originalMode": "100644",
++      "originalGitBlob": "ef058be23c99dd5a0884fce005cc4b21420c44d3",
++      "originalBytes": 356,
++      "originalSha256": "35e4fb0ea79b93a5009098bea274378425b508207195ae6110de3702362e7617",
++      "archiveSha256": "ac1fc23a9909c28e9db876418da56588a7fe76d442d0007912a3794bc3dd465c"
++    }
++  ]
++}
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config
+deleted file mode 100644
+index 4c1a0a69..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config
++++ /dev/null
+@@ -1 +0,0 @@
+-<configuration><packageSources><clear/><add key="nuget.org" value="https://api.nuget.org/v3/index.json"/></packageSources><auditSources><clear/><add key="nuget.org" value="https://api.nuget.org/v3/index.json"/></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-approved-release-2026-11-15/source-candidate-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..8689f885158d9203ba7594257f0b183af1ad78f2
+GIT binary patch
+literal 130
+zcmV-|0Db=-iwFP!00002|FzFC3d1lAh2g6NAHW*A6~~w8352b>N`ho;IkdM=r$V}C
+ze(*j1kW`*rMnhwj7%HX}3q5qSL_LPI5jKbcbDmcE%uYrj^V*7=cH9Qd?qyc{9RMr)
+k-wOK;STeo+(pB77fPWfCX1n6(48ytb0BR<fGw}cb00HVbpa1{>
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config
+deleted file mode 100644
+index 4c1a0a69..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config
++++ /dev/null
+@@ -1 +0,0 @@
+-<configuration><packageSources><clear/><add key="nuget.org" value="https://api.nuget.org/v3/index.json"/></packageSources><auditSources><clear/><add key="nuget.org" value="https://api.nuget.org/v3/index.json"/></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-published-release-2026-11-15/NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..8689f885158d9203ba7594257f0b183af1ad78f2
+GIT binary patch
+literal 130
+zcmV-|0Db=-iwFP!00002|FzFC3d1lAh2g6NAHW*A6~~w8352b>N`ho;IkdM=r$V}C
+ze(*j1kW`*rMnhwj7%HX}3q5qSL_LPI5jKbcbDmcE%uYrj^V*7=cH9Qd?qyc{9RMr)
+k-wOK;STeo+(pB77fPWfCX1n6(48ytb0BR<fGw}cb00HVbpa1{>
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config
+deleted file mode 100644
+index ff6f07e2..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config
++++ /dev/null
+@@ -1,2 +0,0 @@
+-<?xml version='1.0' encoding='utf-8'?>
+-<configuration><packageSources><clear /><add key="private-0" value="/tmp/hexalith-job.ZeTP2vHb/candidate-feed" /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources><auditSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-composition/composition-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..e9c7b7cee3a728c3991497b02485c47434d5fdac
+GIT binary patch
+literal 209
+zcmV;?051O@iwFP!00002|D}+-Zo@DT1p9mip+=Q>cG3g^CATgOBvraId7{piNrE~O
+z%HQWv7*L8dsdq5DSaVo!v#OLAj-hY&de<rnHaZTzZ;OoGb9)#bjE!MrUoy%UH<*O>
+zik@C$$(EME*qJaZ7z{e6uJqA2DRV`kZr7-abD_Qgxh0rr#hGR5F7d42>FxAbk7uwL
+z9J_CPBy!D06pAO&G5fn{5=qMo04CP=6zUUjaJ1^n62p%Iey_yhSpL}jkE*R2ws(C3
+Lwb;axWdQ&HUMgWM
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config
+deleted file mode 100644
+index f2515663..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config
++++ /dev/null
+@@ -1,2 +0,0 @@
+-<?xml version='1.0' encoding='utf-8'?>
+-<configuration><packageSources><clear /><add key="private-0" value="/tmp/hexalith-job.ZrV0oyLa/candidate-feed" /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources><auditSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-patch-api/patch-api-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..fb13ab33a07e768c0cd11a60f250e409c028e7a7
+GIT binary patch
+literal 208
+zcmV;>05AU^iwFP!00002|D}*IZo@DT1pB;#P@_sb8EK4wl0V=sKniyk@<g32lLU1X
+z<liTDVL&d@q~5{oV$ET_PHLe%a|~U*(`~IN*yuR;t}Ze(`})wo85_gEzGReNt~Uwo
+z1wDPnk}b`>u@hld&>M74UFg<TDf5CtO<So2r$Su?a!oMOiWAG&oa47X<*zp0jtCZm
+zV|T{~B3Erhp?DG<vww<4ku-k*U}F7DVR;7*j#ho1V|XawbtM+Z^2g?XRBhF;z3T^L
+KNt{e&0RR9<TU@sQ
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config
+deleted file mode 100644
+index 4a104a40..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config
++++ /dev/null
+@@ -1,2 +0,0 @@
+-<?xml version='1.0' encoding='utf-8'?>
+-<configuration><packageSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources><auditSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final-producer/producer-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..acd38b44fc325a8bb9125a951e28b28313fa9ab2
+GIT binary patch
+literal 161
+zcmV;S0ABweiwFP!00002|FzFO4gw(*1mNCN5E?2$V`B`khwub1@D_2`2jOS4-d=4?
+z*4}z1-(>W#K4!LHsWFieM|lto$t52t7}49fKa0Wcv`aL`&<nJ8&*}_rf`Hf5i^FQQ
+zn-L0AR)hC!!l&WX12&mT;B0}pqv5yKa=j=8Im&OUmXnI)ah3O)h<^z6i$nLZ{by=R
+PtL@7d92ZF&9033T`a4P%
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config
+deleted file mode 100644
+index 9548831e..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config
++++ /dev/null
+@@ -1,2 +0,0 @@
+-<?xml version='1.0' encoding='utf-8'?>
+-<configuration><packageSources><clear /><add key="private-0" value="/tmp/hexalith-job.4JRm10oI/private-feed" /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources><auditSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-final/consumers-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..d13e3b855875e05d648ea67af38a727e04d21c6e
+GIT binary patch
+literal 204
+zcmV;-05ks|iwFP!00002|D}+zj)O1|MEm;+i-rm>QLczihSYau@&$YLVjRG>%o>ru
+zPju2nB1M|i^Ymsk>bOp$SSZad_@>;+x)kJfFwWbi%-mIn^4NYT9en3(PRMtzRT1@o
+zmd+t3O>?XCNSFk)3XKs1U7I2%w;)qh7h=INQ&Rv>5qes2blg{$@GC!mPSdUq-|!E2
+zM5fqie73|gB>T|x%yIq#!06;7g=G)U8(QUM4*pL8&l@ot$1fJYQMFaW_N*KEca2_S
+G0RR9;WMAC?
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config
+deleted file mode 100644
+index 34a5bff1..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config
++++ /dev/null
+@@ -1,2 +0,0 @@
+-<?xml version='1.0' encoding='utf-8'?>
+-<configuration><packageSources><clear /><add key="private-0" value="/tmp/hexalith-job.xU5npI6s/private-feed" /><add key="existing-cache" value="/home/administrator/.nuget/packages" /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources><auditSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15-qualification2/consumers-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..7c37b06a5c9598ee7607be4018ead17f92eed7f1
+GIT binary patch
+literal 233
+zcmV<F02coriwFP!00002|D}*IPQ)+}MSD(RrAZafA_PJx$<|vV4lvjg+q;Qv+2hFE
+zo@fP&LP10QzTW&l{jn~ySSe)}{LtRZLo3Lupq)2ETX^c8+v9lGtKcVRN<!XpV;@mn
+z(9mlrNl_kqH4`QQV~<*k3w;btOm0P{?$C%8=R!jRyhN~6advFGb9k5a?a{~6Q-<&G
+zM5LRYhN{cFb?Fo;OFu3f76R0Z^Bdn<g#^+ULkwTl^4@c0G9+_TSmu~t05Cdvqp&`J
+j^O~wW=isjj_`Ma2cKpZkf1KK@VgK|`3qdfWs{sH2K^bkq
+
+literal 0
+HcmV?d00001
+
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config
+deleted file mode 100644
+index ef058be2..00000000
+--- a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config
++++ /dev/null
+@@ -1,2 +0,0 @@
+-<?xml version='1.0' encoding='utf-8'?>
+-<configuration><packageSources><clear /><add key="existing-cache" value="/home/administrator/.nuget/packages" /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources><auditSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></auditSources></configuration>
+\ No newline at end of file
+diff --git a/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config.gz b/_bmad-output/implementation-artifacts/evidence/story-1-17-release-prerequisites-2026-11-15/producer-NuGet.Config.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..17f9d1684e95e2e3bbdbf55cf6fccff59df0d214
+GIT binary patch
+literal 196
+zcmV;#06YI5iwFP!00002|E17P3WG2Z1>k*85!_^Drlp%wq8_3r7?LrjY9jd&d;5wM
+z!7jS#`VHTEjBJ*1U^9hiy{q^|oH-+>ytd9%Jg2t2@uogW<y~t{4w%-vT282XH1zN}
+zD2laI17ToLOVpb6^r{M4Y)mUsDpVa6Y{nr|RY2!Q0@R~*Yrb+mfN<GRf{z)CgR^DA
+y2eT7hN>jW8;AF*~!h8kmG%ey8z1s-*9*J4o^kecLRYw|*-+BW_kM3k-0RR9`y;vOp
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/Hexalith.Folders.EventStore/FoldersCatalogAdapterSource.cs b/src/Hexalith.Folders.EventStore/FoldersCatalogAdapterSource.cs
+index ec56d20f..27d7ca33 100644
+--- a/src/Hexalith.Folders.EventStore/FoldersCatalogAdapterSource.cs
++++ b/src/Hexalith.Folders.EventStore/FoldersCatalogAdapterSource.cs
+@@ -8,25 +8,5 @@ namespace Hexalith.Folders.EventStore;
+ public static class FoldersCatalogAdapterSource
+ {
+     /// <summary>Creates the complete existing mutation policy inventory.</summary>
+-    public static IReadOnlyList<IDeclaredIdempotencyIntentAdapter> Create() =>
+-    [
+-        new ArchiveFolderIdempotencyIntentAdapter(),
+-        new AuthorizeContentErasureIdempotencyIntentAdapter(),
+-        new BindRepositoryIdempotencyIntentAdapter(),
+-        new ChangeNativeTaskIdempotencyIntentAdapter(),
+-        new CommitWorkspaceIdempotencyIntentAdapter(),
+-        new ConfigureBranchRefPolicyIdempotencyIntentAdapter(),
+-        new ConfigureProviderBindingIdempotencyIntentAdapter(),
+-        new CreateFolderIdempotencyIntentAdapter(),
+-        new CreateRepositoryBackedFolderIdempotencyIntentAdapter(),
+-        new GrantFolderAccessIdempotencyIntentAdapter(),
+-        new LockWorkspaceIdempotencyIntentAdapter(),
+-        new MutateFilesIdempotencyIntentAdapter(),
+-        new OrganizationAclIdempotencyIntentAdapter("Hexalith.Folders.Commands.GrantOrganizationAclPrincipal", "grant-organization-acl-principal"),
+-        new OrganizationAclIdempotencyIntentAdapter("Hexalith.Folders.Commands.InitializeOrganizationAclBaseline", "initialize-organization-acl-baseline"),
+-        new OrganizationAclIdempotencyIntentAdapter("Hexalith.Folders.Commands.RevokeOrganizationAclPrincipal", "revoke-organization-acl-principal"),
+-        new PrepareWorkspaceIdempotencyIntentAdapter(),
+-        new ReleaseWorkspaceLockIdempotencyIntentAdapter(),
+-        new RevokeFolderAccessIdempotencyIntentAdapter()
+-    ];
++    public static IReadOnlyList<IDeclaredIdempotencyIntentAdapter> Create() => FoldersCatalogAdapters.Create();
+ }
+diff --git a/src/Hexalith.Folders.EventStore/FoldersCatalogAdapters.cs b/src/Hexalith.Folders.EventStore/FoldersCatalogAdapters.cs
+new file mode 100644
+index 00000000..87a1fc14
+--- /dev/null
++++ b/src/Hexalith.Folders.EventStore/FoldersCatalogAdapters.cs
+@@ -0,0 +1,30 @@
++using Hexalith.EventStore.DomainService;
++
++namespace Hexalith.Folders.EventStore;
++
++/// <summary>Creates the unchanged module command policies for both actual owner executable images.</summary>
++internal static class FoldersCatalogAdapters
++{
++    /// <summary>Returns one fresh instance of every existing trusted mutation adapter.</summary>
++    internal static IReadOnlyList<IDeclaredIdempotencyIntentAdapter> Create() =>
++    [
++        new ArchiveFolderIdempotencyIntentAdapter(),
++        new AuthorizeContentErasureIdempotencyIntentAdapter(),
++        new BindRepositoryIdempotencyIntentAdapter(),
++        new ChangeNativeTaskIdempotencyIntentAdapter(),
++        new CommitWorkspaceIdempotencyIntentAdapter(),
++        new ConfigureBranchRefPolicyIdempotencyIntentAdapter(),
++        new ConfigureProviderBindingIdempotencyIntentAdapter(),
++        new CreateFolderIdempotencyIntentAdapter(),
++        new CreateRepositoryBackedFolderIdempotencyIntentAdapter(),
++        new GrantFolderAccessIdempotencyIntentAdapter(),
++        new LockWorkspaceIdempotencyIntentAdapter(),
++        new MutateFilesIdempotencyIntentAdapter(),
++        new OrganizationAclIdempotencyIntentAdapter("Hexalith.Folders.Commands.GrantOrganizationAclPrincipal", "grant-organization-acl-principal"),
++        new OrganizationAclIdempotencyIntentAdapter("Hexalith.Folders.Commands.InitializeOrganizationAclBaseline", "initialize-organization-acl-baseline"),
++        new OrganizationAclIdempotencyIntentAdapter("Hexalith.Folders.Commands.RevokeOrganizationAclPrincipal", "revoke-organization-acl-principal"),
++        new PrepareWorkspaceIdempotencyIntentAdapter(),
++        new ReleaseWorkspaceLockIdempotencyIntentAdapter(),
++        new RevokeFolderAccessIdempotencyIntentAdapter()
++    ];
++}
+diff --git a/src/Hexalith.Folders.Server/FolderServerCatalogAdapterSource.cs b/src/Hexalith.Folders.Server/FolderServerCatalogAdapterSource.cs
+new file mode 100644
+index 00000000..f15284c7
+--- /dev/null
++++ b/src/Hexalith.Folders.Server/FolderServerCatalogAdapterSource.cs
+@@ -0,0 +1,13 @@
++using Hexalith.EventStore.DomainService;
++
++[assembly: RouteCatalogAdapterSource(typeof(Hexalith.Folders.Server.FolderServerCatalogAdapterSource))]
++
++namespace Hexalith.Folders.Server;
++
++/// <summary>Exposes this actual owner's existing compiled command policies to canonical SDK catalog preparation.</summary>
++public static class FolderServerCatalogAdapterSource
++{
++    /// <summary>Returns the same module adapter implementation used by the existing Folders command gateway.</summary>
++    public static IReadOnlyList<IDeclaredIdempotencyIntentAdapter> Create()
++        => Hexalith.Folders.EventStore.FoldersCatalogAdapters.Create();
++}
+diff --git a/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj b/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj
+index 814c5e06..11988296 100644
+--- a/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj
++++ b/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj
+@@ -44,4 +44,12 @@
+     <PackageReference Include="Hexalith.Memories.Contracts" Condition="'$(HexalithMemoriesFromSource)' != 'true'" />
+     <PackageReference Include="Hexalith.Memories.Client.Rest" Condition="'$(HexalithMemoriesFromSource)' != 'true'" />
+   </ItemGroup>
++  <!-- Both actual executables expose the same module policies without an executable library reference. -->
++  <ItemGroup>
++    <Compile Include="../Hexalith.Folders.EventStore/*IdempotencyIntentAdapter.cs" Link="CatalogPolicies/%(Filename)%(Extension)" />
++    <Compile Include="../Hexalith.Folders.EventStore/FolderAccessIdempotencyIntent.cs" Link="CatalogPolicies/FolderAccessIdempotencyIntent.cs" />
++    <Compile Include="../Hexalith.Folders.EventStore/FoldersCanonicalIntentBuilder.cs" Link="CatalogPolicies/FoldersCanonicalIntentBuilder.cs" />
++    <Compile Include="../Hexalith.Folders.EventStore/FoldersCommandIntentDeclarations.cs" Link="CatalogPolicies/FoldersCommandIntentDeclarations.cs" />
++    <Compile Include="../Hexalith.Folders.EventStore/FoldersCatalogAdapters.cs" Link="CatalogPolicies/FoldersCatalogAdapters.cs" />
++  </ItemGroup>
+ </Project>
+diff --git a/tests/Hexalith.Folders.Server.Tests/FolderServerCatalogAdapterSourceTests.cs b/tests/Hexalith.Folders.Server.Tests/FolderServerCatalogAdapterSourceTests.cs
+new file mode 100644
+index 00000000..c2cd7c82
+--- /dev/null
++++ b/tests/Hexalith.Folders.Server.Tests/FolderServerCatalogAdapterSourceTests.cs
+@@ -0,0 +1,64 @@
++namespace Hexalith.Folders.Server.Tests;
++
++using System.Reflection;
++using System.Text;
++using System.Text.Json;
++
++using Hexalith.EventStore.DomainService;
++using Hexalith.Folders.Server;
++
++using Shouldly;
++
++using Xunit;
++
++/// <summary>Qualifies the actual owner factory against its complete command inventory and retained product outputs.</summary>
++public sealed class FolderServerCatalogAdapterSourceTests
++{
++    /// <summary>The actual server image supplies every declared policy through the public SDK factory attribute.</summary>
++    [Fact]
++    public void ActualServerFactoryMatchesEveryOwnerCommandDeclaration()
++    {
++        RouteCatalogAdapterSourceAttribute source = typeof(FoldersRuntimeCatalogDeclarations).Assembly
++            .GetCustomAttributes<RouteCatalogAdapterSourceAttribute>().Single();
++        source.SourceType.ShouldBe(typeof(FolderServerCatalogAdapterSource));
++        source.SourceType.Assembly.ShouldBe(typeof(FoldersRuntimeCatalogDeclarations).Assembly);
++        var adapters = ((IReadOnlyList<IDeclaredIdempotencyIntentAdapter>)source.SourceType
++            .GetMethod("Create", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, null)!).ToDictionary(adapter => adapter.CommandType);
++        adapters.Count.ShouldBe(18);
++        adapters.Keys.Order(StringComparer.Ordinal).ShouldBe(FoldersRuntimeCatalogDeclarations.Commands
++            .Select(command => command.Route.MessageType!).Order(StringComparer.Ordinal));
++        foreach (var declaration in FoldersRuntimeCatalogDeclarations.Commands)
++            JsonSerializer.Serialize(adapters[declaration.Route.MessageType!].Declaration, JsonSerializerOptions.Web)
++                .ShouldBe(JsonSerializer.Serialize(declaration, JsonSerializerOptions.Web));
++    }
++
++    /// <summary>Every adapter in the real owner retains both original golden variants and their complete semantic scope.</summary>
++    [Fact]
++    public void ActualServerPoliciesRetainAllLegacyCanonicalIntentOutputs()
++    {
++        var adapters = FolderServerCatalogAdapterSource.Create().ToDictionary(adapter => adapter.CommandType);
++        using JsonDocument fixtures = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory,
++            "CatalogPolicies", "legacy-canonical-intents.json")));
++        JsonElement[] records = fixtures.RootElement.EnumerateArray().ToArray();
++        records.Length.ShouldBe(36);
++        records.Select(record => record.GetProperty("CommandType").GetString()).Distinct().Count().ShouldBe(18);
++        foreach (JsonElement record in records)
++        {
++            string commandType = record.GetProperty("CommandType").GetString()!;
++            IDeclaredIdempotencyIntentAdapter adapter = adapters[commandType];
++            IdempotencyCanonicalIntent intent = adapter.CreateIntent(new(commandType, "tenant-a", "folders",
++                record.GetProperty("AggregateId").GetString()!, Encoding.UTF8.GetBytes(record.GetProperty("payload").GetString()!),
++                new Dictionary<string, string> { ["taskId"] = "task-a" }));
++            adapter.AdapterId.ShouldBe(record.GetProperty("AdapterId").GetString());
++            adapter.OperationId.ShouldBe(record.GetProperty("OperationId").GetString());
++            adapter.DescriptorVersion.ShouldBe(record.GetProperty("DescriptorVersion").GetInt32());
++            adapter.RetentionTier.ToString().ShouldBe(record.GetProperty("retentionTier").GetString());
++            intent.SemanticPayload.ShouldBe(Convert.FromBase64String(record.GetProperty("semanticPayload").GetString()!));
++            intent.CanonicalTarget.ShouldBe(record.GetProperty("CanonicalTarget").GetString());
++            intent.PolicyVersion.ShouldBe(record.GetProperty("PolicyVersion").GetString());
++            intent.SemanticOptions.ShouldBe(JsonSerializer.Deserialize<Dictionary<string, string>>(record.GetProperty("SemanticOptions")));
++            intent.DelegatedTaskScope.ShouldBe(record.GetProperty("DelegatedTaskScope").GetString());
++            intent.CredentialScope.ShouldBe(record.GetProperty("CredentialScope").GetString());
++        }
++    }
++}
+diff --git a/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj b/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj
+index 3732ef01..4aa37eef 100644
+--- a/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj
++++ b/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj
+@@ -7,6 +7,9 @@
+     <PackageReference Include="Hexalith.Commons.UniqueIds" ExcludeAssets="all" Condition="'$(HexalithCommonsFromSource)' != 'true'" />
+     <ProjectReference Include="$(HexalithCommonsRoot)/src/libraries/Hexalith.Commons.UniqueIds/Hexalith.Commons.UniqueIds.csproj" />
+   </ItemGroup>
++  <ItemGroup>
++    <None Include="../Hexalith.Folders.EventStore.Tests/Fixtures/legacy-canonical-intents.json" Link="CatalogPolicies/legacy-canonical-intents.json" CopyToOutputDirectory="PreserveNewest" />
++  </ItemGroup>
+   <ItemGroup>
+     <Compile Include="../shared/NativeContent/*.cs" Link="NativeContent/%(Filename)%(Extension)" />
+     <ProjectReference Include="../../src/Hexalith.Folders.Client/Hexalith.Folders.Client.csproj" />

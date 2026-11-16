@@ -13,14 +13,16 @@ jobs:
   ci:
     uses: [[ ci_workflow | tojson ]]
     permissions: [[ ci_permissions | tojson ]]
-[% if ci_timeout_minutes is not none %]
+[% if ci_arguments %]
     with:
-      job-timeout-minutes: [[ ci_timeout_minutes | tojson ]]
+[% for argument, value in ci_arguments | dictsort %]
+      [[ argument ]]: [[ value | tojson ]]
+[% endfor %]
 [% endif %]
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
-[% for job, options in config.jobs | dictsort %]
+[% for job, options in legacy_jobs | dictsort %]
   [[ ('windows-' ~ job) | tojson ]]:
     needs: ci
     runs-on: [[ options.runner | tojson ]]
@@ -39,4 +41,8 @@ jobs:
           module-authority: ${{ needs.ci.outputs.module-authority }}
 [% endif %]
       - uses: [[ ('./.github/actions/' ~ job) | tojson ]]
+[% endfor %]
+[% for job, options in ci_custom_jobs | dictsort %]
+  [[ job | tojson ]]:
+[[ options | toyaml | indent(4, true) ]]
 [% endfor %]

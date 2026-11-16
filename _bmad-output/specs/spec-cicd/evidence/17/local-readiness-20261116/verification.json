@@ -1,0 +1,159 @@
+{
+  "status": "blocked; local candidate preserved",
+  "scope": "local objects only; no remote Git, provisioning, adoption or credentials",
+  "revisions": {
+    "cicd": "0f25d19ba712eee9aae59d118251b854bbffd120",
+    "folders": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+    "folders_tree": "447b78de825d385ddbb7123a3a2746271a26b9e5",
+    "folders_parents": "a448d20873dc9e809623f85da206e8d8a13bb9ab",
+    "builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "builds_tag": "v6.0.6"
+  },
+  "commands": [
+    {
+      "label": "production-render-check",
+      "arguments": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "production-render-check.txt"
+    },
+    {
+      "label": "candidate-render",
+      "arguments": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py"
+      ],
+      "exit_code": 0,
+      "output": "candidate-render.txt"
+    },
+    {
+      "label": "candidate-render-check",
+      "arguments": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "candidate-render-check.txt"
+    }
+  ],
+  "candidate_tree_matches_saved": true,
+  "owned_tree_preserved": true,
+  "nested_submodules_uninitialized": true,
+  "production_local_validator_boundaries": "passed",
+  "candidate_render": {
+    "rendered/Hexalith.Folders/.github/dependabot.yml": {
+      "sha256": "779a7659ec7c86fb709cb6e77b43cb4ec26c871a96c588df0b0c655e376dec32",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders/.github/hexalith-ci.json": {
+      "sha256": "06f062f45c547b3015ddc50e0d1ad0e2c5014078c266ff598b40100f86d2f85d",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders/.github/workflows/ci.yml": {
+      "sha256": "3eece14ea457e207497702f423c5736d98796029c43b881ee4066809cb6b445d",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders/.github/workflows/release.yml": {
+      "sha256": "27c473b95e60024e1057678f90f4df276330df9ddf0412691699ec486eeb51c8",
+      "matches_archived_candidate": true
+    },
+    "rendered/Hexalith.Folders.perimeter.json": {
+      "sha256": "c3b7d77789497f3c0002b036443981bdcc3f897cd0405912aea3ab46e354873a",
+      "matches_archived_candidate": true
+    }
+  },
+  "candidate_documents_and_callers": "passed",
+  "action_discovery": {
+    "selected_files": [
+      ".github/actions/after-integration-tests/action.yml",
+      ".github/actions/after-unit-tests/action.yml",
+      ".github/actions/nightly/action.yml",
+      "scripts/release_package_contract.py",
+      "scripts/tests/test_release_packages.py",
+      "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1",
+      "tests/tools/run-capacity-calibration-gates.ps1",
+      "tests/tools/run-capacity-smoke-ci-gates.ps1",
+      "tests/tools/run-complete-project-tests.ps1",
+      "tests/tools/run-forgejo-provider-evidence-gates.ps1",
+      "tests/tools/run-forgejo-smart-http-alpine-smoke.ps1",
+      "tests/tools/run-nightly-drift-gates.ps1"
+    ],
+    "error_count": 940,
+    "matches_saved_diagnostics": true,
+    "diagnostics_sha256": "0cb33d3697d2a032f7c12dba0d09a9d0ffc3cf5eb3a5e061e28ca67605e96e89",
+    "existing_diagnostics": "../action-discovery.json"
+  },
+  "unchanged_qualification": {
+    "released_builds": true,
+    "strict_runner": true,
+    "prior_results": [
+      "../final-candidate.json",
+      "../resume/verification.json",
+      "../complete-project-runner-qualification.json"
+    ],
+    "rerun": false
+  },
+  "product_blocker_source_identity": {
+    "tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs": true,
+    "tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs": true,
+    "tests/Hexalith.Folders.AppHost.Tests/Fr58PublicMutationSearchRoundTripTests.cs": true,
+    "_bmad-output/implementation-artifacts/sprint-status.yaml": true
+  },
+  "product_suites": {
+    "rerun": false,
+    "reason": "Exact candidate and failed prerequisite sources unchanged; preserve prior outcomes without duplicating runs.",
+    "prior_results": [
+      "../final-candidate.json",
+      "../attempt-3/product-verification.json",
+      "../focused-product-prerequisites.json"
+    ]
+  },
+  "blockers": [
+    "Released audit lint remains failed on eight unchanged historical auditSources declarations; see final-candidate.json.",
+    "Current CiCd discovery reports 940 diagnostics; no exemption was added.",
+    "Unchanged retained Server/AppHost/FR58 and operator-provider prerequisites remain incomplete; see resume/product-blocker-analysis.json.",
+    "Predecessor acceptance, AD-21 administration, protected adoption and the genuine scheduled release remain outstanding."
+  ],
+  "folders_worktree_preserved": true,
+  "folders_head_preserved": true,
+  "scratch_root": "/tmp/hexalith-job.ClSBhVIZ",
+  "policy_source_blobs": {
+    "tools/render.py": "c24831f300ca0089cbec38e6454de2bdd5ea7598",
+    "tools/check_global.py": "28061d979b6d17a9453a92841b23d57c539d63a4",
+    "tools/scan_discovery.py": "310bd6a000d70779ea9a41b7d6b26712b4ab453c",
+    "templates/.github/workflows/ci.yml.j2": "95befa868c8f79055a241577f14d94240ec58065"
+  },
+  "changed_policy_inputs_since_prior_resume": [
+    "templates/.github/workflows/ci.yml.j2",
+    "tools/render.py",
+    "tools/scan_discovery.py"
+  ],
+  "not_executed": {
+    "full_validator": "It clones live module repositories, outside the local-only boundary.",
+    "normal_module_checker": "Folders is unadopted; its nested Builds remains intentionally absent.",
+    "live_acceptance": "Predecessor checkpoints, AD-21, adoption, retirement and scheduled release remain gated."
+  },
+  "scratch_root_removed": true,
+  "qualification_source_sha256": "26b6ccc7edcfe6589ff843e30ea0c5f5434c3ea87984f4986132893e2dcdcc30",
+  "entrypoint": [
+    "run-with-temp",
+    "python3",
+    "_bmad-output/specs/spec-cicd/evidence/17/requalify-local.py",
+    "--output",
+    "_bmad-output/specs/spec-cicd/evidence/17/local-readiness-20261116"
+  ],
+  "entrypoint_exit_code": 1
+}

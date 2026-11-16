@@ -1,0 +1,26 @@
+name: Commitlint
+
+# Runs on PRs and on direct pushes to main: semantic-release derives versions
+# solely from commit messages, and this repository pushes to main directly, so
+# a PR-only gate can be bypassed.
+on:
+  pull_request:
+    branches: [main]
+    # Subscribe to title edits: the shared workflow validates the prospective squash
+    # title, so a retitled PR must be revalidated.
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main]
+
+concurrency:
+  group: commitlint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    uses: Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@main
+    with:
+      pull-request-title: ${{ github.event.pull_request.title }}

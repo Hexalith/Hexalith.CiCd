@@ -164,3 +164,28 @@ The historical publication/audit/A8 work and Story 1.17 tracking are unchanged.
 [Owner run 43933951553](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43933951553) qualified exact source `6fe837f2fafa0952d21e1690c61cef7a11e6eeab`: 17 acquisition, 28 controller and 17 workflow tests passed. The original patch, action/workflow blobs and all gitlinks are unchanged. Current-source requalification preserves the concurrent product preparation that advanced Projects from `981ceef13a1abc88219925e73c51a23eb9ac50c2` to the current base above.
 
 Delivery then failed at App token creation: `GET /repos/Hexalith/Hexalith.Projects/installation` returned HTTP 404. The configured CiCd App needs an accessible installation covering Projects with its existing Contents/Workflows write capabilities. No App token or push was produced, no credentials/settings were broadened, and no corrected Projects CI/G-6 acceptance is claimed. The owner must resolve this external prerequisite, then use a fresh exact-source dispatch. Full retained receipts and continuation instructions are in `_bmad-output/implementation-artifacts/evidence/projects-g6-narrow-delivery-2026-11-16/authorized-resume-20261116T175933Z/README.md`.
+
+## Actual delivery and fresh hosted result — 2026-11-16
+
+The user completed the existing CiCd App's Projects access grant. Fresh owner
+run [43939511545](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545)
+at `2a1128e0106baed22999c4687d7d15e7639f22cf` passed all 62 behavioral cases,
+production qualification and scoped App mint, then delivered Projects commit
+`146d0f7e9964c82da23d31b51e6ab62efdcfdda6` as a direct child of the reviewed base.
+Independent complete-tree comparison confirms exactly the three reviewed paths
+changed, the expected result tree and unchanged pins, gitlinks and other entries.
+No full adoption or direct maintainer module push was performed.
+
+Fresh [Projects CI 43940159468](https://github.com/Hexalith/Hexalith.Projects/actions/runs/43940159468)
+fails in the unchanged shared-skill fixture: `@dataclass(frozen=True)` decorates
+`_write_text`, a function, raising `AttributeError: 'function' object has no
+attribute '__mro__'` on import. G-6 is skipped behind `workflow-gates`; acquisition,
+prepare-build and runtime qualification did not run. Separately,
+[Commitlint 43940159230](https://github.com/Hexalith/Hexalith.Projects/actions/runs/43940159230)
+fails before message validation because its resolved shared Builds workflow
+runs `npm ci --ignore-scripts` without a Projects lockfile. Both failures and
+their unchanged-source causes are retained; existing gates are preserved.
+
+Delivery is complete. Hosted acquisition/G-6 runtime acceptance remains pending
+separate owner corrections and a fresh exact-source run. Receipts and diagnostics:
+`_bmad-output/implementation-artifacts/evidence/projects-g6-narrow-delivery-2026-11-16/accepted-resume-20261116T192656Z/README.md`.

@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-11-16T19:20:19.034336+00:00",
+  "status": "blocked-external-permission",
+  "authorization": "User explicitly requested give access; only Projects selected repository access to existing CiCd App authorized.",
+  "app": {
+    "slug": "hexalith-cicd",
+    "id": 5671811,
+    "client_id": "Iv23liRwXrNRB9QVzmuh",
+    "installation_id": 179966090
+  },
+  "target": {
+    "repository": "Hexalith/Hexalith.Projects",
+    "id": 871087402
+  },
+  "admin_profile": {
+    "config_dir": "/home/administrator/.config/gh",
+    "account": "jpiquot",
+    "credential_kind": "OAuth access token",
+    "organization_role": "admin",
+    "organization_state": "active"
+  },
+  "failed_operation": "PUT /user/installations/179966090/repositories/871087402",
+  "http_status": 403,
+  "github_message": "You do not have permission to modify this app on Hexalith. Please contact an Organization Owner.",
+  "request_id": "CC88:23FD89:20FBBB5:31735F4:6AFB5729",
+  "repository_inventory": {
+    "status": "unavailable",
+    "http_status": 403,
+    "reason": "Current OAuth credential rejected; inventory not inferred from absence."
+  },
+  "preservation": {
+    "app_permissions_unchanged": true,
+    "repository_selection_unchanged": true,
+    "no_successful_access_mutation": true,
+    "token_scopes_changed": false,
+    "credentials_created": false,
+    "module_push_attempted": false,
+    "story_tracking_changed": false
+  },
+  "missing_prerequisite": "Save Hexalith.Projects as an additional selected repository in the existing CiCd App installation through an accepted owner session, or provide an installation-admin credential accepted by GitHub. No broader App permissions are required.",
+  "settings_url": "https://github.com/organizations/Hexalith/settings/installations/179966090",
+  "delivery": "Not retried: access grant failed. Previous owner qualification passed; actual corrected delivery and fresh Projects CI/G-6 acceptance remain pending.",
+  "api_reference": "https://docs.github.com/en/rest/apps/installations#add-a-repository-to-an-app-installation"
+}

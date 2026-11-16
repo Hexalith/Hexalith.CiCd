@@ -1,0 +1,5073 @@
+{
+  "recorded_at": "2026-11-16T19:49:21.223225+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4710",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 290"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4709",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 291"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/git/ref/heads/main",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4708",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 292"
+      ],
+      "data": {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDORf3mra9yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/git/refs/heads/main",
+        "object": {
+          "sha": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/git/commits/0e0e85fd646da904c5528854e271b71a2b0b9066"
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4707",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 293"
+      ],
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/default-setup",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4706",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 294"
+      ],
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/automated-security-fixes",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4989",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 11"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/immutable-releases",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4988",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 12"
+      ],
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4705",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 295"
+      ],
+      "data": [],
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/environments?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4704",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 296"
+      ],
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 18745236815,
+            "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-07-25T18:15:54Z",
+            "updated_at": "2026-07-25T18:15:54Z",
+            "can_admins_bypass": false,
+            "protection_rules": [
+              {
+                "id": 60898544,
+                "node_id": "GA_kwDORf3mrc4DoTzw",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 60898545,
+                "node_id": "GA_kwDORf3mrc4DoTzx",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4987",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 13"
+      ],
+      "data": {
+        "variables": [
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-08T16:11:27Z",
+            "updated_at": "2026-10-08T16:11:27Z"
+          }
+        ],
+        "total_count": 1
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/releases?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4703",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 297"
+      ],
+      "data": [
+        {
+          "id": 447133958,
+          "tag_name": "v8.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-16T14:15:19Z"
+        },
+        {
+          "id": 445435155,
+          "tag_name": "v8.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-14T16:37:30Z"
+        },
+        {
+          "id": 442026075,
+          "tag_name": "v7.0.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T17:49:51Z"
+        },
+        {
+          "id": 439285820,
+          "tag_name": "v7.0.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T15:13:47Z"
+        },
+        {
+          "id": 436700005,
+          "tag_name": "v7.0.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T15:56:23Z"
+        },
+        {
+          "id": 435288940,
+          "tag_name": "v7.0.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T14:12:41Z"
+        },
+        {
+          "id": 435173203,
+          "tag_name": "v7.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T12:26:54Z"
+        },
+        {
+          "id": 433517592,
+          "tag_name": "v7.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T04:35:37Z"
+        },
+        {
+          "id": 433493187,
+          "tag_name": "v7.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T03:53:44Z"
+        },
+        {
+          "id": 432416284,
+          "tag_name": "v7.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T08:07:01Z"
+        },
+        {
+          "id": 430055186,
+          "tag_name": "v6.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T16:39:33Z"
+        },
+        {
+          "id": 429766286,
+          "tag_name": "v5.11.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T06:33:54Z"
+        },
+        {
+          "id": 426492275,
+          "tag_name": "v5.11.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T09:54:25Z"
+        },
+        {
+          "id": 426307906,
+          "tag_name": "v5.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T05:54:23Z"
+        },
+        {
+          "id": 420307521,
+          "tag_name": "v5.10.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T04:27:22Z"
+        },
+        {
+          "id": 420119986,
+          "tag_name": "v5.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-21T22:33:12Z"
+        },
+        {
+          "id": 416751466,
+          "tag_name": "v5.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T22:36:03Z"
+        },
+        {
+          "id": 407076282,
+          "tag_name": "v5.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-08T17:07:47Z"
+        },
+        {
+          "id": 383266386,
+          "tag_name": "v5.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-05T14:14:17Z"
+        },
+        {
+          "id": 379235192,
+          "tag_name": "v5.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-30T09:27:21Z"
+        },
+        {
+          "id": 376589150,
+          "tag_name": "v5.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-25T17:34:16Z"
+        },
+        {
+          "id": 364611292,
+          "tag_name": "v5.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-04T03:56:14Z"
+        },
+        {
+          "id": 363509099,
+          "tag_name": "v5.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-01T11:29:04Z"
+        },
+        {
+          "id": 362247050,
+          "tag_name": "v5.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-30T07:14:09Z"
+        },
+        {
+          "id": 362150360,
+          "tag_name": "v5.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-30T02:23:55Z"
+        },
+        {
+          "id": 361510480,
+          "tag_name": "v5.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-29T04:42:10Z"
+        },
+        {
+          "id": 361002429,
+          "tag_name": "v5.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-28T10:25:23Z"
+        },
+        {
+          "id": 356090542,
+          "tag_name": "v3.2.18",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-18T11:54:27Z"
+        },
+        {
+          "id": 356087935,
+          "tag_name": "v3.2.17",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-18T11:38:35Z"
+        },
+        {
+          "id": 355810073,
+          "tag_name": "v3.2.16",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T16:55:38Z"
+        },
+        {
+          "id": 355777739,
+          "tag_name": "v3.2.15",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T15:48:43Z"
+        },
+        {
+          "id": 355717785,
+          "tag_name": "v3.2.14",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T14:01:08Z"
+        },
+        {
+          "id": 355154656,
+          "tag_name": "v3.2.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T14:42:09Z"
+        },
+        {
+          "id": 355111153,
+          "tag_name": "v3.2.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:32:59Z"
+        },
+        {
+          "id": 354829797,
+          "tag_name": "v3.2.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:15:11Z"
+        },
+        {
+          "id": 354140513,
+          "tag_name": "v3.2.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T00:25:24Z"
+        },
+        {
+          "id": 354066317,
+          "tag_name": "v3.2.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T20:46:29Z"
+        },
+        {
+          "id": 354005445,
+          "tag_name": "v3.2.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T18:45:41Z"
+        },
+        {
+          "id": 353833300,
+          "tag_name": "v3.2.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T13:55:37Z"
+        },
+        {
+          "id": 353761192,
+          "tag_name": "v3.2.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T11:51:19Z"
+        },
+        {
+          "id": 352711596,
+          "tag_name": "v3.2.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T09:03:14Z"
+        },
+        {
+          "id": 352708220,
+          "tag_name": "v3.2.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T08:42:36Z"
+        },
+        {
+          "id": 351459088,
+          "tag_name": "v3.2.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T10:18:52Z"
+        },
+        {
+          "id": 351386111,
+          "tag_name": "v3.2.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T07:55:08Z"
+        },
+        {
+          "id": 350953388,
+          "tag_name": "v2.4.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T13:39:57Z"
+        },
+        {
+          "id": 350936086,
+          "tag_name": "v2.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T13:10:56Z"
+        }
+      ],
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.Tenants",
+      "exit": 1,
+      "http_status": 404,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4702",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 298"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/git/refs#get-a-reference",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)",
+      "state": "not-found-or-inaccessible"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/installations?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org, read:org, write:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4701",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 299"
+      ],
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "client_id": "Iv1.662b006fa5e9ac0d",
+            "account": {
+              "login": "Hexalith",
+              "id": 80614290,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Hexalith",
+              "html_url": "https://github.com/Hexalith",
+              "followers_url": "https://api.github.com/users/Hexalith/followers",
+              "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+              "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+              "repos_url": "https://api.github.com/users/Hexalith/repos",
+              "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "repository_selection": "selected",
+            "access_tokens_url": "https://api.github.com/app/installations/31615326/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/31615326",
+            "app_id": 67,
+            "app_slug": "travis-ci",
+            "target_id": 80614290,
+            "target_type": "Organization",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            },
+            "events": [
+              "check_run",
+              "check_suite",
+              "create",
+              "delete",
+              "member",
+              "pull_request",
+              "push",
+              "release",
+              "repository"
+            ],
+            "created_at": "2022-11-27T11:12:52.000+01:00",
+            "updated_at": "2024-06-26T15:50:52.000+02:00",
+            "single_file_name": null,
+            "has_multiple_single_files": false,
+            "single_file_paths": [],
+            "suspended_by": null,
+            "suspended_at": null
+          },
+          {
+            "id": 31626264,
+            "client_id": "Iv1.4a97e692dda8878b",
+            "account": {
+              "login": "Hexalith",
+              "id": 80614290,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Hexalith",
+              "html_url": "https://github.com/Hexalith",
+              "followers_url": "https://api.github.com/users/Hexalith/followers",
+              "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+              "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+              "repos_url": "https://api.github.com/users/Hexalith/repos",
+              "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "repository_selection": "all",
+            "access_tokens_url": "https://api.github.com/app/installations/31626264/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/31626264",
+            "app_id": 56611,
+            "app_slug": "codacy-production",
+            "target_id": 80614290,
+            "target_type": "Organization",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            },
+            "events": [
+              "custom_property",
+              "custom_property_values",
+              "organization",
+              "repository"
+            ],
+            "created_at": "2022-11-27T18:30:45.000+01:00",
+            "updated_at": "2026-11-07T09:22:24.000+01:00",
+            "single_file_name": null,
+            "has_multiple_single_files": false,
+            "single_file_paths": [],
+            "suspended_by": null,
+            "suspended_at": null
+          },
+          {
+            "id": 31641834,
+            "client_id": "Iv1.9d88ef6ecc903626",
+            "account": {
+              "login": "Hexalith",
+              "id": 80614290,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Hexalith",
+              "html_url": "https://github.com/Hexalith",
+              "followers_url": "https://api.github.com/users/Hexalith/followers",
+              "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+              "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+              "repos_url": "https://api.github.com/users/Hexalith/repos",
+              "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "repository_selection": "all",
+            "access_tokens_url": "https://api.github.com/app/installations/31641834/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/31641834",
+            "app_id": 254,
+            "app_slug": "codecov",
+            "target_id": 80614290,
+            "target_type": "Organization",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            },
+            "events": [
+              "delete",
+              "fork",
+              "member",
+              "membership",
+              "organization",
+              "public",
+              "pull_request",
+              "push",
+              "release",
+              "repository",
+              "status",
+              "team_add"
+            ],
+            "created_at": "2022-11-28T08:16:43.000+01:00",
+            "updated_at": "2026-11-07T09:22:24.000+01:00",
+            "single_file_name": null,
+            "has_multiple_single_files": false,
+            "single_file_paths": [],
+            "suspended_by": null,
+            "suspended_at": null
+          },
+          {
+            "id": 77847816,
+            "client_id": "Iv23liVemv8A9if9v0F2",
+            "account": {
+              "login": "Hexalith",
+              "id": 80614290,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Hexalith",
+              "html_url": "https://github.com/Hexalith",
+              "followers_url": "https://api.github.com/users/Hexalith/followers",
+              "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+              "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+              "repos_url": "https://api.github.com/users/Hexalith/repos",
+              "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "repository_selection": "selected",
+            "access_tokens_url": "https://api.github.com/app/installations/77847816/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/77847816",
+            "app_id": 1144995,
+            "app_slug": "chatgpt-codex-connector",
+            "target_id": 80614290,
+            "target_type": "Organization",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            },
+            "events": [
+              "check_run",
+              "check_suite",
+              "commit_comment",
+              "issues",
+              "issue_comment",
+              "pull_request",
+              "pull_request_review",
+              "pull_request_review_comment",
+              "pull_request_review_thread",
+              "repository",
+              "status",
+              "sub_issues"
+            ],
+            "created_at": "2025-07-27T11:50:58.000+02:00",
+            "updated_at": "2026-11-09T00:01:51.000+01:00",
+            "single_file_name": null,
+            "has_multiple_single_files": false,
+            "single_file_paths": [],
+            "suspended_by": null,
+            "suspended_at": null
+          },
+          {
+            "id": 97329264,
+            "client_id": "Iv1.dc610988574d1724",
+            "account": {
+              "login": "Hexalith",
+              "id": 80614290,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Hexalith",
+              "html_url": "https://github.com/Hexalith",
+              "followers_url": "https://api.github.com/users/Hexalith/followers",
+              "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+              "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+              "repos_url": "https://api.github.com/users/Hexalith/repos",
+              "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "repository_selection": "all",
+            "access_tokens_url": "https://api.github.com/app/installations/97329264/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/97329264",
+            "app_id": 12526,
+            "app_slug": "sonarqubecloud",
+            "target_id": 80614290,
+            "target_type": "Organization",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            },
+            "events": [
+              "code_scanning_alert",
+              "organization",
+              "pull_request",
+              "push",
+              "repository"
+            ],
+            "created_at": "2025-11-30T17:31:00.000+01:00",
+            "updated_at": "2026-11-07T09:22:24.000+01:00",
+            "single_file_name": null,
+            "has_multiple_single_files": false,
+            "single_file_paths": [],
+            "suspended_by": null,
+            "suspended_at": null
+          },
+          {
+            "id": 179966090,
+            "client_id": "Iv23liRwXrNRB9QVzmuh",
+            "account": {
+              "login": "Hexalith",
+              "id": 80614290,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Hexalith",
+              "html_url": "https://github.com/Hexalith",
+              "followers_url": "https://api.github.com/users/Hexalith/followers",
+              "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+              "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+              "repos_url": "https://api.github.com/users/Hexalith/repos",
+              "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "repository_selection": "selected",
+            "access_tokens_url": "https://api.github.com/app/installations/179966090/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/179966090",
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "target_id": 80614290,
+            "target_type": "Organization",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            },
+            "events": [],
+            "created_at": "2026-11-08T21:38:50.000+01:00",
+            "updated_at": "2026-11-16T20:31:01.000+01:00",
+            "single_file_name": null,
+            "has_multiple_single_files": false,
+            "single_file_paths": [],
+            "suspended_by": null,
+            "suspended_at": null
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "user/installations/179966090/repositories?per_page=100&page=1",
+      "exit": 1,
+      "http_status": 403,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Accepted-Oauth-Scopes: read:user, user",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4700",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 300"
+      ],
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user",
+      "state": "refused"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "Link: <https://api.github.com/repositories/1174267565/code-scanning/analyses?per_page=100&page=2>; rel=\"next\", <https://api.github.com/repositories/1174267565/code-scanning/analyses?per_page=100&page=9>; rel=\"last\"",
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4699",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 301"
+      ],
+      "data": [
+        {
+          "id": 2177434213,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "292dbf164f26bcf376ef86d749b149b075f8b502",
+          "created_at": "2026-11-16T14:38:36Z"
+        },
+        {
+          "id": 2176903263,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "ab67fd6bc308b5a641b0ca398d776e347193c168",
+          "created_at": "2026-11-16T13:34:44Z"
+        },
+        {
+          "id": 2176572494,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "42d53e30eb117b26fa7c27e421d3910e1a4924eb",
+          "created_at": "2026-11-16T12:51:10Z"
+        },
+        {
+          "id": 2176500555,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "b73cadc18f0b6736feafe1ea7d35c095b75be032",
+          "created_at": "2026-11-16T12:41:44Z"
+        },
+        {
+          "id": 2176453005,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4b99a89c78c57294b99b52eaf5889e8c74b87999",
+          "created_at": "2026-11-16T12:34:38Z"
+        },
+        {
+          "id": 2176194432,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8aa6f169b3e27f0a831ad6425c4bc1278ca2c445",
+          "created_at": "2026-11-16T11:56:08Z"
+        },
+        {
+          "id": 2172020000,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8aa6f169b3e27f0a831ad6425c4bc1278ca2c445",
+          "created_at": "2026-11-15T19:32:15Z"
+        },
+        {
+          "id": 2171919224,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4faa79395b092fd73cd552ae9a37fdcbf77124ae",
+          "created_at": "2026-11-15T18:56:41Z"
+        },
+        {
+          "id": 2171425693,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d73267fdbe84d09ccddf0a6492390e32d8938405",
+          "created_at": "2026-11-15T15:55:26Z"
+        },
+        {
+          "id": 2171358839,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "dc0124faad78b34d2fc67a471f1f2085e8646be2",
+          "created_at": "2026-11-15T15:31:04Z"
+        },
+        {
+          "id": 2171303537,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+          "created_at": "2026-11-15T15:10:50Z"
+        },
+        {
+          "id": 2171069738,
+          "ref": "refs/pull/75/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2fe19615723e2162d945def3a018a8f756195ed7",
+          "created_at": "2026-11-15T13:40:37Z"
+        },
+        {
+          "id": 2170982485,
+          "ref": "refs/pull/74/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2d8e5a2a744287b14c87915cdc69fe373ed0b4c4",
+          "created_at": "2026-11-15T13:05:40Z"
+        },
+        {
+          "id": 2170800294,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8b03eb999cd596aa07906face9db295e6705f9de",
+          "created_at": "2026-11-15T11:48:53Z"
+        },
+        {
+          "id": 2170781721,
+          "ref": "refs/pull/74/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7108de0cdf8fc70a39adf3dc66dce9ed29529fda",
+          "created_at": "2026-11-15T11:40:58Z"
+        },
+        {
+          "id": 2170355808,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2ec938397c5b330cf1e694e8cc442cb4ad022f2b",
+          "created_at": "2026-11-15T08:34:37Z"
+        },
+        {
+          "id": 2170309113,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "30b9b61845e35052187c86968880c79d8e76cd2b",
+          "created_at": "2026-11-15T08:13:49Z"
+        },
+        {
+          "id": 2168172611,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d89f234c4f020373aaabe0e3699ecdb5097b1079",
+          "created_at": "2026-11-14T17:34:48Z"
+        },
+        {
+          "id": 2168084102,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0caa7b442eed4baccdb565a6dcdfc1d3a89a89d5",
+          "created_at": "2026-11-14T17:01:54Z"
+        },
+        {
+          "id": 2167618031,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0cfe90e887e4d9d9f0168cba98fca1852cb80313",
+          "created_at": "2026-11-14T14:00:19Z"
+        },
+        {
+          "id": 2167587410,
+          "ref": "refs/pull/73/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cd0b102034c49b05374d642f4a9d5fd115ada1e9",
+          "created_at": "2026-11-14T13:47:09Z"
+        },
+        {
+          "id": 2167541287,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "91405352d4cb2803f9a79faae8c6c02e3420f6c0",
+          "created_at": "2026-11-14T13:28:25Z"
+        },
+        {
+          "id": 2167467550,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f3b0e85f68c0ef0515d567502f59257916ac18b6",
+          "created_at": "2026-11-14T12:58:08Z"
+        },
+        {
+          "id": 2167446400,
+          "ref": "refs/pull/73/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2d3800e0de6cdafcbf0e92019e46e1545094714f",
+          "created_at": "2026-11-14T12:49:28Z"
+        },
+        {
+          "id": 2167378504,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "a2142101a021161790546ba59b164940516ca6a6",
+          "created_at": "2026-11-14T12:20:43Z"
+        },
+        {
+          "id": 2167346543,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "6f4df89e5ad5b8f96d79e22b45116f5069291f97",
+          "created_at": "2026-11-14T12:07:34Z"
+        },
+        {
+          "id": 2167321770,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "48218900f2836a60f2bd7760954a89601cf82bbb",
+          "created_at": "2026-11-14T11:56:02Z"
+        },
+        {
+          "id": 2167132279,
+          "ref": "refs/pull/72/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "01348b3bdff091524d168bf0d3d154508b2790ca",
+          "created_at": "2026-11-14T10:28:55Z"
+        },
+        {
+          "id": 2166820950,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "6fcff842a8e48fc843d7b2df942d369f99f92b6b",
+          "created_at": "2026-11-14T08:15:05Z"
+        },
+        {
+          "id": 2166118108,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d99b7f63feb81f74cee75c3976894c02d173b373",
+          "created_at": "2026-11-14T03:38:54Z"
+        },
+        {
+          "id": 2159315112,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "401d926eb7d51bdf332696ed3f0fe39a812b3501",
+          "created_at": "2026-11-13T08:11:39Z"
+        },
+        {
+          "id": 2156617697,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8ce40cdfe9b1bdd0ec3bd643b0f3386501e514c2",
+          "created_at": "2026-11-12T22:33:30Z"
+        },
+        {
+          "id": 2155690654,
+          "ref": "refs/pull/71/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "49d3b5f513887756ad16a606075438a2b6155592",
+          "created_at": "2026-11-12T20:27:14Z"
+        },
+        {
+          "id": 2155667113,
+          "ref": "refs/pull/70/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "95839a0085fade9261e829194e07791bb8f328fc",
+          "created_at": "2026-11-12T20:24:07Z"
+        },
+        {
+          "id": 2155655041,
+          "ref": "refs/pull/69/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "64efb0e4d760c67dfa952fbc6a99b3c84ba74be0",
+          "created_at": "2026-11-12T20:22:32Z"
+        },
+        {
+          "id": 2155259791,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "175dcf050292b72ba1049121b274f2d1f6460adb",
+          "created_at": "2026-11-12T19:31:19Z"
+        },
+        {
+          "id": 2150383371,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d43342f1a21fbe57ff0d42108ed3d211ecdbeb55",
+          "created_at": "2026-11-12T08:33:17Z"
+        },
+        {
+          "id": 2150120000,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "b239c8e43da8a80fd872c7f4391d219be44b2d1d",
+          "created_at": "2026-11-12T07:44:08Z"
+        },
+        {
+          "id": 2149888857,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "5617d967d92f51dafc98ee267fb2e8ce71e15d02",
+          "created_at": "2026-11-12T06:57:00Z"
+        },
+        {
+          "id": 2145768298,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "bcee4b4dbd886b7b718843cfb80419a92d33de15",
+          "created_at": "2026-11-11T17:08:39Z"
+        },
+        {
+          "id": 2145512460,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c9f93e817c645dee8628c7ca96ab92f81511b792",
+          "created_at": "2026-11-11T16:34:11Z"
+        },
+        {
+          "id": 2145280540,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "aa1653a45eaf2163c57278923543dc68f652f7b3",
+          "created_at": "2026-11-11T16:03:11Z"
+        },
+        {
+          "id": 2145180783,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9de41a26d2b60ff9527724203cd98aadfde0532f",
+          "created_at": "2026-11-11T15:50:00Z"
+        },
+        {
+          "id": 2145086698,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9adaa4a6cbca66b85a0f6001d2f7c00a7707df30",
+          "created_at": "2026-11-11T15:37:39Z"
+        },
+        {
+          "id": 2145010322,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "a2f030d6cf881bad6f88363ae331bdfccb4809af",
+          "created_at": "2026-11-11T15:27:34Z"
+        },
+        {
+          "id": 2144825393,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "1e50517c2c5c09008b5d3078a7a9839cd49ea047",
+          "created_at": "2026-11-11T15:03:39Z"
+        },
+        {
+          "id": 2144330366,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f07be33889202d96bc877e1b7d10ae0d73e073c8",
+          "created_at": "2026-11-11T13:56:39Z"
+        },
+        {
+          "id": 2144167235,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9c1b46f2a9b245c0cb0b0241fd839b5af6310b54",
+          "created_at": "2026-11-11T13:33:34Z"
+        },
+        {
+          "id": 2144100667,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "340d2dc279b043707b3dd2ca1894bbe74e421ac8",
+          "created_at": "2026-11-11T13:23:49Z"
+        },
+        {
+          "id": 2142740186,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cca5537c3a9d6dde162787053b34e17c8351b21d",
+          "created_at": "2026-11-11T09:38:14Z"
+        },
+        {
+          "id": 2131299369,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "019aa0a82d021e08475a68fc50eff3b6a0e6c111",
+          "created_at": "2026-11-10T00:05:12Z"
+        },
+        {
+          "id": 2127248961,
+          "ref": "refs/pull/68/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7d096205c40e08d75a75173a31fa0781d89895f3",
+          "created_at": "2026-11-09T14:45:29Z"
+        },
+        {
+          "id": 2127108985,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "dfe7031b7f74c7a303711cabf7ce0884d800f9a9",
+          "created_at": "2026-11-09T14:28:06Z"
+        },
+        {
+          "id": 2126917774,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8abe739a9a97daa579131d3d649de0cc788a6e0d",
+          "created_at": "2026-11-09T14:03:53Z"
+        },
+        {
+          "id": 2126100377,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d88aef6b52d7e8a2e2d81132b1d76b7e1d1f0f35",
+          "created_at": "2026-11-09T12:01:05Z"
+        },
+        {
+          "id": 2112874605,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d88aef6b52d7e8a2e2d81132b1d76b7e1d1f0f35",
+          "created_at": "2026-11-06T15:10:03Z"
+        },
+        {
+          "id": 2112687604,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "26d9a1968b5a13a0af8e187fb20b5ddabd3ed882",
+          "created_at": "2026-11-06T14:45:28Z"
+        },
+        {
+          "id": 2111949881,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4b7fb859766969635c4463a7860d976cc9ee9549",
+          "created_at": "2026-11-06T12:55:37Z"
+        },
+        {
+          "id": 2107839687,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cf36618a2c27b5722a1ff811cfbbce4528c3c105",
+          "created_at": "2026-11-05T22:30:05Z"
+        },
+        {
+          "id": 2107380841,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c1395216240a8971c3d27e10ac64d55ec5ea5980",
+          "created_at": "2026-11-05T21:25:23Z"
+        },
+        {
+          "id": 2107284506,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cfb5d1ae93bbe3f2a5f96a08a14affdf8b8f9103",
+          "created_at": "2026-11-05T21:12:44Z"
+        },
+        {
+          "id": 2106856455,
+          "ref": "refs/pull/67/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "74b49ade2843e730d2a9dfc7614d5bcf4e685e67",
+          "created_at": "2026-11-05T20:15:56Z"
+        },
+        {
+          "id": 2106836456,
+          "ref": "refs/pull/66/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c43686df2978f82c2bd1d2739140e9e92526082a",
+          "created_at": "2026-11-05T20:13:26Z"
+        },
+        {
+          "id": 2106820318,
+          "ref": "refs/pull/65/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d21e0dcc1890cc3c054dc4b2da8f3d0f854e31bf",
+          "created_at": "2026-11-05T20:11:27Z"
+        },
+        {
+          "id": 2103371188,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8e20524574901d71ad5f4876804c64c3c6c87b88",
+          "created_at": "2026-11-05T12:52:55Z"
+        },
+        {
+          "id": 2102819390,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f4129cfe0a44b079a4f11f9cfb1374aed915f243",
+          "created_at": "2026-11-05T11:26:13Z"
+        },
+        {
+          "id": 2091770543,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "143cec60a3f5bb1831fa57f35c510880ceb788d8",
+          "created_at": "2026-11-04T04:03:22Z"
+        },
+        {
+          "id": 2091574217,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7f240703a50a803820e041c8bc2798fe272f9282",
+          "created_at": "2026-11-04T03:13:00Z"
+        },
+        {
+          "id": 2091498117,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "5e18de96f841fc18ee29855e51c8acf0e06976a0",
+          "created_at": "2026-11-04T02:53:58Z"
+        },
+        {
+          "id": 2091409592,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0d1268f315882f30ed6ba4e08a23f94ae4d49230",
+          "created_at": "2026-11-04T02:31:54Z"
+        },
+        {
+          "id": 2091244767,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9b81fe4d3d964f9b191bc244a2028f710dd1a4b0",
+          "created_at": "2026-11-04T01:51:16Z"
+        },
+        {
+          "id": 2091191822,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c0ca5b3581cd4ca4867b1cfd4af2fea1e9ef3f1f",
+          "created_at": "2026-11-04T01:37:47Z"
+        },
+        {
+          "id": 2090920684,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "316400ea38f3dfef62a5340adb2d9ee4c82b2b0c",
+          "created_at": "2026-11-04T00:36:07Z"
+        },
+        {
+          "id": 2090747155,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4f99d54889bec94c26b942b3e505222abbc7cada",
+          "created_at": "2026-11-04T00:02:33Z"
+        },
+        {
+          "id": 2090670506,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8ffe27051c5d5709db047de0490fdd2b23854281",
+          "created_at": "2026-11-03T23:47:35Z"
+        },
+        {
+          "id": 2090580594,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "1bdae82f13daa009c872028be70d0e586695a475",
+          "created_at": "2026-11-03T23:30:52Z"
+        },
+        {
+          "id": 2090460031,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "bad965e0793f6b9db9b9ff519cec5dd51434bce8",
+          "created_at": "2026-11-03T23:10:53Z"
+        },
+        {
+          "id": 2090363680,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9ee7e363d63f516f35885c24032ab2808cf45627",
+          "created_at": "2026-11-03T22:55:03Z"
+        },
+        {
+          "id": 2089907162,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c472219844bb4ffc03f070d45eda91f66e47b3a1",
+          "created_at": "2026-11-03T21:47:01Z"
+        },
+        {
+          "id": 2089560728,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8f0b39f876f64e508b9e916de0a810fcb7f7cc19",
+          "created_at": "2026-11-03T20:59:09Z"
+        },
+        {
+          "id": 2089121430,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "1bc5118de19d8c79d1f9438f73271463b1e7fda9",
+          "created_at": "2026-11-03T19:59:01Z"
+        },
+        {
+          "id": 2088611043,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7d88588c281c5448caeb27563781f15658a3cd2f",
+          "created_at": "2026-11-03T18:49:40Z"
+        },
+        {
+          "id": 2088352571,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c0508dbb8efce8a4b3b297777cf023ad6ed43c85",
+          "created_at": "2026-11-03T18:15:15Z"
+        },
+        {
+          "id": 2088178490,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8beb58d6de9b0d17d630d2c7b4b4a2f20ce86537",
+          "created_at": "2026-11-03T17:52:01Z"
+        },
+        {
+          "id": 2087962635,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "3ba0f153053ed9abfd58499f6671486407137e4a",
+          "created_at": "2026-11-03T17:24:36Z"
+        },
+        {
+          "id": 2087519643,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "10cf25e522afc0e1f3fbfdbeffdc4754d24ddc29",
+          "created_at": "2026-11-03T16:32:17Z"
+        },
+        {
+          "id": 2087192255,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cf058629bd810d57b7b89506b41c43a1df4f6bbc",
+          "created_at": "2026-11-03T15:54:23Z"
+        },
+        {
+          "id": 2087073240,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c2a45226ee599f2298ad71f6eddd4b8bb40ee94e",
+          "created_at": "2026-11-03T15:40:46Z"
+        },
+        {
+          "id": 2087009053,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0bec7d6b866f4b5084444c6cd1ca586d7486cda3",
+          "created_at": "2026-11-03T15:33:31Z"
+        },
+        {
+          "id": 2085753718,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "33835a03e92579a26400e7cb7cf68d666c715b3e",
+          "created_at": "2026-11-03T12:59:18Z"
+        },
+        {
+          "id": 2085639299,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "60daa5198169f093b11abd1bafca5a45afe254fe",
+          "created_at": "2026-11-03T12:42:22Z"
+        },
+        {
+          "id": 2085601196,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7598b08a3897902b8e4a82e8ac4f38798d838db3",
+          "created_at": "2026-11-03T12:36:48Z"
+        },
+        {
+          "id": 2085496458,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f11bc1957fa60a957c654c8dcf3110fc9de25e25",
+          "created_at": "2026-11-03T12:21:08Z"
+        },
+        {
+          "id": 2085275497,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "07e35f11d247c7ab2aff4ce68f4e64c2eda6af9c",
+          "created_at": "2026-11-03T11:46:59Z"
+        },
+        {
+          "id": 2085094075,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "bd4946b9599ac05e2a8bb619fc8f71f148835b3e",
+          "created_at": "2026-11-03T11:17:17Z"
+        },
+        {
+          "id": 2084997094,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "553cb1dc05bf9d2e091c2652cb7e890670c878a9",
+          "created_at": "2026-11-03T11:02:13Z"
+        },
+        {
+          "id": 2084915282,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8c30bdfa0dc046155c2c1c10459cfa554a32eabc",
+          "created_at": "2026-11-03T10:49:24Z"
+        },
+        {
+          "id": 2084785218,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "02236a923f3c2229b6b47c8e49f0876bd98b6a02",
+          "created_at": "2026-11-03T10:29:35Z"
+        },
+        {
+          "id": 2084586732,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "fc4e96e531b5499f85a92a1bf15d133693ffee9e",
+          "created_at": "2026-11-03T10:00:00Z"
+        },
+        {
+          "id": 2084387774,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8eaf6f601d82bcb4a92ed89aa1c2dcdc8815baa8",
+          "created_at": "2026-11-03T09:29:12Z"
+        }
+      ],
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4986",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 14"
+      ],
+      "data": {
+        "total_count": 10,
+        "secrets": [
+          {
+            "name": "AZURE_APPLICATIONID",
+            "created_at": "2024-05-10T11:49:54Z",
+            "updated_at": "2026-11-08T21:46:54Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories"
+          },
+          {
+            "name": "AZURE_APPLICATIONSECRET",
+            "created_at": "2024-05-10T11:52:00Z",
+            "updated_at": "2026-11-08T21:47:24Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories"
+          },
+          {
+            "name": "AZURE_SUBSCRIPTION_ID",
+            "created_at": "2024-11-16T19:45:07Z",
+            "updated_at": "2026-11-08T21:45:48Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories"
+          },
+          {
+            "name": "AZURE_TENANT_ID",
+            "created_at": "2024-11-16T19:44:21Z",
+            "updated_at": "2026-11-08T21:46:21Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "created_at": "2026-11-08T23:43:37Z",
+            "updated_at": "2026-11-16T16:05:37Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "created_at": "2026-11-08T23:43:36Z",
+            "updated_at": "2026-11-16T16:05:36Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+          },
+          {
+            "name": "HEXALITH_ZOT_API_KEY",
+            "created_at": "2026-07-09T07:47:49Z",
+            "updated_at": "2026-11-08T21:45:17Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories"
+          },
+          {
+            "name": "HEXALITH_ZOT_USERNAME",
+            "created_at": "2026-07-08T14:34:13Z",
+            "updated_at": "2026-11-08T21:44:48Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories"
+          },
+          {
+            "name": "NUGET_API_KEY",
+            "created_at": "2022-11-21T07:33:02Z",
+            "updated_at": "2026-11-08T21:49:02Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories"
+          },
+          {
+            "name": "SONAR_TOKEN",
+            "created_at": "2024-05-12T16:40:50Z",
+            "updated_at": "2026-11-08T21:47:54Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4985",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 15"
+      ],
+      "data": {
+        "total_count": 7,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4984",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 16"
+      ],
+      "data": {
+        "total_count": 7,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4983",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 17"
+      ],
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          },
+          {
+            "id": 1272275109,
+            "full_name": "Hexalith/Hexalith.Timesheets"
+          },
+          {
+            "id": 647343286,
+            "full_name": "Hexalith/semantic-kernel"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4982",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 18"
+      ],
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          },
+          {
+            "id": 1272275109,
+            "full_name": "Hexalith/Hexalith.Timesheets"
+          },
+          {
+            "id": 647343286,
+            "full_name": "Hexalith/semantic-kernel"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4981",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 19"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4980",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 20"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4979",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 21"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 1188027961,
+            "full_name": "Hexalith/Hexalith.Memories"
+          },
+          {
+            "id": 1170072276,
+            "full_name": "Hexalith/Hexalith.Parties"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4978",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 22"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 1188027961,
+            "full_name": "Hexalith/Hexalith.Memories"
+          },
+          {
+            "id": 1170072276,
+            "full_name": "Hexalith/Hexalith.Parties"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4977",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 23"
+      ],
+      "data": {
+        "total_count": 24,
+        "repositories": [
+          {
+            "id": 851523569,
+            "full_name": "Hexalith/Hexalith"
+          },
+          {
+            "id": 1277685416,
+            "full_name": "Hexalith/Hexalith.Agents"
+          },
+          {
+            "id": 1120511943,
+            "full_name": "Hexalith/Hexalith.Applications"
+          },
+          {
+            "id": 1027122874,
+            "full_name": "Hexalith/Hexalith.ChatClient"
+          },
+          {
+            "id": 890456345,
+            "full_name": "Hexalith/Hexalith.DaprIdentityStore"
+          },
+          {
+            "id": 968206525,
+            "full_name": "Hexalith/Hexalith.Documents"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 968662765,
+            "full_name": "Hexalith/Hexalith.Domains"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 963292804,
+            "full_name": "Hexalith/Hexalith.EventStores"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 1107174746,
+            "full_name": "Hexalith/Hexalith.GitStorage"
+          },
+          {
+            "id": 967469113,
+            "full_name": "Hexalith/Hexalith.IdentityStores"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 960307124,
+            "full_name": "Hexalith/Hexalith.KeyValueStorages"
+          },
+          {
+            "id": 1131658602,
+            "full_name": "Hexalith/Hexalith.MarkdownEditor"
+          },
+          {
+            "id": 1027188474,
+            "full_name": "Hexalith/Hexalith.MyNewModule"
+          },
+          {
+            "id": 956657445,
+            "full_name": "Hexalith/Hexalith.MyNewPackage"
+          },
+          {
+            "id": 967276766,
+            "full_name": "Hexalith/Hexalith.NetAspire"
+          },
+          {
+            "id": 854107919,
+            "full_name": "Hexalith/Hexalith.Oidc"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 966892135,
+            "full_name": "Hexalith/Hexalith.Security"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          },
+          {
+            "id": 958460421,
+            "full_name": "Hexalith/Hexalith.Streams"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4976",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 24"
+      ],
+      "data": {
+        "total_count": 7,
+        "repositories": [
+          {
+            "id": 890456345,
+            "full_name": "Hexalith/Hexalith.DaprIdentityStore"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 854107919,
+            "full_name": "Hexalith/Hexalith.Oidc"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/dependabot/secrets?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4975",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 25"
+      ],
+      "data": {
+        "total_count": 2,
+        "secrets": [
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "created_at": "2026-11-08T23:43:39Z",
+            "updated_at": "2026-11-16T16:05:39Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "created_at": "2026-11-08T23:43:38Z",
+            "updated_at": "2026-11-16T16:05:38Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4974",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 26"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4973",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 27"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/variables?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4972",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 28"
+      ],
+      "data": {
+        "total_count": 3,
+        "variables": [
+          {
+            "name": "AZURE_REGISTRY",
+            "value": "itaneo.azurecr.io",
+            "created_at": "2023-11-17T15:55:06Z",
+            "updated_at": "2024-11-16T19:32:21Z",
+            "visibility": "all"
+          },
+          {
+            "name": "HEXALITH_NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-11-08T20:26:36Z",
+            "updated_at": "2026-11-16T16:05:40Z",
+            "visibility": "selected",
+            "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories"
+          },
+          {
+            "name": "HEXALITH_ZOT_REGISTRY",
+            "value": "registry.hexalith.com",
+            "created_at": "2026-07-08T14:37:51Z",
+            "updated_at": "2026-07-08T14:37:51Z",
+            "visibility": "all"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4971",
+        "X-Ratelimit-Reset: 1794858919",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 29"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "module-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4696",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 304"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "module-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4695",
+        "X-Ratelimit-Reset: 1794858616",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 305"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": null
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1",
+      "item_key": null,
+      "pages": [
+        "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [],
+      "complete": true,
+      "state": "complete",
+      "observed_count": 0
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/environments?per_page=100&page=1",
+      "item_key": "environments",
+      "pages": [
+        "repos/Hexalith/Hexalith.Tenants/environments?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 18745236815,
+          "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+          "name": "production",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+          "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+          "created_at": "2026-07-25T18:15:54Z",
+          "updated_at": "2026-07-25T18:15:54Z",
+          "can_admins_bypass": false,
+          "protection_rules": [
+            {
+              "id": 60898544,
+              "node_id": "GA_kwDORf3mrc4DoTzw",
+              "type": "required_reviewers",
+              "prevent_self_review": false,
+              "reviewers": [
+                {
+                  "type": "User",
+                  "reviewer": {
+                    "login": "jpiquot",
+                    "id": 6775094,
+                    "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/jpiquot",
+                    "html_url": "https://github.com/jpiquot",
+                    "followers_url": "https://api.github.com/users/jpiquot/followers",
+                    "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                    "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                    "repos_url": "https://api.github.com/users/jpiquot/repos",
+                    "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                    "type": "User",
+                    "user_view_type": "public",
+                    "site_admin": false
+                  }
+                }
+              ]
+            },
+            {
+              "id": 60898545,
+              "node_id": "GA_kwDORf3mrc4DoTzx",
+              "type": "branch_policy"
+            }
+          ],
+          "deployment_branch_policy": {
+            "protected_branches": false,
+            "custom_branch_policies": true
+          }
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 1,
+      "observed_count": 1
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1",
+      "item_key": "variables",
+      "pages": [
+        "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "name": "NUGET_USER",
+          "value": "jpiquot",
+          "created_at": "2026-10-08T16:11:27Z",
+          "updated_at": "2026-10-08T16:11:27Z"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 1,
+      "observed_count": 1
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/releases?per_page=100&page=1",
+      "item_key": null,
+      "pages": [
+        "repos/Hexalith/Hexalith.Tenants/releases?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 447133958,
+          "tag_name": "v8.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-16T14:15:19Z"
+        },
+        {
+          "id": 445435155,
+          "tag_name": "v8.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-14T16:37:30Z"
+        },
+        {
+          "id": 442026075,
+          "tag_name": "v7.0.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-11T17:49:51Z"
+        },
+        {
+          "id": 439285820,
+          "tag_name": "v7.0.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-09T15:13:47Z"
+        },
+        {
+          "id": 436700005,
+          "tag_name": "v7.0.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-06T15:56:23Z"
+        },
+        {
+          "id": 435288940,
+          "tag_name": "v7.0.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T14:12:41Z"
+        },
+        {
+          "id": 435173203,
+          "tag_name": "v7.0.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-05T12:26:54Z"
+        },
+        {
+          "id": 433517592,
+          "tag_name": "v7.0.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T04:35:37Z"
+        },
+        {
+          "id": 433493187,
+          "tag_name": "v7.0.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-04T03:53:44Z"
+        },
+        {
+          "id": 432416284,
+          "tag_name": "v7.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-11-03T08:07:01Z"
+        },
+        {
+          "id": 430055186,
+          "tag_name": "v6.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T16:39:33Z"
+        },
+        {
+          "id": 429766286,
+          "tag_name": "v5.11.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-31T06:33:54Z"
+        },
+        {
+          "id": 426492275,
+          "tag_name": "v5.11.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T09:54:25Z"
+        },
+        {
+          "id": 426307906,
+          "tag_name": "v5.11.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-28T05:54:23Z"
+        },
+        {
+          "id": 420307521,
+          "tag_name": "v5.10.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-22T04:27:22Z"
+        },
+        {
+          "id": 420119986,
+          "tag_name": "v5.10.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-21T22:33:12Z"
+        },
+        {
+          "id": 416751466,
+          "tag_name": "v5.9.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-18T22:36:03Z"
+        },
+        {
+          "id": 407076282,
+          "tag_name": "v5.8.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-10-08T17:07:47Z"
+        },
+        {
+          "id": 383266386,
+          "tag_name": "v5.7.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-09-05T14:14:17Z"
+        },
+        {
+          "id": 379235192,
+          "tag_name": "v5.6.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-30T09:27:21Z"
+        },
+        {
+          "id": 376589150,
+          "tag_name": "v5.5.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-25T17:34:16Z"
+        },
+        {
+          "id": 364611292,
+          "tag_name": "v5.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-04T03:56:14Z"
+        },
+        {
+          "id": 363509099,
+          "tag_name": "v5.4.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-08-01T11:29:04Z"
+        },
+        {
+          "id": 362247050,
+          "tag_name": "v5.3.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-30T07:14:09Z"
+        },
+        {
+          "id": 362150360,
+          "tag_name": "v5.2.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-30T02:23:55Z"
+        },
+        {
+          "id": 361510480,
+          "tag_name": "v5.1.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-29T04:42:10Z"
+        },
+        {
+          "id": 361002429,
+          "tag_name": "v5.0.0",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-28T10:25:23Z"
+        },
+        {
+          "id": 356090542,
+          "tag_name": "v3.2.18",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-18T11:54:27Z"
+        },
+        {
+          "id": 356087935,
+          "tag_name": "v3.2.17",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-18T11:38:35Z"
+        },
+        {
+          "id": 355810073,
+          "tag_name": "v3.2.16",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T16:55:38Z"
+        },
+        {
+          "id": 355777739,
+          "tag_name": "v3.2.15",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T15:48:43Z"
+        },
+        {
+          "id": 355717785,
+          "tag_name": "v3.2.14",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-17T14:01:08Z"
+        },
+        {
+          "id": 355154656,
+          "tag_name": "v3.2.13",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T14:42:09Z"
+        },
+        {
+          "id": 355111153,
+          "tag_name": "v3.2.12",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T13:32:59Z"
+        },
+        {
+          "id": 354829797,
+          "tag_name": "v3.2.11",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-16T02:15:11Z"
+        },
+        {
+          "id": 354140513,
+          "tag_name": "v3.2.10",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-15T00:25:24Z"
+        },
+        {
+          "id": 354066317,
+          "tag_name": "v3.2.9",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T20:46:29Z"
+        },
+        {
+          "id": 354005445,
+          "tag_name": "v3.2.8",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T18:45:41Z"
+        },
+        {
+          "id": 353833300,
+          "tag_name": "v3.2.7",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T13:55:37Z"
+        },
+        {
+          "id": 353761192,
+          "tag_name": "v3.2.6",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-14T11:51:19Z"
+        },
+        {
+          "id": 352711596,
+          "tag_name": "v3.2.5",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T09:03:14Z"
+        },
+        {
+          "id": 352708220,
+          "tag_name": "v3.2.4",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-12T08:42:36Z"
+        },
+        {
+          "id": 351459088,
+          "tag_name": "v3.2.3",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T10:18:52Z"
+        },
+        {
+          "id": 351386111,
+          "tag_name": "v3.2.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-09T07:55:08Z"
+        },
+        {
+          "id": 350953388,
+          "tag_name": "v2.4.2",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T13:39:57Z"
+        },
+        {
+          "id": 350936086,
+          "tag_name": "v2.4.1",
+          "draft": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "published_at": "2026-07-08T13:10:56Z"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "observed_count": 46
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/installations?per_page=100&page=1",
+      "item_key": "installations",
+      "pages": [
+        "orgs/Hexalith/installations?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 31615326,
+          "client_id": "Iv1.662b006fa5e9ac0d",
+          "account": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "repository_selection": "selected",
+          "access_tokens_url": "https://api.github.com/app/installations/31615326/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/31615326",
+          "app_id": 67,
+          "app_slug": "travis-ci",
+          "target_id": 80614290,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "write",
+            "members": "read",
+            "contents": "read",
+            "metadata": "read",
+            "statuses": "write",
+            "deployments": "write",
+            "pull_requests": "read",
+            "repository_hooks": "write"
+          },
+          "events": [
+            "check_run",
+            "check_suite",
+            "create",
+            "delete",
+            "member",
+            "pull_request",
+            "push",
+            "release",
+            "repository"
+          ],
+          "created_at": "2022-11-27T11:12:52.000+01:00",
+          "updated_at": "2024-06-26T15:50:52.000+02:00",
+          "single_file_name": null,
+          "has_multiple_single_files": false,
+          "single_file_paths": [],
+          "suspended_by": null,
+          "suspended_at": null
+        },
+        {
+          "id": 31626264,
+          "client_id": "Iv1.4a97e692dda8878b",
+          "account": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "repository_selection": "all",
+          "access_tokens_url": "https://api.github.com/app/installations/31626264/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/31626264",
+          "app_id": 56611,
+          "app_slug": "codacy-production",
+          "target_id": 80614290,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "write",
+            "issues": "write",
+            "members": "read",
+            "contents": "read",
+            "metadata": "read",
+            "statuses": "write",
+            "pull_requests": "write",
+            "repository_hooks": "write",
+            "organization_hooks": "write",
+            "repository_custom_properties": "read",
+            "organization_custom_properties": "read"
+          },
+          "events": [
+            "custom_property",
+            "custom_property_values",
+            "organization",
+            "repository"
+          ],
+          "created_at": "2022-11-27T18:30:45.000+01:00",
+          "updated_at": "2026-11-07T09:22:24.000+01:00",
+          "single_file_name": null,
+          "has_multiple_single_files": false,
+          "single_file_paths": [],
+          "suspended_by": null,
+          "suspended_at": null
+        },
+        {
+          "id": 31641834,
+          "client_id": "Iv1.9d88ef6ecc903626",
+          "account": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "repository_selection": "all",
+          "access_tokens_url": "https://api.github.com/app/installations/31641834/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/31641834",
+          "app_id": 254,
+          "app_slug": "codecov",
+          "target_id": 80614290,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "write",
+            "issues": "read",
+            "members": "read",
+            "contents": "read",
+            "metadata": "read",
+            "statuses": "write",
+            "pull_requests": "write",
+            "administration": "read"
+          },
+          "events": [
+            "delete",
+            "fork",
+            "member",
+            "membership",
+            "organization",
+            "public",
+            "pull_request",
+            "push",
+            "release",
+            "repository",
+            "status",
+            "team_add"
+          ],
+          "created_at": "2022-11-28T08:16:43.000+01:00",
+          "updated_at": "2026-11-07T09:22:24.000+01:00",
+          "single_file_name": null,
+          "has_multiple_single_files": false,
+          "single_file_paths": [],
+          "suspended_by": null,
+          "suspended_at": null
+        },
+        {
+          "id": 77847816,
+          "client_id": "Iv23liVemv8A9if9v0F2",
+          "account": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "repository_selection": "selected",
+          "access_tokens_url": "https://api.github.com/app/installations/77847816/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/77847816",
+          "app_id": 1144995,
+          "app_slug": "chatgpt-codex-connector",
+          "target_id": 80614290,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "read",
+            "issues": "write",
+            "actions": "write",
+            "contents": "write",
+            "metadata": "read",
+            "statuses": "read",
+            "workflows": "write",
+            "pull_requests": "write"
+          },
+          "events": [
+            "check_run",
+            "check_suite",
+            "commit_comment",
+            "issues",
+            "issue_comment",
+            "pull_request",
+            "pull_request_review",
+            "pull_request_review_comment",
+            "pull_request_review_thread",
+            "repository",
+            "status",
+            "sub_issues"
+          ],
+          "created_at": "2025-07-27T11:50:58.000+02:00",
+          "updated_at": "2026-11-09T00:01:51.000+01:00",
+          "single_file_name": null,
+          "has_multiple_single_files": false,
+          "single_file_paths": [],
+          "suspended_by": null,
+          "suspended_at": null
+        },
+        {
+          "id": 97329264,
+          "client_id": "Iv1.dc610988574d1724",
+          "account": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "repository_selection": "all",
+          "access_tokens_url": "https://api.github.com/app/installations/97329264/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/97329264",
+          "app_id": 12526,
+          "app_slug": "sonarqubecloud",
+          "target_id": 80614290,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "write",
+            "members": "read",
+            "contents": "read",
+            "metadata": "read",
+            "statuses": "write",
+            "pull_requests": "write",
+            "security_events": "write",
+            "organization_copilot_seat_management": "read"
+          },
+          "events": [
+            "code_scanning_alert",
+            "organization",
+            "pull_request",
+            "push",
+            "repository"
+          ],
+          "created_at": "2025-11-30T17:31:00.000+01:00",
+          "updated_at": "2026-11-07T09:22:24.000+01:00",
+          "single_file_name": null,
+          "has_multiple_single_files": false,
+          "single_file_paths": [],
+          "suspended_by": null,
+          "suspended_at": null
+        },
+        {
+          "id": 179966090,
+          "client_id": "Iv23liRwXrNRB9QVzmuh",
+          "account": {
+            "login": "Hexalith",
+            "id": 80614290,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/Hexalith",
+            "html_url": "https://github.com/Hexalith",
+            "followers_url": "https://api.github.com/users/Hexalith/followers",
+            "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+            "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+            "repos_url": "https://api.github.com/users/Hexalith/repos",
+            "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "repository_selection": "selected",
+          "access_tokens_url": "https://api.github.com/app/installations/179966090/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/Hexalith/settings/installations/179966090",
+          "app_id": 5671811,
+          "app_slug": "hexalith-cicd",
+          "target_id": 80614290,
+          "target_type": "Organization",
+          "permissions": {
+            "actions": "write",
+            "contents": "write",
+            "metadata": "read",
+            "workflows": "write",
+            "administration": "read",
+            "security_events": "read"
+          },
+          "events": [],
+          "created_at": "2026-11-08T21:38:50.000+01:00",
+          "updated_at": "2026-11-16T20:31:01.000+01:00",
+          "single_file_name": null,
+          "has_multiple_single_files": false,
+          "single_file_paths": [],
+          "suspended_by": null,
+          "suspended_at": null
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 6,
+      "observed_count": 6
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "user/installations/179966090/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "user/installations/179966090/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 0,
+      "items": [],
+      "complete": false,
+      "state": "refused",
+      "failure": {
+        "endpoint": "user/installations/179966090/repositories?per_page=100&page=1",
+        "reason": "refused"
+      },
+      "observed_count": 0
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+      "item_key": null,
+      "pages": [
+        "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 2177434213,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "292dbf164f26bcf376ef86d749b149b075f8b502",
+          "created_at": "2026-11-16T14:38:36Z"
+        },
+        {
+          "id": 2176903263,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "ab67fd6bc308b5a641b0ca398d776e347193c168",
+          "created_at": "2026-11-16T13:34:44Z"
+        },
+        {
+          "id": 2176572494,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "42d53e30eb117b26fa7c27e421d3910e1a4924eb",
+          "created_at": "2026-11-16T12:51:10Z"
+        },
+        {
+          "id": 2176500555,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "b73cadc18f0b6736feafe1ea7d35c095b75be032",
+          "created_at": "2026-11-16T12:41:44Z"
+        },
+        {
+          "id": 2176453005,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4b99a89c78c57294b99b52eaf5889e8c74b87999",
+          "created_at": "2026-11-16T12:34:38Z"
+        },
+        {
+          "id": 2176194432,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8aa6f169b3e27f0a831ad6425c4bc1278ca2c445",
+          "created_at": "2026-11-16T11:56:08Z"
+        },
+        {
+          "id": 2172020000,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8aa6f169b3e27f0a831ad6425c4bc1278ca2c445",
+          "created_at": "2026-11-15T19:32:15Z"
+        },
+        {
+          "id": 2171919224,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4faa79395b092fd73cd552ae9a37fdcbf77124ae",
+          "created_at": "2026-11-15T18:56:41Z"
+        },
+        {
+          "id": 2171425693,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d73267fdbe84d09ccddf0a6492390e32d8938405",
+          "created_at": "2026-11-15T15:55:26Z"
+        },
+        {
+          "id": 2171358839,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "dc0124faad78b34d2fc67a471f1f2085e8646be2",
+          "created_at": "2026-11-15T15:31:04Z"
+        },
+        {
+          "id": 2171303537,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+          "created_at": "2026-11-15T15:10:50Z"
+        },
+        {
+          "id": 2171069738,
+          "ref": "refs/pull/75/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2fe19615723e2162d945def3a018a8f756195ed7",
+          "created_at": "2026-11-15T13:40:37Z"
+        },
+        {
+          "id": 2170982485,
+          "ref": "refs/pull/74/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2d8e5a2a744287b14c87915cdc69fe373ed0b4c4",
+          "created_at": "2026-11-15T13:05:40Z"
+        },
+        {
+          "id": 2170800294,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8b03eb999cd596aa07906face9db295e6705f9de",
+          "created_at": "2026-11-15T11:48:53Z"
+        },
+        {
+          "id": 2170781721,
+          "ref": "refs/pull/74/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7108de0cdf8fc70a39adf3dc66dce9ed29529fda",
+          "created_at": "2026-11-15T11:40:58Z"
+        },
+        {
+          "id": 2170355808,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2ec938397c5b330cf1e694e8cc442cb4ad022f2b",
+          "created_at": "2026-11-15T08:34:37Z"
+        },
+        {
+          "id": 2170309113,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "30b9b61845e35052187c86968880c79d8e76cd2b",
+          "created_at": "2026-11-15T08:13:49Z"
+        },
+        {
+          "id": 2168172611,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d89f234c4f020373aaabe0e3699ecdb5097b1079",
+          "created_at": "2026-11-14T17:34:48Z"
+        },
+        {
+          "id": 2168084102,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0caa7b442eed4baccdb565a6dcdfc1d3a89a89d5",
+          "created_at": "2026-11-14T17:01:54Z"
+        },
+        {
+          "id": 2167618031,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0cfe90e887e4d9d9f0168cba98fca1852cb80313",
+          "created_at": "2026-11-14T14:00:19Z"
+        },
+        {
+          "id": 2167587410,
+          "ref": "refs/pull/73/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cd0b102034c49b05374d642f4a9d5fd115ada1e9",
+          "created_at": "2026-11-14T13:47:09Z"
+        },
+        {
+          "id": 2167541287,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "91405352d4cb2803f9a79faae8c6c02e3420f6c0",
+          "created_at": "2026-11-14T13:28:25Z"
+        },
+        {
+          "id": 2167467550,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f3b0e85f68c0ef0515d567502f59257916ac18b6",
+          "created_at": "2026-11-14T12:58:08Z"
+        },
+        {
+          "id": 2167446400,
+          "ref": "refs/pull/73/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "2d3800e0de6cdafcbf0e92019e46e1545094714f",
+          "created_at": "2026-11-14T12:49:28Z"
+        },
+        {
+          "id": 2167378504,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "a2142101a021161790546ba59b164940516ca6a6",
+          "created_at": "2026-11-14T12:20:43Z"
+        },
+        {
+          "id": 2167346543,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "6f4df89e5ad5b8f96d79e22b45116f5069291f97",
+          "created_at": "2026-11-14T12:07:34Z"
+        },
+        {
+          "id": 2167321770,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "48218900f2836a60f2bd7760954a89601cf82bbb",
+          "created_at": "2026-11-14T11:56:02Z"
+        },
+        {
+          "id": 2167132279,
+          "ref": "refs/pull/72/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "01348b3bdff091524d168bf0d3d154508b2790ca",
+          "created_at": "2026-11-14T10:28:55Z"
+        },
+        {
+          "id": 2166820950,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "6fcff842a8e48fc843d7b2df942d369f99f92b6b",
+          "created_at": "2026-11-14T08:15:05Z"
+        },
+        {
+          "id": 2166118108,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d99b7f63feb81f74cee75c3976894c02d173b373",
+          "created_at": "2026-11-14T03:38:54Z"
+        },
+        {
+          "id": 2159315112,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "401d926eb7d51bdf332696ed3f0fe39a812b3501",
+          "created_at": "2026-11-13T08:11:39Z"
+        },
+        {
+          "id": 2156617697,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8ce40cdfe9b1bdd0ec3bd643b0f3386501e514c2",
+          "created_at": "2026-11-12T22:33:30Z"
+        },
+        {
+          "id": 2155690654,
+          "ref": "refs/pull/71/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "49d3b5f513887756ad16a606075438a2b6155592",
+          "created_at": "2026-11-12T20:27:14Z"
+        },
+        {
+          "id": 2155667113,
+          "ref": "refs/pull/70/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "95839a0085fade9261e829194e07791bb8f328fc",
+          "created_at": "2026-11-12T20:24:07Z"
+        },
+        {
+          "id": 2155655041,
+          "ref": "refs/pull/69/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "64efb0e4d760c67dfa952fbc6a99b3c84ba74be0",
+          "created_at": "2026-11-12T20:22:32Z"
+        },
+        {
+          "id": 2155259791,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "175dcf050292b72ba1049121b274f2d1f6460adb",
+          "created_at": "2026-11-12T19:31:19Z"
+        },
+        {
+          "id": 2150383371,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d43342f1a21fbe57ff0d42108ed3d211ecdbeb55",
+          "created_at": "2026-11-12T08:33:17Z"
+        },
+        {
+          "id": 2150120000,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "b239c8e43da8a80fd872c7f4391d219be44b2d1d",
+          "created_at": "2026-11-12T07:44:08Z"
+        },
+        {
+          "id": 2149888857,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "5617d967d92f51dafc98ee267fb2e8ce71e15d02",
+          "created_at": "2026-11-12T06:57:00Z"
+        },
+        {
+          "id": 2145768298,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "bcee4b4dbd886b7b718843cfb80419a92d33de15",
+          "created_at": "2026-11-11T17:08:39Z"
+        },
+        {
+          "id": 2145512460,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c9f93e817c645dee8628c7ca96ab92f81511b792",
+          "created_at": "2026-11-11T16:34:11Z"
+        },
+        {
+          "id": 2145280540,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "aa1653a45eaf2163c57278923543dc68f652f7b3",
+          "created_at": "2026-11-11T16:03:11Z"
+        },
+        {
+          "id": 2145180783,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9de41a26d2b60ff9527724203cd98aadfde0532f",
+          "created_at": "2026-11-11T15:50:00Z"
+        },
+        {
+          "id": 2145086698,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9adaa4a6cbca66b85a0f6001d2f7c00a7707df30",
+          "created_at": "2026-11-11T15:37:39Z"
+        },
+        {
+          "id": 2145010322,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "a2f030d6cf881bad6f88363ae331bdfccb4809af",
+          "created_at": "2026-11-11T15:27:34Z"
+        },
+        {
+          "id": 2144825393,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "1e50517c2c5c09008b5d3078a7a9839cd49ea047",
+          "created_at": "2026-11-11T15:03:39Z"
+        },
+        {
+          "id": 2144330366,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f07be33889202d96bc877e1b7d10ae0d73e073c8",
+          "created_at": "2026-11-11T13:56:39Z"
+        },
+        {
+          "id": 2144167235,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9c1b46f2a9b245c0cb0b0241fd839b5af6310b54",
+          "created_at": "2026-11-11T13:33:34Z"
+        },
+        {
+          "id": 2144100667,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "340d2dc279b043707b3dd2ca1894bbe74e421ac8",
+          "created_at": "2026-11-11T13:23:49Z"
+        },
+        {
+          "id": 2142740186,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cca5537c3a9d6dde162787053b34e17c8351b21d",
+          "created_at": "2026-11-11T09:38:14Z"
+        },
+        {
+          "id": 2131299369,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "019aa0a82d021e08475a68fc50eff3b6a0e6c111",
+          "created_at": "2026-11-10T00:05:12Z"
+        },
+        {
+          "id": 2127248961,
+          "ref": "refs/pull/68/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7d096205c40e08d75a75173a31fa0781d89895f3",
+          "created_at": "2026-11-09T14:45:29Z"
+        },
+        {
+          "id": 2127108985,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "dfe7031b7f74c7a303711cabf7ce0884d800f9a9",
+          "created_at": "2026-11-09T14:28:06Z"
+        },
+        {
+          "id": 2126917774,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8abe739a9a97daa579131d3d649de0cc788a6e0d",
+          "created_at": "2026-11-09T14:03:53Z"
+        },
+        {
+          "id": 2126100377,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d88aef6b52d7e8a2e2d81132b1d76b7e1d1f0f35",
+          "created_at": "2026-11-09T12:01:05Z"
+        },
+        {
+          "id": 2112874605,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d88aef6b52d7e8a2e2d81132b1d76b7e1d1f0f35",
+          "created_at": "2026-11-06T15:10:03Z"
+        },
+        {
+          "id": 2112687604,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "26d9a1968b5a13a0af8e187fb20b5ddabd3ed882",
+          "created_at": "2026-11-06T14:45:28Z"
+        },
+        {
+          "id": 2111949881,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4b7fb859766969635c4463a7860d976cc9ee9549",
+          "created_at": "2026-11-06T12:55:37Z"
+        },
+        {
+          "id": 2107839687,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cf36618a2c27b5722a1ff811cfbbce4528c3c105",
+          "created_at": "2026-11-05T22:30:05Z"
+        },
+        {
+          "id": 2107380841,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c1395216240a8971c3d27e10ac64d55ec5ea5980",
+          "created_at": "2026-11-05T21:25:23Z"
+        },
+        {
+          "id": 2107284506,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cfb5d1ae93bbe3f2a5f96a08a14affdf8b8f9103",
+          "created_at": "2026-11-05T21:12:44Z"
+        },
+        {
+          "id": 2106856455,
+          "ref": "refs/pull/67/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "74b49ade2843e730d2a9dfc7614d5bcf4e685e67",
+          "created_at": "2026-11-05T20:15:56Z"
+        },
+        {
+          "id": 2106836456,
+          "ref": "refs/pull/66/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c43686df2978f82c2bd1d2739140e9e92526082a",
+          "created_at": "2026-11-05T20:13:26Z"
+        },
+        {
+          "id": 2106820318,
+          "ref": "refs/pull/65/merge",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "d21e0dcc1890cc3c054dc4b2da8f3d0f854e31bf",
+          "created_at": "2026-11-05T20:11:27Z"
+        },
+        {
+          "id": 2103371188,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8e20524574901d71ad5f4876804c64c3c6c87b88",
+          "created_at": "2026-11-05T12:52:55Z"
+        },
+        {
+          "id": 2102819390,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f4129cfe0a44b079a4f11f9cfb1374aed915f243",
+          "created_at": "2026-11-05T11:26:13Z"
+        },
+        {
+          "id": 2091770543,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "143cec60a3f5bb1831fa57f35c510880ceb788d8",
+          "created_at": "2026-11-04T04:03:22Z"
+        },
+        {
+          "id": 2091574217,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7f240703a50a803820e041c8bc2798fe272f9282",
+          "created_at": "2026-11-04T03:13:00Z"
+        },
+        {
+          "id": 2091498117,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "5e18de96f841fc18ee29855e51c8acf0e06976a0",
+          "created_at": "2026-11-04T02:53:58Z"
+        },
+        {
+          "id": 2091409592,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0d1268f315882f30ed6ba4e08a23f94ae4d49230",
+          "created_at": "2026-11-04T02:31:54Z"
+        },
+        {
+          "id": 2091244767,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9b81fe4d3d964f9b191bc244a2028f710dd1a4b0",
+          "created_at": "2026-11-04T01:51:16Z"
+        },
+        {
+          "id": 2091191822,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c0ca5b3581cd4ca4867b1cfd4af2fea1e9ef3f1f",
+          "created_at": "2026-11-04T01:37:47Z"
+        },
+        {
+          "id": 2090920684,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "316400ea38f3dfef62a5340adb2d9ee4c82b2b0c",
+          "created_at": "2026-11-04T00:36:07Z"
+        },
+        {
+          "id": 2090747155,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "4f99d54889bec94c26b942b3e505222abbc7cada",
+          "created_at": "2026-11-04T00:02:33Z"
+        },
+        {
+          "id": 2090670506,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8ffe27051c5d5709db047de0490fdd2b23854281",
+          "created_at": "2026-11-03T23:47:35Z"
+        },
+        {
+          "id": 2090580594,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "1bdae82f13daa009c872028be70d0e586695a475",
+          "created_at": "2026-11-03T23:30:52Z"
+        },
+        {
+          "id": 2090460031,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "bad965e0793f6b9db9b9ff519cec5dd51434bce8",
+          "created_at": "2026-11-03T23:10:53Z"
+        },
+        {
+          "id": 2090363680,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "9ee7e363d63f516f35885c24032ab2808cf45627",
+          "created_at": "2026-11-03T22:55:03Z"
+        },
+        {
+          "id": 2089907162,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c472219844bb4ffc03f070d45eda91f66e47b3a1",
+          "created_at": "2026-11-03T21:47:01Z"
+        },
+        {
+          "id": 2089560728,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8f0b39f876f64e508b9e916de0a810fcb7f7cc19",
+          "created_at": "2026-11-03T20:59:09Z"
+        },
+        {
+          "id": 2089121430,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "1bc5118de19d8c79d1f9438f73271463b1e7fda9",
+          "created_at": "2026-11-03T19:59:01Z"
+        },
+        {
+          "id": 2088611043,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7d88588c281c5448caeb27563781f15658a3cd2f",
+          "created_at": "2026-11-03T18:49:40Z"
+        },
+        {
+          "id": 2088352571,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c0508dbb8efce8a4b3b297777cf023ad6ed43c85",
+          "created_at": "2026-11-03T18:15:15Z"
+        },
+        {
+          "id": 2088178490,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8beb58d6de9b0d17d630d2c7b4b4a2f20ce86537",
+          "created_at": "2026-11-03T17:52:01Z"
+        },
+        {
+          "id": 2087962635,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "3ba0f153053ed9abfd58499f6671486407137e4a",
+          "created_at": "2026-11-03T17:24:36Z"
+        },
+        {
+          "id": 2087519643,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "10cf25e522afc0e1f3fbfdbeffdc4754d24ddc29",
+          "created_at": "2026-11-03T16:32:17Z"
+        },
+        {
+          "id": 2087192255,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "cf058629bd810d57b7b89506b41c43a1df4f6bbc",
+          "created_at": "2026-11-03T15:54:23Z"
+        },
+        {
+          "id": 2087073240,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "c2a45226ee599f2298ad71f6eddd4b8bb40ee94e",
+          "created_at": "2026-11-03T15:40:46Z"
+        },
+        {
+          "id": 2087009053,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "0bec7d6b866f4b5084444c6cd1ca586d7486cda3",
+          "created_at": "2026-11-03T15:33:31Z"
+        },
+        {
+          "id": 2085753718,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "33835a03e92579a26400e7cb7cf68d666c715b3e",
+          "created_at": "2026-11-03T12:59:18Z"
+        },
+        {
+          "id": 2085639299,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "60daa5198169f093b11abd1bafca5a45afe254fe",
+          "created_at": "2026-11-03T12:42:22Z"
+        },
+        {
+          "id": 2085601196,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "7598b08a3897902b8e4a82e8ac4f38798d838db3",
+          "created_at": "2026-11-03T12:36:48Z"
+        },
+        {
+          "id": 2085496458,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "f11bc1957fa60a957c654c8dcf3110fc9de25e25",
+          "created_at": "2026-11-03T12:21:08Z"
+        },
+        {
+          "id": 2085275497,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "07e35f11d247c7ab2aff4ce68f4e64c2eda6af9c",
+          "created_at": "2026-11-03T11:46:59Z"
+        },
+        {
+          "id": 2085094075,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "bd4946b9599ac05e2a8bb619fc8f71f148835b3e",
+          "created_at": "2026-11-03T11:17:17Z"
+        },
+        {
+          "id": 2084997094,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "553cb1dc05bf9d2e091c2652cb7e890670c878a9",
+          "created_at": "2026-11-03T11:02:13Z"
+        },
+        {
+          "id": 2084915282,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8c30bdfa0dc046155c2c1c10459cfa554a32eabc",
+          "created_at": "2026-11-03T10:49:24Z"
+        },
+        {
+          "id": 2084785218,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "02236a923f3c2229b6b47c8e49f0876bd98b6a02",
+          "created_at": "2026-11-03T10:29:35Z"
+        },
+        {
+          "id": 2084586732,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "fc4e96e531b5499f85a92a1bf15d133693ffee9e",
+          "created_at": "2026-11-03T10:00:00Z"
+        },
+        {
+          "id": 2084387774,
+          "ref": "refs/heads/main",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "commit_sha": "8eaf6f601d82bcb4a92ed89aa1c2dcdc8815baa8",
+          "created_at": "2026-11-03T09:29:12Z"
+        }
+      ],
+      "complete": false,
+      "state": "partial",
+      "failure": {
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+        "reason": "pagination left the requested GitHub collection"
+      },
+      "observed_count": 100
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets?per_page=100&page=1",
+      "item_key": "secrets",
+      "pages": [
+        "orgs/Hexalith/actions/secrets?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "name": "AZURE_APPLICATIONID",
+          "created_at": "2024-05-10T11:49:54Z",
+          "updated_at": "2026-11-08T21:46:54Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories"
+        },
+        {
+          "name": "AZURE_APPLICATIONSECRET",
+          "created_at": "2024-05-10T11:52:00Z",
+          "updated_at": "2026-11-08T21:47:24Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories"
+        },
+        {
+          "name": "AZURE_SUBSCRIPTION_ID",
+          "created_at": "2024-11-16T19:45:07Z",
+          "updated_at": "2026-11-08T21:45:48Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories"
+        },
+        {
+          "name": "AZURE_TENANT_ID",
+          "created_at": "2024-11-16T19:44:21Z",
+          "updated_at": "2026-11-08T21:46:21Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories"
+        },
+        {
+          "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+          "created_at": "2026-11-08T23:43:37Z",
+          "updated_at": "2026-11-16T16:05:37Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+        },
+        {
+          "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+          "created_at": "2026-11-08T23:43:36Z",
+          "updated_at": "2026-11-16T16:05:36Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+        },
+        {
+          "name": "HEXALITH_ZOT_API_KEY",
+          "created_at": "2026-07-09T07:47:49Z",
+          "updated_at": "2026-11-08T21:45:17Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories"
+        },
+        {
+          "name": "HEXALITH_ZOT_USERNAME",
+          "created_at": "2026-07-08T14:34:13Z",
+          "updated_at": "2026-11-08T21:44:48Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories"
+        },
+        {
+          "name": "NUGET_API_KEY",
+          "created_at": "2022-11-21T07:33:02Z",
+          "updated_at": "2026-11-08T21:49:02Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories"
+        },
+        {
+          "name": "SONAR_TOKEN",
+          "created_at": "2024-05-12T16:40:50Z",
+          "updated_at": "2026-11-08T21:47:54Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 10,
+      "observed_count": 10
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 871088977,
+          "full_name": "Hexalith/Hexalith.Contacts"
+        },
+        {
+          "id": 871091034,
+          "full_name": "Hexalith/Hexalith.Documents_OLD"
+        },
+        {
+          "id": 796320664,
+          "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+        },
+        {
+          "id": 798881062,
+          "full_name": "Hexalith/Hexalith.ExternalSystems"
+        },
+        {
+          "id": 796191088,
+          "full_name": "Hexalith/Hexalith.Inventories"
+        },
+        {
+          "id": 798887497,
+          "full_name": "Hexalith/Hexalith.Sales"
+        },
+        {
+          "id": 852168913,
+          "full_name": "Hexalith/Hexalith.Security_OLD"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 7,
+      "observed_count": 7
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 871088977,
+          "full_name": "Hexalith/Hexalith.Contacts"
+        },
+        {
+          "id": 871091034,
+          "full_name": "Hexalith/Hexalith.Documents_OLD"
+        },
+        {
+          "id": 796320664,
+          "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+        },
+        {
+          "id": 798881062,
+          "full_name": "Hexalith/Hexalith.ExternalSystems"
+        },
+        {
+          "id": 796191088,
+          "full_name": "Hexalith/Hexalith.Inventories"
+        },
+        {
+          "id": 798887497,
+          "full_name": "Hexalith/Hexalith.Sales"
+        },
+        {
+          "id": 852168913,
+          "full_name": "Hexalith/Hexalith.Security_OLD"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 7,
+      "observed_count": 7
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 871088977,
+          "full_name": "Hexalith/Hexalith.Contacts"
+        },
+        {
+          "id": 871091034,
+          "full_name": "Hexalith/Hexalith.Documents_OLD"
+        },
+        {
+          "id": 1155154671,
+          "full_name": "Hexalith/Hexalith.EventStore"
+        },
+        {
+          "id": 852168913,
+          "full_name": "Hexalith/Hexalith.Security_OLD"
+        },
+        {
+          "id": 1272275109,
+          "full_name": "Hexalith/Hexalith.Timesheets"
+        },
+        {
+          "id": 647343286,
+          "full_name": "Hexalith/semantic-kernel"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 6,
+      "observed_count": 6
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 871088977,
+          "full_name": "Hexalith/Hexalith.Contacts"
+        },
+        {
+          "id": 871091034,
+          "full_name": "Hexalith/Hexalith.Documents_OLD"
+        },
+        {
+          "id": 1155154671,
+          "full_name": "Hexalith/Hexalith.EventStore"
+        },
+        {
+          "id": 852168913,
+          "full_name": "Hexalith/Hexalith.Security_OLD"
+        },
+        {
+          "id": 1272275109,
+          "full_name": "Hexalith/Hexalith.Timesheets"
+        },
+        {
+          "id": 647343286,
+          "full_name": "Hexalith/semantic-kernel"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 6,
+      "observed_count": 6
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 952945989,
+          "full_name": "Hexalith/Hexalith.Builds"
+        },
+        {
+          "id": 952960148,
+          "full_name": "Hexalith/Hexalith.Commons"
+        },
+        {
+          "id": 1379417482,
+          "full_name": "Hexalith/Hexalith.McpCli"
+        },
+        {
+          "id": 957156862,
+          "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 952945989,
+          "full_name": "Hexalith/Hexalith.Builds"
+        },
+        {
+          "id": 952960148,
+          "full_name": "Hexalith/Hexalith.Commons"
+        },
+        {
+          "id": 1379417482,
+          "full_name": "Hexalith/Hexalith.McpCli"
+        },
+        {
+          "id": 957156862,
+          "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 1155154671,
+          "full_name": "Hexalith/Hexalith.EventStore"
+        },
+        {
+          "id": 1188027961,
+          "full_name": "Hexalith/Hexalith.Memories"
+        },
+        {
+          "id": 1170072276,
+          "full_name": "Hexalith/Hexalith.Parties"
+        },
+        {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 1155154671,
+          "full_name": "Hexalith/Hexalith.EventStore"
+        },
+        {
+          "id": 1188027961,
+          "full_name": "Hexalith/Hexalith.Memories"
+        },
+        {
+          "id": 1170072276,
+          "full_name": "Hexalith/Hexalith.Parties"
+        },
+        {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 851523569,
+          "full_name": "Hexalith/Hexalith"
+        },
+        {
+          "id": 1277685416,
+          "full_name": "Hexalith/Hexalith.Agents"
+        },
+        {
+          "id": 1120511943,
+          "full_name": "Hexalith/Hexalith.Applications"
+        },
+        {
+          "id": 1027122874,
+          "full_name": "Hexalith/Hexalith.ChatClient"
+        },
+        {
+          "id": 890456345,
+          "full_name": "Hexalith/Hexalith.DaprIdentityStore"
+        },
+        {
+          "id": 968206525,
+          "full_name": "Hexalith/Hexalith.Documents"
+        },
+        {
+          "id": 871091034,
+          "full_name": "Hexalith/Hexalith.Documents_OLD"
+        },
+        {
+          "id": 968662765,
+          "full_name": "Hexalith/Hexalith.Domains"
+        },
+        {
+          "id": 796320664,
+          "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+        },
+        {
+          "id": 963292804,
+          "full_name": "Hexalith/Hexalith.EventStores"
+        },
+        {
+          "id": 798881062,
+          "full_name": "Hexalith/Hexalith.ExternalSystems"
+        },
+        {
+          "id": 1107174746,
+          "full_name": "Hexalith/Hexalith.GitStorage"
+        },
+        {
+          "id": 967469113,
+          "full_name": "Hexalith/Hexalith.IdentityStores"
+        },
+        {
+          "id": 796191088,
+          "full_name": "Hexalith/Hexalith.Inventories"
+        },
+        {
+          "id": 960307124,
+          "full_name": "Hexalith/Hexalith.KeyValueStorages"
+        },
+        {
+          "id": 1131658602,
+          "full_name": "Hexalith/Hexalith.MarkdownEditor"
+        },
+        {
+          "id": 1027188474,
+          "full_name": "Hexalith/Hexalith.MyNewModule"
+        },
+        {
+          "id": 956657445,
+          "full_name": "Hexalith/Hexalith.MyNewPackage"
+        },
+        {
+          "id": 967276766,
+          "full_name": "Hexalith/Hexalith.NetAspire"
+        },
+        {
+          "id": 854107919,
+          "full_name": "Hexalith/Hexalith.Oidc"
+        },
+        {
+          "id": 798887497,
+          "full_name": "Hexalith/Hexalith.Sales"
+        },
+        {
+          "id": 966892135,
+          "full_name": "Hexalith/Hexalith.Security"
+        },
+        {
+          "id": 852168913,
+          "full_name": "Hexalith/Hexalith.Security_OLD"
+        },
+        {
+          "id": 958460421,
+          "full_name": "Hexalith/Hexalith.Streams"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 24,
+      "observed_count": 24
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 890456345,
+          "full_name": "Hexalith/Hexalith.DaprIdentityStore"
+        },
+        {
+          "id": 796320664,
+          "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+        },
+        {
+          "id": 798881062,
+          "full_name": "Hexalith/Hexalith.ExternalSystems"
+        },
+        {
+          "id": 796191088,
+          "full_name": "Hexalith/Hexalith.Inventories"
+        },
+        {
+          "id": 854107919,
+          "full_name": "Hexalith/Hexalith.Oidc"
+        },
+        {
+          "id": 798887497,
+          "full_name": "Hexalith/Hexalith.Sales"
+        },
+        {
+          "id": 852168913,
+          "full_name": "Hexalith/Hexalith.Security_OLD"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 7,
+      "observed_count": 7
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/dependabot/secrets?per_page=100&page=1",
+      "item_key": "secrets",
+      "pages": [
+        "orgs/Hexalith/dependabot/secrets?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+          "created_at": "2026-11-08T23:43:39Z",
+          "updated_at": "2026-11-16T16:05:39Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+        },
+        {
+          "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+          "created_at": "2026-11-08T23:43:38Z",
+          "updated_at": "2026-11-16T16:05:38Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 2,
+      "observed_count": 2
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 952945989,
+          "full_name": "Hexalith/Hexalith.Builds"
+        },
+        {
+          "id": 952960148,
+          "full_name": "Hexalith/Hexalith.Commons"
+        },
+        {
+          "id": 1379417482,
+          "full_name": "Hexalith/Hexalith.McpCli"
+        },
+        {
+          "id": 957156862,
+          "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 952945989,
+          "full_name": "Hexalith/Hexalith.Builds"
+        },
+        {
+          "id": 952960148,
+          "full_name": "Hexalith/Hexalith.Commons"
+        },
+        {
+          "id": 1379417482,
+          "full_name": "Hexalith/Hexalith.McpCli"
+        },
+        {
+          "id": 957156862,
+          "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/variables?per_page=100&page=1",
+      "item_key": "variables",
+      "pages": [
+        "orgs/Hexalith/actions/variables?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "name": "AZURE_REGISTRY",
+          "value": "itaneo.azurecr.io",
+          "created_at": "2023-11-17T15:55:06Z",
+          "updated_at": "2024-11-16T19:32:21Z",
+          "visibility": "all"
+        },
+        {
+          "name": "HEXALITH_NUGET_USER",
+          "value": "jpiquot",
+          "created_at": "2026-11-08T20:26:36Z",
+          "updated_at": "2026-11-16T16:05:40Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories"
+        },
+        {
+          "name": "HEXALITH_ZOT_REGISTRY",
+          "value": "registry.hexalith.com",
+          "created_at": "2026-07-08T14:37:51Z",
+          "updated_at": "2026-07-08T14:37:51Z",
+          "visibility": "all"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 3,
+      "observed_count": 3
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 952945989,
+          "full_name": "Hexalith/Hexalith.Builds"
+        },
+        {
+          "id": 952960148,
+          "full_name": "Hexalith/Hexalith.Commons"
+        },
+        {
+          "id": 1379417482,
+          "full_name": "Hexalith/Hexalith.McpCli"
+        },
+        {
+          "id": 957156862,
+          "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    }
+  ],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "module_credential_file": {
+    "path": "/home/administrator/.config/gh-module-agent/token",
+    "exists": true,
+    "symlink": false,
+    "mode": "0o600",
+    "owned_by_current_user": true
+  },
+  "git": {
+    "cicd_head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "ec481fd50b280e2d41f9baecbd03945c833e4538\n",
+      "stderr": ""
+    },
+    "tenants_head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 0,
+      "stdout": "292dbf164f26bcf376ef86d749b149b075f8b502\n",
+      "stderr": ""
+    },
+    "tenants_main": {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 0,
+      "stdout": "292dbf164f26bcf376ef86d749b149b075f8b502\n",
+      "stderr": ""
+    },
+    "tenants_committed_inputs": {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Builds",
+        ".github/hexalith-ci.json"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "exit": 0,
+      "stdout": "160000 commit fdda17c0a4538b0f7c99f813c20ca24b49006530\treferences/Hexalith.Builds\n",
+      "stderr": ""
+    }
+  },
+  "checker": {
+    "state": "not-run",
+    "reason": "Configuration inventory does not verify a product revision."
+  },
+  "authentication_after": {
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+    "override_presence": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    }
+  }
+}

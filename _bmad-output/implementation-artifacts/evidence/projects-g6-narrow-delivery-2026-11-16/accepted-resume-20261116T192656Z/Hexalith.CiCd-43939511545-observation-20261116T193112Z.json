@@ -1,0 +1,909 @@
+{
+  "observed_at": "2026-11-16T19:31:13.301969+00:00",
+  "run": {
+    "id": 43939511545,
+    "name": "Delivery",
+    "node_id": "WFR_kwLOUjhxY88AAAAKOv-8-Q",
+    "head_branch": "main",
+    "head_sha": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+    "path": ".github/workflows/deliver.yml",
+    "display_title": "Delivery",
+    "run_number": 70,
+    "event": "workflow_dispatch",
+    "status": "in_progress",
+    "conclusion": null,
+    "workflow_id": 417001267,
+    "check_suite_id": 118952160439,
+    "check_suite_node_id": "CS_kwDOUjhxY88AAAAbshnstw",
+    "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545",
+    "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545",
+    "pull_requests": [],
+    "created_at": "2026-11-16T19:27:24Z",
+    "updated_at": "2026-11-16T19:30:58Z",
+    "actor": {
+      "login": "jpiquot",
+      "id": 6775094,
+      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpiquot",
+      "html_url": "https://github.com/jpiquot",
+      "followers_url": "https://api.github.com/users/jpiquot/followers",
+      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+      "repos_url": "https://api.github.com/users/jpiquot/repos",
+      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-16T19:27:24Z",
+    "triggering_actor": {
+      "login": "jpiquot",
+      "id": 6775094,
+      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpiquot",
+      "html_url": "https://github.com/jpiquot",
+      "followers_url": "https://api.github.com/users/jpiquot/followers",
+      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+      "repos_url": "https://api.github.com/users/jpiquot/repos",
+      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545/jobs",
+    "logs_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545/logs",
+    "check_suite_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-suites/118952160439",
+    "artifacts_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545/artifacts",
+    "cancel_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545/cancel",
+    "rerun_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/417001267",
+    "head_commit": {
+      "id": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+      "tree_id": "06a366cf02db15f4a0ab2546311b93d9d6c90b29",
+      "message": "docs(cicd): record Projects G-6 delivery qualification",
+      "timestamp": "2026-11-16T19:11:14Z",
+      "author": {
+        "name": "J\u00e9r\u00f4me Piquot",
+        "email": "jpiquot@itaneo.com"
+      },
+      "committer": {
+        "name": "J\u00e9r\u00f4me Piquot",
+        "email": "jpiquot@itaneo.com"
+      }
+    },
+    "repository": {
+      "id": 1379430755,
+      "node_id": "R_kgDOUjhxYw",
+      "name": "Hexalith.CiCd",
+      "full_name": "Hexalith/Hexalith.CiCd",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd",
+      "description": "Maintain harmonized Hexalith CI/CD workflows threw all modules",
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/deployments"
+    },
+    "head_repository": {
+      "id": 1379430755,
+      "node_id": "R_kgDOUjhxYw",
+      "name": "Hexalith.CiCd",
+      "full_name": "Hexalith/Hexalith.CiCd",
+      "private": false,
+      "owner": {
+        "login": "Hexalith",
+        "id": 80614290,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Hexalith",
+        "html_url": "https://github.com/Hexalith",
+        "followers_url": "https://api.github.com/users/Hexalith/followers",
+        "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+        "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+        "repos_url": "https://api.github.com/users/Hexalith/repos",
+        "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd",
+      "description": "Maintain harmonized Hexalith CI/CD workflows threw all modules",
+      "fork": false,
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd",
+      "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/forks",
+      "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/teams",
+      "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/hooks",
+      "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/events",
+      "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/tags",
+      "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/languages",
+      "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/stargazers",
+      "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/contributors",
+      "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/subscribers",
+      "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/subscription",
+      "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/merges",
+      "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/downloads",
+      "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/deployments"
+    }
+  },
+  "jobs": [
+    {
+      "id": 133552956593,
+      "run_id": 43939511545,
+      "workflow_name": "Delivery",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfGGBksQ",
+      "head_sha": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/133552956593",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545/job/133552956593",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-16T19:27:26Z",
+      "started_at": "2026-11-16T19:27:29Z",
+      "completed_at": "2026-11-16T19:30:52Z",
+      "name": "validate",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T19:27:29Z",
+          "completed_at": "2026-11-16T19:27:31Z"
+        },
+        {
+          "name": "Checkout CiCd candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T19:27:31Z",
+          "completed_at": "2026-11-16T19:27:33Z"
+        },
+        {
+          "name": "Setup uv",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T19:27:33Z",
+          "completed_at": "2026-11-16T19:27:34Z"
+        },
+        {
+          "name": "Checkout Builds objects and tags",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-16T19:27:34Z",
+          "completed_at": "2026-11-16T19:27:34Z"
+        },
+        {
+          "name": "Checkout only narrow delivery fixture tag",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T19:27:34Z",
+          "completed_at": "2026-11-16T19:27:36Z"
+        },
+        {
+          "name": "Validate candidate and modules",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-16T19:27:36Z",
+          "completed_at": "2026-11-16T19:27:36Z"
+        },
+        {
+          "name": "Qualify narrow catalog delivery behavior without secrets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T19:27:36Z",
+          "completed_at": "2026-11-16T19:30:44Z"
+        },
+        {
+          "name": "Bind narrow plan to current exact owner source and reviewed Projects tree",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T19:30:44Z",
+          "completed_at": "2026-11-16T19:30:48Z"
+        },
+        {
+          "name": "Upload narrow qualification receipt",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-16T19:30:48Z",
+          "completed_at": "2026-11-16T19:30:49Z"
+        },
+        {
+          "name": "Post Checkout only narrow delivery fixture tag",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-16T19:30:49Z",
+          "completed_at": "2026-11-16T19:30:50Z"
+        },
+        {
+          "name": "Post Setup uv",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-16T19:30:50Z",
+          "completed_at": "2026-11-16T19:30:50Z"
+        },
+        {
+          "name": "Post Checkout CiCd candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-16T19:30:50Z",
+          "completed_at": "2026-11-16T19:30:50Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-16T19:30:50Z",
+          "completed_at": "2026-11-16T19:30:50Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/133552956593",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000087871,
+      "runner_name": "GitHub Actions 1000087871",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 133555051370,
+      "run_id": 43939511545,
+      "workflow_name": "Delivery",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfGIBbag",
+      "head_sha": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/133555051370",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545/job/133555051370",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-11-16T19:30:53Z",
+      "started_at": "2026-11-16T19:30:58Z",
+      "completed_at": null,
+      "name": "deliver",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T19:30:58Z",
+          "completed_at": "2026-11-16T19:31:00Z"
+        },
+        {
+          "name": "Checkout exact qualified narrow owner source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T19:31:00Z",
+          "completed_at": "2026-11-16T19:31:01Z"
+        },
+        {
+          "name": "Mint only Projects catalog correction token",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T19:31:01Z",
+          "completed_at": "2026-11-16T19:31:02Z"
+        },
+        {
+          "name": "Deliver exact qualified Projects catalog correction",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T19:31:02Z",
+          "completed_at": "2026-11-16T19:31:08Z"
+        },
+        {
+          "name": "Upload narrow delivery receipt",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T19:31:08Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Checkout immutable delivery bootstrap",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Select trusted delivery source and initialize report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint CiCd accepted-ref and freshness token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Initialize delivery and hourly freshness",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 01 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 01 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 01",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 02 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 02 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 02",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 03 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 03 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 03",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 04 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 04 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 04",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 05 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 05 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 05",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 06 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 06 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 06",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 07 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 07 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 07",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 30,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 08 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 08 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 32,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 08",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 33,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 09 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 34,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 09 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 35,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 09",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 36,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 10 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 37,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 10 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 38,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 10",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 39,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 11 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 40,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 11 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 41,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 11",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 42,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 12 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 12 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 44,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 12",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 45,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 13 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 46,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 13 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 47,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 13",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 48,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 14 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 49,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 14 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 50,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 14",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 51,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 15 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 52,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 15 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 53,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 15",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 54,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 16 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 55,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 16 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 56,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 16",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 57,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Check module slot 17 time budget",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 58,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Mint module slot 17 token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 59,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Process module slot 17",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 60,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Finalize delivery report and aggregate result",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 61,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Upload delivery report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 62,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:09Z"
+        },
+        {
+          "name": "Post Mint only Projects catalog correction token",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 123,
+          "started_at": "2026-11-16T19:31:09Z",
+          "completed_at": "2026-11-16T19:31:10Z"
+        },
+        {
+          "name": "Post Checkout exact qualified narrow owner source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 124,
+          "started_at": "2026-11-16T19:31:10Z",
+          "completed_at": "2026-11-16T19:31:10Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 125,
+          "started_at": "2026-11-16T19:31:10Z",
+          "completed_at": "2026-11-16T19:31:10Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/133555051370",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000087872,
+      "runner_name": "GitHub Actions 1000087872",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

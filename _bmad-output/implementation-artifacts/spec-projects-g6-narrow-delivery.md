@@ -2,7 +2,7 @@
 title: 'Deliver the reviewed Projects G-6 catalog acquisition correction'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_commit: 'eba7514e02904c741f6a0a80930d85eb358d385c'
 review_loop_iteration: 0
@@ -151,3 +151,31 @@ All findings are addressed within the existing owner job and exact three-file co
 The original request requires source rechecks before delivery. Concurrent product preparation advanced Projects to `4511105bb1f00b8cf762097523de74acc828a001`; independent filtered-Git requalification bound input tree `24c52776922ecca9eca63720347f32ecee64694c` and corrected tree `c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047` without changing the patch or any output blob, unrelated entry, pin or gitlink. This is the same authorized three-file correction on the reviewed current source. The source guard rejected earlier stale inputs; no automatic module rebase or direct workflow patch was used.
 
 Fresh hosted CiCd run `43933951553` at `6fe837f2fafa0952d21e1690c61cef7a11e6eeab` passed acquisition (17), controller (28), and workflow (17) cases plus production qualification. Actual delivery is externally blocked: the configured App lookup `GET /repos/Hexalith/Hexalith.Projects/installation` returned 404. Its controller receipt fails at require-scoped-token, with no minted token, push attempt, candidate or delivered SHA. Required prerequisite: accessible configured App installation covering Projects under the existing Contents/Workflows request. Credentials, installation settings and tracking were not broadened or changed. No corrected Projects CI/G-6 evidence exists. Implementation/review is complete; actual delivery and hosted runtime acceptance remain pending that external prerequisite.
+
+### Delivered outcome and subsequent-failure diagnosis — 2026-11-16
+
+The authorized App access prerequisite is resolved. Fresh owner run 43939511545
+at `2a1128e0106baed22999c4687d7d15e7639f22cf` passed 17 acquisition, 28 controller
+and 17 workflow cases, qualified the exact current source, minted the existing
+scoped Projects token and successfully delivered
+`146d0f7e9964c82da23d31b51e6ab62efdcfdda6`. Its sole parent is the reviewed base;
+its complete tree equals `c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047`. Independent
+untruncated hosted-tree comparison proves exactly the three reviewed output
+paths and all other entries, pins and gitlinks preserved. No owner source or
+proposal rebinding was needed on this continuation.
+
+Fresh Projects CI 43940159468 binds that delivered source, fails at the unchanged
+shared-skill fixture import (`@dataclass` decorates `_write_text`, a function),
+and skips G-6 behind the existing workflow-gates dependency. Commitlint
+43940159230 fails before message validation: its unchanged caller resolves
+Builds workflow `6db97d4e9da392ef691ed3f367e73f1b7d2ef318`, whose `npm ci`
+requires a lockfile absent from the reviewed Projects source. Both exact logs,
+metadata and source diagnoses are retained in the accepted-resume evidence
+packet. These are subsequent failures, not successful hosted acquisition/G-6
+acceptance. Separate owner fixes and a fresh exact-source run remain required
+for runtime acceptance. No existing gate was removed or weakened.
+
+The narrow implementation, review, delivery and requested subsequent-failure
+diagnosis are complete. This task-spec status does not change Story 1.17 or
+sprint tracking, does not accept runtime G-6, and does not repeat historical
+publication/audit/A8 work, deploy or activate v2.

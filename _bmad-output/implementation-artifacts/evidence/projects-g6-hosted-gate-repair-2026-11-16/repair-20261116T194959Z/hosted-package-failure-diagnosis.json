@@ -1,0 +1,36 @@
+{
+  "source": "7da7e95b670838de3181e946709e1246695a0e72",
+  "failures": [
+    {
+      "job_id": 133597914418,
+      "step": "Build",
+      "command": "dotnet build Hexalith.Projects.CI.slnx --no-restore --configuration Release -warnaserror",
+      "exit": 1,
+      "error": "CS0234, 14 errors: QueryResultContractAttribute/QueryResultContract absent from Hexalith.EventStore.Contracts.Queries",
+      "pinned_EventStore_version": "5.1.1",
+      "api_query": {
+        "command": "dnx dotnet-inspect -y -- find \"*QueryResultContract*\" --package Hexalith.EventStore.Contracts@5.1.1 -n 20",
+        "exit": 0,
+        "result": "No types found matching the pattern."
+      },
+      "source_changes_outside_repair": "Preserved product query declarations outside the nine-file repair",
+      "missing_prerequisite": "Owner-provided package/API compatibility for the unchanged 5.1.1 consumer, or an approved source/package version-alignment decision preserving the contract."
+    },
+    {
+      "job_id": 133597914034,
+      "step": "Restore effective G-6 package graphs",
+      "command": "env -u CI dotnet restore references/Hexalith.McpCli/src/Hexalith.McpCli/Hexalith.McpCli.csproj -p:UseHexalithProjectReferences=true -p:HexalithConversationsFromSource=false",
+      "exit": 1,
+      "error": "NU1102: Hexalith.Projects.Contracts >= 2.0.0-story66.3 unavailable on configured nuget.org feed; nearest listed version 1.2.4",
+      "pinned_mcpcli_source": "5008de388c5e37257ca78e48d8afe899cf7aaa2a",
+      "version_owner": "Hexalith.McpCli Directory.Build.props blob89552fec5872844350d3e05634471051f0cf112b",
+      "missing_prerequisite": "Make the required Projects.Contracts artifact available from an approved feed, or obtain an approved dependency/catalog alignment decision."
+    }
+  ],
+  "catalog_acquisition_and_mapper_prepared": true,
+  "constraints": [
+    "Preserve every dependency pin and concurrent product change",
+    "Do not repeat publication/audit/A8 work",
+    "Do not weaken existing gates or substitute source refs to hide package-mode failures"
+  ]
+}

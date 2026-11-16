@@ -1,0 +1,421 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - next
+      - alpha
+      - beta
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 2 * * *'
+
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-gates:
+    name: Validate workflow policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Validate production-authority scheduling guard
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python3 -m venv "${RUNNER_TEMP}/production-authority-tests"
+          "${RUNNER_TEMP}/production-authority-tests/bin/python" -m pip install --disable-pip-version-check pyyaml==6.0.3
+          "${RUNNER_TEMP}/production-authority-tests/bin/python" -m unittest tests/tools/test_production_authority_guard.py -v
+
+      - name: Validate BMAD Loop hook relay
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_bmad_loop_hook.py -v
+
+      - name: Validate shared skill renderer
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_render_skill.py -v
+
+      - name: Validate Git whitespace policy
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_git_whitespace_policy.py -v
+
+      - name: Validate Build Auto workspace ownership
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 .agents/skills/bmad-build-auto/scripts/tests/test_workspace_ownership.py
+
+      - name: Validate BMAD legacy cleanup atomicity
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 .agents/skills/bmad-module-builder/scripts/tests/test-cleanup-legacy.py
+
+      - name: Validate BMAD merge atomicity
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python3 -m venv "${RUNNER_TEMP}/bmad-merge-tests"
+          "${RUNNER_TEMP}/bmad-merge-tests/bin/python" -m pip install --disable-pip-version-check pyyaml==6.0.3
+          "${RUNNER_TEMP}/bmad-merge-tests/bin/python" .agents/skills/bmad-module-builder/scripts/tests/test-merge-atomicity.py
+
+      - name: Validate release package tool fixtures
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_release_package_tools.py -v
+
+      - name: Validate release workflow shell behavior
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_release_workflow.py -v
+
+      - name: Validate G-6 packet gitlink check fixtures
+        # Historical packet fixtures remain regression coverage; current G-6 runs in g6-current.
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_check_g6_packet_gitlinks.py tests/tools/test_g6_packet_references.py -v
+
+      - name: Validate status-aware G-6 gate fixtures
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_run_g6_candidate_gate.py -v
+
+      - name: Initialize Builds for current G-6 policy fixtures
+        shell: bash
+        run: git -c submodule.recurse=false submodule update --init -- references/Hexalith.Builds
+
+      - name: Validate current G-6 change selection
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_run_g6_ci_gate.py tests/tools/test_current_g6_policy.py -v
+
+      - name: Validate workflow policy regression fixtures
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest tests/tools/test_run_ci_workflow_gates.py -v
+
+      - name: Validate CI/CD invariants
+        shell: pwsh
+        run: ./tests/tools/run-ci-workflow-gates.ps1
+
+  ci:
+    needs: workflow-gates
+    uses: Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+    with:
+      # Bare solution path only. The callee runs `dotnet restore "$SOLUTION"`, so an
+      # embedded `-p:` switch is parsed as part of the project path (MSB1009), and
+      # `github.workspace` is empty when a reusable-workflow `with:` is evaluated.
+      # Directory.Build.props auto-detects HexalithCommonsRoot from references/.
+      solution: Hexalith.Projects.CI.slnx
+      additional-sdk-version: '10.0.404'
+      dapr-version: '1.19.1'
+      dapr-runtime-version: '1.19.1'
+      test-platform: microsoft-testing-platform
+      run-consumer-validation: true
+      build-timeout-minutes: 30
+      unit-test-projects: |
+        tests/Hexalith.Projects.Contracts.Tests
+        tests/Hexalith.Projects.Client.Tests
+        tests/Hexalith.Projects.Tests
+        tests/Hexalith.Projects.Server.Tests
+        tests/Hexalith.Projects.UI.Tests
+        tests/Hexalith.Projects.Mcp.Tests
+        tests/Hexalith.Projects.Cli.Tests
+      integration-test-projects: |
+        tests/Hexalith.Projects.Integration.Tests
+
+  project-gates:
+    name: Projects generated-artifact gates
+    runs-on: ubuntu-latest
+    needs: ci
+    env:
+      CI: 'true'
+      HexalithCommonsRoot: ${{ github.workspace }}/references/Hexalith.Commons
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          submodules: false
+
+      - name: Initialize root-declared submodules
+        uses: Hexalith/Hexalith.Builds/Github/initialize-build@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+
+      - name: Initialize .NET
+        uses: Hexalith/Hexalith.Builds/Github/initialize-dotnet@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+        with:
+          global-json-file: global.json
+
+      - name: FrontComposer inspect gate
+        shell: pwsh
+        timeout-minutes: 15
+        run: ./tests/tools/run-frontcomposer-inspect-gate.ps1
+
+      - name: OpenAPI fingerprint / compatibility gate
+        shell: pwsh
+        timeout-minutes: 15
+        run: ./tests/tools/run-openapi-fingerprint-gate.ps1
+
+  # Audit each checkout; run a fresh proof for material runtime changes,
+  # runtime-owning submodule changes, schedules, and uncertain change ranges.
+  # Historical attempt-16 stays archived, and older-proof reuse is disabled.
+  g6-current:
+    name: G-6 current runtime qualification
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    needs: workflow-gates
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      G6_OUTPUT: .g6-current-evidence/ci-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          submodules: false
+
+      - name: Initialize root-declared submodules
+        uses: Hexalith/Hexalith.Builds/Github/initialize-build@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+
+      - name: Initialize .NET
+        uses: Hexalith/Hexalith.Builds/Github/initialize-dotnet@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+        with:
+          global-json-file: global.json
+
+      - name: Validate current G-6 preflight
+        shell: bash
+        run: |
+          python3 -m unittest tests/tools/test_run_g6_current.py tests/tools/test_g6_qualification_runner.py -v
+          python3 -m unittest tests/tools/test_g6_deferred_contracts.py -v
+          python3 references/Hexalith.Builds/Tools/test_package_readme.py -v
+
+      - name: Validate source mapper and current tool boundaries
+        shell: bash
+        run: python3 -m unittest tests/tools/test_g6_mapper_build.py tests/tools/test_install_g6_current_tools.py -v
+
+      - name: Pull pinned G-6 PostgreSQL fixture image
+        run: docker pull postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636
+
+      - name: Resolve reviewed direct Platform revision
+        id: g6-platform
+        shell: bash
+        run: |
+          set -euo pipefail
+          platform_revision="$(git rev-parse HEAD:references/Hexalith.Platform)"
+          [[ "$platform_revision" =~ ^[0-9a-f]{40}$ ]]
+          printf 'revision=%s\n' "$platform_revision" >> "$GITHUB_OUTPUT"
+
+      - name: Acquire reviewed G-6 catalog
+        uses: ./.github/actions/prepare-g6-catalog
+        with:
+          platform-revision: ${{ steps.g6-platform.outputs.revision }}
+          diagnostics: ${{ env.G6_OUTPUT }}/source-mapping
+
+      - name: Restore effective G-6 package graphs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapping_workspace="${RUNNER_TEMP}/conversations-source-mapping"
+          mapping_diagnostics="${G6_OUTPUT}/source-mapping"
+          mkdir -p "$mapping_diagnostics"
+          mapping_json="${mapping_diagnostics}/conversations.json"
+          mapping_env="${mapping_diagnostics}/conversations.env"
+          mapping_builds_root="${PWD}/references/Hexalith.Builds"
+          mapping_assembly="${mapping_builds_root}/src/libraries/Hexalith.Builds.Module.Cli/bin/Release/net11.0/Hexalith.Builds.Module.Cli.dll"
+          rm -rf "$mapping_workspace"
+          mapping_status=0
+          (
+            cd "$mapping_builds_root" || exit "$?"
+            dotnet build src/libraries/Hexalith.Builds.Module.Cli/Hexalith.Builds.Module.Cli.csproj \
+              --configuration Release -m:1 /nr:false
+          ) > "${mapping_diagnostics}/build.stdout.log" 2> "${mapping_diagnostics}/build.stderr.log" || mapping_status=$?
+          if (( mapping_status != 0 )); then
+            cat "${mapping_diagnostics}/build.stdout.log" "${mapping_diagnostics}/build.stderr.log"
+            exit "$mapping_status"
+          fi
+          mapping_status=0
+          (
+            cd references/Hexalith.Conversations || exit "$?"
+            dotnet "$mapping_assembly" \
+              prepare-build \
+              --manifest module/hexalith.module-manifest.v2.json \
+              --mode source \
+              --workspace "$mapping_workspace" \
+              --output json
+          ) > "$mapping_json" 2> "${mapping_diagnostics}/prepare.stderr.log" || mapping_status=$?
+          if (( mapping_status != 0 )); then
+            cat "${mapping_diagnostics}/prepare.stderr.log"
+            exit "$mapping_status"
+          fi
+          python3 - "$mapping_json" "$mapping_env" <<'PY'
+          import json
+          import sys
+          data = json.load(open(sys.argv[1], encoding="utf-8"))
+          if data.get("status") != "prepared":
+              raise SystemExit("Conversations source mapping was not prepared")
+          environment = data["buildPreparation"]["environment"]
+          with open(sys.argv[2], "w", encoding="utf-8", newline="\n") as handle:
+              for key in sorted(environment):
+                  value = environment[key]
+                  if not isinstance(value, str) or any(ord(character) < 32 for character in value):
+                      raise SystemExit(f"invalid mapping environment value for {key}")
+                  handle.write(f"{key}={value}\n")
+          PY
+          mapping_args=()
+          while IFS= read -r assignment || [ -n "$assignment" ]; do
+            mapping_args+=("$assignment")
+          done < "$mapping_env"
+          while IFS= read -r project; do
+            # Jérôme Piquot, 2026-10-03: “Unset CI in restore (Recommended)”.
+            # This dedicated Debug source proof retains the normal package-only CI guard.
+            if [[ "$project" == references/Hexalith.Conversations/* ]]; then
+              env -u CI "${mapping_args[@]}" dotnet restore "$project" -p:UseHexalithProjectReferences=true
+            else
+              # Conversations source projects require their own mapping. Keep that module on
+              # packages while the rest of this source graph is restored.
+              env -u CI dotnet restore "$project" -p:UseHexalithProjectReferences=true -p:HexalithConversationsFromSource=false
+            fi
+          done < <(jq -r '.resolvedProjects[]' tools/qualification/g6-current-policy-2026-11-12-dapr-net1191.json)
+
+      - name: Audit and qualify current G-6 when required
+        env:
+          G6_EVENT_NAME: ${{ github.event_name }}
+          G6_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: >-
+          python3 tests/tools/run_g6_ci_gate.py
+          --event "$G6_EVENT_NAME"
+          --base-sha "$G6_BASE_SHA"
+          --policy tools/qualification/g6-current-policy-2026-11-12-dapr-net1191.json
+          --output "$G6_OUTPUT"
+
+      - name: Upload G-6 result and diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: g6-current-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.G6_OUTPUT }}
+          if-no-files-found: error
+          retention-days: 30
+
+  # Replays the selected P1R tuple; historical 3.109.0 checks remain manually executable.
+  p1r-candidate-evidence:
+    name: P1R candidate evidence replay
+    runs-on: ubuntu-latest
+    needs: workflow-gates
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Initialize root-declared submodules
+        uses: Hexalith/Hexalith.Builds/Github/initialize-build@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+
+      - name: Fetch EventStore history and tags read by the P1R evidence replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          history=()
+          if [ "$(git -C references/Hexalith.EventStore rev-parse --is-shallow-repository)" = true ]; then
+            history+=(--unshallow)
+          fi
+          git -C references/Hexalith.EventStore -c submodule.recurse=false fetch \
+            --no-recurse-submodules --no-tags "${history[@]}" origin \
+            +refs/heads/main:refs/remotes/origin/main \
+            +refs/tags/v3.110.0:refs/tags/v3.110.0
+
+      - name: Replay P1R candidate evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: >-
+          python3 -m unittest
+          tests.tools.test_p1r_candidate_evidence.SelectedPublishedEvidenceTests
+          tests.tools.test_p1r_candidate_evidence.SelectedEvidenceMutationTests -v
+
+  e2e:
+    name: Scheduled managed AppHost E2E
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    needs:
+      - ci
+      - workflow-gates
+      - project-gates
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Initialize root-declared submodules
+        uses: Hexalith/Hexalith.Builds/Github/initialize-build@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+
+      - name: Initialize .NET
+        uses: Hexalith/Hexalith.Builds/Github/initialize-dotnet@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
+        with:
+          global-json-file: global.json
+
+      - name: Initialize Dapr
+        uses: ./references/Hexalith.Builds/Github/dapr-init
+        with:
+          version: '1.19.1'
+          runtime-version: '1.19.1'
+
+      - name: Install Aspire CLI
+        run: dotnet tool install --global Aspire.Cli --version 13.6.5
+
+      - name: Initialize Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tests/e2e/package-lock.json
+
+      - name: Install locked dependencies without lifecycle scripts
+        env:
+          CI: '1'
+        run: npm --prefix tests/e2e ci --ignore-scripts
+
+      - name: Install Playwright browsers explicitly
+        run: npm --prefix tests/e2e run install:browsers
+
+      - name: Run managed AppHost E2E suite
+        timeout-minutes: 45
+        env:
+          # 'true' keeps the AppHost build in CI package-reference mode; any other value selects
+          # local Debug sibling-source references through Directory.Build.props.
+          CI: 'true'
+          KEYCLOAK_CLIENT_ID: hexalith-eventstore
+          TEST_USER_USERNAME: admin-user
+          TEST_USER_PASSWORD: ${{ secrets.PROJECTS_E2E_TEST_USER_PASSWORD }}
+        run: npm --prefix tests/e2e run test:live:managed
+
+      - name: Stop the exact Projects AppHost
+        if: always()
+        run: aspire stop --apphost "$GITHUB_WORKSPACE/src/Hexalith.Projects.AppHost/Hexalith.Projects.AppHost.csproj" --non-interactive || true
+
+      - name: Upload E2E failure evidence
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-failure-evidence-${{ github.sha }}
+          path: |
+            tests/e2e/test-results
+            tests/e2e/playwright-report
+          if-no-files-found: ignore
+          retention-days: 7

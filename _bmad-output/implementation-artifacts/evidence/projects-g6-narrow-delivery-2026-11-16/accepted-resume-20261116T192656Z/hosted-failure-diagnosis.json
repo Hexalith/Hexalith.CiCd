@@ -1,0 +1,49 @@
+{
+  "observed_at": "2026-11-16T19:34:56.754876+00:00",
+  "source": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+  "ci": {
+    "run": 43940159468,
+    "url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43940159468",
+    "conclusion": "failure",
+    "job_id": 133555237444,
+    "failed_step": "Validate shared skill renderer",
+    "command": "python3 -m unittest tests/tools/test_render_skill.py -v",
+    "exit_code": 1,
+    "exception": "AttributeError: 'function' object has no attribute '__mro__'",
+    "source_path": "tests/tools/test_render_skill.py",
+    "source_blob": "b539b15c99f38b05e445b9a161ef35ffede9e4ec",
+    "cause": "The @dataclass(frozen=True) decorator at line 26 applies to the _write_text function at line 29. Dataclasses expects a class; module import fails before tests execute.",
+    "function": "_write_text",
+    "function_line": 29,
+    "decorator_line": 26,
+    "unchanged_from_reviewed_parent": true
+  },
+  "g6": {
+    "job_id": 133555960523,
+    "conclusion": "skipped",
+    "cause": "Unchanged needs: workflow-gates dependency failed.",
+    "acquisition_executed": false,
+    "prepare_build_executed": false,
+    "runtime_acceptance": false,
+    "artifact_count": 0
+  },
+  "commitlint": {
+    "run": 43940159230,
+    "url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43940159230",
+    "conclusion": "failure",
+    "job_id": 133555236833,
+    "failed_step": "Install dependencies",
+    "command": "npm ci --ignore-scripts",
+    "exit_code": 1,
+    "error": "EUSAGE: npm ci requires package-lock.json or npm-shrinkwrap.json; neither exists in Projects source.",
+    "package_metadata_absent_before_and_after": true,
+    "referenced_workflow": {
+      "path": "Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@main",
+      "sha": "6db97d4e9da392ef691ed3f367e73f1b7d2ef318",
+      "ref": "refs/heads/main"
+    },
+    "commit_message_validation_reached": false
+  },
+  "changes_for_diagnosis": "None. Existing gates, test files, source pins and workflows preserved.",
+  "runtime_prerequisite": "Separately resolve the invalid shared-skill fixture import through its owner and reconcile the shared commitlint installation contract. Then collect fresh exact-source CI/G-6; do not bypass or weaken gates."
+}
