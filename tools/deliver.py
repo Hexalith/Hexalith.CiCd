@@ -67,15 +67,16 @@ def app_checks(transport, repository, token):
     if actual != expected:
         raise rt.DeliveryError("AD-21 main/v* rulesets check failed")
     # This Administration-protected read must succeed before interpreting the
-    # security-updates endpoint's documented disabled=404 response.
+    # security-updates endpoint's legacy disabled=404 response.
     retention = api.get(prefix + "/actions/permissions/artifact-and-log-retention", token)
     if not isinstance(retention, dict) or type(retention.get("days")) is not int or retention["days"] != 90:
         raise rt.DeliveryError("artifact/log retention check failed: expected 90 days")
     setup = api.get(prefix + "/code-scanning/default-setup", token)
     if not isinstance(setup, dict) or setup.get("state") != "not-configured":
         raise rt.DeliveryError("code-scanning default setup check failed")
-    if api.get(prefix + "/automated-security-fixes", token, absent=True) is not None:
-        raise rt.DeliveryError("Dependabot security updates check failed: enabled")
+    updates = api.get(prefix + "/automated-security-fixes", token, absent=True)
+    if updates is not None and (not isinstance(updates, dict) or updates.get("enabled") is not False):
+        raise rt.DeliveryError("Dependabot security updates check failed: enabled or malformed response")
 
 
 def nightly(transport, token, *, now=None):

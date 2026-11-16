@@ -52,6 +52,9 @@ class RuntimeTests(unittest.TestCase):
         for body in (b"x" * (rt.MAX_JSON + 1), b'{"x":1,"x":2}'):
             with self.assertRaises(rt.DeliveryError):
                 rt.API(opener=Opener(body)).get("/repos/Hexalith/Fixture/test")
+        with self.assertRaisesRegex(rt.DeliveryError, "null response"):
+            rt.API(opener=Opener(b"null")).get(
+                "/repos/Hexalith/Fixture/automated-security-fixes", "inert", absent=True)
         with self.assertRaises(rt.DeliveryError):
             rt.NoRedirect().redirect_request(None, None, None, None, None, None)
         with self.assertRaises(rt.DeliveryError):

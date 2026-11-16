@@ -1,0 +1,18 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  ci:
+    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.0.6"
+    permissions: {"actions": "write", "contents": "write"}
+    secrets:
+      registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
+      registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}

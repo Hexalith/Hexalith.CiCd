@@ -112,6 +112,45 @@ class DeliveryTests(unittest.TestCase):
                 requests = [json.loads(line) for line in Path(w.config["requests"]).read_text().splitlines()]
                 self.assertTrue(any(r["authorization"] == "Bearer inert-token-Hexalith.Alpha" for r in requests))
 
+    def test_dependabot_disabled_response_and_legacy_404_are_accepted(self):
+        path = "/repos/Hexalith/Hexalith.Alpha/automated-security-fixes"
+        for index, response in enumerate((
+                {"status": 200, "body": {"enabled": False, "paused": False}},
+                {"status": 404, "body": {"message": "Not Found"}})):
+            with self.subTest(response=response):
+                w = Workspace(Path(self.temp.name) / f"disabled-{index}", self.ws.modules)
+                w.config["api"][path] = response
+                self.assertEqual(w.deliver(), 0, w.report())
+                self.assertEqual([r["advancement"] for r in w.report()["modules"]], ["advanced", "advanced"])
+
+    def test_dependabot_malformed_and_authorization_failures_isolate_siblings(self):
+        path = "/repos/Hexalith/Hexalith.Alpha/automated-security-fixes"
+        responses = [{"status": 200, "body": value}
+                     for value in ({"enabled": True}, {"enabled": 0}, {"enabled": "false"}, {}, [], False, None)]
+        responses += [{"status": status, "body": {"message": "Resource not accessible"}} for status in (401, 403)]
+        for index, response in enumerate(responses):
+            with self.subTest(response=response):
+                w = Workspace(Path(self.temp.name) / f"disabled-rejected-{index}", self.ws.modules)
+                w.config["api"][path] = response
+                self.assertEqual(w.deliver(), 1)
+                alpha, beta = w.report()["modules"]
+                self.assertEqual((alpha["advancement"], alpha["application"]), ("skipped", "no-ref"))
+                self.assertEqual((beta["advancement"], beta["application"]), ("advanced", "pushed"))
+                self.assertEqual(git(w.remote, "for-each-ref", "--format=%(refname)",
+                                     "refs/heads/delivered/Hexalith.Alpha"), "")
+
+    def test_dependabot_404_requires_successful_administrative_preflight(self):
+        w = self.ws
+        w.config["api"]["/repos/Hexalith/Hexalith.Alpha/actions/permissions/artifact-and-log-retention"] = {
+            "status": 403, "body": {"message": "Resource not accessible"}}
+        self.assertEqual(w.deliver(), 1)
+        alpha, beta = w.report()["modules"]
+        self.assertEqual(alpha["advancement"], "skipped")
+        self.assertEqual(beta["advancement"], "advanced")
+        requests = [json.loads(line) for line in Path(w.config["requests"]).read_text().splitlines()]
+        self.assertFalse(any(r.get("path", "").startswith(
+            "/repos/Hexalith/Hexalith.Alpha/automated-security-fixes") for r in requests))
+
     def test_rejected_module_repairs_old_render_healthy_sibling_advances(self):
         w = self.ws
         w.ref("Hexalith.Alpha")

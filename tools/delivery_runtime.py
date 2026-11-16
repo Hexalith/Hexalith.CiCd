@@ -262,7 +262,13 @@ class API:
                                   timeout=min(30, self.budget.timeout())) as response:
                 if response.status != 200:
                     raise DeliveryError("GitHub API unexpected status")
-                return json_read(response.read(MAX_JSON + 1))
+                value = json_read(response.read(MAX_JSON + 1))
+                # A successful null must not impersonate the legacy disabled
+                # 404 sentinel. Other callers validate their own response shape
+                # and preserve endpoint-specific identity diagnostics.
+                if value is None and absent:
+                    raise DeliveryError("GitHub API returned a null response")
+                return value
         except HTTPError as error:
             error.close()
             if absent and error.code == 404:
