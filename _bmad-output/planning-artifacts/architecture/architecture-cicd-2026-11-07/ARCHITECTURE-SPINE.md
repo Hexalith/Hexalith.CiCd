@@ -77,7 +77,7 @@ flowchart LR
   CALLER -- "uses exact tag" --> BCI
   CALLER -- "uses exact tag" --> BREL
   CALLER -- "uses exact tag: prepare, publish" --> COMP
-  CALLER -- "Windows job: literal ./" --> ACT
+  CALLER -- "Windows/macOS job: literal ./" --> ACT
   PRODUCT -- "gitlink = buildsTag: MSBuild imports" --> PROPS
   BOWN -- "local ./" --> BCI
   BOWN -- "local ./" --> BREL
@@ -99,8 +99,8 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Rule:**
   - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `codeql`, `tests`, `hooks` and `jobs`.
   - Builds' CI, Builds' release and `check.py` read it from the checkout, through the AD-4 loader.
-  - It is complete: every knob is written out, so no reader applies a default or accepts a missing key.
-  - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, the Windows jobs (which take `solution` from the `ci` job's output, AD-12) and the publish job with its environment.
+  - Its baseline fields are complete and required. The additive native fields `aspire` and `job-timeout-minutes` may be omitted to preserve existing documents and renders; their defined omission behaviors are disabled and the configured CI budget (`ciTimeoutMinutes` when defined by the published schema, otherwise 30 minutes) respectively. The loader returns supplied values unchanged. Every explicitly selected capability is materialized in the module commit.
+  - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, platform jobs (which consume validated `ci` outputs, AD-12), an explicitly selected CI timeout and the publish job with its environment.
   - At run time Builds reads CiCd only for the guard and the release drift check (AD-8, AD-17).
 
 ### AD-2 — Builds is module-agnostic
@@ -116,15 +116,16 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Rule:**
   - The managed modules are exactly `setup/*.yml` (file name = repo name), and every CiCd tool enumerates them. `setup/Hexalith.Builds.yml` is rejected (AD-19).
   - A setup file is `hexalith-ci.json` without `schema` and `buildsTag`; a setup file that contains either key fails.
-  - The render adds `schema` (the `const` of the schema file at `builds-version`) and `buildsTag` (from `builds-version` only), and writes every knob explicitly: schema `default` values, plus the `codeql` rule below.
+  - The render adds `schema` (the `const` of the schema file at `builds-version`) and `buildsTag` (from `builds-version` only), and writes every baseline knob explicitly: schema `default` values, plus the `codeql` rule below. The additive native fields retain AD-1's compatible omission behavior.
   - Validation checks that rendered `hexalith-ci.json` against Builds' `schemas/hexalith.ci.v<N>.json` at `builds-version`, never the raw setup file. Unknown keys fail.
-  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr` and `browsers` are `false`.
+  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, runners are `windows-latest` or `macos-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, `dapr` and `browsers` are `false`, and `aspire` is absent or `false`.
   - **Knobs:**
     - `solution`: a repo-relative path, or `none`, which runs stage 1 only and releases a GitHub release only.
     - `dapr`, `browsers`, `registry`.
+    - Optional `aspire` and `job-timeout-minutes`, with AD-12's runtime and budget constraints.
     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
-  - Adding an optional knob with a schema default is a minor Builds release (AD-10).
+  - Adding an optional knob with a schema default or a documented compatible omission behavior is a minor Builds release (AD-10).
   - **Global checks**, which gate every ref advance: render with no diff; schemas; tool tests; actionlint and zizmor over CiCd's workflows and, passed by path, `rendered/*/.github/workflows/*.yml`; `builds-version` names an acceptable tag (AD-10). They are one CiCd script, which `validate` and the nightly `bump` run identically, with no secret other than the job's read-only `GITHUB_TOKEN`.
   - **Per-module checks**, which gate only that module's `delivered/<Repo>` ref:
     - with anonymous reads, in every run: the repo is a submodule; every action named by `hooks`, `jobs` or `tests.exclude` exists on the module's live `main`; no job name equals a hook name; every `tests.exclude` target is an enabled hook or job;
@@ -142,7 +143,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - **Closed entry kinds:** `whole`, `whole-dir`, `gitlink`, `gitmodules-section`, `json-superset`, `marker-block`, `absent-glob`, `absent-json`, `absent-line`.
   - Partial-entry text is inline. Whole-file content is `rendered/<Repo>/<path>`.
   - **One loader per document.** Builds' `Github/lib/` holds one stdlib loader each for `hexalith-ci.json` and the perimeter. Every reader uses it: CI, the release, the guard, restore, `check.py`, and delivery through its Builds clone.
-    - It accepts exactly the `schema` value of the schema file at its own commit, and rejects unknown and missing keys.
+    - It accepts exactly the `schema` value of the schema file at its own commit, and rejects unknown and missing required keys.
     - An unknown `schema` value or entry kind fails with its fixed message.
     - `builds-ci.yml` runs the loaders and the JSON Schemas over the same valid and invalid fixtures.
   - **Repair comes before parsing.**
@@ -299,7 +300,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
     - npm tools through a committed lockfile, `npm ci --ignore-scripts`, then `npm audit signatures`;
     - binaries that a Builds or CiCd script downloads itself, through a SHA-256 it checks before use. Tool-managed downloads (Playwright browsers, the Dapr runtime) are pinned by the tool's version.
     - the OCI publisher runs the official Skopeo container distribution at the version/image digest and upstream source commit pinned in Builds `Tools/spikes/publish-tools.json`; it verifies the exact reported version/source before copy.
-  - The parts of `prepare` that run on Windows (checkout, .NET setup, restore, build) contain no Python and read no JSON.
+  - The parts of `prepare` that run on Windows and macOS (checkout, .NET setup, restore, build) contain no Python and read no JSON.
   - A workflow `run:` step only invokes a script, except for one-liners. Expressions never appear inside `run:`; values reach scripts through `env:`.
   - Custom actions are module-owned and not bound by this rule.
   - The `Props/` catalog validators in Builds' `Tools/` are product checks, as in AD-2's `Props/` exception. Each is classified with the gate rule (`gate-classification.md`); the ones kept run in `builds-ci.yml` in their current language.
@@ -317,6 +318,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        - Dapr if `dapr`, at the one Dapr version pinned in Builds;
        - browsers if `browsers`, or if stage 4 holds an E2E project;
        - registry login if `registry`, with the pull-only pair.
+       - the trusted Linux amd64 Aspire CLI and its verified embedded DCP/dashboard bundle, native prerequisites, namespace probe and pinned private Python tooling if `aspire`; this requires `dapr`. Exact Core/ASP.NET runtime selection is checked before hooks. Namespace configuration is bounded and allowed only on disposable GitHub-hosted runners.
 
        Then hook `after-unit-tests`, then integration tests project by project, then hook `after-integration-tests`.
   - The environment setup is one Builds composite. CI stage 4 and `prepare` on Linux use it.
@@ -325,8 +327,9 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - No CodeQL runs on a push or PR.
   - The module `ci.yml` triggers on `push` to `main`, `pull_request` and `workflow_dispatch`.
   - A custom action that needs browsers or Dapr is a hook with that knob on.
-  - `jobs` exist only for Windows. The reusable `ci.yml` outputs every knob that Windows `prepare` uses, as the loader validated it: `solution` (workspace-relative, including `module-root` when set) and, once added, `submodules`. Each job is rendered with `needs: ci`, `runs-on: windows-latest` and two steps: `uses: Hexalith/Hexalith.Builds/Github/prepare@<tag>` with those outputs as inputs, then a literal `uses: ./.github/actions/<job-name>`.
-  - On Windows, `prepare` checks out, sets up .NET, restores and builds, and sets up no environment. On Linux, it reads the knobs through the AD-4 loader and runs the environment setup after the build.
+  - `jobs` support `windows-latest` and `macos-latest`. The reusable `ci.yml` outputs every knob platform `prepare` uses, as the loader validated it: `solution` (workspace-relative, including `module-root` when set), `global-json` and `submodules`. Each job is rendered with `needs: ci`, the selected runner and two steps: `uses: Hexalith/Hexalith.Builds/Github/prepare@<tag>` with those outputs as inputs, then a literal `uses: ./.github/actions/<job-name>`. Job IDs retain `windows-<name>` for existing Windows registrations and use `macos-<name>` for macOS.
+  - On Windows and macOS, `prepare` checks out, sets up .NET, restores and builds, and sets up no environment. On Linux, it reads the knobs through the AD-4 loader and runs the environment setup after the build.
+  - Optional `job-timeout-minutes` is an integer from 1 through 360, passed by the rendered caller to the shared workflow's existing input. An explicit value takes precedence over materialized `ciTimeoutMinutes` when that field is defined by the published schema; otherwise the budget is 30 minutes. Both default to 30, preserving existing caller behavior. Native lanes must budget the shared stages, preparation, every product case and cleanup within that complete-job bound; no coverage is removed to fit it.
 
 ### AD-13 — Test-stage classification
 
@@ -347,10 +350,10 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Rule:**
   - Custom actions are composite only, at `.github/actions/<hook-name or job-name>/action.yml`, and always resolve from the workspace root.
   - The hooks are exactly `after-unit-tests`, `after-integration-tests` and `nightly`, with one action per hook point. That action may call local sub-actions.
-  - An action may use any language. A hook action assumes a restored, Release-built workspace with the Builds environment set up; a Windows job's action assumes a restored, Release-built workspace only. No action rebuilds, sets up an environment or calls Builds.
+  - An action may use any language. A hook action assumes a restored, Release-built workspace with the Builds environment set up; a Windows or macOS job's action assumes a restored, Release-built workspace only. No action rebuilds the module, sets up a generic environment or calls Builds. Distinct test-owned source fixtures may be compiled in private outputs and caches while the module's already built outputs remain unchanged. Module-owned isolated launchers retain all product audit/provenance checks, diagnostics and bounded cleanup.
   - It gets a read-only token. Every secret its job references is readable by all of that job's steps, so the CI job and `nightly-hook` hold only the pull-only registry pair. Hook secrets arrive as a minor Builds API change when the first hook that needs one is enabled, passed explicitly by name (Deferred: where they go).
   - Directories that are not enabled stay dormant: linted and scanned, never run.
-  - Failure means a failed step. Actions write no result or evidence files.
+  - Failure means a failed step. Product actions may retain test reports, fixture/package provenance and failure diagnostics needed by their product assertions. They do not produce alternative CI/release verdicts or enforce story/agent evidence gates.
 
 ### AD-15 — Local check mirrors CI stages 1–3
 
@@ -596,7 +599,7 @@ sequenceDiagram
 | Workflow security | outside the AD-20 freeze: every workflow triggers only on `push`, `pull_request`, `schedule`, `workflow_dispatch` or `workflow_call`, and declares top-level `permissions: {}`, granting per job; both `release.yml` files and CiCd's `deliver.yml` and `nightly.yml` declare `cache-mode: none`, with setup-uv `enable-cache: false`; checkouts use `persist-credentials: false`, and a job that pushes passes its token explicitly; no expression inside `run:` |
 | Concurrency | declared only in top-level workflows; module CI: `pull_request` runs in `ci-<ref>`, cancelling in progress, and push and dispatch runs in `ci-<sha>`, never superseded; `release` per repo; `deliver` for runs on `main`, never cancelled, and `deliver-validate-<ref>` for the others, cancelling in progress; `nightly` in CiCd; otherwise a pending run may be superseded by a newer one |
 | Green | a workflow run with conclusion `success`; anything else is not green |
-| Runners | `ubuntu-latest`; `windows-latest` for Windows jobs; GitHub-hosted only |
+| Runners | `ubuntu-latest`; `windows-latest` and `macos-latest` for platform product jobs; GitHub-hosted only |
 | Action references | `Hexalith/Hexalith.Builds/…@vX.Y.Z` (exact tag); third-party actions by full commit SHA with a `# vX.Y.Z` comment; Builds' own composites via `$/`; actionlint runs with ignores for `$/` references, the `job.workflow_*` properties and the `cache-mode` key; zizmor runs with a committed config (ref-pin `Hexalith/*`, hash-pin all others, `self-repository` audit off, never `--fix`) and its online audits, over Builds workflows and `Github/**/action.yml`, CiCd workflows and `rendered/**`; in Builds, the frozen legacy workflows (AD-20) are listed under per-rule `ignore` entries until the final deletion |
 | SDK and build | SDK from the module's `global.json`, resolved by its `rollForward`; Release configuration; `-p:UseHexalithProjectReferences=false`, `-noAutoResponse` and `-p:RestoreConfigFile=<Builds' NuGet config>` everywhere, where that config maps every package to nuget.org, sets `signatureValidationMode` to `require` and trusts the nuget.org repository signature; `-p:NuGetAudit=false` in CI and the local check |
 | Time | UTC everywhere; nightly 02:17; hourly delivery at minute 47; polling every 60 s; App tokens used at most 50 minutes after minting |

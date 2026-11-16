@@ -1,0 +1,66 @@
+{
+  "resourceVersion": "46533286",
+  "namespace_patterns": [
+    "**",
+    "cicd-publish-spike-3-1",
+    "commons",
+    "commons/**",
+    "polymorphicserializations",
+    "polymorphicserializations/**"
+  ],
+  "mcpcli_relevant": {
+    "**": {
+      "anonymousPolicy": [],
+      "policies": [
+        {
+          "users": [
+            "jpiquot",
+            "jpiquot@itaneo.com"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        },
+        {
+          "users": [
+            "cluster-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "ci-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-registry-pull"
+          ],
+          "actions": [
+            "read"
+          ]
+        }
+      ]
+    }
+  },
+  "admin_policy": {
+    "users": [
+      "jpiquot",
+      "jpiquot@itaneo.com"
+    ],
+    "actions": [
+      "read",
+      "create",
+      "update",
+      "delete"
+    ]
+  }
+}

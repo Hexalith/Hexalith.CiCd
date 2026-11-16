@@ -180,6 +180,76 @@ class RenderTests(unittest.TestCase):
                 self.assertTrue(data.endswith(b"\n"))
                 self.assertFalse(data.endswith(b"\n\n"))
 
+    def native_contract(self, fixture):
+        """Qualify the candidate API without pretending it is a released tag."""
+        paths = ("schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")
+        fixture.change_tag({path: (ROOT / "references/Hexalith.Builds" / path).read_bytes()
+                            for path in paths})
+
+    def test_native_contract_preserves_existing_registration_bytes_with_central_test_defaults(self):
+        with workspace() as fixture:
+            fixture.setup("full")
+            fixture.cli()
+            original = file_bytes(fixture.root / "rendered")
+            self.native_contract(fixture)
+            fixture.cli()
+            actual = file_bytes(fixture.root / "rendered")
+            config_path = "Hexalith.Fixture/.github/hexalith-ci.json"
+            expected = json.loads(original[config_path])
+            # Independent central test-floor and timeout policies add these safe defaults.
+            # Native capabilities must not change any other registration bytes.
+            expected["tests"].update(minimumExpectedTests={}, failSkips=False)
+            expected["ciTimeoutMinutes"] = 30
+            expected["npmWorkspaces"] = []
+            expected["dotnetTools"] = False
+            self.assertEqual(expected, fixture.json())
+            original.pop(config_path)
+            actual.pop(config_path)
+            self.assertEqual(original, actual)
+
+    def test_current_contract_forwards_central_timeout_with_native_override_precedence(self):
+        for central, override, expected in ((30, None, None), (60, None, 60), (60, 360, 360), (60, 30, None)):
+            with self.subTest(central=central, override=override), workspace() as fixture:
+                self.native_contract(fixture)
+                document = {"solution": "Fixture.slnx", "ciTimeoutMinutes": central}
+                if override is not None:
+                    document["job-timeout-minutes"] = override
+                fixture.document(document)
+                fixture.cli()
+                job = fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]
+                self.assertEqual(central, fixture.json()["ciTimeoutMinutes"])
+                self.assertEqual({} if expected is None else {"job-timeout-minutes": expected}, job.get("with", {}))
+
+    def test_native_contract_renders_macos_and_complete_job_budget(self):
+        with workspace() as fixture:
+            self.native_contract(fixture)
+            fixture.document({"solution": "Fixture.slnx", "dapr": True, "aspire": True,
+                              "job-timeout-minutes": 360,
+                              "jobs": {"platform": {"runner": "macos-latest"},
+                                       "windows": {"runner": "windows-latest"}}})
+            fixture.cli()
+            document = fixture.json()
+            self.assertTrue(document["aspire"])
+            self.assertEqual(360, document["job-timeout-minutes"])
+            jobs = fixture.yaml(".github/workflows/ci.yml")["jobs"]
+            self.assertEqual({"job-timeout-minutes": 360}, jobs["ci"]["with"])
+            self.assertEqual("macos-latest", jobs["macos-platform"]["runs-on"])
+            self.assertEqual("windows-latest", jobs["windows-windows"]["runs-on"])
+            self.assertEqual("ci", jobs["macos-platform"]["needs"])
+            self.assertEqual("./.github/actions/platform", jobs["macos-platform"]["steps"][1]["uses"])
+            fixture.cli("--check")
+
+    def test_native_contract_rejects_invalid_budget_and_missing_dapr_before_render(self):
+        with workspace() as fixture:
+            self.native_contract(fixture)
+            fixture.setup()
+            fixture.cli()
+            for changes in ({"job-timeout-minutes": 361}, {"job-timeout-minutes": True},
+                            {"aspire": True}):
+                with self.subTest(changes=changes):
+                    fixture.document({"solution": "Fixture.slnx", **changes})
+                    self.assert_failure_unchanged(fixture)
+
     def test_nested_defaults_and_explicit_values_survive(self):
         with workspace() as fixture:
             fixture.setup("partial")

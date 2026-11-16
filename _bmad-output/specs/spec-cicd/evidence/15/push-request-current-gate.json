@@ -1,0 +1,34 @@
+{
+  "recorded_at": "2026-11-16T19:37:23.158008+00:00",
+  "commit": "d4341dba735a4347793235b60dfa7a89c269b334",
+  "fresh_main": "119a4b59e5e1391ff8ddb4587e1608ad1d1e5145",
+  "builds_import": "65fd22f37b9fad64b595841923cdbe050563ab99",
+  "protected_paths": [
+    ".github/workflows",
+    ".github/dependabot.yml",
+    ".github/hexalith-ci.json",
+    ".releaserc.json",
+    ".gitmodules",
+    "references/Hexalith.Builds",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".github/copilot-instructions.md",
+    ".claude/settings.json"
+  ],
+  "owned_content_diff": "",
+  "literal_checker_exit": 2,
+  "package_restore_exit": 1,
+  "package_restore_command": [
+    "dotnet",
+    "restore",
+    "tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj",
+    "-p:UseHexalithProjectReferences=false",
+    "-p:NuGetAudit=true",
+    "-p:NuGetAuditMode=all",
+    "-p:NuGetAuditLevel=low",
+    "-warnaserror"
+  ],
+  "module_push_permitted": false,
+  "note": "This does not waive required package-mode build/test/consumer checks.",
+  "nested_submodules_initialized": false
+}

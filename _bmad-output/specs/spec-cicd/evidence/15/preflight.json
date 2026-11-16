@@ -1,0 +1,624 @@
+{
+  "recorded_at": "2026-11-16T14:57:07.311535+00:00",
+  "profile": "/home/administrator/.config/gh",
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "token_overrides_present": false,
+  "requests": [
+    {
+      "endpoint": "user",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 1379417482,
+        "full_name": "Hexalith/Hexalith.McpCli",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/commits/main",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "sha": "e2e3db7ba2d45d61feacc39c41b3051310fbc57f"
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/rulesets?includes_parents=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": []
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/environments",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 24587191530,
+            "node_id": "EN_kwDOUjg9is8AAAAFuYLE6g",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.McpCli/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-10-17T17:59:02Z",
+            "updated_at": "2026-10-17T17:59:02Z",
+            "can_admins_bypass": true,
+            "protection_rules": [
+              {
+                "id": 69197379,
+                "node_id": "GA_kwDOUjg9is4EH95D",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 69197380,
+                "node_id": "GA_kwDOUjg9is4EH95E",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/environments/hexalith-release/secrets",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/reference/actions#list-environment-secrets",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/actions/variables",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 0,
+        "variables": []
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/code-scanning/default-setup",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/automated-security-fixes",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/immutable-releases",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/code-scanning/analyses?tool_name=CodeQL&per_page=100",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "no analysis found",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+        "status": "404"
+      },
+      "error": "gh: no analysis found (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/releases?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "id": 445767097,
+          "tag_name": "v3.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-15T02:47:26Z",
+          "author": "github-actions[bot]",
+          "marked": false
+        },
+        {
+          "id": 435585219,
+          "tag_name": "v2.0.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-05T18:39:44Z",
+          "author": "github-actions[bot]",
+          "marked": false
+        },
+        {
+          "id": 431882922,
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-02T19:31:52Z",
+          "author": "github-actions[bot]",
+          "marked": false
+        },
+        {
+          "id": 425941976,
+          "tag_name": "v1.1.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-27T20:19:06Z",
+          "author": "github-actions[bot]",
+          "marked": false
+        },
+        {
+          "id": 415987356,
+          "tag_name": "v1.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-17T18:26:59Z",
+          "author": "github-actions[bot]",
+          "marked": false
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/git/matching-refs/tags/v",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "ref": "refs/tags/v1.0.0",
+          "node_id": "REF_kwDOUjg9irByZWZzL3RhZ3MvdjEuMC4w",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/refs/tags/v1.0.0",
+          "object": {
+            "sha": "d9f822d64f7afa9bd51ca1698f5051147b86b554",
+            "type": "commit",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/commits/d9f822d64f7afa9bd51ca1698f5051147b86b554"
+          }
+        },
+        {
+          "ref": "refs/tags/v1.1.0",
+          "node_id": "REF_kwDOUjg9irByZWZzL3RhZ3MvdjEuMS4w",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/refs/tags/v1.1.0",
+          "object": {
+            "sha": "8d4a8c07636c1ad065dfc8dc28dbfc956d5deb82",
+            "type": "commit",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/commits/8d4a8c07636c1ad065dfc8dc28dbfc956d5deb82"
+          }
+        },
+        {
+          "ref": "refs/tags/v2.0.0",
+          "node_id": "REF_kwDOUjg9irByZWZzL3RhZ3MvdjIuMC4w",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/refs/tags/v2.0.0",
+          "object": {
+            "sha": "06cfdf25a352034b36041e9ed44da514b167ca5a",
+            "type": "commit",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/commits/06cfdf25a352034b36041e9ed44da514b167ca5a"
+          }
+        },
+        {
+          "ref": "refs/tags/v2.0.1",
+          "node_id": "REF_kwDOUjg9irByZWZzL3RhZ3MvdjIuMC4x",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/refs/tags/v2.0.1",
+          "object": {
+            "sha": "aa2845edbea23444a1d362060b8d0f5dc05a132e",
+            "type": "commit",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/commits/aa2845edbea23444a1d362060b8d0f5dc05a132e"
+          }
+        },
+        {
+          "ref": "refs/tags/v3.0.0",
+          "node_id": "REF_kwDOUjg9irByZWZzL3RhZ3MvdjMuMC4w",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/refs/tags/v3.0.0",
+          "object": {
+            "sha": "63df6d2b1e96bda795d2a21fff7813b35b9da947",
+            "type": "commit",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.McpCli/git/commits/63df6d2b1e96bda795d2a21fff7813b35b9da947"
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "app_id": 67,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            }
+          },
+          {
+            "id": 31626264,
+            "app_id": 56611,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            }
+          },
+          {
+            "id": 31641834,
+            "app_id": 254,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            }
+          },
+          {
+            "id": 77847816,
+            "app_id": 1144995,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            }
+          },
+          {
+            "id": 97329264,
+            "app_id": 12526,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            }
+          },
+          {
+            "id": 179966090,
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    }
+  ],
+  "implementation_recheck": {
+    "recorded_at": "2026-11-16T15:30:31.067352+00:00",
+    "requests": "preflight-recheck.json",
+    "app_selector": "app-selector-observation.json",
+    "codeql": "codeql-corroboration.json",
+    "remote_mutations": false,
+    "ordered_provisioning_complete": false,
+    "app_selection": "not saved; browser search interaction needs continuation; API list returns 403",
+    "codeql_diagnosis": "Filtered and unfiltered inventories return typed no analysis found; no permission failure is inferred from the gh refresh hint. No stale analysis deletion target identified.",
+    "later_ad21_stages": "not performed; retain production and every legacy credential/policy pending verified replacement and actual adoption"
+  }
+}

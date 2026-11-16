@@ -1,0 +1,36 @@
+commit 61db47b72239825da544922d2f930b1ad8dc8e68
+Author:     Jérôme Piquot <jpiquot@itaneo.com>
+AuthorDate: Sun Nov 15 22:54:03 2026 +0100
+Commit:     Jérôme Piquot <jpiquot@itaneo.com>
+CommitDate: Mon Nov 16 08:48:52 2026 +0100
+
+    build: sync local changes via /pushall
+
+ Directory.Build.props                              |   1 +
+ README.md                                          |   8 +-
+ .../projects-migration-inventory-v2.md             | 231 +++++++++++++++++++++
+ .../HexalithQueryAttribute.cs                      |   4 +-
+ .../Catalog/RoutingResolver.cs                     |   1 -
+ src/Hexalith.McpCli/Hexalith.McpCli.csproj         |   1 +
+ .../ConfigCommandTests.cs                          |   2 +-
+ .../DiscoveryCommandTests.cs                       |   7 +-
+ tests/Hexalith.McpCli.Core.Tests/CatalogTests.cs   |  20 +-
+ .../OperationExecutorTests.cs                      |  29 +++
+ .../OperationShapeTests.cs                         |   1 +
+ .../MissingProjectionQuery.cs                      |   4 +-
+ .../WhitespaceProjectionQuery.cs                   |   7 +
+ .../ComputedStatusQuery.cs                         |   7 +
+ tools/conformance-vectors/v1/README.md             |   2 +
+ .../Hexalith.Projects.Contracts/approval.json      |  13 ++
+ .../describe.vector.json                           |  76 +++++++
+ .../Hexalith.Projects.Contracts/list.vector.json   |  86 ++++++++
+ .../trace-attachments.vector.json                  |  72 +++++++
+ .../trace-conversation.vector.json                 |  62 ++++++
+ tools/conformance-vectors/v1/schema.json           |   2 +-
+ tools/conformance-vectors/v1/test_validate.py      |  12 +-
+ tools/conformance-vectors/v1/validate.py           |   4 +-
+ tools/dependency-policy.json                       |   3 +-
+ .../v1/projects-accepted-lint.json                 |  14 ++
+ tools/inventory-coverage/v1/projects-approved.json |  89 ++++++++
+ .../live-topology/plans-current/projects.list.json |  12 ++
+ 27 files changed, 752 insertions(+), 18 deletions(-)

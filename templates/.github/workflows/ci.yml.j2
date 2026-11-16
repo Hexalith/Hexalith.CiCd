@@ -13,11 +13,15 @@ jobs:
   ci:
     uses: [[ ci_workflow | tojson ]]
     permissions: [[ ci_permissions | tojson ]]
+[% if config.get('job-timeout-minutes', config.get('ciTimeoutMinutes', 30)) != 30 %]
+    with:
+      job-timeout-minutes: [[ config.get('job-timeout-minutes', config.get('ciTimeoutMinutes', 30)) | tojson ]]
+[% endif %]
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
 [% for job, options in config.jobs | dictsort %]
-  [[ ('windows-' ~ job) | tojson ]]:
+  [[ ((options.runner.split('-')[0]) ~ '-' ~ job) | tojson ]]:
     needs: ci
     runs-on: [[ options.runner | tojson ]]
     permissions:

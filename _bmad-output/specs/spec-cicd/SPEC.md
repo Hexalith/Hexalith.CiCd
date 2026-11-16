@@ -54,7 +54,8 @@ The architecture spine (first companion) decides how each capability is built, i
     - The only hook points are `after-unit-tests`, `after-integration-tests`, and `nightly`.
     - An enabled hook runs without repeating checkout, restore, build, or environment setup.
     - An action that needs browsers or Dapr runs as a hook in the main job, with that knob turned on.
-    - An action declared for Windows runs in its own job on that runner, only after the main job passes.
+    - An action declared for Windows or macOS runs in its own job on that runner, only after the main job passes.
+    - Native Aspire hooks enable the shared trusted Linux toolchain and retain module-owned isolated case execution and provenance. An optional complete-job timeout is bounded to six hours; existing modules keep the 30-minute default.
 - **CAP-6** One Builds version
   - **intent:** Every module references one exact Builds release tag, through the callers, `hexalith-ci.json`, and the submodule, moved together by delivery.
   - **success:**

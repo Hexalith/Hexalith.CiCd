@@ -1,0 +1,60 @@
+{
+  "observed_at": "2026-11-16T15:58:12.680046+00:00",
+  "action": "save",
+  "exit_code": 0,
+  "observation": {
+    "action": "save",
+    "url": "github.com/organizations/Hexalith/settings/installations/179966090",
+    "before": {
+      "selected": [
+        "Hexalith.Builds",
+        "Hexalith.CiCd",
+        "Hexalith.Commons",
+        "Hexalith.McpCli",
+        "Hexalith.PolymorphicSerializations"
+      ],
+      "save_enabled": true,
+      "only_selected": true
+    },
+    "selected": [
+      "Hexalith.Builds",
+      "Hexalith.CiCd",
+      "Hexalith.Commons",
+      "Hexalith.McpCli",
+      "Hexalith.PolymorphicSerializations"
+    ],
+    "save_enabled": true,
+    "only_selected": true,
+    "controls": [
+      {
+        "name": "Remove Hexalith.McpCli",
+        "type": "ControlType.Button",
+        "enabled": true,
+        "patterns": [
+          "InvokePatternIdentifiers.Pattern",
+          "ScrollItemPatternIdentifiers.Pattern"
+        ]
+      },
+      {
+        "name": "Hexalith/Hexalith.McpCli",
+        "type": "ControlType.Group",
+        "enabled": true,
+        "patterns": [
+          "InvokePatternIdentifiers.Pattern",
+          "ScrollItemPatternIdentifiers.Pattern"
+        ]
+      },
+      {
+        "name": "Hexalith.McpCli",
+        "type": "ControlType.Text",
+        "enabled": true,
+        "patterns": [
+          "TextPatternIdentifiers.Pattern",
+          "ScrollItemPatternIdentifiers.Pattern"
+        ]
+      }
+    ],
+    "save_invoked": true
+  },
+  "error": ""
+}

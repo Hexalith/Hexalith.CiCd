@@ -1,0 +1,250 @@
+{
+  "recorded_at": "2026-11-16T17:56:08.293676+00:00",
+  "source_log": "native-other-suites-python312-final.log",
+  "tests": 149,
+  "failure_count": 9,
+  "error_count": 47,
+  "zero_skip_claim": false,
+  "result": "failed; do not infer a complete passed subset from subtest counts",
+  "missing_actual_inputs": {
+    "tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll": false,
+    "tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll": false,
+    "src/Hexalith.McpCli/bin/Release/net11.0/Hexalith.McpCli.dll": false,
+    "src/Hexalith.McpCli/obj/project.assets.json": false
+  },
+  "causes": {
+    "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON": 16,
+    "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)": 10,
+    "absent actual Integration.Tests Release output; real selector exits1": 22,
+    "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary": 8
+  },
+  "assertions": [
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.create-party')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.deactivate-party')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.get-party')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.list-parties')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.reactivate-party')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.search-parties')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.update-party')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='projects.list')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.add-user-to-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.change-user-role')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.create-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.disable-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.enable-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant-audit')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant-users')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-user-tenants')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.list-tenants')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.remove-tenant-configuration')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.remove-user-from-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.set-tenant-configuration')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.update-tenant')",
+      "cause": "absent actual Integration.Tests Release output; real selector exits1"
+    },
+    {
+      "assertion": "ERROR: test_actual_built_adapter_matches_restored_production_closure (test_live_plans.AdapterDependencyTests.test_actual_built_adapter_matches_restored_production_closure)",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "ERROR: test_findings_stay_on_stdout_with_a_failing_exit_code (test_live_plans.InventoryAdapterReportTests.test_findings_stay_on_stdout_with_a_failing_exit_code)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_discovery_must_equal_the_flagged_package_manifests (test_live_plans.LiveKindCoverageTests.test_discovery_must_equal_the_flagged_package_manifests)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_inventory_reports_are_forwarded_without_failing (test_live_plans.LiveKindCoverageTests.test_inventory_reports_are_forwarded_without_failing)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes (test_live_plans.LiveKindCoverageTests.test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_missing_live_kind_fails_naming_the_module_and_kind (test_live_plans.LiveKindCoverageTests.test_missing_live_kind_fails_naming_the_module_and_kind)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_orphan_plan_fails_preflight (test_live_plans.LiveKindCoverageTests.test_orphan_plan_fails_preflight)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_vector_version_differences_reach_the_preflight_reports (test_live_plans.LiveKindCoverageTests.test_vector_version_differences_reach_the_preflight_reports)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_vector_without_a_plan_stays_loopback_only (test_live_plans.LiveKindCoverageTests.test_vector_without_a_plan_stays_loopback_only)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_version_difference_is_reported_and_the_binding_uses_the_restored_package (test_live_plans.LiveKindCoverageTests.test_version_difference_is_reported_and_the_binding_uses_the_restored_package)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.create-party', label='persisted-invocation')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='persisted-prerequisites-0')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-type')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-active')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-createdafter')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='offset-after-only-match')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='persisted-prerequisites-0')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-query')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-type')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-active')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='offset-after-only-match')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.update-party', label='persisted-prerequisites-0')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.update-party', label='persisted-invocation')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) (operation='tenants.get-tenant-users')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "ERROR: test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) (operation='tenants.get-tenant-audit')",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    },
+    {
+      "assertion": "FAIL: test_unmentioned_operation_is_reported_on_stderr_without_a_finding (test_live_plans.InventoryAdapterReportTests.test_unmentioned_operation_is_reported_on_stderr_without_a_finding)",
+      "cause": "absent actual ConformanceHost Release output; inventory producer through HeadProcess returns no JSON (test_live_plans.py HOST at366, inventory_reports at398, run_adapter at592)"
+    },
+    {
+      "assertion": "FAIL: test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight (test_live_plans.PlanTests.test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight)",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='check_adapter_dependencies')",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='artifact_for')",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='_verify_artifact_in_host')",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='approved_inventory')",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='_preflight_vectors')",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='validate_call')",
+      "cause": "absent actual tool restored project.assets.json; cannot inspect production closure or reach later refusal boundary"
+    },
+    {
+      "assertion": "FAIL: test_resolved_core_refusal_prevents_that_phase_from_reaching_cli (test_live_runner.ExecutionTests.test_resolved_core_refusal_prevents_that_phase_from_reaching_cli)",
+      "cause": "absent actual ConformanceHost Release output; Core validation exits1 instead of returning JSON"
+    }
+  ],
+  "resume": "After real public Projects contract availability, perform complete package-mode restore/build and direct source initialization on final committed input, then rerun all149 and the full product lane. No synthetic production output, skip or changed assertion is authorized.",
+  "inventory_invocation_log": "native-inventory-missing-host-final.log",
+  "required_after_real_build": true
+}

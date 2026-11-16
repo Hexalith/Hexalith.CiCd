@@ -1,0 +1,5 @@
+fix(ci): bind Aspire setup to its explicit layout root
+
+Set the supported ASPIRE_LAYOUT_PATH per bounded setup invocation so the
+verified CLI validates the exact target instead of discovering another layout.
+Keep failed installers fatal and compare the complete embedded bundle bytes.
