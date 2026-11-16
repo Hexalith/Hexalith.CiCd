@@ -793,9 +793,17 @@ class RenderTests(unittest.TestCase):
             })
             names = ("123-job", "alpha-windows", "windows-123-job", "windows-tests")
             self.assertEqual(list(ci["jobs"]), ["ci", *("windows-" + name for name in names)])
+            # Qualify the real selected contract, including released restore
+            # support, without deriving the expected union through the renderer.
+            self.assertEqual(ci_declaration["jobs"]["ci"]["permissions"], {"contents": "read"})
+            expected_ci_permissions = {"contents": "read"}
+            if "restore" in ci_declaration["jobs"]:
+                self.assertEqual(ci_declaration["jobs"]["restore"]["permissions"],
+                                 {"contents": "write", "actions": "write"})
+                expected_ci_permissions = {"contents": "write", "actions": "write"}
             self.assertEqual(ci["jobs"]["ci"], {
                 "uses": f"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{fixture.tag}",
-                "permissions": {"contents": "read"}, "secrets": pull_secrets,
+                "permissions": expected_ci_permissions, "secrets": pull_secrets,
             })
             self.assertEqual(ci["jobs"]["ci"]["permissions"], global_checks.permission_union(ci_declaration))
             self.assert_arguments_supplied(ci["jobs"]["ci"].get("with", {}), ci_api["inputs"])
@@ -849,6 +857,11 @@ class RenderTests(unittest.TestCase):
             fixture.setup("full")
             path = ".github/workflows/ci.yml"
             original = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{path}"), "old tagged CI")
+            # This transition needs an explicit pre-restore baseline even when
+            # the production pin already contains the released restore job.
+            original["jobs"] = {"ci": original["jobs"]["ci"]}
+            self.assertEqual(original["jobs"]["ci"]["permissions"], {"contents": "read"})
+            fixture.change_tag({path: json.dumps(original).encode()})
             updated = renderer.yaml_document(json.dumps(original).encode(), "new tagged CI")
             updated["jobs"]["restore"] = {
                 "runs-on": "ubuntu-latest", "permissions": {"contents": "write", "actions": "write"},
