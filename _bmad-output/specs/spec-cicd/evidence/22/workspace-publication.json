@@ -317,6 +317,161 @@
       ],
       "remoteMain": "705b9c7b27ef714817c857ad54c6665a927bce24",
       "remoteContainsCandidate": true
+    },
+    "projects-diagnostics-push.json": {
+      "repository": "Hexalith.Projects",
+      "authentication": "module-agent",
+      "commit": "4511105bb1f00b8cf762097523de74acc828a001",
+      "qualificationComplete": false,
+      "publication": "existing work in progress per repeated user instruction",
+      "operations": [
+        {
+          "command": [
+            "git",
+            "-c",
+            "submodule.recurse=false",
+            "fetch",
+            "--no-recurse-submodules",
+            "origin"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "git",
+            "push",
+            "origin",
+            "HEAD:refs/heads/main"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": "To https://github.com/Hexalith/Hexalith.Projects.git\n   705b9c7b..4511105b  HEAD -> main\n"
+        },
+        {
+          "command": [
+            "git",
+            "-c",
+            "submodule.recurse=false",
+            "fetch",
+            "--no-recurse-submodules",
+            "origin"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "remoteMain": "4511105bb1f00b8cf762097523de74acc828a001",
+      "remoteContainsCandidate": true
+    },
+    "cicd-verification.json": [
+      {
+        "suite": "test_validate.py",
+        "source": "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+        "command": [
+          "run-with-temp",
+          "uv",
+          "run",
+          "--locked",
+          "--script",
+          "--python",
+          "3.12",
+          "tools/tests/test_validate.py"
+        ],
+        "exitCode": 0,
+        "seconds": 151.85,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-all-audit/cicd-test_validate.py.log",
+        "tail": "Installed 9 packages in 33ms\n....................................................\n----------------------------------------------------------------------\nRan 52 tests in 150.578s\n\nOK"
+      },
+      {
+        "suite": "test_render.py",
+        "source": "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+        "command": [
+          "run-with-temp",
+          "uv",
+          "run",
+          "--locked",
+          "--script",
+          "--python",
+          "3.12",
+          "tools/tests/test_render.py"
+        ],
+        "exitCode": 0,
+        "seconds": 166.23,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-all-audit/cicd-test_render.py.log",
+        "tail": "Installed 9 packages in 72ms\n...................................\n----------------------------------------------------------------------\nRan 35 tests in 164.916s\n\nOK"
+      },
+      {
+        "suite": "test_deliver_g6_catalog.py",
+        "source": "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+        "command": [
+          "run-with-temp",
+          "uv",
+          "run",
+          "--locked",
+          "--script",
+          "--python",
+          "3.12",
+          "tools/tests/test_deliver_g6_catalog.py"
+        ],
+        "exitCode": 0,
+        "seconds": 185.96,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-all-audit/cicd-test_deliver_g6_catalog.py.log",
+        "tail": "............................\n----------------------------------------------------------------------\nRan 28 tests in 185.591s\n\nOK"
+      },
+      {
+        "suite": "test_delivery_workflow.py",
+        "source": "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+        "command": [
+          "run-with-temp",
+          "uv",
+          "run",
+          "--locked",
+          "--script",
+          "--python",
+          "3.12",
+          "tools/tests/test_delivery_workflow.py"
+        ],
+        "exitCode": 124,
+        "seconds": 240.14,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-all-audit/cicd-test_delivery_workflow.py.log",
+        "tail": "Installed 1 package in 31ms\n........."
+      },
+      {
+        "suite": "test_scan.py",
+        "source": "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+        "command": [
+          "run-with-temp",
+          "uv",
+          "run",
+          "--locked",
+          "--script",
+          "--python",
+          "3.12",
+          "tools/tests/test_scan.py"
+        ],
+        "exitCode": 124,
+        "seconds": 240.28,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-all-audit/cicd-test_scan.py.log",
+        "tail": "Installed 1 package in 24ms\n.CALIBRATION yaml: 36 lines, 216 tokens; detected\nCALIBRATION bash: 18 lines, 54 tokens; detected\nCALIBRATION powershell: 18 lines, 72 tokens; detected\nCALIBRATION python: 18 lines, 144 tokens; detected\nCALIBRATION javascript: 18 lines, 198 tokens; detected\nCALIBRATION typescript: 18 lines, 198 tokens; detected\n......................................"
+      }
+    ],
+    "cicd-strengthened-noop-test.json": {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/tests/test_deliver_g6_catalog.py",
+        "CatalogDeliveryTests.test_nonempty_unrelated_full_writer_selectors_allow_qualification_delivery_and_noop"
+      ],
+      "exitCode": 0,
+      "seconds": 6.98,
+      "scope": "Latest strengthened exact qualified/delivered/unchanged assertion; production source unchanged from isolated suite candidate."
     }
   },
   "submodulePointers": [
@@ -337,7 +492,7 @@
     },
     {
       "path": "references/Hexalith.Projects",
-      "commit": "705b9c7b27ef714817c857ad54c6665a927bce24",
+      "commit": "4511105bb1f00b8cf762097523de74acc828a001",
       "availableOnOriginMain": true
     },
     {
@@ -395,6 +550,56 @@
       "pendingMessagesValidated": [
         "49f0a9e31482891fe8c1376d2ccdb1637f1f20dd"
       ]
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "commit": "e7ae60bedb60921ab6561a70530bcf011911dc45",
+      "message": "build(cicd): publish workspace preparation and validation changes",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "e7ae60bedb60921ab6561a70530bcf011911dc45"
+      ]
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Projects",
+      "commit": "705b9c7b27ef714817c857ad54c6665a927bce24",
+      "message": "test: strengthen safe fixture failure diagnostics",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "705b9c7b27ef714817c857ad54c6665a927bce24"
+      ]
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd",
+      "commit": "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+      "message": "test(cicd): preserve concurrent delivery and fixture safeguards",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "18b6edbe8e90a6ae0864d33f2610793f3a50df5d",
+        "919dcbd69dfe3477dedd1fbaaed4cff030130842"
+      ]
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Projects",
+      "commit": "4511105bb1f00b8cf762097523de74acc828a001",
+      "message": "fix: constrain fixture diagnostics and catalog platform",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "4511105bb1f00b8cf762097523de74acc828a001"
+      ]
     }
-  ]
+  ],
+  "finalLocalVerificationAt": "2026-11-16T18:43:37.278444+00:00",
+  "finalLocalVerificationSummary": {
+    "validator": "52 passed",
+    "renderer": "35 passed",
+    "catalogDelivery": "28 passed",
+    "strengthenedNoopAssertion": "1 passed",
+    "duplicateScan": "incomplete: 240-second timeout; no assertion failures observed before termination",
+    "deliveryWorkflow": "incomplete: 240-second timeout; no assertion failures observed before termination"
+  }
 }

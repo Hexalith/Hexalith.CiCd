@@ -381,8 +381,9 @@ class CatalogDeliveryTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         qualified = json.loads(w.report_path.read_bytes())
         self.assertEqual(json.loads(dict(line.split("=", 1) for line in output.splitlines())["plan"]), qualified["plan"])
-        for receipt in (qualified, w.deliver(qualified), w.deliver()):
-            self.assertIn(receipt["status"], {"qualified", "delivered", "unchanged"})
+        receipts = (qualified, w.deliver(qualified), w.deliver())
+        self.assertEqual([receipt["status"] for receipt in receipts], ["qualified", "delivered", "unchanged"])
+        for receipt in receipts:
             for proof in receipt["full_writer_exclusion"]:
                 self.assertEqual(proof["registry_count"], 1)
                 self.assertEqual(proof["accepted_ref_count"], 1)
