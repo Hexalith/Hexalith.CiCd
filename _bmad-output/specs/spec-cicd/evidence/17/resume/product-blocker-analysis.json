@@ -1,0 +1,103 @@
+{
+  "folders": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+  "saved_focused_candidate": "e97292752132b2dbbc8d7a1f85df49d8230c4c1e",
+  "reconstructed_focused_tree": "edcf1e20599b8d501f1d8fba95a794239519ef36",
+  "source_reconstruction": "Saved attempt-3 binary patch applied to the recorded base in a private bare repository; write-tree exactly matches the saved qualification tree.",
+  "current_source_binding": {
+    "tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs": {
+      "current_blob": "83997601759a30a53e38adf84a5694487f6ebc9f",
+      "focused_run_blob": "83997601759a30a53e38adf84a5694487f6ebc9f",
+      "unchanged_since_focused_run": true
+    },
+    "tests/Hexalith.Folders.AppHost.Tests/WorkloadEnrollmentComponentTests.cs": {
+      "current_blob": "ae0468b0976006db2fd1a90c577d721d0bd672c9",
+      "focused_run_blob": "ae0468b0976006db2fd1a90c577d721d0bd672c9",
+      "unchanged_since_focused_run": true
+    },
+    "tests/Hexalith.Folders.AppHost.Tests/Fr58PublicMutationSearchRoundTripTests.cs": {
+      "current_blob": "df713a1e9b2c619e3940ccf3397ff42afe2df96f",
+      "focused_run_blob": "df713a1e9b2c619e3940ccf3397ff42afe2df96f",
+      "unchanged_since_focused_run": true
+    },
+    "_bmad-output/implementation-artifacts/sprint-status.yaml": {
+      "current_blob": "6a427d1100c8aacb639d1bf4c27c4e70c3bdce79",
+      "focused_run_blob": "6a427d1100c8aacb639d1bf4c27c4e70c3bdce79",
+      "unchanged_since_focused_run": true
+    }
+  },
+  "saved_failures": {
+    "explicit-server-controls": {
+      "saved_log_sha256": "d8b94364b2200a835a615bdf6490e56bea2fa9903ed9b7da4656167dc27756dd",
+      "messages": [
+        "System.InvalidOperationException : Run this explicit component suite through Platform infrastructure/keycloak-workload-binding/verify_component.py --sdk-assembly <Debug assembly>.",
+        "Hexalith.Folders.Server.Tests  Total: 11, Errors: 0, Failed: 11, Skipped: 0, Not Run: 0, Time: 0.178s"
+      ],
+      "prior_results": "../focused-product-prerequisites.json",
+      "rerun": false
+    },
+    "explicit-apphost-controls": {
+      "saved_log_sha256": "bbe75c549223012c8374a91469ed706e738c437a8a0d1bbb00e4efa7e499dd5e",
+      "messages": [
+        "System.InvalidOperationException : Run through Platform verify_component.py --apphost-assembly <Debug assembly>.",
+        "System.InvalidOperationException : Run Platform verify_component.py --run-owned --apphost-assembly <Debug assembly>.",
+        "Hexalith.Folders.AppHost.Tests  Total: 6, Errors: 0, Failed: 6, Skipped: 0, Not Run: 0, Time: 0.135s"
+      ],
+      "prior_results": "../focused-product-prerequisites.json",
+      "rerun": false
+    },
+    "fr58-opted-in-product-proof": {
+      "saved_log_sha256": "0472fbb21160f8aeb6b59c9452a84a806c083ad3ebb2f9f040cfb15c8a02a612",
+      "messages": [
+        "Story 10.8 FR58 live path is blocked by Task 0: Stories 12.1\u201312.3 and 12.5 are backlog; FolderDomainProcessor still maps accepted mutations to PayloadNoOpDomainResult (12.6 admission is not event emission); AddFoldersLayeredAuthorization defaults to unpopulated InMemoryEffectivePermissionsReadModel (DW-292) and DenyAllEventStoreAuthorizationValidator; Story 11.15 DCP lane is backlog. A skipped governed run is not FR58 acceptance.",
+        "Hexalith.Folders.AppHost.Tests  Total: 1, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 0.138s"
+      ],
+      "prior_results": "../focused-product-prerequisites.json",
+      "rerun": false
+    }
+  },
+  "dependency_source": {
+    "platform_gitlink": "829d68b4cb6bf4e27c9baba318555e2e7b3ebbaf",
+    "launcher_blobs": {
+      "infrastructure/keycloak-workload-binding/verify_component.py": "d1c3a7b90e2a5b8e85534dc1ebe1c6f210e5cf2b",
+      "infrastructure/keycloak-workload-binding/run_owned_component.py": "d1990a6079ba2f97442f035ee36e172582fdb3b4"
+    }
+  },
+  "classification": {
+    "source_bound_server_controls": {
+      "type": "real infrastructure prerequisite with package/Release incompatibility",
+      "owner": "Platform workload-component launcher and EventStore source-boundary qualification owners",
+      "requirement": "A real disposable Keycloak issuer manifest and byte-identical EventStore Debug source assemblies. The existing launcher runs only EnrolledWorkloadSourceBoundaryTests, not the complete project.",
+      "constraint": "The approved migration preserves package-mode Release checking, complete retained suites once, and product/security assertions. Do not build Debug and claim Release proof, manufacture manifests, drop source identity assertions, or add a subset exemption."
+    },
+    "apphost_component_controls": {
+      "type": "real infrastructure prerequisite needing complete-project launcher integration",
+      "owner": "Platform workload authority and Folders AppHost qualification owners",
+      "requirement": "Real consumer-component and run-owned authority manifests; the two existing Platform modes each invoke only their specific method.",
+      "constraint": "Calling both alongside the complete AppHost project repeats controls and still does not provision both lifetimes for that complete run. Proper integration must retain real process ownership, secrets, TLS and cleanup."
+    },
+    "fr58": {
+      "type": "frozen product prerequisite",
+      "owner": "Folders owners of Stories 10.8, 11.15, 12.2, 12.3, 12.5, 12.6 and DW-292",
+      "requirement": "The real public mutation/search product path. LivePathPrerequisitesSatisfied() is false and the opted-in proof fails.",
+      "constraint": "Folders sprint execution hold explicitly allows 12.6 in-progress work and keeps 10.8 gated. This CI migration does not implement the held EventStore/projection/egress/authorization stories or set the gate true. The saved error text mentions 12.1 as backlog; current sprint status marks 12.1 done, but the actual false prerequisite and remaining held dependencies persist."
+    },
+    "provider_operator_evidence": {
+      "type": "unprovided approved isolated provider prerequisites",
+      "owner": "Folders provider maintainers/operator evidence lane",
+      "requirement": "Approved isolated HTTPS provider deployments with distinct positive/denied/isolation credential references and binding targets. The retained production-provider test requires them explicitly.",
+      "constraint": "The distinct Alpine smart-HTTP smoke previously passed but cannot substitute for operator provider-mutation evidence. No evidence or credentials were fabricated."
+    },
+    "audit": {
+      "type": "released shared policy failure",
+      "owner": "Builds audit-policy and Folders historical-evidence owners",
+      "requirement": "Released audit lint rejects eight historical auditSources declarations, all byte-identical to the baseline.",
+      "constraint": "Do not rewrite historical proof, introduce a module waiver, or weaken audit scanning to obtain a pass."
+    },
+    "discovery": {
+      "type": "central pipeline defect",
+      "owner": "CiCd local-script discovery",
+      "requirement": "CiCd scanner emits 940 unchanged diagnostics on existing PowerShell callees. The minimal literal-callee repro is saved.",
+      "constraint": "Report the defect without suppressing diagnostics or replacing shared discovery with a module setup action."
+    }
+  }
+}

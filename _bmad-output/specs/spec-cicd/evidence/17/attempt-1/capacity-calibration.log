@@ -1,0 +1,108 @@
+CAPACITY-CALIBRATION category=release-calibration-run status=running
+  _   _   ____                        _                        __   
+ | \ | | | __ )    ___    _ __ ___   | |__     ___   _ __     / /_  
+ |  \| | |  _ \   / _ \  | '_ ` _ \  | '_ \   / _ \ | '__|   | '_ \ 
+ | |\  | | |_) | | (_) | | | | | | | | |_) | |  __/ | |      | (_) |
+ |_| \_| |____/   \___/  |_| |_| |_| |_.__/   \___| |_|       \___/ 
+                                                                    
+Welcome to the NBomber community!
+Documentation: https://nbomber.com/docs/getting-started/overview
+Blog: https://nbomber.com/blog
+Roadmap: https://nbomber.com/docs/getting-started/roadmap
+GitHub Discussion: https://github.com/PragmaticFlow/NBomber/discussions
+GitHub Issues: https://github.com/PragmaticFlow/NBomber/issues
+Docker Hub: https://hub.docker.com/u/nbomberdocker
+LinkedIn: https://www.linkedin.com/company/nbomber
+Slack: https://nbomberworkspace.slack.com
+
+16:34:48 [WRN] Server GC mode is not enabled. For better performance and more accurate load 
+test results, enable it by adding <ServerGarbageCollection>true</ServerGarbageCollection> to your .csproj file, or #:property ServerGarbageCollection=true to the top of your .cs file script. Docs: https://learn.microsoft.com/en-us/dotnet/core/runtime-config/garbage-collector#w
+orkstation-vs-server
+16:34:48 [INF] NBomber "6.7.1" started a new session: "2026-11-16_15-34-48_500440c8"
+16:34:48 [INF] NBomber started as single node
+16:34:48 [INF] License validation....
+16:34:48 [WRN] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an 
+organization.
+16:34:48 [INF] Reports folder: "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/load/bin/Release/net11.0/_bma
+d-output/gates/capacity-calibration/reports"
+16:34:48 [INF] Plugins: no plugins were loaded
+16:34:48 [INF] Reporting sinks: no reporting sinks were loaded
+16:34:48 [INF] Starting init...
+16:34:48 [INF] Target scenarios: "folder_workspace_full_lifecycle"
+16:34:48 [INF] Init finished
+16:34:48 [INF] Starting bombing...
+16:35:00 [INF] Stopping scenarios...
+16:35:00 [INF] Calculating final statistics...
+
+────────────────────────────────── test info ───────────────────────────────────
+
+test suite: nbomber_default_test_suite_name
+test name: nbomber_default_test_name
+session id: 2026-11-16_15-34-48_500440c8
+
+──────────────────────────────── scenario stats ────────────────────────────────
+
+scenario: folder_workspace_full_lifecycle
+  - duration: 00:00:09
+
+load simulations: 
+  - inject, rate: 2, interval: 00:00:01, during: 00:00:09
+
+┌─────────────────────────┬────────────────────────────────────────────────────┐
+│      scenario and steps │ ok stats                                           │
+├─────────────────────────┼────────────────────────────────────────────────────┤
+│           scenario name │ folder_workspace_full_lifecycle                    │
+│                requests │ total = 90, ok = 90, fail = 0                      │
+│           RPS (req/sec) │ total = 10/s, ok = 10/s, fail = 0/s                │
+│            latency (ms) │ min = 0.02, mean = 0.52, max = 13.66, StdDev =     │
+│                         │ 1.98                                               │
+│ latency percentile (ms) │ p50 = 0.09, p75 = 0.15, p95 = 2.31, p99 = 11.65    │
+│                         │                                                    │
+│               step name │ prepare_workspace                                  │
+│                requests │ total = 18, ok = 18, fail = 0                      │
+│           RPS (req/sec) │ total = 2/s, ok = 2/s, fail = 0/s                  │
+│            latency (ms) │ min = 0.07, mean = 0.92, max = 13.66, StdDev =     │
+│                         │ 3.09                                               │
+│ latency percentile (ms) │ p50 = 0.13, p75 = 0.21, p95 = 0.47, p99 = 13.67    │
+│                         │                                                    │
+│               step name │ acquire_workspace_lock                             │
+│                requests │ total = 18, ok = 18, fail = 0                      │
+│           RPS (req/sec) │ total = 2/s, ok = 2/s, fail = 0/s                  │
+│            latency (ms) │ min = 0.03, mean = 0.2, max = 2.31, StdDev = 0.51  │
+│ latency percentile (ms) │ p50 = 0.05, p75 = 0.12, p95 = 0.22, p99 = 2.31     │
+│                         │                                                    │
+│               step name │ mutate_workspace_file                              │
+│                requests │ total = 18, ok = 18, fail = 0                      │
+│           RPS (req/sec) │ total = 2/s, ok = 2/s, fail = 0/s                  │
+│            latency (ms) │ min = 0.11, mean = 0.81, max = 11.64, StdDev =     │
+│                         │ 2.63                                               │
+│ latency percentile (ms) │ p50 = 0.14, p75 = 0.24, p95 = 0.35, p99 = 11.65    │
+│                         │                                                    │
+│               step name │ commit_workspace                                   │
+│                requests │ total = 18, ok = 18, fail = 0                      │
+│           RPS (req/sec) │ total = 2/s, ok = 2/s, fail = 0/s                  │
+│            latency (ms) │ min = 0.05, mean = 0.4, max = 5.57, StdDev = 1.26  │
+│ latency percentile (ms) │ p50 = 0.08, p75 = 0.09, p95 = 0.46, p99 = 5.57     │
+│                         │                                                    │
+│               step name │ read_workspace_status                              │
+│                requests │ total = 18, ok = 18, fail = 0                      │
+│           RPS (req/sec) │ total = 2/s, ok = 2/s, fail = 0/s                  │
+│            latency (ms) │ min = 0.02, mean = 0.26, max = 4.09, StdDev = 0.93 │
+│ latency percentile (ms) │ p50 = 0.03, p75 = 0.04, p95 = 0.07, p99 = 4.09     │
+└─────────────────────────┴────────────────────────────────────────────────────┘
+
+status codes for scenario: folder_workspace_full_lifecycle
+┌─────────────┬───────┬─────────┐
+│ status code │ count │ message │
+├─────────────┼───────┼─────────┤
+│    Accepted │  72   │         │
+│     Allowed │  18   │         │
+└─────────────┴───────┴─────────┘
+
+
+16:35:00 [INF] Reports saved in folder: "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/_bmad-output/gates/capacity-calibra
+tion/reports"
+16:35:00 [WRN] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an 
+organization.
+Evidence: _bmad-output/gates/capacity-calibration/reports/lifecycle-capacity-evidence.json
+CAPACITY-CALIBRATION status=passed

@@ -1,0 +1,192 @@
+{
+  "component": "agents",
+  "commands": [
+    {
+      "label": "agents-normal-checker",
+      "command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "exitCode": 1,
+      "log": "agents-normal-checker.log"
+    },
+    {
+      "label": "agents-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "Hexalith.Agents.slnx",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-restore.log"
+    },
+    {
+      "label": "agents-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Agents.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-build.log"
+    },
+    {
+      "label": "agents-tests-Contracts",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Contracts.Tests/Hexalith.Agents.Contracts.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "529",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Contracts.log"
+    },
+    {
+      "label": "agents-tests-Client",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Client.Tests/Hexalith.Agents.Client.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "6",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Client.log"
+    },
+    {
+      "label": "agents-tests-Domain",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Tests/Hexalith.Agents.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "787",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Domain.log"
+    },
+    {
+      "label": "agents-tests-Server",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Server.Tests/Hexalith.Agents.Server.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "549",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Server.log"
+    },
+    {
+      "label": "agents-tests-UI",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.UI.Tests/Hexalith.Agents.UI.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "1073",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-UI.log"
+    },
+    {
+      "label": "agents-package-hook",
+      "command": [
+        "python3",
+        "scripts/check-built-packages.py"
+      ],
+      "exitCode": 0,
+      "log": "agents-package-hook.log"
+    },
+    {
+      "label": "agents-exact-exclusions",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "package_authority_exclusions_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-exact-exclusions.log"
+    }
+  ],
+  "head": "c5c22620cafaa0af2625896cf41022e614e9b490",
+  "freshMainBase": "805b35da01efe4d3ac5f1402e611950ac282d0a1",
+  "recordedBuildsGitlink": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "qualifiedSharedCandidate": "26031f097198f001380c23f4b9fb855c3d7b88c6",
+  "normalChecker": "Refused missing pre-adoption config; approved preparation proof follows.",
+  "qualifiedSharedTree": "2b638e82a9211595bcbaaa16c272c08c428e952a",
+  "ownedPerimeterMatchesFreshMain": true,
+  "releasedAuditSourceUnchanged": true,
+  "releasedAuditLint": "passed",
+  "moduleProductTreeUnchangedDuringProof": true,
+  "result": "pass"
+}

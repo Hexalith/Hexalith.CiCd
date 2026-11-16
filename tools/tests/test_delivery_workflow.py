@@ -16,6 +16,8 @@ import hashlib
 from pathlib import Path
 import re
 import shlex
+import shutil
+import subprocess
 import tempfile
 import unittest
 from unittest import mock
@@ -26,19 +28,24 @@ from delivery_support import ROOT, Workspace, bootstrap_source, git
 
 class Workflow:
     def __init__(self, workspace, *, ref="refs/heads/main", event="push", validation="success", verdict=None,
-                 mint_fail=(), cancel_after=None):
+                 mint_fail=(), cancel_after=None, delivery="full", g6_plan=None, job="deliver",
+                 suite_result="success", checkout_fail=False):
         self.w = workspace
         self.document = yaml.safe_load((ROOT / ".github/workflows/deliver.yml").read_bytes())
-        self.job = self.document["jobs"]["deliver"]
+        self.job = self.document["jobs"][job]
+        self.job_name = job
+        self.suite_result = suite_result
+        self.checkout_fail = checkout_fail
         self.context = {"github": {"ref": ref, "sha": workspace.sha, "repository": "Hexalith/Hexalith.CiCd",
             "workspace": str(workspace.root), "run_id": "101", "run_attempt": "1", "event_name": event, "token": "inert-checkout-token"},
             "needs": {"validate": {"result": validation, "outputs": {"verdict": json.dumps(verdict) if verdict is not None else ""}}},
-            "steps": {}, "runner": {"temp": str(workspace.root)},
+            "steps": {}, "inputs": {"delivery": delivery}, "runner": {"temp": str(workspace.root)},
             "secrets": {"HEXALITH_CICD_APP_PRIVATE_KEY": "inert-no-private-key"},
             "vars": {"HEXALITH_CICD_APP_CLIENT_ID": "inert-client-id"}}
         # Model validation at its I/O boundary, then evaluate the real job's
         # output mapping even when that job's result is failure.
-        self.context["steps"] = {"validate": {"outputs": self.context["needs"]["validate"]["outputs"]}}
+        self.context["steps"] = {"validate": {"outputs": self.context["needs"]["validate"]["outputs"]},
+                                 "g6_qualify": {"outputs": {"plan": json.dumps(g6_plan) if g6_plan else ""}}}
         self.context["needs"]["validate"]["outputs"] = {
             key: self.expand(value) for key, value in self.document["jobs"]["validate"].get("outputs", {}).items()}
         self.context["steps"] = {}
@@ -83,6 +90,20 @@ class Workflow:
             return value
         return re.sub(r"\$\{\{(.*?)\}\}", lambda m: str(self.expression(m.group(1))), value)
 
+    def condition(self, value):
+        # GitHub inserts success() unless an explicit status function occurs.
+        if not re.search(r"\b(?:always|cancelled|failure|success)\s*\(", value):
+            if self.failed or self.cancelled:
+                return False
+        return self.expression(value)
+
+    def finish_step(self, identifier, step, outcome, outputs):
+        self.context["steps"][identifier] = {"outcome": outcome, "outputs": outputs}
+        if outcome == "failure" and not step.get("continue-on-error", False):
+            self.failed = True
+        if self.cancel_after is not None and self.cancel_after in (identifier, step.get("name")):
+            self.cancelled = True
+
     def execute(self):
         triggers = self.document.get("on", self.document.get(True))
         event, ref = self.context["github"]["event_name"], self.context["github"]["ref"]
@@ -91,16 +112,22 @@ class Workflow:
         concurrency = self.document["concurrency"]
         self.concurrency_group = self.expression(concurrency["group"])
         self.cancel_in_progress = self.expression(concurrency["cancel-in-progress"])
+        writer = self.job.get("concurrency")
+        self.writer_concurrency_group = self.expand(writer["group"]) if writer else None
+        self.writer_cancel_in_progress = self.expand(writer["cancel-in-progress"]) if writer else None
         self.validation_entered = True
-        if not self.expression(self.job["if"]):
+        if not self.condition(self.job.get("if", "success()")):
             return "skipped"
         base = self.w.env()
+        if self.job_name == "validate":
+            base.pop("MODULE_TOKEN", None)
+            base.pop("CICD_TOKEN", None)
         base.update({"GITHUB_" + key.upper(): str(value) for key, value in self.context["github"].items() if key != "token"})
         base.update({key: self.expand(value) for key, value in self.job.get("env", {}).items()})
         self.context["env"] = base
         for ordinal, step in enumerate(self.job["steps"]):
             identifier = step.get("id", f"step_{ordinal}")
-            if not self.expression(step.get("if", "success()")):
+            if not self.condition(step.get("if", "success()")):
                 self.context["steps"][identifier] = {"outcome": "skipped", "outputs": {}}
                 continue
             outputs, outcome = {}, "success"
@@ -110,6 +137,32 @@ class Workflow:
                 action = step["uses"].split("@", 1)[0]
                 if action == "actions/checkout":
                     source = inputs.get("ref", "")
+                    if self.job_name == "validate":
+                        # Candidate bytes already exist in this real Git fixture;
+                        # only the external checkout action is substituted.
+                        if step.get("id") == "cicd" and self.checkout_fail:
+                            outcome = "failure"
+                        self.checkouts.append(inputs)
+                        self.finish_step(identifier, step, outcome, outputs)
+                        continue
+                    if inputs.get("path") == ".g6-owner":
+                        if self.checkout_fail:
+                            self.finish_step(identifier, step, "failure", outputs)
+                            continue
+                        if source != self.w.sha or inputs.get("persist-credentials") is not False or inputs.get("submodules") is not False:
+                            raise AssertionError("narrow checkout changed qualified source/credentials")
+                        destination = self.w.root / inputs["path"]
+                        paths = git(self.w.candidate, "ls-tree", "-r", "--name-only", source).splitlines()
+                        selected = [path for path in paths if any(path == prefix or path.startswith(prefix + "/")
+                                    for prefix in inputs["sparse-checkout"].splitlines())]
+                        for path in selected:
+                            target = destination / path
+                            target.parent.mkdir(parents=True, exist_ok=True)
+                            target.write_bytes(subprocess.run(["git", "-C", str(self.w.candidate), "show",
+                                                source + ":" + path], check=True, capture_output=True).stdout)
+                        self.checkouts.append(sorted(selected))
+                        self.finish_step(identifier, step, outcome, outputs)
+                        continue
                     anchor = json.loads((ROOT / "tools/tests/fixtures/delivery-bootstrap.json").read_bytes())
                     if not re.fullmatch(r"[0-9a-f]{40}", source) or source != anchor["source_sha"]:
                         raise AssertionError("selector checkout is not immutable")
@@ -142,13 +195,23 @@ class Workflow:
                         outputs["token"] = "inert-token-" + repository
                 elif action == "actions/upload-artifact":
                     artifact = Path(inputs["path"])
+                    if not artifact.is_absolute():
+                        artifact = self.w.root / artifact
                     if not artifact.is_file():
-                        raise AssertionError("upload did not receive actual report bytes")
+                        self.finish_step(identifier, step, "failure", outputs)
+                        continue
                     self.uploads.append((inputs["name"], artifact.read_bytes()))
+                elif action == "astral-sh/setup-uv" and self.job_name == "validate":
+                    pass
                 else:
                     raise AssertionError("unhandled external action " + action)
             elif "run" in step:
+                if identifier == "g6_tests" and self.job_name == "validate":
+                    self.finish_step(identifier, step, self.suite_result, outputs)
+                    continue
                 command = shlex.split(step["run"])
+                if command[2:3] in ([".g6-owner/tools/deliver_g6_catalog.py"], ["tools/deliver_g6_catalog.py"]):
+                    command[command.index("--report") + 1] = str(self.w.root / command[command.index("--report") + 1])
                 if command[:2] != ["python3", "-I"] or "${{" in step["run"]:
                     raise AssertionError("privileged command is not isolated Python")
                 self.commands.append(command)
@@ -157,18 +220,15 @@ class Workflow:
                 if command[3:4] == ["module"]:
                     self.processes.append({"name": step["name"], "slot": int(command[command.index("--slot") + 1]),
                                            "token": env.get("MODULE_TOKEN", "")})
-                result = self.w.call(str(self.w.root / command[2]), command[3:], env=env)
+                source = self.w.candidate / command[2] if self.job_name == "validate" else self.w.root / command[2]
+                result = self.w.call(str(source), command[3:], env=env) if source.is_file() else 1
                 if result:
                     outcome = "failure"
                 if self.w.outputs.exists():
                     outputs = dict(line.split("=", 1) for line in self.w.outputs.read_text().splitlines())
             else:
                 raise AssertionError("step has neither action nor command")
-            self.context["steps"][identifier] = {"outcome": outcome, "outputs": outputs}
-            if outcome == "failure" and not step.get("continue-on-error", False):
-                self.failed = True
-            if self.cancel_after is not None and self.cancel_after in (identifier, step.get("name")):
-                self.cancelled = True
+            self.finish_step(identifier, step, outcome, outputs)
         return "failure" if self.failed else "success"
 
 
@@ -316,6 +376,154 @@ class WorkflowTests(unittest.TestCase):
         workflow, report = self.run_workflow(w, validation="failure")
         self.assertTrue(report["failed"])
         self.assertIsNone(report["tools_source_sha"])
+
+
+class NarrowWorkflowTests(unittest.TestCase):
+    def fixture(self):
+        from test_deliver_g6_catalog import CatalogWorkspace, delivery
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        w = Workspace(Path(temporary.name) / "workspace", (delivery.PROJECTS,))
+        (w.candidate / "setup" / (delivery.PROJECTS + ".yml")).unlink()
+        (w.candidate / "setup/Hexalith.Unrelated.yml").write_text("{}\n")
+        catalog = CatalogWorkspace(w.root / "catalog")
+        for path in delivery.SOURCES:
+            target = w.candidate / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(catalog.owner / path, target)
+        w.config["modules"][delivery.PROJECTS] = str(catalog.remote)
+        w.commit()
+        w.ref("Hexalith.Unrelated", w.sha)
+        report = w.root / "qualified.json"
+        w.outputs.unlink(missing_ok=True)
+        code = w.call(str(w.candidate / "tools/deliver_g6_catalog.py"), ["qualify", "--report", str(report)],
+                      env=w.env(GITHUB_EVENT_NAME="workflow_dispatch", G6_OWNER_SOURCE=w.sha,
+                                MODULE_TOKEN="", CICD_TOKEN=""))
+        self.assertEqual(code, 0)
+        published = dict(line.split("=", 1) for line in w.outputs.read_text().splitlines())
+        self.assertEqual(set(published), {"plan"})
+        binding = json.loads(published["plan"])
+        self.assertEqual(binding, json.loads(report.read_bytes())["plan"])
+        return w, catalog, binding
+
+    def test_narrow_branch_executes_only_qualified_owner_writer_and_projects_mint(self):
+        w, catalog, binding = self.fixture()
+        workflow = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", g6_plan=binding)
+        self.assertEqual(workflow.execute(), "success")
+        self.assertEqual(workflow.concurrency_group, "deliver-projects-g6-catalog")
+        self.assertFalse(workflow.cancel_in_progress)
+        self.assertEqual(workflow.writer_concurrency_group, "deliver-owned-writes")
+        self.assertFalse(workflow.writer_cancel_in_progress)
+        self.assertEqual([inputs["repositories"] for _, inputs in workflow.mints], ["Hexalith.Projects"])
+        self.assertEqual(set(workflow.mints[0][1]), {"client-id", "private-key", "owner", "repositories",
+                                                   "permission-contents", "permission-workflows"})
+        self.assertEqual(len(workflow.commands), 1)
+        self.assertIn("deliver_g6_catalog.py", workflow.commands[0][2])
+        self.assertEqual(workflow.processes, [])
+        self.assertEqual([name for name, _ in workflow.uploads], ["projects-g6-delivery"])
+        result = json.loads(workflow.uploads[0][1])
+        self.assertEqual(result["status"], "delivered")
+        self.assertEqual(result["owner_source"], w.sha)
+        self.assertEqual(result["delivered_tree"], catalog.result_tree)
+        self.assertEqual(git(w.remote, "for-each-ref", "--format=%(refname)", "refs/heads/delivered/"), "refs/heads/delivered/Hexalith.Unrelated")
+        self.assertEqual(git(w.remote, "ls-tree", "-r", "--name-only", w.sha, "--", "setup"), "setup/Hexalith.Unrelated.yml")
+        self.assertTrue(all(proof["registry_count"] == 1 and proof["accepted_ref_count"] == 1
+                            for proof in result["full_writer_exclusion"]))
+
+    def test_concurrency_keeps_normal_default_and_pr_groups(self):
+        w, _, binding = self.fixture()
+        scenarios = (
+            ({"event": "workflow_dispatch", "delivery": "projects-g6-catalog"}, "deliver-projects-g6-catalog", False),
+            ({"event": "workflow_dispatch", "delivery": "full"}, "deliver", False),
+            ({"event": "workflow_dispatch", "delivery": ""}, "deliver", False),
+            ({"event": "push", "delivery": "projects-g6-catalog"}, "deliver", False),
+            ({"event": "schedule", "delivery": ""}, "deliver", False),
+            ({"event": "pull_request", "ref": "refs/pull/1/merge", "delivery": "projects-g6-catalog"},
+             "deliver-validate-refs/pull/1/merge", True),
+            ({"event": "workflow_dispatch", "ref": "refs/heads/feature", "delivery": "projects-g6-catalog"},
+             "deliver-validate-refs/heads/feature", True),
+        )
+        for options, group, cancel in scenarios:
+            with self.subTest(options=options):
+                workflow = Workflow(w, validation="cancelled", g6_plan=binding, **options)
+                self.assertEqual(workflow.execute(), "skipped")
+                self.assertEqual(workflow.concurrency_group, group)
+                self.assertEqual(workflow.cancel_in_progress, cancel)
+                self.assertEqual(workflow.mints, [])
+                self.assertEqual(workflow.writer_concurrency_group, "deliver-owned-writes")
+                self.assertFalse(workflow.writer_cancel_in_progress)
+
+    def test_independent_validation_lanes_share_only_the_existing_write_job_mutex(self):
+        w, _, binding = self.fixture()
+        groups = []
+        for mode in ("full", "projects-g6-catalog"):
+            writer = Workflow(w, event="workflow_dispatch", delivery=mode, validation="cancelled", g6_plan=binding)
+            self.assertEqual(writer.execute(), "skipped")
+            self.assertEqual(writer.writer_concurrency_group, "deliver-owned-writes")
+            self.assertFalse(writer.writer_cancel_in_progress)
+            self.assertNotEqual(writer.writer_concurrency_group, writer.concurrency_group)
+            validation = Workflow(w, event="workflow_dispatch", delivery=mode, validation="cancelled", job="validate")
+            self.assertEqual(validation.execute(), "skipped")
+            self.assertIsNone(validation.writer_concurrency_group)
+            groups.append(validation.concurrency_group)
+        self.assertEqual(groups, ["deliver", "deliver-projects-g6-catalog"])
+
+    def test_narrow_qualification_failure_missing_plan_or_wrong_ref_mints_nothing(self):
+        for options in ({"validation": "failure"}, {"g6_plan": None}, {"ref": "refs/heads/feature"},
+                        {"event": "push"}):
+            with self.subTest(options=options):
+                w, catalog, binding = self.fixture()
+                args = {"event": "workflow_dispatch", "delivery": "projects-g6-catalog", "g6_plan": binding} | options
+                workflow = Workflow(w, **args)
+                self.assertEqual(workflow.execute(), "skipped")
+                self.assertEqual(workflow.mints, [])
+                self.assertEqual(workflow.commands, [])
+                self.assertEqual(git(catalog.remote, "rev-parse", "main"), catalog.base)
+
+    def test_narrow_mint_refusal_uploads_failed_receipt_without_other_mints(self):
+        w, catalog, binding = self.fixture()
+        workflow = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", g6_plan=binding,
+                            mint_fail=("Hexalith.Projects",))
+        self.assertEqual(workflow.execute(), "failure")
+        self.assertEqual(len(workflow.mints), 1)
+        result = json.loads(workflow.uploads[0][1])
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("App token unavailable", result["reason"])
+        self.assertFalse(result["push_attempted"])
+        self.assertEqual(git(catalog.remote, "rev-parse", "main"), catalog.base)
+
+    def test_behavioral_suite_failure_still_uploads_failed_qualification_without_plan_or_mint(self):
+        w, catalog, _ = self.fixture()
+        validation = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", job="validate", suite_result="failure")
+        self.assertEqual(validation.execute(), "failure")
+        self.assertEqual(validation.lookup("steps.g6_tests.outcome"), "failure")
+        self.assertEqual(validation.lookup("steps.g6_qualify.outcome"), "failure")
+        self.assertEqual(validation.lookup("steps.g6_qualify.outputs.plan"), "")
+        self.assertEqual([name for name, _ in validation.uploads], ["projects-g6-qualification"])
+        receipt = json.loads(validation.uploads[0][1])
+        self.assertEqual(receipt["status"], "failed")
+        self.assertEqual(receipt["failed_operation"], "verify secret-free behavioral suites")
+        self.assertIsNone(receipt["plan"])
+        writer = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", validation="failure")
+        self.assertEqual(writer.execute(), "skipped")
+        self.assertEqual(writer.mints, [])
+        checkouts = [item for item in validation.checkouts if isinstance(item, dict) and item.get("repository") == "Hexalith/Hexalith.Builds"]
+        self.assertEqual(len(checkouts), 1)
+        self.assertEqual(checkouts[0]["ref"], "refs/tags/v5.1.0")
+        self.assertEqual(checkouts[0]["fetch-depth"], 1)
+        self.assertFalse(checkouts[0]["fetch-tags"])
+        self.assertFalse(checkouts[0]["submodules"])
+        self.assertEqual(git(catalog.remote, "rev-parse", "main"), catalog.base)
+
+    def test_implicit_success_prevents_mint_after_checkout_failure_or_cancellation(self):
+        for options in ({"checkout_fail": True}, {"cancel_after": "Checkout exact qualified narrow owner source"}):
+            with self.subTest(options=options):
+                w, catalog, binding = self.fixture()
+                workflow = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", g6_plan=binding, **options)
+                workflow.execute()
+                self.assertEqual(workflow.lookup("steps.g6_token.outcome"), "skipped")
+                self.assertEqual(workflow.mints, [])
+                self.assertEqual(git(catalog.remote, "rev-parse", "main"), catalog.base)
 
 
 if __name__ == "__main__":

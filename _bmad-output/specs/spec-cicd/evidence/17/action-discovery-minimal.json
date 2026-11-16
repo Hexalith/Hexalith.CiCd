@@ -1,0 +1,20 @@
+{
+  "revision": "c8ef1943dee66e1c2d7fbfaf178a6d0657b308af",
+  "cicd_source": "7d32df03405c876df6f098aec4036207bf35af1d",
+  "intended_literal_callees": {
+    ".github/actions/example/action.yml": [
+      "tests/tools/verify.ps1"
+    ],
+    "tests/tools/verify.ps1": []
+  },
+  "script": "param([string]$Label = 'folders')\n$ErrorActionPreference = 'Stop'\nWrite-Host $Label\n",
+  "selected": [
+    ".github/actions/example/action.yml",
+    "tests/tools/verify.ps1"
+  ],
+  "errors": [
+    "tests/tools/verify.ps1:1: local-script discovery: unsupported shell compound/subshell execution",
+    "tests/tools/verify.ps1:2: local-script discovery: unresolved computed command: $ErrorActionPreference"
+  ],
+  "classification": "False positives on ordinary PowerShell parameter/variable syntax; the script invokes no child script or process."
+}

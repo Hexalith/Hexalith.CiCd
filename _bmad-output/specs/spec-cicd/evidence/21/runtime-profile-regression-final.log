@@ -1,0 +1,26 @@
+test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile (scripts.test_runtime_artifact_graph.RuntimeArtifactGraphTests.test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile) ... FAIL
+
+======================================================================
+FAIL: test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile (scripts.test_runtime_artifact_graph.RuntimeArtifactGraphTests.test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties/scripts/test_runtime_artifact_graph.py", line 37, in test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile
+    self.assertEqual(1, len(outputs), result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 :   Determining projects to restore...
+  Restored /tmp/hexalith-job.1prbgYBc/parties-runtime-graph-c2pmewl5/child/Child.csproj (in 75 ms).
+  Restored /tmp/hexalith-job.1prbgYBc/parties-runtime-graph-c2pmewl5/Owner.csproj (in 72 ms).
+  Child -> /tmp/hexalith-job.1prbgYBc/parties-runtime-graph-c2pmewl5/artifacts/bin/Child/release/Child.dll
+  Owner -> /tmp/hexalith-job.1prbgYBc/parties-runtime-graph-c2pmewl5/artifacts/bin/Owner/release/Owner.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.00
+
+
+----------------------------------------------------------------------
+Ran 1 test in 3.525s
+
+FAILED (failures=1)

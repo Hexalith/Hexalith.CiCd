@@ -15,10 +15,13 @@ from __future__ import annotations
 
 import ast
 from collections import deque
-from pathlib import PurePosixPath
+from functools import lru_cache
+import json
+from pathlib import Path, PurePosixPath
 import posixpath
 import re
 import shlex
+import subprocess
 import tomllib
 
 import yaml
@@ -26,8 +29,11 @@ import yaml
 from delivery_runtime import DeliveryError, clean
 
 FORMATS = {".yml": "yaml", ".yaml": "yaml", ".sh": "bash", ".bash": "bash",
-           ".ps1": "powershell", ".psm1": "powershell", ".py": "python"}
-SCRIPTS = {"bash", "powershell", "python"}
+           ".ps1": "powershell", ".psm1": "powershell", ".py": "python",
+           ".js": "javascript", ".mjs": "javascript", ".cjs": "javascript",
+           ".ts": "typescript", ".mts": "typescript", ".cts": "typescript",
+           ".jsx": "javascript", ".tsx": "typescript"}
+SCRIPTS = {"bash", "powershell", "python", "javascript", "typescript"}
 MAX_FILES = 2000
 MAX_BYTES = 32 * 1024 * 1024
 MAX_LITERAL = 4096
@@ -35,7 +41,8 @@ MAX_LITERAL = 4096
 # an environment-file selector that can set them, and the PowerShell module and
 # shell cd search paths, which redirect name-based module and directory lookup.
 RESOLUTION = {"PYTHONPATH", "PYTHONHOME", "PYTHONSAFEPATH", "PYTHONUSERBASE", "UV_ENV_FILE", "PSMODULEPATH",
-              "CDPATH"}
+              "CDPATH", "NODE_PATH", "NODE_OPTIONS", "NPM_CONFIG_SCRIPT_SHELL", "NPM_CONFIG_NODE_OPTIONS",
+              "NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG", "NPM_CONFIG_PREFIX", "NPM_CONFIG_WORKSPACE"}
 ENVIRON = {"os.environ", "os.environb"}
 ENVIRON_WRITES = {"setdefault", "update", "__setitem__", "__ior__"}
 MODULE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
@@ -49,7 +56,7 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
 KEYWORDS = {"then", "do", "else", "if", "elif", "while", "until", "!", "&", "{", "}", "try", "catch", "finally"}
 SHELLS = {"bash": "bash", "sh": "bash", "dash": "bash", "zsh": "bash", "ksh": "bash",
           "pwsh": "powershell", "powershell": "powershell"}
-OTHER_LANGUAGES = {".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".rb", ".pl", ".pm", ".php"}
+OTHER_LANGUAGES = {".rb", ".pl", ".pm", ".php"}
 COMMAND_APIS = {"subprocess.run", "subprocess.call", "subprocess.Popen", "subprocess.check_call",
                 "subprocess.check_output", "subprocess.getoutput", "subprocess.getstatusoutput",
                 "os.system", "os.popen", "runpy.run_path", "runpy.run_module"}
@@ -215,6 +222,55 @@ def shell_words(text, powershell):
         return [word for word in lex if word and not set(word) <= set(";&|()")]
     except ValueError:
         return [word.strip("'\"") for word in text.split()]
+
+
+@lru_cache(maxsize=128)
+def powershell_ast(text):
+    """Use the language parser, with source only on stdin, never as code."""
+    try:
+        result = subprocess.run(
+            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File",
+             str(Path(__file__).with_name("scan_powershell.ps1"))],
+            input=text, text=True, encoding="utf-8", capture_output=True, timeout=30,
+            cwd=Path(__file__).resolve().parent)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise DeliveryError("PowerShell parser unavailable: " + clean(error)) from None
+    if result.returncode:
+        raise DeliveryError("PowerShell parser failed: " + clean(result.stderr))
+    try:
+        events = json.loads(result.stdout)["events"]
+        if not isinstance(events, list):
+            raise ValueError("invalid event list")
+        for event in events:
+            if (not isinstance(event, dict) or type(event.get("line")) is not int or event["line"] < 1
+                    or event.get("kind") not in {"error", "command", "literal", "assignment", "member",
+                                                 "module", "here-expansion", "sequence", "unsupported"}):
+                raise ValueError("invalid parser event")
+            if event["kind"] == "sequence":
+                if not isinstance(event.get("values"), list) or not all(isinstance(v, str) for v in event["values"]):
+                    raise ValueError("invalid literal sequence")
+                continue
+            if not isinstance(event.get("text"), str):
+                raise ValueError("invalid parser text")
+            if event["kind"] == "command":
+                if (event.get("invocation") not in {"Unknown", "Ampersand", "Dot"}
+                        or not isinstance(event.get("words"), list) or not event["words"]
+                        or any(not isinstance(w, dict) or not isinstance(w.get("type"), str)
+                               or not isinstance(w.get("value"), str) or type(w.get("splatted")) is not bool
+                               or type(w.get("computed")) is not bool
+                               for w in event["words"])
+                        or not isinstance(event.get("redirects"), list)
+                        or not all(isinstance(r, str) for r in event["redirects"])):
+                    raise ValueError("invalid command event")
+            if event["kind"] == "assignment" and (
+                    type(event.get("simple")) is not bool or type(event.get("increment")) is not bool
+                    or not isinstance(event.get("operator"), str)
+                    or not isinstance(event.get("variables"), list)
+                    or not all(isinstance(v, str) for v in event["variables"])):
+                raise ValueError("invalid assignment event")
+        return events
+    except (KeyError, ValueError, TypeError):
+        raise DeliveryError("invalid PowerShell parser output") from None
 
 
 def powershell_comments(text):
@@ -453,7 +509,7 @@ def scalars(value, skip=()):
 
 
 class Discovery:
-    def __init__(self, git, revision):
+    def __init__(self, git, revision, *, javascript_parser=None):
         self.git, self.revision = git, revision
         self.items = git.items(revision)
         self.directories = set()
@@ -463,6 +519,9 @@ class Discovery:
         self.files, self.errors, self.queue, self.visited = {}, [], deque(), set()
         self.headers, self.recipes = {}, {}
         self.total = 0
+        self.javascript_parser = javascript_parser
+        self.npm_seen = set()
+        self.npm_roots = set()
 
     def error(self, path, line, message):
         self.errors.append(f"{clean(path)}:{line}: {clean(message)}")
@@ -488,7 +547,7 @@ class Discovery:
         if not self.regular(path):
             raise DeliveryError("missing or unsafe regular script/action: " + clean(path))
         fmt = fmt or FORMATS.get(PurePosixPath(path).suffix.lower()) or self.header(path)
-        if fmt not in {"yaml", "bash", "powershell", "python"}:
+        if fmt not in set(FORMATS.values()):
             raise DeliveryError("unsupported local-script language: " + clean(path))
         if path not in self.files:
             if len(self.files) >= MAX_FILES:
@@ -881,11 +940,12 @@ class Discovery:
         # Recognized calls carry the literal working directory. Literal words
         # naming tracked scripts are included afterwards from every base.
         text = text.removeprefix("\ufeff")
-        if powershell:
-            text = powershell_comments(text)
         # Replace spaced Actions expressions before shell tokenization.
         text = re.sub(r"\$\{\{\s*github\.(workspace|action_path)\s*\}\}",
                       lambda m: "$GITHUB_WORKSPACE" if m[1] == "workspace" else "$GITHUB_ACTION_PATH", text)
+        if powershell:
+            self.powershell(path, text, cwd, action, offset=offset, sourced=sourced)
+            return
         cwds, literals, modules = [cwd], [], []
         for number, line, data in self.logical(text, offset, powershell, path):
             for body_number, body, expands in data:
@@ -925,6 +985,101 @@ class Discovery:
                 self.environment(segments, line[:cut], powershell)
                 for words in segments:
                     cwd = self.segment(words, path, cwd, action, cwds, number, powershell, sourced)
+            except (ValueError, RecursionError) as error:
+                self.error(path, number, "local-script discovery: " + clean(error))
+        for candidate_cwd in dict.fromkeys(cwds):
+            self.include(literals, path, candidate_cwd, action, self.bases(path, action, cwds))
+            self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, cwds))
+
+    def powershell(self, path, text, cwd, action, *, offset, sourced):
+        """Traverse AST commands inside all branches, functions and expressions.
+
+        Declarations, assignments and data expressions are not command words.
+        Literal fallback remains independent of invocation recognition.
+        """
+        try:
+            events = powershell_ast(text)
+        except DeliveryError as error:
+            self.error(path, offset + 1, "local-script discovery: " + clean(error))
+            return
+        cwds, literals, modules = [cwd], [], []
+        for event in events:
+            number, kind = event["line"] + offset, event["kind"]
+            if kind == "literal":
+                words = [event["text"], *shell_words(event["text"], True)]
+                literals.extend((number, word) for word in words)
+                modules.extend((number, module) for module in self.references(words, path, number))
+                continue
+            try:
+                if kind == "error":
+                    raise DeliveryError("invalid PowerShell syntax: " + event["text"])
+                if kind == "unsupported":
+                    raise DeliveryError(event["text"])
+                if kind == "here-expansion":
+                    raise DeliveryError("unsupported expanding heredoc execution")
+                if kind == "member":
+                    raise DeliveryError("unsupported PowerShell method invocation: " + event["text"])
+                if kind == "assignment":
+                    for variable in event["variables"]:
+                        if variable.lower().startswith("env:"):
+                            name = variable[4:].upper()
+                            if (name in RESOLUTION or (name == "PATH" and (
+                                    not event["simple"] or event["operator"] not in {"Equals", "PlusEquals"}))
+                                    or re.search(r"[$`*?]", name)):
+                                raise DeliveryError("unsupported environment assignment affecting script resolution")
+                        if (variable.lower().startswith(("function:", "alias:"))
+                                or variable.split(":")[-1].upper() in {
+                                    "PSDEFAULTPARAMETERVALUES", "PSMODULEAUTOLOADINGPREFERENCE", "EXECUTIONCONTEXT"}):
+                            raise DeliveryError("unsupported PowerShell assignment affecting command resolution")
+                    if not event["simple"]:
+                        raise DeliveryError("unsupported PowerShell assignment target")
+                    self.environment([], event["text"], True)
+                elif kind == "sequence":
+                    modules.extend((number, module) for module in self.references(event["values"], path, number))
+                elif kind == "module":
+                    self.segment(["using", "module", event["text"]], path, cwd, action, cwds, number, True, sourced)
+                elif kind == "command":
+                    words = [word["value"] for word in event["words"]]
+                    modules.extend((number, module) for module in self.references(words, path, number))
+                    # A computed command and a script-block invocation must not
+                    # become a harmless bare command after token removal.
+                    first = event["words"][0]
+                    if first["type"] == "ScriptBlockExpressionAst":
+                        raise DeliveryError("unsupported shell compound/subshell execution")
+                    if first["type"] not in {"StringConstantExpressionAst", "ExpandableStringExpressionAst"}:
+                        raise DeliveryError("unresolved computed command: " + words[0])
+                    if any(word["splatted"] for word in event["words"]):
+                        raise DeliveryError("unresolved PowerShell argument splatting")
+                    name = PurePosixPath(words[0]).name.lower().removesuffix(".exe")
+                    if name in {"set-alias", "sal", "new-alias", "nal", "import-alias", "ipal", "remove-alias",
+                                "new-psdrive", "ndr", "remove-psdrive", "rdr"}:
+                        raise DeliveryError("unsupported PowerShell alias mutation affecting command resolution")
+                    mutates_provider = (name.partition("-")[0] in {"set", "new", "remove", "clear", "copy",
+                                                                  "move", "rename", "add"}
+                                        or name in {"si", "ni", "sc", "ri", "cli", "clc", "ac", "cpi", "cp", "copy",
+                                                    "mi", "mv", "move", "rni", "ren", "sp", "cpp", "mp", "rnp",
+                                                    "rp", "clp", "sv", "rv", "clv"})
+                    if (mutates_provider
+                            and any(re.match(r"(?i)(?:-\w+:)?(?:alias|function):", word) for word in words[1:])):
+                        raise DeliveryError("unsupported PowerShell provider mutation affecting command resolution")
+                    if (name not in {"echo", "write-output", "write-host", "cat", "get-content"}
+                            and any(word["computed"] for word in event["words"][1:])):
+                        raise DeliveryError("unresolved computed PowerShell command operand: " + name)
+                    code_words = []
+                    if name in {"invoke-expression", "iex", "eval"}:
+                        code_words = event["words"][1:]
+                    elif name in SHELLS:
+                        mode, remaining = self.shell_options(words[1:], SHELLS[name] == "powershell")
+                        if mode == "inline" and remaining:
+                            code_words = event["words"][-len(remaining):]
+                    if any(word["computed"] or word["type"] not in {"StringConstantExpressionAst", "CommandParameterAst"}
+                           for word in code_words):
+                        raise DeliveryError("unresolved computed command: execution text")
+                    redirects = [word for value in event["redirects"] for word in shell_words(value, True)]
+                    self.environment([words + redirects], event["text"], True)
+                    if event["invocation"] == "Dot":
+                        words = [".", *words]
+                    cwd = self.segment(words + redirects, path, cwd, action, cwds, number, True, sourced)
             except (ValueError, RecursionError) as error:
                 self.error(path, number, "local-script discovery: " + clean(error))
         for candidate_cwd in dict.fromkeys(cwds):
@@ -1155,6 +1310,8 @@ class Discovery:
         if builtin in {"eval", "invoke-expression", "iex"}:
             if args[:1] and args[0].lower() == "-command":
                 args = args[1:]
+            if powershell and not args:
+                raise DeliveryError("unresolved computed command: missing execution text or pipeline-fed evaluation")
             # Evaluated text runs in this shell, so a directory change inside
             # it fails rather than leaving a stale caller cwd.
             self.commands(path, " ".join(args), cwd, action, offset=number - 1, powershell=powershell, sourced=True)
@@ -1183,6 +1340,9 @@ class Discovery:
             self.task_runner(base, args, bases)
             return cwd
         if base in NODE_RUNNERS:
+            if base == "npm":
+                self.npm(args, path, number, cwd, action)
+                return cwd
             if base == "bun":
                 self.other_language(args, path, cwd, action)
             if any(argument.split("=", 1)[0] in RECIPE_LOCATIONS | {"--workspace", "--workspaces", "-w"} or (
@@ -1210,6 +1370,27 @@ class Discovery:
                 return cwd
             if self.recipe(("package.json",), bases):
                 raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(base))
+            raise DeliveryError("unsupported JavaScript task runner execution: " + clean(base))
+        if base in {"node", "nodejs", "tsx", "ts-node"}:
+            if args in (["--version"], ["-v"], ["--help"]):
+                return cwd
+            if not args or args[0].startswith("-"):
+                raise DeliveryError("unsupported JavaScript interpreter options")
+            target = self.resolve(args[0], path=path, cwd=cwd, action=action)
+            for suffix in ("node_modules/@playwright/test/cli.js", "node_modules/playwright/cli.js"):
+                if target == suffix or target.endswith("/" + suffix):
+                    directory = target[:-len(suffix)].rstrip("/") or "."
+                    self.npm_workspace(directory, path, number, action)
+                    self.playwright(args[1:], path, number, directory, action)
+                    return cwd
+            fmt = FORMATS.get(PurePosixPath(target).suffix.lower())
+            if fmt not in {"javascript", "typescript"}:
+                raise DeliveryError("unsupported JavaScript interpreter target")
+            self.add(target, fmt, cwd, action)
+            return cwd
+        if base == "playwright":
+            self.npm_workspace(cwd, path, number, action)
+            self.playwright(args, path, number, cwd, action)
             return cwd
         if cmd == "cd":
             if sourced:
@@ -1317,6 +1498,216 @@ class Discovery:
                     continue
                 if resolved in self.items:
                     raise DeliveryError("unsupported local-script language: " + clean(resolved))
+
+    def json(self, path):
+        """Read regular committed JSON with duplicate keys rejected."""
+        path = safe_path(posixpath.normpath(path))
+        if not self.regular(path):
+            raise DeliveryError("missing or unsafe npm/config input: " + clean(path))
+        def pairs(items):
+            result = {}
+            for key, value in items:
+                if key in result:
+                    raise DeliveryError("duplicate npm/config JSON key: " + clean(path))
+                result[key] = value
+            return result
+        return json.loads(self.git.blob(self.revision, path), object_pairs_hook=pairs,
+                          parse_constant=lambda _: (_ for _ in ()).throw(DeliveryError("non-JSON constant")))
+
+    def npm_workspace(self, directory, path, number, action):
+        """Include every tracked JS/TS source in the selected literal workspace."""
+        manifest = posixpath.join(directory, "package.json")
+        for parent in (PurePosixPath(directory), *PurePosixPath(directory).parents):
+            if posixpath.normpath(posixpath.join(str(parent), ".npmrc")) in self.items:
+                raise DeliveryError("unsupported tracked npm configuration affecting execution")
+        package = self.json(manifest)
+        lock = self.json(posixpath.join(directory, "package-lock.json"))
+        if (not isinstance(package, dict) or not isinstance(lock, dict)
+                or lock.get("lockfileVersion") not in (2, 3) or not isinstance(lock.get("packages"), dict)):
+            raise DeliveryError("npm workspace requires a manifest and committed lock")
+        self.npm_roots.add(directory)
+        prefix = "" if directory == "." else directory + "/"
+        for source in sorted(self.items):
+            if source.startswith(prefix) and FORMATS.get(PurePosixPath(source).suffix.lower()) in {"javascript", "typescript"}:
+                self.add(source, cwd=directory, action=action)
+        return package
+
+    def playwright(self, args, path, number, directory, action):
+        """Validate fixed installed invocation and follow explicit config overrides."""
+        if not args or args[0] not in {"test", "install", "show-report"}:
+            raise DeliveryError("unsupported Playwright invocation")
+        if any(any(character in argument for character in "$`") for argument in args):
+            raise DeliveryError("unresolved computed Playwright invocation")
+        args = list(args[1:])
+        while args:
+            option = args.pop(0)
+            key, equal, operand = option.partition("=")
+            if key in {"--config", "-c", "--tsconfig", "--reporter"}:
+                if not equal:
+                    if not args:
+                        raise DeliveryError("missing Playwright configuration operand")
+                    operand = args.pop(0)
+                if key == "--reporter" and not operand.startswith(".") and "/" not in operand:
+                    continue
+                target = self.resolve(operand, path=path, cwd=directory, action=action)
+                if key == "--tsconfig":
+                    self.json(target)
+                else:
+                    self.add(target, cwd=directory, action=action)
+
+    def npm(self, args, path, number, cwd, action):
+        """Follow literal npm --prefix/workspace run recipes without executing them."""
+        ignore_scripts = "--ignore-scripts" in args
+        args, directory, workspace = list(args), cwd, None
+        remaining = []
+        while args:
+            value = args.pop(0)
+            if value == "--":
+                remaining.extend([value, *args])
+                break
+            key, equal, operand = value.partition("=")
+            if key == "--ignore-scripts" and equal and operand != "true":
+                raise DeliveryError("unsupported npm lifecycle-enabling option: " + key)
+            if key in {"--prefix", "--workspace", "-w"}:
+                if not equal:
+                    if not args:
+                        raise DeliveryError("unresolved npm workspace directory")
+                    operand = args.pop(0)
+                if key == "--prefix":
+                    directory = self.resolve(operand, path=path, cwd=cwd, action=action, allow_root=True)
+                else:
+                    workspace = operand
+            elif key in {"--workspaces", "--if-present", "--script-shell", "--ignore-scripts=false"}:
+                raise DeliveryError("unsupported npm execution option: " + key)
+            else:
+                remaining.append(value)
+        if workspace is not None:
+            root = self.json(posixpath.join(directory, "package.json"))
+            declared = root.get("workspaces") if isinstance(root, dict) else None
+            if not isinstance(declared, list) or any(not isinstance(item, str) or any(c in item for c in "*?{}") for item in declared):
+                raise DeliveryError("npm workspace selection requires literal workspace paths")
+            if workspace not in declared:
+                raise DeliveryError("npm workspace must name a declared literal path")
+            directory = self.resolve(workspace, path=path, cwd=directory, action=action)
+        while remaining and remaining[0].startswith("-"):
+            option = remaining.pop(0)
+            if option in NODE_SAFE:
+                return
+            if option not in NODE_FLAGS:
+                raise DeliveryError("unsupported task runner leading option: npm")
+        subcommand = remaining.pop(0) if remaining else None
+        if subcommand == "audit":
+            if any(not argument.startswith("-") and argument != "signatures" for argument in remaining):
+                raise DeliveryError("unsupported mutating npm audit operation")
+            return
+        if subcommand in NODE_SAFE:
+            if subcommand == "config" and (not remaining or remaining[0] not in {"get", "list", "ls"}):
+                raise DeliveryError("unsupported mutating npm configuration")
+            return
+        if subcommand in {"install", "ci", "add", "remove", "uninstall"} and ignore_scripts:
+            return
+        if subcommand not in {"run", "run-script", "test", "start", "stop", "restart"}:
+            if self.recipe(("package.json",), [directory]):
+                raise DeliveryError("unsupported task runner with tracked module recipes: npm")
+            raise DeliveryError("unsupported npm execution without a literal recipe")
+        recipe = remaining.pop(0) if subcommand in {"run", "run-script"} and remaining else subcommand
+        if not recipe or recipe.startswith("-"):
+            raise DeliveryError("unresolved npm recipe")
+        package = self.npm_workspace(directory, path, number, action)
+        scripts = package.get("scripts", {})
+        if not isinstance(scripts, dict) or not isinstance(scripts.get(recipe), str):
+            raise DeliveryError("missing or computed npm recipe: " + clean(str(recipe)))
+        for selected in ("pre" + recipe, recipe, "post" + recipe):
+            if selected not in scripts:
+                continue
+            if not isinstance(scripts[selected], str):
+                raise DeliveryError("unresolved npm lifecycle recipe")
+            key = (directory, selected)
+            if key in self.npm_seen:
+                continue
+            self.npm_seen.add(key)
+            command = scripts[selected]
+            if selected == recipe and remaining:
+                command += " " + shlex.join(remaining[1:] if remaining[0] == "--" else remaining)
+            self.commands(posixpath.join(directory, "package.json"), command, directory, action)
+
+    def javascript(self, path, text, cwd, action):
+        """Resolve parser-proven imports and execution literals; indirection fails."""
+        if self.javascript_parser is None:
+            raise DeliveryError("trusted TypeScript 6.0.3 parser is unavailable")
+        parsed = self.javascript_parser(path, text)
+        for number, message in parsed["errors"]:
+            self.error(path, number, message)
+        bases = self.bases(path, action, [cwd])
+        self.include(parsed["literals"], path, cwd, action, bases)
+        parent = str(PurePosixPath(path).parent)
+        roots = sorted((root for root in self.npm_roots if root == "." or path.startswith(root + "/")), key=len, reverse=True)
+        root = roots[0] if roots else parent
+        config = posixpath.join(root, "tsconfig.json")
+        aliases, base = {}, root
+        if config in self.items:
+            document = self.json(config)
+            if not isinstance(document, dict) or "extends" in document or "references" in document:
+                raise DeliveryError("unsupported indirect TypeScript configuration")
+            options = document.get("compilerOptions", {})
+            if not isinstance(options, dict):
+                raise DeliveryError("unsupported TypeScript compilerOptions")
+            if "baseUrl" in options:
+                base = self.resolve(options["baseUrl"], path=path, cwd=root, action=action, allow_root=True)
+            aliases = options.get("paths", {})
+            if not isinstance(aliases, dict):
+                raise DeliveryError("unsupported TypeScript path aliases")
+        for number, imported in parsed["imports"]:
+            try:
+                targets = []
+                if imported.startswith("."):
+                    targets = [self.resolve(imported, path=path, cwd=parent, action=action)]
+                elif imported.startswith(("/", "\\")) or re.match(r"[A-Za-z]:", imported):
+                    raise DeliveryError("unsafe JavaScript import path")
+                else:
+                    for pattern, replacements in aliases.items():
+                        if not isinstance(pattern, str) or pattern.count("*") > 1 or not isinstance(replacements, list):
+                            raise DeliveryError("unsupported TypeScript alias")
+                        match = re.fullmatch(re.escape(pattern).replace(r"\*", "(.*)"), imported)
+                        if match:
+                            for replacement in replacements:
+                                if not isinstance(replacement, str) or replacement.count("*") > 1:
+                                    raise DeliveryError("unsupported TypeScript alias target")
+                                targets.append(self.resolve(replacement.replace("*", match[1] if match.lastindex else ""),
+                                                            path=path, cwd=base, action=action))
+                    if not targets:
+                        # Bare imports must come from the locked workspace or Node's builtins.
+                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process"}:
+                            continue
+                        package = "/".join(imported.split("/")[:2]) if imported.startswith("@") else imported.split("/")[0]
+                        lock = self.json(posixpath.join(root, "package-lock.json"))
+                        if "node_modules/" + package not in lock.get("packages", {}):
+                            raise DeliveryError("unresolved unlocked JavaScript import: " + clean(imported))
+                        continue
+                found = False
+                for target in targets:
+                    stem, suffix = posixpath.splitext(target)
+                    candidates = [target, *([stem + extension for extension in (".ts", ".mts", ".cts")] if suffix in {".js", ".mjs", ".cjs"} else []),
+                                  *(target + extension for extension in (".ts", ".js", ".mts", ".mjs", ".cts", ".cjs")),
+                                  posixpath.join(target, "index.ts"), posixpath.join(target, "index.js")]
+                    for candidate in candidates:
+                        if candidate in self.items:
+                            fmt = FORMATS.get(PurePosixPath(candidate).suffix.lower())
+                            if fmt not in {"javascript", "typescript"}:
+                                if PurePosixPath(candidate).suffix == ".json":
+                                    self.json(candidate)
+                                    found = True
+                                    continue
+                                raise DeliveryError("unsupported local JavaScript import language")
+                            self.add(candidate, fmt, cwd, action)
+                            found = True
+                if not found:
+                    raise DeliveryError("missing JavaScript import: " + clean(imported))
+            except (ValueError, UnicodeError) as error:
+                self.error(path, number, str(error))
+        for command in parsed["commands"]:
+            directory = self.resolve(command["cwd"], path=path, cwd=cwd, action=action, allow_root=True) if "cwd" in command else cwd
+            self.commands(path, command.get("command", shlex.join(command.get("argv", []))), directory, action, offset=command["line"] - 1)
 
     @staticmethod
     def uv_options(words, run=False):
@@ -1798,6 +2189,24 @@ class Discovery:
             if not node.args:
                 raise DeliveryError("unresolved Python script invocation")
             first = node.args[0]
+            # Fixed .NET SDK operations consume project/output/property data.
+            # Their C#/MSBuild graph is outside this source-language perimeter;
+            # dynamic executable/verb/options expansion still cannot be certified.
+            # The fixed read-only Git provenance operation likewise executes no
+            # repository script. Every literal in the operands is still visited
+            # by the enclosing AST traversal's normal literal-reference rule.
+            if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
+                fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
+                compiler = (fixed[:1] == ["dotnet"] and (
+                    fixed[1:2] in (["build"], ["pack"], ["restore"], ["msbuild"])
+                    or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
+                provenance = len(fixed) == 5 and fixed[:2] == ["git", "-C"] and fixed[-2:] == ["rev-parse", "HEAD"]
+                if compiler or provenance:
+                    if any(keyword.arg == "shell" and not (
+                            isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
+                           for keyword in node.keywords):
+                        raise DeliveryError("unsupported shell execution of a compiled operation")
+                    return
             try:
                 if (isinstance(first, (ast.List, ast.Tuple)) and first.elts
                         and "sys.executable" in names(ast.unparse(first.elts[0]))):
@@ -1858,6 +2267,8 @@ class Discovery:
                     self.action(path, item["text"])
                 elif item["format"] == "python":
                     self.python(path, item["text"], cwd, action, roots=python_roots)
+                elif item["format"] in {"javascript", "typescript"}:
+                    self.javascript(path, item["text"], cwd, action)
                 elif item["format"] in {"bash", "powershell"}:
                     self.commands(path, item["text"], cwd, action, powershell=item["format"] == "powershell", sourced=sourced)
             except (ValueError, UnicodeError, RecursionError) as error:

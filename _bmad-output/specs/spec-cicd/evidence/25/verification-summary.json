@@ -1,0 +1,100 @@
+{
+  "status": "local preparation verified with signing/discovery/publication/adoption acceptance open",
+  "external_current_heads": {
+    "cicd": "61c558fc4a9b02fbfef262bebce76c2c15370194",
+    "builds": "4b68863d930efb727b512df8e5804a51861ae433",
+    "timesheets": "b325a0b47d642f1711f49e589509ca89ac585bca"
+  },
+  "full_run_inputs": {
+    "revisions": {
+      "module": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+      "builds_source": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+      "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+      "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+      "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+    },
+    "hashes": {
+      "module_patch_sha256": "d0d8dd0a20aede189a90a3b7ff0dd947374b4bead9aed2e7429b0eb8e86f4edf",
+      "runner_sha256": "295f89c1f0a8dca6cefe7cfa682baf23761e1164189a0826822f0f37f064f9ab",
+      "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+      "catalog_candidate_sha256": "90a34d48db2b9e8147d00c97f5fe2d687eba482475c44a319e91fcb35d903537"
+    }
+  },
+  "scoped_followup_inputs": {
+    "revisions": {
+      "module": "b325a0b47d642f1711f49e589509ca89ac585bca",
+      "builds_source": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+      "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+      "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+      "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+    },
+    "hashes": {
+      "module_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "runner_sha256": "bfd12c3daf7dfa6258c1b274ccca0c71da0fbf859964c47d6394b9449bae61d1",
+      "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+      "catalog_candidate_sha256": "e87d7a01991f41e5fe693f3f4f945019038c6c3e73d0ef12e9740f52a8188e23"
+    }
+  },
+  "current_runner_sha256": "bfd12c3daf7dfa6258c1b274ccca0c71da0fbf859964c47d6394b9449bae61d1",
+  "current_runner_matches_actual_package_probe": true,
+  "catalog_metadata_matches_current_proposal": false,
+  "product_results": {
+    "architecture": {
+      "passed": 95
+    },
+    "contracts": {
+      "passed": 108
+    },
+    "projections": {
+      "passed": 792,
+      "seconds": 950
+    },
+    "server": {
+      "passed": 746,
+      "initial_poll_count_failure_retained": true,
+      "fresh_run_includes_external_deterministic_clock_change": true
+    },
+    "works": {
+      "passed": 76
+    },
+    "integration": {
+      "passed": 1057,
+      "existing_skips": 5
+    },
+    "package_validator_tests": {
+      "passed": 30
+    },
+    "selected_index_tests": {
+      "passed": 30
+    },
+    "fixture_privacy": {
+      "passed": 270
+    },
+    "runner_behavior": {
+      "passed": 27
+    },
+    "catalog_metadata_cases": 6,
+    "reservation_regression_cases": 5
+  },
+  "package_probe": {
+    "version": "2.1.1-preview.0.3",
+    "all_six_packages_and_symbols_packed": true,
+    "payload_and_dependency_validator_passed": true,
+    "isolated_consumers": "blocked at first restore by NU3004; no consumer runtime acceptance"
+  },
+  "queued_jobs_complete": true,
+  "disposable_jobs": "completed and cleaned by run-with-temp; deterministic process-tree regression asserts descendants killed and reaped",
+  "remaining": [
+    "qualified signed-candidate consumer path",
+    "complete bounded discovery and real cross-module duplicate scan",
+    "compatible immutable published Builds release",
+    "exact committed pre-push/ownership/fresh-main/commitlint verification",
+    "maintainer onboarding and module-agent remote preparation",
+    "registration/render/gitlink and authenticated candidate validation",
+    "App adoption, normal check.py, immutable-release and legacy-credential cleanup",
+    "green adopted CI and next central nightly"
+  ],
+  "agent_shared_repo_commits_pushes_or_remote_mutations": false,
+  "current_catalog_sha256": "a5bbe3e7bfd78903ba3b7282885c087fc5cfda09e70dd53ca9ec0583066e2ccd",
+  "catalog_qualification_scope": "Six metadata cases cover the recorded proposal; later concurrent catalog deltas are outside this qualification."
+}

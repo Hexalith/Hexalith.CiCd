@@ -1,0 +1,109 @@
+{
+  "observed_at": "2026-11-16T14:59:40.181585+00:00",
+  "phase": "read-only standalone bootstrap diagnosis; no source edits or pushes",
+  "scratch_removed_by": "run-with-temp",
+  "records": [
+    {
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--quiet",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd-story-14/references/Hexalith.Agents",
+        "/tmp/hexalith-job.5mMx6r9c/Hexalith.Agents"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Agents.git"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--quiet",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd-story-14/references/Hexalith.Builds",
+        "/tmp/hexalith-job.5mMx6r9c/Hexalith.Agents/references/Hexalith.Builds"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "895039d8513363424882b3b7d64bca574fddc43b\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "/tmp/hexalith-job.5mMx6r9c/Hexalith.Agents/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.5mMx6r9c/Hexalith.Agents/.github/hexalith-ci.json'\n"
+    }
+  ]
+}

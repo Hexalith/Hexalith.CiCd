@@ -1,0 +1,15 @@
+test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile (scripts.test_runtime_artifact_graph.RuntimeArtifactGraphTests.test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile) ... FAIL
+
+======================================================================
+FAIL: test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile (scripts.test_runtime_artifact_graph.RuntimeArtifactGraphTests.test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties/scripts/test_runtime_artifact_graph.py", line 36, in test_unlisted_runtime_reference_keeps_release_and_the_closed_package_profile
+    self.assertTrue((root/'child/bin/Release/net11.0/Child.dll').is_file())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 3.169s
+
+FAILED (failures=1)

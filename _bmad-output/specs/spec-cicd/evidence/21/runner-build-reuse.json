@@ -1,0 +1,96 @@
+{
+  "inspection": "Local cached package metadata plus exact local source Git objects; no runner execution or new publication claimed",
+  "cached_cli_nuspec_sha256": "9c802c6f4c81810289a38c523706304d37084e879b5786e0d0d065b851e57d81",
+  "records": {
+    "published_cli_5_2_2": {
+      "revision": "02ed624aa19781cac75d2c9112940e9bd830441a",
+      "files": {
+        "src/libraries/Hexalith.Builds.Tooling/Runtime/NativeTestExecutor.cs": {
+          "sha256": "6f214466446fb449e72ae169b64f2c16092803b3e6db2c38ec7e08dabbee6d19",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "                [\"test\", projectPath, \"--logger\", \"trx;LogFileName=\" + _reportFileName, \"--results-directory\", resultsDirectory],",
+            "                [\"test\", \"--project\", projectPath, \"--results-directory\", resultsDirectory, \"--report-xunit-trx\", \"--report-xunit-trx-filename\", _reportFileName],",
+            "            System.Diagnostics.ProcessStartInfo childStart = CompositionProcess.CreateStartInfo(selection.Executor == \"python3\" ? \"python3\" : dotnetCommand, selection.Executor == \"python3\" ? [\"-E\", \"-s\", \"-B\", project] : [.. CreateArguments(selection.Executor, project, results, session.Plan.SourceMapping), \"--artifacts-path\", Path.Combine(privateWorkspace, \"test-builds\")], Path.GetDirectoryName(project), environment);"
+          ]
+        },
+        "src/libraries/Hexalith.Builds.Tooling/Runtime/PlatformManifestCommand.cs": {
+          "sha256": "19f0d2cf96fa78f6a5247f5588d40006ae018c05f1dd0a261826fd99e77d65e4",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "            \"build\", project, \"--configuration\", mapping.Mode == WorkspaceMode.Source ? \"Debug\" : \"Release\", \"--output\", output,",
+            "        \"build\", project, \"--configuration\", \"Debug\", \"--artifacts-path\", McpCliArtifactsPath(workspace),"
+          ]
+        },
+        "src/libraries/Hexalith.Builds.Tooling/Manifest/PlatformManifestValidator.cs": {
+          "sha256": "0c07672578ed0ceb31df24f91ed9526dbd43505a1ab89621a07633e5e4128a9e",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "            if (executor == \"python3\" && StringValue(test, \"mode\") != \"source\")",
+            "                Add(diagnostics, \"HXP020\", source, field + \".mode\", \"Python tests currently support source mode only; packaged candidate provenance is unavailable.\");"
+          ]
+        }
+      }
+    },
+    "parties_builds_gitlink": {
+      "revision": "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee",
+      "files": {
+        "src/libraries/Hexalith.Builds.Tooling/Runtime/NativeTestExecutor.cs": {
+          "sha256": "6f214466446fb449e72ae169b64f2c16092803b3e6db2c38ec7e08dabbee6d19",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "                [\"test\", projectPath, \"--logger\", \"trx;LogFileName=\" + _reportFileName, \"--results-directory\", resultsDirectory],",
+            "                [\"test\", \"--project\", projectPath, \"--results-directory\", resultsDirectory, \"--report-xunit-trx\", \"--report-xunit-trx-filename\", _reportFileName],",
+            "            System.Diagnostics.ProcessStartInfo childStart = CompositionProcess.CreateStartInfo(selection.Executor == \"python3\" ? \"python3\" : dotnetCommand, selection.Executor == \"python3\" ? [\"-E\", \"-s\", \"-B\", project] : [.. CreateArguments(selection.Executor, project, results, session.Plan.SourceMapping), \"--artifacts-path\", Path.Combine(privateWorkspace, \"test-builds\")], Path.GetDirectoryName(project), environment);"
+          ]
+        },
+        "src/libraries/Hexalith.Builds.Tooling/Runtime/PlatformManifestCommand.cs": {
+          "sha256": "19f0d2cf96fa78f6a5247f5588d40006ae018c05f1dd0a261826fd99e77d65e4",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "            \"build\", project, \"--configuration\", mapping.Mode == WorkspaceMode.Source ? \"Debug\" : \"Release\", \"--output\", output,",
+            "        \"build\", project, \"--configuration\", \"Debug\", \"--artifacts-path\", McpCliArtifactsPath(workspace),"
+          ]
+        },
+        "src/libraries/Hexalith.Builds.Tooling/Manifest/PlatformManifestValidator.cs": {
+          "sha256": "0c07672578ed0ceb31df24f91ed9526dbd43505a1ab89621a07633e5e4128a9e",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "            if (executor == \"python3\" && StringValue(test, \"mode\") != \"source\")",
+            "                Add(diagnostics, \"HXP020\", source, field + \".mode\", \"Python tests currently support source mode only; packaged candidate provenance is unavailable.\");"
+          ]
+        }
+      }
+    },
+    "selected_builds_v6_0_6": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "files": {
+        "src/libraries/Hexalith.Builds.Tooling/Runtime/NativeTestExecutor.cs": {
+          "sha256": "6f214466446fb449e72ae169b64f2c16092803b3e6db2c38ec7e08dabbee6d19",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "                [\"test\", projectPath, \"--logger\", \"trx;LogFileName=\" + _reportFileName, \"--results-directory\", resultsDirectory],",
+            "                [\"test\", \"--project\", projectPath, \"--results-directory\", resultsDirectory, \"--report-xunit-trx\", \"--report-xunit-trx-filename\", _reportFileName],",
+            "            System.Diagnostics.ProcessStartInfo childStart = CompositionProcess.CreateStartInfo(selection.Executor == \"python3\" ? \"python3\" : dotnetCommand, selection.Executor == \"python3\" ? [\"-E\", \"-s\", \"-B\", project] : [.. CreateArguments(selection.Executor, project, results, session.Plan.SourceMapping), \"--artifacts-path\", Path.Combine(privateWorkspace, \"test-builds\")], Path.GetDirectoryName(project), environment);"
+          ]
+        },
+        "src/libraries/Hexalith.Builds.Tooling/Runtime/PlatformManifestCommand.cs": {
+          "sha256": "a10c5abd5582ecf6ec29134b9fef7f328a3e7f15d2d64640c19393d0cfb8d8fa",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "            \"build\", project, \"--configuration\", mapping.Mode == WorkspaceMode.Source ? \"Debug\" : \"Release\", \"--output\", output,",
+            "        \"build\", project, \"--configuration\", \"Debug\", \"--artifacts-path\", McpCliArtifactsPath(workspace),"
+          ]
+        },
+        "src/libraries/Hexalith.Builds.Tooling/Manifest/PlatformManifestValidator.cs": {
+          "sha256": "0c07672578ed0ceb31df24f91ed9526dbd43505a1ab89621a07633e5e4128a9e",
+          "contains_no_build_option": false,
+          "relevant_lines": [
+            "            if (executor == \"python3\" && StringValue(test, \"mode\") != \"source\")",
+            "                Add(diagnostics, \"HXP020\", source, field + \".mode\", \"Python tests currently support source mode only; packaged candidate provenance is unavailable.\");"
+          ]
+        }
+      }
+    }
+  }
+}

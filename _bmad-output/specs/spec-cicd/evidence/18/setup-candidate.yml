@@ -1,0 +1,16 @@
+# Local review artifact only. Do not register until all adoption prerequisites pass.
+solution: Hexalith.Projects.CI.slnx
+dapr: true
+browsers: true
+registry: false
+npmWorkspaces:
+  - tests/e2e
+dotnetTools: true
+hooks:
+  - after-unit-tests
+  - nightly
+submodules:
+  - references/Hexalith.EventStore
+  - references/Hexalith.Tenants
+  - references/Hexalith.Folders
+  - references/Hexalith.Platform

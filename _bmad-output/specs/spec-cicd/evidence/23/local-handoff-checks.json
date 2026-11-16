@@ -1,0 +1,40 @@
+{
+  "repositories": {
+    "cicd": {
+      "baseline": "771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1",
+      "unchanged_verified_source_files": 4
+    },
+    "builds": {
+      "baseline": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "unchanged_verified_source_files": 17
+    }
+  },
+  "final_focused_checks_passed_on": [
+    "Python 3.12",
+    "Python 3.14"
+  ],
+  "superseded_combined_failure": "Each retained 148-case combined log has the earlier Docker-inspection exit assertion failure; final 31-case environment suites pass after its correction. Other 117 cases passed.",
+  "contract_fixture_preservation": {
+    "original_cases": 179,
+    "new_timeout_cases": 11,
+    "all_original_values_preserved_except_added_default": true
+  },
+  "approved_intent_sha256": "a2f21f40138f324d1bcc7d617ab92f0c6c207713cbae24a1be35e728eb0d40ec",
+  "additional_contract_documentation": {
+    "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md": "28548f84f49a691e6cb7f7a45191b4458009a3d280669766b23708b969475b1b",
+    "_bmad-output/specs/spec-cicd/pipeline-stages.md": "4444f564cfefacff45d86bcaeb433effbf256c3c12940563edc80a1d04408f3b"
+  },
+  "local_source_staged": true,
+  "commits_created": false,
+  "remote_service_operations": false,
+  "tenants_product_changes": false,
+  "story_acceptance_complete": false,
+  "full_story_review_complete": false,
+  "next_gates": [
+    "AD-21 provisioning",
+    "Compatible Builds release and pin",
+    "Tenants product migration",
+    "Candidate validation and actual adoption",
+    "Green adopted CI and next scheduled nightly"
+  ]
+}

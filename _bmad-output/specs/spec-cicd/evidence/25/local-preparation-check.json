@@ -1,0 +1,85 @@
+{
+  "qualification": "uncommitted local preparation only; no fetch, push, remote settings or adoption",
+  "revisions": {
+    "module": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+    "local_origin_main": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+    "references/Hexalith.Builds": "39973bfccb26ae98a3d25856a8f85950fecdf02a",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "patch_sha256": "bb74fd1077fc2e34978168f6bbf7c651db7a5f12d612e18c7b75c7e2cfe520d9",
+  "additions": {
+    "scripts/tests/test_product_packages.py": "9beb8cf9bcae776e5fa49b385c5159f8be5aeed88f11f113689f2a2e747fe3e1",
+    "tests/Hexalith.Timesheets.ArchitectureTests/FitnessTests/AppHostDependencyTests.cs": "4a0e4cf3329e4558df46b8a59e6cccd61319a254ab061ba1fa830339d3f53512"
+  },
+  "results": [
+    {
+      "job": "package-validator-tests",
+      "command": [
+        "python3",
+        "scripts/tests/test_product_packages.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "package-validator-tests.log"
+    },
+    {
+      "job": "selected-index-tests",
+      "command": [
+        "python3",
+        "scripts/test_magic_link_index_selection.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "selected-index-tests.log"
+    },
+    {
+      "job": "release-package-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Timesheets.slnx",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 1,
+      "log": "release-package-build.log"
+    },
+    {
+      "job": "architecture-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Timesheets.ArchitectureTests/Hexalith.Timesheets.ArchitectureTests.csproj",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 0,
+      "log": "architecture-build.log"
+    },
+    {
+      "job": "architecture-tests",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.ArchitectureTests/Hexalith.Timesheets.ArchitectureTests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "architecture-tests.log"
+    }
+  ]
+}

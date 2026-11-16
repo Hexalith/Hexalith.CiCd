@@ -277,6 +277,37 @@ class ValidateTests(unittest.TestCase):
                 self.assertEqual(status, 1)
                 self.assertIn("nightly/action.yml", diagnostic)
 
+    def test_enabled_preparation_requires_live_committed_regular_inputs(self):
+        inputs = ("tests/e2e/package.json", "tests/e2e/package-lock.json", ".config/dotnet-tools.json")
+        for changed in inputs:
+            for failure in (None, "missing", "symlink"):
+                with self.subTest(changed=changed, failure=failure), workspace() as fixture:
+                    remote = fixture.module(setup={"solution": "src/F.slnx"})
+                    for name in inputs:
+                        target = remote / name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_text("{}\n")
+                    if failure:
+                        (remote / changed).unlink()
+                        if failure == "symlink":
+                            (remote / changed).symlink_to("../../README.md" if changed.startswith("tests/") else "../README.md")
+                    git(remote, "add", ".")
+                    git(remote, "commit", "--quiet", "-m", "Preparation inputs")
+                    fixture.commit()
+                    # The active released tag deliberately lacks the additive
+                    # fields. Exercise the preparation-input boundary after an
+                    # upgraded tagged reader has returned its complete document.
+                    config = fixture.json() | {"npmWorkspaces": ["tests/e2e"], "dotnetTools": True}
+                    contract = mock.Mock(tag=config["buildsTag"])
+                    contract.validate.return_value = config
+                    with mock.patch.object(validator, "clone_module", side_effect=fixture.clone):
+                        if failure:
+                            with self.assertRaises(validator.checks.CheckError) as raised:
+                                validator.check_module(fixture.root, "Hexalith.Fixture", contract)
+                            self.assertIn(changed, str(raised.exception))
+                        else:
+                            validator.check_module(fixture.root, "Hexalith.Fixture", contract)
+
     def test_clone_failure_does_not_drop_other_modules(self):
         with workspace() as fixture:
             fixture.module("Hexalith.Alpha")

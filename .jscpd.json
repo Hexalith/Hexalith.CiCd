@@ -5,8 +5,17 @@
   "maxSize": "2mb",
   "maxLines": 2097152,
   "workers": 1,
-  "format": ["yaml", "bash", "powershell", "python"],
-  "reporters": ["json"],
+  "format": [
+    "yaml",
+    "bash",
+    "powershell",
+    "python",
+    "javascript",
+    "typescript"
+  ],
+  "reporters": [
+    "json"
+  ],
   "absolute": true,
   "skipLocal": true,
   "noGitignore": true,

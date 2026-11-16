@@ -1,0 +1,12 @@
+{
+  "candidate": "5838c29193cf7b7e6e283ff59174034903664059",
+  "baseline": "c64e292a46858058f6764095c8e01c2faa0ff3e0",
+  "suite": "access_telemetry_c1",
+  "status": "blocked; stopped after prerequisite diagnosis, not a complete or passing suite",
+  "diagnostic": "FAIL: current-input: deploy/kubernetes/overlays/production/access-telemetry-disabled-patch.yaml",
+  "expectedApprovalHash": "0c2b4b836d14be457ab8ccc79a534cd9997193f9c7b10f3d11b8b100a8b40ab2",
+  "baselineGitBlobSha256": "c2e002c81951672e13a2776d0b12eb514f4ecbcb7d7fd917bc51d82b1b734cc9",
+  "candidateWorktreeSha256": "c2e002c81951672e13a2776d0b12eb514f4ecbcb7d7fd917bc51d82b1b734cc9",
+  "unchangedFromBaseline": true,
+  "cause": "Existing approved profile binds older Production overlay bytes. The migration did not change either input or approval. Keep the refusal; do not rewrite approval hashes to make tests green."
+}

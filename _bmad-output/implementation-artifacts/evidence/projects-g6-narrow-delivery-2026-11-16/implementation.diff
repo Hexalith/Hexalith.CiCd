@@ -1,0 +1,1419 @@
+diff --git a/tools/deliver_g6_catalog.py b/tools/deliver_g6_catalog.py
+--- /dev/null
++++ b/tools/deliver_g6_catalog.py
+@@ -0,0 +1,202 @@
++"""Closed, pre-adoption Projects catalog correction; no module code is executed.
++
++The committed manifest binds the complete input/output trees and proposal bytes.
++Only the network transport is replaceable by real-Git qualification fixtures.
++"""
++from __future__ import annotations
++
++import argparse
++import hashlib
++import importlib.util
++import json
++import os
++from pathlib import Path
++import re
++import sys
++import tempfile
++
++_SPEC = importlib.util.spec_from_file_location("_g6_delivery_runtime", Path(__file__).with_name("delivery_runtime.py"))
++rt = importlib.util.module_from_spec(_SPEC)
++sys.modules[_SPEC.name] = rt
++_SPEC.loader.exec_module(rt)
++
++PROJECTS = "Hexalith.Projects"
++MANIFEST = "docs/proposals/projects-g6-catalog.json"
++PATCH = "docs/proposals/projects-g6-catalog.patch"
++WORKFLOW = ".github/workflows/ci.yml"
++ACTION = ".github/actions/prepare-g6-catalog/"
++PATHS = (WORKFLOW, ACTION + "action.yml", ACTION + "prepare.py")
++SOURCES = ("tools/deliver_g6_catalog.py", "tools/delivery_runtime.py", MANIFEST, PATCH,
++           ACTION + "action.yml", ACTION + "prepare.py")
++
++
++def require(condition, message):
++    if not condition:
++        raise rt.DeliveryError(message)
++
++
++def digest(data):
++    return hashlib.sha256(data).hexdigest()
++
++
++def manifest(data):
++    value = rt.json_read(data)
++    require(isinstance(value, dict) and set(value) == {
++        "schema", "repository", "base_commit", "base_tree", "patch_sha256", "result_tree", "before", "after"},
++        "invalid closed catalog delivery manifest")
++    require(value["schema"] == "hexalith.projects-g6-catalog.v1" and value["repository"] == PROJECTS,
++            "catalog delivery repository/schema mismatch")
++    for key in ("base_commit", "base_tree", "result_tree"):
++        rt.sha(value[key])
++    require(isinstance(value["patch_sha256"], str) and re.fullmatch(r"[0-9a-f]{64}", value["patch_sha256"]),
++            "invalid proposal SHA256")
++    for key in ("before", "after"):
++        require(isinstance(value[key], dict) and set(value[key]) == set(PATHS), "unexpected manifest path")
++        for path, item in value[key].items():
++            if key == "before" and path != WORKFLOW:
++                require(item is None, "catalog action must be absent at reviewed base")
++            else:
++                require(isinstance(item, list) and len(item) == 3 and item[:2] == ["100644", "blob"],
++                        "catalog delivery requires regular nonexecutable blobs")
++                rt.sha(item[2])
++    return value
++
++
++def entries(git, revision, expected):
++    actual = git.items(revision)
++    for path, item in expected.items():
++        require(actual.get(path) == (tuple(item) if item else None), "unexpected catalog source blob/mode: " + path)
++    return actual
++
++
++def proposal(owner, source, target, value):
++    patch = owner.blob(source, PATCH)
++    require(digest(patch) == value["patch_sha256"], "reviewed proposal SHA256 mismatch")
++    base = value["base_commit"]
++    require(target.resolve(base + "^{tree}") == value["base_tree"], "reviewed base tree mismatch")
++    before = entries(target, base, value["before"])
++    target.run("read-tree", value["base_tree"])
++    target.run("apply", "--cached", "--whitespace=nowarn", data=patch)
++    tree = target.resolve(target.run("write-tree").decode().strip())
++    require(tree == value["result_tree"], "complete proposal output tree mismatch")
++    after = entries(target, tree, value["after"])
++    changed = {path for path in set(before) | set(after) if before.get(path) != after.get(path)}
++    require(changed == set(PATHS), "proposal changed paths outside the three-path correction")
++    for path in PATHS[1:]:
++        require(target.blob(tree, path) == owner.blob(source, path), "catalog action differs from owner payload")
++    return tree
++
++
++def plan(source, value, manifest_bytes, live):
++    return {"schema": "hexalith.projects-g6-catalog-plan.v1", "owner_source": source,
++            "manifest_sha256": digest(manifest_bytes), "patch_sha256": value["patch_sha256"],
++            "base_commit": value["base_commit"], "base_tree": value["base_tree"],
++            "result_tree": value["result_tree"], "observed_main": live}
++
++
++def parents(git, revision):
++    header = git.run("cat-file", "commit", revision).split(b"\n\n", 1)[0]
++    return [line[7:].decode("ascii") for line in header.splitlines() if line.startswith(b"parent ")]
++
++
++def execute(operation, context, report_path, *, transport=None, token="", scratch=None, local_root=None):
++    """Qualify or deliver using private objects/index, retaining bounded failure receipts."""
++    rt._SECRETS.extend([token] if token else [])
++    receipt = {"schema": "hexalith.projects-g6-catalog-delivery.v1", "operation": operation,
++               "repository": PROJECTS, "owner_source": context.get("G6_OWNER_SOURCE", ""),
++               "status": "failed", "failed_operation": "authorize owner invocation", "reason": None,
++               "observed_main": None, "delivered_sha": None, "delivered_tree": None,
++               "push_attempted": False, "plan": None}
++    try:
++        require(context.get("GITHUB_REPOSITORY") == "Hexalith/Hexalith.CiCd" and
++                context.get("GITHUB_REF") == "refs/heads/main" and
++                context.get("GITHUB_EVENT_NAME") == "workflow_dispatch", "ineligible narrow owner invocation")
++        source = rt.sha(context.get("G6_OWNER_SOURCE"))
++        require(source == context.get("GITHUB_SHA"), "owner source differs from dispatch source")
++        if operation == "deliver":
++            require(context.get("G6_QUALIFICATION") == "success", "secret-free qualification did not succeed")
++            qualified = rt.json_read(context.get("G6_PLAN", ""))
++        budget = rt.Budget()
++        transport = transport or rt.Transport(budget)
++        with tempfile.TemporaryDirectory(prefix="g6-owner-", dir=scratch) as temporary:
++            root = Path(temporary)
++            owner = rt.Git(root / "owner.git", budget)
++            owner.init()
++            receipt["failed_operation"] = "fetch exact CiCd main"
++            require(transport.module(owner, rt.CICD) == source, "owner source is not current exact CiCd main")
++            receipt["failed_operation"] = "verify committed owner source and manifest"
++            source_root = Path(local_root) if local_root else Path(__file__).resolve().parents[1]
++            for path in SOURCES:
++                require((source_root / path).is_file() and not (source_root / path).is_symlink() and
++                        (source_root / path).read_bytes() == owner.blob(source, path),
++                        "local owner payload differs from exact committed source: " + path)
++            raw = owner.blob(source, MANIFEST)
++            value = manifest(raw)
++            target = rt.Git(root / "projects.git", budget, index=root / "private-index")
++            target.init()
++            receipt["failed_operation"] = "fetch exact Projects main"
++            live = transport.module(target, PROJECTS)
++            receipt["observed_main"] = live
++            # The base is fetched by exact object id when main is already the
++            # delivered child. No checkout, submodule or module command runs.
++            if live != value["base_commit"]:
++                receipt["failed_operation"] = "verify already delivered exact tree and direct parent"
++                require(target.resolve(live + "^{tree}") == value["result_tree"] and
++                        parents(target, live) == [value["base_commit"]], "Projects main differs from reviewed base/result")
++                target.run("fetch", "--depth=1", "--no-tags", "--no-recurse-submodules",
++                           transport.remote(PROJECTS), value["base_commit"])
++            receipt["failed_operation"] = "construct exact reviewed proposal"
++            tree = proposal(owner, source, target, value)
++            binding = plan(source, value, raw, live)
++            receipt["plan"] = binding
++            if operation == "deliver":
++                require(qualified == binding, "qualified source/proposal/main binding mismatch")
++            if operation == "qualify":
++                receipt["status"] = "qualified"
++            elif live != value["base_commit"]:
++                receipt.update(status="unchanged", delivered_sha=live, delivered_tree=tree)
++            else:
++                require(token, "scoped Projects App token unavailable")
++                receipt["failed_operation"] = "create direct child commit"
++                commit = rt.sha(target.run("commit-tree", tree, "-p", live,
++                    data=b"build(cicd): acquire reviewed Projects G-6 catalog\n").decode().strip())
++                require(parents(target, commit) == [live], "delivery commit parent mismatch")
++                receipt["failed_operation"] = "reread exact CiCd and Projects main before push"
++                require(transport.module(owner, rt.CICD) == source, "CiCd main advanced before push")
++                require(transport.module(target, PROJECTS) == live, "Projects main advanced before push")
++                receipt["failed_operation"] = "git push " + commit + ":refs/heads/main"
++                receipt["push_attempted"] = True
++                code, output = transport.push(target, PROJECTS, commit, token)
++                receipt["push_result"] = {"exit_code": code, "output": rt.clean(output.decode("utf-8", "replace"))}
++                require(code == 0, "non-forced Projects push refused; no retry or reapply")
++                receipt.update(delivered_sha=commit, delivered_tree=tree)
++                receipt["failed_operation"] = "reread Projects main after push"
++                observed = transport.module(target, PROJECTS)
++                receipt["observed_main"] = observed
++                require(observed == commit and target.resolve(observed + "^{tree}") == tree,
++                        "Projects main changed after push")
++                receipt["status"] = "delivered"
++            receipt["failed_operation"] = None
++    except Exception as error:
++        receipt["reason"] = rt.clean(error) if isinstance(error, rt.DeliveryError) else "catalog owner operation failed: " + type(error).__name__
++    rt.atomic(Path(report_path), receipt)
++    return receipt
++
++
++def main(argv=None, *, transport=None):
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("operation", choices=("qualify", "deliver"))
++    parser.add_argument("--report", required=True)
++    args = parser.parse_args(argv)
++    context = os.environ.copy()
++    tokens = rt.sanitize()
++    result = execute(args.operation, context, args.report, transport=transport,
++                     token=tokens["MODULE_TOKEN"], scratch=context.get("TMPDIR"))
++    if args.operation == "qualify" and result["status"] == "qualified" and context.get("GITHUB_OUTPUT"):
++        with open(context["GITHUB_OUTPUT"], "a", encoding="utf-8") as stream:
++            stream.write("plan=" + json.dumps(result["plan"], separators=(",", ":")) + "\n")
++    return 0 if result["status"] in {"qualified", "unchanged", "delivered"} else 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/docs/proposals/projects-g6-catalog.json b/docs/proposals/projects-g6-catalog.json
+--- /dev/null
++++ b/docs/proposals/projects-g6-catalog.json
+@@ -0,0 +1,34 @@
++{
++  "schema": "hexalith.projects-g6-catalog.v1",
++  "repository": "Hexalith.Projects",
++  "base_commit": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
++  "base_tree": "b8a7a8b3b5532cb954f36835685d5b8dcd9577ab",
++  "patch_sha256": "3b4e5540391f585c778f21953f4b2a37be1a87aa9df9ae7e2b56b6e05cefb588",
++  "result_tree": "238d933a813d0453e950e1080175d74f12e82975",
++  "before": {
++    ".github/workflows/ci.yml": [
++      "100644",
++      "blob",
++      "66ab41495043051c5ffe9b51bf8fdb1eb5c5f2ff"
++    ],
++    ".github/actions/prepare-g6-catalog/action.yml": null,
++    ".github/actions/prepare-g6-catalog/prepare.py": null
++  },
++  "after": {
++    ".github/workflows/ci.yml": [
++      "100644",
++      "blob",
++      "960a63947bc9584454a7a3dca080a9c1664231f3"
++    ],
++    ".github/actions/prepare-g6-catalog/action.yml": [
++      "100644",
++      "blob",
++      "e50095bcb31b192cb09c628ce58f2c5ace698cde"
++    ],
++    ".github/actions/prepare-g6-catalog/prepare.py": [
++      "100644",
++      "blob",
++      "7bc405449d0060084cb84b02cba62d31e36bfe72"
++    ]
++  }
++}
+diff --git a/tools/tests/test_deliver_g6_catalog.py b/tools/tests/test_deliver_g6_catalog.py
+--- /dev/null
++++ b/tools/tests/test_deliver_g6_catalog.py
+@@ -0,0 +1,318 @@
++#!/usr/bin/env python3
++# /// script
++# requires-python = ">=3.12"
++# dependencies = []
++# ///
++"""Real-Git qualification of the closed three-path owner correction."""
++from __future__ import annotations
++
++import copy
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import tempfile
++import unittest
++from unittest import mock
++
++from delivery_support import ROOT, filtered_remote, git, load
++
++delivery = load(ROOT / "tools/deliver_g6_catalog.py", "_g6_delivery_tests")
++rt = delivery.rt
++
++
++class CatalogWorkspace:
++    """Synthetic reviewed Projects source with real canonical Git tree bindings."""
++    def __init__(self, root):
++        self.root = Path(root)
++        self.root.mkdir()
++        self.projects = self.root / "projects"
++        self.projects.mkdir()
++        git(self.projects, "init", "--quiet", "--initial-branch=main")
++        workflow = self.projects / delivery.WORKFLOW
++        workflow.parent.mkdir(parents=True)
++        workflow.write_text("name: Product\n# retain every product gate\n")
++        (self.projects / "foreign.txt").write_bytes(b"foreign\r\n")
++        (self.projects / ".gitattributes").write_text("* filter=poison\n")
++        git(self.projects, "add", ".")
++        git(self.projects, "commit", "--quiet", "-m", "test: reviewed base")
++        self.base = git(self.projects, "rev-parse", "HEAD")
++        git(self.projects, "update-index", "--add", "--cacheinfo", "160000", self.base, "references/Foreign")
++        git(self.projects, "commit", "--quiet", "-m", "test: retain gitlink")
++        self.base = git(self.projects, "rev-parse", "HEAD")
++        self.base_tree = git(self.projects, "rev-parse", "HEAD^{tree}")
++        self.before = self.items(self.projects, self.base)
++        workflow.write_text(workflow.read_text() + "# catalog acquisition before prepare-build\n")
++        for path in delivery.PATHS[1:]:
++            target = self.projects / path
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_bytes((ROOT / path).read_bytes())
++        git(self.projects, "add", "--", *delivery.PATHS)
++        self.patch = subprocess.run(["git", "-C", str(self.projects), "diff", "--cached", "--binary", self.base],
++                                    check=True, capture_output=True).stdout
++        self.result_tree = git(self.projects, "write-tree")
++        self.after = self.items(self.projects, self.result_tree)
++        self.value = {"schema": "hexalith.projects-g6-catalog.v1", "repository": delivery.PROJECTS,
++                      "base_commit": self.base, "base_tree": self.base_tree,
++                      "patch_sha256": delivery.digest(self.patch), "result_tree": self.result_tree,
++                      "before": {path: self.before.get(path) for path in delivery.PATHS},
++                      "after": {path: self.after.get(path) for path in delivery.PATHS}}
++        self.remote = self.root / "projects.git"
++        git(self.root, "clone", "--bare", "--quiet", self.projects, self.remote)
++        filtered_remote(self.remote)
++        self.owner = self.root / "owner"
++        self.owner.mkdir()
++        git(self.owner, "init", "--quiet", "--initial-branch=main")
++        for path in delivery.SOURCES:
++            if path == delivery.MANIFEST:
++                continue
++            target = self.owner / path
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_bytes(self.patch if path == delivery.PATCH else (ROOT / path).read_bytes())
++        self.write_manifest()
++        self.owner_remote = self.root / "owner.git"
++        git(self.root, "clone", "--bare", "--quiet", self.owner, self.owner_remote)
++        self.sha = git(self.owner, "rev-parse", "HEAD")
++        self.report_path = self.root / "receipt.json"
++        self.pushes = []
++        self.fetches = []
++        self.refuse = False
++        self.race = None
++        self.token = "inert-narrow-token"
++        workspace = self
++
++        class Transport(rt.Transport):
++            def remote(self, repository):
++                if repository not in {rt.CICD, delivery.PROJECTS}:
++                    raise AssertionError("transport broadened")
++                return (workspace.owner_remote if repository == rt.CICD else workspace.remote).as_uri()
++
++            def module(self, target, repository):
++                workspace.fetches.append(repository)
++                if workspace.token and any(workspace.token in value for value in target.env.values()):
++                    raise AssertionError("token inherited by non-network Git environment")
++                return super().module(target, repository)
++
++            def push(self, target, repository, revision, token):
++                if repository != delivery.PROJECTS or token != workspace.token:
++                    raise AssertionError("write token/repository isolation failed")
++                workspace.pushes.append(revision)
++                if workspace.refuse:
++                    return 1, ("denied " + workspace.token).encode()
++                if workspace.race == "before":
++                    workspace.advance()
++                result = super().push(target, repository, revision, token)
++                if workspace.race == "after":
++                    workspace.advance()
++                return result
++        self.transport = Transport()
++
++    @staticmethod
++    def items(root, revision):
++        result = {}
++        for row in git(root, "ls-tree", "-r", revision).splitlines():
++            header, path = row.split("\t")
++            result[path] = header.split()
++        return result
++
++    def write_manifest(self):
++        path = self.owner / delivery.MANIFEST
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(self.value) + "\n")
++        git(self.owner, "add", ".")
++        git(self.owner, "commit", "--quiet", "-m", "test: reviewed owner proposal")
++        self.sha = git(self.owner, "rev-parse", "HEAD")
++        if hasattr(self, "owner_remote"):
++            git(self.owner, "push", "--quiet", self.owner_remote, "HEAD:main")
++
++    def context(self):
++        return {"GITHUB_REPOSITORY": "Hexalith/Hexalith.CiCd", "GITHUB_REF": "refs/heads/main",
++                "GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_SHA": self.sha, "G6_OWNER_SOURCE": self.sha}
++
++    def run(self, operation="qualify", **context):
++        return delivery.execute(operation, self.context() | context, self.report_path, transport=self.transport,
++                                token=self.token if operation == "deliver" else "", scratch=self.root, local_root=self.owner)
++
++    def deliver(self, qualified=None):
++        qualified = qualified or self.run()
++        return self.run("deliver", G6_QUALIFICATION="success", G6_PLAN=json.dumps(qualified["plan"]))
++
++    def advance(self, *, tree=None, parent=None):
++        head = git(self.remote, "rev-parse", "refs/heads/main")
++        revision = git(self.remote, "commit-tree", tree or git(self.remote, "rev-parse", head + "^{tree}"),
++                       "-p", parent or head, data=b"test: concurrent source\n")
++        git(self.remote, "update-ref", "refs/heads/main", revision)
++        return revision
++
++
++class CatalogDeliveryTests(unittest.TestCase):
++    def setUp(self):
++        temporary = tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR"))
++        self.addCleanup(temporary.cleanup)
++        self.w = CatalogWorkspace(Path(temporary.name) / "workspace")
++        original = rt.environment
++        def file_transport():
++            result = original()
++            i = int(result["GIT_CONFIG_COUNT"])
++            result.update(GIT_CONFIG_COUNT=str(i + 1))
++            result[f"GIT_CONFIG_KEY_{i}"] = "protocol.file.allow"
++            result[f"GIT_CONFIG_VALUE_{i}"] = "always"
++            return result
++        self.patch = mock.patch.object(rt, "environment", side_effect=file_transport)
++        self.patch.start()
++        self.addCleanup(self.patch.stop)
++
++    def assert_refused(self, result, reason=None):
++        self.assertEqual(result["status"], "failed")
++        self.assertTrue(result["failed_operation"])
++        if reason:
++            self.assertIn(reason, result["reason"])
++        self.assertEqual(self.w.pushes, [])
++        self.assertEqual(git(self.w.remote, "rev-parse", "main"), self.w.base)
++
++    def test_exact_result_preserves_foreign_objects_indices_worktrees_and_token_isolation(self):
++        w = self.w
++        snapshots = [(root, (root / ".git/index").read_bytes(), git(root, "status", "--porcelain"),
++                      git(root, "show-ref")) for root in (w.projects, w.owner)]
++        with mock.patch.dict(os.environ, {"GIT_DIR": "/nonexistent/poison", "MODULE_TOKEN": w.token,
++                                         "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.hooksPath",
++                                         "GIT_CONFIG_VALUE_0": "/nonexistent/poison"}):
++            qualified = w.run()
++            self.assertEqual(qualified["status"], "qualified")
++            result = w.deliver(qualified)
++        self.assertEqual(result["status"], "delivered")
++        self.assertEqual(result["owner_source"], w.sha)
++        self.assertEqual(result["delivered_tree"], w.result_tree)
++        self.assertEqual(w.items(w.remote, result["delivered_sha"]), w.after)
++        self.assertEqual(git(w.remote, "rev-parse", result["delivered_sha"] + "^"), w.base)
++        for root, index, status, refs in snapshots:
++            self.assertEqual((root / ".git/index").read_bytes(), index)
++            self.assertEqual(git(root, "status", "--porcelain"), status)
++            self.assertEqual(git(root, "show-ref"), refs)
++        self.assertFalse((w.root / "executed").exists())
++        self.assertNotIn(w.token.encode(), w.report_path.read_bytes())
++        self.assertEqual(w.fetches.count(delivery.PROJECTS), 4)
++
++    def test_already_delivered_exact_tree_and_parent_is_idempotent(self):
++        delivered = self.w.deliver()
++        self.w.pushes.clear()
++        result = self.w.deliver()
++        self.assertEqual(result["status"], "unchanged")
++        self.assertEqual(result["delivered_sha"], delivered["delivered_sha"])
++        self.assertEqual(result["owner_source"], self.w.sha)
++        self.assertEqual(self.w.pushes, [])
++
++    def test_different_live_source_refuses_without_push(self):
++        self.w.advance()
++        result = self.w.run()
++        self.assertEqual(result["status"], "failed")
++        self.assertIn("differs from reviewed", result["reason"])
++        self.assertEqual(self.w.pushes, [])
++
++    def test_exact_result_with_wrong_parent_refuses(self):
++        delivered = self.w.deliver()
++        self.w.pushes.clear()
++        self.w.advance(tree=self.w.result_tree, parent=delivered["delivered_sha"])
++        self.assertEqual(self.w.run()["status"], "failed")
++        self.assertEqual(self.w.pushes, [])
++
++    def test_changed_patch_payload_or_complete_tree_refuses(self):
++        w = self.w
++        for mutation in ("patch", "payload", "tree"):
++            with self.subTest(mutation=mutation):
++                path = w.owner / (delivery.PATCH if mutation == "patch" else delivery.PATHS[1])
++                original = path.read_bytes()
++                value = copy.deepcopy(w.value)
++                if mutation == "tree":
++                    w.value["result_tree"] = "1" * 40
++                else:
++                    path.write_bytes(original + b"\n")
++                w.write_manifest()
++                self.assert_refused(w.run())
++                path.write_bytes(original)
++                w.value = value
++                w.write_manifest()
++
++    def test_symlink_unexpected_mode_extra_path_and_missing_blob_refuse(self):
++        w = self.w
++        for bad in ("symlink", "mode", "extra", "missing"):
++            with self.subTest(bad=bad):
++                value = copy.deepcopy(w.value)
++                if bad == "symlink":
++                    w.value["after"][delivery.PATHS[1]][0] = "120000"
++                elif bad == "mode":
++                    w.value["before"][delivery.WORKFLOW][0] = "100755"
++                elif bad == "extra":
++                    w.value["after"]["product.txt"] = w.value["after"][delivery.WORKFLOW]
++                else:
++                    w.value["after"][delivery.WORKFLOW][2] = "f" * 40
++                w.write_manifest()
++                self.assert_refused(w.run())
++                w.value = value
++                w.write_manifest()
++
++    def test_extra_patch_path_refuses_even_with_updated_patch_hash(self):
++        w = self.w
++        path = w.owner / delivery.PATCH
++        patch = path.read_bytes() + b"diff --git a/extra b/extra\nnew file mode 100644\n--- /dev/null\n+++ b/extra\n@@ -0,0 +1 @@\n+unapproved\n"
++        path.write_bytes(patch)
++        w.value["patch_sha256"] = delivery.digest(patch)
++        w.write_manifest()
++        self.assert_refused(w.run(), "complete proposal output tree")
++
++    def test_owner_source_and_qualification_bindings_refuse(self):
++        qualified = self.w.run()
++        for extra in ({"G6_QUALIFICATION": "failure"}, {"G6_PLAN": "{}"}, {"G6_OWNER_SOURCE": "f" * 40},
++                      {"GITHUB_REF": "refs/heads/feature"}, {"GITHUB_EVENT_NAME": "push"}):
++            with self.subTest(extra=extra):
++                context = {"G6_QUALIFICATION": "success", "G6_PLAN": json.dumps(qualified["plan"])} | extra
++                self.assert_refused(self.w.run("deliver", **context))
++
++    def test_owner_advance_or_uncommitted_payload_refuses(self):
++        w = self.w
++        qualified = w.run()
++        (w.owner / "foreign").write_text("owner advanced\n")
++        w.write_manifest()
++        self.assert_refused(w.deliver(qualified), "binding mismatch")
++        path = w.owner / delivery.PATHS[1]
++        path.write_bytes(path.read_bytes() + b"uncommitted")
++        self.assert_refused(w.run(), "local owner payload differs")
++
++    def test_push_refusal_retains_exact_operation_no_retry_and_redacts_token(self):
++        self.w.refuse = True
++        result = self.w.deliver()
++        self.assertEqual(result["status"], "failed")
++        self.assertTrue(result["failed_operation"].startswith("git push "))
++        self.assertEqual(len(self.w.pushes), 1)
++        self.assertFalse(result["delivered_sha"])
++        self.assertEqual(git(self.w.remote, "rev-parse", "main"), self.w.base)
++        self.assertNotIn(self.w.token.encode(), self.w.report_path.read_bytes())
++
++    def test_main_races_never_retry_rebase_or_reapply(self):
++        for phase in ("before", "after"):
++            with self.subTest(phase=phase):
++                self.w.race = phase
++                result = self.w.deliver()
++                self.assertEqual(result["status"], "failed")
++                self.assertEqual(len(self.w.pushes), 1)
++                self.assertIn("push" if phase == "before" else "after push", result["failed_operation"])
++                git(self.w.remote, "update-ref", "refs/heads/main", self.w.base)
++                self.w.pushes.clear()
++
++    def test_missing_scoped_app_token_writes_nothing(self):
++        self.w.token = ""
++        self.assert_refused(self.w.deliver(), "App token unavailable")
++
++    def test_production_manifest_is_closed_and_payload_matches_reviewed_blobs(self):
++        value = delivery.manifest((ROOT / delivery.MANIFEST).read_bytes())
++        self.assertEqual(value["patch_sha256"], hashlib.sha256((ROOT / delivery.PATCH).read_bytes()).hexdigest())
++        for path in delivery.PATHS[1:]:
++            data = (ROOT / path).read_bytes()
++            oid = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
++            self.assertEqual(oid, value["after"][path][2])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/tools/tests/test_deliver_g6_catalog.py.lock b/tools/tests/test_deliver_g6_catalog.py.lock
+--- /dev/null
++++ b/tools/tests/test_deliver_g6_catalog.py.lock
+@@ -0,0 +1,3 @@
++version = 1
++revision = 3
++requires-python = ">=3.12"
+diff --git a/.github/workflows/deliver.yml b/.github/workflows/deliver.yml
+--- a/.github/workflows/deliver.yml
++++ b/.github/workflows/deliver.yml
+@@ -7,6 +7,12 @@
+   schedule:
+     - cron: '47 * * * *'
+   workflow_dispatch:
++    inputs:
++      delivery:
++        description: Delivery scope
++        type: choice
++        default: full
++        options: [full, projects-g6-catalog]
+ 
+ permissions: {}
+ cache-mode: none
+@@ -23,6 +29,7 @@
+       contents: read
+     outputs:
+       verdict: ${{ steps.validate.outputs.verdict }}
++      g6_plan: ${{ steps.g6_qualify.outputs.plan }}
+     steps:
+       - name: Checkout CiCd candidate
+         id: cicd
+@@ -54,14 +61,37 @@
+         # A failed Builds checkout must still permit a conservative verdict.
+         # Its failed step keeps the job red even if validation can continue.
+         # !cancelled(), unlike always(), lets a superseded or cancelled run stop.
+-        if: ${{ !cancelled() && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
++        if: ${{ !cancelled() && inputs.delivery != 'projects-g6-catalog' && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
+         env:
+           GITHUB_TOKEN: ${{ github.token }}
+         run: uv run --locked --script tools/validate.py
+ 
++      - name: Qualify narrow catalog delivery behavior without secrets
++        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
++        run: |
++          uv run --locked --script --python 3.12 tools/tests/test_prepare_g6_catalog.py
++          uv run --locked --script --python 3.12 tools/tests/test_deliver_g6_catalog.py
++          uv run --locked --script --python 3.12 tools/tests/test_delivery_workflow.py
++
++      - name: Bind narrow plan to current exact owner source and reviewed Projects tree
++        id: g6_qualify
++        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
++        env:
++          G6_OWNER_SOURCE: ${{ github.sha }}
++        run: python3 -I tools/deliver_g6_catalog.py qualify --report g6-qualification.json
++
++      - name: Upload narrow qualification receipt
++        if: ${{ always() && inputs.delivery == 'projects-g6-catalog' }}
++        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
++        with:
++          name: projects-g6-qualification
++          path: g6-qualification.json
++          if-no-files-found: warn
++          retention-days: 90
++
+   deliver:
+     needs: validate
+-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
++    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
+     runs-on: ubuntu-latest
+     timeout-minutes: 40
+     environment: cicd-app
+@@ -70,7 +100,56 @@
+     env:
+       DELIVERY_DIRECTORY: ${{ github.workspace }}/.delivery-state-${{ github.run_id }}-${{ github.run_attempt }}
+     steps:
++      - name: Checkout exact qualified narrow owner source
++        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
++        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
++        with:
++          ref: ${{ github.sha }}
++          path: .g6-owner
++          sparse-checkout: |
++            tools/deliver_g6_catalog.py
++            tools/delivery_runtime.py
++            docs/proposals/projects-g6-catalog.json
++            docs/proposals/projects-g6-catalog.patch
++            .github/actions/prepare-g6-catalog
++          sparse-checkout-cone-mode: false
++          submodules: false
++          persist-credentials: false
++
++      - name: Mint only Projects catalog correction token
++        id: g6_token
++        timeout-minutes: 1
++        if: ${{ inputs.delivery == 'projects-g6-catalog' }}
++        continue-on-error: true
++        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
++        with:
++          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
++          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
++          owner: Hexalith
++          repositories: Hexalith.Projects
++          permission-contents: write
++          permission-workflows: write
++
++      - name: Deliver exact qualified Projects catalog correction
++        if: ${{ !cancelled() && inputs.delivery == 'projects-g6-catalog' }}
++        env:
++          G6_OWNER_SOURCE: ${{ github.sha }}
++          G6_QUALIFICATION: ${{ needs.validate.result }}
++          G6_PLAN: ${{ needs.validate.outputs.g6_plan }}
++          MODULE_TOKEN: ${{ steps.g6_token.outputs.token }}
++        run: python3 -I .g6-owner/tools/deliver_g6_catalog.py deliver --report projects-g6-delivery.json
++
++      - name: Upload narrow delivery receipt
++        if: ${{ always() && inputs.delivery == 'projects-g6-catalog' }}
++        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
++        with:
++          name: projects-g6-delivery
++          path: projects-g6-delivery.json
++          if-no-files-found: error
++          retention-days: 90
++
+       - name: Checkout immutable delivery bootstrap
++        if: ${{ inputs.delivery != 'projects-g6-catalog' }}
+         timeout-minutes: 3
+         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+         with:
+@@ -85,7 +164,7 @@
+ 
+       - name: Select trusted delivery source and initialize report
+         id: select
+-        if: ${{ always() }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && always() }}
+         continue-on-error: true
+         env:
+           DELIVERY_VERDICT: ${{ needs.validate.outputs.verdict }}
+@@ -94,7 +173,7 @@
+       - name: Mint CiCd accepted-ref and freshness token
+         timeout-minutes: 1
+         id: cicd_token
+-        if: ${{ !cancelled() && steps.select.outputs.ready == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.ready == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -107,7 +186,7 @@
+           permission-actions: read
+ 
+       - name: Initialize delivery and hourly freshness
+-        if: ${{ !cancelled() }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -115,14 +194,14 @@
+ 
+       - name: Check module slot 01 time budget
+         id: module_01_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 1
+ 
+       - name: Mint module slot 01 token
+         timeout-minutes: 1
+         id: module_01_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -135,7 +214,7 @@
+           permission-administration: ${{ steps.select.outputs.check_01 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 01
+-        if: ${{ !cancelled() && steps.select.outputs.slot_01 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -144,14 +223,14 @@
+ 
+       - name: Check module slot 02 time budget
+         id: module_02_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 2
+ 
+       - name: Mint module slot 02 token
+         timeout-minutes: 1
+         id: module_02_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -164,7 +243,7 @@
+           permission-administration: ${{ steps.select.outputs.check_02 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 02
+-        if: ${{ !cancelled() && steps.select.outputs.slot_02 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -173,14 +252,14 @@
+ 
+       - name: Check module slot 03 time budget
+         id: module_03_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 3
+ 
+       - name: Mint module slot 03 token
+         timeout-minutes: 1
+         id: module_03_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -193,7 +272,7 @@
+           permission-administration: ${{ steps.select.outputs.check_03 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 03
+-        if: ${{ !cancelled() && steps.select.outputs.slot_03 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -202,14 +281,14 @@
+ 
+       - name: Check module slot 04 time budget
+         id: module_04_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 4
+ 
+       - name: Mint module slot 04 token
+         timeout-minutes: 1
+         id: module_04_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -222,7 +301,7 @@
+           permission-administration: ${{ steps.select.outputs.check_04 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 04
+-        if: ${{ !cancelled() && steps.select.outputs.slot_04 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -231,14 +310,14 @@
+ 
+       - name: Check module slot 05 time budget
+         id: module_05_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 5
+ 
+       - name: Mint module slot 05 token
+         timeout-minutes: 1
+         id: module_05_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -251,7 +330,7 @@
+           permission-administration: ${{ steps.select.outputs.check_05 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 05
+-        if: ${{ !cancelled() && steps.select.outputs.slot_05 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -260,14 +339,14 @@
+ 
+       - name: Check module slot 06 time budget
+         id: module_06_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 6
+ 
+       - name: Mint module slot 06 token
+         timeout-minutes: 1
+         id: module_06_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -280,7 +359,7 @@
+           permission-administration: ${{ steps.select.outputs.check_06 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 06
+-        if: ${{ !cancelled() && steps.select.outputs.slot_06 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -289,14 +368,14 @@
+ 
+       - name: Check module slot 07 time budget
+         id: module_07_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 7
+ 
+       - name: Mint module slot 07 token
+         timeout-minutes: 1
+         id: module_07_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -309,7 +388,7 @@
+           permission-administration: ${{ steps.select.outputs.check_07 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 07
+-        if: ${{ !cancelled() && steps.select.outputs.slot_07 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -318,14 +397,14 @@
+ 
+       - name: Check module slot 08 time budget
+         id: module_08_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 8
+ 
+       - name: Mint module slot 08 token
+         timeout-minutes: 1
+         id: module_08_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -338,7 +417,7 @@
+           permission-administration: ${{ steps.select.outputs.check_08 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 08
+-        if: ${{ !cancelled() && steps.select.outputs.slot_08 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -347,14 +426,14 @@
+ 
+       - name: Check module slot 09 time budget
+         id: module_09_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 9
+ 
+       - name: Mint module slot 09 token
+         timeout-minutes: 1
+         id: module_09_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -367,7 +446,7 @@
+           permission-administration: ${{ steps.select.outputs.check_09 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 09
+-        if: ${{ !cancelled() && steps.select.outputs.slot_09 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -376,14 +455,14 @@
+ 
+       - name: Check module slot 10 time budget
+         id: module_10_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 10
+ 
+       - name: Mint module slot 10 token
+         timeout-minutes: 1
+         id: module_10_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -396,7 +475,7 @@
+           permission-administration: ${{ steps.select.outputs.check_10 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 10
+-        if: ${{ !cancelled() && steps.select.outputs.slot_10 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -405,14 +484,14 @@
+ 
+       - name: Check module slot 11 time budget
+         id: module_11_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 11
+ 
+       - name: Mint module slot 11 token
+         timeout-minutes: 1
+         id: module_11_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -425,7 +504,7 @@
+           permission-administration: ${{ steps.select.outputs.check_11 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 11
+-        if: ${{ !cancelled() && steps.select.outputs.slot_11 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -434,14 +513,14 @@
+ 
+       - name: Check module slot 12 time budget
+         id: module_12_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 12
+ 
+       - name: Mint module slot 12 token
+         timeout-minutes: 1
+         id: module_12_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -454,7 +533,7 @@
+           permission-administration: ${{ steps.select.outputs.check_12 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 12
+-        if: ${{ !cancelled() && steps.select.outputs.slot_12 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -463,14 +542,14 @@
+ 
+       - name: Check module slot 13 time budget
+         id: module_13_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 13
+ 
+       - name: Mint module slot 13 token
+         timeout-minutes: 1
+         id: module_13_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -483,7 +562,7 @@
+           permission-administration: ${{ steps.select.outputs.check_13 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 13
+-        if: ${{ !cancelled() && steps.select.outputs.slot_13 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -492,14 +571,14 @@
+ 
+       - name: Check module slot 14 time budget
+         id: module_14_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 14
+ 
+       - name: Mint module slot 14 token
+         timeout-minutes: 1
+         id: module_14_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -512,7 +591,7 @@
+           permission-administration: ${{ steps.select.outputs.check_14 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 14
+-        if: ${{ !cancelled() && steps.select.outputs.slot_14 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -521,14 +600,14 @@
+ 
+       - name: Check module slot 15 time budget
+         id: module_15_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 15
+ 
+       - name: Mint module slot 15 token
+         timeout-minutes: 1
+         id: module_15_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -541,7 +620,7 @@
+           permission-administration: ${{ steps.select.outputs.check_15 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 15
+-        if: ${{ !cancelled() && steps.select.outputs.slot_15 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -550,14 +629,14 @@
+ 
+       - name: Check module slot 16 time budget
+         id: module_16_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 16
+ 
+       - name: Mint module slot 16 token
+         timeout-minutes: 1
+         id: module_16_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -570,7 +649,7 @@
+           permission-administration: ${{ steps.select.outputs.check_16 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 16
+-        if: ${{ !cancelled() && steps.select.outputs.slot_16 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -579,14 +658,14 @@
+ 
+       - name: Check module slot 17 time budget
+         id: module_17_budget
+-        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' }}
+         continue-on-error: true
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py permit --slot 17
+ 
+       - name: Mint module slot 17 token
+         timeout-minutes: 1
+         id: module_17_token
+-        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}
+         continue-on-error: true
+         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+         with:
+@@ -599,7 +678,7 @@
+           permission-administration: ${{ steps.select.outputs.check_17 == 'true' && 'read' || '' }}
+ 
+       - name: Process module slot 17
+-        if: ${{ !cancelled() && steps.select.outputs.slot_17 != '' }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' }}
+         continue-on-error: true
+         env:
+           CICD_TOKEN: ${{ steps.cicd_token.outputs.token }}
+@@ -607,12 +686,12 @@
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py module --slot 17
+ 
+       - name: Finalize delivery report and aggregate result
+-        if: ${{ always() }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && always() }}
+         run: python3 -I .delivery-bootstrap/tools/delivery_bootstrap.py finalize
+ 
+       - name: Upload delivery report
+         timeout-minutes: 3
+-        if: ${{ always() }}
++        if: ${{ inputs.delivery != 'projects-g6-catalog' && always() }}
+         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+         with:
+           name: hexalith-delivery
+diff --git a/docs/projects-g6-catalog-acquisition.md b/docs/projects-g6-catalog-acquisition.md
+--- a/docs/projects-g6-catalog-acquisition.md
++++ b/docs/projects-g6-catalog-acquisition.md
+@@ -32,9 +32,9 @@
+ gitlinks and refs plus an idempotent second invocation. These tests qualify
+ acquisition only; they do not execute the mapper, restore or runtime G-6.
+ 
+-## Integration and delivery blocker
++## Reviewed integration
+ 
+-`docs/proposals/projects-g6-catalog.patch` is an **unapplied owner proposal**.
++`docs/proposals/projects-g6-catalog.patch` is the retained reviewed owner proposal.
+ It adds the local action and inserts its invocation before the existing restore
+ step in Projects source `981ceef13a1abc88219925e73c51a23eb9ac50c2`. The revision is
+ derived at execution from Projects HEAD; the historical catalog commit is never
+@@ -48,11 +48,80 @@
+ (currently `v6.0.6`); enabling that delivery would perform the separately planned
+ Projects adoption in CiCd Story 18 and change policy/pins beyond this correction.
+ 
+-An owner-supported delivery path for this pre-adoption source-preparation change
+-is therefore required. Do not apply the patch directly in a module checkout,
+-register Projects to bypass this gap, or edit delivered workflows with a different
+-credential. No delivery, push, dispatch or rerun was performed. Fresh corrected
+-exact-source hosted CI/G-6 remains blocked until that owner path is available.
++## Closed pre-adoption delivery exception
++
++The `projects-g6-catalog` dispatch choice in the existing `deliver.yml` is a
++task-specific AD-6 exception for this source-preparation correction. It keeps
++AD-7's existing main-only `deliver` job, `cicd-app` environment, `deliver`
++concurrency group and pinned App action. It neither registers Projects nor
++creates an accepted ref, resolves a Builds version, or applies a rendered
++perimeter. The architecture document and Story 1.17 tracking are unchanged.
++
++The closed manifest `docs/proposals/projects-g6-catalog.json` binds Projects base
++`981ceef13a1abc88219925e73c51a23eb9ac50c2`, its entire tree, the reviewed patch
++SHA256, every input/output path and blob, and complete output tree
++`238d933a813d0453e950e1080175d74f12e82975`. The only output changes are
++`.github/workflows/ci.yml`, `.github/actions/prepare-g6-catalog/action.yml` and
++`.github/actions/prepare-g6-catalog/prepare.py`. The action bytes are reused
++unchanged. Acquisition precedes Conversations prepare-build; the mapper stays
++offline and fail-closed. All pins, product gates and other tree entries survive
++byte for byte.
++
++The secret-free validation job runs the acquisition, narrow delivery and existing
++workflow behavioral suites, then constructs a plan from current exact CiCd main
++and current Projects main in private bare Git repositories. That JSON output
++binds qualification to the writer's source, manifest, patch, base and result
++tree. Failed qualification, a missing plan or a non-main/non-dispatch invocation
++prevents the narrow write job from running. Normal triggers and the default
++`full` choice retain the existing delivery behavior.
++
++The narrow write branch checks out the exact qualified CiCd source and mints
++only Projects Contents/Workflows write. It skips normal selection, accepted-ref
++and freshness tokens, module slots, report finalization and the normal artifact.
++Only stdlib CiCd Python and bounded Git run with that token; no module code,
++build, tests, dependency initialization or mapper runs there. Proposal application
++uses a private bare object store and index, never a module working tree. The
++controller rejects changed source, bytes, trees, missing blobs, symlinks,
++unexpected modes or extra paths before writing. It rereads owner and module main,
++makes one non-forced push, then rereads the actual main SHA/tree. Refusal or a
++race is retained with the exact failed operation, without retry, force, rebase
++or automatic reapplication. An exact delivered tree with the reviewed base as
++its sole direct parent is an idempotent no-op.
++
++The owner invocation, after publishing and qualifying the task-owned CiCd source
++and satisfying the module pre-push prerequisite, is:
++
++```bash
++gh workflow run deliver.yml --repo Hexalith/Hexalith.CiCd --ref main \
++  -f delivery=projects-g6-catalog
++```
++
++Dispatch through the existing scoped CiCd profile. If the App installation cannot
++mint the Projects token, retain GitHub's failed mint step and the failed delivery
++receipt; do not broaden credentials. Qualification and delivery retain separate
++`projects-g6-qualification` and `projects-g6-delivery` JSON artifacts for 90 days.
++Receipts identify the owner source, proposal binding, observed main, actual
++delivered SHA/tree, push result and exact failed operation.
++
++Local qualification is available with:
++
++```bash
++run-with-temp python3 -B tools/tests/test_deliver_g6_catalog.py
++run-with-temp uv run --locked --script --python 3.12 tools/tests/test_deliver_g6_catalog.py
++run-with-temp uv run --locked --script --python 3.12 tools/tests/test_delivery_workflow.py
++```
++
++These tests qualify the delivery mechanism; they do not establish actual delivery
++or hosted acquisition/G-6 acceptance. The normal exact pinned Builds checker
++remains a separate pre-push prerequisite. On the clean proposed pre-adoption
++Projects source, `python3 references/Hexalith.Builds/check.py` currently exits 1
++because `.github/hexalith-ci.json` is absent. Do not register/adopt Projects, add
++configuration, suppress the checker or weaken a gate to bypass that refusal.
++Retain the prerequisite failure for owner resolution before an actual module
++write. After any authorized successful delivery, inspect Projects' exact three-path
++diff and collect fresh CI/G-6 logs and artifacts tied to its delivered SHA.
++Diagnose any subsequent hosted failure separately from catalog acquisition.
++Publishing, A8 audit, deployment and v2 activation remain outside this correction.
+ 
+ Retained proof and full source identities are in Folders:
+ `_bmad-output/implementation-artifacts/evidence/story-1-17-g6-catalog-acquisition-2026-11-16/`.
+diff --git a/tools/tests/test_delivery_workflow.py b/tools/tests/test_delivery_workflow.py
+--- a/tools/tests/test_delivery_workflow.py
++++ b/tools/tests/test_delivery_workflow.py
+@@ -16,6 +16,8 @@
+ from pathlib import Path
+ import re
+ import shlex
++import shutil
++import subprocess
+ import tempfile
+ import unittest
+ from unittest import mock
+@@ -26,19 +28,20 @@
+ 
+ class Workflow:
+     def __init__(self, workspace, *, ref="refs/heads/main", event="push", validation="success", verdict=None,
+-                 mint_fail=(), cancel_after=None):
++                 mint_fail=(), cancel_after=None, delivery="full", g6_plan=None):
+         self.w = workspace
+         self.document = yaml.safe_load((ROOT / ".github/workflows/deliver.yml").read_bytes())
+         self.job = self.document["jobs"]["deliver"]
+         self.context = {"github": {"ref": ref, "sha": workspace.sha, "repository": "Hexalith/Hexalith.CiCd",
+             "workspace": str(workspace.root), "run_id": "101", "run_attempt": "1", "event_name": event, "token": "inert-checkout-token"},
+             "needs": {"validate": {"result": validation, "outputs": {"verdict": json.dumps(verdict) if verdict is not None else ""}}},
+-            "steps": {}, "runner": {"temp": str(workspace.root)},
++            "steps": {}, "inputs": {"delivery": delivery}, "runner": {"temp": str(workspace.root)},
+             "secrets": {"HEXALITH_CICD_APP_PRIVATE_KEY": "inert-no-private-key"},
+             "vars": {"HEXALITH_CICD_APP_CLIENT_ID": "inert-client-id"}}
+         # Model validation at its I/O boundary, then evaluate the real job's
+         # output mapping even when that job's result is failure.
+-        self.context["steps"] = {"validate": {"outputs": self.context["needs"]["validate"]["outputs"]}}
++        self.context["steps"] = {"validate": {"outputs": self.context["needs"]["validate"]["outputs"]},
++                                 "g6_qualify": {"outputs": {"plan": json.dumps(g6_plan) if g6_plan else ""}}}
+         self.context["needs"]["validate"]["outputs"] = {
+             key: self.expand(value) for key, value in self.document["jobs"]["validate"].get("outputs", {}).items()}
+         self.context["steps"] = {}
+@@ -110,6 +113,21 @@
+                 action = step["uses"].split("@", 1)[0]
+                 if action == "actions/checkout":
+                     source = inputs.get("ref", "")
++                    if inputs.get("path") == ".g6-owner":
++                        if source != self.w.sha or inputs.get("persist-credentials") is not False or inputs.get("submodules") is not False:
++                            raise AssertionError("narrow checkout changed qualified source/credentials")
++                        destination = self.w.root / inputs["path"]
++                        paths = git(self.w.candidate, "ls-tree", "-r", "--name-only", source).splitlines()
++                        selected = [path for path in paths if any(path == prefix or path.startswith(prefix + "/")
++                                    for prefix in inputs["sparse-checkout"].splitlines())]
++                        for path in selected:
++                            target = destination / path
++                            target.parent.mkdir(parents=True, exist_ok=True)
++                            target.write_bytes(subprocess.run(["git", "-C", str(self.w.candidate), "show",
++                                                source + ":" + path], check=True, capture_output=True).stdout)
++                        self.checkouts.append(sorted(selected))
++                        self.context["steps"][identifier] = {"outcome": "success", "outputs": {}}
++                        continue
+                     anchor = json.loads((ROOT / "tools/tests/fixtures/delivery-bootstrap.json").read_bytes())
+                     if not re.fullmatch(r"[0-9a-f]{40}", source) or source != anchor["source_sha"]:
+                         raise AssertionError("selector checkout is not immutable")
+@@ -142,6 +160,8 @@
+                         outputs["token"] = "inert-token-" + repository
+                 elif action == "actions/upload-artifact":
+                     artifact = Path(inputs["path"])
++                    if not artifact.is_absolute():
++                        artifact = self.w.root / artifact
+                     if not artifact.is_file():
+                         raise AssertionError("upload did not receive actual report bytes")
+                     self.uploads.append((inputs["name"], artifact.read_bytes()))
+@@ -149,6 +169,8 @@
+                     raise AssertionError("unhandled external action " + action)
+             elif "run" in step:
+                 command = shlex.split(step["run"])
++                if command[2:3] == [".g6-owner/tools/deliver_g6_catalog.py"]:
++                    command[command.index("--report") + 1] = str(self.w.root / command[command.index("--report") + 1])
+                 if command[:2] != ["python3", "-I"] or "${{" in step["run"]:
+                     raise AssertionError("privileged command is not isolated Python")
+                 self.commands.append(command)
+@@ -318,5 +340,63 @@
+         self.assertIsNone(report["tools_source_sha"])
+ 
+ 
++class NarrowWorkflowTests(unittest.TestCase):
++    def fixture(self):
++        from test_deliver_g6_catalog import CatalogWorkspace, delivery
++        temporary = tempfile.TemporaryDirectory()
++        self.addCleanup(temporary.cleanup)
++        w = Workspace(Path(temporary.name) / "workspace", (delivery.PROJECTS,))
++        catalog = CatalogWorkspace(w.root / "catalog")
++        for path in delivery.SOURCES:
++            target = w.candidate / path
++            target.parent.mkdir(parents=True, exist_ok=True)
++            shutil.copyfile(catalog.owner / path, target)
++        w.config["modules"][delivery.PROJECTS] = str(catalog.remote)
++        w.commit()
++        binding = delivery.plan(w.sha, catalog.value, (catalog.owner / delivery.MANIFEST).read_bytes(), catalog.base)
++        return w, catalog, binding
++
++    def test_narrow_branch_executes_only_qualified_owner_writer_and_projects_mint(self):
++        w, catalog, binding = self.fixture()
++        workflow = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", g6_plan=binding)
++        self.assertEqual(workflow.execute(), "success")
++        self.assertEqual([inputs["repositories"] for _, inputs in workflow.mints], ["Hexalith.Projects"])
++        self.assertEqual(set(workflow.mints[0][1]), {"client-id", "private-key", "owner", "repositories",
++                                                   "permission-contents", "permission-workflows"})
++        self.assertEqual(len(workflow.commands), 1)
++        self.assertIn("deliver_g6_catalog.py", workflow.commands[0][2])
++        self.assertEqual(workflow.processes, [])
++        self.assertEqual([name for name, _ in workflow.uploads], ["projects-g6-delivery"])
++        result = json.loads(workflow.uploads[0][1])
++        self.assertEqual(result["status"], "delivered")
++        self.assertEqual(result["owner_source"], w.sha)
++        self.assertEqual(result["delivered_tree"], catalog.result_tree)
++        self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
++
++    def test_narrow_qualification_failure_missing_plan_or_wrong_ref_mints_nothing(self):
++        for options in ({"validation": "failure"}, {"g6_plan": None}, {"ref": "refs/heads/feature"},
++                        {"event": "push"}):
++            with self.subTest(options=options):
++                w, catalog, binding = self.fixture()
++                args = {"event": "workflow_dispatch", "delivery": "projects-g6-catalog", "g6_plan": binding} | options
++                workflow = Workflow(w, **args)
++                self.assertEqual(workflow.execute(), "skipped")
++                self.assertEqual(workflow.mints, [])
++                self.assertEqual(workflow.commands, [])
++                self.assertEqual(git(catalog.remote, "rev-parse", "main"), catalog.base)
++
++    def test_narrow_mint_refusal_uploads_failed_receipt_without_other_mints(self):
++        w, catalog, binding = self.fixture()
++        workflow = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", g6_plan=binding,
++                            mint_fail=("Hexalith.Projects",))
++        self.assertEqual(workflow.execute(), "failure")
++        self.assertEqual(len(workflow.mints), 1)
++        result = json.loads(workflow.uploads[0][1])
++        self.assertEqual(result["status"], "failed")
++        self.assertIn("App token unavailable", result["reason"])
++        self.assertFalse(result["push_attempted"])
++        self.assertEqual(git(catalog.remote, "rev-parse", "main"), catalog.base)
++
++
+ if __name__ == "__main__":
+     unittest.main()

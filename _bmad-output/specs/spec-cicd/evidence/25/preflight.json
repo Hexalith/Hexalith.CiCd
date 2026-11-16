@@ -1,0 +1,571 @@
+{
+  "recorded_at": "2026-11-16T15:54:43.576136+00:00",
+  "cicd_base": "66e3a5a3a0e9bb01dd161c19349953594e01a22f",
+  "timesheets_main": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+  "cicd_timesheets_gitlink": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+  "builds_version": "v6.0.6",
+  "builds_commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "admin_profile": "/home/administrator/.config/gh",
+  "credential_override_present": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "authenticated_account": "jpiquot",
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets",
+      "exit": 0,
+      "data": {
+        "id": 1272275109,
+        "full_name": "Hexalith/Hexalith.Timesheets",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/rulesets?includes_parents=true",
+      "exit": 0,
+      "data": [],
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/environments",
+      "exit": 0,
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 24654321698,
+            "node_id": "EN_kwDOS9Vgpc8AAAAFvYMYIg",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Timesheets/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-10-18T20:56:18Z",
+            "updated_at": "2026-10-18T20:56:18Z",
+            "can_admins_bypass": true,
+            "protection_rules": [
+              {
+                "id": 69255541,
+                "node_id": "GA_kwDOS9Vgpc4EIMF1",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 69255542,
+                "node_id": "GA_kwDOS9Vgpc4EIMF2",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/actions/variables",
+      "exit": 0,
+      "data": {
+        "total_count": 2,
+        "variables": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true"
+          },
+          {
+            "name": "NUGET_USER"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/code-scanning/default-setup",
+      "exit": 0,
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/automated-security-fixes",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "paused": false
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/immutable-releases",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/releases?per_page=100",
+      "exit": 0,
+      "data": [
+        {
+          "id": 442640968,
+          "tag_name": "v2.1.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/releases/tag/v2.1.0",
+          "published_at": "2026-11-12T07:59:00Z"
+        },
+        {
+          "id": 430836829,
+          "tag_name": "v2.0.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/releases/tag/v2.0.3",
+          "published_at": "2026-11-01T20:27:22Z"
+        },
+        {
+          "id": 425971938,
+          "tag_name": "v2.0.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/releases/tag/v2.0.2",
+          "published_at": "2026-10-27T20:52:17Z"
+        },
+        {
+          "id": 421106172,
+          "tag_name": "v2.0.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/releases/tag/v2.0.1",
+          "published_at": "2026-10-22T19:18:47Z"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/actions/runs?branch=main&per_page=10",
+      "exit": 0,
+      "data": {
+        "total_count": 410,
+        "workflow_runs": [
+          {
+            "id": 43861006946,
+            "name": "CodeQL",
+            "path": ".github/workflows/codeql.yml",
+            "event": "schedule",
+            "head_sha": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43861006946",
+            "created_at": "2026-11-16T11:48:45Z"
+          },
+          {
+            "id": 43741211339,
+            "name": "Commitlint",
+            "path": ".github/workflows/commitlint.yml",
+            "event": "push",
+            "head_sha": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43741211339",
+            "created_at": "2026-11-15T17:27:33Z"
+          },
+          {
+            "id": 43741211405,
+            "name": "CI",
+            "path": ".github/workflows/ci.yml",
+            "event": "push",
+            "head_sha": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43741211405",
+            "created_at": "2026-11-15T17:27:33Z"
+          },
+          {
+            "id": 43741211335,
+            "name": "CodeQL",
+            "path": ".github/workflows/codeql.yml",
+            "event": "push",
+            "head_sha": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43741211335",
+            "created_at": "2026-11-15T17:27:33Z"
+          },
+          {
+            "id": 43739180596,
+            "name": "CodeQL",
+            "path": ".github/workflows/codeql.yml",
+            "event": "push",
+            "head_sha": "02a69b58f41c2780b4e4fdc14069af2220613e95",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43739180596",
+            "created_at": "2026-11-15T17:06:04Z"
+          },
+          {
+            "id": 43739180600,
+            "name": "CI",
+            "path": ".github/workflows/ci.yml",
+            "event": "push",
+            "head_sha": "02a69b58f41c2780b4e4fdc14069af2220613e95",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43739180600",
+            "created_at": "2026-11-15T17:06:04Z"
+          },
+          {
+            "id": 43739180660,
+            "name": "Commitlint",
+            "path": ".github/workflows/commitlint.yml",
+            "event": "push",
+            "head_sha": "02a69b58f41c2780b4e4fdc14069af2220613e95",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43739180660",
+            "created_at": "2026-11-15T17:06:04Z"
+          },
+          {
+            "id": 43177325291,
+            "name": "Release",
+            "path": ".github/workflows/release.yml",
+            "event": "workflow_dispatch",
+            "head_sha": "aafdae771e81f152671d18c506a0470ce0deee7f",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43177325291",
+            "created_at": "2026-11-12T07:43:12Z"
+          },
+          {
+            "id": 43170808149,
+            "name": "Commitlint",
+            "path": ".github/workflows/commitlint.yml",
+            "event": "push",
+            "head_sha": "aafdae771e81f152671d18c506a0470ce0deee7f",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43170808149",
+            "created_at": "2026-11-12T06:49:14Z"
+          },
+          {
+            "id": 43170808300,
+            "name": "CodeQL",
+            "path": ".github/workflows/codeql.yml",
+            "event": "push",
+            "head_sha": "aafdae771e81f152671d18c506a0470ce0deee7f",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/43170808300",
+            "created_at": "2026-11-12T06:49:14Z"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 31626264,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 31641834,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 77847816,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 97329264,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            },
+            "suspended_at": null
+          },
+          {
+            "id": 179966090,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            },
+            "suspended_at": null
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "timesheets_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "timesheets_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 24,
+        "timesheets_selected": false,
+        "returned_count": 24
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 4,
+        "timesheets_selected": false,
+        "returned_count": 4
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_PASSWORD/repositories?per_page=100",
+      "exit": 1,
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/actions/secrets#list-selected-repositories-for-an-organization-secret",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)\n"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_CREDENTIALS/repositories?per_page=100",
+      "exit": 1,
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/actions/secrets#list-selected-repositories-for-an-organization-secret",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)\n"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 7,
+        "timesheets_selected": false,
+        "returned_count": 7
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "timesheets_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "timesheets_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "timesheets_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Timesheets/environments/production/secrets",
+      "exit": 0,
+      "data": {
+        "total_count": 0,
+        "secrets": []
+      },
+      "stderr": ""
+    }
+  ],
+  "remote_mutations": false,
+  "nested_submodules_initialized": false
+}

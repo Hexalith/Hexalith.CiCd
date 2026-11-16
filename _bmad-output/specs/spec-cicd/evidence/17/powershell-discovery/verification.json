@@ -1,0 +1,45 @@
+{
+  "status": "discovery fix verified; story 17 remains in progress",
+  "cicd_base": "2adf156b24e0a8053de42d7d4bf9b7c15a8b82e4",
+  "source_sha256": {
+    "tools/scan_discovery.py": "c6b02599e77520a214dd985155e7565027f346ab4bdd1f140ae25b4aad69210e",
+    "tools/scan_powershell.ps1": "b21c0e6678741b5c779f91cfa919dab4f122296f75898151fffeab162fc0acc6"
+  },
+  "folders": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+  "folders_tree": "447b78de825d385ddbb7123a3a2746271a26b9e5",
+  "powershell_version": "7.6.2",
+  "saved_baseline_reproduced": true,
+  "minimal": {
+    "before_errors": 2,
+    "after_errors": 0,
+    "result": "minimal.json"
+  },
+  "folders_discovery": {
+    "before_files": 12,
+    "after_files": 12,
+    "before_errors": 940,
+    "after_errors": 318,
+    "added_files": [],
+    "removed_files": [],
+    "remaining_by_category": {
+      "unresolved PowerShell argument splatting": 2,
+      "unresolved computed PowerShell command operand": 39,
+      "unresolved computed command": 2,
+      "unresolved computed operand of unknown command": 193,
+      "unsupported PowerShell assignment target": 18,
+      "unsupported PowerShell method invocation": 63,
+      "unsupported shell wrapper options": 1
+    },
+    "remaining_by_file": {
+      "tests/tools/forgejo-drift/Write-SanitizedForgejoDriftReport.ps1": 18,
+      "tests/tools/run-capacity-calibration-gates.ps1": 92,
+      "tests/tools/run-capacity-smoke-ci-gates.ps1": 56,
+      "tests/tools/run-complete-project-tests.ps1": 7,
+      "tests/tools/run-forgejo-provider-evidence-gates.ps1": 30,
+      "tests/tools/run-forgejo-smart-http-alpine-smoke.ps1": 36,
+      "tests/tools/run-nightly-drift-gates.ps1": 79
+    },
+    "result": "folders.json"
+  },
+  "separate_prerequisites": "Eight historical audit declarations, real product/workload/provider prerequisites, AD-21 adoption, delivered green CI and scheduled-night acceptance remain unproven."
+}

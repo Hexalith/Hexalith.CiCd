@@ -1,0 +1,81 @@
+{
+  "status": "blocked-on-genuine-product-prerequisites",
+  "results": [
+    {
+      "label": "explicit-server-controls",
+      "candidate": "e97292752132b2dbbc8d7a1f85df49d8230c4c1e",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.rf3Zmx1V/Hexalith.Folders/tests/Hexalith.Folders.Server.Tests/bin/Release/net11.0/Hexalith.Folders.Server.Tests.dll",
+        "-noLogo",
+        "-noColor",
+        "-explicit",
+        "only",
+        "-class",
+        "Hexalith.Folders.Server.Tests.EnrolledWorkloadSourceBoundaryTests"
+      ],
+      "environment_names_set": [],
+      "exit_code": 1,
+      "summary": {
+        "total": 11,
+        "errors": 0,
+        "failed": 11,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "status": "failed-prerequisite",
+      "log": "explicit-server-controls.log"
+    },
+    {
+      "label": "explicit-apphost-controls",
+      "candidate": "e97292752132b2dbbc8d7a1f85df49d8230c4c1e",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.rf3Zmx1V/Hexalith.Folders/tests/Hexalith.Folders.AppHost.Tests/bin/Release/net11.0/Hexalith.Folders.AppHost.Tests.dll",
+        "-noLogo",
+        "-noColor",
+        "-explicit",
+        "only",
+        "-class",
+        "Hexalith.Folders.AppHost.Tests.WorkloadEnrollmentComponentTests"
+      ],
+      "environment_names_set": [],
+      "exit_code": 1,
+      "summary": {
+        "total": 6,
+        "errors": 0,
+        "failed": 6,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "status": "failed-prerequisite",
+      "log": "explicit-apphost-controls.log"
+    },
+    {
+      "label": "fr58-opted-in-product-proof",
+      "candidate": "e97292752132b2dbbc8d7a1f85df49d8230c4c1e",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.rf3Zmx1V/Hexalith.Folders/tests/Hexalith.Folders.AppHost.Tests/bin/Release/net11.0/Hexalith.Folders.AppHost.Tests.dll",
+        "-noLogo",
+        "-noColor",
+        "-method",
+        "Hexalith.Folders.AppHost.Tests.Fr58PublicMutationSearchRoundTripTests.AuthenticatedPublicAddWorkspaceFileShouldConvergeOnPublicSearchAndStatus"
+      ],
+      "environment_names_set": [
+        "HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION"
+      ],
+      "exit_code": 1,
+      "summary": {
+        "total": 1,
+        "errors": 0,
+        "failed": 1,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "status": "failed-prerequisite",
+      "log": "fr58-opted-in-product-proof.log"
+    }
+  ],
+  "interpretation": "These are real retained product controls, deliberately not exempted. Focused selectors apply only to local investigation; delivered hooks select complete projects without class/method filters."
+}

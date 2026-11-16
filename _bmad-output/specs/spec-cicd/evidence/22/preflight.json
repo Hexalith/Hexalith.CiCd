@@ -1,0 +1,4114 @@
+{
+  "recorded_at": "2026-11-16T15:54:28.075583+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "administration_profile": "/home/administrator/.config/gh",
+  "target": "Hexalith/Hexalith.Memories",
+  "requests": [
+    {
+      "endpoint": "user",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 1188027961,
+        "full_name": "Hexalith/Hexalith.Memories",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/commits/main",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "sha": "c64e292a46858058f6764095c8e01c2faa0ff3e0"
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/rulesets?includes_parents=true",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "id": 15760772,
+          "name": "main",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Memories",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5Gz945zgDwfYQ",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Memories/rulesets/15760772"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Memories/rules/15760772"
+            }
+          },
+          "created_at": "2026-04-30T07:41:45.188+02:00",
+          "updated_at": "2026-07-01T11:13:11.234+02:00"
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/environments",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 2,
+        "environments": [
+          {
+            "id": 14777780073,
+            "name": "copilot",
+            "protection_rules": [],
+            "deployment_branch_policy": null
+          },
+          {
+            "id": 24712111554,
+            "name": "production",
+            "protection_rules": [
+              {
+                "id": 71082075,
+                "node_id": "GA_kwDORs_eOc4EPKBb",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 71082076,
+                "node_id": "GA_kwDORs_eOc4EPKBc",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/actions/variables?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "variables": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true",
+            "created_at": "2026-11-03T21:40:50Z",
+            "updated_at": "2026-11-03T21:40:50Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-19T13:24:57Z",
+            "updated_at": "2026-10-19T13:24:57Z"
+          }
+        ],
+        "total_count": 2
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/code-scanning/default-setup",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/automated-security-fixes",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/immutable-releases",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/releases?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "id": 444271946,
+          "tag_name": "v4.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-13T13:37:30Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 442272340,
+          "tag_name": "v3.0.27",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-11T22:47:15Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 441666314,
+          "tag_name": "v3.0.26",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-11T12:31:25Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 435930782,
+          "tag_name": "v3.0.25",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-06T00:26:35Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 435753153,
+          "tag_name": "v3.0.24",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-05T21:17:03Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 433463293,
+          "tag_name": "v3.0.23",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-04T03:02:47Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 431815487,
+          "tag_name": "v3.0.18",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-02T18:16:19Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 431458023,
+          "tag_name": "v3.0.17",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-02T12:51:40Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 431419108,
+          "tag_name": "v3.0.16",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-02T12:10:38Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 430770863,
+          "tag_name": "v3.0.15",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-01T18:25:16Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 430663101,
+          "tag_name": "v3.0.14",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-11-01T15:14:28Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 429905545,
+          "tag_name": "v3.0.13",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-31T11:54:17Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 429870882,
+          "tag_name": "v3.0.12",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-31T10:39:06Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 429842457,
+          "tag_name": "v3.0.11",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-31T09:35:54Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426734730,
+          "tag_name": "v3.0.10",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T13:54:20Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426608031,
+          "tag_name": "v3.0.9",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T11:55:02Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426575228,
+          "tag_name": "v3.0.8",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T11:20:22Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426550977,
+          "tag_name": "v3.0.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T10:54:35Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426518002,
+          "tag_name": "v3.0.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T10:20:29Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426497061,
+          "tag_name": "v3.0.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T09:59:27Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426471700,
+          "tag_name": "v3.0.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T09:32:37Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426170374,
+          "tag_name": "v3.0.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T01:34:37Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426147653,
+          "tag_name": "v3.0.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T00:52:35Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 426125299,
+          "tag_name": "v3.0.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-28T00:11:18Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 425902063,
+          "tag_name": "v3.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-27T19:38:41Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 422640117,
+          "tag_name": "v2.29.15",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-24T09:37:55Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 422323070,
+          "tag_name": "v2.29.14",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-23T21:24:59Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 422301219,
+          "tag_name": "v2.29.13",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-23T20:55:04Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 422247444,
+          "tag_name": "v2.29.12",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-23T19:46:01Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 422179967,
+          "tag_name": "v2.29.11",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-23T18:30:18Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 422117127,
+          "tag_name": "v2.29.10",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-23T17:18:29Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 421979160,
+          "tag_name": "v2.29.9",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-23T15:03:21Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 420056228,
+          "tag_name": "v2.29.8",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-21T21:06:13Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 419957087,
+          "tag_name": "v2.29.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-21T19:15:30Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 418760702,
+          "tag_name": "v2.29.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-20T19:02:43Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 418307658,
+          "tag_name": "v2.29.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-20T11:11:00Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 418137575,
+          "tag_name": "v2.29.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-20T07:58:52Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 417487872,
+          "tag_name": "v2.29.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-19T16:07:58Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 417337435,
+          "tag_name": "v2.29.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-10-19T13:40:19Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 384777540,
+          "tag_name": "v2.27.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-08T13:58:58Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 384663952,
+          "tag_name": "v2.27.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-08T11:15:49Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383592468,
+          "tag_name": "v2.26.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-06T13:24:13Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383545561,
+          "tag_name": "v2.26.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-06T10:35:37Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383302581,
+          "tag_name": "v2.26.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T16:28:19Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383281326,
+          "tag_name": "v2.25.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T15:09:25Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383260981,
+          "tag_name": "v2.25.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T13:53:54Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383245281,
+          "tag_name": "v2.25.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T12:49:45Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383225007,
+          "tag_name": "v2.24.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T11:22:39Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383219637,
+          "tag_name": "v2.24.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T10:58:56Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383212756,
+          "tag_name": "v2.23.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T10:27:37Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 383208912,
+          "tag_name": "v2.23.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-09-05T10:10:37Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 379412893,
+          "tag_name": "v2.22.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-30T21:56:13Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 379225301,
+          "tag_name": "v2.22.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-30T08:42:54Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 371103028,
+          "tag_name": "v2.21.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-15T16:41:59Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 370975307,
+          "tag_name": "v2.21.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-15T06:15:20Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 370297808,
+          "tag_name": "v2.21.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-14T01:30:03Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 370118855,
+          "tag_name": "v2.21.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-13T18:19:55Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 370056346,
+          "tag_name": "v2.20.12",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-13T16:25:49Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 369886033,
+          "tag_name": "v2.20.11",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-13T12:08:14Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 369703156,
+          "tag_name": "v2.20.10",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-13T06:20:31Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 369290464,
+          "tag_name": "v2.20.9",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-12T14:11:26Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 368863727,
+          "tag_name": "v2.20.8",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-11T21:22:50Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 367225448,
+          "tag_name": "v2.20.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-08T14:47:25Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 367208682,
+          "tag_name": "v2.20.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-08T13:28:30Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 367202959,
+          "tag_name": "v2.20.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-08T12:59:04Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 367199931,
+          "tag_name": "v2.20.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-08T12:43:17Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 365490060,
+          "tag_name": "v2.20.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-05T11:51:32Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 365102018,
+          "tag_name": "v2.20.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-04T19:24:44Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 364786248,
+          "tag_name": "v2.20.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-04T10:31:50Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 363996932,
+          "tag_name": "v2.20.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-03T05:06:28Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 363842082,
+          "tag_name": "v2.19.10",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-02T17:01:36Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 363505239,
+          "tag_name": "v2.19.9",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-08-01T11:07:36Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 363261224,
+          "tag_name": "v2.19.8",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-31T18:39:14Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 361758139,
+          "tag_name": "v2.19.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-29T13:00:50Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 361526729,
+          "tag_name": "v2.19.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-29T05:37:38Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 361517280,
+          "tag_name": "v2.19.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-29T05:05:32Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 361027411,
+          "tag_name": "v2.19.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-28T11:12:17Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 360725645,
+          "tag_name": "v2.19.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-27T21:53:07Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 360715133,
+          "tag_name": "v2.19.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-27T21:25:38Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 360407566,
+          "tag_name": "v2.19.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-27T12:22:51Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 360270036,
+          "tag_name": "v2.19.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-27T07:41:12Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 360140318,
+          "tag_name": "v2.18.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-26T23:14:28Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 360064387,
+          "tag_name": "v2.17.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-26T16:31:41Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 357109912,
+          "tag_name": "v2.16.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-21T04:13:40Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 357099499,
+          "tag_name": "v2.16.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-21T03:35:21Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 357094909,
+          "tag_name": "v2.16.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-21T03:17:04Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356961176,
+          "tag_name": "v2.15.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-20T19:52:06Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356921966,
+          "tag_name": "v2.15.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-20T18:29:42Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356665723,
+          "tag_name": "v2.15.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-20T11:20:10Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356517173,
+          "tag_name": "v2.14.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-20T05:34:34Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356437657,
+          "tag_name": "v2.13.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-19T21:33:46Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356434044,
+          "tag_name": "v2.13.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-19T21:09:53Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356400947,
+          "tag_name": "v2.13.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-19T17:56:57Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356364417,
+          "tag_name": "v2.13.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-19T14:54:52Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356362790,
+          "tag_name": "v2.12.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-19T14:47:04Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356359273,
+          "tag_name": "v2.12.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-19T14:29:22Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 356093639,
+          "tag_name": "v2.11.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-18T12:12:15Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 355066438,
+          "tag_name": "v2.10.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-16T12:14:54Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 355013339,
+          "tag_name": "v2.9.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-16T10:26:28Z",
+          "author": "github-actions[bot]"
+        },
+        {
+          "id": 354981190,
+          "tag_name": "v2.8.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "published_at": "2026-07-16T09:19:03Z",
+          "author": "github-actions[bot]"
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/actions/workflows?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 10,
+        "workflows": [
+          {
+            "id": 266538521,
+            "name": "CI",
+            "path": ".github/workflows/ci.yml",
+            "state": "active"
+          },
+          {
+            "id": 305929913,
+            "name": "CodeQL",
+            "path": ".github/workflows/codeql.yml",
+            "state": "active"
+          },
+          {
+            "id": 305929914,
+            "name": "Commitlint",
+            "path": ".github/workflows/commitlint.yml",
+            "state": "active"
+          },
+          {
+            "id": 305929916,
+            "name": "Dependency Review",
+            "path": ".github/workflows/dependency-review.yml",
+            "state": "active"
+          },
+          {
+            "id": 264194893,
+            "name": "Nightly Integration Tests",
+            "path": ".github/workflows/nightly.yml",
+            "state": "active"
+          },
+          {
+            "id": 403456746,
+            "name": "Qualify Builds publication",
+            "path": ".github/workflows/qualify-builds-publication.yml",
+            "state": "active"
+          },
+          {
+            "id": 313129857,
+            "name": "Recover Partial Release",
+            "path": ".github/workflows/recover-partial-release.yml",
+            "state": "active"
+          },
+          {
+            "id": 266538522,
+            "name": "Release",
+            "path": ".github/workflows/release.yml",
+            "state": "active"
+          },
+          {
+            "id": 269030502,
+            "name": "Copilot cloud agent",
+            "path": "dynamic/copilot-swe-agent/copilot",
+            "state": "active"
+          },
+          {
+            "id": 305949772,
+            "name": "Dependabot Updates",
+            "path": "dynamic/dependabot/dependabot-updates",
+            "state": "active"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/environments/hexalith-release/secrets?per_page=100",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/reference/actions#list-environment-secrets",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/environments/hexalith-release/deployment-branch-policies?per_page=100",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/deployments/branch-policies#list-deployment-branch-policies",
+        "status": "404"
+      },
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "app_id": 67,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            }
+          },
+          {
+            "id": 31626264,
+            "app_id": 56611,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            }
+          },
+          {
+            "id": 31641834,
+            "app_id": 254,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            }
+          },
+          {
+            "id": 77847816,
+            "app_id": 1144995,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            }
+          },
+          {
+            "id": 97329264,
+            "app_id": 12526,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            }
+          },
+          {
+            "id": 179966090,
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v6.0.6",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 446824101,
+        "tag_name": "v6.0.6",
+        "target_commitish": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+        "draft": false,
+        "prerelease": false,
+        "immutable": true,
+        "published_at": "2026-11-16T09:34:49Z"
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 24,
+        "repositories": [
+          {
+            "id": 851523569,
+            "full_name": "Hexalith/Hexalith"
+          },
+          {
+            "id": 1277685416,
+            "full_name": "Hexalith/Hexalith.Agents"
+          },
+          {
+            "id": 1120511943,
+            "full_name": "Hexalith/Hexalith.Applications"
+          },
+          {
+            "id": 1027122874,
+            "full_name": "Hexalith/Hexalith.ChatClient"
+          },
+          {
+            "id": 890456345,
+            "full_name": "Hexalith/Hexalith.DaprIdentityStore"
+          },
+          {
+            "id": 968206525,
+            "full_name": "Hexalith/Hexalith.Documents"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 968662765,
+            "full_name": "Hexalith/Hexalith.Domains"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 963292804,
+            "full_name": "Hexalith/Hexalith.EventStores"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 1107174746,
+            "full_name": "Hexalith/Hexalith.GitStorage"
+          },
+          {
+            "id": 967469113,
+            "full_name": "Hexalith/Hexalith.IdentityStores"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 960307124,
+            "full_name": "Hexalith/Hexalith.KeyValueStorages"
+          },
+          {
+            "id": 1131658602,
+            "full_name": "Hexalith/Hexalith.MarkdownEditor"
+          },
+          {
+            "id": 1027188474,
+            "full_name": "Hexalith/Hexalith.MyNewModule"
+          },
+          {
+            "id": 956657445,
+            "full_name": "Hexalith/Hexalith.MyNewPackage"
+          },
+          {
+            "id": 967276766,
+            "full_name": "Hexalith/Hexalith.NetAspire"
+          },
+          {
+            "id": 854107919,
+            "full_name": "Hexalith/Hexalith.Oidc"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 966892135,
+            "full_name": "Hexalith/Hexalith.Security"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          },
+          {
+            "id": 958460421,
+            "full_name": "Hexalith/Hexalith.Streams"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 1188027961,
+            "full_name": "Hexalith/Hexalith.Memories"
+          },
+          {
+            "id": 1170072276,
+            "full_name": "Hexalith/Hexalith.Parties"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 1188027961,
+            "full_name": "Hexalith/Hexalith.Memories"
+          },
+          {
+            "id": 1170072276,
+            "full_name": "Hexalith/Hexalith.Parties"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 7,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 7,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          },
+          {
+            "id": 1272275109,
+            "full_name": "Hexalith/Hexalith.Timesheets"
+          },
+          {
+            "id": 647343286,
+            "full_name": "Hexalith/semantic-kernel"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 871088977,
+            "full_name": "Hexalith/Hexalith.Contacts"
+          },
+          {
+            "id": 871091034,
+            "full_name": "Hexalith/Hexalith.Documents_OLD"
+          },
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          },
+          {
+            "id": 1272275109,
+            "full_name": "Hexalith/Hexalith.Timesheets"
+          },
+          {
+            "id": 647343286,
+            "full_name": "Hexalith/semantic-kernel"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 7,
+        "repositories": [
+          {
+            "id": 890456345,
+            "full_name": "Hexalith/Hexalith.DaprIdentityStore"
+          },
+          {
+            "id": 796320664,
+            "full_name": "Hexalith/Hexalith.Dynamics365Finance"
+          },
+          {
+            "id": 798881062,
+            "full_name": "Hexalith/Hexalith.ExternalSystems"
+          },
+          {
+            "id": 796191088,
+            "full_name": "Hexalith/Hexalith.Inventories"
+          },
+          {
+            "id": 854107919,
+            "full_name": "Hexalith/Hexalith.Oidc"
+          },
+          {
+            "id": 798887497,
+            "full_name": "Hexalith/Hexalith.Sales"
+          },
+          {
+            "id": 852168913,
+            "full_name": "Hexalith/Hexalith.Security_OLD"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 10,
+        "secrets": [
+          {
+            "name": "AZURE_APPLICATIONID",
+            "visibility": "selected"
+          },
+          {
+            "name": "AZURE_APPLICATIONSECRET",
+            "visibility": "selected"
+          },
+          {
+            "name": "AZURE_SUBSCRIPTION_ID",
+            "visibility": "selected"
+          },
+          {
+            "name": "AZURE_TENANT_ID",
+            "visibility": "selected"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+            "visibility": "selected"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+            "visibility": "selected"
+          },
+          {
+            "name": "HEXALITH_ZOT_API_KEY",
+            "visibility": "selected"
+          },
+          {
+            "name": "HEXALITH_ZOT_USERNAME",
+            "visibility": "selected"
+          },
+          {
+            "name": "NUGET_API_KEY",
+            "visibility": "selected"
+          },
+          {
+            "name": "SONAR_TOKEN",
+            "visibility": "selected"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/code-scanning/analyses?per_page=100",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": [
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "c64e292a46858058f6764095c8e01c2faa0ff3e0",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T15:22:12Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2177816980,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2177816980",
+          "sarif_id": "7d995128-e1d1-11f1-9e9d-afc1e79365b0",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": true,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "c187e78086c3ec16ac2a310354b02e806dce1615",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T14:58:39Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2177613376,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2177613376",
+          "sarif_id": "344c62e2-e1ce-11f1-9eaf-fda9a2b8d187",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "898f451111740ccf489d56f7c20cd47edc2fcdf6",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T14:37:02Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2177421288,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2177421288",
+          "sarif_id": "2ed1e31c-e1cb-11f1-9ef6-db77185a721a",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "dd422905e563d0c23b7232df910a0c41d82d7b03",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T12:39:21Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2176484866,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2176484866",
+          "sarif_id": "be725ef4-e1ba-11f1-9c49-0d5892d8333c",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "e4b2b08edacf1d10337258ffb6949711cc5987ca",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T12:07:10Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2176265158,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2176265158",
+          "sarif_id": "3fba6740-e1b6-11f1-8999-1c246a0bb6a5",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T11:52:38Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2176171202,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2176171202",
+          "sarif_id": "373c2b32-e1b4-11f1-88dc-65804c31bf66",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T09:34:09Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2175260278,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2175260278",
+          "sarif_id": "df68b4d8-e1a0-11f1-8b44-2236d441f000",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "9d87500eaf4c39ce0cec0cb3a03e5dd62c167106",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-16T08:25:03Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2174833520,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2174833520",
+          "sarif_id": "3804e7c4-e197-11f1-8ff2-e6397aa5491e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "fad5ec5efb286a1b4589869a354895acd3aaf55c",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T22:01:16Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2172430321,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2172430321",
+          "sarif_id": "133a8e28-e140-11f1-93ff-3818e2560d6d",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "61a2caef3f3b7d556a856100b04b05feddddfb34",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T19:19:06Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2171982039,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2171982039",
+          "sarif_id": "6c009e56-e129-11f1-9f76-fdf9056985bb",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "59df159117c2f92c262804e8574a7e979525d202",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T18:47:45Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2171895699,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2171895699",
+          "sarif_id": "0b1b551c-e125-11f1-9625-7f5a1ac29667",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "003e3d8677292739bb7978efea95415210c78719",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T17:25:57Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2171670671,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2171670671",
+          "sarif_id": "9daa98a4-e119-11f1-8eaf-86f38478c80a",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "1306a0f84cf78160a192be6bc341798fe32427d4",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T15:48:05Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2171406144,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2171406144",
+          "sarif_id": "f13e905a-e10b-11f1-9e1f-237d7a57191a",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "10e8cbee109c6135009da9d3360df395770ad746",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T15:39:36Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2171382554,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2171382554",
+          "sarif_id": "c1e64e3e-e10a-11f1-885f-aab220865657",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "7a5c892508700b2e5c71c921cdaeedf68de5f03d",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T13:07:21Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2170986647,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2170986647",
+          "sarif_id": "7d1fb430-e0f5-11f1-885c-9e05c5b5ce35",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "261e1b798c0a481b5a4841f2ccdf8574fe9ebe76",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T11:19:26Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2170733470,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2170733470",
+          "sarif_id": "6a11b654-e0e6-11f1-8411-b07782cac01a",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "b7e195031cab96b38949b90317ea8033797027b8",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T10:07:52Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2170568989,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2170568989",
+          "sarif_id": "6a596bac-e0dc-11f1-9d1a-f91c710ad900",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "66e2441e2536fc37708aca2bd3456fd4cd21a439",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T10:01:07Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2170552963,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2170552963",
+          "sarif_id": "795f1404-e0db-11f1-9a91-7ec6594c27b6",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "f20e8b8145a6c00310a2aed3d0c8758844b65fdc",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-15T08:41:59Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2170372071,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2170372071",
+          "sarif_id": "6b5f4e38-e0d0-11f1-8d0d-85454b08367b",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "2c2e9b58990638ededf22e8e67ff5c12de75b434",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-14T03:27:45Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2166088877,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2166088877",
+          "sarif_id": "5ad5a652-dfdb-11f1-9381-d75a15dc603e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "c4ee997702ede948ada5f99eeae7b3782e92003b",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T13:10:14Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2160985973,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2160985973",
+          "sarif_id": "8f879f4a-df63-11f1-9501-b9a5019fa55c",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "520037ad2ba4eb274a97f2f8fb9e8670ee0ffdb8",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T12:41:28Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2160811656,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2160811656",
+          "sarif_id": "8a4e5ee6-df5f-11f1-92f5-0eace5fce5f9",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "6d8031776fbe2a94b173ff19bb5cc9d637ec4eb6",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T12:05:09Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2160593085,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2160593085",
+          "sarif_id": "77f845ae-df5a-11f1-8a8a-2468f2675c00",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "1d94e17a3492ebbfca5f6ea181a44841c8a89473",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T10:14:41Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2159983495,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2159983495",
+          "sarif_id": "098747dc-df4b-11f1-817f-5216c658e3ee",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "9888a388f7129248ac3f2021bfb994ef9344ce59",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T10:08:48Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2159949690,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2159949690",
+          "sarif_id": "36a885ec-df4a-11f1-9722-d28f987c6e83",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "c5e201fec62823fc0f3f0dfbc2fa6b7ca2d6a366",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T09:59:27Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2159896774,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2159896774",
+          "sarif_id": "e853c344-df48-11f1-95f7-801cd4534570",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "a3f0b3a4a0f0905f6b88da039491ceb286103207",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-13T07:54:41Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2159231953,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2159231953",
+          "sarif_id": "7a668dc8-df37-11f1-945e-d5abe81067ec",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "3e98dc990675fdaed83aff2bf4856440a191986f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-12T09:34:48Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2150752595,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2150752595",
+          "sarif_id": "4c244ed4-de7c-11f1-9734-42e7178ae576",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "a846178e8f552e66cf29982550e3ebdab93956ba",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-12T08:00:24Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2150201563,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2150201563",
+          "sarif_id": "1bb77594-de6f-11f1-8cd1-02912c131a8c",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "f87c33c6d758534a84853e090d1824569802fffb",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-12T07:32:01Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2150056954,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2150056954",
+          "sarif_id": "25405512-de6b-11f1-9070-694463c2ac07",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "d20924044ac501bfab9c375b1732fcf0847145b6",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-12T06:59:58Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2149901664,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2149901664",
+          "sarif_id": "ab5aca60-de66-11f1-870b-4f8968772f08",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "ca3bcc981e8e3dd6be41f669587984225171f7ca",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T23:19:17Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2147934018,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2147934018",
+          "sarif_id": "4fe4e976-de26-11f1-8ca2-c4b2cf328e19",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "d6c06292c451b9b02d1da3d6e96353abfdc87940",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T22:48:28Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2147762625,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2147762625",
+          "sarif_id": "01eec1c8-de22-11f1-8a10-38c119231447",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "535ee97b694c79e6c7608e90a5a725f092ad982c",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T21:33:11Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2147307438,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2147307438",
+          "sarif_id": "7d78760a-de17-11f1-85c0-b6043db1aadc",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "13fdb88a3267626b14f75e16cc2de58dcfbbb2bb",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T14:48:07Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2144707132,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2144707132",
+          "sarif_id": "e71749d0-ddde-11f1-882a-2f7f23533cf0",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "fe27727d0ee43892c55818acb1cfb435370b4005",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T13:29:53Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2144142384,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2144142384",
+          "sarif_id": "f915a42a-ddd3-11f1-93b1-2906f9051a13",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "3a47c520052afa4d66cb9f3af15af1de610e3601",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T13:13:08Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2144029624,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2144029624",
+          "sarif_id": "a20fe188-ddd1-11f1-9617-600d8b14706b",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "c4addf98c6a4017d54e0c3aaeb3b57a52f82bffa",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T12:31:14Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2143765600,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2143765600",
+          "sarif_id": "c7f5eaec-ddcb-11f1-9424-4a56b457ca01",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "f807701e45297064f3968bcc8052e8002eac6d34",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T12:00:25Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2143567525,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2143567525",
+          "sarif_id": "79bbacf8-ddc7-11f1-8536-667ffc847012",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "f2c1d8a813e7a03d8f3ac5e1217c283fe8af33bb",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T11:01:05Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2143224511,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2143224511",
+          "sarif_id": "2fb3d980-ddbf-11f1-96f3-203720dc10a4",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "db769a95e2966dd42f5523ce091e7f8f317f22a4",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T09:54:45Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2142839192,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2142839192",
+          "sarif_id": "ebeef3aa-ddb5-11f1-81fa-341051acdf0d",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "43d2d72f7170a29a58b6046f69e05c9ad9734701",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-11T01:38:28Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2140634106,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2140634106",
+          "sarif_id": "975f513a-dd70-11f1-99b1-c0597385ff7d",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "1143ba17a2336f0d718fcff71e049c06350a45a2",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-10T11:21:41Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2134534315,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2134534315",
+          "sarif_id": "e63fafa2-dcf8-11f1-827b-92b367664b9b",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "4ff3e6866ecb6d1a497e7063e972c24259252c40",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-09T11:57:58Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2126082968,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2126082968",
+          "sarif_id": "cd4e7e52-dc34-11f1-8a75-e65f52a65fb3",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "4ff3e6866ecb6d1a497e7063e972c24259252c40",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-06T12:57:17Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2111959914,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2111959914",
+          "sarif_id": "98005bbc-d9e1-11f1-9829-0c6ca756f775",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "246157a7ff8e2dcd8d356c833a77a02514490d2f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T23:54:17Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2108313319,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2108313319",
+          "sarif_id": "35d70c00-d974-11f1-9a90-3e5886fd6a2e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/66/merge",
+          "commit_sha": "9d8020cd26c694bea979cb5eed4e9b50cce912da",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T23:33:20Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2108198378,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2108198378",
+          "sarif_id": "46ea9c08-d971-11f1-91e9-b7a576567ab6",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": true,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/66/merge",
+          "commit_sha": "73b7ae6c6df7410e43c17dcbb47b4cc5eff9cdde",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T22:40:49Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2107908050,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2107908050",
+          "sarif_id": "f16978d2-d969-11f1-8b8b-c43eaf9b9129",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/66/merge",
+          "commit_sha": "8e6bae6753299813323942d99b56a69bc1ccbce5",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T21:33:57Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2107445399,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2107445399",
+          "sarif_id": "9ab52972-d960-11f1-87aa-4afd175a746e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "859680b38a77f04cc8f81ab7a5fe7f40a617cc2a",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T14:00:32Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2103857205,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2103857205",
+          "sarif_id": "434f2e56-d921-11f1-8de7-4fafeffefb2e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "a2f1d6a883ce592499638abad11cf9770090ad7f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T13:33:50Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2103655164,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2103655164",
+          "sarif_id": "8886b5e2-d91d-11f1-9485-7f798d4b1968",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "3a62bfe1281cce5fee83caa569d3531175e1944f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T13:19:58Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2103555595,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2103555595",
+          "sarif_id": "9866448e-d91b-11f1-92d5-70fc35c6e3d4",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "0eb7185fe4b14f226f7b5b77513e09114e41b33a",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T12:19:36Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2103153455,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2103153455",
+          "sarif_id": "28c753b4-d913-11f1-9824-4db70b27e03d",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "38572369ce83ea10e720993eb772860d8eca3f6c",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-05T12:14:51Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2103123735,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2103123735",
+          "sarif_id": "80153556-d912-11f1-8cb5-0d30bcbaad5f",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "ea334b6456e079e181b9d78552d4f340c891b2ff",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-04T16:48:49Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2096328297,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2096328297",
+          "sarif_id": "9aa911ce-d86f-11f1-9bd4-54aa235a3176",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "4dac7decfdd33b3d048de3c77e9cb1562bb95c6f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-04T04:59:45Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2092001283,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2092001283",
+          "sarif_id": "8cd5fd5e-d80c-11f1-9d99-62f02b741942",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "82c0aa0a7046d7bd91569ac1c9a38a3ed0386d0f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-04T02:31:09Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2091406428,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2091406428",
+          "sarif_id": "ca9ed83c-d7f7-11f1-9b0d-28a7cb4442c2",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "4f32c5d7417217cf99d37952fa0adb8a7a032784",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-04T01:31:39Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2091168697,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2091168697",
+          "sarif_id": "7a7b0180-d7ef-11f1-8be0-e518e18b5229",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "205baddda57911896d8c08708e80ecaf0bc14f82",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-04T01:24:47Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2091141726,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2091141726",
+          "sarif_id": "84f1e22e-d7ee-11f1-9d2d-0f572a69b20c",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "0433b4946e4f22b549ae88899b0ea44adbc62e73",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-04T00:26:49Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2090874912,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2090874912",
+          "sarif_id": "6c363f94-d7e6-11f1-8361-cf780dac3ded",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "4536ae937e017d83f08e3b68ea6ab88025b013db",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T23:42:39Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2090644833,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2090644833",
+          "sarif_id": "40bfc390-d7e0-11f1-9b13-9cffa592c43a",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "49c913da13a8041fa70f87de40ffd44f19877f87",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T23:06:10Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2090430713,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2090430713",
+          "sarif_id": "279a2982-d7db-11f1-8a9d-0077039cd966",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "10ac2d676f8a61dc5359d46574b9709db28012a5",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T21:26:54Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2089766201,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2089766201",
+          "sarif_id": "4907d186-d7cd-11f1-98b6-40535c2d4bb7",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "351f04a86068305bcc8ac3f945b3cbd121348f88",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T20:50:44Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2089497827,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2089497827",
+          "sarif_id": "3c045982-d7c8-11f1-9170-05449eed6dfc",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "41f8bdca7ee5e8b719f600b95e22a43dbc26f1dc",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T19:58:10Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2089115495,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2089115495",
+          "sarif_id": "e425db2a-d7c0-11f1-9637-f39a1e755a01",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "d959bdae5af9c22f53573eda71c091cb5c0aae4c",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T12:02:30Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2085373045,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2085373045",
+          "sarif_id": "715b0ab2-d77e-11f1-90e6-a6a5b10080dc",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "d7e44d01b66f0800bdb7edca8553934fe44dc145",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T10:46:32Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2084895865,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2084895865",
+          "sarif_id": "d3d2ec60-d773-11f1-8bdb-a768321e785c",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "5925c0bf195f3c70ddd862f1197e17e029fa094a",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T09:03:24Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2084225659,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2084225659",
+          "sarif_id": "6bbfa900-d765-11f1-809d-d935cd5e6a70",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "57e591c565bda7f8d23c52478835395a7423c0e9",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T06:50:40Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2083543579,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2083543579",
+          "sarif_id": "e111a252-d752-11f1-8b61-f9da10bd2446",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "f1c4596c3e1da1468fd1c2654931d03f4e928efa",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-03T06:30:02Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2083449297,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2083449297",
+          "sarif_id": "ff2f2f14-d74f-11f1-9ea8-7798eb2f568b",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "d9d61d8a95c7dc8827acf68ae723859711703729",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T18:24:25Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2079596958,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2079596958",
+          "sarif_id": "a12b6dde-d6ea-11f1-9526-9254043becf4",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "66822bc5bc4858c824f17b7d093f5f0f676b03ea",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T17:16:58Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2079087866,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2079087866",
+          "sarif_id": "34c005f0-d6e1-11f1-9107-8c77dd9bfc8a",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "9c0fac6ec0227b318662dcb9bb3217c5de995c66",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T15:32:23Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2078218856,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2078218856",
+          "sarif_id": "9799b450-d6d2-11f1-9bcb-bca9871ff161",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "e964fb3399ec0c17767fa1c66064422bb43643cb",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T14:07:17Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2077518557,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2077518557",
+          "sarif_id": "b527d3fa-d6c6-11f1-9c9b-12424889da9f",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "8aee7a1323160cb39d7b1415256dbfdcb032939a",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T13:36:08Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2077286575,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2077286575",
+          "sarif_id": "5b90db88-d6c2-11f1-90d2-52a3694c5182",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "ad9a5ff649a31341f02522c31f36a86ff4b414ea",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T12:59:09Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2077031778,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2077031778",
+          "sarif_id": "30cde058-d6bd-11f1-9212-961a5b68fecb",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "7e2e87e80bccc3c6f4f6ceb27a09a649a5be7f71",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T12:47:29Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2076954590,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2076954590",
+          "sarif_id": "8e2e3fb0-d6bb-11f1-8fcd-aa58f48338ae",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "637eaa1b14b9251d45b7b44ed8644f2b2a9a0e55",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T12:02:41Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2076652526,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2076652526",
+          "sarif_id": "4d92bc2a-d6b5-11f1-9849-7aad81794521",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "46667b0d25c707bcdc961d59895bfe5a064bfd12",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T11:31:53Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2076470609,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2076470609",
+          "sarif_id": "ff878c6c-d6b0-11f1-81ce-68449af87821",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "46667b0d25c707bcdc961d59895bfe5a064bfd12",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T09:28:23Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2075692041,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2075692041",
+          "sarif_id": "bf0cbcd6-d69f-11f1-8ff0-7b524575283e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "df78cf5451734cfdf439e24c30035aced5e1ff3f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-02T08:48:12Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2075453181,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2075453181",
+          "sarif_id": "21ec9e6c-d69a-11f1-822c-13794d0e1c45",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "e8956eb5c1bd49297f86702f9606eb9b013bc2f1",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T18:18:12Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2072443066,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2072443066",
+          "sarif_id": "985885f4-d620-11f1-98db-810bb7757fbb",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "09ab99d0db575454224ff5c8842d3024b14c6368",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T18:09:46Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2072419153,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2072419153",
+          "sarif_id": "6a85a734-d61f-11f1-97df-e7207143c8e5",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "76c737bfcb3b5ecf9ce26191eab13749fdade8d6",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T16:47:47Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2072196525,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2072196525",
+          "sarif_id": "f6e323de-d613-11f1-9da5-164f0c9694df",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "3635d93816287a0f2c3547c2ee313e440d05a880",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T15:09:57Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2071936499,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071936499",
+          "sarif_id": "4be6d028-d606-11f1-86c3-57616e409141",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "f80a7e58ec27d24ca72ac8d267ecc8741c4789a6",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T14:28:04Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2071830414,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071830414",
+          "sarif_id": "726051f8-d600-11f1-9218-9e2afe13357f",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/61/merge",
+          "commit_sha": "1205240c7ea268baede3227798d2a3040f29162a",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T12:01:07Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2071465494,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071465494",
+          "sarif_id": "ea75d362-d5eb-11f1-9726-d01c76b5c5e4",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": true,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/61/merge",
+          "commit_sha": "21263d4d61f30c0cc40bbe41f76c9ba53ec57316",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T10:56:02Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2071323417,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071323417",
+          "sarif_id": "d2f5e58c-d5e2-11f1-8799-033fd08bcf32",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/61/merge",
+          "commit_sha": "3597ec3fff230e2ecde0773851496a4e2b0b52a2",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T10:40:27Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2071288822,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071288822",
+          "sarif_id": "a5dc4908-d5e0-11f1-9f47-c7bf1468ffec",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "848f02340d960a08d807265b5d794c32e66063dc",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T10:36:05Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2071280089,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071280089",
+          "sarif_id": "0a25f7e8-d5e0-11f1-86a0-683bb20082f8",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/pull/61/merge",
+          "commit_sha": "8c3583dd08fc77d2c8bc5cdb3c36d13bc743aa22",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T10:35:06Z",
+          "results_count": 0,
+          "rules_count": 52,
+          "id": 2071277935,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071277935",
+          "sarif_id": "e6d5e398-d5df-11f1-8677-9954dc1fd4c5",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "b93b32cf77f3d76e51d3221550eff99f4d1e93cb",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T09:02:03Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2071074100,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2071074100",
+          "sarif_id": "e711ade0-d5d2-11f1-9fda-2cb2342f431f",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "fd24feb312512332d6a08de8660decaec4359ccb",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T07:13:43Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2070846749,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2070846749",
+          "sarif_id": "c45f5374-d5c3-11f1-8274-4d5220d42336",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "e0f3408fee7100c02d8fbc752e74483ad2f71b5f",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T06:39:31Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2070777738,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2070777738",
+          "sarif_id": "fd971b68-d5be-11f1-8349-fbc5b2fdb8f0",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "b67e96440b4e9e0e0886562be1fda30b68b2fdc7",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-11-01T00:13:40Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2069910897,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2069910897",
+          "sarif_id": "166a259e-d589-11f1-8381-ace177a41a05",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "aa097b52a62b80af32c10267a100646b95be8ac2",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-10-31T17:45:45Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2068992993,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2068992993",
+          "sarif_id": "e584ac00-d552-11f1-8903-1a5209a457ff",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "2649a946aa55cdd570c9beb15f9c91bc01703a26",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-10-31T17:26:15Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2068945466,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2068945466",
+          "sarif_id": "2bd07a0c-d550-11f1-8f2c-276f9b95b633",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "00919bdd6fe97284da5f4f1657da4a5b336867cc",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-10-31T15:43:40Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2068694046,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2068694046",
+          "sarif_id": "d747abd0-d541-11f1-9eee-92f7c75f80c7",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "cc5a8b366c753c545e174632f8e2370826e2c800",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-10-31T14:38:05Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2068540151,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2068540151",
+          "sarif_id": "adf8388e-d538-11f1-8ca3-a027d72557da",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        },
+        {
+          "ref": "refs/heads/main",
+          "commit_sha": "8a483069bd7521f5ac8125e1700c1b701b29b19d",
+          "analysis_key": ".github/workflows/codeql.yml:analyze",
+          "environment": "{}",
+          "category": ".github/workflows/codeql.yml:analyze",
+          "error": "",
+          "created_at": "2026-10-31T14:26:49Z",
+          "results_count": 42,
+          "rules_count": 52,
+          "id": 2068513551,
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/code-scanning/analyses/2068513551",
+          "sarif_id": "1ae0ad3e-d537-11f1-8c27-9952d97542f7",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.3"
+          },
+          "deletable": false,
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/rulesets/15760772",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 15760772,
+        "name": "main",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Memories",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/heads/main"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5Gz945zgDwfYQ",
+        "created_at": "2026-04-30T07:41:45.188+02:00",
+        "updated_at": "2026-07-01T11:13:11.234+02:00",
+        "bypass_actors": [
+          {
+            "actor_id": null,
+            "actor_type": "OrganizationAdmin",
+            "bypass_mode": "always"
+          },
+          {
+            "actor_id": 5,
+            "actor_type": "RepositoryRole",
+            "bypass_mode": "always"
+          }
+        ],
+        "current_user_can_bypass": "always",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Memories/rulesets/15760772"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Memories/rules/15760772"
+          }
+        }
+      }
+    }
+  ],
+  "completed_at": "2026-11-16T15:54:32.006794+00:00"
+}

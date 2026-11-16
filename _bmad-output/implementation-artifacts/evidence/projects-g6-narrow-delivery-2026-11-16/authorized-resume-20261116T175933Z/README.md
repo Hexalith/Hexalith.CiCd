@@ -1,0 +1,21 @@
+# Authorized Projects G-6 delivery — final owner handoff
+
+The implementation is fixed and freshly hosted-qualified, but actual Projects delivery is blocked by external App access. [Owner run 43933951553](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43933951553) validates exact owner source `6fe837f2fafa0952d21e1690c61cef7a11e6eeab`: 17 acquisition, 28 controller and 17 workflow tests passed. Its [qualification receipt](Hexalith.CiCd-43933951553-g6-qualification.json) binds the current Projects base `4511105bb1f00b8cf762097523de74acc828a001`, input tree `24c52776922ecca9eca63720347f32ecee64694c` and corrected tree `c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047`.
+
+The reviewed patch is unchanged (SHA256 `3b4e5540391f585c778f21953f4b2a37be1a87aa9df9ae7e2b56b6e05cefb588`). It changes exactly `.github/workflows/ci.yml` and the two `.github/actions/prepare-g6-catalog/` files. [Fresh source proof](projects-source-requalification.json) preserves every other current-source entry and all gitlinks, including Builds `fdda17c0a4538b0f7c99f813c20ca24b49006530` and Platform `829d68b4cb6bf4e27c9baba318555e2e7b3ebbaf`. The unrelated `Directory.Packages.props` blob is missing both before and after the filtered-clone proof; tree construction does not acquire it. The mapper and acquisition payload remain unchanged.
+
+## Actual failed operation
+
+The pinned App-token action made `GET https://api.github.com/repos/Hexalith/Hexalith.Projects/installation` and GitHub returned **HTTP 404 Not Found**. The configured App cannot obtain an accessible repository installation for Projects. The missing prerequisite is owner-provided App installation/access covering Projects with its already requested Contents/Workflows write capabilities. No installation settings, credential profile or token permissions were broadened.
+
+[Delivery receipt](Hexalith.CiCd-43933951553-projects-g6-delivery.json) fails at `require scoped Projects App token`; token creation failed before any push. There is no candidate/delivered commit, no corrected Projects CI/G-6 run, and no hosted runtime acceptance. The [failed job](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43933951553/job/133535949086) and retained `Hexalith.CiCd-43933951553-job-133535949086.log` show the exact HTTP request/status. Both qualification/delivery archives, their SHA256 receipts, raw observations and logs remain in this directory. [Final result](final-result.json) separates qualification from delivery and acceptance.
+
+## Completed internal corrections
+
+The user's “fix” authorized the reviewed-tree pre-adoption gate. The mechanism uses separate validation lanes and a shared `deliver-owned-writes` job mutex. It proves registry/ref exclusion using one owner-main/accepted-ref advertisement, rereads Projects after that probe, retains ambiguous push outcomes, and rejects missing/malformed proof. Follow-up review found no remaining material issues. Normal groups, gates, credentials and all module-owned workflows outside the three reviewed paths are preserved.
+
+Concurrent owner/product preparation advanced both repositories. All such work is retained; the original source guard rejected stale dispatches. Two earlier queued dispatches were cancelled by main-workflow concurrency before any delivery job; those observations are retained. An isolated source snapshot avoids overwriting the concurrent workspace rebase. The current correction was manually requalified against the new Projects source rather than automatically rebased or applied in a module checkout.
+
+## Owner continuation
+
+After the external App access prerequisite is resolved, dispatch `deliver.yml` on current CiCd main with `delivery=projects-g6-catalog`. A fresh dispatch is required: do not reuse a failed job whose exact owner source is stale. Recheck the module source first; the closed manifest will refuse any different base/result until independently reviewed and rebound. Then retain the actual Projects child commit, fresh exact-source CI/G-6 artifacts, and any subsequent failure. Do not broaden credentials, adopt Projects incidentally, alter dependency pins/gates, initialize nested submodules, deploy, activate v2, or change Story 1.17 tracking.

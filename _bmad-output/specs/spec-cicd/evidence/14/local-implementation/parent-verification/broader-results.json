@@ -1,0 +1,180 @@
+{
+  "commands": [
+    {
+      "label": "candidate-clone",
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--shared",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd-story-14/references/Hexalith.Builds",
+        "/tmp/hexalith-job.FtrMna4U/Builds"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "candidate-apply",
+      "command": [
+        "git",
+        "apply",
+        "--binary"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "candidate-stage",
+      "command": [
+        "git",
+        "add",
+        "--all"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "node-locked-install",
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "node-signatures",
+      "command": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "test_guard_actions-python312",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_guard_actions.py",
+        "-v"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "test_guard_tools-python312",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_guard_tools.py",
+        "-v"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "test_ci_environment-python312",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_ci_environment.py",
+        "-v"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "test_release_adapters-python312",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_release_adapters.py",
+        "-v"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "test_release_build-python312",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_release_build.py",
+        "-v"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "candidateTree": "e4540657efe3d1eedc989398ae826c310f47eeda",
+  "result": "pass"
+}

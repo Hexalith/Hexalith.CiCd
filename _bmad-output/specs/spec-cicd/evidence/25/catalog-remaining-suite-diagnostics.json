@@ -1,0 +1,54 @@
+{
+  "scope": "supplementary diagnostics of preserved original catalog candidate; no fix rebuild or exact-commit qualification",
+  "complete": true,
+  "results": [
+    {
+      "project": "Hexalith.Timesheets.Server.Tests",
+      "exit_code": 0,
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Server.Tests/Hexalith.Timesheets.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "log": "diagnostic-Hexalith.Timesheets.Server.Tests.log"
+    },
+    {
+      "project": "Hexalith.Timesheets.Works.Tests",
+      "exit_code": 0,
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Works.Tests/Hexalith.Timesheets.Works.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "log": "diagnostic-Hexalith.Timesheets.Works.Tests.log"
+    },
+    {
+      "project": "Hexalith.Timesheets.IntegrationTests",
+      "exit_code": 2,
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.IntegrationTests/Hexalith.Timesheets.IntegrationTests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "log": "diagnostic-Hexalith.Timesheets.IntegrationTests.log"
+    }
+  ]
+}
