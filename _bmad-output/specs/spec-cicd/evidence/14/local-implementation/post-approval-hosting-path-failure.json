@@ -1,0 +1,131 @@
+{
+  "scope": "local unreleased candidate only",
+  "commands": [
+    {
+      "label": "agents-restore",
+      "arguments": [
+        "dotnet",
+        "restore",
+        "Hexalith.Agents.slnx",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-restore.log"
+    },
+    {
+      "label": "agents-build",
+      "arguments": [
+        "dotnet",
+        "build",
+        "Hexalith.Agents.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-build.log"
+    },
+    {
+      "label": "agents-tests-Contracts",
+      "arguments": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Contracts.Tests/Hexalith.Agents.Contracts.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "529",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Contracts.log"
+    },
+    {
+      "label": "agents-tests-Client",
+      "arguments": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Client.Tests/Hexalith.Agents.Client.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "6",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Client.log"
+    },
+    {
+      "label": "agents-tests-Domain",
+      "arguments": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Tests/Hexalith.Agents.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "787",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Domain.log"
+    },
+    {
+      "label": "agents-tests-Server",
+      "arguments": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Server.Tests/Hexalith.Agents.Server.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "549",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 2,
+      "log": "agents-tests-Server.log"
+    }
+  ],
+  "lane": "full",
+  "moduleBase": "895039d8513363424882b3b7d64bca574fddc43b",
+  "buildsBase": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "moduleCandidateTree": "dfb70d3782ed24b7378ea3bca7e7b5a607d603df",
+  "buildsCandidateTree": "e4540657efe3d1eedc989398ae826c310f47eeda",
+  "moduleCandidateDiffSha256": "5904122d49fd1cc51d4bba1ea25a1bd2ec1ae3f7468868b6cf141a057fcce00f",
+  "buildsCandidateDiffSha256": "566442b4391be64e4e96c29ab09293899ae504b144f8984ff5654593492bbda3"
+}

@@ -1,0 +1,103 @@
+{
+  "status": "in-progress; full local product proof passed; external adoption prerequisites pending",
+  "shared": {
+    "builds-config-python312.log": {
+      "tests": 18,
+      "pass": true
+    },
+    "builds-pipeline-python312.log": {
+      "tests": 38,
+      "pass": true
+    },
+    "builds-local-check-python312.log": {
+      "tests": 38,
+      "pass": true
+    },
+    "builds-config-python314.log": {
+      "tests": 18,
+      "pass": true
+    },
+    "builds-pipeline-python314.log": {
+      "tests": 38,
+      "pass": true
+    },
+    "builds-local-check-python314.log": {
+      "tests": 38,
+      "pass": true
+    }
+  },
+  "productRegressions": {
+    "agents-built-hook-regressions.log": {
+      "tests": 3,
+      "pass": true
+    },
+    "agents-consumer-assets-regressions.log": {
+      "tests": 4,
+      "pass": true
+    },
+    "agents-package-validation-regressions.log": {
+      "tests": 20,
+      "pass": true
+    },
+    "agents-ui-package-regressions.log": {
+      "tests": 8,
+      "pass": true
+    },
+    "agents-publish-package-regressions.log": {
+      "tests": 7,
+      "pass": true
+    },
+    "agents-package-integrity-regressions.log": {
+      "tests": 8,
+      "pass": true
+    },
+    "agents-pack-regressions.log": {
+      "tests": 3,
+      "pass": true
+    },
+    "agents-recovery-package-regressions.log": {
+      "tests": 13,
+      "pass": true
+    },
+    "approved-exclusions-regression.log": {
+      "tests": 1,
+      "pass": true
+    }
+  },
+  "productRegressionCount": 67,
+  "independentQualification": null,
+  "decisionProposal": "historical-authority-decision.md",
+  "sourceCandidates": "final-candidates.json",
+  "externalPrerequisites": "not performed or inferred",
+  "orderedQualification": "product-results.json",
+  "historicalOrderedFailure": "full-suite-failed-authority.json",
+  "approvedExclusions": "approved-exclusions.json",
+  "testSuites": {
+    "Contracts": {
+      "total": 2005,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Client": {
+      "total": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Domain": {
+      "total": 1041,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Server": {
+      "total": 1883,
+      "failed": 0,
+      "skipped": 0
+    },
+    "UI": {
+      "total": 1352,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "totalTests": 6288
+}

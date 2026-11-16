@@ -1,0 +1,75 @@
+{
+  "component": "builds",
+  "commands": [
+    {
+      "label": "builds-node-install",
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exitCode": 0,
+      "log": "builds-node-install.log"
+    },
+    {
+      "label": "builds-node-signatures",
+      "command": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "exitCode": 0,
+      "log": "builds-node-signatures.log"
+    },
+    {
+      "label": "builds-library-python312",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-library-python312.log"
+    },
+    {
+      "label": "builds-library-python314",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.14",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-library-python314.log"
+    }
+  ],
+  "head": "26031f097198f001380c23f4b9fb855c3d7b88c6",
+  "result": "pass"
+}

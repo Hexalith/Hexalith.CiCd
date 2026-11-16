@@ -37,7 +37,6 @@ The risk is small, because all product tests stay. A deleted gate may once have 
 ## Not yet classified
 
 These gates failed in the sample but have no explicit verdict in the source. Apply the rule during migration.
-- Agents: "Enforce package test floors"
 - Folders: locally classified in [story 17](evidence/17/gate-classification.json). Keep actual provider smoke, pinned provider classification/redaction, source whitespace/analyzers, capacity operations, and complete product suites. Remove repeated scheduled test orchestration and CI/tooling/story-evidence assertions. The local candidate remains blocked on policy and genuine product prerequisites; this classification does not establish adoption.
 - Works:
   - "Lint release tooling"
@@ -54,3 +53,28 @@ These gates failed in the sample but have no explicit verdict in the source. App
 - Test projects can't be skipped. The setup file can only move one to stage 4 or hand it to an enabled hook or job (AD-13). The guard rejects module test-filter properties (`TestingPlatformCommandLineArguments`, `VSTestTestCaseFilter`), and commitlint rejects `[skip ci]`-family markers.
 - Module files can't waive the release's vulnerability gate. The guard rejects them, and waivers live only in Builds' `Props/` (AD-8, AD-10).
 - The rule is written into this repository's `AGENTS.md`. The delivered instruction block forbids tests that assert workflow YAML. It is the only lasting control for that rule.
+
+## Agents classification (story 14, local preparation)
+
+- Keep original Release test floors (Contracts 529, Client 6, Agents 787,
+  Server 549, UI 1073), fail-skips and all five suites in stage 3. Builds owns
+  count/skip execution for both CI and local checking; no second suite runner.
+- Keep whole-repository package authority with the existing exclusions and the
+  six exact frozen Platform evidence paths approved by the human on 2026-11-16,
+  dependency-mode rejection targets, and stable EventStore capability floor as
+  product tests. The floor script has a neutral product name.
+- Keep six-package inventory, archive integrity, UI static assets and isolated
+  consumers. The prepared hook uses existing Release output and cleaned scratch,
+  without rebuilding Agents or retaining receipts. Hook enablement is pending
+  complete cross-module duplication qualification. Local source discovery passes the unchanged scanner.
+- Delete pinned-workflow-source, npm tooling, workflow-text and story-evidence
+  assertions, traceability-manifest checks and redundant full/focused runners.
+  Remove the registered nested-submodule automation scan from
+  `ForbiddenHostingOwnershipTests`; it checks agent tooling and workflow text.
+  Retain its hosting-boundary product tests, with the existing validator-data
+  exception following the validator's move to `nuget_package_validation.py`.
+  Historical source-mapping runners remain outside hosted gates. Runtime tests
+  with story-related names stay.
+- Delivery owns legacy workflow/release/commitlint removal. Module preparation
+  preserves that perimeter. Production registration awaits the accepted pilot,
+  an acceptable Builds release, provisioning and authenticated App delivery.
