@@ -1,0 +1,47 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index cd75b5d3647c8ecfbdd34c3cea94b2e199838b64..287cbd8c9d76fbfecd32b2687ae88f69d8a9e259 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -65 +65 @@ jobs:
+-        uses: Hexalith/Hexalith.Builds/Github/dapr-init@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++        uses: Hexalith/Hexalith.Builds/Github/dapr-init@3641d6226b4e6150a4ed43c472c97373378f3679
+@@ -69,0 +70,2 @@ jobs:
++        env:
++          GH_TOKEN: ${{ github.token }}
+@@ -99 +101 @@ jobs:
+-    uses: Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++    uses: Hexalith/Hexalith.Builds/.github/workflows/domain-ci.yml@3641d6226b4e6150a4ed43c472c97373378f3679
+diff --git a/.github/workflows/codeql.yml b/.github/workflows/codeql.yml
+index a24e14c870ad1cf1d95e5cdf9a4579a742e85d29..9f2e20822a643f123ed1ecf5f4aaf4cb287d380e 100644
+--- a/.github/workflows/codeql.yml
++++ b/.github/workflows/codeql.yml
+@@ -20 +20 @@ jobs:
+-    uses: Hexalith/Hexalith.Builds/.github/workflows/codeql.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++    uses: Hexalith/Hexalith.Builds/.github/workflows/codeql.yml@3641d6226b4e6150a4ed43c472c97373378f3679
+diff --git a/.github/workflows/commitlint.yml b/.github/workflows/commitlint.yml
+index 8b50a9df89369eb46ec95d267404490f8fb38ec1..9f5369ad5582dfdebefd5f1d3c0c4acff932150e 100644
+--- a/.github/workflows/commitlint.yml
++++ b/.github/workflows/commitlint.yml
+@@ -19 +19 @@ jobs:
+-    uses: Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++    uses: Hexalith/Hexalith.Builds/.github/workflows/commitlint.yml@3641d6226b4e6150a4ed43c472c97373378f3679
+diff --git a/.github/workflows/dependency-review.yml b/.github/workflows/dependency-review.yml
+index efa973ddc6dd889dd16635ff322c7f7d114e3e13..f72abda11e6ba71299307d232e134eb4aa9b3a26 100644
+--- a/.github/workflows/dependency-review.yml
++++ b/.github/workflows/dependency-review.yml
+@@ -19 +19 @@ jobs:
+-    uses: Hexalith/Hexalith.Builds/.github/workflows/dependency-review.yml@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++    uses: Hexalith/Hexalith.Builds/.github/workflows/dependency-review.yml@3641d6226b4e6150a4ed43c472c97373378f3679
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index b26f2b12371e5ab138aaedd5865b658d25ff9454..243fa00b0467ce0300957f775bc424f17ab3faa7 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -65 +65 @@ jobs:
+-        uses: Hexalith/Hexalith.Builds/Github/prepare-domain-release@6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++        uses: Hexalith/Hexalith.Builds/Github/prepare-domain-release@3641d6226b4e6150a4ed43c472c97373378f3679
+@@ -69 +69 @@ jobs:
+-          builds-execution-sha: 6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++          builds-execution-sha: 3641d6226b4e6150a4ed43c472c97373378f3679
+@@ -90 +90 @@ jobs:
+-          HEXALITH_BUILDS_EXECUTION_SHA: 6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b
++          HEXALITH_BUILDS_EXECUTION_SHA: 3641d6226b4e6150a4ed43c472c97373378f3679
