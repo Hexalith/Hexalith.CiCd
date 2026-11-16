@@ -742,8 +742,10 @@ class RenderTests(unittest.TestCase):
             for entry in blocks:
                 with self.subTest(instruction_file=entry["path"]):
                     policy = " ".join(entry["text"].split())
-                    self.assertIn("Do not use PR Update branch until the CiCd pilot verifies it;", policy)
-                    self.assertIn("that operation's permission behavior remains unverified.", policy)
+                    self.assertIn("GitHub permits PR Update branch with the restricted module credential even when it imports changed workflows.", policy)
+                    self.assertIn("Do not use it to import owned CI/CD changes.", policy)
+                    self.assertIn("Fetch current `main`, create a new product branch, and reapply only product changes instead.", policy)
+                    self.assertNotIn("permission behavior remains unverified", policy)
             deny = next(entry for entry in entries if entry["kind"] == "json-superset")
             self.assertEqual(deny, {"kind": "json-superset", "path": ".claude/settings.json",
                                     "pointer": "/permissions/deny", "values": [

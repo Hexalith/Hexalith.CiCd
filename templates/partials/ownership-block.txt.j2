@@ -26,8 +26,10 @@ Start each product branch from current `main`: fetch `origin main` immediately
 before creating the branch from `origin/main`. Do not reuse an older base that
 predates delivered CI/CD changes. Use the restricted module credential. Report
 permission refusals without switching credentials or broadening access.
-Do not use PR Update branch until the CiCd pilot verifies it; that operation's
-permission behavior remains unverified.
+GitHub permits PR Update branch with the restricted module credential even
+when it imports changed workflows. Do not use it to import owned CI/CD changes.
+Fetch current `main`, create a new product branch, and reapply only product
+changes instead.
 
 Launch Claude Code from the module root. The project-local `Edit` deny rules
 protect the whole-owned workflow/config files and Builds subtree while keeping

@@ -22,8 +22,10 @@ Require successful `python3 references/Hexalith.Builds/check.py` before module
 pushes. Fix product failures; report pipeline defects and permission refusals
 without weakening audits or tests, adding skip markers or trailers, editing
 owned portions, or switching credentials. Product branches start from freshly
-fetched current `main`. PR Update branch remains unverified and must not be used
-until the CiCd pilot qualifies it. Releases follow the central nightly process.
+fetched current `main`. GitHub permits PR Update branch to import changed
+workflows with the restricted module credential. Do not use it to import owned
+CI/CD changes; create a branch from current `main` and reapply only product
+changes. Releases follow the central nightly process.
 
 Launch Claude Code from the module root so the delivered project-local `Edit`
 denies anchor at that root. Keep reads available and keep denies out of
