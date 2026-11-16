@@ -1,6 +1,6 @@
 # Shared adoption validation — 2026-11-16–17
 
-**Source qualification passed for the integrated fixes below. Operational delivery remains blocked by the AI.Tools AD-21 ruleset precondition. Infrastructure release and product cutover remain held.** This report supersedes the provisional synthetic-source qualification in the [previous report](https://github.com/Hexalith/Hexalith.CiCd/blob/5da249288476d21095c3c677563974bf90dccbbe/docs/shared-adoption-validation.md).
+**Source qualification passed for the integrated fixes below. Operational delivery remains blocked by the AI.Tools AD-21 ruleset precondition. Builds main subsequently advanced beyond the qualified source, so its newer combined source also requires qualification. Infrastructure release and product cutover remain held.** This report supersedes the provisional synthetic-source qualification in the [previous report](https://github.com/Hexalith/Hexalith.CiCd/blob/5da249288476d21095c3c677563974bf90dccbbe/docs/shared-adoption-validation.md).
 
 The selected production contract remains `v6.0.6` at `fdda17c0a4538b0f7c99f813c20ca24b49006530`. This work creates no infrastructure release or product adoption. EventStore, FrontComposer and Tenants publication switches were found enabled and changed to `false`, with successful readbacks at 2026-11-16 21:30 and 23:19 UTC. No product package/image publication or product source changes were performed.
 
@@ -55,6 +55,12 @@ The earlier frozen reviewed Builds source `24184ca0…` separately passed both c
 
 CI stages 1–3 deliberately retain their existing shared `NuGetAudit=false` restore policy. Their flags and local checker alignment are unchanged; the separate infrastructure release's authoritative all-package audit remains required. Dependency signature checks and audit regressions were retained. Existing conditional/live skips certify no Platform/live/private product execution.
 
+## Concurrent main advancement
+
+At 2026-11-16 23:51 UTC, Builds main had advanced from the qualified `2ee32885ae96805c7745c519275e351ebb229720` to `66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9`. The intervening work changes producer preparation, package metadata acquisition, schema/workflow contracts and catalog assignment ordering, including replacing the ambiguous-default rejection with SDK-evaluated ordered assignments. These are substantive changes outside this qualification's frozen eight-file fix. Their [CI run 43981872199](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43981872199) was queued when inspected.
+
+The green results above qualify `2ee32885…` only. They cannot authorize releasing the newer main. Freeze and qualify the intended combined source, including its complete projects, catalog/Python suites, audits and candidate contract, before an infrastructure release. No later-main passing result is inferred from the earlier snapshot or from focused checks.
+
 ## Operational delivery blocker
 
 The [separate delivery job](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43973386699/job/133679596704) failed after successful validation: `Hexalith.AI.Tools` reported `App precondition check failed: AD-21 main/v* rulesets check failed`. Its accepted ref remained absent and no application occurred. A read-only API query returned zero rulesets. The guard remains unchanged; provisioning this repository's live policy is a separate maintainer operation.
@@ -69,6 +75,6 @@ The three repositories' product publication variables remain disabled. No infras
 
 ## Separate operations after qualification
 
-1. Resolve the separate AD-21 operational blocker and retain green checks for the frozen integrated Builds source, then perform its separately authorized `builds-release.yml` infrastructure release. Preserve authoritative release audits and original-artifact provenance, and verify an acceptable immutable bot-authored stable tag. No such release is dispatched or published by this work.
+1. Resolve the separate AD-21 operational blocker and qualify the frozen intended Builds release source, including the concurrent main changes described above, then perform its separately authorized `builds-release.yml` infrastructure release. Preserve authoritative release audits and original-artifact provenance, and verify an acceptable immutable bot-authored stable tag. No such release is dispatched or published by this work.
 2. In a separate CiCd infrastructure change, select that exact acceptable tag in `builds-version`, regenerate callers, commit the render with its cause, and run full locked global/module validation against the published tag. Checkout files cannot substitute for released contract bytes.
 3. Product preparation and hosted browser/TLS/APT, Dapr/backend, matrix isolation, mutation budgets and private authority evidence remain separate. EventStore → FrontComposer → Tenants adoption and product publication require later authorization; keep their publication switches disabled.
