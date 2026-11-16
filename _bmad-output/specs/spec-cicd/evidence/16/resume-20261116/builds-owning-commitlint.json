@@ -1,0 +1,32 @@
+{
+  "message": "fix(deps): refresh tooling package audit provenance\n",
+  "config": "commitlint.config.mjs",
+  "cli": "21.2.4",
+  "rootLockSha256": "20d03be3bb439035f930eb888c2eb659032d515e64ef379feb43dfa4d2655680",
+  "checks": [
+    {
+      "operation": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exit": 0
+    },
+    {
+      "operation": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "exit": 0
+    },
+    {
+      "operation": [
+        "node",
+        "node_modules/@commitlint/cli/cli.js",
+        "--config"
+      ],
+      "exit": 0
+    }
+  ]
+}

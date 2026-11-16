@@ -1512,3 +1512,27 @@ Mixed legacy pipeline file: extract listed package/mapping product methods, dele
 - python KEEP: 12
 
 This inventory enumerates every C# source and Python test/helper file under the two conformance project directories and tests/tooling at the stated source, including each declared Fact/Theory and test_* method. It is a planning classification, not evidence that any revised suite, adapter, hook, archive checkout or shared preparation has passed.
+
+## Fresh-main addendum, 2026-11-16
+
+Source: `f1a2b3da468760d4188f604045deb098af8ead52`, freshly fetched before
+reapplying the held product preparation. The original inventory above retains
+its original source and counts.
+
+| Path | Method | Disposition |
+| --- | --- | --- |
+| `tests/Hexalith.Conversations.Conformance.Tests/SmC2MeasurementMethodValidationTest.cs` | `MethodShouldBePredeclaredAndDeterministic` | DELETE: checks a historical measurement envelope, signed digest, frozen source identities and recorded sample vectors; its private statistical helpers validate that evidence rather than executing the Conversations product. |
+
+The actual warm-path product benchmark remains byte-identical:
+`tests/Hexalith.Conversations.IntegrationTests/Performance/SmC2HotPathBenchmark.cs`,
+`FrozenWarmPathInventoryEmitsComparableRawSamples`. It executes create,
+append/replay/conflict, paged list and detail queries, asserts their semantics,
+then checks all four positive sample sets. Its integration project stays in the
+root solution and the full integration lane remains required. All `src/` bytes,
+the live projection suite and the original MinimalModule fixture remain unchanged
+from this fresh main. The neutral runtime key test also retains the current
+main's public/nonpublic static-string inventory and both named encoders.
+
+The resumed preservation receipt records exact Git blob/tree identities. These
+are source-preservation checks; released-input execution remains pending and is
+not inferred from the unchanged source.
