@@ -35,6 +35,10 @@ Earlier candidates were superseded before any push. Candidate 4 passed all
 399 tests/full checks, but main advanced with story evidence and final module
 gitlinks during that gate. The freshness guard stopped before any push; the
 final candidate preserves that concurrent main advance and is qualified again.
+The workspace also has separate local checkpoint commits recording the work.
+Do not rebase/reset them or assume local HEAD is the pushed source. The final
+handoff records the actual remote main and matching reviewed source bytes;
+authenticate the scheduled event against GitHub and the canonical pushed fix.
 
 Use only GH_CONFIG_DIR=/home/administrator/.config/gh-cicd-agent for GitHub.
 GH_TOKEN and GITHUB_TOKEN overrides must be absent for ordinary operations.
