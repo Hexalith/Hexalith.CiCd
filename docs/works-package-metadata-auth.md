@@ -28,7 +28,7 @@ the same token to the existing direct parity preparation step. All other bytes
 are retained. The owner proposal records full input commit/tree, per-file
 before/after Git blobs and SHA256s, result tree, exact compatible Builds commit
 and binary patch digest. The materializer validates all targets before writing,
-refuses staged/unstaged workflow changes, advanced source, adoption, altered
+refuses staged/unstaged workflow changes, hard-linked targets, advanced source, adoption, altered
 Builds scope and patch tampering, and leaves foreign files, index, refs and
 commits untouched. It performs no remote action and uses no credential.
 
@@ -60,8 +60,9 @@ run-with-temp python3 -m unittest discover -s tools/tests \
 ```
 
 All four real legacy preparation commands pass with step-scoped synthetic
-authority and fail without it. Six real-Git materializer cases cover exact
+authority and fail without it. Seven real-Git materializer cases cover exact
 application, foreign edit/index/ref preservation, workflow edits, changed
-source, patch tampering, unreviewed Builds source and adopted-module refusal.
+source, patch tampering, hard-link alias preservation, unreviewed Builds source
+and adopted-module refusal.
 Actionlint accepts the compatibility workflow. These results do not waive any
 audit, test, source or release gate.

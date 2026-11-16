@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -103,6 +104,19 @@ class OwnerRepairTests(unittest.TestCase):
         (self.directory / "works-package-metadata-auth.patch").write_text("changed")
         with self.assertRaisesRegex(ValueError, "patch identity changed"):
             REPAIR.apply(self.module, self.builds, self.revision, self.directory)
+
+    def test_hard_link_refuses_before_any_target_or_foreign_alias_write(self):
+        self.prepare()
+        target = self.module / ".github/workflows/ci.yml"
+        alias = self.module / "foreign-backup.txt"
+        os.link(target, alias)
+        before = {path: (self.module / path).read_bytes() for path in REPAIR.WORKS_PATHS}
+        alias_before = alias.read_bytes()
+        with self.assertRaisesRegex(ValueError, "hard-linked workflow aliases"):
+            REPAIR.apply(self.module, self.builds, self.revision, self.directory)
+        self.assertEqual(before, {path: (self.module / path).read_bytes() for path in before})
+        self.assertEqual(alias_before, alias.read_bytes())
+        self.assertFalse((self.directory / "works-package-metadata-auth-applied.json").exists())
 
     def test_new_module_head_requires_new_proposal(self):
         self.prepare()

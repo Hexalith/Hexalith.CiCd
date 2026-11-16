@@ -117,7 +117,7 @@ def proposal(module, builds, revision):
             identity = git(store, "hash-object", "-w", "--stdin", data=raw).stdout.decode().strip()
             git(store, "update-index", "--add", "--cacheinfo", "100644," + identity + "," + path, environment=env)
         result_tree = git(store, "write-tree", environment=env).stdout.decode().strip()
-        patch = git(store, "diff", "--cached", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", base,
+        patch = git(store, "diff", "--cached", "--binary", "--full-index", "--unified=0", "--no-ext-diff", "--no-textconv", base,
                     environment=env).stdout
     manifest = {"schema": "hexalith.works-package-metadata-auth.v1", "repository": "Hexalith.Works",
                 **owner_identity(),
@@ -136,6 +136,8 @@ def apply(module, builds, revision, directory):
         target = module / path
         if any(parent.is_symlink() for parent in (target, *target.parents)):
             raise ValueError("Workflow target may not traverse symbolic links")
+        if target.stat().st_nlink != 1:
+            raise ValueError("Preserve hard-linked workflow aliases: " + path)
         if not stat.S_ISREG(target.stat().st_mode) or target.stat().st_mode & 0o111:
             raise ValueError("Preserve changed workflow file modes: " + path)
         if sha256(target.read_bytes()) != entry[3] or git(module, "diff", "--quiet", "--cached", "--", path,
