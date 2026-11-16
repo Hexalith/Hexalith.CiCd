@@ -1,0 +1,121 @@
+[
+  {
+    "lens": "adversarial",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "Unicode expands serialized evidence past the diagnostic ceiling.",
+    "guard_snippet": "Bound fields before serialization and retain complete Unicode JSON.",
+    "potential_consequence": "Evidence can be clipped mid-object.",
+    "disposition": "resolved",
+    "resolution": "Headers limited to 80 characters; ensure_ascii=False; Unicode regression passes."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "An oversized numeric retry header is rejected before diagnostics.",
+    "guard_snippet": "Attach HTTP/context/response evidence to retry-delay validation failures.",
+    "potential_consequence": "A 403 loses its authentication and response context.",
+    "disposition": "resolved",
+    "resolution": "Delay-validation failures retain bounded diagnostics; both oversized headers tested."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "An API message contains an unfamiliar signed or credential-bearing URL.",
+    "guard_snippet": "Omit response-message URLs before retaining text.",
+    "potential_consequence": "Query credentials can reach reports.",
+    "disposition": "resolved",
+    "resolution": "Response URLs omitted; unfamiliar signature regression passes."
+  },
+  {
+    "lens": "adversarial",
+    "location": "docs/nightly.md",
+    "trigger_condition": "Artifact-download errors still use their original diagnostics.",
+    "guard_snippet": "Narrow the documented guarantee to JSON API requests.",
+    "potential_consequence": "Documentation overstates diagnostic coverage.",
+    "disposition": "resolved",
+    "resolution": "Documentation explicitly preserves existing artifact-download diagnostics."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "Bodies cannot be parsed/read or exceed limits.",
+    "guard_snippet": "Retain an explicit bounded body_status.",
+    "potential_consequence": "Operators cannot distinguish absent message from collection failure.",
+    "disposition": "resolved",
+    "resolution": "message/no-message/oversized/invalid-json/unreadable/budget-exhausted states recorded."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "A permissions or response header exceeds the retained bound.",
+    "guard_snippet": "Mark clipped fields explicitly within their limit.",
+    "potential_consequence": "A partial required-permissions expression appears complete.",
+    "disposition": "resolved",
+    "resolution": "Clipped fields carry ...[truncated]."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/tests/test_nightly_runtime.py",
+    "trigger_condition": "A job/token/caller has less than two seconds left.",
+    "guard_snippet": "Exercise short enclosing deadlines and exhausted budgets.",
+    "potential_consequence": "The slow-body bound is verified only with generous fake time.",
+    "disposition": "resolved",
+    "resolution": "Real-clock job/token/caller tests and expired-budget no-read test pass."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/tests/test_nightly_runtime.py",
+    "trigger_condition": "PUT/PATCH failures have unreadable diagnostic bodies.",
+    "guard_snippet": "Assert original status and one write without retry.",
+    "potential_consequence": "Enablement/publication write behavior is unverified.",
+    "disposition": "resolved",
+    "resolution": "PUT/PATCH unreadable-body refusals retain status and make exactly one request."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/tests/test_nightly_runtime.py",
+    "trigger_condition": "The response echoes another registered controller credential.",
+    "guard_snippet": "Test redaction of active and other registered secrets.",
+    "potential_consequence": "The diagnostic could reveal a different held token.",
+    "disposition": "resolved",
+    "resolution": "Active token and distinct registered polling token are both removed."
+  },
+  {
+    "lens": "adversarial",
+    "location": "tools/tests/test_nightly_runtime.py",
+    "trigger_condition": "Retries end in 429 or 503.",
+    "guard_snippet": "Assert final-response evidence, closure and retry counts.",
+    "potential_consequence": "Only terminal 403 diagnostics have direct coverage.",
+    "disposition": "resolved",
+    "resolution": "Terminal 429/503 exact final request IDs, attempt counts, closure and delays pass."
+  },
+  {
+    "lens": "edge-case-hunter",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "Unicode expands serialized evidence past the diagnostic ceiling.",
+    "guard_snippet": "Bound fields before serialization and retain complete Unicode JSON.",
+    "potential_consequence": "Evidence can be clipped mid-object.",
+    "disposition": "resolved",
+    "resolution": "Headers limited to 80 characters; ensure_ascii=False; Unicode regression passes."
+  },
+  {
+    "lens": "edge-case-hunter",
+    "location": "tools/nightly_runtime.py",
+    "trigger_condition": "An oversized numeric retry header is rejected before diagnostics.",
+    "guard_snippet": "Attach HTTP/context/response evidence to retry-delay validation failures.",
+    "potential_consequence": "A 403 loses its authentication and response context.",
+    "disposition": "resolved",
+    "resolution": "Delay-validation failures retain bounded diagnostics; both oversized headers tested."
+  },
+  {
+    "lens": "verification-gap",
+    "location": "tools/tests/test_nightly_runtime.py",
+    "trigger_condition": "Malformed/oversized/no-message cases do not assert their exact body_status.",
+    "guard_snippet": "Parameterize payloads with expected statuses and assert each exact status.",
+    "potential_consequence": "An in-memory removal of the invalid-json assignment passes the earlier tests.",
+    "disposition": "resolved",
+    "resolution": "Exact invalid-json/oversized/no-message/unreadable assertions pass on both interpreters; reviewer confirmed closure.",
+    "gap_shape": "regression-gap",
+    "consumer": "Nightly initialization failure artifacts"
+  }
+]

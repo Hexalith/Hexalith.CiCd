@@ -1,0 +1,35 @@
+{
+  "controllerRevision": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+  "detector": {
+    "name": "jscpd",
+    "policySha256": "bd0385d9e1de5e373583dde67898cffb4ffc763c2d9743743259ff80072b9830",
+    "signatures": "verified",
+    "version": "5.4.3"
+  },
+  "errors": [],
+  "findings": [],
+  "modules": [],
+  "policy": {
+    "absolute": true,
+    "format": [
+      "yaml",
+      "bash",
+      "powershell",
+      "python"
+    ],
+    "maxLines": 2097152,
+    "maxSize": "2mb",
+    "minLines": 10,
+    "minTokens": 50,
+    "mode": "weak",
+    "noGitignore": true,
+    "reporters": [
+      "json"
+    ],
+    "silent": true,
+    "skipLocal": true,
+    "workers": 1
+  },
+  "result": "pass",
+  "schema": "hexalith.duplicate-scan.v1"
+}

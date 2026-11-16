@@ -1,0 +1,54 @@
+{
+  "observed_at": "2026-11-16T13:42:06.684300+00:00",
+  "scope": "read-only audit of saved non-nightly acceptance evidence and local immutable Git objects; no remote API operation",
+  "checks": {
+    "final_main_ci_log_hashes_and_372_zero_skip_tests": "pass",
+    "both_pre_adoption_complete_product_report_and_log_hashes": "pass",
+    "qualified_candidate_source_and_successful_full_gate_hashes": "pass",
+    "released_shared_tag_and_publisher_regressions": "pass",
+    "initial_adoption_and_final_redelivery_exact_parent_perimeter_foreign_and_sdk_trees": {
+      "authenticated-adoption.json:Hexalith.Commons": {
+        "commit": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+        "parent": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+        "foreign_paths_unchanged": 212,
+        "csharp_files_unchanged": 143
+      },
+      "authenticated-adoption.json:Hexalith.PolymorphicSerializations": {
+        "commit": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+        "parent": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+        "foreign_paths_unchanged": 55,
+        "csharp_files_unchanged": 24
+      },
+      "authenticated-policy-redelivery.json:Hexalith.Commons": {
+        "commit": "49187d47da882d5470deac982bb383486c90202c",
+        "parent": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+        "foreign_paths_unchanged": 218,
+        "csharp_files_unchanged": 143
+      },
+      "authenticated-policy-redelivery.json:Hexalith.PolymorphicSerializations": {
+        "commit": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+        "parent": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+        "foreign_paths_unchanged": 61,
+        "csharp_files_unchanged": 24
+      }
+    },
+    "normal_checkers_protected_token_probe_objects_update_import_and_local_cleanup": "pass",
+    "saved_immediate_immutable_settings_legacy_policy_and_pilot_scoped_credential_dispositions": "pass; API/browser observations remain the original authenticated evidence; global Zot API-key mapping remains explicitly unverified"
+  },
+  "metadata_inconsistencies": [
+    {
+      "file": "post-adoption-fresh-branch-outcomes.json",
+      "module": "Hexalith.Commons",
+      "detail": "stale remote_push_performed:false conflicts with push_attempted:true and push_confirmed:true; raw push/readback and cleanup operation evidence establish actual success"
+    },
+    {
+      "file": "post-adoption-fresh-branch-outcomes.json",
+      "module": "Hexalith.PolymorphicSerializations",
+      "detail": "stale remote_push_performed:false conflicts with push_attempted:true and push_confirmed:true; raw push/readback and cleanup operation evidence establish actual success"
+    }
+  ],
+  "acceptance": "pending genuine scheduled nightly",
+  "result": "pass with nonblocking evidence metadata inconsistency",
+  "spec_preserved": true,
+  "index_preserved": true
+}

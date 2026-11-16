@@ -1,0 +1,171 @@
+{
+  "started_at": "2026-11-16T13:53:11.065532+00:00",
+  "operations": [
+    {
+      "arguments": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.CiCd\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "arguments": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "3427f041c5f686c460c1fa027cf6f835791209c1\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+        "3427f041c5f686c460c1fa027cf6f835791209c1"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "HEAD is now at 3427f04 docs(cicd): document verified Update branch ownership boundary\n",
+      "stderr": "Preparing worktree (detached HEAD 3427f04)\n"
+    },
+    {
+      "arguments": [
+        "git",
+        "rev-parse",
+        "3427f041c5f686c460c1fa027cf6f835791209c1:references/Hexalith.Builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "fdda17c0a4538b0f7c99f813c20ca24b49006530\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd/references/Hexalith.Builds",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "HEAD is now at fdda17c0 test(release): keep recovery verification on the local feed\n",
+      "stderr": "Preparing worktree (detached HEAD fdda17c0)\n"
+    },
+    {
+      "arguments": [
+        "git",
+        "add",
+        "--",
+        "tools/nightly_runtime.py",
+        "tools/tests/test_nightly_runtime.py",
+        "docs/nightly.md"
+      ],
+      "cwd": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--file",
+        "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/message.txt"
+      ],
+      "cwd": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+      "exit": 0,
+      "stdout": "[detached HEAD 55e71f4] fix(nightly): retain bounded HTTP failure evidence\n 3 files changed, 240 insertions(+), 12 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+      "exit": 0,
+      "stdout": "55e71f4f60d71afa6fdcd5a42d864c435eaa9617\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "rev-parse",
+        "HEAD^"
+      ],
+      "cwd": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+      "exit": 0,
+      "stdout": "3427f041c5f686c460c1fa027cf6f835791209c1\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "diff",
+        "--name-only",
+        "3427f041c5f686c460c1fa027cf6f835791209c1",
+        "55e71f4f60d71afa6fdcd5a42d864c435eaa9617"
+      ],
+      "cwd": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+      "exit": 0,
+      "stdout": "docs/nightly.md\ntools/nightly_runtime.py\ntools/tests/test_nightly_runtime.py\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "git",
+        "update-ref",
+        "refs/heads/cicd-story11-nightly-diagnostics-20261116-3",
+        "55e71f4f60d71afa6fdcd5a42d864c435eaa9617",
+        "0000000000000000000000000000000000000000"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "sources": {
+    "tools/nightly_runtime.py": "23a175b0b9af5e31ea258d4e8cfc5abe977d744f1138f94f8f9da6f0b99a915f",
+    "tools/tests/test_nightly_runtime.py": "ac9e487a366338ee663cbe35a8d0e589b3619852854a28a917f8c83656459061",
+    "docs/nightly.md": "75b9e0272c353ff4feafe6203618bdd0dea4ce2c393fb6ddd8a8273d89af6c13"
+  },
+  "result": "superseded before push by completed BMAD review corrections",
+  "push_attempted": false,
+  "original_index_sha256": "b54a13ccc6f20c1c8ee1686be7d27afe4d02c2a2f8e8b2039a7cd58e9b637e55",
+  "base": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "head": "55e71f4f60d71afa6fdcd5a42d864c435eaa9617",
+  "branch": "cicd-story11-nightly-diagnostics-20261116-3",
+  "validation_pid": 1892395,
+  "worktree_cleanup": [
+    {
+      "path": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "/tmp/hexalith-job.N7WpZc97/nightly-diagnostics/cicd",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "original_index_preserved": true,
+  "completed_at": "2026-11-16T13:54:05.763165+00:00",
+  "validation_interrupted_intentionally": true
+}

@@ -73,6 +73,21 @@ context:
 
 ## Implementation Notes
 
+- Resume, 2026-11-16: the requested failed scheduled run `43842471669`
+  predates pilot adoption and contains no registered modules. Its authenticated,
+  digest-matched publish-ready artifact identifies an anonymous
+  `GET /repos/Hexalith/Hexalith.Builds/releases/tags/v5.2.2` HTTP 403 during
+  trusted-source initialization, before any publication mint. The original
+  transport discarded response bodies and headers; permission denial versus
+  rate limiting cannot be established retrospectively. Fresh anonymous and
+  existing CiCd-agent reads both return 200 for that exact public release.
+  Fix only the confirmed diagnostic loss in `tools/nightly_runtime.py`, with
+  bounded/redacted response evidence and unchanged retry, credential and trust
+  policy. `tools/tests/test_nightly_runtime.py` covers rate-limit versus
+  permission responses, refusal/no-write-retry, redaction, bounded/unreadable
+  bodies and retry-budget exhaustion. The exact scheduled checkpoint remains
+  pending for 2026-11-17 02:17 UTC (03:17 Europe/Paris); no manual dispatch or
+  future success is inferred. Original approvals and baseline remain intact.
 - Current execution checkpoint, 2026-11-16 13:06 UTC: real delivery run
   `43860977581` succeeded and both App adoptions are authenticated by report,
   digest, accepted refs, sole preparation parents and complete tree comparisons.
@@ -350,10 +365,35 @@ context:
 
 ## Review Triage Log
 
+- 2026-11-16 — Diagnostic follow-up only: all three BMAD code lenses ran
+  independently. Corrected Unicode truncation, missing context when retry-header
+  validation refuses, URL retention, ambiguous body omission and field clipping;
+  clarified that artifact-download diagnostics are unchanged. Added bounded
+  job/token/caller and expired-budget coverage, all write-method no-retry cases,
+  cross-token redaction and terminal 429/503 evidence. The verification lens's
+  exact `body_status` assertion gap is fixed and passes on both interpreters.
+  All three lenses report no unresolved findings. This scoped review does not
+  replace the remaining full-story review after genuine scheduled acceptance.
+  See `nightly-diagnostics-bmad-review.json` in the evidence folder.
+
 ## Verification
 
 Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
 
+- `failed-nightly-{run,artifact-metadata,api-response,diagnosis}.json`, its
+  saved publish-ready log and digest-matched artifact members: actual failed
+  scheduled source, anonymous request, fresh exact-endpoint HTTP 200 responses,
+  and the explicitly unverified historical refusal/rate-limit classification.
+- `resume-prior-acceptance-audit.json`: independent immutable-object and
+  hash verification of completed initial/final adoptions, preservation, actual
+  green CI, shared publisher coverage, protected-token probes and cleanup.
+  The stale `remote_push_performed: false` field in earlier probe evidence is
+  annotated; raw successful pushes, readbacks and deletions remain preserved.
+- `nightly-response-diagnostics-qualified-python312.log` and `-runner.log`:
+  all 36 final runtime tests pass on both interpreters; subsequent exact
+  omission-status assertions pass in `nightly-response-status-python312.log`
+  and `-runner.log`. Superseded qualification attempts are retained explicitly
+  and made no push; only the final candidate may establish deployment evidence.
 - `builds-publisher-python312.log` and `builds-publisher-python314.log`: 17
   publisher regressions passed on each interpreter, including actual composite
   rejection of missing, wrong-source and unauthorized feed responses.

@@ -1,0 +1,61 @@
+{
+  "observed_at": "2026-11-16T14:25:42.221238+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "read_only": true,
+  "observations": [
+    {
+      "repository": "Hexalith.CiCd",
+      "path": "actions/workflows/nightly.yml",
+      "status": "HTTP/2.0 200 OK",
+      "headers": {
+        "x-accepted-github-permissions": "actions=read",
+        "x-github-request-id": "CAB0:2C20D:895525:CA861D:6AFB1267",
+        "x-ratelimit-remaining": "4846"
+      },
+      "response": {
+        "id": 418646366,
+        "name": "Nightly releases",
+        "path": ".github/workflows/nightly.yml",
+        "state": "active"
+      }
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "path": "code-scanning/analyses?ref=refs/heads/main&per_page=100",
+      "status": "HTTP/2.0 403 Forbidden",
+      "headers": {
+        "x-accepted-github-permissions": "security_events=read",
+        "x-github-request-id": "FF14:20F726:43E1D:6FDE1:6AFB1267",
+        "x-ratelimit-remaining": "4845"
+      },
+      "response": {
+        "message": "Resource not accessible by personal access token"
+      }
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "path": "code-scanning/analyses?ref=refs/heads/main&per_page=100",
+      "status": "HTTP/2.0 403 Forbidden",
+      "headers": {
+        "x-accepted-github-permissions": "security_events=read",
+        "x-github-request-id": "FF48:32AC8:8528BD:C4A727:6AFB1268",
+        "x-ratelimit-remaining": "4844"
+      },
+      "response": {
+        "message": "Resource not accessible by personal access token"
+      }
+    }
+  ],
+  "authentication_context": {
+    "GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "GH_TOKEN_present": false,
+    "GITHUB_TOKEN_present": false,
+    "user": {
+      "id": 6775094,
+      "login": "jpiquot"
+    }
+  },
+  "direct_analysis_inventory": "unverified due to actual token permission refusals; no absence inferred",
+  "verification_path": "same-profile exact scheduled Actions logs/artifacts: CodeQL upload, completed SARIF processing and security findings gate; keep criterion unverified if insufficient",
+  "credential_switch": false
+}

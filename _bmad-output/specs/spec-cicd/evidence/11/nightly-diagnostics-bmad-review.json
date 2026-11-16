@@ -1,0 +1,25 @@
+{
+  "scope": "diagnostic fix only; full story review remains after real scheduled-night acceptance",
+  "lenses": {
+    "adversarial": "no unresolved findings after corrections",
+    "edge-case-hunter": [],
+    "verification-gap": "all findings closed; exact body_status regression assertions verified on both interpreters"
+  },
+  "corrections": [
+    "complete bounded Unicode JSON diagnostics",
+    "retain context when retry-header validation refuses",
+    "omit response-message URLs",
+    "identify body omission reasons and clipped fields",
+    "scope documentation to JSON API requests; preserve artifact download diagnostics",
+    "short job/token/caller and expired budget checks",
+    "POST/PUT/PATCH refusal and no retries",
+    "cross-token redaction",
+    "terminal 429/503 response evidence",
+    "assert exact invalid-json/oversized/no-message/unreadable classifications"
+  ],
+  "superseded_candidate_process_groups_empty": true,
+  "whole_story_acceptance": "pending genuine schedule 2026-11-17 02:17 UTC",
+  "final_findings": "nightly-diagnostics-review-findings-final.json",
+  "final_diff": "nightly-diagnostics-review-final.diff",
+  "test_status_assertion_followup": "Both Python 3.12 and runner targeted regressions passed; verification lens confirmed no remaining gaps"
+}

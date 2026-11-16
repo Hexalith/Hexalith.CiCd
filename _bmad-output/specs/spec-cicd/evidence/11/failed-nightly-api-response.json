@@ -1,0 +1,112 @@
+{
+  "observed_at": "2026-11-16T13:40:09.829541+00:00",
+  "local_auth": {
+    "profile": "/home/administrator/.config/gh-cicd-agent",
+    "login": "jpiquot",
+    "GH_TOKEN_present": false,
+    "GITHUB_TOKEN_present": false
+  },
+  "observations": [
+    {
+      "credential": "none; matches initialization trusted-source request",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/releases/tags/v5.2.2",
+      "status": 200,
+      "headers": {
+        "Date": "Mon, 16 Nov 2026 13:40:10 GMT",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "59",
+        "X-RateLimit-Used": "1",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794840010",
+        "X-GitHub-Request-Id": "FF2B:0C46:B900D3:1525EA4:6AFB07BA"
+      },
+      "response": {
+        "tag_name": "v5.2.2",
+        "immutable": true,
+        "draft": false,
+        "published_at": "2026-11-13T15:53:03Z"
+      }
+    },
+    {
+      "credential": "none; matches initialization trusted-source request",
+      "url": "https://api.github.com/rate_limit",
+      "status": 200,
+      "headers": {
+        "Date": "Mon, 16 Nov 2026 13:40:10 GMT",
+        "X-RateLimit-Limit": "60",
+        "X-RateLimit-Remaining": "58",
+        "X-RateLimit-Used": "2",
+        "X-RateLimit-Resource": "core",
+        "X-RateLimit-Reset": "1794838908",
+        "X-GitHub-Request-Id": "C7DC:29FCB6:1B33C755:29277AE8:6AFB07BB"
+      },
+      "response": {
+        "resources": {
+          "code_search": {
+            "limit": 60,
+            "remaining": 58,
+            "reset": 1794838908,
+            "used": 2
+          },
+          "core": {
+            "limit": 60,
+            "remaining": 58,
+            "reset": 1794838908,
+            "used": 2
+          },
+          "graphql": {
+            "limit": 0,
+            "remaining": 0,
+            "reset": 1794840011,
+            "used": 0
+          },
+          "integration_manifest": {
+            "limit": 5000,
+            "remaining": 5000,
+            "reset": 1794840011,
+            "used": 0
+          },
+          "search": {
+            "limit": 10,
+            "remaining": 10,
+            "reset": 1794836471,
+            "used": 0
+          }
+        }
+      }
+    },
+    {
+      "credential": "CiCd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v5.2.2",
+      "rc": 0,
+      "headers": "HTTP/2.0 200 OK\nAccess-Control-Allow-Origin: *\nAccess-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning\nCache-Control: private, max-age=60, s-maxage=60\nContent-Security-Policy: default-src 'none'\nContent-Type: application/json; charset=utf-8\nDate: Mon, 16 Nov 2026 13:40:11 GMT\nEtag: W/\"f559b6e560e6d33cc9171d04b48d8a4dc0074d90406f251d37820c63b7ac2a8f\"\nGithub-Authentication-Token-Expiration: 2027-11-08 23:00:00 UTC\nLast-Modified: Fri, 13 Nov 2026 15:53:03 GMT\nReferrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin\nServer: github.com\nStrict-Transport-Security: max-age=31536000; includeSubdomains; preload\nVary: Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With\nX-Accepted-Github-Permissions: contents=read\nX-Content-Type-Options: nosniff\nX-Frame-Options: deny\nX-Github-Api-Version-Selected: 2026-03-10\nX-Github-Edge-Region: fra\nX-Github-Media-Type: github.v3; format=json\nX-Github-Request-Id: C7E0:3BA934:1B9CAFB4:29CC3EC6:6AFB07BB\nX-Ratelimit-Limit: 5000\nX-Ratelimit-Remaining: 4999\nX-Ratelimit-Reset: 1794840011\nX-Ratelimit-Resource: core\nX-Ratelimit-Used: 1\nX-Xss-Protection: 0",
+      "response": {
+        "tag_name": "v5.2.2",
+        "immutable": true,
+        "draft": false,
+        "published_at": "2026-11-13T15:53:03Z"
+      },
+      "stderr": ""
+    },
+    {
+      "credential": "CiCd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/permissions",
+      "rc": 1,
+      "headers": "HTTP/2.0 403 Forbidden\nAccess-Control-Allow-Origin: *\nAccess-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning\nContent-Security-Policy: default-src 'none'\nContent-Type: application/json; charset=utf-8\nDate: Mon, 16 Nov 2026 13:40:11 GMT\nGithub-Authentication-Token-Expiration: 2027-11-08 23:00:00 UTC\nReferrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin\nServer: github.com\nStrict-Transport-Security: max-age=31536000; includeSubdomains; preload\nVary: Accept-Encoding, Accept, X-Requested-With\nX-Accepted-Github-Permissions: administration=read\nX-Content-Type-Options: nosniff\nX-Frame-Options: deny\nX-Github-Api-Version-Selected: 2026-03-10\nX-Github-Edge-Region: switzerlandnorth\nX-Github-Media-Type: github.v3; format=json\nX-Github-Request-Id: FF39:2B6381:E53123:1A0B228:6AFB07BB\nX-Ratelimit-Limit: 5000\nX-Ratelimit-Remaining: 4997\nX-Ratelimit-Reset: 1794838563\nX-Ratelimit-Resource: core\nX-Ratelimit-Used: 3\nX-Xss-Protection: 0",
+      "response": {
+        "message": "Resource not accessible by personal access token"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)\n"
+    },
+    {
+      "credential": "CiCd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/permissions/workflow",
+      "rc": 1,
+      "headers": "HTTP/2.0 403 Forbidden\nAccess-Control-Allow-Origin: *\nAccess-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning\nContent-Security-Policy: default-src 'none'\nContent-Type: application/json; charset=utf-8\nDate: Mon, 16 Nov 2026 13:40:12 GMT\nGithub-Authentication-Token-Expiration: 2027-11-08 23:00:00 UTC\nReferrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin\nServer: github.com\nStrict-Transport-Security: max-age=31536000; includeSubdomains; preload\nVary: Accept-Encoding, Accept, X-Requested-With\nX-Accepted-Github-Permissions: administration=read\nX-Content-Type-Options: nosniff\nX-Frame-Options: deny\nX-Github-Api-Version-Selected: 2026-03-10\nX-Github-Edge-Region: fra\nX-Github-Media-Type: github.v3; format=json\nX-Github-Request-Id: C79D:3372F4:1C6A5632:2AFEC3FB:6AFB07BC\nX-Ratelimit-Limit: 5000\nX-Ratelimit-Remaining: 4996\nX-Ratelimit-Reset: 1794838563\nX-Ratelimit-Resource: core\nX-Ratelimit-Used: 4\nX-Xss-Protection: 0",
+      "response": {
+        "message": "Resource not accessible by personal access token"
+      },
+      "stderr": "gh: Resource not accessible by personal access token (HTTP 403)\n"
+    }
+  ]
+}

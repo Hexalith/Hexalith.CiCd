@@ -1,0 +1,77 @@
+{
+  "observed_at": "2026-11-16T13:44:09.622074+00:00",
+  "run": {
+    "id": 43842471669,
+    "event": "schedule",
+    "head_sha": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+    "run_attempt": 1,
+    "created_at": "2026-11-16T09:44:33Z",
+    "conclusion": "failure",
+    "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43842471669"
+  },
+  "artifact_digests_verified": {
+    "hexalith-nightly-bump-report-1": {
+      "id": 14215315986,
+      "digest": "sha256:6f5acef35d6172c753ba6837092b7b9ec0638dd4680a26f08259ed3119b552b2"
+    },
+    "hexalith-nightly-scan-1": {
+      "id": 14215201804,
+      "digest": "sha256:bd11d813c7402b88022bca722b4c782dcae2dccb9a269f5288f7a933a8b8cd75"
+    },
+    "hexalith-nightly-keepalive-1": {
+      "id": 14214488322,
+      "digest": "sha256:89f53dd2587dbe103c3f6a9d2ec7acafec544094567fc6122f5be23aeed97640"
+    },
+    "hexalith-nightly-nightly-1": {
+      "id": 14214353001,
+      "digest": "sha256:dbde9b171b9b4d0922d421d43f6988ef09600d1cd1300bc8f992ac0ec6b3513b"
+    },
+    "hexalith-nightly-dispatch-1": {
+      "id": 14213976579,
+      "digest": "sha256:5a317c62b50e530265375367c20d0e384184895e7a695d4a8fe9872564cadff0"
+    },
+    "hexalith-nightly-wait-1": {
+      "id": 14213623430,
+      "digest": "sha256:9032cc4324ca6662fa20ebb7334551eea20733ccb0beeb4799b8bc14180c36a9"
+    }
+  },
+  "failing_phase": "publish-ready initialize",
+  "failing_request": {
+    "method": "GET",
+    "path": "/repos/Hexalith/Hexalith.Builds/releases/tags/v5.2.2",
+    "authentication": "anonymous; API.get called without token by inherited Transport.builds",
+    "status": 403,
+    "original_response_body_and_headers": "unavailable: original transport discarded them"
+  },
+  "confirmed_defect": "transport discarded diagnostic response evidence needed to distinguish a permission refusal from a rate limit",
+  "retrospective_root_cause": "unverified; do not label as permission denial or proven rate limit",
+  "current_reproduction": "exact public release read returns HTTP 200 anonymously and with unchanged CiCd-agent; see failed-nightly-api-response.json",
+  "separate_local_admin_reads": {
+    "result": "HTTP 403 Resource not accessible by personal access token",
+    "required_permission_header": "administration=read",
+    "configuration": "unverified; these unrelated local reads do not establish hosted failure cause"
+  },
+  "credential_switch_for_failed_request": false,
+  "manual_dispatch_or_rerun": false,
+  "reference_docs": [
+    "https://docs.github.com/en/rest/releases/releases#get-a-release-by-tag-name",
+    "https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api"
+  ],
+  "hosted_job_authentication": {
+    "GITHUB_TOKEN_permissions": {
+      "actions": "read",
+      "contents": "read",
+      "metadata": "read"
+    },
+    "handoff_credential": "GITHUB_TOKEN used for CiCd artifact handoff only",
+    "failing_Builds_metadata_read": "API.get(path) defaults token=None; _headers(None) omits Authorization",
+    "publication_App_token": "not minted; initialization produced no publication slots",
+    "raw_job_log": "failed-nightly-publish-job.log"
+  },
+  "original_source_hashes": {
+    "tools/nightly.py": "97cdfd65da5c6b6d797d8390f8a2ac056eaf96ad326a002c25af9480cf3dae41",
+    "tools/nightly_runtime.py": "1c5e822699c343d93cb87ca5b77971d2b82b3cd22b6bb6d260ac6103b465bb93",
+    "tools/delivery_runtime.py": "ca1d547633185663f51bab89fc1b65fc938d1ec6a700ed9d06e24ff5a666fce0",
+    ".github/workflows/nightly.yml": "d69f677333fb47141b0ce61196a194db6d934c2604c084e63551550e09433e4e"
+  }
+}

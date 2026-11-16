@@ -374,5 +374,20 @@
     "original_cicd_staging_preserved": true,
     "original_cicd_staging_sha256": "51d905e7ddd474ded73c896be00dee06552036931adc6cbca6fad9688006ba89"
   },
-  "terminal_delivery_states_rechecked": true
+  "terminal_delivery_states_rechecked": true,
+  "resumed_nightly_investigation": {
+    "observed_at": "2026-11-16T14:29:10.909589+00:00",
+    "failed_schedule": 43842471669,
+    "diagnosis": "anonymous trusted Builds v5.2.2 release read returned 403; historical response details discarded; exact current anonymous and CiCd-agent reads return 200",
+    "historical_cause": "unverified; no inferred permission denial or proven rate limit",
+    "confirmed_fix": "bounded diagnostic evidence preserving credentials/retries/checks",
+    "scoped_bmad_review": "all three lenses have no unresolved findings",
+    "full_story_review": "pending real scheduled-night acceptance",
+    "candidate": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+    "full_candidate_gate": "running on fresh main; prior exact candidate passed all 399 tests/global/live checks",
+    "scheduled_continuation": "prepared and read-only authentication/CLI readiness verified; timer not yet installed",
+    "base": "bac15f4a8560b0e8b6363996d538e8c8dc0de755",
+    "main_advance": "external reparented story commits preserved; root tracked tree/index unchanged; freshness guard stopped before push",
+    "separate_codeql_inventory_refusals": "HTTP 403; security_events=read required; inventory unverified; planned exact scheduled-job upload/processing/security-gate evidence"
+  }
 }

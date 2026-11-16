@@ -1,0 +1,631 @@
+{
+  "schema": "hexalith.story-11.matrix-coverage-audit.v1",
+  "observed_at": "2026-11-16T14:02:08.856047+00:00",
+  "spec": {
+    "file": "_bmad-output/implementation-artifacts/spec-11-pilot-migration-commons-and-polymorphicserializations.md",
+    "sha256": "ea69ceb4065328dd156a1a5758a455d132559f6a2206c9b3edc13866272aa436",
+    "matrix_rows": 5,
+    "frozen_intent_modified": false
+  },
+  "method": "Read immutable test sources, existing passing execution logs and retained reports only; no test rerun or remote operation. Aggregate gate blocks are attributed by the committed sorted suite runner.",
+  "source_revisions": {
+    "CiCd_qualified_candidate": "3427f041c5f686c460c1fa027cf6f835791209c1",
+    "Builds_released_v6_0_6": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "execution_evidence": {
+    "qualified_gate": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+      "sha256": "1f78943bf2b394d0ba3bdae7e9b29b6b5ee363a5232b65a6aad8d825b4a6680c",
+      "candidate": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "passing_report": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-candidate.json",
+        "sha256": "3add01c79e0771dd6de83d3c2c698c5f4d82a45112183b7b5124a66aaebb11df"
+      },
+      "scope": "All 14 suites passed; exact named-test membership is established from the immutable candidate test sources. The log is aggregate unittest output, not per-test verbose output.",
+      "suite_order_source": {
+        "file": "tools/check_global.py",
+        "revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+        "function": "run_tool_tests",
+        "behavior": "sorted tools/tests/test_*.py; uv run --locked --script --python sys.executable each suite"
+      }
+    },
+    "qualified_gate_suites": {
+      "test_bump.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 20,
+        "tests_passed": 15,
+        "status": "OK"
+      },
+      "test_bump_push.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 27,
+        "tests_passed": 17,
+        "status": "OK"
+      },
+      "test_deliver.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 32,
+        "tests_passed": 20,
+        "status": "OK"
+      },
+      "test_delivery_bootstrap.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 37,
+        "tests_passed": 9,
+        "status": "OK"
+      },
+      "test_delivery_runtime.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 42,
+        "tests_passed": 12,
+        "status": "OK"
+      },
+      "test_delivery_workflow.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 48,
+        "tests_passed": 10,
+        "status": "OK"
+      },
+      "test_nightly.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 53,
+        "tests_passed": 39,
+        "status": "OK"
+      },
+      "test_nightly_delivery_wait.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 58,
+        "tests_passed": 21,
+        "status": "OK"
+      },
+      "test_nightly_keepalive.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 63,
+        "tests_passed": 9,
+        "status": "OK"
+      },
+      "test_nightly_runtime.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 68,
+        "tests_passed": 29,
+        "status": "OK"
+      },
+      "test_nightly_workflow.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 74,
+        "tests_passed": 27,
+        "status": "OK"
+      },
+      "test_render.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 80,
+        "tests_passed": 32,
+        "status": "OK"
+      },
+      "test_scan.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 90,
+        "tests_passed": 101,
+        "status": "OK"
+      },
+      "test_validate.py": {
+        "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-full-validation.log",
+        "ran_line": 96,
+        "tests_passed": 51,
+        "status": "OK"
+      }
+    },
+    "publisher_python312": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/builds-publish-fixture-python312.log",
+      "sha256": "c88f9bbcb07d8006fc57b07d716a9657def79e6f2ad48fd206c4193888ad043e",
+      "status": "17 tests passed; exact NuGetVerificationTests and PublishCompositeTests names are logged verbosely"
+    },
+    "publisher_runner_python314": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/builds-publish-fixture-python314.log",
+      "sha256": "182509503af599bfbf765652e8e67f0a70dbb47618cd3d4af941d5f08daadaf6",
+      "status": "17 tests passed; exact NuGetVerificationTests and PublishCompositeTests names are logged verbosely"
+    },
+    "dependabot_null_python312": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/deliver-null-python312.log",
+      "sha256": "f6a93fadb1ebd1154fd912f9e0bb120461c6edf6c8347b0c31c7ecba2d54d148",
+      "status": "Focused malformed/null/authorization test passed"
+    },
+    "delivery_runner_python314": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/deliver-python314.log",
+      "sha256": "41b033a72425f1e0907a28cc02bbf6ecd049647143ec397860453b0d169aa22d",
+      "status": "20 tests passed on final null-aware delivery code"
+    },
+    "runtime_python312": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python312.log",
+      "sha256": "275491f6e999ab7e03ad459f18a32addd08df018eb67d7e3e14f1fc8debd0ccb",
+      "status": "12 tests passed"
+    },
+    "runtime_runner_python314": {
+      "file": "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python314.log",
+      "sha256": "4a5c9def2426b15338b5bee0af66e209aa4cd5cd581215a95757e1c5d329dd57",
+      "status": "12 tests passed"
+    }
+  },
+  "rows": [
+    {
+      "row": 1,
+      "state": "Missing dependency, policy or credential",
+      "expected_behavior": "Stop before adoption; record the unmet prerequisite.",
+      "automated_coverage": "covered",
+      "operational_evidence": "covered by preserved concrete pre-adoption stops; later successful provisioning does not erase them",
+      "tests": [
+        {
+          "test": "DeliveryTests.test_missing_perimeter_capability_rejects_before_tag_code_executes",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 294,
+          "proves": "Missing shared perimeter capability fails before tagged code executes and before accepted refs are created.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_bad_release_retains_ref_and_fails_before_module_write",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 209,
+          "proves": "Unacceptable shared publication retains prior accepted ref and writes no module commit.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_each_closed_app_check_blocks_only_its_module_and_preserves_repair",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 82,
+          "proves": "Installation/repository identity/ruleset/retention/security-policy failures prevent advancement; only the prior accepted render may be repaired.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_mint_and_transport_failure_continue_siblings",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 196,
+          "proves": "Missing module/CiCd credentials produce failure/no-ref outcomes and no adoption refs.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_anonymous_rejection_without_accepted_ref_makes_no_write",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 349,
+          "proves": "A failed anonymous prerequisite on a first adoption leaves module main and delivered ref untouched.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "RuntimeTests.test_fixture_http_rejects_missing_and_wrong_repository_credentials",
+          "file": "tools/tests/test_delivery_runtime.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "46f149d945acfef97ec6cf1fc78640b8adf167a6fe681d50fd23e00388e5ceb2",
+          "line": 106,
+          "proves": "Missing/wrong-repository credentials are real fixture HTTP 403 failures.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_delivery_runtime.py",
+            "runtime_python312",
+            "runtime_runner_python314"
+          ]
+        }
+      ],
+      "saved_execution": [
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/resume-prerequisites.json",
+          "sha256": "6a4b685431b564e7948f825e95c62f45c18b4158476cd8e5f2d1a589526959c6",
+          "observed": "2026-11-16 07:33 UTC: App-selection read access unverified; both required module checker commands exited 2; nested_submodules_initialized:false, push_attempted:false, remote_mutations:false"
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/pre-adoption-prepush-blocker.json",
+          "sha256": "91cab9bbfd47211b1bc871ce770ed3cc870ad6900ab1db02d3a131da0408edbf",
+          "observed": "Records exact missing checker paths and no push attempted before the later explicit human verification exception."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/nuget-session-expired.json",
+          "sha256": "14c704cb15b7936401660d025916801239a723face4dc4ce190b4c1df46a5cec",
+          "observed": "NuGet sign-in is required; credential_values_read:false."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/nuget-signin-result.json",
+          "sha256": "459e8b29a11585e39a9a0e428348f26103e4369e888afda3cb67d99089e207fa",
+          "observed": "Normal Microsoft sign-in reaches a human authentication boundary; no credentials entered."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/provisioning-after.json",
+          "sha256": "a14c476a24184734ce5ec4f12475535d98a2b8346cc7431ca4526f13834585cf",
+          "observed": "Post-boundary inventory is read-only, writes_performed:false."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/provisioning-status.md",
+          "sha256": "ed2f29cbf8afd2ee5baf2fa1e0455a84947e410d560e3422b4b9699b2614350f",
+          "observed": "Chronological provisioning disposition; missing policy/authentication was recorded before later provisioning/adoption."
+        }
+      ],
+      "limit": "NuGet policy creation and human authentication are administrative prerequisites evidenced by real procedural stops; no unit test is represented as a live NuGet policy read or creation."
+    },
+    {
+      "row": 2,
+      "state": "Disabled Dependabot response",
+      "expected_behavior": "Accept boolean enabled:false or authenticated legacy 404 after administrative preflight; reject enabled/malformed/error responses.",
+      "automated_coverage": "covered",
+      "operational_evidence": "covered; observed enabled:false pilot endpoint responses and actual successful App adoption are retained",
+      "tests": [
+        {
+          "test": "DeliveryTests.test_dependabot_disabled_response_and_legacy_404_are_accepted",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 115,
+          "proves": "Both boolean false (with paused:false) and legacy HTTP 404 allow advancement.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py",
+            "delivery_runner_python314"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_dependabot_malformed_and_authorization_failures_isolate_siblings",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 126,
+          "proves": "enabled:true/0/string, missing object field, list, scalar, JSON null, HTTP 401/403 are rejected; healthy sibling still advances.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py",
+            "delivery_runner_python314",
+            "dependabot_null_python312"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_dependabot_404_requires_successful_administrative_preflight",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 142,
+          "proves": "Administrative HTTP 403 stops before automated-security-fixes is read, so absence cannot hide authorization failure.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py",
+            "delivery_runner_python314"
+          ]
+        },
+        {
+          "test": "RuntimeTests.test_http_caps_redirects_errors_and_canonical_url",
+          "file": "tools/tests/test_delivery_runtime.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "46f149d945acfef97ec6cf1fc78640b8adf167a6fe681d50fd23e00388e5ceb2",
+          "line": 47,
+          "proves": "Only actual absent-enabled 404 becomes None; successful JSON null is rejected.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_delivery_runtime.py",
+            "runtime_python312",
+            "runtime_runner_python314"
+          ]
+        }
+      ],
+      "saved_execution": [
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/preflight.json",
+          "sha256": "27716e46f400ab308bd828be2ef3a5410548550e05b6e33b61bbcd32b0835c7c",
+          "observed": "Authenticated pilot endpoint inventory retains observed enabled:false responses."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/authenticated-adoption.json",
+          "sha256": "82097ebc568d76d0d9251ecf17e66e8be2f596b36433f7ce5a9516b2b4ce99e3",
+          "observed": "Successful real App adoption authenticated by exact report/ref/parent/tree identities."
+        }
+      ],
+      "limit": "The test fixture checks policy semantics; saved live responses establish GitHub response compatibility. Neither is substituted for the other."
+    },
+    {
+      "row": 3,
+      "state": "Package indexing delay or conflicting existing version",
+      "expected_behavior": "Bounded retry for transient absence; mismatched ID/version/source fails before GitHub publication.",
+      "automated_coverage": "covered including actual publication composite",
+      "operational_evidence": "successful live shared publisher verification retained; destructive source-conflict/missing-feed faults were confined to regression fixtures",
+      "tests": [
+        {
+          "test": "NuGetVerificationTests.test_indexing_delay_and_transient_errors_retry_only_pending_packages",
+          "file": "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py",
+          "source_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "source_sha256": "1e5fa4363c5fbd91891528590c26817df67a20a75c1e9353536ea8315f47cf71",
+          "line": 430,
+          "proves": "404/408/429/503/URLError/timeout retry only pending packages: six bounded sleeps and seven requests for the pending item.",
+          "executed_evidence": [
+            "publisher_python312",
+            "publisher_runner_python314"
+          ]
+        },
+        {
+          "test": "NuGetVerificationTests.test_missing_packages_exhaust_bounds_and_identity_conflicts_fail_immediately",
+          "file": "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py",
+          "source_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "source_sha256": "1e5fa4363c5fbd91891528590c26817df67a20a75c1e9353536ea8315f47cf71",
+          "line": 447,
+          "proves": "Persistent 404 exhausts exact attempt bound; wrong source SHA, package ID, version and invalid package fail without retry.",
+          "executed_evidence": [
+            "publisher_python312",
+            "publisher_runner_python314"
+          ]
+        },
+        {
+          "test": "NuGetVerificationTests.test_authorization_errors_are_not_retried_and_empty_inventory_needs_no_network",
+          "file": "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py",
+          "source_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "source_sha256": "1e5fa4363c5fbd91891528590c26817df67a20a75c1e9353536ea8315f47cf71",
+          "line": 464,
+          "proves": "401/403 fail immediately; empty authenticated inventory causes no feed request.",
+          "executed_evidence": [
+            "publisher_python312",
+            "publisher_runner_python314"
+          ]
+        },
+        {
+          "test": "NuGetVerificationTests.test_response_size_and_whole_verification_deadline_are_bounded",
+          "file": "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py",
+          "source_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "source_sha256": "1e5fa4363c5fbd91891528590c26817df67a20a75c1e9353536ea8315f47cf71",
+          "line": 474,
+          "proves": "Response size and whole-verification deadline are bounded and do not add sleeps after expiry.",
+          "executed_evidence": [
+            "publisher_python312",
+            "publisher_runner_python314"
+          ]
+        },
+        {
+          "test": "PublishCompositeTests.test_actual_composite_one_outcome_for_success_login_push_api_and_malformed_handoff",
+          "file": "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py",
+          "source_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+          "source_sha256": "1e5fa4363c5fbd91891528590c26817df67a20a75c1e9353536ea8315f47cf71",
+          "line": 492,
+          "proves": "Actual composite scenarios nuget-missing, nuget-source and nuget-authorization yield failed outcome and zero GitHub publication writes; valid scenarios publish.",
+          "executed_evidence": [
+            "publisher_python312",
+            "publisher_runner_python314"
+          ]
+        }
+      ],
+      "saved_execution": [
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/builds-released-pin.json",
+          "sha256": "8941310468406fd0662e1ef4487b8053255dd6f8cbf2fc67457996a468db3a77",
+          "observed": "Actual successful shared release v6.0.6 at fdda17c0, published outcome artifact and immutable bot tag authenticated."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/builds-publisher-live-verification.json",
+          "sha256": "a1a4e9c4e2b2192fb5dfcf75df7c67a1f5e49adbfc0b5bb88d43a162afb847fe",
+          "observed": "Both actual 6.0.6 packages passed live-feed ID/version/source verification before GitHub finalization."
+        }
+      ],
+      "limit": "No conflicting live package was uploaded and no production feed failure was manufactured to repeat the negative fixtures."
+    },
+    {
+      "row": 4,
+      "state": "Delivery race or failed module",
+      "expected_behavior": "Existing bounded forward-only delivery applies; retain per-module report and do not claim adoption.",
+      "automated_coverage": "covered",
+      "operational_evidence": "actual initial/final adoption reports are authenticated independently from regression failure/race outcomes",
+      "tests": [
+        {
+          "test": "DeliveryTests.test_race_retry_parentage_and_exhaustion",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 185,
+          "proves": "One race retries on concurrent product parent and succeeds; four races exhaust at three retries, return failure and preserve concurrent product main.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_stale_candidate_and_ref_race_keep_newer_accepted_state",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 221,
+          "proves": "Stale candidate and accepted-ref races retain newer accepted state, report superseded and apply newer render.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_rejected_module_repairs_old_render_healthy_sibling_advances",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 154,
+          "proves": "Failed module never advances candidate acceptance; previous accepted render is repaired and healthy sibling advances with a distinct report row.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_malformed_partial_is_repaired_and_transport_failure_is_not_retried",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 236,
+          "proves": "Transport failure is a failed application with zero retries rather than a race retry or adoption success.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        },
+        {
+          "test": "DeliveryTests.test_invalid_ref_excluded_while_valid_sibling_repairs",
+          "file": "tools/tests/test_deliver.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+          "line": 332,
+          "proves": "Unrelated accepted ref is reported failed and leaves module main unchanged while valid sibling repairs.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_deliver.py"
+          ]
+        }
+      ],
+      "saved_execution": [
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/delivery-report.json",
+          "sha256": "68dd3b3c7d35602b853b004c8977d30a4792d5b03551790a58baa178188fb5a9",
+          "observed": "Real initial per-module report for run 43860977581."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/authenticated-adoption.json",
+          "sha256": "82097ebc568d76d0d9251ecf17e66e8be2f596b36433f7ce5a9516b2b4ce99e3",
+          "observed": "Each real initial pushed commit has its exact sole preparation parent and full expected/foreign tree proofs."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/qualified-policy-delivery-report.json",
+          "sha256": "a462bd98f879b850ac8f00e728029d8ca28ab0c447ac629dcd763d6d4dbc1ec5",
+          "observed": "Real final per-module report for run 43869480499."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/authenticated-policy-redelivery.json",
+          "sha256": "843ceb2975e5ff95f8d42e220be5d798806a1290d8a9db182d2800983810e839",
+          "observed": "Final forward-only commits have the exact preceding App commit as sole parent; no inference from report status alone."
+        }
+      ],
+      "limit": "No live delivery race was deliberately induced. Failure/race claims rely on executed real-controller fixtures; actual pilot adoption claims rely on independently authenticated successful reports and Git objects."
+    },
+    {
+      "row": 5,
+      "state": "No Builds update or releasable change overnight",
+      "expected_behavior": "Record authenticated no-bump/nothing-to-release outcome; do not force a release.",
+      "automated_coverage": "covered",
+      "operational_evidence": "pending actual scheduled-night outcome after final policy state",
+      "tests": [
+        {
+          "test": "BumpTests.test_skip_rollback_no_change_and_invalid_line",
+          "file": "tools/tests/test_bump.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "5f2aa62b74dbd319b3c3571bce89bb85375e4bb75fc8db680c27bc59c7fe671b",
+          "line": 58,
+          "proves": "No eligible newer release returns no-change and exposes no candidate artifact; malformed skip policy fails.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_bump.py"
+          ]
+        },
+        {
+          "test": "BumpTests.test_same_night_rerun_and_next_night",
+          "file": "tools/tests/test_bump.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "5f2aa62b74dbd319b3c3571bce89bb85375e4bb75fc8db680c27bc59c7fe671b",
+          "line": 77,
+          "proves": "A same-night rerun returns no-change without a second bump; following night may select a newer release.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_bump.py"
+          ]
+        },
+        {
+          "test": "BumpTests.test_no_acceptable_release_and_unreadable_listing_fail",
+          "file": "tools/tests/test_bump.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "5f2aa62b74dbd319b3c3571bce89bb85375e4bb75fc8db680c27bc59c7fe671b",
+          "line": 94,
+          "proves": "No acceptable release or unreadable inventory fails rather than fabricating a no-bump success.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_bump.py"
+          ]
+        },
+        {
+          "test": "NightlyControllerTests.test_success_and_outcome_failures_are_data_and_status_read_failure_fails_wait",
+          "file": "tools/tests/test_nightly.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c935ffb76b036346582b13eaaefd1051ce4dd858d492b631be7b98f47fffe9ce",
+          "line": 416,
+          "proves": "Successful exact-run nothing outcomes are authenticated by the fixture transport; malformed outcome/status-read failures are not promoted to successful nothing.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_nightly.py"
+          ]
+        },
+        {
+          "test": "NightlyControllerTests.test_outcome_download_rerun_rechecks_every_terminal_result_and_status_failure",
+          "file": "tools/tests/test_nightly.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "c935ffb76b036346582b13eaaefd1051ce4dd858d492b631be7b98f47fffe9ce",
+          "line": 377,
+          "proves": "Even nothing/disabled/published outcomes are discarded when producing run attempt changes or recheck becomes unreadable.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_nightly.py"
+          ]
+        },
+        {
+          "test": "TestNightlyPublication.test_mixed_verdicts_keep_all_links_and_write_summary_before_failure",
+          "file": "tools/tests/nightly_publish_cases.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "d305a16a85b60c08502a638062bd127ed50f149c41ef01f8a9339969dfc7ed1e",
+          "line": 288,
+          "proves": "Report reduction explicitly accepts a valid nothing outcome as pass, preserves every target run link/summary, and retains sibling failures.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_nightly.py"
+          ],
+          "suite_membership": "Imported into test_nightly.py as TestNightlyPublication on line 17; unittest.main executes the imported TestCase as part of the recorded 39-test suite."
+        },
+        {
+          "test": "TestNightlyPublication.test_nonsuccess_conclusions_override_every_otherwise_passing_outcome",
+          "file": "tools/tests/nightly_publish_cases.py",
+          "source_revision": "3427f041c5f686c460c1fa027cf6f835791209c1",
+          "source_sha256": "d305a16a85b60c08502a638062bd127ed50f149c41ef01f8a9339969dfc7ed1e",
+          "line": 315,
+          "proves": "Valid successful nothing yields pass; failure/neutral/cancelled/skipped/timed-out/action-required/stale/startup/empty conclusions force failure even beside nothing.",
+          "executed_evidence": [
+            "qualified_gate_suites.test_nightly.py"
+          ],
+          "suite_membership": "Imported into test_nightly.py as TestNightlyPublication on line 17; unittest.main executes the imported TestCase as part of the recorded 39-test suite."
+        }
+      ],
+      "saved_execution": [
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/actual-next-version-assessment.json",
+          "sha256": "f2883fccd2d3776ef94848c3147e38a7aee432f974158a5850ea0e9e8b544abc",
+          "observed": "Unmodified released resolver on exact preparation mains reports no-version:true for both pilots; version_override:false, publication_performed:false, workflow_dispatch_performed:false."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/actual-next-version-assessment.log",
+          "sha256": "d0d7c61889fb0141bb44d72ef9296ee962f5aa9484cc812819f64835ae9b1abe",
+          "observed": "Both actual resolver invocations say nothing to release."
+        },
+        {
+          "file": "_bmad-output/specs/spec-cicd/evidence/11/nightly-checkpoint-pending.json",
+          "sha256": "44e0e32a93c48673474f2bc689d9190291bbf00a4f53306079b928fa2fe0f347",
+          "observed": "Explicit genuine schedule requirement; no future outcome inferred."
+        }
+      ],
+      "uncovered_live_requirement": "The read-only pre-adoption resolver computation is not an authenticated scheduled-night release outcome or Builds no-bump report. The genuine scheduled-night checkpoint remains open and is owned by the parent session.",
+      "limit": "Passing fixtures and pre-adoption computation cannot replace the required real scheduled-night acceptance event. No manual dispatch or forced version is proposed."
+    }
+  ],
+  "summary": {
+    "automated_rows_covered": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "automated_rows_uncovered": [],
+    "actual_live_acceptance_pending": [
+      {
+        "row": 5,
+        "reason": "Genuine scheduled-night release/no-release and Builds bump/no-bump outcome after final policy state remains required."
+      }
+    ],
+    "real_uncovered_code_behavior_found": false,
+    "spec_preserved": true,
+    "index_preserved": true,
+    "audited_source_files_preserved": true,
+    "tests_executed_during_audit": 0,
+    "remote_operations_during_audit": 0
+  }
+}
