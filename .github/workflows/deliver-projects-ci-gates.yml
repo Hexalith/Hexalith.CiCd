@@ -1,0 +1,115 @@
+name: Deliver reviewed Projects gate repair
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: deliver-projects-ci-gates
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    outputs:
+      plan: ${{ steps.qualify.outputs.plan }}
+    steps:
+      - name: Checkout CiCd source without dependencies or persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Setup pinned uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          enable-cache: false
+
+      - name: Qualify both closed delivery profiles without secrets
+        id: tests
+        run: |
+          uv run --locked --script --python 3.12 tools/tests/test_deliver_g6_catalog.py
+          uv run --locked --script --python 3.12 tools/tests/test_deliver_projects_ci_gates.py
+
+      - name: Bind reviewed nine-file repair to current exact sources
+        id: qualify
+        if: ${{ !cancelled() }}
+        env:
+          G6_OWNER_SOURCE: ${{ github.sha }}
+          G6_PROFILE: ci-gates
+          G6_BEHAVIORAL_RESULT: ${{ steps.tests.outcome }}
+        run: python3 -I tools/deliver_g6_catalog.py qualify --profile ci-gates --report projects-ci-gates-qualification.json
+
+      - name: Upload qualification receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: projects-ci-gates-qualification
+          path: projects-ci-gates-qualification.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  deliver:
+    needs: validate
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.plan != '' }}
+    concurrency:
+      group: deliver-owned-writes
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: cicd-app
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact qualified owner source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .ci-gates-owner
+          sparse-checkout: |
+            tools/deliver_g6_catalog.py
+            tools/delivery_runtime.py
+            docs/proposals/projects-ci-gates.json
+            docs/proposals/projects-ci-gates.patch
+            docs/proposals/projects-ci-gates-validation.json
+            .github/workflows/deliver-projects-ci-gates.yml
+          sparse-checkout-cone-mode: false
+          submodules: false
+          persist-credentials: false
+
+      - name: Mint only Projects content correction token
+        id: token
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.Projects
+          permission-contents: write
+
+      - name: Apply only the exact qualified nine-file repair
+        if: ${{ !cancelled() }}
+        env:
+          G6_OWNER_SOURCE: ${{ github.sha }}
+          G6_PROFILE: ci-gates
+          G6_QUALIFICATION: ${{ needs.validate.result }}
+          G6_PLAN: ${{ needs.validate.outputs.plan }}
+          MODULE_TOKEN: ${{ steps.token.outputs.token }}
+        run: python3 -I .ci-gates-owner/tools/deliver_g6_catalog.py deliver --profile ci-gates --report projects-ci-gates-delivery.json
+
+      - name: Upload delivery receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: projects-ci-gates-delivery
+          path: projects-ci-gates-delivery.json
+          if-no-files-found: error
+          retention-days: 90
