@@ -1,0 +1,49 @@
+{
+  "source_sha256": {
+    "tools/scan_discovery.py": "c6b02599e77520a214dd985155e7565027f346ab4bdd1f140ae25b4aad69210e",
+    "tools/scan_powershell.ps1": "b21c0e6678741b5c779f91cfa919dab4f122296f75898151fffeab162fc0acc6"
+  },
+  "test_source_sha256": "f414084cc0019cb40dc7044da1d338e7a6ab10c81964b079c61f856ee47762de",
+  "checks": [
+    {
+      "command": "run-with-temp uv run --locked --script tools/tests/test_scan.py -v",
+      "exit_code": 0,
+      "tests": 109,
+      "output": "scan-tests.txt",
+      "sha256": "8d8941d9612529345347d50cb83ba0f1bb5a1fabb5d52a7aa857fba1fb3d556f"
+    },
+    {
+      "command": "run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py -v",
+      "exit_code": 0,
+      "tests": 109,
+      "output": "scan-tests-python312.txt",
+      "sha256": "a89da210cd9c1a19f7a0728f5c5e507d4bdd83dacd700e8980be2b3331b7165d"
+    },
+    {
+      "command": "run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py PowerShellDiscoveryTests ScanTests.test_followed_wrapper_and_recursive_interpreter_forms ScanTests.test_comments_bom_installed_tools_and_attribute_imports_keep_actual_scope ScanTests.test_review6_double_quoted_powershell_here_strings_expand ScanTests.test_review7_powershell_environment_output_uses_separate_lines -v",
+      "exit_code": 0,
+      "tests": 12,
+      "output": "focused-tests.txt",
+      "sha256": "22e9da2273f67ab7d3fbb3cf4994e0f4a7f77ff183fc2eff563f85f023751b63"
+    },
+    {
+      "command": "run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py PowerShellDiscoveryTests.test_alias_and_provider_mutations_are_rejected -v",
+      "exit_code": 0,
+      "tests": 1,
+      "output": "provider-mutation-tests.txt",
+      "sha256": "d2332c7e79db1a0a76372abca3a809b16a3631cc54baeeab433b0c480c680ead"
+    }
+  ],
+  "sequence": "Full 109-test suites passed on both interpreters during hardening; 12 focused checks and the added provider-mutation regression then passed after final review corrections.",
+  "reproduction_command": "run-with-temp uv run --with PyYAML==6.0.3 python _bmad-output/specs/spec-cicd/evidence/17/verify-powershell-discovery.py --folders /home/administrator/projects/hexalith/cicd-story-17/references/Hexalith.Folders",
+  "reproduction_exit_code": 0,
+  "reproduction_result": "verification.json",
+  "render_check": {
+    "exit_code": 0,
+    "output": "render.txt",
+    "context": "Disposable CiCd clone with pinned direct Builds; fresh worktree's direct check initially failed because that checkout was absent."
+  },
+  "story_17_status": "in-progress",
+  "migration_spec_and_production_delivery_unchanged": true,
+  "remaining_discovery_diagnostics": 318
+}

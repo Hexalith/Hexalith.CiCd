@@ -15,10 +15,13 @@ from __future__ import annotations
 
 import ast
 from collections import deque
-from pathlib import PurePosixPath
+from functools import lru_cache
+import json
+from pathlib import Path, PurePosixPath
 import posixpath
 import re
 import shlex
+import subprocess
 import tomllib
 
 import yaml
@@ -215,6 +218,55 @@ def shell_words(text, powershell):
         return [word for word in lex if word and not set(word) <= set(";&|()")]
     except ValueError:
         return [word.strip("'\"") for word in text.split()]
+
+
+@lru_cache(maxsize=128)
+def powershell_ast(text):
+    """Use the language parser, with source only on stdin, never as code."""
+    try:
+        result = subprocess.run(
+            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File",
+             str(Path(__file__).with_name("scan_powershell.ps1"))],
+            input=text, text=True, encoding="utf-8", capture_output=True, timeout=30,
+            cwd=Path(__file__).resolve().parent)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise DeliveryError("PowerShell parser unavailable: " + clean(error)) from None
+    if result.returncode:
+        raise DeliveryError("PowerShell parser failed: " + clean(result.stderr))
+    try:
+        events = json.loads(result.stdout)["events"]
+        if not isinstance(events, list):
+            raise ValueError("invalid event list")
+        for event in events:
+            if (not isinstance(event, dict) or type(event.get("line")) is not int or event["line"] < 1
+                    or event.get("kind") not in {"error", "command", "literal", "assignment", "member",
+                                                 "module", "here-expansion", "sequence", "unsupported"}):
+                raise ValueError("invalid parser event")
+            if event["kind"] == "sequence":
+                if not isinstance(event.get("values"), list) or not all(isinstance(v, str) for v in event["values"]):
+                    raise ValueError("invalid literal sequence")
+                continue
+            if not isinstance(event.get("text"), str):
+                raise ValueError("invalid parser text")
+            if event["kind"] == "command":
+                if (event.get("invocation") not in {"Unknown", "Ampersand", "Dot"}
+                        or not isinstance(event.get("words"), list) or not event["words"]
+                        or any(not isinstance(w, dict) or not isinstance(w.get("type"), str)
+                               or not isinstance(w.get("value"), str) or type(w.get("splatted")) is not bool
+                               or type(w.get("computed")) is not bool
+                               for w in event["words"])
+                        or not isinstance(event.get("redirects"), list)
+                        or not all(isinstance(r, str) for r in event["redirects"])):
+                    raise ValueError("invalid command event")
+            if event["kind"] == "assignment" and (
+                    type(event.get("simple")) is not bool or type(event.get("increment")) is not bool
+                    or not isinstance(event.get("operator"), str)
+                    or not isinstance(event.get("variables"), list)
+                    or not all(isinstance(v, str) for v in event["variables"])):
+                raise ValueError("invalid assignment event")
+        return events
+    except (KeyError, ValueError, TypeError):
+        raise DeliveryError("invalid PowerShell parser output") from None
 
 
 def powershell_comments(text):
@@ -881,11 +933,12 @@ class Discovery:
         # Recognized calls carry the literal working directory. Literal words
         # naming tracked scripts are included afterwards from every base.
         text = text.removeprefix("\ufeff")
-        if powershell:
-            text = powershell_comments(text)
         # Replace spaced Actions expressions before shell tokenization.
         text = re.sub(r"\$\{\{\s*github\.(workspace|action_path)\s*\}\}",
                       lambda m: "$GITHUB_WORKSPACE" if m[1] == "workspace" else "$GITHUB_ACTION_PATH", text)
+        if powershell:
+            self.powershell(path, text, cwd, action, offset=offset, sourced=sourced)
+            return
         cwds, literals, modules = [cwd], [], []
         for number, line, data in self.logical(text, offset, powershell, path):
             for body_number, body, expands in data:
@@ -925,6 +978,101 @@ class Discovery:
                 self.environment(segments, line[:cut], powershell)
                 for words in segments:
                     cwd = self.segment(words, path, cwd, action, cwds, number, powershell, sourced)
+            except (ValueError, RecursionError) as error:
+                self.error(path, number, "local-script discovery: " + clean(error))
+        for candidate_cwd in dict.fromkeys(cwds):
+            self.include(literals, path, candidate_cwd, action, self.bases(path, action, cwds))
+            self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, cwds))
+
+    def powershell(self, path, text, cwd, action, *, offset, sourced):
+        """Traverse AST commands inside all branches, functions and expressions.
+
+        Declarations, assignments and data expressions are not command words.
+        Literal fallback remains independent of invocation recognition.
+        """
+        try:
+            events = powershell_ast(text)
+        except DeliveryError as error:
+            self.error(path, offset + 1, "local-script discovery: " + clean(error))
+            return
+        cwds, literals, modules = [cwd], [], []
+        for event in events:
+            number, kind = event["line"] + offset, event["kind"]
+            if kind == "literal":
+                words = [event["text"], *shell_words(event["text"], True)]
+                literals.extend((number, word) for word in words)
+                modules.extend((number, module) for module in self.references(words, path, number))
+                continue
+            try:
+                if kind == "error":
+                    raise DeliveryError("invalid PowerShell syntax: " + event["text"])
+                if kind == "unsupported":
+                    raise DeliveryError(event["text"])
+                if kind == "here-expansion":
+                    raise DeliveryError("unsupported expanding heredoc execution")
+                if kind == "member":
+                    raise DeliveryError("unsupported PowerShell method invocation: " + event["text"])
+                if kind == "assignment":
+                    for variable in event["variables"]:
+                        if variable.lower().startswith("env:"):
+                            name = variable[4:].upper()
+                            if (name in RESOLUTION or (name == "PATH" and (
+                                    not event["simple"] or event["operator"] not in {"Equals", "PlusEquals"}))
+                                    or re.search(r"[$`*?]", name)):
+                                raise DeliveryError("unsupported environment assignment affecting script resolution")
+                        if (variable.lower().startswith(("function:", "alias:"))
+                                or variable.split(":")[-1].upper() in {
+                                    "PSDEFAULTPARAMETERVALUES", "PSMODULEAUTOLOADINGPREFERENCE", "EXECUTIONCONTEXT"}):
+                            raise DeliveryError("unsupported PowerShell assignment affecting command resolution")
+                    if not event["simple"]:
+                        raise DeliveryError("unsupported PowerShell assignment target")
+                    self.environment([], event["text"], True)
+                elif kind == "sequence":
+                    modules.extend((number, module) for module in self.references(event["values"], path, number))
+                elif kind == "module":
+                    self.segment(["using", "module", event["text"]], path, cwd, action, cwds, number, True, sourced)
+                elif kind == "command":
+                    words = [word["value"] for word in event["words"]]
+                    modules.extend((number, module) for module in self.references(words, path, number))
+                    # A computed command and a script-block invocation must not
+                    # become a harmless bare command after token removal.
+                    first = event["words"][0]
+                    if first["type"] == "ScriptBlockExpressionAst":
+                        raise DeliveryError("unsupported shell compound/subshell execution")
+                    if first["type"] not in {"StringConstantExpressionAst", "ExpandableStringExpressionAst"}:
+                        raise DeliveryError("unresolved computed command: " + words[0])
+                    if any(word["splatted"] for word in event["words"]):
+                        raise DeliveryError("unresolved PowerShell argument splatting")
+                    name = PurePosixPath(words[0]).name.lower().removesuffix(".exe")
+                    if name in {"set-alias", "sal", "new-alias", "nal", "import-alias", "ipal", "remove-alias",
+                                "new-psdrive", "ndr", "remove-psdrive", "rdr"}:
+                        raise DeliveryError("unsupported PowerShell alias mutation affecting command resolution")
+                    mutates_provider = (name.partition("-")[0] in {"set", "new", "remove", "clear", "copy",
+                                                                  "move", "rename", "add"}
+                                        or name in {"si", "ni", "sc", "ri", "cli", "clc", "ac", "cpi", "cp", "copy",
+                                                    "mi", "mv", "move", "rni", "ren", "sp", "cpp", "mp", "rnp",
+                                                    "rp", "clp", "sv", "rv", "clv"})
+                    if (mutates_provider
+                            and any(re.match(r"(?i)(?:-\w+:)?(?:alias|function):", word) for word in words[1:])):
+                        raise DeliveryError("unsupported PowerShell provider mutation affecting command resolution")
+                    if (name not in {"echo", "write-output", "write-host", "cat", "get-content"}
+                            and any(word["computed"] for word in event["words"][1:])):
+                        raise DeliveryError("unresolved computed PowerShell command operand: " + name)
+                    code_words = []
+                    if name in {"invoke-expression", "iex", "eval"}:
+                        code_words = event["words"][1:]
+                    elif name in SHELLS:
+                        mode, remaining = self.shell_options(words[1:], SHELLS[name] == "powershell")
+                        if mode == "inline" and remaining:
+                            code_words = event["words"][-len(remaining):]
+                    if any(word["computed"] or word["type"] not in {"StringConstantExpressionAst", "CommandParameterAst"}
+                           for word in code_words):
+                        raise DeliveryError("unresolved computed command: execution text")
+                    redirects = [word for value in event["redirects"] for word in shell_words(value, True)]
+                    self.environment([words + redirects], event["text"], True)
+                    if event["invocation"] == "Dot":
+                        words = [".", *words]
+                    cwd = self.segment(words + redirects, path, cwd, action, cwds, number, True, sourced)
             except (ValueError, RecursionError) as error:
                 self.error(path, number, "local-script discovery: " + clean(error))
         for candidate_cwd in dict.fromkeys(cwds):
@@ -1155,6 +1303,8 @@ class Discovery:
         if builtin in {"eval", "invoke-expression", "iex"}:
             if args[:1] and args[0].lower() == "-command":
                 args = args[1:]
+            if powershell and not args:
+                raise DeliveryError("unresolved computed command: missing execution text or pipeline-fed evaluation")
             # Evaluated text runs in this shell, so a directory change inside
             # it fails rather than leaving a stale caller cwd.
             self.commands(path, " ".join(args), cwd, action, offset=number - 1, powershell=powershell, sourced=True)

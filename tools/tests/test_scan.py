@@ -135,7 +135,7 @@ A1 = (
      "scripts/helper.sh", "unsupported shell compound/subshell execution"),
     ("ps-try", [("pwsh", "try { ./scripts/helper.ps1 } catch { exit 1 }", "")], {"scripts/helper.ps1": COPY},
      "scripts/helper.ps1", None),
-    ("ps-else", [("pwsh", "} else { ./scripts/helper.ps1 }", "")], {"scripts/helper.ps1": COPY},
+    ("ps-else", [("pwsh", "if ($false) { Write-Host x } else { ./scripts/helper.ps1 }", "")], {"scripts/helper.ps1": COPY},
      "scripts/helper.ps1", None),
     ("builtin-source", [("bash", "builtin source ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
      "scripts/helper.sh", None),
@@ -216,6 +216,148 @@ A1 = (
      {"pyproject.toml": "[project]\nname = 'x'\n[project.scripts]\nlint = 'helper:main'\n", "helper.py": COPY},
      None, "unsupported task runner with tracked module recipes: uv"),
 )
+
+
+class PowerShellDiscoveryTests(unittest.TestCase):
+    def discover(self, source, files=None):
+        temporary = tempfile.TemporaryDirectory(prefix="powershell-discovery-")
+        self.addCleanup(temporary.cleanup)
+        w = Workspace(Path(temporary.name) / "workspace", ("Hexalith.Alpha",))
+        w.action("Hexalith.Alpha", "./scripts/start.ps1", shell="pwsh")
+        for path, text in {"scripts/start.ps1": source, **(files or {})}.items():
+            w.write("Hexalith.Alpha", path, text)
+        revision = w.commit(w.paths["Hexalith.Alpha"])
+        return sc.Discovery(rt.Git(w.paths["Hexalith.Alpha"]), revision).discover()
+
+    def test_parameters_assignments_and_data_expressions_are_not_commands(self):
+        files, errors = self.discover("""param([string]$Label = 'folders')
+$ErrorActionPreference = 'Stop'
+$values = @(1, 2)
+$count = 0
+$count++
+$data = @{ Label = $Label; Values = $values }
+foreach ($item in $values) { Write-Host "$($data.Label): $item" }
+""")
+        self.assertEqual(errors, [])
+        self.assertEqual(set(files), {".github/actions/dormant/action.yml", "scripts/start.ps1"})
+
+    def test_literal_calls_inside_functions_branches_and_assignment_rhs(self):
+        files, errors = self.discover("""using module @{ModuleName='./scripts/library.psm1'; ModuleVersion='1.0.0'}
+function Invoke-Checks {
+    param([string]$Label = 'folders')
+    if ($Label) { & "$PSScriptRoot/child.ps1" } else { . "$PSScriptRoot/library.psm1" }
+}
+Invoke-Checks -Label folders
+$output = (python ./scripts/check.py)
+try { ./scripts/direct.ps1 } catch { Write-Host 'failed' }
+pwsh -Command:"& ./scripts/direct.ps1"
+""", {"scripts/child.ps1": "Write-Host child\n", "scripts/library.psm1": "Write-Host library\n",
+       "scripts/check.py": "print('checked')\n", "scripts/direct.ps1": "Write-Host direct\n"})
+        self.assertEqual(errors, [])
+        self.assertTrue({"scripts/child.ps1", "scripts/library.psm1", "scripts/check.py",
+                         "scripts/direct.ps1"} <= set(files))
+
+    def test_unresolved_execution_and_resolution_mutations_still_fail(self):
+        probes = {
+            "& $Command": "unresolved computed command",
+            ". $Script": "unresolved computed command",
+            "$output = (& $Command)": "unresolved computed command",
+            'Write-Host "$(python $Script)"': "unresolved local-script target",
+            'pwsh -File "$Script"': "unresolved local-script target",
+            "Invoke-Expression $Code": "unresolved computed command",
+            "Start-Process python -ArgumentList $Args": "PowerShell process invocation",
+            "[System.Diagnostics.Process]::Start($Command)": "PowerShell method invocation",
+            "[scriptblock]::Create($Code).Invoke()": "PowerShell method invocation",
+            "Set-Location scripts": "working-directory command",
+            "$env:PYTHONPATH = 'support'": "environment assignment",
+            '$env:PATH = "$PWD/scripts;$env:PATH"': "PATH change",
+            "Set-Item env:PSModulePath ./modules": "environment assignment",
+            "unknown-launcher $Command": "computed operand of unknown command",
+            "unknown-launcher @Arguments": "argument splatting",
+            'pwsh -Command "$Code"': "unresolved computed command",
+            'python -c ("exec(" + "input())")': "computed PowerShell command operand",
+            'Invoke-Expression -Command:("./scripts/" + "hidden.ps1")': "computed PowerShell command operand",
+            'Invoke-Expression -Command:$Code': "unresolved computed command",
+            'unknown-launcher ("scripts/hid" + "den.ps1")': "computed PowerShell command operand",
+            '$env:PYTHONPATH[0] = "s"': "environment assignment",
+            '[Environment]::CurrentDirectory = "scripts"': "PowerShell assignment target",
+            '$env:PYTHONPATH++': "environment assignment",
+            '$env:PYTHONPATH ??= "support"': "environment assignment",
+            '$env:PATH ??= "scripts"': "environment assignment",
+            '--$env:PATH': "environment assignment",
+            '$function:InvokeHidden = $Code': "assignment affecting command resolution",
+            '$alias:InvokeHidden = $Command': "assignment affecting command resolution",
+            '$global:PSDefaultParameterValues = @{}': "assignment affecting command resolution",
+            '("./scripts/hid" + "den.ps1") | Invoke-Expression': "unresolved computed command",
+            'Set-Alias run Invoke-Expression; run "& (\'./scripts/hid\' + \'den.ps1\')"': "alias mutation",
+            'Set-Item alias:run Invoke-Expression': "provider mutation",
+        }
+        for source, diagnostic in probes.items():
+            with self.subTest(source=source):
+                _, errors = self.discover("param()\n" + source + "\n")
+                self.assertTrue(any("scripts/start.ps1:2:" in error and diagnostic in error
+                                    for error in errors), errors)
+
+    def test_alias_and_provider_mutations_are_rejected(self):
+        for command in ('Copy-Item alias:iex alias:run', 'cpi alias:iex alias:run',
+                        'Move-Item alias:iex alias:run', 'Rename-Item alias:iex run',
+                        'Import-Alias ./aliases.csv', 'New-PSDrive -Name commands -PSProvider Alias -Root ""'):
+            with self.subTest(command=command):
+                _, errors = self.discover(command + "\n")
+                self.assertTrue(any("affecting command resolution" in error for error in errors), errors)
+
+    def test_invalid_syntax_and_missing_parser_fail_closed(self):
+        _, errors = self.discover("if ($true { Write-Host x }\n")
+        self.assertTrue(any("invalid PowerShell syntax" in error for error in errors), errors)
+        import scan_discovery as discovery
+        discovery.powershell_ast.cache_clear()
+        with mock.patch.object(discovery.subprocess, "run", side_effect=FileNotFoundError("pwsh")):
+            with self.assertRaisesRegex(rt.DeliveryError, "PowerShell parser unavailable"):
+                discovery.powershell_ast("param()\n# missing parser probe\n")
+
+    def test_malformed_and_failed_parser_output_fail_closed(self):
+        import scan_discovery as discovery
+        for output in ("not JSON", '{"events":null}', '{"events":[{}]}',
+                       '{"events":[{"line":1,"kind":"command","text":"x"}]}'):
+            with self.subTest(output=output):
+                result = discovery.subprocess.CompletedProcess([], 0, output, "")
+                with mock.patch.object(discovery.subprocess, "run", return_value=result):
+                    with self.assertRaisesRegex(rt.DeliveryError, "invalid PowerShell parser output"):
+                        discovery.powershell_ast("# malformed output probe " + output)
+        with mock.patch.object(discovery.subprocess, "run", return_value=discovery.subprocess.CompletedProcess(
+                [], 1, "", "parser failure")):
+            with self.assertRaisesRegex(rt.DeliveryError, "PowerShell parser failed"):
+                discovery.powershell_ast("# failed parser probe")
+        with mock.patch.object(discovery.subprocess, "run", side_effect=discovery.subprocess.TimeoutExpired("pwsh", 30)):
+            with self.assertRaisesRegex(rt.DeliveryError, "PowerShell parser unavailable"):
+                discovery.powershell_ast("# parser timeout probe")
+
+    def test_data_array_literal_module_references_are_traversed(self):
+        files, errors = self.discover("$arguments = @('python', '-m', 'helper')\n", {"helper.py": "print('helper')\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("helper.py", files)
+
+    def test_requires_literal_module_is_traversed(self):
+        files, errors = self.discover("#requires -Modules ./scripts/helper.psm1\nWrite-Host ready\n",
+                                      {"scripts/helper.psm1": "& $Command\n"})
+        self.assertIn("scripts/helper.psm1", files)
+        self.assertTrue(any("scripts/helper.psm1:1:" in error and "unresolved computed command" in error
+                            for error in errors), errors)
+
+    def test_source_is_never_executed(self):
+        temporary = tempfile.TemporaryDirectory(prefix="powershell-inert-")
+        self.addCleanup(temporary.cleanup)
+        marker = Path(temporary.name) / "must-not-exist"
+        _, errors = self.discover("Set-Content -Path '" + str(marker) + "' -Value executed\n")
+        self.assertEqual(errors, [])
+        self.assertFalse(marker.exists())
+        import scan_discovery as discovery
+        module = Path(temporary.name) / "must-not-load.psm1"
+        module.write_text("Set-Content -Path '" + str(marker) + "' -Value loaded\n")
+        for target in (module, module.with_name("does-not-exist.psm1")):
+            events = discovery.powershell_ast("using module '" + str(target) + "'\n")
+            self.assertFalse(any(event["kind"] == "error" for event in events), events)
+            self.assertFalse(marker.exists())
 
 
 class ScanTests(unittest.TestCase):
