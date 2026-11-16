@@ -79,6 +79,12 @@ Upstream artifact IDs are carried through job outputs; downloads authenticate
 the current nightly run, attempt, source, phase, registry and exact JSON member.
 ZIPs are bounded and read in memory. Tokens and keys never enter these files.
 Missing outputs or downloads produce explicit orchestration failures.
+Terminal controller API failures retain bounded, credential-redacted response
+messages, request IDs, rate-limit/required-permission headers, attempt counts
+and anonymous/scoped authentication context. A bare historical HTTP 403 cannot
+establish a permission refusal: rate-limit and response evidence are required.
+Diagnostic response reads have a two-second whole-operation limit and never
+change retries, credentials or release verification.
 Each job seeds a conservative failure document before checkout, outside its
 cleanup directory, so unavailable controllers still leave a failed artifact
 and summary. Normal initialization replaces that seed with the committed
