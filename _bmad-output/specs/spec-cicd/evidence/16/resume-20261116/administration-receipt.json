@@ -1,0 +1,465 @@
+{
+  "recordedAt": "2026-11-16T20:40:33.304170+00:00",
+  "repository": "Hexalith/Hexalith.Conversations",
+  "repositoryId": 1231551514,
+  "administrationProfile": "command-local maintainer",
+  "defaultProfileUnchanged": true,
+  "appInstallation": 179966090,
+  "appMembershipVerified": true,
+  "allNineteenInstallationSelectionsPreserved": true,
+  "legacyCodeql": {
+    "initialAnalysisCount": 296,
+    "acknowledgedDeletedCount": 296,
+    "initialAnalysesWithoutAcknowledgedDeletion": [],
+    "additionalDeletedIds": [],
+    "configuration": ".github/workflows/codeql.yml:analyze",
+    "terminalListStatus": 404,
+    "terminalListMessage": "no analysis found",
+    "acknowledgedIdsReceipt": "codeql-deletion-coverage.json"
+  },
+  "drafts": [],
+  "orphanVersionTags": [],
+  "rulesets": [
+    {
+      "id": 27406894,
+      "name": "Protect main",
+      "target": "branch",
+      "enforcement": "active",
+      "conditions": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/heads/main"
+          ]
+        }
+      },
+      "rules": [
+        {
+          "type": "deletion"
+        },
+        {
+          "type": "non_fast_forward"
+        }
+      ],
+      "bypass_actors": []
+    },
+    {
+      "id": 27406897,
+      "name": "v tags",
+      "target": "tag",
+      "enforcement": "active",
+      "conditions": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/tags/v*"
+          ]
+        }
+      },
+      "rules": [
+        {
+          "type": "update"
+        },
+        {
+          "type": "deletion"
+        }
+      ],
+      "bypass_actors": []
+    }
+  ],
+  "releaseEnvironment": {
+    "name": "hexalith-release",
+    "branchPolicies": [
+      {
+        "name": "main",
+        "type": "branch"
+      }
+    ],
+    "reviewers": [],
+    "waitTimer": 0,
+    "secretNames": [
+      "HEXALITH_REGISTRY_PASSWORD",
+      "HEXALITH_REGISTRY_USERNAME"
+    ]
+  },
+  "nugetPolicy": {
+    "id": 27245,
+    "repositoryId": 1231551514,
+    "owner": "Hexalith",
+    "repository": "Hexalith.Conversations",
+    "workflow": "release.yml",
+    "environment": "hexalith-release",
+    "packageGlob": "Hexalith.Conversations*",
+    "pushNewPackagesAndVersions": true,
+    "unlist": false,
+    "stage": false,
+    "active": true,
+    "legacyPolicyRetained": 18928,
+    "otherPolicyIdsPreserved": true
+  },
+  "registry": {
+    "identity": {
+      "username": "hexalith-conversations-publish",
+      "repository_patterns": [
+        "conversations",
+        "conversations/**"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update"
+      ],
+      "admin_actions": [],
+      "bcrypt_cost": 12,
+      "secret_values_persisted_locally": false,
+      "environment_secret_names": [
+        "HEXALITH_REGISTRY_PASSWORD",
+        "HEXALITH_REGISTRY_USERNAME"
+      ]
+    },
+    "preservation": {
+      "old_htpasswd_rows_byte_identical": true,
+      "existing_configuration_and_grants_unchanged": true,
+      "legacy_access_removed": false,
+      "configuration_sha256": "7a31f2b2e5897114fe59c86fa1d95dca847946334f7eff5ceb79cd46393a9eb5"
+    },
+    "authentication": [
+      {
+        "repository": "Hexalith.Conversations",
+        "username": "hexalith-conversations-publish",
+        "method": "GET",
+        "endpoint": "/v2/",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "repository": "Hexalith.Conversations",
+        "username": "hexalith-conversations-publish",
+        "method": "POST",
+        "endpoint": "/v2/commons/blobs/uploads/",
+        "status": 403,
+        "expected": 403
+      },
+      {
+        "repository": "Hexalith.Conversations",
+        "username": "hexalith-conversations-publish",
+        "method": "POST",
+        "endpoint": "/v2/story-16-unrelated/blobs/uploads/",
+        "status": 403,
+        "expected": 403
+      }
+    ]
+  },
+  "releasePublishEnabled": "true",
+  "defaultCodeqlSetup": "not-configured",
+  "dependabotSecurityUpdates": false,
+  "immutableReleases": {
+    "enabled": false,
+    "enforced_by_owner": false
+  },
+  "retentionDays": 90,
+  "pushProtection": "enabled",
+  "additiveGrants": [
+    "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1231551514",
+    "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1231551514",
+    "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1231551514",
+    "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1231551514",
+    "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories/1231551514"
+  ],
+  "priorGrantMembershipsPreserved": true,
+  "legacyAccessRetired": false,
+  "adoptionPerformed": false,
+  "rawLogsDirectory": "/home/administrator/projects/hexalith/story-16-operational-logs/resume-20261116",
+  "rawFileDigests": {
+    "package-version-audit.before.json": "8403515e0f86881c40a75944e84ab27771cecafb92c74f48ddf30e86e0c48ff4",
+    "catalog-preservation.json": "035c887ca4a7fe9f4f0c11c88aed0b86cc989699cba2c64623a838788bf2e555",
+    "sonar-triage-test_perimeter.py.log": "cd3d70185a80fa538810514a864379e62b09c793110b5ceda0db3fe6b71dc941",
+    "private-docker.log": "8e1028f9c3c66d6c1f6706d2e29674685c8b2c43e7013f2f480f2ea7f30296ff",
+    "module-commit-message.txt": "24dc8c2051c11b9210815896f5d2e78c26bfd43e43431045dd1ac9ed0158dab3",
+    "path-guard-test_module_preparation.py.log": "293eda1681e8fb9f72107b88b85eb61f4e2e3e338d5c4536b6ccd3315262eb6c",
+    "sonar-triage-test_module_preparation.py.log": "946495322545006089048dc3a353ccb0ef62af74ecb07c7c9fa74395459fb2d3",
+    "admin-registry.py": "8188a3c0645eb6a06c7f33fdcd6b20e5930afcf2be39b4edacfd742e237b6916",
+    "provision-environments.json": "b981ccbaccf1f71acce6e769fcc3b643dfbe5677af4b73cd4188964dddc47761",
+    "nuget-conversations-prepare-5.json": "5caf7cf43c3a2cb77e4bf3f997d840463895b6ec2ab7558c87ffde4c5e68f359",
+    "test-package-version-audit-generator.log": "68c99df9b19916bb4cba9354132a3f5e94d83f585a1eb67f17654c4251e1122a",
+    "provision-cleanup.empty-filter.json": "51c32c356d4ba6feb1cc2bc6ce9639814b2104483e24c85baa54e96bd9c1e912",
+    "catalog-verification.json": "cdbc8f5edc7abe1abcbf666fefbcb17322654c03b26c51b19c7a7b21528fcf6e",
+    "path-guard-final-test_release_build.py.log": "13fa54149c71334f71031c365b4e80fa963c2b297ee3f1303aeb60580d65b00e",
+    "nuget-navigation.json": "f276ae2291b5b712e4215adeb554c350b1118cc88f70991a242a2805462d2138",
+    "catalog-failure-summary.txt": "7ce4cd43fc8bed9e9cb8e412a571a410bd818ebd218ffde602f82f61e8e3786f",
+    "path-guard-test_ci_prepare.py.log": "a36ade9846c6237e0d30d437baa52c4d89713eb333c6cbb40733232cb5ba28b6",
+    "private-docker.initial-failure.log": "c173cff90e27039bb082df6166cbbb32b3102ffa77e067b666c233d7fd2cd2f5",
+    "provision-registry.json": "f02099d2445c22593d1bb9c00a6f2bb72208c5c3e114562e5657f79b97db50eb",
+    "nuget-conversations-submit-5.json": "aeaef48c474603df7b452a92762c1ad3c2433bc5e22be5615f5fb06f16836519",
+    "app-selection-readback.json": "ff9b96df5ce092b0a110a100870a30ad0228c383456c7aee0438f64023c27703",
+    "path-guard-test_local_check.py.log": "016691cf6faed67e8af4bbe81e8742e028bf9840d9b4f5e043db086b8a796b0f",
+    "path-guard-message.txt": "d1df4996997bbc141968f9557572ab45993b424017c2cde560bd4e2584a4d8e8",
+    "codeql-ui-readback.json": "d22402253741d0309861c03b4b80d110a8d7d9cf6cf15240afb9f4cfa882a4e8",
+    "path-guard-final-test_module_preparation.py.log": "5d6a2ed72d8a1044039f59b095e83dd79012334938689baf3ff6307d63217d0d",
+    "validate-package-version-audit.log": "c1cda67f05ccc84863726eea3e63b809e32e26090f8c64562f5e951e628fda6e",
+    "admin-provision.py": "79a8eb8708d4baa6aa5d7815789a2da315e6d14da7a5f05190c1c8f77cb4b85c",
+    "admin-preflight.py": "ef7d41fc7896c6cc8169ceecdd74a10a95566b5c736d468d4a4c7915ae7310bd",
+    "nuget-conversations-readback-1.json": "d6752d13554f57dd8355078ff823f5580415fdacddebb887d269644a0c1fba04",
+    "nuget-form-state.json": "ab22ed9bec865b789793c4198a5f978b0c2a9fd6293e219a77db4c7df5f01620",
+    "sonar-triage-test_qualification_tools.py.log": "95698e0ebc17a917fb058091871f2ddcfc17a0c7361da718e0e6c6e401fd64a8",
+    "path-guard-final-test_ci_prepare.py.log": "ee2029cd9d35655e10e08e525a4da26bf712974715264b90972903fe9d416dfc",
+    "final-administration-readbacks.json": "82070c9a437dfb935919540de96bb334c5fb58484bc9fcb30f7d62a4e4bafa24",
+    "test-package-version-audit-validator.log": "2e05e085564f1e0ff6d9c597e3b71e5cfc5496b24d117b48a3c7b9a9c2795ebf",
+    "codeql-deletion-coverage.json": "919260936d7fd63e0853d54a41232bb677646a63f9179bd46606691c330f3488",
+    "path-guard-final-test_local_check.py.log": "1cca39ed2ac0f9cf595c4b867ef8d29fbbfd8ec6ff066a557ca28a3210e58014",
+    "path-guard-initial-runner.log": "3992690b3b20d2b3c297fb6c7970bd70d4ec07438be9c6558572e572eb763a92",
+    "module-commitlint.log": "021ea27a87769603019aae84c9efcd7ac3b14646dd9c4b02aa16aff1e0f900f1",
+    "provision-rulesets.json": "ea7b565c34b0dfa4c197cb9637d2fca6296270d4cec17f129b84c1ac71873a85",
+    "registry-preflight.json": "1d846a5430b69e20f3d5cb90cc0798aec43c1c7efc54f8a389a3d3cd718e9962",
+    "nuget-readback.json": "8805ed7a5855f8f300d16a67928edc7d80c95875fa0c0468da6dd8e97ed61afe",
+    "nuget-after-signin.json": "b1bafd67d61f86bdd6beb1cb109409160c9a9e8e3c1505b700fb719da0b09701",
+    "path-guard-test_windows_checkout.py.log": "282f6c3f8d187a5efca86999d9fc95387ed685bc8f7a33dd54e371ce567f4438",
+    "path-guard-commitlint.log": "560978a618c7bd66c9ff3952427978389949999ab95e2d7b86444bbdb3bcd324",
+    "builds-audit-owning-commitlint.json": "9ec8a8271d1bc8b18df982f6558f267a9d9dab64bc4821017d1306a13454a577",
+    "app-selection-navigated.json": "ac7aa4843f45c7bc681d37af4d23d81d43273454a7b0017b6dd07efc2386f1d4",
+    "path-guard-final-test_windows_checkout.py.log": "be48a7585fcba1e8e33b6f487733a5d492feaf07b68fe53e3772e250b6d9a567",
+    "nuget-authentication-required.json": "76139261bb4964cc6d5c0f041bcffa9f3143b394ee6831be51a4c679109f97d8",
+    "builds-audit-commitlint.json": "7bd3bf71da4eebb6edfa59c117387ec2a8d604a343bd16d78a6ad847412edddd",
+    "provision-settings-grants.json": "ce96129685b5266ad5e89ec6949068d01f0367ec5da40ae6a34129115cf713d6",
+    "nuget-conversations-readback-5.json": "c69db5b3e169a2cf70dd84edc25c53a5c06a21350efbd99dcc49d64c4caec810",
+    "provision-cleanup.initial.json": "b74a20bbe385252ee7687664b14ab104c6d30e66ff941d011f421f7128b9e582",
+    "provision-cleanup.json": "052d0678b5ee61867ef58ce9c1c573fb6b3c0f624f4d34e2f72cd9cda5ac6ee8",
+    "probe-private-docker.py": "df8c4a73c5669a23e4582aa16d57da3e43022594f8ffe1028cb96a7b7986de90",
+    "administrative-preflight.json": "fd5347f495ee986ee4fc1d10b3074be65d887ec2681f5a0d3926197e73fba455",
+    "nuget-policy-ui.py": "263be211f4d68690edc958374febb7ff46f535b33e8dbf943295fded0713bf8c",
+    "private-docker.loopback-bootstrap-failure.log": "2ea4078ea5668f204120cef6967364d0a54e3a4000991a70e8b31b325d693f2b",
+    "builds-audit-commit-message.txt": "4028cfd78369b6724b75b63522ae8607fa628aa0ecc4d0b73796b0f17af57c9b",
+    "provision-cleanup.eventual-consistency.json": "41b1f8f95c6e84e1aecfc9cf01a72b0059e7b98f67d236b4704df15cab2d4621",
+    "path-guard-final-test_release_outcome.py.log": "8c6a14c3d0eb8555db5a782dddf969a3419a06fb86dcdf3ee773b54517eba833"
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "endpoint": "user",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/code-scanning/analyses?tool_name=CodeQL&per_page=100",
+      "status": "HTTP/2.0 404 Not Found",
+      "exit": 1
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/releases?per_page=100",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "user",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/rulesets?includes_parents=true",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/rulesets",
+      "status": "HTTP/2.0 201 Created",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/rulesets/27406894",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/rulesets",
+      "status": "HTTP/2.0 201 Created",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/rulesets/27406897",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "user",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/environments",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "PUT",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/environments/hexalith-release",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/environments/hexalith-release/deployment-branch-policies",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/environments/hexalith-release/deployment-branch-policies",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "user",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/code-scanning/default-setup",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/automated-security-fixes",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/actions/variables",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Conversations/actions/permissions/artifact-and-log-retention",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1231551514",
+      "status": "HTTP/2.0 204 No Content",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1231551514",
+      "status": "HTTP/2.0 204 No Content",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1231551514",
+      "status": "HTTP/2.0 204 No Content",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1231551514",
+      "status": "HTTP/2.0 204 No Content",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories/1231551514",
+      "status": "HTTP/2.0 204 No Content",
+      "exit": 0
+    },
+    {
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "status": "HTTP/2.0 200 OK",
+      "exit": 0
+    }
+  ]
+}

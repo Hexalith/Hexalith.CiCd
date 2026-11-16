@@ -80,7 +80,7 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
 
 - [x] `evidence/16/` — record human decisions, source/preflight investigation,
   gate inventory, shared design and native Windows feasibility probes.
-- [ ] `evidence/16/` — verify/provision AD-21 preconditions in order, preserving
+- [x] `evidence/16/` — verify/provision AD-21 preconditions in order, preserving
   existing access until adoption and recording exact readbacks/access failures.
 - [x] Builds `schemas/`, `Github/lib/module_preparation.py`, producer/CLI,
   orchestration and `Github/prepare/` — implement companion contracts and tests
@@ -165,7 +165,48 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   [implementation handoff](../specs/spec-cicd/evidence/16/implementation-and-verification.md)
   and [publication packet](../specs/spec-cicd/evidence/16/push-20261116T193523Z/README.md).
 
+- Resumed administration on 2026-11-16 verified Conversations in the existing
+  App installation, deleted all 296 inventoried legacy CodeQL analyses with
+  acknowledged responses, provisioned/read back the exact rulesets and main-only
+  release environment, added scoped NuGet policy 27245 and an isolated Zot push
+  identity, and additively granted the shared pull pair and NuGet variable.
+  Existing installation selections, policy 18928, registry entries and legacy
+  access were preserved. Immutable releases remain off until authenticated
+  adoption. The exact terminal CodeQL response was HTTP 404 `no analysis found`,
+  accompanied by successful metadata reads and the deletion receipts.
+- The stale consumer-declaration audit that blocked Builds CI was refreshed
+  through its existing generator for seven affected families. All 317 selected
+  versions and 150 other families stayed unchanged. Production audit validation,
+  113 generator cases, 109 validator cases and owning root commitlint passed.
+  The audit-only fix is published on Builds main at
+  `fa6dc2864ac65c6244b111fa9ecc5e7a78722e3e`; exact-source CI is run
+  `43951398012`. An acceptable supporting release is still required.
+- Source triage also closed the approved preparation contract's unsafe scratch
+  spelling gap: traversal/control-character paths now refuse before tag fetching,
+  tool execution or output creation. Commit
+  `27e8fba9736a4825d44c40c638c5e6f9b65ab81e` preserves concurrent catalog/audit
+  work and has current CI run `43956522607`. All 152 finalized Python controls
+  passed without skips; the eleven preparation cases also passed on Python
+  3.12.13. Existing security findings remain under triage, with no suppressed
+  checks or claimed external-gate clearance.
+- Product preparation was reapplied locally onto fresh Conversations main
+  `f1a2b3da468760d4188f604045deb098af8ead52` and committed as
+  `47e8dde1600b7a72b86532e22644dca5d952a4ff`, with owning commitlint validation.
+  The newly encountered historical measurement-envelope gate is classified in
+  the central gate inventory and retired. Git identities preserve runtime
+  source, the real warm-path benchmark/live projection suite, original fixture
+  and named owned paths. This candidate is unpushed and has no released-input
+  execution claim. See the [resumed receipts](../specs/spec-cicd/evidence/16/resume-20261116/README.md).
+
 ## Spec Change Log
+
+- 2026-11-16 follow-up: the user requested "fix" after the publication report.
+  Resume the approved remaining release, qualification and adoption work to fix
+  the missing-config checker blocker. The prior explicit instruction to push all
+  changes to main and merge remains in force as qualification gates permit.
+  No owned-module edit, fabricated receipt, skipped test or audit weakening is
+  authorized. Continue from the existing isolated worktree and full baseline.
+
 
 ## Review Triage Log
 

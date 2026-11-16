@@ -1,0 +1,32 @@
+[
+  {
+    "command": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "Tools/validate-package-version-audit.ps1"
+    ],
+    "exit": 0,
+    "seconds": 103.4
+  },
+  {
+    "command": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "Tools/test-package-version-audit-generator.ps1"
+    ],
+    "exit": 0,
+    "seconds": 101.03
+  },
+  {
+    "command": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "Tools/test-package-version-audit-validator.ps1"
+    ],
+    "exit": 0,
+    "seconds": 1132.62
+  }
+]
