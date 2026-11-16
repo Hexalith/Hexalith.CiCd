@@ -21,6 +21,9 @@ jobs:
       security-events: write
     with:
       delivered-sha: ${{ inputs.delivered-sha }}
+[% for argument, minutes in release_timeouts | dictsort %]
+      [[ argument ]]: [[ minutes | tojson ]]
+[% endfor %]
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}

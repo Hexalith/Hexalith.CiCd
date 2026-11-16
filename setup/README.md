@@ -44,7 +44,7 @@ Contracts that also declare the explicit native `job-timeout-minutes` override
 retain that override's precedence over `ciTimeoutMinutes`.
 
 Hooks are `after-unit-tests`, `after-integration-tests` and `nightly`; their actions
-and Windows job actions live at `.github/actions/<name>/action.yml` in the module.
+and custom job actions live at `.github/actions/<name>/action.yml` in the module.
 CI runs the two test hooks; `nightly` runs only in the Release workflow's
 `nightly-hook` job. Each Windows job `<name>` renders as CI workflow job ID
 `windows-<name>` (the example above becomes `windows-windows-tests`), while its
@@ -82,6 +82,149 @@ Nightly release prepares before publication discovery while retaining its audite
 restore and release targets. The separate candidate-qualification authority is
 local product proof only; CI, the normal checker, Windows and release reject it.
 
+## Adoption execution extensions
+
+The following additive fields require a published Builds tag whose exact schema,
+strict reader, workflow and action interfaces supply them. Updating checkout
+files alone does not enable them. Keep `builds-version` and production
+registrations unchanged until the separate Builds infrastructure release is
+published and qualified.
+
+`releaseTimeoutMinutes` and `nightlyTimeoutMinutes` bound the audited release
+build and existing nightly hook respectively, from 1 through 360 minutes. Omission
+keeps their 45-minute defaults. `jobs.<name>.timeoutMinutes` similarly bounds
+one independently prepared custom job; its default is 30 and private jobs are
+limited to 180 minutes. Set limits from measured
+workloads. A 360-minute mutation allowance is not evidence of elapsed duration.
+
+For example, a future compatible registration can express isolated product lanes:
+
+```yaml
+jobs:
+  authenticated-routes:
+    runner: ubuntu-latest
+    timeoutMinutes: 90
+    matrix:
+      include:
+        - {id: route-one}
+        - {id: route-two}
+        - {id: route-three}
+        - {id: route-four}
+    maxParallel: 4
+    setup: {dapr: true, browsers: true}
+  mutation-segments:
+    runner: ubuntu-24.04
+    trigger: nightly
+    resourceProfile: mutation
+    timeoutMinutes: 360
+    matrix:
+      include:
+        - {id: happy-path}
+        - {id: error-handling}
+  mutation-summary:
+    runner: ubuntu-24.04
+    trigger: nightly
+    resourceProfile: mutation
+    timeoutMinutes: 360
+    needs: [mutation-segments]
+    runAfterFailure: true
+```
+
+Each matrix record has a unique kebab-case `id` and literal string values. Each
+case gets a fresh runner, checkout, Release build, shared setup and product
+action. `fail-fast: false` preserves the other cases when one fails. `needs`
+forms a same-trigger dependency DAG. `runAfterFailure` permits an aggregate to
+inspect failed dependencies without changing their failed verdicts. Product
+actions exchange reports through artifacts with names including the job and
+case identity; a serial hook cannot replace these isolated workers.
+
+Hosted runners are `ubuntu-latest`, `ubuntu-24.04`, `windows-latest` and
+`macos-latest`. Existing minimal Windows/macOS jobs keep their original
+`windows-<name>` IDs. Linux jobs use `custom-<name>`. The `mutation` resource
+profile comes from the selected Builds schema's `x-resource-profiles` bytes:
+the authenticated SDK container digest, four CPUs, 10 GiB memory and the same
+swap cap. Builds installs Python and patch before preparation, selects its
+supported Python interpreter, and records cgroup limits. Module actions do not
+reimplement this preparation.
+
+`trigger` defaults to `ci`. A `nightly` or `manual` job adds the owned
+`qualification.yml` caller. Its nightly schedule is centrally defined here at
+02:37 UTC, independently of the release scheduler. A main-branch manual dispatch
+selects `nightly` or one named manual job, together with its prerequisites.
+This workflow has no publisher. Successful qualification provides adoption
+evidence; it grants no release or publication permission and does not replace CI.
+
+Protected live qualification uses a manual-only private job:
+
+```yaml
+jobs:
+  azure-conformance:
+    runner:
+      group: payload-protection-azure-private-ephemeral
+      labels: [self-hosted, linux, x64]
+    trigger: manual
+    environment: payload-protection-azure-conformance
+    timeoutMinutes: 45
+    secrets:
+      AUTHORITY_JSON: PAYLOAD_AZURE_AUTHORITY_JSON
+      CUSTODY_JSON: PAYLOAD_AZURE_CUSTODY_JSON
+```
+
+Every selected private lane, including dependencies of a selected aggregate,
+waits for a fresh shared `qualification-ci` run at the dispatch SHA. Its exact
+successful `source-sha` and the explicit dispatch `authority-sha256` go to Builds'
+`prepare` in `environment: preserve` mode. Builds validates the request before
+checkout, builds once and retains the owner's Dapr/runtime fixture. Private
+setup overrides are rejected. The legacy `secrets: [NAME]` plus
+`preparation: build-only` form follows the same path; mapped secrets may also
+state `preparation: build-only` explicitly.
+
+The environment's protection, runner-group isolation/ephemerality and secret
+scope require separate live verification before adoption. Secret values reach
+only that product action step, never general CI or shared preparation. Dispatch
+`parameters` is JSON for product authority identifiers and modes, never credentials.
+The product action validates its authority/custody and real fault eligibility.
+The catalog Dapr tuple is not a replacement for its historically qualified tuple.
+
+Extended actions receive `HEXALITH_JOB_NAME`, `HEXALITH_JOB_PARAMETERS` (the JSON
+matrix record, or `{}`), `HEXALITH_JOB_NEEDS` (dependency outcomes) and
+`HEXALITH_QUALIFICATION_PARAMETERS` (manual parameters, otherwise `{}`). Private
+lanes also receive trusted `HEXALITH_AUTHORITY_SHA256` and `HEXALITH_SOURCE_SHA`.
+Actions
+must parse this data without interpolating it into shell code, retain ownership
+of their product hosts/backends and clean their own resources. Credentials must
+not be copied into reports or artifacts.
+
+Per-job `setup` overrides only shared environment settings: `dapr`, `browsers`,
+`registry`, `aspire`, `npmWorkspaces`, `dotnetTools` and `prerequisites`. It does
+not alter test classification. `prerequisites` is also available at the module
+level: exact paired `nodeVersion`/`npmVersion`, `apt`, `tlsTrust` and the explicit
+`daprProfile: catalog`. The runtime refuses a mismatched npm version, unsupported
+Dapr profiles and unsafe workspace inputs. No historical runtime promotion is
+implied. Browser product startup and assertions remain in enabled actions.
+
+An enabled action can use Builds' `Github/qualification-tools` with a product-owned
+`hexalith.qualification-tools.v1` manifest of exact official assets and hashes.
+Staging is isolated. Its optional `dapr-runtime-version` uses the shared full
+initializer for an exact runtime >=1.18.0 with the verified official CLI named
+`dapr`. It requires a fresh hosted Linux worker, shared `dapr` setup disabled,
+and no existing Dapr home/receipt. It exports a job-bound initialization receipt;
+product compatibility and eligibility assertions remain in the action. Private
+workers preserve owner preparation and cannot use this initialization option.
+
+`tests.additional` explicitly admits test projects outside the selected solution
+to shared Release restore/build and discovery; non-test or missing projects fail.
+`tests.reports.trx: true` collects native per-project results. Optional
+`tests.reports.coverage` declares required `projects`, `lineScope`,
+`minimumLine`, `lineComparison` (`at-least` or `greater-than`), `branchTargets`
+and `minimumBranch`. Scope prefixes may end in `/`; branch targets name exact
+source files. A threshold requires a nonempty corresponding scope. Missing,
+empty or invalid required reports fail. Reporting without thresholds adds no
+gate. Preserve each product's existing scopes/comparisons; Tenants retains strict
+line coverage greater than 80 and branch coverage at least 100 on its named files.
+The shared local checker uses the same unit report rules in stages 1–3; hosted
+integration, custom jobs and qualification still require separate evidence.
+
 Prerequisites: `uv`, and an initialized `references/Hexalith.Builds` submodule
 whose local objects include the `builds-version` tag; rendering never fetches it.
 `--lint` also requires Linux x86_64 and network access, and downloads the pinned
@@ -111,7 +254,8 @@ checkout or HEAD differs. Both schemas and readers validate serialized output
 before publication. YAML is parsed strictly too; GitHub expressions stay literal.
 
 Each registration produces `.github/hexalith-ci.json`, `.github/dependabot.yml`
-and two workflows under `rendered/<Repo>/`, plus the sibling
+and the CI/release workflows under `rendered/<Repo>/` (also `qualification.yml`
+when qualification jobs are enabled), plus the sibling
 `rendered/<Repo>.perimeter.json`. All generated files are whole owned files.
 Partial ownership is inline in the perimeter: it does not emit whole agent
 instructions or Claude settings. A successful render replaces the desired tree,

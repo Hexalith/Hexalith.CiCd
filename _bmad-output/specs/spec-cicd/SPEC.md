@@ -7,6 +7,7 @@ companions:
   - gate-classification.md
   - module-inventory.md
   - baseline-and-targets.md
+  - adoption-execution.md
 sources:
   - ../../planning-artifacts/briefs/brief-cicd-2026-11-07/brief.md
   - ../../planning-artifacts/briefs/brief-cicd-2026-11-07/addendum.md

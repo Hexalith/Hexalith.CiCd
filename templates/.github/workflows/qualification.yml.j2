@@ -1,0 +1,29 @@
+name: Product qualification
+on:
+  schedule:
+    - cron: '37 2 * * *'
+  workflow_dispatch:
+    inputs:
+      job:
+        description: Nightly lanes or one explicitly authorized manual qualification
+        type: choice
+        options: [[ qualification_choices | tojson ]]
+        default: nightly
+      parameters:
+        description: Product qualification parameters as JSON; never credentials
+        type: string
+        default: '{}'
+      authority-sha256:
+        description: Exact owner-approved private qualification authority digest
+        type: string
+        required: false
+        default: ''
+permissions: {}
+concurrency:
+  group: qualification-${{ inputs.job || 'nightly' }}
+  cancel-in-progress: false
+jobs:
+[% for job, options in qualification_jobs | dictsort %]
+  [[ job | tojson ]]:
+[[ options | toyaml | indent(4, true) ]]
+[% endfor %]
