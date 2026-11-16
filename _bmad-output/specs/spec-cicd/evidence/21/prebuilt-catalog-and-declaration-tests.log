@@ -1,0 +1,24 @@
+test_cancellation_stops_child_retains_receipts_and_removes_workspace (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_cancellation_stops_child_retains_receipts_and_removes_workspace) ... ok
+test_complete_sequence_shares_workspace_and_retains_only_reports (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_complete_sequence_shares_workspace_and_retains_only_reports) ... ok
+test_each_failed_stage_preserves_status_and_partial_diagnostics (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_each_failed_stage_preserves_status_and_partial_diagnostics) ... ok
+test_empty_results_directory_is_exclusively_owned_before_logs_exist (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_empty_results_directory_is_exclusively_owned_before_logs_exist) ... ok
+test_existing_results_are_preserved_and_not_reused (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_existing_results_are_preserved_and_not_reused) ... ok
+test_missing_prepared_manifest_refuses_test_execution (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_missing_prepared_manifest_refuses_test_execution) ... ok
+test_release_keeps_same_routing_and_required_published_properties (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_release_keeps_same_routing_and_required_published_properties) ... ok
+test_reuses_prebuilt_outputs_without_building_and_preserves_their_lifetime (scripts.test_verify_catalog_runtime.VerifyCatalogRuntimeTests.test_reuses_prebuilt_outputs_without_building_and_preserves_their_lifetime) ... ok
+test_build_files_leave_all_source_selection_to_the_tool (scripts.test_platform_declaration.PlatformDeclarationTests.test_build_files_leave_all_source_selection_to_the_tool) ... ok
+test_check_rejects_missing_stale_and_unsafe_inputs_without_rewriting (scripts.test_platform_declaration.PlatformDeclarationTests.test_check_rejects_missing_stale_and_unsafe_inputs_without_rewriting) ... /tmp/hexalith-job.21JPxAbd/tmpmf1way0e/accesscontrol.yaml: Platform declaration: declaration is missing or stale; run python3 scripts/render-platform-declaration.py
+/tmp/hexalith-job.21JPxAbd/tmpmf1way0e/accesscontrol.yaml: Platform declaration: declaration is missing or stale; run python3 scripts/render-platform-declaration.py
+/tmp/hexalith-job.21JPxAbd/tmpmf1way0e/accesscontrol.yaml: Platform declaration: declaration is missing or stale; run python3 scripts/render-platform-declaration.py
+/tmp/hexalith-job.21JPxAbd/tmpmf1way0e/accesscontrol.yaml: Platform declaration: Unsafe operation grant
+ok
+test_declared_suites_consume_platform_without_apphost_or_doubles (scripts.test_platform_declaration.PlatformDeclarationTests.test_declared_suites_consume_platform_without_apphost_or_doubles) ... ok
+test_malformed_literal_reports_failure_without_traceback_or_rewriting (scripts.test_platform_declaration.PlatformDeclarationTests.test_malformed_literal_reports_failure_without_traceback_or_rewriting) ... ok
+test_optimized_process_rejects_unsafe_acl_without_rewriting (scripts.test_platform_declaration.PlatformDeclarationTests.test_optimized_process_rejects_unsafe_acl_without_rewriting) ... ok
+test_owner_acl_is_the_exact_declaration_authority (scripts.test_platform_declaration.PlatformDeclarationTests.test_owner_acl_is_the_exact_declaration_authority) ... ok
+test_unsafe_malformed_and_duplicate_acl_inputs_fail_closed (scripts.test_platform_declaration.PlatformDeclarationTests.test_unsafe_malformed_and_duplicate_acl_inputs_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.854s
+
+OK
