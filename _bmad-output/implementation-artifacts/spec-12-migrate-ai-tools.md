@@ -86,6 +86,14 @@ context:
   post-adoption checker/green CI and the subsequent genuine nightly outcome
   remain incomplete. See `evidence/12/implementation.md` for the exact handoff.
 
+- Subsequent human request, 2026-11-16: "push all changes to main" authorizes
+  remote publication beyond the historical local-only phase. The renewed-proof
+  product preparation is published on AI.Tools main at
+  `cfd1ebea92587cdea41b9aa2cff47358bf2f32f6`; the owned legacy config remains
+  intact. Central policy/evidence, the published gitlink and the root snapshot
+  are being qualified for main. Adoption registration remains excluded pending
+  clarification of the approved pilot gate. See `evidence/12/publication.md`.
+
 ## Spec Change Log
 
 ## Review Triage Log
