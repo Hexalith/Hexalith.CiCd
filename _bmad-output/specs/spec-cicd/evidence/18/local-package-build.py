@@ -1,5 +1,6 @@
 """Standalone local Release/package qualification; initialize no nested submodules."""
 from pathlib import Path
+import hashlib
 import os
 import shutil
 import subprocess
@@ -15,6 +16,12 @@ for module in modules:
     print('SOURCE', name, subprocess.check_output(['git', '-C', str(repository), 'rev-parse', 'HEAD'], text=True).strip(), flush=True)
     subprocess.run(['git', 'clone', '--quiet', '--local', '--shared', '--no-recurse-submodules', str(repository), str(target)], check=True)
     names = (subprocess.check_output(['git', '-C', str(repository), 'diff', '--name-only', '--no-ext-diff', 'HEAD', '-z']) + subprocess.check_output(['git', '-C', str(repository), 'ls-files', '--others', '--exclude-standard', '-z'])).split(b'\0')
+    if '--diagnostic-snapshot' in sys.argv:
+        allowed = {b'tests/Hexalith.Projects.PackageFixtures/FixtureDiagnostics.cs',
+                   b'tests/Hexalith.Projects.PackageFixtures/PackageFixtureRun.cs',
+                   b'tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs'} if module == 'Projects' else set()
+        names = [name for name in names if name in allowed]
+        print('DIAGNOSTIC SNAPSHOT: committed source plus selected diagnostic files; other work in progress excluded', flush=True)
     for raw in names:
         if not raw:
             continue
@@ -24,17 +31,21 @@ for module in modules:
             output = target / relative
             output.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, output)
+            if '--diagnostic-snapshot' in sys.argv:
+                print('DIAGNOSTIC INPUT', relative, hashlib.sha256(output.read_bytes()).hexdigest(), flush=True)
         elif not path.exists() and (target / relative).is_file():
             (target / relative).unlink()
 root = scratch / 'Hexalith.Projects'
 config = root / 'references/Hexalith.Builds/NuGet.ci.Config'
 flags = ['-noAutoResponse', '-p:Configuration=Release', '-warnaserror', '-p:UseHexalithProjectReferences=false',
          '-p:ShouldUnsetParentConfigurationAndPlatform=false', f'-p:RestoreConfigFile={config}', '-p:EnableNETAnalyzers=true', '-p:RunAnalyzers=true',
-         '-p:RunAnalyzersDuringBuild=true', '-m:1']
-for command in (['dotnet','restore','Hexalith.Projects.CI.slnx',*flags],
-                ['dotnet','build','Hexalith.Projects.CI.slnx','--no-restore',*flags]):
+         '-p:RunAnalyzersDuringBuild=true', '-p:UseSharedCompilation=false', '-nr:false', '-m:1']
+target = 'tests/Hexalith.Projects.PackageFixtures/Hexalith.Projects.PackageFixtures.csproj' if '--adapter-only' in sys.argv else 'Hexalith.Projects.CI.slnx'
+for command in (['dotnet','restore',target,'--disable-build-servers',*flags],
+                ['dotnet','build',target,'--no-restore','--disable-build-servers',*flags]):
     print('RUN', *command, flush=True)
     result = subprocess.run(command, cwd=root, check=False)
+    print('RESULT', command[1], 'exit', result.returncode, flush=True)
     if result.returncode:
         sys.exit(result.returncode)
 
@@ -44,6 +55,12 @@ if '--test' in sys.argv:
     import ci_pipeline
     tests = ci_pipeline.discover_test_projects(root, 'Hexalith.Projects.CI.slnx')
     ci_pipeline.execute_test_projects(root, tests, runner=ci_pipeline.test_runner(root), stage='Preserved product')
+if '--fixture-safety' in sys.argv:
+    command = ['dotnet', 'tests/Hexalith.Projects.Integration.Tests/bin/Release/net11.0/Hexalith.Projects.Integration.Tests.dll',
+               '-class', 'Hexalith.Projects.Integration.Tests.PackageFixtureSafetyTests', '-noColor', '-failSkips']
+    result = subprocess.run(command, cwd=root, check=False)
+    if result.returncode:
+        sys.exit(result.returncode)
 if '--hooks' in sys.argv:
     for command in (['dotnet','tool','restore','--tool-manifest','.config/dotnet-tools.json','--configfile',str(config)],
                     ['python3','scripts/check-frontcomposer-output.py'],

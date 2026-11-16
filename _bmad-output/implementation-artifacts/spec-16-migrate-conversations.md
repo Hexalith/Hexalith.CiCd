@@ -122,6 +122,15 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
 
 ## Implementation Notes
 
+- Local implementation and qualification are isolated in the existing
+  `story/16-migrate-conversations` worktree at `../cicd-story-16`, preserving
+  concurrent work in this checkout. Resume from its
+  [implementation handoff](../../../cicd-story-16/_bmad-output/specs/spec-cicd/evidence/16/implementation-and-verification.md)
+  and [verification results](../../../cicd-story-16/_bmad-output/specs/spec-cicd/evidence/16/verification-results.json).
+- The story remains in progress. Published prerequisites, live qualification,
+  adoption and scheduled-night acceptance are pending; the active implementation
+  step prohibits pushes and remote operations. No commits or pushes were made.
+
 ## Spec Change Log
 
 ## Review Triage Log
