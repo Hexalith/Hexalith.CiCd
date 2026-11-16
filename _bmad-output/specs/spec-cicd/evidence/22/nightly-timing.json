@@ -1,0 +1,53 @@
+{
+  "recorded_at": "2026-11-16T16:00:01.578665+00:00",
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/actions/runs/43846941740",
+      "exit": 0,
+      "data": {
+        "id": 43846941740,
+        "event": "schedule",
+        "head_sha": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+        "status": "completed",
+        "conclusion": "success",
+        "run_started_at": "2026-11-16T10:13:49Z",
+        "created_at": "2026-11-16T10:13:49Z",
+        "updated_at": "2026-11-16T10:24:15Z",
+        "html_url": "https://github.com/Hexalith/Hexalith.Memories/actions/runs/43846941740"
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/actions/runs/43846941740/jobs?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "jobs": [
+          {
+            "id": 133229369233,
+            "name": "Tier 3 integration (slow lane)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-16T10:13:52Z",
+            "completed_at": "2026-11-16T10:24:14Z"
+          },
+          {
+            "id": 133229369554,
+            "name": "NDCG benchmark quality gate",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-16T10:13:52Z",
+            "completed_at": "2026-11-16T10:16:23Z"
+          },
+          {
+            "id": 133229371540,
+            "name": "Tier 3 integration (fast lane)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "started_at": "2026-11-16T10:13:50Z",
+            "completed_at": "2026-11-16T10:13:49Z"
+          }
+        ]
+      }
+    }
+  ]
+}

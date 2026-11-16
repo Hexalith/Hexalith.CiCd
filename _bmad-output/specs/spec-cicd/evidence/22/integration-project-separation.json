@@ -1,0 +1,216 @@
+{
+  "baseline": "c64e292a46858058f6764095c8e01c2faa0ff3e0",
+  "fastSourceMethods": 437,
+  "nightlySourceMethods": 40,
+  "nightlyLinkedHelperFiles": [
+    "tests/Hexalith.Memories.IntegrationTests/AssemblyInfo.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Cli/CliSearchIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/EventStoreIntegration/EventIngestionPipelineIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Factories/IndexInputFactory.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/AspireIngestionPipelineFixture.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/CompositeSearchFixture.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/DaprStateSidecarFixture.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/EmbeddingProviderFaultPlan.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/EmbeddingProviderSecret.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/EmbeddingProviderTestMode.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/FakeHttpRequestEvidence.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/FalkorDbFixture.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/IngestionIntegrationTestDriver.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/MemoryErasureProcessMessage.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/MemoryErasureProcessProtocol.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/MemoryErasureProcessWorker.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/OllamaOidcFakeServer.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/OpenBaoCapturedRequest.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/OpenBaoRecordingHandler.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/OpenBaoTopologyIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/OwnedSemanticInventory.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/RedisStackCollection.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/RedisStackFixture.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Fixtures/ScriptedHttpServer.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Health/HealthEndpointIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/CandidateOnlyQualificationWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/ContentBearingLegacyRetryWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/HistoricalCandidateArtifactWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/HistoricalNaturalLanguageEmbeddingRetryWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/HistoricalProcessArtifactWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/LegacyRetryErasureQualificationWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/RetainedAnnotationSchedulingWorkflow.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Ingestion/RetryDatabaseInterception.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Search/DegradationIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Search/GraphScopedSearchIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Search/SemanticSearchIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Search/SyntacticSearchIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/AccessTelemetryOperationRendezvous.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/AccessTelemetryYamlLeastPrivilegeValidator.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/AspireEndToEndTraceTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/AuditLogStreamIntegrationTests.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/CollectingLogger.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/CollectingLoggerProvider.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/CoordinatedAccessTelemetryStateStore.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/FailFirstStateStore.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/Infrastructure/AuditEventStreamReader.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/Infrastructure/CliTracingHarness.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/Infrastructure/InMemorySpanCollector.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/Infrastructure/ServerActivityStreamReader.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/Infrastructure/TelemetryAsserts.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/InnerOperationOverlapStateStore.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/LifecycleProcessBoundaryDeliveryClient.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/ObservedFakeTimeProvider.cs",
+    "tests/Hexalith.Memories.IntegrationTests/Telemetry/TimedOutageAccessTelemetryDeliveryClient.cs"
+  ],
+  "subprocessWorker": "MemoryErasureProcessWorker is required in both executables; its inert entry point returns unless called explicitly.",
+  "moves": [
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Cli/CliSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Cli/CliSearchIntegrationTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "10801891108daa24458e772e4c9b2eb7a5adcc6e74416c5032ae66b8cde732a2"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/EventStoreIntegration/EventIngestionPipelineIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/EventStoreIntegration/EventIngestionPipelineIntegrationTests.Nightly.cs",
+      "methods": 2,
+      "ownership": "nightly-partial",
+      "sha256": "095b64984bb256e6be27b9da5cccd3e1d5fbff1417c9ba970a47bf3879745ade"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Fixtures/OpenBaoTopologyIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Fixtures/OpenBaoTopologyIntegrationTests.Fast.cs",
+      "methods": 5,
+      "ownership": "fast-partial",
+      "sha256": "c9b54d902aef22b69a42150995ad05852dc8f1204c309dfebca1162192174e70"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Fixtures/OpenBaoTopologyIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Fixtures/OpenBaoTopologyIntegrationTests.Nightly.cs",
+      "methods": 2,
+      "ownership": "nightly-partial",
+      "sha256": "23b3e185f280abb9b7c326e4ce084abb53151b86043f5215e621cb8e1ccc5b1e"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Health/HealthEndpointIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Health/HealthEndpointIntegrationTests.Fast.cs",
+      "methods": 2,
+      "ownership": "fast-partial",
+      "sha256": "9824ac8c97e91d0f2a3fd2f3835065c782262e9097a8d5b2ece3de6f603a9c36"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Health/HealthEndpointIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Health/HealthEndpointIntegrationTests.Nightly.cs",
+      "methods": 2,
+      "ownership": "nightly-partial",
+      "sha256": "dbae0e89896e51f6b9283fcd59bf2510c193e0de46f5df33ed2f2c607140d308"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Ingestion/MemoryErasureProcessRestartTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Ingestion/MemoryErasureProcessRestartTests.cs",
+      "methods": 4,
+      "ownership": "nightly-complete-class"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Ingestion/PipelinePersistenceIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Ingestion/PipelinePersistenceIntegrationTests.cs",
+      "methods": 7,
+      "ownership": "nightly-complete-class"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Ingestion/RetryWorkflowErasureIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Ingestion/RetryWorkflowErasureIntegrationTests.cs",
+      "methods": 15,
+      "ownership": "nightly-complete-class"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Performance/PipelinePersistencePerformanceTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Performance/PipelinePersistencePerformanceTests.cs",
+      "methods": 1,
+      "ownership": "nightly-complete-class"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/DegradationIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Search/DegradationIntegrationTests.Fast.cs",
+      "methods": 3,
+      "ownership": "fast-partial",
+      "sha256": "2a794cbd812e781884638ef150d91fbf1344bf71d842891cd33dfdad53e39763"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/DegradationIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Search/DegradationIntegrationTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "b12b29088a26f917fdb7a1e098ad13243b125405e5cacc77699bb3372558c3e2"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/GraphScopedSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Search/GraphScopedSearchIntegrationTests.Fast.cs",
+      "methods": 19,
+      "ownership": "fast-partial",
+      "sha256": "d3371a63ae67c1f7e7cec4e253b0864ec3c9622a6e4d89fa8dc8b1237e1d01fb"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/GraphScopedSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Search/GraphScopedSearchIntegrationTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "6b177278e54af75aa964c7ffbd8eb0a8fb2957ce260cc03061255765e93437f8"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/SemanticSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Search/SemanticSearchIntegrationTests.Fast.cs",
+      "methods": 16,
+      "ownership": "fast-partial",
+      "sha256": "ab128901873d2ccddd890dae9e1037dc0b6d446f0a3113b231512fd8fa810a3e"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/SemanticSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Search/SemanticSearchIntegrationTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "efc8fcd16b610275d1594f7dca5245cd0b9f24d1aa927c3a6aba70c372071e35"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/SyntacticSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Search/SyntacticSearchIntegrationTests.Fast.cs",
+      "methods": 26,
+      "ownership": "fast-partial",
+      "sha256": "5580006fe45d91a61ec524b37a7b0b990f2ca3d633225c9bf2e6cf838a219184"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Search/SyntacticSearchIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Search/SyntacticSearchIntegrationTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "b38db096d158e12b045fe1736a6e488db14395428b79a44d5556a0fb3f656364"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Telemetry/AspireEndToEndTraceTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Telemetry/AspireEndToEndTraceTests.Fast.cs",
+      "methods": 1,
+      "ownership": "fast-partial",
+      "sha256": "b7be8a64c7c78da006c9b05b15207889f2bd9ac2ff1ea71773ef50992289e234"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Telemetry/AspireEndToEndTraceTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Telemetry/AspireEndToEndTraceTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "07e6f88813378d8e5ed7b6bec348b3f04844f4c99e70b7bd3b2df1259fde444a"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Telemetry/AuditLogStreamIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.IntegrationTests/Telemetry/AuditLogStreamIntegrationTests.Fast.cs",
+      "methods": 6,
+      "ownership": "fast-partial",
+      "sha256": "e39cd989ce3bb18683bec3d2ed9141c83bec4079055d5bf9caca9b168aaf5f62"
+    },
+    {
+      "file": "tests/Hexalith.Memories.IntegrationTests/Telemetry/AuditLogStreamIntegrationTests.cs",
+      "target": "tests/Hexalith.Memories.Integration.NightlyTests/Telemetry/AuditLogStreamIntegrationTests.Nightly.cs",
+      "methods": 1,
+      "ownership": "nightly-partial",
+      "sha256": "da78cc68435d2af39b5a75d88c48d2b74b6e2ac01774e545a2e20271a75df317"
+    }
+  ],
+  "candidate": "22723f99ed8a3f0abe306a4634836737be7f838d",
+  "removedCiAssertion": "OpenBaoTopologyTraits_FastSlowAndPerformanceLanesRemainSeparated"
+}

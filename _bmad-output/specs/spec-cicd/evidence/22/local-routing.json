@@ -1,0 +1,172 @@
+{
+  "candidate": "74770c1b539d30206403e8549ac5da0aa629f295",
+  "controlledDotnetOnly": true,
+  "executedProductTests": false,
+  "cases": [
+    {
+      "shell": "bash",
+      "selector": "Category!=Integration",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Contracts.Tests/Hexalith.Memories.Contracts.Tests.csproj",
+        "tests/Hexalith.Memories.Server.Tests/Hexalith.Memories.Server.Tests.csproj",
+        "tests/Hexalith.Memories.DerivedStores.Tests/Hexalith.Memories.DerivedStores.Tests.csproj",
+        "tests/Hexalith.Memories.AccessTelemetry.Tests/Hexalith.Memories.AccessTelemetry.Tests.csproj",
+        "tests/Hexalith.Memories.Cli.Tests/Hexalith.Memories.Cli.Tests.csproj",
+        "tests/Hexalith.Memories.Mcp.Tests/Hexalith.Memories.Mcp.Tests.csproj",
+        "tests/Hexalith.Memories.EventStore.Tests/Hexalith.Memories.EventStore.Tests.csproj",
+        "tests/Hexalith.Memories.Web.Tests/Hexalith.Memories.Web.Tests.csproj",
+        "tests/Hexalith.Memories.DomainService.Tests/Hexalith.Memories.DomainService.Tests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "bash",
+      "selector": "Category=Integration",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.IntegrationTests/Hexalith.Memories.IntegrationTests.csproj",
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "bash",
+      "selector": "Category=IntegrationSlow",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "bash",
+      "selector": "Category=Performance",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "bash",
+      "selector": "Category=Integration&Category!=IntegrationSlow&Category!=Performance",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.IntegrationTests/Hexalith.Memories.IntegrationTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "bash",
+      "selector": "Category=Benchmark",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Benchmarks/Hexalith.Memories.Benchmarks.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "bash",
+      "selector": "",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Contracts.Tests/Hexalith.Memories.Contracts.Tests.csproj",
+        "tests/Hexalith.Memories.Server.Tests/Hexalith.Memories.Server.Tests.csproj",
+        "tests/Hexalith.Memories.DerivedStores.Tests/Hexalith.Memories.DerivedStores.Tests.csproj",
+        "tests/Hexalith.Memories.AccessTelemetry.Tests/Hexalith.Memories.AccessTelemetry.Tests.csproj",
+        "tests/Hexalith.Memories.Cli.Tests/Hexalith.Memories.Cli.Tests.csproj",
+        "tests/Hexalith.Memories.Mcp.Tests/Hexalith.Memories.Mcp.Tests.csproj",
+        "tests/Hexalith.Memories.EventStore.Tests/Hexalith.Memories.EventStore.Tests.csproj",
+        "tests/Hexalith.Memories.Web.Tests/Hexalith.Memories.Web.Tests.csproj",
+        "tests/Hexalith.Memories.DomainService.Tests/Hexalith.Memories.DomainService.Tests.csproj",
+        "tests/Hexalith.Memories.IntegrationTests/Hexalith.Memories.IntegrationTests.csproj",
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj",
+        "tests/Hexalith.Memories.Benchmarks/Hexalith.Memories.Benchmarks.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "Category!=Integration",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Contracts.Tests/Hexalith.Memories.Contracts.Tests.csproj",
+        "tests/Hexalith.Memories.Server.Tests/Hexalith.Memories.Server.Tests.csproj",
+        "tests/Hexalith.Memories.DerivedStores.Tests/Hexalith.Memories.DerivedStores.Tests.csproj",
+        "tests/Hexalith.Memories.AccessTelemetry.Tests/Hexalith.Memories.AccessTelemetry.Tests.csproj",
+        "tests/Hexalith.Memories.Cli.Tests/Hexalith.Memories.Cli.Tests.csproj",
+        "tests/Hexalith.Memories.Mcp.Tests/Hexalith.Memories.Mcp.Tests.csproj",
+        "tests/Hexalith.Memories.EventStore.Tests/Hexalith.Memories.EventStore.Tests.csproj",
+        "tests/Hexalith.Memories.Web.Tests/Hexalith.Memories.Web.Tests.csproj",
+        "tests/Hexalith.Memories.DomainService.Tests/Hexalith.Memories.DomainService.Tests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "Category=Integration",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.IntegrationTests/Hexalith.Memories.IntegrationTests.csproj",
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "Category=IntegrationSlow",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "Category=Performance",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "Category=Integration&Category!=IntegrationSlow&Category!=Performance",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.IntegrationTests/Hexalith.Memories.IntegrationTests.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "Category=Benchmark",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Benchmarks/Hexalith.Memories.Benchmarks.csproj"
+      ],
+      "passed": true
+    },
+    {
+      "shell": "pwsh",
+      "selector": "",
+      "selectedProjects": [
+        "tests/Hexalith.Memories.Contracts.Tests/Hexalith.Memories.Contracts.Tests.csproj",
+        "tests/Hexalith.Memories.Server.Tests/Hexalith.Memories.Server.Tests.csproj",
+        "tests/Hexalith.Memories.DerivedStores.Tests/Hexalith.Memories.DerivedStores.Tests.csproj",
+        "tests/Hexalith.Memories.AccessTelemetry.Tests/Hexalith.Memories.AccessTelemetry.Tests.csproj",
+        "tests/Hexalith.Memories.Cli.Tests/Hexalith.Memories.Cli.Tests.csproj",
+        "tests/Hexalith.Memories.Mcp.Tests/Hexalith.Memories.Mcp.Tests.csproj",
+        "tests/Hexalith.Memories.EventStore.Tests/Hexalith.Memories.EventStore.Tests.csproj",
+        "tests/Hexalith.Memories.Web.Tests/Hexalith.Memories.Web.Tests.csproj",
+        "tests/Hexalith.Memories.DomainService.Tests/Hexalith.Memories.DomainService.Tests.csproj",
+        "tests/Hexalith.Memories.IntegrationTests/Hexalith.Memories.IntegrationTests.csproj",
+        "tests/Hexalith.Memories.Integration.NightlyTests/Hexalith.Memories.Integration.NightlyTests.csproj",
+        "tests/Hexalith.Memories.Benchmarks/Hexalith.Memories.Benchmarks.csproj"
+      ],
+      "passed": true
+    }
+  ],
+  "childFailuresPropagated": true,
+  "coverageThreshold": 76.5,
+  "requiredReportProjects": [
+    "Hexalith.Memories.Contracts.Tests",
+    "Hexalith.Memories.Server.Tests",
+    "Hexalith.Memories.DerivedStores.Tests",
+    "Hexalith.Memories.AccessTelemetry.Tests",
+    "Hexalith.Memories.Cli.Tests",
+    "Hexalith.Memories.Mcp.Tests",
+    "Hexalith.Memories.EventStore.Tests",
+    "Hexalith.Memories.Web.Tests",
+    "Hexalith.Memories.DomainService.Tests"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "recordedAt": "2026-11-16T18:00:15.324267+00:00",
+  "repository": "Hexalith/Hexalith.Memories",
+  "defaultProfile": "/home/administrator/.config/gh-cicd-agent",
+  "inheritedCredentialOverridePresent": false,
+  "moduleAuthentication": "protected module-agent token in child environment",
+  "requests": [
+    {
+      "endpoint": "user",
+      "exitCode": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories",
+      "exitCode": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read"
+      ],
+      "data": {
+        "full_name": "Hexalith/Hexalith.Memories",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/commits/main",
+      "exitCode": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read"
+      ],
+      "data": {
+        "sha": "c64e292a46858058f6764095c8e01c2faa0ff3e0"
+      }
+    }
+  ],
+  "pushPerformed": false,
+  "currentRemoteMain": "c64e292a46858058f6764095c8e01c2faa0ff3e0",
+  "candidate": "22723f99ed8a3f0abe306a4634836737be7f838d",
+  "buildsGitlink": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+  "requiredChecker": {
+    "command": "python3 references/Hexalith.Builds/check.py",
+    "exitCode": 1,
+    "output": "/tmp/hexalith-job.YoLZAFlT/memories-prepush/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.YoLZAFlT/memories-prepush/.github/hexalith-ci.json'\n"
+  },
+  "approvedExceptionComplete": false,
+  "remainingExceptionRequirements": [
+    "Released shared source/composition, browser, coverage, SQL and rollout support",
+    "Complete applicable runtime/product and package-consumer verification",
+    "Resolution of the unchanged C1 approval/input mismatch and dependent suite verification",
+    "AD-21 maintainer preconditions and exact current-main product reapplication as needed"
+  ]
+}
