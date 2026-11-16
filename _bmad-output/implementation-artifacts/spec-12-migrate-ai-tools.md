@@ -44,7 +44,7 @@ context:
 - `evidence/12/planning.md` under the main spec folder — exact sources, preflight, concurrency and proposed preparation proof; `planning-preflight.json` contains actual GETs and refusals.
 - AI.Tools `package.json`, `package-lock.json`, `commitlint.config.mjs` — tool-only local validator; related guidance in README, three entrypoints and `hexalith-{git,llm}-instructions.md`.
 - `tools/render.py`, `tools/validate.py`, `setup/README.md` — existing no-solution registration and committed-candidate checks; no runtime change needed.
-- Builds `check.py`, `Github/lib/{ci_pipeline,guard_commitlint,guard_audit,release_version,release_build}.py` — reuse released checking and empty-inventory behavior.
+- Builds `check.py`, `Github/lib/{ci_pipeline,guard_commitlint,guard_tools,audit_lint,release_version,release_build}.py` — reuse released checking and empty-inventory behavior.
 
 ## Tasks & Acceptance
 

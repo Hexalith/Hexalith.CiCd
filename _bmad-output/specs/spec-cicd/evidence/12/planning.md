@@ -17,6 +17,10 @@ fresh GitHub GET observations in `planning-preflight.json`.
   Preserve all of these changes. This session neither stages nor resets them.
   Implementation must recheck ownership of concurrent work and establish a
   clean story branch from freshly fetched main without dropping local evidence.
+- A subsequent external `/pushall` commit,
+  `eebeb80284da2bd23cc9fbaa3a4647915d77f094`, included this session's draft and
+  planning files along with that other work. This session did not create that
+  commit. Committing the draft does not approve it or resolve its open questions.
 - AI.Tools initially checked out at
   `7ef8166ef87e1365f86d1a1b3aaf0235545177d4`; authenticated live main and
   subsequently observed local main are
@@ -116,7 +120,7 @@ on packages and registry push on containers. `release_version.py` still
 analyzes Conventional Commits. Existing `feat` history without stable tags can
 produce an initial GitHub-only release, likely v1.0.0; exact version/outcome
 must come from the real nightly. Empty solution does not imply no-release.
-Plan to enable publishing (`true`) under the approved package-free/literal
+Propose enabling publishing (`true`) under the selected package-free/literal
 provisioning decision; disabled is not a substitute for CAP-16 acceptance.
 
 Reuse the released loader/guard/commitlint, `tools/render.py`, committed
@@ -125,3 +129,11 @@ through `run-with-temp`; save useful logs here. Capture zero-scope duplicate
 scan behavior, actual green CI, normal local checker and next scheduled
 release success or valid nothing-to-release. No pre-adoption tests or
 production/global validation were run during planning.
+
+The wrapped mandatory checker was attempted from the actual AI.Tools root:
+`run-with-temp python3 references/Hexalith.Builds/check.py` exited 2 because the
+script is absent. `pre-adoption-check.json` records the exact result. No nested
+dependency was initialized and no module push followed. Planning script syntax,
+final newlines and whitespace pass. The draft measured 1,207 tokens with
+`o200k_base` before the final code-map filename correction, within the workflow
+scope target; no implementation acceptance is implied.
