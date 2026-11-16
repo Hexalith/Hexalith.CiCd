@@ -1,3 +1,27 @@
+# Isolated resume — 2026-11-16
+
+The human explicitly approved resuming story 12 in an isolated worktree while
+preserving unrelated changes. This run uses
+`/home/administrator/projects/hexalith/cicd-story-12-resume`, branch
+`story/12-migrate-ai-tools-resume`, from committed local main
+`0f25d19ba712eee9aae59d118251b854bbffd120`. This workspace replaces the
+historical CiCd workspace named below for this resume only. The original
+story workspace and its staged changes must remain untouched. The six held
+registration additions were copied here unchanged. The standalone product
+preparation remains at `/home/administrator/projects/hexalith/ai-tools-story-12`.
+
+Continue step 03 locally with its existing no-remote-operations restriction.
+Use current committed sources and the exact released Builds dependency for
+verification; never copy a dirty shared Builds working tree. A local clone of
+its Git object store is permitted. Tool downloads required for verification
+remain permitted. Retain the original baseline_commit and frozen intent.
+Record independent work and current qualification here without claiming the
+future pilot-night gate or marking adoption complete. Do not modify the
+existing story 11 observer. Shared work is active; no changes to unrelated
+files or submodules in the original checkout are authorized.
+
+The historical execution handoff follows.
+
 # Story 12 execution handoff — 2026-11-16
 
 The human answered "do recommended", approving both concrete alternatives in

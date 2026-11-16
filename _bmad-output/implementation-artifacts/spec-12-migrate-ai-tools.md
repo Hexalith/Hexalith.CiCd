@@ -96,6 +96,15 @@ context:
 
 ## Spec Change Log
 
+- Isolated resume, 2026-11-16: the same six held registration additions pass
+  offline committed-input/render, reproducibility, schema, caller and direct
+  gitlink checks on the authorized isolated base
+  `0f25d19ba712eee9aae59d118251b854bbffd120`. Its updated existing
+  renderer and validator suites pass 35 and 52 tests. Historical source evidence
+  is preserved; exact revisions, digests, logs, local ref drift and pending live
+  sequence are in `evidence/12/isolated-resume.md` and
+  `isolated-resume-check.json`. No remote operations, integration, adoption or
+  acceptance are claimed, and the frozen intent and task status remain unchanged.
 - Local resume, 2026-11-16: the six held registration additions pass existing
   committed render/input, schema, caller and direct-submodule checks on a
   disposable candidate from current local main
@@ -111,6 +120,11 @@ context:
 
 ## Verification
 
+- Isolated current-base results: `isolated-resume-check.json` records passing
+  offline committed candidate checks and 87 existing tests (35 renderer,
+  52 validator), using exact released v6.0.6 Builds objects. Only the six held
+  registration files enter the temporary candidate; all existing committed
+  files are preserved. Full live validation and adoption remain pending.
 - Local results: renderer generation and `--check` pass; the existing renderer
   suite passes 32 tests and validator suite 51. A disposable committed CiCd
   candidate passes existing committed-input/render, schema and caller-interface
