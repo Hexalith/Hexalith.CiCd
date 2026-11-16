@@ -1,0 +1,31 @@
+{
+  "observed_at": "2026-11-16T15:15:22.498633+00:00",
+  "version": "6.0.0",
+  "source": "official nuget.org via released Builds trusted configuration",
+  "results": [
+    {
+      "command": [
+        "dotnet",
+        "tool",
+        "install",
+        "Hexalith.FrontComposer.Cli",
+        "--version",
+        "6.0.0",
+        "--tool-path",
+        "/tmp/hexalith-job.qUlaqdrV/tools",
+        "--configfile",
+        "/home/administrator/projects/hexalith/cicd-story-18/references/Hexalith.Builds/NuGet.ci.Config"
+      ],
+      "exit_code": 0,
+      "output": "You can invoke the tool using the following command: frontcomposer\nTool 'hexalith.frontcomposer.cli' (version '6.0.0') was successfully installed.\n"
+    },
+    {
+      "command": [
+        "/tmp/hexalith-job.qUlaqdrV/tools/frontcomposer",
+        "--help"
+      ],
+      "exit_code": 0,
+      "output": "Hexalith FrontComposer CLI\n\nUsage:\n  frontcomposer inspect [--type <metadata-name>] [--project <path>] [--solution <path>] [--configuration <name>] [--framework <tfm>] [--build] [--format text|json] [--severity hidden|info|warning|error] [--fail-on-warning] [--fail-on-error] [--absolute-paths]\n  frontcomposer migrate --from <version> --to <version> [--dry-run|--apply] [--project <path>] [--solution <path>] [--format text|json] [--fail-on-findings]\n\nExit codes: 0 success, 1 explicit fail-on-findings, 2 invalid/ambiguous input, 3 generated output unavailable, 4 apply/write failure.\nPath support: --project requires .csproj; --solution requires .sln with exactly one .csproj. .slnx and .fsproj fail closed in v1.\nInspect fail flags: --fail-on-warning is stricter than --fail-on-error when both are supplied.\nMigrate JSON: applied is true only after a clean --apply run; diffs are bounded informational output, not a patch contract.\n"
+    }
+  ]
+}
