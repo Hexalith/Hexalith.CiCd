@@ -1,0 +1,734 @@
+{
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.013,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "a575021fc97a8eda664711089270b60f5e570ded"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties",
+      "elapsed_seconds": 1.114,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--binary",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.022,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--binary",
+        "-"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties",
+      "elapsed_seconds": 0.007,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-files",
+        "--others",
+        "--exclude-standard",
+        "-z"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.021,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.001,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Builds",
+      "elapsed_seconds": 0.001,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Builds",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.008,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Builds",
+      "elapsed_seconds": 0.353,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.EventStore"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "fdb59895975e86a1e234325a01237f259cdbd53b^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.EventStore",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.EventStore",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.EventStore"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.019,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "fdb59895975e86a1e234325a01237f259cdbd53b"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.EventStore",
+      "elapsed_seconds": 0.845,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Tenants"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "2ec938397c5b330cf1e694e8cc442cb4ad022f2b^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Tenants"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.011,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "2ec938397c5b330cf1e694e8cc442cb4ad022f2b"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Tenants",
+      "elapsed_seconds": 0.956,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Memories"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.005,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "65bfb98dca7f65c005213507b15fbe4ab45f2e19^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Memories",
+      "elapsed_seconds": 0.009,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Memories",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Memories"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.051,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "65bfb98dca7f65c005213507b15fbe4ab45f2e19"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Memories",
+      "elapsed_seconds": 1.003,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Commons"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.007,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "fbf4e94233821f6ca336af91a06feaaeb7a16855^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "elapsed_seconds": 0.001,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Commons"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.017,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "fbf4e94233821f6ca336af91a06feaaeb7a16855"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Commons",
+      "elapsed_seconds": 0.148,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.FrontComposer"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.003,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "bca9dff291ce42c57516598732340a80703dfb6d^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.FrontComposer",
+      "elapsed_seconds": 0.004,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.FrontComposer",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.FrontComposer"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.012,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "bca9dff291ce42c57516598732340a80703dfb6d"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.FrontComposer",
+      "elapsed_seconds": 0.806,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.Platform"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.005,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "f6f85032598865b9123f16364448bfd02c0ff5b0^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Platform"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.016,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "f6f85032598865b9123f16364448bfd02c0ff5b0"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.Platform",
+      "elapsed_seconds": 4.17,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.McpCli"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "23072f04f423eea3f30456fe5af13d2d382624fe^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.McpCli",
+      "elapsed_seconds": 0.003,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.McpCli",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.McpCli"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.016,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "23072f04f423eea3f30456fe5af13d2d382624fe"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.McpCli",
+      "elapsed_seconds": 2.18,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.PolymorphicSerializations"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.003,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "e97b56930e213f674b64c157551f499b0473ec43^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.PolymorphicSerializations"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.014,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "e97b56930e213f674b64c157551f499b0473ec43"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.PolymorphicSerializations",
+      "elapsed_seconds": 0.043,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "HEAD",
+        "references/Hexalith.AI.Tools"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Parties",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "cat-file",
+        "-e",
+        "17a37d83db193f0b7494c1b931fd1e82a67c1424^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.AI.Tools",
+      "elapsed_seconds": 0.001,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.AI.Tools",
+        "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.AI.Tools"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.009,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties/references/Hexalith.AI.Tools",
+      "elapsed_seconds": 0.013,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "v6.0.6^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Builds",
+      "elapsed_seconds": 0.002,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--local",
+        "--shared",
+        "--no-checkout",
+        "--no-recurse-submodules",
+        "/home/administrator/projects/hexalith/cicd-build-21/references/Hexalith.Builds",
+        "/tmp/hexalith-job.9EbzCtaa/selected-builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-build-21",
+      "elapsed_seconds": 0.02,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--quiet",
+        "--detach",
+        "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/selected-builds",
+      "elapsed_seconds": 0.398,
+      "exit_code": 0,
+      "log": null
+    },
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Parties.Ci.Tests/Hexalith.Parties.Ci.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-m:1",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.9EbzCtaa/selected-builds"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties",
+      "elapsed_seconds": 10.297,
+      "exit_code": 0,
+      "log": "retained-product-tests-build.log"
+    },
+    {
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Parties.Ci.Tests/bin/Release/net11.0/Hexalith.Parties.Ci.Tests.dll",
+        "-class",
+        "Hexalith.Parties.Ci.Tests.ContainerProductTests"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties",
+      "elapsed_seconds": 9.105,
+      "exit_code": 0,
+      "log": "retained-ContainerProductTests.log"
+    },
+    {
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Parties.Ci.Tests/bin/Release/net11.0/Hexalith.Parties.Ci.Tests.dll",
+        "-class",
+        "Hexalith.Parties.Ci.Tests.BrowserProductTests"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties",
+      "elapsed_seconds": 0.386,
+      "exit_code": 0,
+      "log": "retained-BrowserProductTests.log"
+    },
+    {
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Parties.Ci.Tests/bin/Release/net11.0/Hexalith.Parties.Ci.Tests.dll",
+        "-class",
+        "Hexalith.Parties.Ci.Tests.StandaloneSolutionTests"
+      ],
+      "cwd": "/tmp/hexalith-job.9EbzCtaa/Hexalith.Parties",
+      "elapsed_seconds": 0.422,
+      "exit_code": 0,
+      "log": "retained-StandaloneSolutionTests.log"
+    }
+  ],
+  "git_network": false,
+  "submodule_initialization": false,
+  "parties_base": "a575021fc97a8eda664711089270b60f5e570ded",
+  "dependencies": {
+    "Hexalith.Builds": "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee",
+    "Hexalith.EventStore": "fdb59895975e86a1e234325a01237f259cdbd53b",
+    "Hexalith.Tenants": "2ec938397c5b330cf1e694e8cc442cb4ad022f2b",
+    "Hexalith.Memories": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+    "Hexalith.Commons": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+    "Hexalith.FrontComposer": "bca9dff291ce42c57516598732340a80703dfb6d",
+    "Hexalith.Platform": "f6f85032598865b9123f16364448bfd02c0ff5b0",
+    "Hexalith.McpCli": "23072f04f423eea3f30456fe5af13d2d382624fe",
+    "Hexalith.PolymorphicSerializations": "e97b56930e213f674b64c157551f499b0473ec43",
+    "Hexalith.AI.Tools": "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+  },
+  "selected_builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+}

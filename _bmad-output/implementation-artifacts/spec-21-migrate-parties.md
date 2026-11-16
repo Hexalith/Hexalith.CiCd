@@ -2,8 +2,9 @@
 title: '21: Migrate Parties'
 type: 'chore'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
 route: 'dispatch'
+baseline_commit: '94b335c7483ba8fe76ad44de46ee3512017c9a11'
 review_loop_iteration: 0
 context: []
 ---
@@ -41,6 +42,7 @@ context: []
 
 ## Code Map
 
+- Current preparation and exact-input verification: [implementation handoff](../specs/spec-cicd/evidence/21/implementation-handoff.md), [accepted local verification](../specs/spec-cicd/evidence/21/accepted-local-verification.json), and [dispositions](../specs/spec-cicd/evidence/21/preparation-dispositions.md). Consult these before the earlier planning investigation. [Native build reuse prerequisite](prerequisite-21-native-build-reuse.md) and the owner-emission boundary evidence record the remaining shared interfaces.
 - `evidence/21/code-investigation.md`, `planning-preflight.json`, `pre-adoption-check.json` under `_bmad-output/specs/spec-cicd/`: exact revisions, gate inventory, dependencies and observed failures; read for implementation.
 - Parties `Hexalith.Parties.Standalone.slnx`, `Directory.Build.{props,targets}`, `Directory.Packages.props`: graph/cohort and container provenance; three native suites currently have obsolete build exclusions.
 - Parties `tests/Hexalith.Parties.Ci.Tests/`, `tests/ci-lifecycle/`, `scripts/`: mixed workflow/controller assertions and product runtime/package/asset checks; retain product coverage per inventory.
@@ -66,6 +68,9 @@ context: []
 ## Implementation Notes
 
 - 2026-11-16: The human approved the complete spec and requested stopping before implementation. The approved intent is frozen; shared timestamp support remains a separate adoption prerequisite.
+- 2026-11-16: Resumed in `/home/administrator/projects/hexalith/cicd-build-21` from freshly fetched main. The implementation phase permits local edits and verification only, with no pushes or remote operations. Complete independent product preparation while keeping prerequisite, delivery and nightly acceptance explicitly pending. Parties is on `build/21-product-preparation` at freshly fetched `a575021fc97a8eda664711089270b60f5e570ded`; only direct CiCd submodules are initialized.
+- 2026-11-16: Local preparation removes obsolete gates, retains product observation checks, declares runtime artifacts, separates five live-runtime classes, and adapts container source/version identity. The complete Release build and thirteen prebuilt preparation records pass. Complete retained Ci.Tests passes 421 cases serially; complete general unit tests pass 2,800 cases; both report zero errors/failures/skips. Exact inputs, layered verification and earlier failures are preserved in the linked handoff. No commit, push, registration or adoption occurred.
+- Completion remains blocked on shared native test/model reuse, owner composition package routing, released frozen-created support and the live AD-21/adoption/nightly prerequisites. All execution checkboxes remain open because their full obligations are unsatisfied. Keep status `in-progress`; implementation has not reached the workflow review checkpoint.
 
 ## Spec Change Log
 
@@ -81,3 +86,11 @@ External effects include settings, product pushes, delivery, credential revocati
 - Before product pushes require the approved substitute and pinned exact-message commitlint; after adoption require the normal checker from a standalone module clone.
 - Run `uv run --locked --script tools/render.py --check`, then committed-candidate `tools/validate.py`; require global/Parties lint, schema, perimeter and live-action verdicts.
 - Verify actual native/browser execution, container provenance/OCI identity, hosted CI, App delivery and scheduled-night outcomes; no mock or unavailable permission proves acceptance.
+
+## Preparation Publication
+
+The human requested publication to main. Product preparation is published in
+Parties commit `0f261ccd3b461102dcac35da2e074d15a195ebb4`; the corresponding CiCd
+record preserves `in-progress`. See [publication proof](../specs/spec-cicd/evidence/21/publication/publication.json)
+and [pre-push qualification](../specs/spec-cicd/evidence/21/publication/pre-push-qualification.json).
+Registration/adoption and full acceptance remain pending their documented prerequisites.
