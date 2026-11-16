@@ -1,0 +1,229 @@
+{
+  "summary": {
+    "parent_revision": "081f88b5084e41c1f5b12f4a9daeecca75b95688",
+    "dependency_revision": "6f35b6eff6c9ab562e8e515918dd6a643d971d6e",
+    "dependency_initialized_exactly": true,
+    "parent_status_clean": true,
+    "parent_tree_unchanged": true,
+    "no_submodule_helper": true,
+    "no_protection_disable": true
+  },
+  "log": [
+    {
+      "args": [
+        "init"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /mnt/c/Users/Public/hexalith-job.c8ERde4V/dep/.git/\n",
+      "stderr": "hint: Using 'master' as the name for the initial branch. This default branch name\nhint: will change to \"main\" in Git 3.0. To configure the initial branch name\nhint: to use in all of your new repositories, which will suppress this warning,\nhint: call:\nhint:\nhint: \tgit config --global init.defaultBranch <name>\nhint:\nhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\nhint: 'development'. The just-created branch can be renamed via this command:\nhint:\nhint: \tgit branch -m <name>\nhint:\nhint: Disable this message with \"git config set advice.defaultBranchName false\"\n"
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "-c",
+        "user.name=Scratch",
+        "-c",
+        "user.email=scratch@example.invalid",
+        "commit",
+        "-m",
+        "scratch"
+      ],
+      "exit": 0,
+      "stdout": "[master (root-commit) 6f35b6e] scratch\n 1 file changed, 1 insertion(+)\n create mode 100644 dep.txt\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "6f35b6eff6c9ab562e8e515918dd6a643d971d6e\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "init"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /mnt/c/Users/Public/hexalith-job.c8ERde4V/source/.git/\n",
+      "stderr": "hint: Using 'master' as the name for the initial branch. This default branch name\nhint: will change to \"main\" in Git 3.0. To configure the initial branch name\nhint: to use in all of your new repositories, which will suppress this warning,\nhint: call:\nhint:\nhint: \tgit config --global init.defaultBranch <name>\nhint:\nhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\nhint: 'development'. The just-created branch can be renamed via this command:\nhint:\nhint: \tgit branch -m <name>\nhint:\nhint: Disable this message with \"git config set advice.defaultBranchName false\"\n"
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000,6f35b6eff6c9ab562e8e515918dd6a643d971d6e,references/Builds"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "-c",
+        "user.name=Scratch",
+        "-c",
+        "user.email=scratch@example.invalid",
+        "commit",
+        "-m",
+        "scratch"
+      ],
+      "exit": 0,
+      "stdout": "[master (root-commit) 081f88b] scratch\n 4 files changed, 6 insertions(+)\n create mode 100644 .gitmodules\n create mode 100644 archive/bad:name.dat\n create mode 160000 references/Builds\n create mode 100644 src/good.txt\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "081f88b5084e41c1f5b12f4a9daeecca75b95688\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "clone",
+        "--no-checkout",
+        "C:\\Users\\Public\\hexalith-job.c8ERde4V\\source",
+        "C:\\Users\\Public\\hexalith-job.c8ERde4V\\windows"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\Public\\hexalith-job.c8ERde4V\\windows'...\ndone.\n"
+    },
+    {
+      "args": [
+        "sparse-checkout",
+        "set",
+        "--cone",
+        "--sparse-index",
+        "src",
+        "references"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "checkout",
+        "--force",
+        "--detach",
+        "081f88b5084e41c1f5b12f4a9daeecca75b95688"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "HEAD is now at 081f88b scratch\n"
+    },
+    {
+      "args": [
+        "init"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in C:/Users/Public/hexalith-job.c8ERde4V/windows/references/Builds/.git/\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "remote",
+        "add",
+        "origin",
+        "C:/Users/Public/hexalith-job.c8ERde4V/dep"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "-c",
+        "protocol.file.allow=always",
+        "fetch",
+        "--no-recurse-submodules",
+        "--no-tags",
+        "--depth=1",
+        "origin",
+        "6f35b6eff6c9ab562e8e515918dd6a643d971d6e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From C:/Users/Public/hexalith-job.c8ERde4V/dep\n * branch            6f35b6eff6c9ab562e8e515918dd6a643d971d6e -> FETCH_HEAD\n"
+    },
+    {
+      "args": [
+        "checkout",
+        "--force",
+        "--detach",
+        "6f35b6eff6c9ab562e8e515918dd6a643d971d6e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "HEAD is now at 6f35b6e scratch\n"
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "6f35b6eff6c9ab562e8e515918dd6a643d971d6e\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "diff",
+        "--exit-code",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "write-tree"
+      ],
+      "exit": 0,
+      "stdout": "f217c9f7de4bbb30fc35cdb91fe0762564d910ca\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit": 0,
+      "stdout": "f217c9f7de4bbb30fc35cdb91fe0762564d910ca\n",
+      "stderr": ""
+    }
+  ]
+}

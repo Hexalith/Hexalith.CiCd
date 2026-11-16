@@ -41,7 +41,7 @@ context:
 ## Code Map
 
 - `evidence/12/planning.md` under the main spec folder — exact sources, preflight, concurrency and proposed preparation proof; `planning-preflight.json` contains actual GETs and refusals.
-- AI.Tools `package.json`, `package-lock.json`, `commitlint.config.mjs` — tool-only local validator; related guidance in README, three entrypoints and `hexalith-{git,llm}-instructions.md`.
+- AI.Tools `package.json`, `package-lock.json` — tool-only package metadata to remove during product preparation; `commitlint.config.mjs` is owned by the perimeter's absent-glob and must be preserved exactly until delivery removes it. Related guidance lives in README, three entrypoints and `hexalith-{git,llm}-instructions.md`.
 - `tools/render.py`, `tools/validate.py`, `setup/README.md` — existing no-solution registration and committed-candidate checks; no runtime change needed.
 - Builds `check.py`, `Github/lib/{ci_pipeline,guard_commitlint,guard_tools,audit_lint,release_version,release_build}.py` — reuse released checking and empty-inventory behavior.
 
@@ -50,8 +50,8 @@ context:
 **Execution:**
 
 - [ ] `evidence/12/` — refresh revisions and pilot acceptance; verify/provision AD-21 in order: App selection, stale state, exact rulesets, main-only release environment, resolved publishing prerequisites, disabled default scans, exact publish switch, retention and grants. Record zero-history baseline.
-- [ ] `ARCHITECTURE-SPINE.md` under the architecture planning folder — record the approved AI.Tools package-free applicability and preparation-check decisions beside AD-21 without extending either exception to other modules.
-- [ ] AI.Tools `package.json`, `package-lock.json`, `commitlint.config.mjs` and guidance above — retire tool-only npm validation, use shared validation and align stale Update branch wording with canonical policy; preserve foreign content. Qualify every edge case through existing checks and actual readbacks; apply the approved preparation proof before any push.
+- [x] `ARCHITECTURE-SPINE.md` under the architecture planning folder — record the approved AI.Tools package-free applicability and preparation-check decisions beside AD-21 without extending either exception to other modules.
+- [ ] AI.Tools `package.json`, `package-lock.json` and guidance above — retire tool-only npm package metadata, use shared validation and align stale Update branch wording with canonical policy; preserve foreign content and the exact owned `commitlint.config.mjs` blob/mode for delivery-owned deletion. Qualify every edge case through existing checks and actual readbacks; apply the approved preparation proof before any push.
 - [ ] `setup/Hexalith.AI.Tools.yml`, `rendered/`, `references/Hexalith.AI.Tools` gitlink — register explicit `solution: none`, current prepared main and unchanged acceptable Builds pin; commit cause and render together, fully validate before pushing. Preserve other registrations.
 - [ ] `evidence/12/` — authenticate accepted ref, App adoption commit, artifact and complete owned/foreign trees; immediately enable immutable releases and remove only applicable legacy policy/secret/key/Zot access. Record green CI, normal checker and next scheduled release/scan/delivery outcomes.
 
@@ -63,11 +63,54 @@ context:
 
 ## Implementation Notes
 
+- Local phase only, following `evidence/12/execution.md`: no push, provisioning,
+  App selection, dispatch, credential changes or other remote operations.
+- Standalone AI.Tools preparation is committed locally on
+  `docs/cicd-adoption-12` at `cfd1ebea92587cdea41b9aa2cff47358bf2f32f6`, from
+  base `736687b79c1e4fa8beabdab75c4675bb76c466b9`. It retires the tool-only npm
+  package/lock files and preserves the exact owned legacy commitlint config for
+  delivery to remove. It documents runnable shared message validation, synchronizes the three
+  entrypoints and aligns Update branch guidance. Its exact approved local
+  preparation proof passes; remote freshness must be checked again before push.
+- `setup/Hexalith.AI.Tools.yml` and five generated artifacts are prepared with
+  explicit `solution: none` and unchanged `v6.0.6`. The two pilot registrations
+  and renders are unchanged. The module gitlink remains the existing published
+  base; it does not record the unpushed preparation commit. Commit/integration
+  with prepared current module main remains pending.
+- At handoff the shared local `origin/main` was
+  `d3f3ef864c08cd89e390246d1a5d1dedffc4a92b`, one documentation-only commit
+  after the starting base; it changes this spec/execution handoff only. The
+  dedicated branch is preserved and fresh-main integration remains pending.
+- Story 11's genuine scheduled night at `2026-11-17T02:17:00Z` and its acceptance
+  remain prerequisites. AD-21 live preconditions, authenticated adoption,
+  post-adoption checker/green CI and the subsequent genuine nightly outcome
+  remain incomplete. See `evidence/12/implementation.md` for the exact handoff.
+
 ## Spec Change Log
 
 ## Review Triage Log
 
 ## Verification
+
+- Local results: renderer generation and `--check` pass; the existing renderer
+  suite passes 32 tests and validator suite 51. A disposable committed CiCd
+  candidate passes existing committed-input/render, schema and caller-interface
+  checks. This is an offline preparation result, not the full live verdict.
+- `preparation-proof.json` records exact base/head, shared and prior owning
+  message lint, audit lint, unchanged blobs/modes/gitlinks, entrypoint and
+  removal consistency. The normal checker remains unavailable before adoption
+  (exit 2); no owned bootstrap or nested dependency was created.
+- The earlier unpushed preparation incorrectly removed the owned legacy
+  commitlint config; its proof is explicitly superseded. The corrected head
+  preserves that exact base blob/mode for delivery-owned deletion and passes
+  the narrowed approved proof. The 83 existing tests cover registry/render/schema
+  cases; actual empty-package release behavior and the full live matrix/acceptance
+  audit remain pending with the live gates.
+- `readme-recipe-verification.json` authenticates the exact documented shared
+  message-validation recipe against the full saved candidate. It runs against
+  CiCd's existing direct released Builds dependency; AI.Tools is not adopted.
+- Full `tools/validate.py`, online audits, fresh live release/settings readbacks
+  and acceptance checks below are deferred by the no-remote-operations phase.
 
 - `run-with-temp uv run --locked --script tools/render.py --check` — reproducible output after generation.
 - `run-with-temp uv run --locked --script tools/validate.py` — complete committed/global/live-module verdict; supply intended read-only authentication privately.

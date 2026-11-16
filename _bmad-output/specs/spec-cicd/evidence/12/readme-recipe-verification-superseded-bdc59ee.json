@@ -1,0 +1,15 @@
+{
+  "observed_at": "2026-11-16T15:13:44.114053+00:00",
+  "source": "/home/administrator/projects/hexalith/ai-tools-story-12/README.md",
+  "recipe_sha256": "23b79f165947f3ea87ca9a13f52c0b01959f504bab752925cab90962a2e39077",
+  "module_head": "bdc59ee98bca55ccae29f36eb821eba0fa189c74",
+  "message_file": "/home/administrator/projects/hexalith/cicd-story-12/_bmad-output/specs/spec-cicd/evidence/12/product-commit-message.txt",
+  "command": "run-with-temp python3 - /home/administrator/projects/hexalith/cicd-story-12/_bmad-output/specs/spec-cicd/evidence/12/product-commit-message.txt <<'PY'\nimport os\nfrom pathlib import Path\nimport sys\n\nsys.dont_write_bytecode = True\nsys.path.insert(0, str(Path(\"references/Hexalith.Builds/Github/lib\").resolve()))\nfrom guard_tools import Tools\n\nscratch = Path(os.environ[\"TMPDIR\"]) / \"commitlint\"\nscratch.mkdir()\nTools(scratch).lint_message(Path(sys.argv[1]).read_text(encoding=\"utf-8\"), \"candidate\")\nprint(\"Commit message validation passed.\")\nPY\n",
+  "working_directory": "/home/administrator/projects/hexalith/cicd-story-12",
+  "scope": "Exact documented recipe against candidate message using CiCd existing direct v6.0.6 Builds pin; AI.Tools is not adopted and has no Builds bootstrap.",
+  "exit": 0,
+  "stdout": "Commit message validation passed.\n",
+  "stderr": "",
+  "superseded": true,
+  "superseded_reason": "The earlier product head deleted owned commitlint.config.mjs. Its owned-preservation claim was invalid. The corrected preparation preserves that exact base blob/mode for delivery-owned deletion."
+}

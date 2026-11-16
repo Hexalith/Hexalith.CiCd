@@ -1,0 +1,386 @@
+{
+  "summary": {
+    "revision": "a60212a863932adf88b9f1d005542dcd4d5d116e",
+    "dependency_revision": "472dd7d0af989b950d590f8b59c1bae5384dc0cc",
+    "patterns": "/*\n!/*/\n/docs/\n/module/\n!/module/*/\n/module/history/\n!/module/history/*/\n/module/history/a/\n!/module/history/a/*/\n/module/history/a/isolated/\n!/module/history/a/isolated/*/\n/module/history/b/\n!/module/history/b/*/\n/module/history/b/isolated/\n!/module/history/b/isolated/*/\n/module/history/c/\n/references/\n/src/\n",
+    "expected_files": [
+      ".gitmodules",
+      "README.md",
+      "docs/guide.txt",
+      "module/history/a/isolated/keep.txt",
+      "module/history/c/safe.txt",
+      "module/readme.txt",
+      "src/app.txt"
+    ],
+    "actual_files": [
+      ".gitmodules",
+      "README.md",
+      "docs/guide.txt",
+      "module/history/a/isolated/keep.txt",
+      "module/history/c/safe.txt",
+      "module/readme.txt",
+      "src/app.txt"
+    ],
+    "exact_materialized_paths": true,
+    "operations": [
+      {
+        "args": [
+          "ls-files",
+          "--sparse",
+          "--stage"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "ls-files",
+          "--stage"
+        ],
+        "exit": 5,
+        "stderr": "hint: The sparse index is expanding to a full index, a slow operation.\nhint: Your working directory likely has contents that are outside of\nhint: your sparse-checkout patterns. Use 'git sparse-checkout list' to\nhint: see your sparse-checkout definition and compare it to your working\nhint: directory contents. Cleaning up any merge conflicts or staged\nhint: changes before running 'git sparse-checkou"
+      },
+      {
+        "args": [
+          "ls-files",
+          "--stage",
+          "--",
+          "references/Builds"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "ls-tree",
+          "-r",
+          "-z",
+          "HEAD",
+          "--",
+          "references/Builds"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "diff",
+          "--exit-code",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "status",
+          "--porcelain"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "-c",
+          "protocol.file.allow=always",
+          "-c",
+          "submodule.recurse=false",
+          "submodule",
+          "update",
+          "--init",
+          "--checkout",
+          "--",
+          "references/Builds"
+        ],
+        "exit": 139,
+        "stderr": "hint: The sparse index is expanding to a full index, a slow operation.\nhint: Your working directory likely has contents that are outside of\nhint: your sparse-checkout patterns. Use 'git sparse-checkout list' to\nhint: see your sparse-checkout definition and compare it to your working\nhint: directory contents. Cleaning up any merge conflicts or staged\nhint: changes before running 'git sparse-checkou"
+      },
+      {
+        "args": [
+          "status",
+          "--porcelain"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "write-tree"
+        ],
+        "exit": 0,
+        "stderr": ""
+      },
+      {
+        "args": [
+          "sparse-checkout",
+          "disable"
+        ],
+        "exit": 5,
+        "stderr": "error: invalid path 'module/history/a/isolated/http-cache/bad:name.txt'\n"
+      }
+    ]
+  },
+  "log": [
+    {
+      "args": [
+        "init"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /mnt/c/Users/Public/hexalith-job.Airtd21x/dependency/.git/\n",
+      "stderr": "hint: Using 'master' as the name for the initial branch. This default branch name\nhint: will change to \"main\" in Git 3.0. To configure the initial branch name\nhint: to use in all of your new repositories, which will suppress this warning,\nhint: call:\nhint:\nhint: \tgit config --global init.defaultBranch <name>\nhint:\nhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\nhint: 'development'. The just-created branch can be renamed via this command:\nhint:\nhint: \tgit branch -m <name>\nhint:\nhint: Disable this message with \"git config set advice.defaultBranchName false\"\n"
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "-c",
+        "user.name=Scratch",
+        "-c",
+        "user.email=scratch@example.invalid",
+        "commit",
+        "-m",
+        "scratch"
+      ],
+      "exit": 0,
+      "stdout": "[master (root-commit) 472dd7d] scratch\n 1 file changed, 1 insertion(+)\n create mode 100644 x.txt\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "472dd7d0af989b950d590f8b59c1bae5384dc0cc\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "init"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /mnt/c/Users/Public/hexalith-job.Airtd21x/source/.git/\n",
+      "stderr": "hint: Using 'master' as the name for the initial branch. This default branch name\nhint: will change to \"main\" in Git 3.0. To configure the initial branch name\nhint: to use in all of your new repositories, which will suppress this warning,\nhint: call:\nhint:\nhint: \tgit config --global init.defaultBranch <name>\nhint:\nhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\nhint: 'development'. The just-created branch can be renamed via this command:\nhint:\nhint: \tgit branch -m <name>\nhint:\nhint: Disable this message with \"git config set advice.defaultBranchName false\"\n"
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        "160000,472dd7d0af989b950d590f8b59c1bae5384dc0cc,references/Builds"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "-c",
+        "user.name=Scratch",
+        "-c",
+        "user.email=scratch@example.invalid",
+        "commit",
+        "-m",
+        "scratch"
+      ],
+      "exit": 0,
+      "stdout": "[master (root-commit) a60212a] scratch\n 10 files changed, 12 insertions(+)\n create mode 100644 .gitmodules\n create mode 100644 README.md\n create mode 100644 docs/guide.txt\n create mode 100644 module/history/a/isolated/http-cache/bad:name.txt\n create mode 100644 module/history/a/isolated/keep.txt\n create mode 100644 module/history/b/isolated/http-cache/bad:name.txt\n create mode 100644 module/history/c/safe.txt\n create mode 100644 module/readme.txt\n create mode 160000 references/Builds\n create mode 100644 src/app.txt\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "a60212a863932adf88b9f1d005542dcd4d5d116e\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "clone",
+        "--no-checkout",
+        "C:\\Users\\Public\\hexalith-job.Airtd21x\\source",
+        "C:\\Users\\Public\\hexalith-job.Airtd21x\\windows"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\Public\\hexalith-job.Airtd21x\\windows'...\ndone.\n"
+    },
+    {
+      "args": [
+        "config",
+        "--local",
+        "core.sparseCheckout",
+        "true"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "--local",
+        "core.sparseCheckoutCone",
+        "true"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "--local",
+        "index.sparse",
+        "true"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "update-index",
+        "-z",
+        "--index-info"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "checkout",
+        "--force",
+        "--detach",
+        "a60212a863932adf88b9f1d005542dcd4d5d116e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "HEAD is now at a60212a scratch\n"
+    },
+    {
+      "args": [
+        "ls-files",
+        "--sparse",
+        "--stage"
+      ],
+      "exit": 0,
+      "stdout": "100644 bfc27661d9366bca44c6f30673ab4343aed5dc18 0\t.gitmodules\n100644 d8649da39ddf7910d29982e2f19cd9c0ff5ffe96 0\tREADME.md\n100644 7e2b6439aebf0bb975796f691b3b227d0af43bb5 0\tdocs/guide.txt\n040000 79db66ae8db62c8a74011f937be38d0a3bc5fc6d 0\tmodule/history/a/isolated/http-cache/\n100644 2fa992c0b8b5c6acd2bdd4fa31de29d29799bdd5 0\tmodule/history/a/isolated/keep.txt\n040000 a54f19d937cb00a480368989d02c0b01551fc9d6 0\tmodule/history/b/isolated/http-cache/\n100644 b7767f67d3494c9c8df2deaac7129f48ce33d2f7 0\tmodule/history/c/safe.txt\n100644 0cca093d7af2d97bfa250fceb954297d68a6f246 0\tmodule/readme.txt\n160000 472dd7d0af989b950d590f8b59c1bae5384dc0cc 0\treferences/Builds\n100644 b80f0bd60822d4fa4893de455958ef32f6c521bf 0\tsrc/app.txt\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "ls-files",
+        "--stage"
+      ],
+      "exit": 5,
+      "stdout": "",
+      "stderr": "hint: The sparse index is expanding to a full index, a slow operation.\nhint: Your working directory likely has contents that are outside of\nhint: your sparse-checkout patterns. Use 'git sparse-checkout list' to\nhint: see your sparse-checkout definition and compare it to your working\nhint: directory contents. Cleaning up any merge conflicts or staged\nhint: changes before running 'git sparse-checkout clean' or 'git\nhint: sparse-checkout reapply' may assist in this cleanup.\nhint: Disable this message with \"git config set advice.sparseIndexExpanded false\"\nerror: invalid path 'module/history/a/isolated/http-cache/bad:name.txt'\n"
+    },
+    {
+      "args": [
+        "ls-files",
+        "--stage",
+        "--",
+        "references/Builds"
+      ],
+      "exit": 0,
+      "stdout": "160000 472dd7d0af989b950d590f8b59c1bae5384dc0cc 0\treferences/Builds\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "ls-tree",
+        "-r",
+        "-z",
+        "HEAD",
+        "--",
+        "references/Builds"
+      ],
+      "exit": 0,
+      "stdout": "160000 commit 472dd7d0af989b950d590f8b59c1bae5384dc0cc\treferences/Builds\u0000",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "diff",
+        "--exit-code",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "-c",
+        "protocol.file.allow=always",
+        "-c",
+        "submodule.recurse=false",
+        "submodule",
+        "update",
+        "--init",
+        "--checkout",
+        "--",
+        "references/Builds"
+      ],
+      "exit": 139,
+      "stdout": "",
+      "stderr": "hint: The sparse index is expanding to a full index, a slow operation.\nhint: Your working directory likely has contents that are outside of\nhint: your sparse-checkout patterns. Use 'git sparse-checkout list' to\nhint: see your sparse-checkout definition and compare it to your working\nhint: directory contents. Cleaning up any merge conflicts or staged\nhint: changes before running 'git sparse-checkout clean' or 'git\nhint: sparse-checkout reapply' may assist in this cleanup.\nhint: Disable this message with \"git config set advice.sparseIndexExpanded false\"\nerror: invalid path 'module/history/a/isolated/http-cache/bad:name.txt'\nC:/Program Files/Git/mingw64/libexec/git-core\\git-submodule: line 273:   806 Segmentation fault         git ${wt_prefix:+-C \"$wt_prefix\"} submodule--helper update $quiet $force $progress $remote $recursive $init $no_fetch $rebase $merge $checkout ${ref_format:+\"$ref_format\"} ${reference:+\"$reference\"} $dissociate ${depth:+\"$depth\"} $require_init $single_branch $recommend_shallow $jobs $filter -- \"$@\"\n"
+    },
+    {
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "write-tree"
+      ],
+      "exit": 0,
+      "stdout": "ff81ef94fff34a1415bc693ede4fbad3ec401d27\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "sparse-checkout",
+        "disable"
+      ],
+      "exit": 5,
+      "stdout": "",
+      "stderr": "error: invalid path 'module/history/a/isolated/http-cache/bad:name.txt'\n"
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "git_version": {
+    "args": [
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "git version 2.55.0.windows.4\n",
+    "stderr": ""
+  },
+  "cases": [
+    {
+      "args": [
+        "init"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /mnt/c/Users/Public/hexalith-job.EOdJYBXK/source/.git/\n",
+      "stderr": "hint: Using 'master' as the name for the initial branch. This default branch name\nhint: will change to \"main\" in Git 3.0. To configure the initial branch name\nhint: to use in all of your new repositories, which will suppress this warning,\nhint: call:\nhint:\nhint: \tgit config --global init.defaultBranch <name>\nhint:\nhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\nhint: 'development'. The just-created branch can be renamed via this command:\nhint:\nhint: \tgit branch -m <name>\nhint:\nhint: Disable this message with \"git config set advice.defaultBranchName false\"\n"
+    },
+    {
+      "args": [
+        "config",
+        "user.name",
+        "Scratch"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.email",
+        "scratch@example.invalid"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "commit",
+        "-m",
+        "scratch"
+      ],
+      "exit": 0,
+      "stdout": "[master (root-commit) 8cb13ca] scratch\n 3 files changed, 3 insertions(+)\n create mode 100644 README.md\n create mode 100644 archive/bad:name.txt\n create mode 100644 src/app.txt\n",
+      "stderr": ""
+    },
+    {
+      "case": "noncone",
+      "args": [
+        "clone",
+        "--no-checkout",
+        "C:\\Users\\Public\\hexalith-job.EOdJYBXK\\source",
+        "C:\\Users\\Public\\hexalith-job.EOdJYBXK\\noncone"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\Public\\hexalith-job.EOdJYBXK\\noncone'...\ndone.\n"
+    },
+    {
+      "case": "noncone",
+      "args": [
+        "sparse-checkout",
+        "set",
+        "--no-cone",
+        "/*",
+        "!/archive/"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "noncone",
+      "args": [
+        "checkout",
+        "--force",
+        "HEAD"
+      ],
+      "exit": 128,
+      "stdout": "",
+      "stderr": "error: invalid path 'archive/bad:name.txt'\n"
+    },
+    {
+      "case": "noncone",
+      "args": [
+        "ls-files",
+        "--sparse",
+        "--stage"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "noncone",
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "D  README.md\nD  archive/bad:name.txt\nD  src/app.txt\n",
+      "stderr": ""
+    },
+    {
+      "case": "cone",
+      "args": [
+        "clone",
+        "--no-checkout",
+        "C:\\Users\\Public\\hexalith-job.EOdJYBXK\\source",
+        "C:\\Users\\Public\\hexalith-job.EOdJYBXK\\cone"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\Public\\hexalith-job.EOdJYBXK\\cone'...\ndone.\n"
+    },
+    {
+      "case": "cone",
+      "args": [
+        "sparse-checkout",
+        "set",
+        "--cone",
+        "src"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "cone",
+      "args": [
+        "checkout",
+        "--force",
+        "HEAD"
+      ],
+      "exit": 128,
+      "stdout": "",
+      "stderr": "error: invalid path 'archive/bad:name.txt'\n"
+    },
+    {
+      "case": "cone",
+      "args": [
+        "ls-files",
+        "--sparse",
+        "--stage"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "cone",
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "D  README.md\nD  archive/bad:name.txt\nD  src/app.txt\n",
+      "stderr": ""
+    },
+    {
+      "case": "cone_sparse_index",
+      "args": [
+        "clone",
+        "--no-checkout",
+        "C:\\Users\\Public\\hexalith-job.EOdJYBXK\\source",
+        "C:\\Users\\Public\\hexalith-job.EOdJYBXK\\cone_sparse_index"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\Public\\hexalith-job.EOdJYBXK\\cone_sparse_index'...\ndone.\n"
+    },
+    {
+      "case": "cone_sparse_index",
+      "args": [
+        "sparse-checkout",
+        "set",
+        "--cone",
+        "--sparse-index",
+        "src"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "cone_sparse_index",
+      "args": [
+        "checkout",
+        "--force",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "Your branch is up to date with 'origin/master'.\n",
+      "stderr": ""
+    },
+    {
+      "case": "cone_sparse_index",
+      "args": [
+        "ls-files",
+        "--sparse",
+        "--stage"
+      ],
+      "exit": 0,
+      "stdout": "100644 b7767f67d3494c9c8df2deaac7129f48ce33d2f7 0\tREADME.md\n040000 863074db22f03eadb3e0b3d35f57540f9ed12c5e 0\tarchive/\n100644 9f0cb519d19b2295ec2895d2ff23689bfc27df9e 0\tsrc/app.txt\n",
+      "stderr": ""
+    },
+    {
+      "case": "cone_sparse_index",
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
