@@ -1,0 +1,1503 @@
+{
+  "phase": "units-release",
+  "product_head": "bf0f44ff395d89c5565a423b424e389d2f80d0f6",
+  "snapshots": {
+    "Hexalith.AI.Tools": "1745b6663ad32bb1288167135ed0f979366c53a0",
+    "Hexalith.Builds": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+    "Hexalith.Commons": "1e292e3e99232a28462b2a35d5547a94dd612e57",
+    "Hexalith.Conversations": "36cd13159f6c66d249942c6cfeca179adf3c4ec8",
+    "Hexalith.EventStore": "77a2dafdf2e6aab7382afab7ab50e22144361d42",
+    "Hexalith.Folders": "8063a0392789bd45a214c2c873298ef25d481bb9",
+    "Hexalith.FrontComposer": "56c9206167b7f18c3a95f610f814dfa39d9dcd01",
+    "Hexalith.McpCli": "1d423dae22e5f4e357889427a67406f47758e377",
+    "Hexalith.Memories": "ca3bcc981e8e3dd6be41f669587984225171f7ca",
+    "Hexalith.Parties": "b6b4f8a5c83b77ab57a9b947436317162b4fb337",
+    "Hexalith.Platform": "f99f51c3053fe0b0292acad461d78c833ec156cc",
+    "Hexalith.PolymorphicSerializations": "bb6d45f3cce0a963d4453e457f47b335cf7b22e9",
+    "Hexalith.Projects": "c9fa1d67703d658189502687a8271986feba121e",
+    "Hexalith.Tenants": "6188ea48cab9fdf4207072135c66aab5a7b7fe32",
+    "Hexalith.Timesheets": "ae5f8171763a6207a70572cf45180b7adbe38d78",
+    "Hexalith.Works": "34c578dd12d50246d8a9513523ae909023a6fcd2"
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "/home/administrator/projects/hexalith/cicd-story-19/references/Hexalith.ChatBot",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot"
+      ],
+      "exit": 0,
+      "seconds": 0.79
+    },
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.ChatBot.slnx",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false",
+        "-noAutoResponse",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 161.5
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.IntegrationTests.dll",
+        "-list",
+        "tests"
+      ],
+      "exit": 0,
+      "seconds": 0.27
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.dll",
+        "-list",
+        "tests"
+      ],
+      "exit": 0,
+      "seconds": 0.22
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Architecture.Tests/Hexalith.ChatBot.Architecture.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 2,
+      "seconds": 24.97
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Cli.Tests/Hexalith.ChatBot.Cli.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 1.51
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Client.Tests/Hexalith.ChatBot.Client.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 2.6
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Conformance.Tests/Hexalith.ChatBot.Conformance.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 20.36
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Contracts.Tests/Hexalith.ChatBot.Contracts.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 4.01
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Mcp.Tests/Hexalith.ChatBot.Mcp.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 1.88
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Server.Tests/Hexalith.ChatBot.Server.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 290.67
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Testing.Tests/Hexalith.ChatBot.Testing.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 1.27
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.UI.Tests/Hexalith.ChatBot.UI.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 3.21
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Workers.Tests/Hexalith.ChatBot.Workers.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 1.48
+    },
+    {
+      "command": [
+        "python3",
+        ".github/actions/after-unit-tests/require-runtime.py"
+      ],
+      "exit": 0,
+      "seconds": 2.44
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Recovery.Tests/bin/Release/net10.0/Hexalith.ChatBot.Recovery.Tests.dll",
+        "-list",
+        "tests"
+      ],
+      "exit": 0,
+      "seconds": 0.32
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.dll",
+        "-list",
+        "tests"
+      ],
+      "exit": 0,
+      "seconds": 0.32
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 2,
+      "seconds": 15.88
+    }
+  ],
+  "product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+  "product_untracked_sha256": {
+    ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+    "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+    "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+    "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+    "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "c8e2000865462ef1cc828b99b652ce07d583e9f560294b674e22e87e965bd9bc",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/Hexalith.ChatBot.Live.IntegrationTests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/RequiredTopologyTests.cs": "57a1a6eea9235d65f513b4407600cf9e4d97defd53d1980da17b432a297ce104",
+    "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+    "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+    "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/required-live.xunit.runner.json": "3aaf68ea8927dce2c9ee5404088745084d709c1ff2d00bf41c90d9406d31b8a1"
+  },
+  "live_required": true,
+  "composition_sdk_package_closure": {
+    "Hexalith.EventStore.Aspire/4.2.0": {
+      "actual_apphost_sha256": "a68d402265448ae6fb75cd7a8422b4e8581c606aee215914f52a989e758e472a",
+      "matches_published_package": true
+    },
+    "Hexalith.EventStore.Contracts/4.2.0": {
+      "actual_apphost_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "matches_published_package": true
+    },
+    "Hexalith.EventStore.Client/4.2.0": {
+      "actual_apphost_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "matches_published_package": true
+    },
+    "Hexalith.EventStore.ServiceDefaults/4.2.0": {
+      "actual_apphost_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "matches_published_package": true
+    }
+  },
+  "required_runner_configuration_sha256": "3aaf68ea8927dce2c9ee5404088745084d709c1ff2d00bf41c90d9406d31b8a1",
+  "built_source_verification": {
+    "regular_files_checked": 6300,
+    "matches_original_product_inputs": true
+  },
+  "json_loader_metadata_before_tests": {
+    "scope": "Actual normal child output metadata; this capture does not claim child-runtime execution",
+    "installed_runtimes": [
+      "Microsoft.AspNetCore.App 10.0.10 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.11 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.12 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.13 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.14 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.15 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 11.0.0 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.NETCore.App 10.0.10 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.11 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.12 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.13 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.14 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.15 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 11.0.0 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]"
+    ],
+    "projects": {
+      "required_test_host": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.deps.json",
+        "deps_sha256": "da57d22afb3dd2c71c4d06793584cbb162c20c168bd9d4f3f77ba911fc179050",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {
+            "System.Text.Json/11.0.0": {
+              "dependencies": {
+                "System.IO.Pipelines": "11.0.0",
+                "System.Text.Encodings.Web": "11.0.0"
+              },
+              "runtime": {
+                "lib/net10.0/System.Text.Json.dll": {
+                  "assemblyVersion": "11.0.0.0",
+                  "fileVersion": "11.0.26.53018",
+                  "localPath": "System.Text.Json.dll"
+                }
+              }
+            }
+          }
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "MSTest.EnableParentProcessQuery": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {
+          "System.Text.Json/11.0.0": {
+            "sha512": "hyLfq7fRYbq8m3ENGqgEYkqxLeLx2xmNMlf6UG1a7RQo9OsTsfm4Ch/E6O+A5vYQ2ThneLUn1CHF644lmH5QhA==",
+            "type": "package",
+            "path": "system.text.json/11.0.0",
+            "files": [
+              ".nupkg.metadata",
+              ".signature.p7s",
+              "Icon.png",
+              "PACKAGE.md",
+              "THIRD-PARTY-NOTICES.TXT",
+              "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.4/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "buildTransitive/net10.0/System.Text.Json.targets",
+              "buildTransitive/net461/System.Text.Json.targets",
+              "buildTransitive/net462/System.Text.Json.targets",
+              "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+              "buildTransitive/netstandard2.0/System.Text.Json.targets",
+              "lib/net10.0/System.Text.Json.dll",
+              "lib/net10.0/System.Text.Json.xml",
+              "lib/net11.0/System.Text.Json.dll",
+              "lib/net11.0/System.Text.Json.xml",
+              "lib/net462/System.Text.Json.dll",
+              "lib/net462/System.Text.Json.xml",
+              "lib/netstandard2.0/System.Text.Json.dll",
+              "lib/netstandard2.0/System.Text.Json.xml",
+              "system.text.json.11.0.0.nupkg.sha512",
+              "system.text.json.nuspec",
+              "useSharedDesignerContext.txt"
+            ]
+          }
+        },
+        "app_local_json_present": true,
+        "app_local_json": {
+          "path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/System.Text.Json.dll",
+          "assembly_identity": "System.Text.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+          "sha256": "11787e1d3ce9ceb32cc86cc5ca6a19c450a47b68c1c12d0b8100e46ebf655768"
+        }
+      },
+      "release_test_host": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.deps.json",
+        "deps_sha256": "2493f170bee060ad917dca6311c318480f4709297971e573c6158f4c4169b842",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {
+            "System.Text.Json/11.0.0": {
+              "dependencies": {
+                "System.IO.Pipelines": "11.0.0",
+                "System.Text.Encodings.Web": "11.0.0"
+              },
+              "runtime": {
+                "lib/net10.0/System.Text.Json.dll": {
+                  "assemblyVersion": "11.0.0.0",
+                  "fileVersion": "11.0.26.53018",
+                  "localPath": "System.Text.Json.dll"
+                }
+              }
+            }
+          }
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "MSTest.EnableParentProcessQuery": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {
+          "System.Text.Json/11.0.0": {
+            "sha512": "hyLfq7fRYbq8m3ENGqgEYkqxLeLx2xmNMlf6UG1a7RQo9OsTsfm4Ch/E6O+A5vYQ2ThneLUn1CHF644lmH5QhA==",
+            "type": "package",
+            "path": "system.text.json/11.0.0",
+            "files": [
+              ".nupkg.metadata",
+              ".signature.p7s",
+              "Icon.png",
+              "PACKAGE.md",
+              "THIRD-PARTY-NOTICES.TXT",
+              "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.4/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "buildTransitive/net10.0/System.Text.Json.targets",
+              "buildTransitive/net461/System.Text.Json.targets",
+              "buildTransitive/net462/System.Text.Json.targets",
+              "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+              "buildTransitive/netstandard2.0/System.Text.Json.targets",
+              "lib/net10.0/System.Text.Json.dll",
+              "lib/net10.0/System.Text.Json.xml",
+              "lib/net11.0/System.Text.Json.dll",
+              "lib/net11.0/System.Text.Json.xml",
+              "lib/net462/System.Text.Json.dll",
+              "lib/net462/System.Text.Json.xml",
+              "lib/netstandard2.0/System.Text.Json.dll",
+              "lib/netstandard2.0/System.Text.Json.xml",
+              "system.text.json.11.0.0.nupkg.sha512",
+              "system.text.json.nuspec",
+              "useSharedDesignerContext.txt"
+            ]
+          }
+        },
+        "app_local_json_present": true,
+        "app_local_json": {
+          "path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/System.Text.Json.dll",
+          "assembly_identity": "System.Text.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+          "sha256": "11787e1d3ce9ceb32cc86cc5ca6a19c450a47b68c1c12d0b8100e46ebf655768"
+        }
+      },
+      "normal_tenants_child": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants/src/Hexalith.Tenants/bin/Release/net10.0/Hexalith.Tenants.deps.json",
+        "deps_sha256": "c75cf7cdb3d9e12ab78622e7cbd88cd55138fdefe411b799e365f351a3c633f5",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {}
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants/src/Hexalith.Tenants/bin/Release/net10.0/Hexalith.Tenants.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "System.GC.Server": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {},
+        "app_local_json_present": false
+      }
+    }
+  },
+  "ordinary_integration_discovery": [
+    "Hexalith.ChatBot.IntegrationTests.AssociationIngressAppChannelTokenTopologyTests.ChatBotAppAndItsOwnSidecarShareOneGeneratedAppChannelToken",
+    "Hexalith.ChatBot.IntegrationTests.ChatBotDeadLetterSubscriptionTopologyTests.BlankConfiguredValuesMustFallBackRatherThanReachTheSubscriptionAsEmpty",
+    "Hexalith.ChatBot.IntegrationTests.ChatBotDeadLetterSubscriptionTopologyTests.ServerSubscriptionBindingMustHonourTheAppHostSuppliedTenantDeadLetterTopic",
+    "Hexalith.ChatBot.IntegrationTests.ChatBotDeadLetterSubscriptionTopologyTests.ServerSubscriptionDefaultsMustMatchTheAspireTopologyConstants",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.ApplicationMailSendAndApprovalShouldStillRequireOutboundServiceGrantAtBoundary",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.ApplicationMailSendAndServiceGrantShouldStillRequirePairedApprovalAtBoundary",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.ApprovedServiceSendWorkflowShouldCarryGrantAndApprovalEvidenceAtBoundary",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.DeniedAuthorityWorkflowShouldRoundTripStableReasonAndSafeAuditRefs",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.ProviderPostureOnlyShouldFailClosedInBoundaryPayload",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.RevokedSharedMailboxMembershipShouldNotDowngradeToAuthenticatedUserSendAtBoundary",
+    "Hexalith.ChatBot.IntegrationTests.Governance.Outbound.SenderAuthorityClassificationWorkflowE2ETests.SuccessfulAuthorityWorkflowShouldRoundTripAsMetadataOnlyBoundaryPayload",
+    "Hexalith.ChatBot.IntegrationTests.IdempotencyStateStoreIntegrationTests.EquivalentRepeatsShouldLeaveSingleCoarseRecordAndSingleDispatchInStateStoreLane",
+    "Hexalith.ChatBot.IntegrationTests.IntegrationPlaceholderTests.IntegrationLaneShouldBindToChatBotModuleIdentity",
+    "Hexalith.ChatBot.IntegrationTests.OwnerServiceTopologyTests.CompleteStaticOverridesPreserveEndpointsTokensAndExplicitTenantBindings",
+    "Hexalith.ChatBot.IntegrationTests.OwnerServiceTopologyTests.CompleteStaticOverridesRejectMixedClientCredentials",
+    "Hexalith.ChatBot.IntegrationTests.OwnerServiceTopologyTests.DevelopmentWithoutStaticOwnerSettingsComposesDedicatedOwnerBindings",
+    "Hexalith.ChatBot.IntegrationTests.OwnerServiceTopologyTests.PartialExplicitOverridesCannotFallBackToLocalCredentials",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalNativeObservationVerifierTests.BeforeObservationMustBeIndependentAndBoundBeforeSubmission",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalNativeObservationVerifierTests.CompleteIndependentlySignedBeforeObservationMustBeAccepted",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalNativeObservationVerifierTests.CompleteIndependentlySignedPairMustMatchTheExactRun",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalNativeObservationVerifierTests.IncompleteOrMismatchedNativeEvidenceMustRemainBlocked",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalNativeObservationVerifierTests.ProducerIdentityMustNotActAsItsOwnWitness",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalPreflightTests.CurrentCandidateMustRemainBlockedWithoutChatBotOwnedCauseReader",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalPreflightTests.MissingProofMustRefuseBothRealPrincipalsWithoutNativeMutation",
+    "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalPreflightTests.NativeVerifierMustRequireExternalEvidenceInsteadOfAnOptInFlag",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.ConcreteCleanupOwnsIndexedDescendantsAndDetectsReappearanceAfterIndexErasure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.EventStoreCleanupCoversCompleteAndAuxiliaryNegativeOutcomes",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.EventStoreCleanupDetachesBeforeFirstAwaitAndPropagatesCancellation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.EventStorePreCommitFailureIsCleanedAndRetired",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.FailedCleanupCannotReuseOldReferencesDuringTheNextScenario",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.IncompleteEventStoreCleanupAllowsFreshSeedingAndCleanup",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.LateInventoryFailureRestoresConcreteCleanupWithoutStartingErasure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.MidLoopSeedFailureCleansConfirmedAndUnconfirmedReferences",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.ScopedCleanupExecutesGraphAndIdentityWithIsolatedSuccessors",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.ScopedCleanupRestoresAfterFirstEraseFailureAndPropagatesCancellation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.ScopedGraphProducerRetainsEveryValidIdentityBeforeLaterFailure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.StateHandoffAndDiagnosticAllowlistRetireAllFlagsAndIdentifiers",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.SubscriptionCleanupErasesIndependentTargetsAndChecksBothDurableTenants",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.SubscriptionCleanupRestoresAfterEraseFailureAndRetiresOnAllExceptions",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.SubscriptionProducersRetainEveryValidIdentityBeforeLaterFailure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.AspireRecoveryCleanupStateTests.SubscriptionReconciliationUsesCurrentDurableIdentitiesAcrossCumulativeRestoreCycles",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ChatBotDomainServiceIdentityContractTests.DaprSuppliedAppIdResolvesToTheTopologyIdentity",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ChatBotDomainServiceIdentityContractTests.ServerIdentityAppIdEqualsTheTopologyDaprAppId",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ChatBotDomainServiceIdentityContractTests.ServiceVersionMatchesTheVersionEventStorePostsForAnUnversionedRegistration",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.AbsenceWindowPerformsFinalReadAfterBoundaryDelay",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.AuthorizationFailureNeverMeansAbsent",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.CallerCancellationStillStopsARequestBeforeItsConfiguredBudget",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.ConfiguredPresenceBudgetEndsTheProbeWithoutWaitingForTheFormerDefault",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.ConfiguredRequestBudgetCancelsAnUnresponsiveTransport",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.ConfiguredRequestBudgetRemainsActiveAfterResponseHeadersWhileReadingBody",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.FirstEventBoundRemainsAuthoritativeWhenAggregateMetadataHasAdvanced",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.LiveRestorationBudgetCanExceedTheFormerPresenceAndRequestDefaults",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.MissingMalformedOrMismatchedDurableBoundsFailClosed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.NonPositiveRestorationBudgetIsRejected",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.PresencePollDelayStopsAtTheConfiguredWindowAndPreservesTheStrictFinalRead",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.PresenceWaitPerformsFinalReadAfterBoundaryDelay",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.PresenceWaitsFinalReadIsNotToleratedFailsClosedWithTheRealDiagnostic",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.PresenceWaitToleratesATransientInconsistentReadThenSucceeds",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.ReadReturnsAuthoritativePersistedSequenceTimestampAndIdentity",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.EventStoreDurableStateProbeTests.SuccessfulMalformedActorStateNeverMeansAbsent",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceRetentionFailureSinkTests.CancelledReplacementPreservesThePreviouslyCompleteMarker",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceRetentionFailureSinkTests.ConstructorRejectsOverlappingOrRelativeRoots",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceRetentionFailureSinkTests.CoordinatorSinkLossFlowsThroughTheRealFileSinkIntoAReplayedRetentionFailure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceRetentionFailureSinkTests.RecordAsyncOverwritesRetryForTheSameClosedScenario",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceRetentionFailureSinkTests.RecordAsyncRejectsUnknownMetadataWithoutWritingAFile",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceRetentionFailureSinkTests.RecordAsyncWritesOneBoundedContainedMetadataOnlyMarker",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.EveryEmittedScenarioCarriesItsCompleteResidualSet",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.RecordAsyncDistinguishesConfiguredCorpusVolumeFromScenarioExerciseVolume",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.RecordAsyncRetainsControlledLossDurableBoundsAsMetadataOnlyEvidence",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.RecordAsyncRetainsMetAndMissedContinuityReportsWithProvenance",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.RecordAsyncSanitizesPathSeparatorsInScenarioTokens",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.RecordAsyncSupersedesPriorArtifactForTheSameScenario",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.FileRecoveryValidationEvidenceSinkTests.RecordedControlledLossManifestSatisfiesTheGateItWillBeReplayedThrough",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.ControlledLossRouteRejectsOpenEndedNotificationPhase",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.ControlledLossRouteUsesOnlyClosedNotificationPhases",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.ControlledRunnerOrSinkFailureWritesFourthJobMarkerBeforeRethrow",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.HostedControlledLossBudgetCanMeasurePastRpoTargetWithinSmallestWorkflowWindow",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.MailboxAdmissionProbeBodyShouldPassTheProductionRequestContract",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.MailboxAdmissionProofRequiresAPostAuthorizationUnavailableProblemType",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.MailboxAdmissionProofRequiresServiceUnavailableAlongsideTheProblemType",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.MailboxAdmissionStartupStatusClassificationIsFailClosed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.MailboxOwnerSeedFailsFastOnlyOnTheCanonicalExecutionRefusal",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.MailboxOwnerSeedShouldTargetTheExactAdmissionProbeIntake",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.NotificationPhasesCannotCrossClosedLaneOwnership",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.RecoveryWorkflowTimeoutHonorsTheBoundedCompletionOverride",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityAspireE2eContractTests.RecoveryWorkflowTimeoutRejectsValuesOutsideTheRunnerBudget",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.CanceledMeasurementStillRestoresAndCleansTheFaultedResource",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.CanceledObservationWithFailedRestoreIsScenarioFailureNotBareCancel",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.CheckpointFailureStillReachesCleanupAndNeverExpiresTheSubscription",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.CleanupFailureAfterSuccessfulMeasurementPropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.CleanupFailureAfterSuccessfulRestoreButFailedDrillPropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.DisabledLiveModeIsRejectedBeforeAnyFaultOperation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.EventStoreDataLossDerivesRpoFromCommittedBeforeOutageBound",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.EventStoreScenarioDerivesRpoAndRtoFromObservedCheckpointAndRecovery",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.FailedInjectionStillAttemptsRestorationAndCleanup",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.LargerReversedRtoBoundsStayUnmeasurable",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.M365ScenarioExercisesWorkerFailureRestorationAndReconciliation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.NullCorrelationIsRejectedBeforeAnyFaultOperation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.RestorationOnlyFailurePreservesTheRestorationDiagnosticNotABareCancel",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.SeedFailureStillReachesCleanupAndNeverInjectsTheFault",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.StopControlRequiresCommandSuccessAndAnObservedUnavailableEndpoint",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.SubscriptionDataLossDerivesRpoFromCommittedBeforeOutageCheckpoint",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.SubscriptionInjectionFailureStillRestoresAndCleans",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.SubscriptionRestorationOnlyFailurePreservesTheRestorationDiagnosticNotABareCancel",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.SubSecondReversedRtoBoundsClampToZero",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveContinuityDrillScenarioRunnerTests.UnknownScenarioIsRejectedBeforeAnyFaultOperation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.CancellationStillRestoresAndCleansUp",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.CleanupFailureCannotQualifyEvidence",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.CleanupFailureCannotReplaceThePrimaryInjectionFailure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.CrossTenantDuplicateFailsTheControlledLossSafetyDecision",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.DurableBoundsBindToThePhysicalTenantDerivedFromTheRequestedLabel",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.DurableBoundsMustBelongToTheRequestedTenant",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.EachControlledLossObservationFalsifiesItsPublishedSafetyFact",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.HostedDeadlineCanRetainAnOverTargetMeasurementAsMissed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.IndependentClockDomainsAreNotCrossOrdered",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.PositiveDurableRpoUsesCanonicalBoundary",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.PostRecoverySentinelChangeFailsBothIsolationAndUnauthorizedMutation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.ResidualCommittedCandidateIsStructuralLoss",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.TheLogicalReplayTestLabelIsNotAcceptedAsADurableBound",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveControlledLossPathRunnerTests.ZeroOrReversedDurableBoundsFailClosed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.CallerCancellationThroughDecoratorDoesNotRetainScenarioFailure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.CoordinatorRunsThePopulatedDatasetThroughTheLiveDriver",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.DisabledLiveModeIsRejectedBeforeTheRebuildReadsItsPopulation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.FailedRebuildSkipsEraseSoTheFreshPartitionRemainsForCapture",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.MultiEnvelopeOperationIsGroupedAndReplayedOnce",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.RebuildCanDivergeFromThePersistedBaseline",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.RebuildUsesOnlyTheSelectedTenantImmutableSourceAndWormChain",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.SameResourceWormStructuralMutationChangesTheGovernedDigest",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.SeveralOperationsMayTargetOneGovernedResource",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveProjectionRebuildDriverTests.UnsafeWormResourceIdIsRejectedInsteadOfCollapsed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.ReplayLoaderOnlyAcceptsBoundedClosedJsonFromDesignatedDirectory",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.ReplayLoaderPreservesCancellationAndMapsAFileRaceToInvalid",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.ReplayRejectsControlledLossEvidenceFromAnotherCommit",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.ReplayRejectsCorruptRetentionEvidence",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.ReplayRejectsDuplicateControlledLossEvidence",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.ReplayRejectsStaleControlledLossEvidence",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.RetentionFailureMarkersAreDiscoveredWithoutAnyManifest",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveRecoveryEvidenceGateReplayTests.WorkflowShapedArtifactReplaysAllFourRetentionFailuresWithoutManifests",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.ACrossTenantEffectDetectedBeforeRestoreFailsIsolationEvenWhenThePostRestoreCheckReportsClean",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.AMismatchedObservedScopeSurvivesIntoTheMeasurementRatherThanBeingCoercedToMatch",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.CanceledObservationStillRestoresAndCleansOnIndependentTokens",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.CanceledObservationWithFailedRestoreIsScenarioFailureNotBareCancel",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.CheckpointFailureStillCleansAndSurfacesBothFailures",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.CheckpointRestoreRouteCannotAcquireAnUnsupportedCorrelationSegment",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.CoordinatorRunsAllSixObservedScenariosThroughTheLiveDriver",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.DisabledLiveModeIsRejectedBeforeInjection",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.DualRestorationAndCleanupFailureSurfacesAggregateException",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.ExpectedScopeMapsEveryCanonicalDependency",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.FailedIndependentControlFailsClosedAfterRestoreAndCleanup",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.IndependentControlFailureNamesWhetherTheProbeWasAnsweredOrNegative",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.LargerReversedScopeRecordingLatencyStaysUnmeasurable",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.ObservationFailureStillRestoresBeforeTheDriverFailsClosed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.ObservedNonRecoverySurvivesIntoTheMeasurement",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.RestorationOrCleanupFailureFailsClosedAfterBothAreAttempted",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.SubSecondReversedScopeRecordingLatencyClampsToZero",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.LiveScopedOutageInjectionDriverTests.UnsafeTenantOrUnknownDependencyIsRejectedBeforeInjection",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAbsenceObservationTests.CancellationDuringDelayPropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAbsenceObservationTests.ObservationFailuresPropagate",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAbsenceObservationTests.SustainedWindowChecksIntermediateState",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAbsenceObservationTests.TinyWindowObservesInitialAndFinalState",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAttemptFailureBoundaryTests.AnyStageFailureRetainsIncompleteSummaryAndActualAlerts",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAttemptFailureBoundaryTests.ControlledLossFailureRetainsBothIndependentArtifacts",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAttemptFailureBoundaryTests.ExhaustedSummaryBudgetPreservesPrimaryFailureAndCancellation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAttemptFailureBoundaryTests.LateFailureReplacesSuccessfulSummaryWithIncompleteObservedState",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAttemptFailureBoundaryTests.SuccessfulSequencePreservesItsFinalSummary",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAttemptFailureBoundaryTests.SummaryWriteFailurePreservesBothFailures",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryDependencyExerciseTests.FaultIsObservedByTheConcreteSeamAndRecoveryIsIdempotent",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryFailureCaptureTests.CallerCancellationStopsPendingBudgetWithoutErasingAnExpiredBudget",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryFailureCaptureTests.FailureRetentionUsesCancellationTokenIdentity",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryFailureCaptureTests.LinkedCancellationIsNormalizedOnlyWithoutAnIndependentDeadline",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.AbsenceFindsMaterializedConversationResidueEvenWithoutIntakeIndexes",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.CapturedParticipantReappearingAtTheClosingBoundaryIsNotLostWithItsIndex",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.CleanupPreservesAnotherIntakeAndTenantAndRetainsChildrenAfterTheirIndexesAreGone",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.FailedOrCancelledInventoryPropagatesBeforeCleanupCanEraseAnything",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.IntakeReferencesRetainAssociationDiscoveryWhenSharedIndexesAreMissing",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.InventoryCoversProductionRootsAndMaterializedChildrenWithoutOwningSharedIndexes",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.InventoryIncludesTheSameItemIdentityInTwoProjectsAndTheirMaterializedChildren",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeInventoryTests.ReassignedParticipantIdentityFailsInventoryWithoutErasingEitherIntake",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.DefaultConstructionUsesFiveHundredMillisecondPolling",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.InjectedReadFailureFailsOnlyTheTargetedAttempt",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.KeysPreserveCanonicalShapesAndOrder",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.KeysPreserveFactoryIdentifierValidation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.OneShotAbsenceChecksEveryCanonicalKey",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.OneShotCallerCancellationPropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.OneShotPresenceAtAnyCanonicalKeyReturnsFalseImmediately",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.OneShotStorageFailurePropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.SustainedAbsenceCallerCancellationPropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.SustainedAbsenceClosingStorageFailurePropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.SustainedAbsencePerformsFinalBoundaryRead",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.SustainedAbsenceReturnsFalseForIntermediatePresenceEvenAfterLaterRemoval",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryIntakeReadModelProbeTests.SustainedAbsenceReturnsFalseForPresenceAtFinalBoundary",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryResourceLogTailTests.CaptureFaultIsReducedToAnExceptionTypeRatherThanReplacingTheRealFailure",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryResourceLogTailTests.DisposalBoundsADiagnosticEnumeratorThatIgnoresCancellation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryResourceLogTailTests.RenderRetainsOnlyTheBoundedMetadataAllowlist",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.HeadersComposeOnlyTheSelectedLaneAndPhase",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.MissingUnknownOrCrossLaneHeadersAreRefused",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.NonProcessRoutesRejectCorrelationLocators",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.ProcessRoutesRequireCorrelationLocators",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.RepeatedHeadersAreRefusedEvenWhenTheirValuesAgree",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.RestoreReadersRejectFlatOrMissingSnapshots",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxBoundaryTests.RoutesEscapeSegmentsAndRejectUnknownActions",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.AuthorizationRejectsWrongSecretAndWrongTenant",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.ControlledLossCandidateRequiresAnActiveSubscriptionFault",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.ControlledLossDecoratorCapturesTheCandidateAndRejectsOnlyTheLossPhase",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.NotificationIdentityRejectsOpenEndedLaneOrPhase",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.NotificationIdentitySeparatesCheckpointFromRecoveryButKeepsRecoveryReplayStable",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.RecordEffectCountsSameCorrelationEmissions",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.RecoveryTokenStatusClassificationIsFailClosed",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.ScopedRestoreReportsAnEffectRecordedOutsideTheExpectedTenantBeforeClearingIt",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.ScopedRestoreReturnsPriorAndCurrentSnapshots",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.ScopeStampValidationAcceptsOnlyStrictlyOrderedNonDefaultBounds",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxContractTests.SubscriptionRestoreReturnsPriorAndCurrentSnapshots",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxHttpBoundaryTests.InvalidLaneHeadersAreRejectedBeforeAnyWorkerProcessing",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxProjectPathTests.MissingSandboxAtTheNearestRootCannotSelectAnotherCheckout",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxProjectPathTests.ProjectResolutionFollowsTheContentRoot",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoverySandboxProjectPathTests.ProjectResolutionRefusesMissingRootOrProject",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationDatasetTests.LoadMaterializesEveryDeclaredDatasetRecord",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationDatasetTests.LoadRejectsEmptyCategory",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationDatasetTests.LoadRejectsMissingGovernedCommandKind",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationDatasetTests.LoadRejectsProjectionSchemaVersionMismatch",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationDatasetTests.LoadRejectsVolumeMismatch",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.AddEventStoreAdminAcceptsDistinctOrUnconfiguredPortsWithoutTheChatBotCompositionAsync",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.AddEventStoreAdminRejectsCollidingPortsWithoutTheChatBotCompositionAsync",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.AddHexalithChatBotRejectsAnOutOfRangeOrUnparsableDaprInternalGrpcPort",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.AddHexalithChatBotRejectsTwoSidecarsSharingOneDaprInternalGrpcPort",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.AddRecoverySandboxRejectsInvalidCapabilityTenantOrEnvironment",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.LocalTopologyPreservesDaprSidecarComponentsOptionsAndUiIsolation",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.PrepareKeycloakRealmImportNamesTheClientWhoseGrantExpiryMapperLostItsPlaceholder",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.PrepareKeycloakRealmImportRejectsAMailboxClientSecretShorterThanThirtyTwoCharacters",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.PrepareKeycloakRealmImportRejectsAMailboxClientSecretWithDisallowedCharacters",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.PrepareKeycloakRealmImportRejectsAWhitespaceOrBlankMailboxClientSecret",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.PrepareKeycloakRealmImportSweepsAbandonedRealmDirectoriesAndSparesLiveOnes",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.PrepareKeycloakRealmImportWritesTheRenderedRealmWithOwnerOnlyPermissionsAtAnUnpredictablePath",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RealmAddsClosedRecoveryMailboxServiceIdentityWithoutACommittedSecret",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RealmKeepsControlTenantsAndAddsDedicatedReplayValidationIdentity",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RecoverySandboxComposedEnvironmentKeepsLogicalAndPhysicalTenantsDistinct",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RecoverySandboxKeepsLogicalControlLocatorSeparateFromPhysicalCommandTenant",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RecoveryTier3LaneBoundsEventStoreGracefulShutdownInsideAspireCommandDeadline",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RecoveryTopologyAssignsEveryConfiguredDaprInternalGrpcPortToItsSidecar",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RecoveryWorkerSimulatorIsAbsentByDefaultAndComposedOnlyWithExplicitCapabilityConfiguration",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.RenderedRealmServiceClientGrantExpiriesAreCanonicalFutureUtcButClaimsAloneCannotAuthorize",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.SharedRequestMatchesTheRealmValidatorAndUsesIndependentForms",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.ValidateUniqueInternalGrpcPortsAcceptsDistinctAndUnconfiguredPorts",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.ValidateUniqueInternalGrpcPortsRejectsACollisionWithoutTheChatBotComposition",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryValidationTopologyContractTests.VersionedDatasetHasExactPositiveMetadataPopulationAndAnIsolatedPartition",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryWriterProtocolProvisionerTests.ConflictIsAcceptedOnlyAfterHealthProvesTheExistingMarkerIsCurrent",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryWriterProtocolProvisionerTests.PermanentlyUnavailableCapabilityFailsWithoutBurningTheRetryBudget",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryWriterProtocolProvisionerTests.SuccessfulActivationUsesTheAdminBearerAndCutoverProvenance",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ScopedOutageControlProbeTests.CallerCancellationPropagates",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ScopedOutageControlProbeTests.IdentityUsesRetainedBearerWithoutAcquisition",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ScopedOutageControlProbeTests.NonPostFailuresPropagate",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ScopedOutageControlProbeTests.PostFailuresAreUnobserved",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ScopedOutageControlProbeTests.ReceivedStatusDoesNotRequireResponseBodyBuffering",
+    "Hexalith.ChatBot.IntegrationTests.Recovery.ScopedOutageControlProbeTests.ResponsesPreserveControlOutcome",
+    "Hexalith.ChatBot.IntegrationTests.ScaffoldTopologySmokeTests.AppHostScaffoldShouldBindChatBotToDaprStateAndTenantScopedProjectionTopic",
+    "Hexalith.ChatBot.IntegrationTests.ScaffoldTopologySmokeTests.StoryElevenSixThinShimShouldPreserveDedicatedDaprResourcesForTierThreeE2e",
+    "Hexalith.ChatBot.IntegrationTests.ScaffoldTopologySmokeTests.StoryElevenSixTierThreeLaunchPathShouldUseTheThinLocalAppHostShim",
+    "Hexalith.ChatBot.IntegrationTests.Story132ProductionBrowserAspireE2ETests.AcceptanceFixtureShouldFailProductionAndReplaceOnlyGuardedProvidersInDevelopment",
+    "Hexalith.ChatBot.IntegrationTests.Story132ProductionBrowserAspireE2ETests.ComposerBlockedPresentationShouldOnlyBeARejectionWithAnExplicitSubmissionError",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.RefusedCommandReservationProbeShouldRejectPersistedCanonicalOperationStatus",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeCallerCancellationAtAnyRetryBoundaryShouldPreventASecondAttempt",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeEndpointConfigurationShouldRejectDuplicateAndInvalidPorts",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeEndpointIsolationShouldOnlyAssignHeldDistinctReservationsToNamedDaprHttpEndpoints",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeExclusiveBindCollisionShouldHonorWindowsAccessDeniedSemantics",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeFinalRecheckShouldEnterAllFourResourcesBeforeAnyCompletes",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeFinalTcpSuccessShouldBeFollowedByACurrentSnapshotRevalidation",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeNamedHttpEndpointShouldRejectANonHttpRuntimeUri",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeParallelValidationShouldDetectALaterTerminalResourcePromptly",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeParallelValidationShouldRetainEveryNonCancellationSiblingFailure",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreePortReservationReleaseShouldBeIdempotentWithoutARebindRace",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreePortReservationShouldBoundRejectedCandidates",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreePortReservationShouldHoldExcludedCandidatesUntilASelectionSucceeds",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreePortReservationShouldRejectDuplicateAndInvalidCandidatePorts",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeRunningPublishedEndpointShouldNotBeReadyWithoutATcpListener",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeSecondAttemptCreationFailureShouldRetainTheFirstCorrelatedFailure",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeSecondAttemptStartFailureShouldRetainTheFirstCorrelatedFailureAndDisposeBothAttempts",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeSelectedReservationOverlapShouldBeRejectedBeforeBuild",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupCancellationShouldNeverRetry",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupCleanupFailureShouldPreserveTheOriginalStartupError",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryClassifierFailureShouldDisposeAndPreserveTheOriginalStartupError",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryShouldCorrelateExactPortOnTheSameExceptionBranch",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryShouldNeverReclassifyUnrelatedAddressFailures",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryShouldNotCombineEvidenceAcrossAggregateBranches",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryShouldNotCorrelatePrefixResourceNames",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryShouldRejectMissingOrWrongSelectedPortEvidence",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeStartupRetryShouldUseAFreshSecondAttemptForSelectedTerminalLogContention",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeTerminalLogCorrelationShouldRequireBindAndExactPortOnOneLine",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeTerminalLogWatcherShouldPreserveAStreamFaultCapturedAfterEvidence",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeTerminalLogWatcherShouldReturnOnEvidenceWhileTheStreamRemainsOpen",
+    "Hexalith.ChatBot.IntegrationTests.TrivialGovernedCommandAspireE2eTests.TierThreeWildcardReservationShouldFallBackToIpv4ForUnavailableDualModeBinding"
+  ],
+  "required_live_discovery": [
+    "Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.AuthenticatedProductionClientShouldFailClosedWithoutPersistingAcrossRequiredChromeMatrix",
+    "Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology",
+    "Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology"
+  ],
+  "owned_backend_observations": {
+    "0c435ad0f28192794041f273764e0f3a5d1fb8475ebae3e140034d630dbb64fc": {
+      "container_id": "0c435ad0f28192794041f273764e0f3a5d1fb8475ebae3e140034d630dbb64fc",
+      "run_id": "cc8e630528da4ce28e3c0133068ac47c",
+      "storage_mounts": [],
+      "tmpfs": {
+        "/data": "rw,nosuid,nodev,noexec,size=64m"
+      },
+      "private_modes": {
+        ".": "0o700",
+        "eventstore-admin-ui.configuration.json": "0o600",
+        "sentry.configuration.json": "0o600",
+        "parties.configuration.json": "0o600",
+        "projects.configuration.json": "0o600",
+        "tenants.configuration.json": "0o600",
+        "memories.configuration.json": "0o600",
+        "chatbot.configuration.json": "0o600",
+        "eventstore.configuration.json": "0o600",
+        "eventstore-admin.configuration.json": "0o600"
+      }
+    },
+    "1c20232d44e12fb0739ae5337fb5651f709f548c2fbec4afdaa82d60bd5e56e4": {
+      "container_id": "1c20232d44e12fb0739ae5337fb5651f709f548c2fbec4afdaa82d60bd5e56e4",
+      "run_id": "56f8362cdac447ffbbcd28b32f57a046",
+      "storage_mounts": [],
+      "tmpfs": {
+        "/data": "rw,nosuid,nodev,noexec,size=64m"
+      },
+      "private_modes": {
+        ".": "0o700",
+        "eventstore-admin-ui.configuration.json": "0o600",
+        "sentry.configuration.json": "0o600",
+        "parties.configuration.json": "0o600",
+        "projects.configuration.json": "0o600",
+        "tenants.configuration.json": "0o600",
+        "memories.configuration.json": "0o600",
+        "chatbot.configuration.json": "0o600",
+        "eventstore.configuration.json": "0o600",
+        "eventstore-admin.configuration.json": "0o600"
+      }
+    }
+  },
+  "compiled_owner_observations": {},
+  "selected_owner_sdk_comparisons": {
+    "hexalith-selected-owner-UooeCS/metadata/Hexalith.EventStore.ServiceDefaults.dll": {
+      "assembly": "Hexalith.EventStore.ServiceDefaults.dll",
+      "selected_owner_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "actual_apphost_sdk_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "identical": true
+    },
+    "hexalith-selected-owner-UooeCS/metadata/Hexalith.EventStore.DomainService.dll": {
+      "assembly": "Hexalith.EventStore.DomainService.dll",
+      "selected_owner_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "actual_apphost_sdk_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "identical": true
+    },
+    "hexalith-selected-owner-UooeCS/metadata/Hexalith.EventStore.Server.dll": {
+      "assembly": "Hexalith.EventStore.Server.dll",
+      "selected_owner_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "actual_apphost_sdk_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "identical": true
+    },
+    "hexalith-selected-owner-UooeCS/metadata/Hexalith.EventStore.Client.dll": {
+      "assembly": "Hexalith.EventStore.Client.dll",
+      "selected_owner_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "actual_apphost_sdk_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "identical": true
+    },
+    "hexalith-selected-owner-UooeCS/metadata/Hexalith.EventStore.Contracts.dll": {
+      "assembly": "Hexalith.EventStore.Contracts.dll",
+      "selected_owner_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "actual_apphost_sdk_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "identical": true
+    },
+    "hexalith-selected-owner-WEWo2T/metadata/Hexalith.EventStore.ServiceDefaults.dll": {
+      "assembly": "Hexalith.EventStore.ServiceDefaults.dll",
+      "selected_owner_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "actual_apphost_sdk_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "identical": true
+    },
+    "hexalith-selected-owner-WEWo2T/metadata/Hexalith.EventStore.DomainService.dll": {
+      "assembly": "Hexalith.EventStore.DomainService.dll",
+      "selected_owner_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "actual_apphost_sdk_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "identical": true
+    },
+    "hexalith-selected-owner-WEWo2T/metadata/Hexalith.EventStore.Server.dll": {
+      "assembly": "Hexalith.EventStore.Server.dll",
+      "selected_owner_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "actual_apphost_sdk_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "identical": true
+    },
+    "hexalith-selected-owner-WEWo2T/metadata/Hexalith.EventStore.Client.dll": {
+      "assembly": "Hexalith.EventStore.Client.dll",
+      "selected_owner_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "actual_apphost_sdk_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "identical": true
+    },
+    "hexalith-selected-owner-WEWo2T/metadata/Hexalith.EventStore.Contracts.dll": {
+      "assembly": "Hexalith.EventStore.Contracts.dll",
+      "selected_owner_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "actual_apphost_sdk_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "identical": true
+    }
+  },
+  "recovery_test_discovered": "Hexalith.ChatBot.Recovery.Tests.LiveContinuityAspireE2eTests.LiveRecoveryValidationRunsAllThreeCoordinatorsAndPassesEvidenceGate",
+  "release_tests_discovered": [
+    "Hexalith.ChatBot.Release.Tests.GovernedStateReleaseGateTests.CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology",
+    "Hexalith.ChatBot.Release.Tests.GovernedStateReleaseGateTests.GovernedNoteShouldProjectIdenticalDurableEndStateRegardlessOfDeclaredOrigin"
+  ],
+  "failed_suites": [
+    "Hexalith.ChatBot.Architecture.Tests",
+    "Hexalith.ChatBot.Release.Tests"
+  ],
+  "passed": false,
+  "error": "Product suites failed: Hexalith.ChatBot.Architecture.Tests, Hexalith.ChatBot.Release.Tests",
+  "product_inputs_after": {
+    "product_diff_sha256": "170fa9510ac02460b2d4545fd663c1f32133f79b197d5f06f845be308b18b2c6",
+    "product_untracked_sha256": {
+      ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+      "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+      "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+      "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+      "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "c8e2000865462ef1cc828b99b652ce07d583e9f560294b674e22e87e965bd9bc",
+      "tests/Hexalith.ChatBot.Live.IntegrationTests/Hexalith.ChatBot.Live.IntegrationTests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+      "tests/Hexalith.ChatBot.Live.IntegrationTests/RequiredTopologyTests.cs": "57a1a6eea9235d65f513b4407600cf9e4d97defd53d1980da17b432a297ce104",
+      "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+      "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+      "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+      "tests/required-live.xunit.runner.json": "3aaf68ea8927dce2c9ee5404088745084d709c1ff2d00bf41c90d9406d31b8a1"
+    }
+  },
+  "input_mutation_error": "Original product inputs changed during verification",
+  "json_loader_metadata_after_tests": {
+    "scope": "Actual normal child output metadata; this capture does not claim child-runtime execution",
+    "installed_runtimes": [
+      "Microsoft.AspNetCore.App 10.0.10 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.11 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.12 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.13 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.14 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.15 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 11.0.0 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.NETCore.App 10.0.10 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.11 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.12 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.13 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.14 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.15 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 11.0.0 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]"
+    ],
+    "projects": {
+      "required_test_host": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.deps.json",
+        "deps_sha256": "da57d22afb3dd2c71c4d06793584cbb162c20c168bd9d4f3f77ba911fc179050",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {
+            "System.Text.Json/11.0.0": {
+              "dependencies": {
+                "System.IO.Pipelines": "11.0.0",
+                "System.Text.Encodings.Web": "11.0.0"
+              },
+              "runtime": {
+                "lib/net10.0/System.Text.Json.dll": {
+                  "assemblyVersion": "11.0.0.0",
+                  "fileVersion": "11.0.26.53018",
+                  "localPath": "System.Text.Json.dll"
+                }
+              }
+            }
+          }
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "MSTest.EnableParentProcessQuery": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {
+          "System.Text.Json/11.0.0": {
+            "sha512": "hyLfq7fRYbq8m3ENGqgEYkqxLeLx2xmNMlf6UG1a7RQo9OsTsfm4Ch/E6O+A5vYQ2ThneLUn1CHF644lmH5QhA==",
+            "type": "package",
+            "path": "system.text.json/11.0.0",
+            "files": [
+              ".nupkg.metadata",
+              ".signature.p7s",
+              "Icon.png",
+              "PACKAGE.md",
+              "THIRD-PARTY-NOTICES.TXT",
+              "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.4/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "buildTransitive/net10.0/System.Text.Json.targets",
+              "buildTransitive/net461/System.Text.Json.targets",
+              "buildTransitive/net462/System.Text.Json.targets",
+              "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+              "buildTransitive/netstandard2.0/System.Text.Json.targets",
+              "lib/net10.0/System.Text.Json.dll",
+              "lib/net10.0/System.Text.Json.xml",
+              "lib/net11.0/System.Text.Json.dll",
+              "lib/net11.0/System.Text.Json.xml",
+              "lib/net462/System.Text.Json.dll",
+              "lib/net462/System.Text.Json.xml",
+              "lib/netstandard2.0/System.Text.Json.dll",
+              "lib/netstandard2.0/System.Text.Json.xml",
+              "system.text.json.11.0.0.nupkg.sha512",
+              "system.text.json.nuspec",
+              "useSharedDesignerContext.txt"
+            ]
+          }
+        },
+        "app_local_json_present": true,
+        "app_local_json": {
+          "path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/System.Text.Json.dll",
+          "assembly_identity": "System.Text.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+          "sha256": "11787e1d3ce9ceb32cc86cc5ca6a19c450a47b68c1c12d0b8100e46ebf655768"
+        }
+      },
+      "release_test_host": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.deps.json",
+        "deps_sha256": "2493f170bee060ad917dca6311c318480f4709297971e573c6158f4c4169b842",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {
+            "System.Text.Json/11.0.0": {
+              "dependencies": {
+                "System.IO.Pipelines": "11.0.0",
+                "System.Text.Encodings.Web": "11.0.0"
+              },
+              "runtime": {
+                "lib/net10.0/System.Text.Json.dll": {
+                  "assemblyVersion": "11.0.0.0",
+                  "fileVersion": "11.0.26.53018",
+                  "localPath": "System.Text.Json.dll"
+                }
+              }
+            }
+          }
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "MSTest.EnableParentProcessQuery": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {
+          "System.Text.Json/11.0.0": {
+            "sha512": "hyLfq7fRYbq8m3ENGqgEYkqxLeLx2xmNMlf6UG1a7RQo9OsTsfm4Ch/E6O+A5vYQ2ThneLUn1CHF644lmH5QhA==",
+            "type": "package",
+            "path": "system.text.json/11.0.0",
+            "files": [
+              ".nupkg.metadata",
+              ".signature.p7s",
+              "Icon.png",
+              "PACKAGE.md",
+              "THIRD-PARTY-NOTICES.TXT",
+              "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.4/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "buildTransitive/net10.0/System.Text.Json.targets",
+              "buildTransitive/net461/System.Text.Json.targets",
+              "buildTransitive/net462/System.Text.Json.targets",
+              "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+              "buildTransitive/netstandard2.0/System.Text.Json.targets",
+              "lib/net10.0/System.Text.Json.dll",
+              "lib/net10.0/System.Text.Json.xml",
+              "lib/net11.0/System.Text.Json.dll",
+              "lib/net11.0/System.Text.Json.xml",
+              "lib/net462/System.Text.Json.dll",
+              "lib/net462/System.Text.Json.xml",
+              "lib/netstandard2.0/System.Text.Json.dll",
+              "lib/netstandard2.0/System.Text.Json.xml",
+              "system.text.json.11.0.0.nupkg.sha512",
+              "system.text.json.nuspec",
+              "useSharedDesignerContext.txt"
+            ]
+          }
+        },
+        "app_local_json_present": true,
+        "app_local_json": {
+          "path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/System.Text.Json.dll",
+          "assembly_identity": "System.Text.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+          "sha256": "11787e1d3ce9ceb32cc86cc5ca6a19c450a47b68c1c12d0b8100e46ebf655768"
+        }
+      },
+      "normal_tenants_child": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants/src/Hexalith.Tenants/bin/Release/net10.0/Hexalith.Tenants.deps.json",
+        "deps_sha256": "c75cf7cdb3d9e12ab78622e7cbd88cd55138fdefe411b799e365f351a3c633f5",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {}
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants/src/Hexalith.Tenants/bin/Release/net10.0/Hexalith.Tenants.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "System.GC.Server": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {},
+        "app_local_json_present": false
+      }
+    }
+  },
+  "built_source_after_tests": {
+    "regular_files_checked": 6300,
+    "matches_original_product_inputs": true
+  },
+  "runtime_cleanup": {
+    "remaining_scoped_processes": [],
+    "owned_backends_removed": []
+  }
+}

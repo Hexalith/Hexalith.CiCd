@@ -1,0 +1,77 @@
+{
+  "product_diff_sha256": "5be4e008b99d9fa9299ec46fcce591afa26fd6522d244a4424245615d620354e",
+  "script_cases": [
+    {
+      "case": "release failure stays failed",
+      "exit": 37,
+      "calls": [
+        {
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj",
+            "--configuration",
+            "Release",
+            "--no-build",
+            "--no-restore"
+          ],
+          "retention": null
+        }
+      ]
+    },
+    {
+      "case": "due recovery still invokes whole project",
+      "exit": 0,
+      "calls": [
+        {
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Hexalith.ChatBot.Recovery.Tests/Hexalith.ChatBot.Recovery.Tests.csproj",
+            "--configuration",
+            "Release",
+            "--no-build",
+            "--no-restore"
+          ],
+          "retention": "/tmp/hexalith-job.1lsHHDt6/routing/chatbot-recovery-retention-failures"
+        }
+      ]
+    },
+    {
+      "case": "non-Sunday leaves weekly sweep due for Sunday",
+      "exit": 0,
+      "calls": []
+    },
+    {
+      "case": "recovery failure stays failed",
+      "exit": 23,
+      "calls": [
+        {
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Hexalith.ChatBot.Recovery.Tests/Hexalith.ChatBot.Recovery.Tests.csproj",
+            "--configuration",
+            "Release",
+            "--no-build",
+            "--no-restore"
+          ],
+          "retention": "/tmp/hexalith-job.1lsHHDt6/routing/chatbot-recovery-retention-failures"
+        }
+      ]
+    }
+  ],
+  "recovery_step_condition": "!cancelled() && steps.runtime.outcome == 'success'",
+  "release_failure_cannot_suppress_due_recovery": true,
+  "release_failure_remains_job_failure": true,
+  "recovery_script_unchanged_from_preparation": true,
+  "recovery_timeouts_minutes": [
+    250,
+    280,
+    300
+  ],
+  "recovery_preparation_cleanup_capacity_minutes": 330,
+  "release_allowance_minutes": 30,
+  "required_shared_total_minutes": 360,
+  "github_hosted_execution_verified": false
+}

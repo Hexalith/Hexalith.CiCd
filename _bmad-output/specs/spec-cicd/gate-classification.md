@@ -47,6 +47,44 @@ These gates failed in the sample but have no explicit verdict in the source. App
 - FrontComposer: "Gate 2b: Infrastructure governance", "Coverage Summary", "Quarantine Summary"
 - Builds: the `Props/` catalog validators in `Tools/`, about 13 PowerShell scripts (about 4,000 lines) that Builds' `ci.yml` runs today. They check the package catalog, so they are product checks (AD-11). Each is classified in the change that rewrites `builds-release.yml`. Kept ones go on running in `builds-ci.yml`, in their current language.
 
+## ChatBot runtime classification during story 19
+
+Keep the genuine runtime checks and preserve their roles with whole test projects:
+
+- `Hexalith.ChatBot.Live.IntegrationTests` retains the authenticated refusal smoke,
+  production-browser matrix and correction-propagation runtime health checks in CI.
+  Run the whole project with runner-enforced `failSkips`. Ordinary integration retains
+  its in-process topology, recovery harness and cleanup contracts in CI.
+- `CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology` and
+  `GovernedNoteShouldProjectIdenticalDurableEndStateRegardlessOfDeclaredOrigin`
+  require accepted canonical commits and durable state. Retain their complete scenario bodies
+  in a dedicated `Hexalith.ChatBot.Release.Tests` project, assigned to the enabled nightly hook
+  with `tests.exclude`. Run that whole project on every release. A real failure blocks publication.
+- The complete destructive recovery sweep stays in `Hexalith.ChatBot.Recovery.Tests`, separately
+  assigned to nightly and run on Sunday UTC. A failed release-only gate must not suppress a due
+  recovery after successful runtime preparation unless the run was canceled.
+
+The legacy ordinary test job did not opt into Tier3. Its separate live CI job selected only
+the refusal smoke and browser matrix; the release workflow selected M2 as an additional gate.
+The origin-parity positive-state test was not selected by either live job. Whole-project nightly
+routing retains that product check as an effective release gate instead of dropping it or
+changing its expected committed state to match the current refusal implementation.
+
+The ordinary integration project's existing manual independent-observer producer remains
+unchanged and visibly optional. It requires independently enrolled trust and signed native
+observations; neither the legacy CI nor release workflow selected it. Report that exact case
+as unexecuted when its operator prerequisites are absent, and reject any other unexpected
+skip. The required live, release and recovery projects reject every skip. This preserves
+the legacy required-live guarantee without inventing observer enrollment or claiming native
+mutation/atomic acceptance from the manual producer.
+
+The current production admission validator unconditionally refuses atomic participation.
+That product-contract gap must remain visible in release results until an accepted owner
+implementation exists. It is independent of removable story evidence, workflow-text assertions
+and artifact bookkeeping. The private catalog fixture must use a genuinely new owned business
+backend and the pinned SDK's explicit owner-custody contract; model-only keys or invented
+observations are not acceptable runtime evidence.
+
 ## Why gates can't come back
 
 - Module agents can't add workflows (token scoping, the guard, and delivery).

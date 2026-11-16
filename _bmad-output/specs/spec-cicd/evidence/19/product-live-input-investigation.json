@@ -1,0 +1,75 @@
+{
+  "product_diff_sha256": "5be4e008b99d9fa9299ec46fcce591afa26fd6522d244a4424245615d620354e",
+  "legacy_readonly_inputs": {
+    "workflows": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/release.yml"
+    ],
+    "root_selectors": [
+      "HexalithCommonsRoot",
+      "HexalithBuildsRoot",
+      "HexalithEventStoreRoot",
+      "HexalithEventStoreFromSource=false",
+      "UseHexalithProjectReferences=false"
+    ],
+    "live_flags": [
+      "HEXALITH_CHATBOT_TIER3=1",
+      "HEXALITH_CHATBOT_TIER3_REQUIRED=1"
+    ],
+    "grant_lifetime_days": 90,
+    "current_apphost_default_grant_lifetime_days": 90,
+    "catalog_profile_input_present": false,
+    "published_tool_manifest_version": "4.48.2"
+  },
+  "permitted_profile_discovery": {
+    "apphost_user_secrets_id": "hexalith-chatbot",
+    "path": "/home/administrator/.microsoft/usersecrets/hexalith-chatbot/secrets.json",
+    "exists": true,
+    "catalog_or_profile_key_names": [],
+    "relevant_environment_names": [],
+    "tracked_platform_local_profile_exists": true,
+    "tracked_platform_catalog_or_profile_keys": [
+      "memories/server/AccessTelemetryLifecycle:ComponentProfileHash",
+      "memories/clock/AccessTelemetryLifecycle:ComponentProfileHash",
+      "memories/telemetry/AccessTelemetryLifecycle:ComponentProfileHash",
+      "memories/domain/AccessTelemetryLifecycle:ComponentProfileHash"
+    ]
+  },
+  "source_findings": {
+    "ordinary_apphost_and_test_startup_register_development_route_catalog": true,
+    "policy_preflight_reference": "tests/Hexalith.ChatBot.IntegrationTests/PolicyIsolation/PolicyRefusalPreflightTopology.cs:346-377 prepares real tenants/parties/projects owners; explicitly notes no compiled ChatBot owner; calls no-options catalog overload",
+    "pinned_sdk_no_options_behavior": "DevelopmentRouteCatalogAspireExtensions.cs:107 requires explicit private custody profile with retained digest material/coordinates; no implicit profile discovery",
+    "production_validator_registration": "src/Hexalith.ChatBot.Server/Gateway/CommandGatewayServiceCollectionExtensions.cs:79 registers ChatBotAdmissionEvidenceValidator",
+    "production_atomic_behavior": "src/Hexalith.ChatBot.Server/Gateway/Admission/ChatBotAdmissionEvidenceValidator.cs:372-379 unconditionally returns CanonicalExecutionUnavailable for every profile",
+    "m2_required_behavior": "tests/Hexalith.ChatBot.IntegrationTests/TrivialGovernedCommandAspireE2eTests.cs:819-820 requires a governed command to be Accepted",
+    "stale_story_label_used_as_evidence": false,
+    "current_gate_contract": "_bmad-output/planning-artifacts/prds/prd-Hexalith.ChatBot-2026-05-28/reconcile-full-sibling-a13-2026-09-14.md requires one exact owner-accepted executable atomic/audit/fencing bundle; artifact itself is not acceptance",
+    "fixture": "LiveCatalogFixture creates fresh Redis tmpfs, inspects absence of persistent/bind mounts, prepares actual owners and supplies explicit SDK custody options.",
+    "sdk_alignment": "Published Hexalith.EventStore.Aspire4.2.0 matches all48 composition files at package commit aa16227 and gitlink77a2daf; package mode now uses it so ordinary owner SDK identities remain packaged."
+  },
+  "conclusions": {
+    "layout_versus_missing_composition": "Genuine fresh backend provision and supported split-owner preparation are configured; current runtime stops at the public loader incompatibility recorded with actual deps/runtimeconfig and host Json identity.",
+    "m2_constraint": "Current production atomic-admission registration cannot produce the Accepted governed state required by the retained M2 assertion, independently of catalog startup.",
+    "guards_modified": false,
+    "witnesses_or_custody_material_invented": false,
+    "actual_fresh_backend_material_created": true,
+    "custody_creation_contract": "Fresh CSPRNG key ring created only alongside each actually new owned tmpfs Redis backend, retained privately through its verified removal. No model key or observer witness is used.",
+    "digest_custody_created_or_catalog_activated_in_observed_runs": false,
+    "reason": "Public owner preparation refuses before the options/key-ring/catalog composition call."
+  },
+  "status": "Final bounded verdict recorded in product-json-loader-blocker.json; no auth diagnosis.",
+  "optional_preflight_inventory": {
+    "case": "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalPreflightTests.MissingProofMustRefuseBothRealPrincipalsWithoutNativeMutation",
+    "source": "tests/Hexalith.ChatBot.IntegrationTests/PolicyIsolation/PolicyRefusalPreflightTests.cs:12",
+    "opt_in": "HEXALITH_POLICY_REFUSAL_PREFLIGHT=1",
+    "trust_input": "HEXALITH_POLICY_REFUSAL_OBSERVER_TRUST",
+    "contract": "Independently enrolled observer, authorizedBy, public-only RSA key >=3072 bits; independent signed before/after observations. Generic HTTP503 cannot establish exact policy-gate cause.",
+    "current_product_gap": "PolicyRefusalPreflightTopology.RequirePolicyGateCauseObservation at line154 always refuses because InMemoryAuditWriter.AuthorizationFailures has no supported cross-process reader; current negative test asserts that refusal.",
+    "configured_workflow_cadence": "No legacy CI/release selection found. Existing Story1.6 native-refusal-preflight README documents explicit manual bounded execution only.",
+    "changed_or_reclassified": false,
+    "required_live_zero_skip_gate_relaxed": false,
+    "unchanged_sha256": "1c396e7b29224131a5b66ae80e3914473af23f78babe67e5151e7358a40ef3d5",
+    "cadence_preserved_by_project_split": "Ordinary IntegrationTests retains all in-process cases and this optional manual producer. Three required runtime entries live in Live.IntegrationTests with failSkips=true; neither manual trust nor producer execution is claimed as acceptance."
+  },
+  "production_runtime_evidence_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9"
+}

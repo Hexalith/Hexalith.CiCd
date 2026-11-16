@@ -1,0 +1,28 @@
+{
+  "production_snapshot_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+  "lineage_to_final": {
+    "runtime_proposal_tree": "459a97cbfdb2708b4aa5e281c04d30b943fb5416",
+    "runtime_product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+    "intermediate_architecture_diff_sha256": "170fa9510ac02460b2d4545fd663c1f32133f79b197d5f06f845be308b18b2c6",
+    "final_proposal_tree": "5fe3abbc9327c0aaf102c1ac4e74ca136bedece0",
+    "final_product_diff_sha256": "5be4e008b99d9fa9299ec46fcce591afa26fd6522d244a4424245615d620354e",
+    "sole_changed_file": "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs",
+    "untracked_hashes_unchanged": true,
+    "all_production_project_and_other_test_inputs_unchanged": true,
+    "final_architecture_evidence": "product-architecture-verification.json",
+    "inherited_lane_hashes_are_not_identical_to_final_global_hash": true
+  },
+  "recovery_tests": [
+    "Hexalith.ChatBot.Recovery.Tests.LiveContinuityAspireE2eTests.LiveRecoveryValidationRunsAllThreeCoordinatorsAndPassesEvidenceGate"
+  ],
+  "release_tests": [
+    "Hexalith.ChatBot.Release.Tests.GovernedStateReleaseGateTests.CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology",
+    "Hexalith.ChatBot.Release.Tests.GovernedStateReleaseGateTests.GovernedNoteShouldProjectIdenticalDurableEndStateRegardlessOfDeclaredOrigin"
+  ],
+  "required_live_tests": [
+    "Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.AuthenticatedProductionClientShouldFailClosedWithoutPersistingAcrossRequiredChromeMatrix",
+    "Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology",
+    "Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology"
+  ],
+  "full_recovery_executed": false
+}

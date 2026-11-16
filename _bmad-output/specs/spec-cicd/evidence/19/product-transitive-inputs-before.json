@@ -1,0 +1,67 @@
+{
+  "phase": "build",
+  "product_head": "bf0f44ff395d89c5565a423b424e389d2f80d0f6",
+  "snapshots": {
+    "Hexalith.AI.Tools": "1745b6663ad32bb1288167135ed0f979366c53a0",
+    "Hexalith.Builds": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+    "Hexalith.Commons": "1e292e3e99232a28462b2a35d5547a94dd612e57",
+    "Hexalith.Conversations": "36cd13159f6c66d249942c6cfeca179adf3c4ec8",
+    "Hexalith.EventStore": "77a2dafdf2e6aab7382afab7ab50e22144361d42",
+    "Hexalith.Folders": "8063a0392789bd45a214c2c873298ef25d481bb9",
+    "Hexalith.FrontComposer": "56c9206167b7f18c3a95f610f814dfa39d9dcd01",
+    "Hexalith.McpCli": "1d423dae22e5f4e357889427a67406f47758e377",
+    "Hexalith.Memories": "ca3bcc981e8e3dd6be41f669587984225171f7ca",
+    "Hexalith.Parties": "b6b4f8a5c83b77ab57a9b947436317162b4fb337",
+    "Hexalith.Platform": "f99f51c3053fe0b0292acad461d78c833ec156cc",
+    "Hexalith.PolymorphicSerializations": "bb6d45f3cce0a963d4453e457f47b335cf7b22e9",
+    "Hexalith.Projects": "c9fa1d67703d658189502687a8271986feba121e",
+    "Hexalith.Tenants": "6188ea48cab9fdf4207072135c66aab5a7b7fe32",
+    "Hexalith.Timesheets": "ae5f8171763a6207a70572cf45180b7adbe38d78",
+    "Hexalith.Works": "34c578dd12d50246d8a9513523ae909023a6fcd2"
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "/home/administrator/projects/hexalith/cicd-story-19/references/Hexalith.ChatBot",
+        "/tmp/hexalith-job.Pf3p3hEy/story19/ChatBot"
+      ],
+      "exit": 0,
+      "seconds": 0.93
+    },
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.ChatBot.slnx",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false",
+        "-noAutoResponse",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.Pf3p3hEy/story19/references/Hexalith.Works"
+      ],
+      "exit": 1,
+      "seconds": 287.2
+    }
+  ],
+  "passed": false,
+  "error": "Package-mode solution build failed"
+}

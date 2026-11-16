@@ -1,0 +1,115 @@
+{
+  "recorded_at": "2026-11-16T19:49:56.715690+00:00",
+  "task": "Fix publication blockers and continue the authorized story 19 push to main",
+  "authentication": "fixed using the existing module-agent credential; default profile unchanged",
+  "product_verification": "6,243 unique passing tests;5 required live/release loader failures;1 unchanged optional manual case unexecuted. Published under the explicit one-time exception; no green verification or completed adoption is claimed.",
+  "old_msb3277_conclusion": "superseded: canonical acyclic source snapshots eliminate the earlier assembly conflicts",
+  "administration": "Not provisioned: fresh readback confirms missing rulesets, release environment and publish switch. App selection remains unverified. One-time publication exception does not claim adoption readiness.",
+  "owner_api_refusal": {
+    "profile": "/home/administrator/.config/gh",
+    "method": "PUT",
+    "endpoint": "user/installations/179966090/repositories/1234748496",
+    "status": 403,
+    "message": "You do not have permission to modify this app on Hexalith. Please contact an Organization Owner."
+  },
+  "prepared_scripts": [
+    "fix-github-baseline.py",
+    "fix-registry.py",
+    "fix-nuget-policy-ui.py"
+  ],
+  "registry_target_repositories": [
+    "hexalith-chatbot-server",
+    "hexalith-chatbot-ui"
+  ],
+  "legacy_release_inventory": "94 releases, no drafts, 94 tags, no orphan v tags",
+  "nuget_existing_policy": "legacy policy 22255 has wildcard package scope and unlist permission; add a scoped policy beside it, preserve it until adoption",
+  "adoption_dependency": "long-running nightly support is a separate prerequisite; latest Builds release is still v6.0.6",
+  "remote_write_success": true,
+  "push_attempted": true,
+  "nightly_routing": {
+    "every_release_project": "Hexalith.ChatBot.Release.Tests",
+    "preserved_positive_cases": [
+      "CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology",
+      "GovernedNoteShouldProjectIdenticalDurableEndStateRegardlessOfDeclaredOrigin"
+    ],
+    "weekly_project": "Hexalith.ChatBot.Recovery.Tests",
+    "weekly_day": "Sunday UTC",
+    "recovery_capacity_preserved_minutes": 330,
+    "legacy_release_gate_capacity_minutes": 30,
+    "total_hook_capacity_minutes": 360,
+    "all_other_modules_default_minutes": 45,
+    "enabled_against_current_builds": false
+  },
+  "custody_configuration": "Public explicit custody options are prepared for a genuinely fresh owned tmpfs Redis backend. Actual catalog enrollment/custody receipts remain unverified: owner loading refuses first. Fresh backend ownership/removal were observed; no model keys or observations were invented.",
+  "atomic_participation": "Current production validator unconditionally refuses; retained positive-state cases remain truthful release blockers, outside the ordinary CI refusal/health role.",
+  "git_dry_run": "Module-agent main push preflight passed; no remote ref changed.",
+  "required_live_routing": {
+    "ci_project": "Hexalith.ChatBot.Live.IntegrationTests",
+    "required_cases": [
+      "GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology",
+      "AuthenticatedProductionClientShouldFailClosedWithoutPersistingAcrossRequiredChromeMatrix",
+      "CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology"
+    ],
+    "required_live_release_recovery_fail_skips": true,
+    "runner_probe": "SDK11.0.100/xUnit4.0.3: default skip exits0; exact failSkips config produces failure and exits2",
+    "ordinary_manual_observer_case": "Hexalith.ChatBot.IntegrationTests.PolicyIsolation.PolicyRefusalPreflightTests.MissingProofMustRefuseBothRealPrincipalsWithoutNativeMutation",
+    "ordinary_manual_case_status": "Unchanged, operator prerequisites required; not claimed as executed or accepted. Reject every other unexpected skip."
+  },
+  "latest_diagnostic": {
+    "full_solution_build": "Pass, zero warnings/errors before the sole Architecture-test correction",
+    "final_architecture_build": "Pass, zero warnings/errors; whole119 tests pass",
+    "unit_suites": "5,388 passed, zero failures/skips after the Architecture correction",
+    "apphost": "18 passed, zero failures/skips",
+    "ordinary_integration": "548 passed, zero failures; exactly the unchanged optional manual observer producer1 skip",
+    "ui_e2e": "289 passed, zero failures/skips",
+    "required_live": "All3 executed,3 failed/0 skips at public owner-loader refusal",
+    "release": "Whole project executed,2 failed/0 skips at the same public owner-loader refusal",
+    "recovery": "Exactly1 intended test discovered; full multi-hour execution is not claimed",
+    "runtime_cleanup": "All owned verification work/resources finished"
+  },
+  "commit_policy": "Pinned candidate commitlint and custom-action YAML parsing pass; locked npm installation and signatures verified. See fix-commit-policy.json; final source/adoption not certified.",
+  "owner_preparation_compatibility": {
+    "test_host": "App-local System.Text.Json/11.0.0",
+    "normal_net10_owner": "No Json package or output DLL; uses framework10",
+    "observed_refusal": "Pinned immutable-output loader rejects host-local Default fallback for requested System.Text.Json10.0.0.0",
+    "guards_or_pins_changed": false,
+    "arbitrary_dll_substitution": false,
+    "effect": "Approved pre-adoption product-push gate remains failed"
+  },
+  "final_proposal": {
+    "tree": "5fe3abbc9327c0aaf102c1ac4e74ca136bedece0",
+    "tracked_diff_sha256": "5be4e008b99d9fa9299ec46fcce591afa26fd6522d244a4424245615d620354e",
+    "runtime_snapshot_tree": "459a97cbfdb2708b4aa5e281c04d30b943fb5416",
+    "sole_delta": [
+      "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs"
+    ],
+    "committed": true,
+    "pushed": true,
+    "commit": "e2727327bf495764fd8c31edd46a81c8048cbbac",
+    "remote_main": "e2727327bf495764fd8c31edd46a81c8048cbbac"
+  },
+  "local_product_push_gate_green": false,
+  "story_acceptance_complete": false,
+  "formal_review_complete": false,
+  "previous_pending_user_action": "Complete GitHub Confirm access for @jpiquot in the existing browser; asynchronous request is pending",
+  "push_request_followup": {
+    "local_commit": "e2727327bf495764fd8c31edd46a81c8048cbbac",
+    "tree": "5fe3abbc9327c0aaf102c1ac4e74ca136bedece0",
+    "product_worktree_clean": true,
+    "push_attempted": true,
+    "scope": "Story19 in its isolated worktree; preserve unrelated concurrent changes",
+    "checks_still_failed": 5,
+    "ad21_preconditions": "Incomplete/unverified; readback in push-request-administration.json",
+    "reviewed_source_unchanged": true,
+    "remote_main": "e2727327bf495764fd8c31edd46a81c8048cbbac",
+    "exception_authorized": true
+  },
+  "publication_exception": {
+    "authorized": true,
+    "one_time": true,
+    "record": "publication-exception.json",
+    "tests_still_failed": 5,
+    "ad21_not_satisfied": true,
+    "future_push_requirements_preserved": true
+  }
+}

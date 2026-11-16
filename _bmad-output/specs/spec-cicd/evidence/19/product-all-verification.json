@@ -1,0 +1,83 @@
+{
+  "phase": "all",
+  "product_head": "bf0f44ff395d89c5565a423b424e389d2f80d0f6",
+  "snapshots": {
+    "Hexalith.AI.Tools": "1745b6663ad32bb1288167135ed0f979366c53a0",
+    "Hexalith.Builds": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+    "Hexalith.Commons": "1e292e3e99232a28462b2a35d5547a94dd612e57",
+    "Hexalith.Conversations": "36cd13159f6c66d249942c6cfeca179adf3c4ec8",
+    "Hexalith.EventStore": "77a2dafdf2e6aab7382afab7ab50e22144361d42",
+    "Hexalith.Folders": "8063a0392789bd45a214c2c873298ef25d481bb9",
+    "Hexalith.FrontComposer": "56c9206167b7f18c3a95f610f814dfa39d9dcd01",
+    "Hexalith.McpCli": "1d423dae22e5f4e357889427a67406f47758e377",
+    "Hexalith.Memories": "ca3bcc981e8e3dd6be41f669587984225171f7ca",
+    "Hexalith.Parties": "b6b4f8a5c83b77ab57a9b947436317162b4fb337",
+    "Hexalith.Platform": "f99f51c3053fe0b0292acad461d78c833ec156cc",
+    "Hexalith.PolymorphicSerializations": "bb6d45f3cce0a963d4453e457f47b335cf7b22e9",
+    "Hexalith.Projects": "c9fa1d67703d658189502687a8271986feba121e",
+    "Hexalith.Tenants": "6188ea48cab9fdf4207072135c66aab5a7b7fe32",
+    "Hexalith.Timesheets": "ae5f8171763a6207a70572cf45180b7adbe38d78",
+    "Hexalith.Works": "34c578dd12d50246d8a9513523ae909023a6fcd2"
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "/home/administrator/projects/hexalith/cicd-story-19/references/Hexalith.ChatBot",
+        "/tmp/hexalith-job.jPjz5WLb/story19/ChatBot"
+      ],
+      "exit": 0,
+      "seconds": 1.65
+    },
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.ChatBot.slnx",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false",
+        "-noAutoResponse",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.jPjz5WLb/story19/references/Hexalith.Works"
+      ],
+      "exit": 130,
+      "seconds": 34.06
+    }
+  ],
+  "product_diff_sha256": "35522115e968718f0ac7da6b95a01f5faa9fb0edc299fba3696cf3eaf5664def",
+  "product_untracked_sha256": {
+    ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+    "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+    "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+    "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+    "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "81bfdec773aafd30e8f12dfd0116070963ae0fa0e711e75c2b552b9fc2a88f31",
+    "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+    "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+    "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "ac8c074616fddaa09d51b9de007deefe771576b517fb541e53b487541d5b3f3e"
+  },
+  "live_required": true,
+  "passed": false,
+  "error": "Package-mode solution build failed",
+  "runtime_cleanup": {
+    "remaining_scoped_processes": [],
+    "owned_backends_removed": []
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "diagnostic_log": "product-split-owner-before.log",
+  "case": "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAbsenceObservationTests.SustainedWindowChecksIntermediateState(appears: False)",
+  "original_window_milliseconds": 30,
+  "original_poll_interval_milliseconds": 1,
+  "observed_reads": 2,
+  "required_assertion": "reads.ShouldBeGreaterThan(2)",
+  "reported_duration_milliseconds": 303,
+  "failure": "Shouldly: 2 should be greater than2",
+  "seed": "InlineData(false); scheduling-sensitive real wall clock under host load",
+  "fix": "Reuse existing AdvancingRecoveryTimeProvider with10ms timestamp steps via optional internal constructor seam. Keep >2 reads, exact second-read presence and full observation-window assertions.",
+  "real_recovery_clock": "TimeProvider.System remains the readonly default and is unchanged for the production/application constructor. Poll delays and 1-minute production absence window remain unchanged.",
+  "recovery_scenario_file": "tests/Hexalith.ChatBot.IntegrationTests/Recovery/LiveRecoverySweep.cs",
+  "recovery_scenario_bytes_unchanged_from_preparation": true,
+  "final_deterministic_verification": {
+    "source": "product-integration-verification.json",
+    "product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+    "entire_ordinary_project_succeeded": true,
+    "succeeded": 548,
+    "failed": 0,
+    "unexecuted_named_manual_producer": 1,
+    "discovered_absence_cases": [
+      "Hexalith.ChatBot.IntegrationTests.Recovery.RecoveryAbsenceObservationTests.SustainedWindowChecksIntermediateState"
+    ]
+  }
+}

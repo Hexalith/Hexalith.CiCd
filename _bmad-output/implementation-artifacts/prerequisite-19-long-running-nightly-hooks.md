@@ -10,8 +10,11 @@ work; it does not claim that the prerequisite has shipped.
 Allow a registered module's genuine product-recovery hook to retain its approved
 execution and cleanup allowance within central nightly releases. Preserve the
 45-minute hook default and current behavior for existing modules. ChatBot needs
-its weekly recovery sweep, with a 330-minute outer job allowance and shorter
-in-process/interrupt deadlines. That is configured capacity, not measured runtime.
+its weekly recovery sweep, retaining its 330-minute outer allowance and shorter
+in-process/interrupt deadlines. The legacy release-only M2 committed-state gate
+also needs its own unchanged 30-minute allowance on every release. Sequentially
+preserving both requires a 360-minute shared hook allowance: the original recovery,
+preparation and cleanup capacity plus M2. That is configured capacity, not measured runtime.
 
 Reuse the current controller, authenticated artifact handoffs and fresh tokens
 for bounded polling slices. Add only the timeout configuration and bounded wait
@@ -35,7 +38,7 @@ product scenarios or silently skip failed/due recovery runs.
 
 1. Builds `schemas/hexalith.ci.v1.json`, `Github/lib/ci_config.py` and their
    tests: add one validated, bounded per-module hook-timeout setting, defaulting
-   to 45 minutes and permitting ChatBot's 330-minute allowance.
+   to 45 minutes and permitting ChatBot's 360-minute combined allowance.
 2. Builds `.github/workflows/release.yml` and its caller contract: carry the
    validated timeout into the hook job. Preparation, build and cleanup share the
    outer budget; the product deadline must expire early enough for cleanup.
@@ -61,9 +64,12 @@ product scenarios or silently skip failed/due recovery runs.
 
 - Given an existing module without a timeout override, when rendered and run,
   then its hook retains the 45-minute default and existing release behavior.
-- Given ChatBot's 330-minute allowance, when its weekly recovery is due, then
-  the supported path can complete recovery and subsequent release work without
-  expiring the central wait or reusing a stale token.
+- Given ChatBot's 360-minute combined allowance, when its weekly recovery is due,
+  then the supported path retains the original 330-minute recovery/preparation/
+  cleanup capacity plus the independent 30-minute release-only M2 gate, and can
+  complete subsequent release work without expiring the central wait or reusing
+  a stale token. A failed M2 gate still permits due recovery after successful
+  runtime preparation unless the run was canceled; either failure blocks publication.
 - Given a recovery failure, cancellation or exceeded deadline, when the run
   finishes, then cleanup gets its reserved window, publication is blocked and
   the nightly report preserves the failure.

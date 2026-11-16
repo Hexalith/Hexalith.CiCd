@@ -1,0 +1,358 @@
+{
+  "phase": "integration",
+  "product_head": "bf0f44ff395d89c5565a423b424e389d2f80d0f6",
+  "snapshots": {
+    "Hexalith.AI.Tools": "1745b6663ad32bb1288167135ed0f979366c53a0",
+    "Hexalith.Builds": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b",
+    "Hexalith.Commons": "1e292e3e99232a28462b2a35d5547a94dd612e57",
+    "Hexalith.Conversations": "36cd13159f6c66d249942c6cfeca179adf3c4ec8",
+    "Hexalith.EventStore": "77a2dafdf2e6aab7382afab7ab50e22144361d42",
+    "Hexalith.Folders": "8063a0392789bd45a214c2c873298ef25d481bb9",
+    "Hexalith.FrontComposer": "56c9206167b7f18c3a95f610f814dfa39d9dcd01",
+    "Hexalith.McpCli": "1d423dae22e5f4e357889427a67406f47758e377",
+    "Hexalith.Memories": "ca3bcc981e8e3dd6be41f669587984225171f7ca",
+    "Hexalith.Parties": "b6b4f8a5c83b77ab57a9b947436317162b4fb337",
+    "Hexalith.Platform": "f99f51c3053fe0b0292acad461d78c833ec156cc",
+    "Hexalith.PolymorphicSerializations": "bb6d45f3cce0a963d4453e457f47b335cf7b22e9",
+    "Hexalith.Projects": "c9fa1d67703d658189502687a8271986feba121e",
+    "Hexalith.Tenants": "6188ea48cab9fdf4207072135c66aab5a7b7fe32",
+    "Hexalith.Timesheets": "ae5f8171763a6207a70572cf45180b7adbe38d78",
+    "Hexalith.Works": "34c578dd12d50246d8a9513523ae909023a6fcd2"
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "/home/administrator/projects/hexalith/cicd-story-19/references/Hexalith.ChatBot",
+        "/tmp/hexalith-job.ZGhYmqKC/story19/ChatBot"
+      ],
+      "exit": 0,
+      "seconds": 1.74
+    },
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.ChatBot.slnx",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false",
+        "-noAutoResponse",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 336.44
+    },
+    {
+      "command": [
+        "python3",
+        ".github/actions/after-unit-tests/require-runtime.py"
+      ],
+      "exit": 0,
+      "seconds": 4.47
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.ZGhYmqKC/story19/ChatBot/tests/Hexalith.ChatBot.AppHost.Tests/Hexalith.ChatBot.AppHost.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 3.78
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.ZGhYmqKC/story19/ChatBot/tests/Hexalith.ChatBot.IntegrationTests/Hexalith.ChatBot.IntegrationTests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Works"
+      ],
+      "exit": 2,
+      "seconds": 70.87
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "/tmp/hexalith-job.ZGhYmqKC/story19/ChatBot/tests/Hexalith.ChatBot.UI.E2E.Tests/Hexalith.ChatBot.UI.E2E.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.ZGhYmqKC/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 204.18
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.ZGhYmqKC/story19/ChatBot/tests/Hexalith.ChatBot.Recovery.Tests/bin/Release/net10.0/Hexalith.ChatBot.Recovery.Tests.dll",
+        "-list",
+        "tests"
+      ],
+      "exit": 0,
+      "seconds": 0.73
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.ZGhYmqKC/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.dll",
+        "-list",
+        "tests"
+      ],
+      "exit": 0,
+      "seconds": 0.57
+    }
+  ],
+  "product_diff_sha256": "379aefa3c77dcc65f3858884a36f9b5d73d41d328e1d6645d2e9190a68f800cf",
+  "product_untracked_sha256": {
+    ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+    "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+    "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+    "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+    "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "81bfdec773aafd30e8f12dfd0116070963ae0fa0e711e75c2b552b9fc2a88f31",
+    "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+    "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+    "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "ac8c074616fddaa09d51b9de007deefe771576b517fb541e53b487541d5b3f3e"
+  },
+  "live_required": true,
+  "owned_backend_observations": {
+    "c0ac1ef5b886f9130e18a340ec0e5e52df6e01dabed68d105bec1e26ed5cd35f": {
+      "container_id": "c0ac1ef5b886f9130e18a340ec0e5e52df6e01dabed68d105bec1e26ed5cd35f",
+      "run_id": "5a9eb4414ecd4cac87650cb51b45af67",
+      "storage_mounts": [],
+      "tmpfs": {
+        "/data": "rw,nosuid,nodev,noexec,size=64m"
+      },
+      "private_modes": {
+        ".": "0o700",
+        "eventstore-admin-ui.configuration.json": "0o600",
+        "sentry.configuration.json": "0o600",
+        "parties.configuration.json": "0o600",
+        "projects.configuration.json": "0o600",
+        "tenants.configuration.json": "0o600",
+        "memories.configuration.json": "0o600",
+        "chatbot.configuration.json": "0o600",
+        "eventstore.configuration.json": "0o600",
+        "eventstore-admin.configuration.json": "0o600"
+      }
+    },
+    "40c52c44e73b369cf40d6be9c25f2ef5399ca8197324b12f0d68334e4dcc5ffb": {
+      "container_id": "40c52c44e73b369cf40d6be9c25f2ef5399ca8197324b12f0d68334e4dcc5ffb",
+      "run_id": "38d21ecba36d44e0adc4841dda0bb92f",
+      "storage_mounts": [],
+      "tmpfs": {
+        "/data": "rw,nosuid,nodev,noexec,size=64m"
+      },
+      "private_modes": {
+        ".": "0o700",
+        "eventstore-admin-ui.configuration.json": "0o600",
+        "sentry.configuration.json": "0o600",
+        "parties.configuration.json": "0o600",
+        "projects.configuration.json": "0o600",
+        "tenants.configuration.json": "0o600",
+        "memories.configuration.json": "0o600",
+        "chatbot.configuration.json": "0o600",
+        "eventstore.configuration.json": "0o600",
+        "eventstore-admin.configuration.json": "0o600"
+      }
+    },
+    "0332030f1f1608426dcea538b9dc5da9934147fe81f7cedd1c3b4a2b9b436c23": {
+      "container_id": "0332030f1f1608426dcea538b9dc5da9934147fe81f7cedd1c3b4a2b9b436c23",
+      "run_id": "082a19acb5df40d7b7e46132f61bc685",
+      "storage_mounts": [],
+      "tmpfs": {
+        "/data": "rw,nosuid,nodev,noexec,size=64m"
+      },
+      "private_modes": {
+        ".": "0o700",
+        "eventstore-admin-ui.configuration.json": "0o600",
+        "sentry.configuration.json": "0o600",
+        "parties.configuration.json": "0o600",
+        "projects.configuration.json": "0o600",
+        "tenants.configuration.json": "0o600",
+        "memories.configuration.json": "0o600",
+        "chatbot.configuration.json": "0o600",
+        "eventstore.configuration.json": "0o600",
+        "eventstore-admin.configuration.json": "0o600"
+      }
+    }
+  },
+  "compiled_owner_observations": {},
+  "selected_owner_sdk_comparisons": {
+    "hexalith-selected-owner-agUNun/metadata/Hexalith.EventStore.ServiceDefaults.dll": {
+      "assembly": "Hexalith.EventStore.ServiceDefaults.dll",
+      "selected_owner_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "actual_apphost_sdk_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "identical": true
+    },
+    "hexalith-selected-owner-agUNun/metadata/Hexalith.EventStore.DomainService.dll": {
+      "assembly": "Hexalith.EventStore.DomainService.dll",
+      "selected_owner_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "actual_apphost_sdk_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "identical": true
+    },
+    "hexalith-selected-owner-agUNun/metadata/Hexalith.EventStore.Server.dll": {
+      "assembly": "Hexalith.EventStore.Server.dll",
+      "selected_owner_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "actual_apphost_sdk_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "identical": true
+    },
+    "hexalith-selected-owner-agUNun/metadata/Hexalith.EventStore.Client.dll": {
+      "assembly": "Hexalith.EventStore.Client.dll",
+      "selected_owner_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "actual_apphost_sdk_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "identical": true
+    },
+    "hexalith-selected-owner-agUNun/metadata/Hexalith.EventStore.Contracts.dll": {
+      "assembly": "Hexalith.EventStore.Contracts.dll",
+      "selected_owner_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "actual_apphost_sdk_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "identical": true
+    },
+    "hexalith-selected-owner-Jsp1ip/metadata/Hexalith.EventStore.ServiceDefaults.dll": {
+      "assembly": "Hexalith.EventStore.ServiceDefaults.dll",
+      "selected_owner_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "actual_apphost_sdk_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "identical": true
+    },
+    "hexalith-selected-owner-Jsp1ip/metadata/Hexalith.EventStore.DomainService.dll": {
+      "assembly": "Hexalith.EventStore.DomainService.dll",
+      "selected_owner_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "actual_apphost_sdk_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "identical": true
+    },
+    "hexalith-selected-owner-Jsp1ip/metadata/Hexalith.EventStore.Server.dll": {
+      "assembly": "Hexalith.EventStore.Server.dll",
+      "selected_owner_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "actual_apphost_sdk_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "identical": true
+    },
+    "hexalith-selected-owner-Jsp1ip/metadata/Hexalith.EventStore.Client.dll": {
+      "assembly": "Hexalith.EventStore.Client.dll",
+      "selected_owner_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "actual_apphost_sdk_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "identical": true
+    },
+    "hexalith-selected-owner-Jsp1ip/metadata/Hexalith.EventStore.Contracts.dll": {
+      "assembly": "Hexalith.EventStore.Contracts.dll",
+      "selected_owner_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "actual_apphost_sdk_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "identical": true
+    },
+    "hexalith-selected-owner-nPwbv5/metadata/Hexalith.EventStore.ServiceDefaults.dll": {
+      "assembly": "Hexalith.EventStore.ServiceDefaults.dll",
+      "selected_owner_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "actual_apphost_sdk_sha256": "3b618387d1adc3b98cef9823d629edace174c2bc9a8272a501e979f972fcad12",
+      "identical": true
+    },
+    "hexalith-selected-owner-nPwbv5/metadata/Hexalith.EventStore.DomainService.dll": {
+      "assembly": "Hexalith.EventStore.DomainService.dll",
+      "selected_owner_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "actual_apphost_sdk_sha256": "d1593c5a2b93e0a6cb8d84d946a94223403bf38c02bb7e30987f1f188ff13646",
+      "identical": true
+    },
+    "hexalith-selected-owner-nPwbv5/metadata/Hexalith.EventStore.Server.dll": {
+      "assembly": "Hexalith.EventStore.Server.dll",
+      "selected_owner_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "actual_apphost_sdk_sha256": "95038655c275192a4971ea8f74a1a3748be15793736ed5914813614b84cf6cf1",
+      "identical": true
+    },
+    "hexalith-selected-owner-nPwbv5/metadata/Hexalith.EventStore.Client.dll": {
+      "assembly": "Hexalith.EventStore.Client.dll",
+      "selected_owner_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "actual_apphost_sdk_sha256": "5b184b6c7bc7e83251d4f48edfb6ee446a28ac4fae7c04c381c388ed8cb9cd92",
+      "identical": true
+    },
+    "hexalith-selected-owner-nPwbv5/metadata/Hexalith.EventStore.Contracts.dll": {
+      "assembly": "Hexalith.EventStore.Contracts.dll",
+      "selected_owner_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "actual_apphost_sdk_sha256": "7e4c8823479a6c59456c5169c95d9082ccbb5d199f403f7cb7c3267c9cf9a44a",
+      "identical": true
+    }
+  },
+  "recovery_test_discovered": "Hexalith.ChatBot.Recovery.Tests.LiveContinuityAspireE2eTests.LiveRecoveryValidationRunsAllThreeCoordinatorsAndPassesEvidenceGate",
+  "release_tests_discovered": [
+    "Hexalith.ChatBot.Release.Tests.GovernedStateReleaseGateTests.CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology",
+    "Hexalith.ChatBot.Release.Tests.GovernedStateReleaseGateTests.GovernedNoteShouldProjectIdenticalDurableEndStateRegardlessOfDeclaredOrigin"
+  ],
+  "failed_suites": [
+    "Hexalith.ChatBot.IntegrationTests"
+  ],
+  "passed": false,
+  "error": "Product suites failed: Hexalith.ChatBot.IntegrationTests",
+  "runtime_cleanup": {
+    "remaining_scoped_processes": [],
+    "owned_backends_removed": []
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "namespace": "Hexalith.EventStore.Aspire",
+  "name": "DevelopmentRouteCatalogOwnerPreparationExtensions",
+  "metadata_name": "DevelopmentRouteCatalogOwnerPreparationExtensions",
+  "definition_name": {
+    "namespace": "Hexalith.EventStore.Aspire",
+    "segments": [
+      "DevelopmentRouteCatalogOwnerPreparationExtensions"
+    ]
+  },
+  "introduced_type_parameter_counts": [
+    0
+  ],
+  "kind": "class",
+  "attributes": [],
+  "has_union_attribute": false,
+  "layout": "Auto",
+  "layout_details": {
+    "module_version_id": "a083aefa-a640-46a2-83a4-bc76812aa3c9",
+    "type_token": 33554477,
+    "size": 0,
+    "packing_size": 0
+  },
+  "memory_safety": {
+    "module_version_id": "a083aefa-a640-46a2-83a4-bc76812aa3c9",
+    "rules": {
+      "kind": "available",
+      "state": 0,
+      "observations": []
+    }
+  },
+  "is_sealed": true,
+  "is_abstract": true,
+  "is_static": true,
+  "is_by_ref_like": false,
+  "is_read_only": false,
+  "base_type": "System.Object",
+  "interfaces": [],
+  "derived_types": [],
+  "type_parameters": [],
+  "members": [
+    {
+      "name": "PrepareEventStoreDevelopmentOwnerAsync",
+      "kind": "method",
+      "attributes": [],
+      "signature": "System.Threading.Tasks.Task\u003CHexalith.EventStore.Aspire.DevelopmentRouteCatalogPreparedOwner\u003E PrepareEventStoreDevelopmentOwnerAsync(Aspire.Hosting.ApplicationModel.IResourceBuilder\u003CAspire.Hosting.ApplicationModel.ProjectResource\u003E project, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default)",
+      "digest": "5dc82313f2",
+      "canonical_signature": "M:Hexalith.EventStore.Aspire.DevelopmentRouteCatalogOwnerPreparationExtensions.PrepareEventStoreDevelopmentOwnerAsync(Aspire.Hosting.ApplicationModel.IResourceBuilder\u003CAspire.Hosting.ApplicationModel.ProjectResource\u003E,System.TimeSpan,System.Threading.CancellationToken)",
+      "metadata_token": 100663720,
+      "is_static": true,
+      "is_virtual": false,
+      "is_abstract": false,
+      "is_override": false,
+      "is_sealed": false,
+      "is_read_only": false,
+      "is_const": false,
+      "is_unsafe": false,
+      "is_async": false,
+      "memory_safety": {
+        "module_version_id": "a083aefa-a640-46a2-83a4-bc76812aa3c9",
+        "caller_contract": {
+          "kind": "none",
+          "evidence": {
+            "member_token": 100663720,
+            "rules_state": 0,
+            "pointer": "Absent",
+            "fixed_buffer": 0,
+            "direct_attribute": {
+              "state": 1,
+              "valid_row_count": 0,
+              "has_malformed_row": false
+            },
+            "associated_attribute": {
+              "state": 1,
+              "valid_row_count": 0,
+              "has_malformed_row": false
+            }
+          }
+        },
+        "signature_pointer": "Absent"
+      },
+      "has_method_body": true,
+      "method_implementation": {
+        "module_version_id": "a083aefa-a640-46a2-83a4-bc76812aa3c9",
+        "method_token": 100663720,
+        "attributes": "Public, Static, HideBySig",
+        "impl_attributes": "IL",
+        "has_body_rva": true
+      },
+      "is_extension": true,
+      "is_obsolete": false,
+      "extended_type": "Aspire.Hosting.ApplicationModel.IResourceBuilder\u003CAspire.Hosting.ApplicationModel.ProjectResource\u003E",
+      "declaring_type": "Hexalith.EventStore.Aspire.DevelopmentRouteCatalogOwnerPreparationExtensions",
+      "documentation": {
+        "samples": []
+      }
+    },
+    {
+      "name": "PrepareEventStoreDevelopmentOwnerAsync",
+      "kind": "method",
+      "attributes": [],
+      "signature": "System.Threading.Tasks.Task\u003CHexalith.EventStore.Aspire.DevelopmentRouteCatalogPreparedOwner\u003E PrepareEventStoreDevelopmentOwnerAsync(Aspire.Hosting.ApplicationModel.IResourceBuilder\u003CAspire.Hosting.ApplicationModel.ProjectResource\u003E project, string declarationAssemblyFileName, string adapterAssemblyFileName, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default)",
+      "digest": "5768b35788",
+      "canonical_signature": "M:Hexalith.EventStore.Aspire.DevelopmentRouteCatalogOwnerPreparationExtensions.PrepareEventStoreDevelopmentOwnerAsync(Aspire.Hosting.ApplicationModel.IResourceBuilder\u003CAspire.Hosting.ApplicationModel.ProjectResource\u003E,string,string,System.TimeSpan,System.Threading.CancellationToken)",
+      "metadata_token": 100663721,
+      "is_static": true,
+      "is_virtual": false,
+      "is_abstract": false,
+      "is_override": false,
+      "is_sealed": false,
+      "is_read_only": false,
+      "is_const": false,
+      "is_unsafe": false,
+      "is_async": false,
+      "memory_safety": {
+        "module_version_id": "a083aefa-a640-46a2-83a4-bc76812aa3c9",
+        "caller_contract": {
+          "kind": "none",
+          "evidence": {
+            "member_token": 100663721,
+            "rules_state": 0,
+            "pointer": "Absent",
+            "fixed_buffer": 0,
+            "direct_attribute": {
+              "state": 1,
+              "valid_row_count": 0,
+              "has_malformed_row": false
+            },
+            "associated_attribute": {
+              "state": 1,
+              "valid_row_count": 0,
+              "has_malformed_row": false
+            }
+          }
+        },
+        "signature_pointer": "Absent"
+      },
+      "has_method_body": true,
+      "method_implementation": {
+        "module_version_id": "a083aefa-a640-46a2-83a4-bc76812aa3c9",
+        "method_token": 100663721,
+        "attributes": "Public, Static, HideBySig",
+        "impl_attributes": "IL",
+        "has_body_rva": true
+      },
+      "is_extension": true,
+      "is_obsolete": false,
+      "extended_type": "Aspire.Hosting.ApplicationModel.IResourceBuilder\u003CAspire.Hosting.ApplicationModel.ProjectResource\u003E",
+      "declaring_type": "Hexalith.EventStore.Aspire.DevelopmentRouteCatalogOwnerPreparationExtensions",
+      "documentation": {
+        "samples": []
+      }
+    }
+  ],
+  "additional_source_files": [],
+  "is_partial_type": false,
+  "is_forwarded": false,
+  "full_name": "Hexalith.EventStore.Aspire.DevelopmentRouteCatalogOwnerPreparationExtensions",
+  "documentation": {
+    "samples": []
+  }
+}

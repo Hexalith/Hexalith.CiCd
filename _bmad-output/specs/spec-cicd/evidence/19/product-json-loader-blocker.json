@@ -1,0 +1,345 @@
+{
+  "classification": "upstream public-loader compatibility prerequisite; required live and release fail",
+  "production_snapshot_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+  "inherited_by_final_source_via": {
+    "runtime_proposal_tree": "459a97cbfdb2708b4aa5e281c04d30b943fb5416",
+    "runtime_product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+    "intermediate_architecture_diff_sha256": "170fa9510ac02460b2d4545fd663c1f32133f79b197d5f06f845be308b18b2c6",
+    "final_proposal_tree": "5fe3abbc9327c0aaf102c1ac4e74ca136bedece0",
+    "final_product_diff_sha256": "5be4e008b99d9fa9299ec46fcce591afa26fd6522d244a4424245615d620354e",
+    "sole_changed_file": "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs",
+    "untracked_hashes_unchanged": true,
+    "all_production_project_and_other_test_inputs_unchanged": true,
+    "final_architecture_evidence": "product-architecture-verification.json",
+    "inherited_lane_hashes_are_not_identical_to_final_global_hash": true
+  },
+  "package": "Hexalith.EventStore.Aspire4.2.0",
+  "package_repository_commit": "aa16227bd07f0564a3026d619a5abd973e02656f",
+  "pinned_eventstore_gitlink": "77a2dafdf2e6aab7382afab7ab50e22144361d42",
+  "source_contract": "DevelopmentRouteCatalogOwnerLoadContext.Load admits an unresolved framework reference only when the Default-selected file is physically under the shared runtime root; preparation snapshots actual selected child DLLs and deps only.",
+  "observed_refusal": "Selected child dependency 'System.Text.Json' is absent from its immutable output snapshot.",
+  "required_live_result": {
+    "project": "Hexalith.ChatBot.Live.IntegrationTests",
+    "total": 3,
+    "failed": 3,
+    "succeeded": 0,
+    "skipped": 0
+  },
+  "release_result": {
+    "project": "Hexalith.ChatBot.Release.Tests",
+    "total": 2,
+    "failed": 2,
+    "succeeded": 0,
+    "skipped": 0
+  },
+  "actual_output_metadata": {
+    "scope": "Actual normal child output metadata; this capture does not claim child-runtime execution",
+    "installed_runtimes": [
+      "Microsoft.AspNetCore.App 10.0.10 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.11 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.12 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.13 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.14 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 10.0.15 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.AspNetCore.App 11.0.0 [/home/administrator/.dotnet/shared/Microsoft.AspNetCore.App]",
+      "Microsoft.NETCore.App 10.0.10 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.11 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.12 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.13 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.14 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 10.0.15 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 11.0.0 [/home/administrator/.dotnet/shared/Microsoft.NETCore.App]"
+    ],
+    "projects": {
+      "required_test_host": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.deps.json",
+        "deps_sha256": "da57d22afb3dd2c71c4d06793584cbb162c20c168bd9d4f3f77ba911fc179050",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {
+            "System.Text.Json/11.0.0": {
+              "dependencies": {
+                "System.IO.Pipelines": "11.0.0",
+                "System.Text.Encodings.Web": "11.0.0"
+              },
+              "runtime": {
+                "lib/net10.0/System.Text.Json.dll": {
+                  "assemblyVersion": "11.0.0.0",
+                  "fileVersion": "11.0.26.53018",
+                  "localPath": "System.Text.Json.dll"
+                }
+              }
+            }
+          }
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/Hexalith.ChatBot.Live.IntegrationTests.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "MSTest.EnableParentProcessQuery": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {
+          "System.Text.Json/11.0.0": {
+            "sha512": "hyLfq7fRYbq8m3ENGqgEYkqxLeLx2xmNMlf6UG1a7RQo9OsTsfm4Ch/E6O+A5vYQ2ThneLUn1CHF644lmH5QhA==",
+            "type": "package",
+            "path": "system.text.json/11.0.0",
+            "files": [
+              ".nupkg.metadata",
+              ".signature.p7s",
+              "Icon.png",
+              "PACKAGE.md",
+              "THIRD-PARTY-NOTICES.TXT",
+              "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.4/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "buildTransitive/net10.0/System.Text.Json.targets",
+              "buildTransitive/net461/System.Text.Json.targets",
+              "buildTransitive/net462/System.Text.Json.targets",
+              "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+              "buildTransitive/netstandard2.0/System.Text.Json.targets",
+              "lib/net10.0/System.Text.Json.dll",
+              "lib/net10.0/System.Text.Json.xml",
+              "lib/net11.0/System.Text.Json.dll",
+              "lib/net11.0/System.Text.Json.xml",
+              "lib/net462/System.Text.Json.dll",
+              "lib/net462/System.Text.Json.xml",
+              "lib/netstandard2.0/System.Text.Json.dll",
+              "lib/netstandard2.0/System.Text.Json.xml",
+              "system.text.json.11.0.0.nupkg.sha512",
+              "system.text.json.nuspec",
+              "useSharedDesignerContext.txt"
+            ]
+          }
+        },
+        "app_local_json_present": true,
+        "app_local_json": {
+          "path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Live.IntegrationTests/bin/Release/net10.0/System.Text.Json.dll",
+          "assembly_identity": "System.Text.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+          "sha256": "11787e1d3ce9ceb32cc86cc5ca6a19c450a47b68c1c12d0b8100e46ebf655768"
+        }
+      },
+      "release_test_host": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.deps.json",
+        "deps_sha256": "2493f170bee060ad917dca6311c318480f4709297971e573c6158f4c4169b842",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {
+            "System.Text.Json/11.0.0": {
+              "dependencies": {
+                "System.IO.Pipelines": "11.0.0",
+                "System.Text.Encodings.Web": "11.0.0"
+              },
+              "runtime": {
+                "lib/net10.0/System.Text.Json.dll": {
+                  "assemblyVersion": "11.0.0.0",
+                  "fileVersion": "11.0.26.53018",
+                  "localPath": "System.Text.Json.dll"
+                }
+              }
+            }
+          }
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/Hexalith.ChatBot.Release.Tests.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "MSTest.EnableParentProcessQuery": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {
+          "System.Text.Json/11.0.0": {
+            "sha512": "hyLfq7fRYbq8m3ENGqgEYkqxLeLx2xmNMlf6UG1a7RQo9OsTsfm4Ch/E6O+A5vYQ2ThneLUn1CHF644lmH5QhA==",
+            "type": "package",
+            "path": "system.text.json/11.0.0",
+            "files": [
+              ".nupkg.metadata",
+              ".signature.p7s",
+              "Icon.png",
+              "PACKAGE.md",
+              "THIRD-PARTY-NOTICES.TXT",
+              "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/System.Text.Json.SourceGeneration.dll",
+              "analyzers/dotnet/roslyn4.4/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+              "analyzers/dotnet/roslyn4.4/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+              "buildTransitive/net10.0/System.Text.Json.targets",
+              "buildTransitive/net461/System.Text.Json.targets",
+              "buildTransitive/net462/System.Text.Json.targets",
+              "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+              "buildTransitive/netstandard2.0/System.Text.Json.targets",
+              "lib/net10.0/System.Text.Json.dll",
+              "lib/net10.0/System.Text.Json.xml",
+              "lib/net11.0/System.Text.Json.dll",
+              "lib/net11.0/System.Text.Json.xml",
+              "lib/net462/System.Text.Json.dll",
+              "lib/net462/System.Text.Json.xml",
+              "lib/netstandard2.0/System.Text.Json.dll",
+              "lib/netstandard2.0/System.Text.Json.xml",
+              "system.text.json.11.0.0.nupkg.sha512",
+              "system.text.json.nuspec",
+              "useSharedDesignerContext.txt"
+            ]
+          }
+        },
+        "app_local_json_present": true,
+        "app_local_json": {
+          "path": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/tests/Hexalith.ChatBot.Release.Tests/bin/Release/net10.0/System.Text.Json.dll",
+          "assembly_identity": "System.Text.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+          "sha256": "11787e1d3ce9ceb32cc86cc5ca6a19c450a47b68c1c12d0b8100e46ebf655768"
+        }
+      },
+      "normal_tenants_child": {
+        "deps_path": "/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants/src/Hexalith.Tenants/bin/Release/net10.0/Hexalith.Tenants.deps.json",
+        "deps_sha256": "c75cf7cdb3d9e12ab78622e7cbd88cd55138fdefe411b799e365f351a3c633f5",
+        "deps_runtime_target": {
+          "name": ".NETCoreApp,Version=v10.0",
+          "signature": ""
+        },
+        "deps_json_entries": {
+          ".NETCoreApp,Version=v10.0": {}
+        },
+        "runtimeconfig_path": "/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants/src/Hexalith.Tenants/bin/Release/net10.0/Hexalith.Tenants.runtimeconfig.json",
+        "runtimeconfig": {
+          "runtimeOptions": {
+            "tfm": "net10.0",
+            "frameworks": [
+              {
+                "name": "Microsoft.NETCore.App",
+                "version": "10.0.0"
+              },
+              {
+                "name": "Microsoft.AspNetCore.App",
+                "version": "10.0.0"
+              }
+            ],
+            "configProperties": {
+              "System.GC.Server": true,
+              "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+              "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+            }
+          }
+        },
+        "assets_json_libraries": {},
+        "app_local_json_present": false
+      }
+    }
+  },
+  "before_after_metadata_identical": true,
+  "sdk_identity_checks_unchanged": true,
+  "sdk_source_identity_mismatch_is_superseded": true,
+  "copied_framework_dlls": false,
+  "sdk_runtime_or_package_pins_changed": false,
+  "catalog_activation_or_atomic_acceptance_reached": false,
+  "atomic_constraint_is_source_proven_not_this_runtime_failure": "ChatBotAdmissionEvidenceValidator.ValidateAtomicParticipationAsync unconditionally refuses CanonicalExecutionUnavailable; passing Server unit assertions preserve this behavior; positive M2/origin bodies still require Accepted."
+}

@@ -1,0 +1,79 @@
+{
+  "recorded_at": "2026-11-16T19:28:20.201523+00:00",
+  "product_head": "bf0f44ff395d89c5565a423b424e389d2f80d0f6",
+  "proposal_tree": "5fe3abbc9327c0aaf102c1ac4e74ca136bedece0",
+  "product_diff_sha256": "5be4e008b99d9fa9299ec46fcce591afa26fd6522d244a4424245615d620354e",
+  "product_untracked_sha256": {
+    ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+    "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+    "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+    "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+    "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "c8e2000865462ef1cc828b99b652ce07d583e9f560294b674e22e87e965bd9bc",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/Hexalith.ChatBot.Live.IntegrationTests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/RequiredTopologyTests.cs": "57a1a6eea9235d65f513b4407600cf9e4d97defd53d1980da17b432a297ce104",
+    "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+    "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+    "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/required-live.xunit.runner.json": "3aaf68ea8927dce2c9ee5404088745084d709c1ff2d00bf41c90d9406d31b8a1"
+  },
+  "checks": {
+    "final_architecture_ownership_policy_and_proposal_sources_match": true,
+    "pinned_action_yaml_proof_matches": true,
+    "frozen_intent_unchanged": true,
+    "manual_observer_producer_unchanged_from_main": true,
+    "protected_whole_files_and_modes": 7,
+    "unchanged_gitlinks": 16,
+    "nested_submodules_initialized": false,
+    "unpublished_gitlink_not_staged": true,
+    "whitespace_and_prepared_scripts": "pass"
+  },
+  "frozen_intent_sha256": "b702dc16f7a6a02e9a00926ce0ed4216ede1b57c66fc5a6b9a3838d9aec71772",
+  "final_proofs_sha256": {
+    "product-architecture-verification.json": "cf5ae7c3961048323f7ea888befbaea5bf8b87cbfb9341c4a6c421b87913c803",
+    "product-fix-ownership.json": "7c570fba335dcf45f9b4f9422139dd58809025506bc967c7ca1d06b863eee88a",
+    "fix-literal-policy.json": "ae6b9028b414929e506c36ce6a8e986c0535e6924b9624b78cfd783cc9be6c37"
+  },
+  "inherited_evidence": {
+    "product-integration-verification.json": {
+      "sha256": "012435172f250d917387af3af937f3c5dce4c9a566f1e43829d260aa7565d2cf",
+      "product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+      "overall_passed": false
+    },
+    "product-units-release-verification.json": {
+      "sha256": "22ce7ef960ff6eeab3ac932d0854f382f4e228dbdc47cdabb8083bf741aebc71",
+      "product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+      "overall_passed": false
+    },
+    "product-packages-verification.json": {
+      "sha256": "bcf7469b1ebf8276e4edf5d0f4c8b163973443eca922ef9e55adb3aff48bbcf9",
+      "product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+      "overall_passed": true
+    },
+    "product-evaluate-verification.json": {
+      "sha256": "45ba083250948705c39cfeec15bb965334c49600de3ae75e42e4d5e3632f765e",
+      "product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+      "overall_passed": true
+    }
+  },
+  "inherited_evidence_limit": "Only the existing Architecture-test source differs; final whole119 suite/build passes separately. Earlier runtime/unit hashes and original failures are preserved, not relabeled.",
+  "sole_source_delta": [
+    "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs"
+  ],
+  "results": {
+    "unit_passed": 5388,
+    "apphost_passed": 18,
+    "ordinary_integration_passed": 548,
+    "ui_e2e_passed": 289,
+    "required_live_failed": 3,
+    "release_failed": 2,
+    "unchanged_optional_manual_skipped": 1,
+    "recovery_execution_claimed": false
+  },
+  "formal_review_complete": false,
+  "story_acceptance_complete": false,
+  "product_push_gate_green": false,
+  "push_attempted": false,
+  "successful_remote_state_change": false,
+  "final_report_sha256": "43e6a11c1ffe7abfd0d57022e3081d41012c97d1547f4c3fda3e5d06ead757d9",
+  "all_handoff_work_finished": true
+}

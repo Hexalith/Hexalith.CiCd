@@ -1,0 +1,121 @@
+{
+  "amended_file": "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs",
+  "before_product_diff_sha256": "4aee2bd0d7cd7a1d495b468c71290282cedaaad69440a9c090a7105794cfb4b9",
+  "before_product_untracked_sha256": {
+    ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+    "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+    "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+    "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+    "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "c8e2000865462ef1cc828b99b652ce07d583e9f560294b674e22e87e965bd9bc",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/Hexalith.ChatBot.Live.IntegrationTests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/RequiredTopologyTests.cs": "57a1a6eea9235d65f513b4407600cf9e4d97defd53d1980da17b432a297ce104",
+    "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+    "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+    "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/required-live.xunit.runner.json": "3aaf68ea8927dce2c9ee5404088745084d709c1ff2d00bf41c90d9406d31b8a1"
+  },
+  "after_product_diff_sha256": "170fa9510ac02460b2d4545fd663c1f32133f79b197d5f06f845be308b18b2c6",
+  "after_product_untracked_sha256": {
+    ".github/actions/nightly/run-release.sh": "1c64c4fc1ab700b322b24f7126496c7b49269178a91f07c7ee57a4cf5fd57065",
+    "Directory.Solution.targets": "fdffa6289d5bd5766624d29e63f9f68faa8a255ac6e4e43c6620adaa44cc2b6f",
+    "eng/ChatBot.Composition.Restore.targets": "b29ea5404aafc7aac877f3e7aafaa9756d58ed7660a0d7ae22316a77a36730d6",
+    "eng/ChatBot.Composition.props": "bc95a1411ea0eca1480971472961c53cbdab629ef57d9abebc12254fe69011b3",
+    "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs": "c8e2000865462ef1cc828b99b652ce07d583e9f560294b674e22e87e965bd9bc",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/Hexalith.ChatBot.Live.IntegrationTests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/Hexalith.ChatBot.Live.IntegrationTests/RequiredTopologyTests.cs": "57a1a6eea9235d65f513b4407600cf9e4d97defd53d1980da17b432a297ce104",
+    "tests/Hexalith.ChatBot.Recovery.Tests/LiveRecoveryValidationCollection.cs": "1d54c8a6570d0de35dce05f27b85c06b185db6224101559cc935603f6587c68b",
+    "tests/Hexalith.ChatBot.Release.Tests/GovernedStateReleaseGateTests.cs": "73d7b600cd4d027161df7f8c85c2f2d5ffe4517621e5ad597c1a7ed763303eac",
+    "tests/Hexalith.ChatBot.Release.Tests/Hexalith.ChatBot.Release.Tests.csproj": "4f9cca5ed3fc8f3c8ab358575eb6d024129422072979f388baf6436a8f5cf954",
+    "tests/required-live.xunit.runner.json": "3aaf68ea8927dce2c9ee5404088745084d709c1ff2d00bf41c90d9406d31b8a1"
+  },
+  "source_change": "Only strengthen the stale architecture topology assertion to distinguish exactly one source-only/published-package catalog helper; all other edges remain unconditional and >5 topology guard retained.",
+  "parent_authorized": true,
+  "whole_architecture_rerun": {
+    "passed": 119,
+    "failed": 0,
+    "skipped": 0
+  },
+  "held_verifier_pid": 566999,
+  "workspace": "/tmp/hexalith-job.CRfRkNvT/story19/ChatBot",
+  "product_lineage": {
+    "before_proposal_tree": "459a97cbfdb2708b4aa5e281c04d30b943fb5416",
+    "regular_blobs_checked": 6300,
+    "changed_files": [
+      "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs"
+    ]
+  },
+  "built_workspace_lineage": {
+    "before_proposal_tree": "459a97cbfdb2708b4aa5e281c04d30b943fb5416",
+    "regular_blobs_checked": 6300,
+    "changed_files": [
+      "tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs"
+    ]
+  },
+  "commands": [
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.ChatBot.Architecture.Tests/Hexalith.ChatBot.Architecture.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false",
+        "-noAutoResponse",
+        "-p:BuildProjectReferences=false",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 9.18
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.ChatBot.Architecture.Tests/Hexalith.ChatBot.Architecture.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:HexalithBuildsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Builds",
+        "-p:HexalithCommonsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Commons",
+        "-p:HexalithConversationsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Conversations",
+        "-p:HexalithEventStoreRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.EventStore",
+        "-p:HexalithFoldersRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Folders",
+        "-p:HexalithFrontComposerRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.FrontComposer",
+        "-p:HexalithMcpCliRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.McpCli",
+        "-p:HexalithMemoriesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Memories",
+        "-p:HexalithPartiesRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Parties",
+        "-p:HexalithPlatformRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Platform",
+        "-p:HexalithProjectsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Projects",
+        "-p:HexalithTenantsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Tenants",
+        "-p:HexalithTimesheetsRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Timesheets",
+        "-p:HexalithWorksRoot=/tmp/hexalith-job.CRfRkNvT/story19/references/Hexalith.Works"
+      ],
+      "exit": 0,
+      "seconds": 27.51
+    }
+  ],
+  "apphost_binary_unchanged_sha256": "aa20178247bd3dc022df0b6fa7a413ec53d1ed6d6995acd7ce1bdfbb89d634dd",
+  "all_other_product_and_test_sources_unchanged": true,
+  "original_architecture_failure_retained_in": "product-units-release-verification.log",
+  "amendment_verification_error": "[Errno 2] No such file or directory: '/tmp/hexalith-job.CRfRkNvT/story19/ChatBot/.agent/skills/bmad-advanced-elicitation/SKILL.md'"
+}
