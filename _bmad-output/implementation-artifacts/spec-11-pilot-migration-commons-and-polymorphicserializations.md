@@ -2,7 +2,8 @@
 title: '11 — Pilot migration: Commons and PolymorphicSerializations'
 type: 'chore'
 created: '2026-11-15'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '37e73a99dfe82c3b7741554d6f4ff2207711644b'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -53,10 +54,10 @@ context:
 **Execution:**
 
 - [ ] `evidence/11/` — recheck completed predecessors and document AD-21 provisioning: App scope, stale release/tag assessment, exact main/v* rulesets, main-only release environment, module push identities, scoped NuGet policies, org grants and security/retention settings. Preserve existing publication access until adoption.
-- [ ] `tools/deliver.py`, `tools/tests/test_deliver.py` — handle the observed disabled response; test false/true/malformed/404/authorization-error cases and sibling isolation.
+- [x] `tools/deliver.py`, `tools/tests/test_deliver.py` — handle the observed disabled response; test false/true/malformed/404/authorization-error cases and sibling isolation.
 - [ ] `references/Hexalith.Builds/Github/lib/release_publish.py` and its tests — add generic bounded live NuGet verification before finalization, reusing authenticated inventory and package identity parsing; preserve missing/indexing-delay/source-conflict coverage. Release through the interactive shared pipeline and await an acceptable tag before adoption.
 - [ ] Both module `tools/` and root `package.json`/lockfile — after shared coverage exists, retire duplicated legacy verification code/tests/manifests and tool-only npm files using the module token. Let delivery remove owned legacy configuration/workflows.
-- [ ] Commons `.github/actions/after-unit-tests/action.yml` and its three package scripts — retain payload/symbol and isolated-consumer checks without another module build/restore; fix consumer SDK/cache isolation and CI audit-off/package flags. Test real package consumption; preserve all C# suites.
+- [x] Commons `.github/actions/after-unit-tests/action.yml` and its three package scripts — retain payload/symbol and isolated-consumer checks without another module build/restore; fix consumer SDK/cache isolation and CI audit-off/package flags. Test real package consumption; preserve all C# suites.
 - [ ] `builds-version`, `setup/Hexalith.{Commons,PolymorphicSerializations}.yml`, `rendered/`, direct gitlinks — pin released shared behavior, use each `.slnx`, enable Commons' hook and default C# analysis. Before adoption, create the disposable product-only probe branch/PR from current module main and record base/head. Render and validate one committed candidate before pushing; hooks must already exist on live main.
 - [ ] `evidence/11/` — authenticate both delivery commits/refs/reports; immediately enable immutable releases and remove other NuGet policies and legacy secret/key/Zot access. Record green CI, the scheduled night and post-delivery branch/Update-branch outcomes; clean probes and confirm/correct 10-2 restrictions.
 
@@ -69,11 +70,124 @@ context:
 
 ## Implementation Notes
 
+- The predecessor recheck confirms 10-1 and 10-2 are done; the approved deferred
+  Update branch qualification and temporary prohibition remain intact.
+  [Implementation readiness](../specs/spec-cicd/evidence/11/implementation-readiness.md)
+  distinguishes completed local source work from outstanding provisioning,
+  publication, adoption and live-night acceptance.
+- Delivery accepts boolean `enabled: false` and authenticated legacy 404 after
+  administrative preflight, while rejecting enabled/malformed/authorization
+  responses with sibling isolation. The API rejects successful JSON `null` on
+  absence-enabled reads, so it cannot be mistaken for 404 absence; other
+  consumers retain their existing response-shape and identity diagnostics.
+- Builds now verifies the authenticated inventory on the live NuGet feed
+  between push and GitHub finalization, with bounded pending-package retry and
+  reused ID/version/source parsing. Publisher regressions pass on Python 3.12
+  and runner Python. No new shared release has been published, so the composite
+  release task remains unchecked and legacy module copies are retained.
+- Added Commons' package/consumer hook and CI packing flags; the isolated
+  consumer uses its unchanged SDK pin and cleans its private NuGet caches.
+  Both pilot package-mode builds, all 372 C# tests across nine suites, all twelve
+  Commons payload/symbol package pairs and real isolated consumption passed.
+  The existing payload/symbol validator and all C# tests remain intact.
+- Initial local preparation performed no module adoption, owned-file edit,
+  probe branch/PR, remote mutation or credential cleanup. Protected-token fetches refreshed the local
+  module checkouts to current remote mains. Production setup/render and the
+  Builds version pin remain unchanged.
+- The initial provisioning attempt was blocked before its first step: the intended maintainer API
+  cannot enumerate the App installation's selected repositories (HTTP 403), and
+  the existing signed-in browser requires human **Confirm access** at the
+  installation settings. Its selection remains unverified. No authentication
+  bypass or access broadening was attempted; the browser stays on that prompt.
+- Product-preparation pushes have a separate prerequisite failure:
+  `python3 references/Hexalith.Builds/check.py` exits 2 in both pilot roots
+  because the nested script is absent. Current shared local checking also
+  requires the adopted configuration, which does not exist yet. The recorded
+  package-mode results do not replace that mandated command. No nested
+  submodule or owned-file bootstrap was created to bypass it; a pre-adoption
+  check/bootstrap resolution remains necessary before the first module push.
+- The first 2026-11-16 read-only refresh confirmed both blockers persisted. The intended
+  maintainer API still returns HTTP 403 and the browser still requires human
+  **Confirm access** at the exact App installation URL. Both required module
+  checks again exit 2. Their legacy Builds pin
+  `9f5d751f7ab0b7a621dcd18b589bf061fabac6ec` contains no checker, so nested
+  initialization alone could not repair the gap. Current checking additionally
+  requires adopted configuration and genuine delivered state. The concrete
+  sequencing/verification decision is recorded in
+  [pre-adoption check resolution](../specs/spec-cicd/evidence/11/pre-adoption-check-resolution.md);
+  no frozen constraint was changed or exception assumed. No additional local
+  source gap was found, and publication/adoption tasks remain incomplete.
+- After the human completed GitHub **Confirm access**, saved App selection and
+  verified it after browser reload: exactly Builds, CiCd and both pilots.
+  Completed the authorized stale CodeQL/three orphan-tag cleanup, exact
+  main/v* rulesets and main-only `hexalith-release` environments. Installed
+  distinct scoped Zot identities and each environment's secret pair, preserving
+  legacy access. Real authentication/foreign-write refusals and preservation
+  checks pass. Full current details are in
+  [provisioning status](../specs/spec-cicd/evidence/11/provisioning-status.md).
+- Scoped NuGet policies remain incomplete: the first Commons submission
+  returned a generic creation error, and refreshing exposed an expired NuGet
+  session. Normal Microsoft sign-in now requires human face/fingerprint/PIN
+  or security-key authentication. No new policy or specific duplicate/permission
+  limitation is proved. Later settings/org-grant writes wait for this AD-21
+  policy step. No module push, shared release, adoption, credential removal or
+  pre-adoption-check substitution occurred; both human prerequisites remain
+  separate from the already authorized provisioning.
+
 ## Spec Change Log
 
 ## Review Triage Log
 
 ## Verification
+
+Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
+
+- `builds-publisher-python312.log` and `builds-publisher-python314.log`: 17
+  publisher regressions passed on each interpreter, including actual composite
+  rejection of missing, wrong-source and unauthorized feed responses.
+- `package-mode-verification.py` and `package-mode-python314.log`: both builds,
+  372 passing C# tests with zero skipped, twelve Commons payload/symbol package
+  pairs and isolated consumer restore/build. Final Commons source hashes match
+  the recorded successful overlays; disposable scratch was removed.
+- `deliver-python312.log`: 20 delivery tests passed; the subsequent null guard
+  receives a separate focused follow-up. `deliver-python314.log`: all 20 passed
+  on runner Python 3.14.4 in 426.449 seconds, including the final null case.
+- `deliver-null-python312.log`: all malformed/null/authorization sibling
+  subcases passed in the focused Python 3.12 test. The initial broader runtime
+  check exposed a diagnostic regression from globally rejecting null; its log
+  is retained. The correction limits rejection to absence-enabled reads and
+  gets direct runtime coverage without weakening any response validation.
+- `delivery-runtime-python312.log` and `delivery-runtime-python314.log`: all 12
+  runtime tests passed on the final code in 15.038s and 13.119s, including the
+  null-versus-404 path and unchanged ancestry-identity diagnostics.
+  `render-check.log`: wrapped locked renderer `--check` exited 0; no production
+  registration, render or Builds pin changed.
+- `final-local-checks.json`: frozen intent and original baseline preserved,
+  source hashes, SDK/C# and owned-boundary checks, unchanged default
+  authentication, evidence credential scan and whitespace checks. This is
+  local readiness evidence; the committed adoption-candidate/global checks and
+  live checkpoint remain unperformed.
+- `recheck-preflight.{py,json,log}` and `module-fetch.log`: authenticated live
+  GET observations, exact failure and remotely reachable source revisions;
+  no provisioning or delivery claim follows from these reads.
+- `app-selection-browser-blocker.json` and
+  `pre-adoption-prepush-blocker.json`: fresh read-only authentication state and
+  both exact failed mandatory module-check commands; no push was attempted.
+- `resume-prerequisites.{py,json,log}`: 2026-11-16 authenticated maintainer
+  preflight, exact browser URL/prompt, both failed check commands and successful
+  Git tree inspection proving the legacy pin lacks the checker. No UI or remote
+  mutation occurred; the default profile and absent overrides are unchanged.
+- `app-selection-*.json`, `provision-*.{json,log}` and
+  `provisioning-after.json`: actual saved App scope, stale configuration/tag
+  cleanup, exact protections, main-only environments and scoped Zot credentials,
+  including preservation and real registry outcomes. `provisioning-status.md`
+  separates completed administration from pending policy/grant and adoption work.
+- `nuget-commons-{proposed,submit,readback}.json`,
+  `nuget-session-expired.json` and `nuget-signin-result.json`: exact failed
+  creation/readback and subsequent human authentication boundary; no saved
+  additive NuGet policy is claimed.
+
+Remaining verification for adoption:
 
 - `run-with-temp uv run --locked --script tools/tests/test_deliver.py` — compatibility and delivery behavior pass on Python 3.12 and runner Python.
 - Builds publisher regressions, module package-mode builds/tests and Commons consumer checks — pass with saved logs; no workflow-text assertions.

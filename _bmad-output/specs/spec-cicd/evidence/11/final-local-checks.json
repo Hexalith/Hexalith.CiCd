@@ -1,0 +1,135 @@
+{
+  "recorded_at": "2026-11-15T23:21:32.890486+00:00",
+  "root_baseline": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+  "frozen_intent_unchanged": true,
+  "story_status": "in-progress",
+  "production_registrations": 0,
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "inherited_override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "remote_mutations": 0,
+  "source_sha256": {
+    "tools/deliver.py": "b7f0cad7f3513a29ce513d4e11755b68fae63c412570e21b55dbf3dade3ea967",
+    "tools/delivery_runtime.py": "dba53df3c84ee14f046cdf7b67ab8631b5e0b0b4d63510379764fe7c44b7dd65",
+    "tools/tests/test_deliver.py": "c354d0580de678a66caa0700bfb5bdd881ffc225c59f787766a2c0ef6e4850cf",
+    "tools/tests/test_delivery_runtime.py": "46f149d945acfef97ec6cf1fc78640b8adf167a6fe681d50fd23e00388e5ceb2",
+    "references/Hexalith.Builds/Github/lib/release_publish.py": "418f0c5335af038dcee1c182e3028c03ca46fa15bc8d2d7113c6c3036d3de929",
+    "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py": "545f87326b3fb2440cab33c644a862e7c004407835adf3727b6ce34c4ce24f83",
+    "references/Hexalith.Commons/scripts/pack-release-packages.py": "a49c7000e870c3587a927d6bb981e1f0a31effdd00c7927ef31cc273179389b8",
+    "references/Hexalith.Commons/scripts/validate-consumer-package-references.py": "a966afe51e75f3c807e13e84fb9543981bcd874eb74f345ad0f393980f9a712d",
+    "references/Hexalith.Commons/.github/actions/after-unit-tests/action.yml": "a41e4f2249789fd4758dcda881d77b08fec0606a4a684d25b2576f382aaaf7c4"
+  },
+  "module_product_and_ownership_checks": {
+    "Hexalith.Commons": {
+      "changed_tracked_paths": [
+        "scripts/pack-release-packages.py",
+        "scripts/validate-consumer-package-references.py"
+      ],
+      "SDK_pin_and_CSharp_sources_unchanged": true,
+      "owned_module_content_unchanged": true,
+      "revision": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "changed_tracked_paths": [],
+      "SDK_pin_and_CSharp_sources_unchanged": true,
+      "owned_module_content_unchanged": true,
+      "revision": "476cfccac3c5ba694a8e0ef11b1157728b9ec093"
+    }
+  },
+  "successful_tests": {
+    "deliver-python312.log": {
+      "tests": 20,
+      "result": "pass",
+      "sha256": "f4c03027dd024f32c1b18654b9c1ac5dc47444b73edf0a5a7d489a4bd7a2417c"
+    },
+    "deliver-python314.log": {
+      "tests": 20,
+      "result": "pass",
+      "sha256": "41b033a72425f1e0907a28cc02bbf6ecd049647143ec397860453b0d169aa22d"
+    },
+    "deliver-null-python312.log": {
+      "tests": 1,
+      "result": "pass",
+      "sha256": "f6a93fadb1ebd1154fd912f9e0bb120461c6edf6c8347b0c31c7ecba2d54d148"
+    },
+    "delivery-runtime-python312.log": {
+      "tests": 12,
+      "result": "pass",
+      "sha256": "275491f6e999ab7e03ad459f18a32addd08df018eb67d7e3e14f1fc8debd0ccb"
+    },
+    "delivery-runtime-python314.log": {
+      "tests": 12,
+      "result": "pass",
+      "sha256": "4a5c9def2426b15338b5bee0af66e209aa4cd5cd581215a95757e1c5d329dd57"
+    },
+    "builds-publisher-python312.log": {
+      "tests": 17,
+      "result": "pass",
+      "sha256": "a5e463cd854185efae3c440bad717d9f59310f5510a9ebe924b72f4163dff66b"
+    },
+    "builds-publisher-python314.log": {
+      "tests": 17,
+      "result": "pass",
+      "sha256": "d9b0000a9f0b9e98353907b667462bd1102ed6d5650eddc054fed3e835504887"
+    },
+    "package-mode-python314.log": {
+      "CSharp_tests": 372,
+      "skipped": 0,
+      "Commons_package_pairs": 12,
+      "consumer_build": "pass",
+      "scratch_removed": true
+    },
+    "render-check.log": {
+      "exit": 0,
+      "result": "pass"
+    }
+  },
+  "credential_scan": {
+    "result": "pass",
+    "files": [
+      "_bmad-output/specs/spec-cicd/evidence/11/builds-publisher-python314.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/render-check.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/package-mode-verification.py",
+      "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python314.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/deliver-python312.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python312-initial.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python312.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/module-fetch.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/deliver-python314.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/final-local-checks.json",
+      "_bmad-output/specs/spec-cicd/evidence/11/recheck-preflight.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-browser-blocker.json",
+      "_bmad-output/specs/spec-cicd/evidence/11/recheck-preflight.py",
+      "_bmad-output/specs/spec-cicd/evidence/11/implementation-readiness.md",
+      "_bmad-output/specs/spec-cicd/evidence/11/recheck-preflight.json",
+      "_bmad-output/specs/spec-cicd/evidence/11/deliver-null-python312.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/builds-publisher-python312.log",
+      "_bmad-output/specs/spec-cicd/evidence/11/pre-adoption-prepush-blocker.json",
+      "_bmad-output/specs/spec-cicd/evidence/11/package-mode-python314.log"
+    ],
+    "checks": [
+      "exact protected credential value absent",
+      "GitHub credential-shaped values absent",
+      "private key headers absent"
+    ]
+  },
+  "builds_gitlink": "73e60af8a1fcdf3f06726d5d1b6e1199cce778ee",
+  "diff_whitespace_checks": "pass",
+  "app_scope_authentication": {
+    "confirm_access_document_present": true,
+    "signed_in_as_jpiquot": true,
+    "interaction": "read-only UIAutomation; no form fill, submit or authentication control invocation",
+    "recorded_at": "2026-11-15T23:20:57.0908116Z",
+    "authentication_controls": [
+      "Use passkey or security key",
+      "Use GitHub Mobile",
+      "Use your authenticator app",
+      "Use your password"
+    ],
+    "url": "https://github.com/organizations/Hexalith/settings/installations/179966090",
+    "title": "Confirm access - Google Chrome"
+  },
+  "mandatory_pre_push_command": "blocked; exact failures in pre-adoption-prepush-blocker.json"
+}

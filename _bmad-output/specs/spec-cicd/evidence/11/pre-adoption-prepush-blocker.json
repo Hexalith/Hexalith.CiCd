@@ -1,0 +1,19 @@
+{
+  "command": ["python3", "references/Hexalith.Builds/check.py"],
+  "results": [
+    {
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 2,
+      "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n"
+    },
+    {
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "exit": 2,
+      "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n"
+    }
+  ],
+  "nested_submodules_initialized": false,
+  "push_attempted": false,
+  "interpretation": "The required pre-push command has not passed. Disposable package-mode product verification does not substitute for it. An authorized pre-adoption check/bootstrap path is needed before publishing product preparation.",
+  "additional_source_requirement": "Current Builds Github/lib/local_check.py requires a separate checkout at the committed Builds gitlink and .github/hexalith-ci.json; neither pilot has the adopted configuration yet. No owned content was authored to bypass these requirements."
+}

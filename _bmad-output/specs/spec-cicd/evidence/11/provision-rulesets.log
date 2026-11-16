@@ -1,0 +1,13 @@
+GET user HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.Commons HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.Commons/rulesets?includes_parents=true HTTP/2.0 200 OK
+POST repos/Hexalith/Hexalith.Commons/rulesets HTTP/2.0 201 Created
+GET repos/Hexalith/Hexalith.Commons/rulesets/27356310 HTTP/2.0 200 OK
+POST repos/Hexalith/Hexalith.Commons/rulesets HTTP/2.0 201 Created
+GET repos/Hexalith/Hexalith.Commons/rulesets/27356311 HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.PolymorphicSerializations HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets?includes_parents=true HTTP/2.0 200 OK
+POST repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets HTTP/2.0 201 Created
+GET repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets/27356312 HTTP/2.0 200 OK
+POST repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets HTTP/2.0 201 Created
+GET repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets/27356313 HTTP/2.0 200 OK

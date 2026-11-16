@@ -1,0 +1,18 @@
+verify maintainer account exit 0
+kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json exit 0
+kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json exit 0
+kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json exit 0
+set Hexalith.Commons hexalith-release HEXALITH_REGISTRY_USERNAME exit 0
+set Hexalith.Commons hexalith-release HEXALITH_REGISTRY_PASSWORD exit 0
+set Hexalith.PolymorphicSerializations hexalith-release HEXALITH_REGISTRY_USERNAME exit 0
+set Hexalith.PolymorphicSerializations hexalith-release HEXALITH_REGISTRY_PASSWORD exit 0
+patch secret distribution-registry-htpasswd exit 0
+patch configmap distribution-registry-config exit 0
+patch deployment distribution-registry exit 0
+kubectl --context jpiquot@local -n registry-distribution rollout status deployment/distribution-registry --timeout=150s exit 0
+kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json exit 0
+kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json exit 0
+kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json exit 0
+read Hexalith.Commons environment secret metadata exit 0
+read Hexalith.PolymorphicSerializations environment secret metadata exit 0
+Pilot Zot identities and environment-secret provisioning passed.

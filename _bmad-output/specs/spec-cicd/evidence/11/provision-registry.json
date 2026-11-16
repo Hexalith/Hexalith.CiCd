@@ -1,0 +1,204 @@
+{
+  "started_at": "2026-11-16T07:53:06.464950+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "administration_profile": "/home/administrator/.config/gh",
+  "operations": [
+    {
+      "recorded_at": "2026-11-16T07:53:06.790592+00:00",
+      "operation": "verify maintainer account",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:06.840196+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:06.887881+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:06.934981+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:07.731101+00:00",
+      "operation": "set Hexalith.Commons hexalith-release HEXALITH_REGISTRY_USERNAME",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:08.386434+00:00",
+      "operation": "set Hexalith.Commons hexalith-release HEXALITH_REGISTRY_PASSWORD",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:09.265018+00:00",
+      "operation": "set Hexalith.PolymorphicSerializations hexalith-release HEXALITH_REGISTRY_USERNAME",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:09.929335+00:00",
+      "operation": "set Hexalith.PolymorphicSerializations hexalith-release HEXALITH_REGISTRY_PASSWORD",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:09.988647+00:00",
+      "operation": "patch secret distribution-registry-htpasswd",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:10.046171+00:00",
+      "operation": "patch configmap distribution-registry-config",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:10.108491+00:00",
+      "operation": "patch deployment distribution-registry",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:21.866679+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution rollout status deployment/distribution-registry --timeout=150s",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:21.916644+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:21.969936+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:22.022634+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:33.086613+00:00",
+      "operation": "read Hexalith.Commons environment secret metadata",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T07:53:44.152717+00:00",
+      "operation": "read Hexalith.PolymorphicSerializations environment secret metadata",
+      "exit": 0
+    }
+  ],
+  "identities": {
+    "Hexalith.Commons": {
+      "username": "hexalith-commons-publish",
+      "repository_patterns": [
+        "commons",
+        "commons/**"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update"
+      ],
+      "admin_actions": [],
+      "bcrypt_cost": 12,
+      "secret_values_persisted_locally": false,
+      "environment_secret_names": [
+        "HEXALITH_REGISTRY_PASSWORD",
+        "HEXALITH_REGISTRY_USERNAME"
+      ]
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "username": "hexalith-polymorphicserializations-publish",
+      "repository_patterns": [
+        "polymorphicserializations",
+        "polymorphicserializations/**"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update"
+      ],
+      "admin_actions": [],
+      "bcrypt_cost": 12,
+      "secret_values_persisted_locally": false,
+      "environment_secret_names": [
+        "HEXALITH_REGISTRY_PASSWORD",
+        "HEXALITH_REGISTRY_USERNAME"
+      ]
+    }
+  },
+  "preservation": {
+    "old_htpasswd_rows_byte_identical": true,
+    "existing_configuration_and_grants_unchanged": true,
+    "legacy_access_removed": false,
+    "configuration_sha256": "99b87628ad560ec690593b3e8fe39fff8b4553ec9867978b04f462a776c527e8"
+  },
+  "resourceVersions": {
+    "secret_before": "44669207",
+    "secret_after": "46533285",
+    "configmap_before": "43593736",
+    "configmap_after": "46533286",
+    "deployment_before": "44669324",
+    "deployment_after": "46533403"
+  },
+  "authentication": [
+    {
+      "repository": "Hexalith.Commons",
+      "username": "hexalith-commons-publish",
+      "method": "GET",
+      "endpoint": "/v2/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "username": "hexalith-commons-publish",
+      "method": "POST",
+      "endpoint": "/v2/polymorphicserializations/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "repository": "Hexalith.Commons",
+      "username": "hexalith-commons-publish",
+      "method": "POST",
+      "endpoint": "/v2/story-11-unrelated/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "username": "hexalith-polymorphicserializations-publish",
+      "method": "GET",
+      "endpoint": "/v2/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "username": "hexalith-polymorphicserializations-publish",
+      "method": "POST",
+      "endpoint": "/v2/commons/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "username": "hexalith-polymorphicserializations-publish",
+      "method": "POST",
+      "endpoint": "/v2/story-11-unrelated/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    }
+  ],
+  "verification_limits": [
+    "Authenticated registry access and foreign-write refusals are real server results.",
+    "Own namespace read/create/update grants are verified from preserved live ACL and restarted workload; no package/image or upload was created.",
+    "No legacy registry identity or credential was revoked before adoption."
+  ],
+  "completed_at": "2026-11-16T07:53:44.153104+00:00",
+  "result": "pass"
+}

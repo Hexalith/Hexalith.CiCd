@@ -1,0 +1,11 @@
+GET user HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.Commons HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.Commons/environments HTTP/2.0 200 OK
+PUT repos/Hexalith/Hexalith.Commons/environments/hexalith-release HTTP/2.0 200 OK
+POST repos/Hexalith/Hexalith.Commons/environments/hexalith-release/deployment-branch-policies HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.Commons/environments/hexalith-release/deployment-branch-policies HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.PolymorphicSerializations HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.PolymorphicSerializations/environments HTTP/2.0 200 OK
+PUT repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release HTTP/2.0 200 OK
+POST repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release/deployment-branch-policies HTTP/2.0 200 OK
+GET repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release/deployment-branch-policies HTTP/2.0 200 OK

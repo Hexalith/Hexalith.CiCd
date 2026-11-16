@@ -1,0 +1,131 @@
+{
+  "recorded_at": "2026-11-16T08:01:29.033559+00:00",
+  "verified": {
+    "Hexalith.Commons": {
+      "main_unchanged": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "ruleset_ids": [
+        27356310,
+        27356311
+      ],
+      "main_only_environment_and_exact_secret_pair": true,
+      "legacy_CodeQL_inventory_empty": true,
+      "default_setup_and_security_updates_disabled": true,
+      "retention_days": 90,
+      "immutable_releases_preserved_disabled_until_adoption": true
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "main_unchanged": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "ruleset_ids": [
+        27356312,
+        27356313
+      ],
+      "main_only_environment_and_exact_secret_pair": true,
+      "legacy_CodeQL_inventory_empty": true,
+      "default_setup_and_security_updates_disabled": true,
+      "retention_days": 90,
+      "immutable_releases_preserved_disabled_until_adoption": true
+    }
+  },
+  "stale_CodeQL_deleted": 218,
+  "Poly_SonarCloud_preserved": {
+    "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/code-scanning/analyses?tool_name=SonarCloud&per_page=100",
+    "exit": 0,
+    "analysis_ids": [
+      435438305
+    ]
+  },
+  "registry_provisioning_and_preservation": "pass",
+  "source_hashes_match_recorded_passing_tests": {
+    "tools/deliver.py": true,
+    "tools/delivery_runtime.py": true,
+    "tools/tests/test_deliver.py": true,
+    "tools/tests/test_delivery_runtime.py": true,
+    "references/Hexalith.Builds/Github/lib/release_publish.py": true,
+    "references/Hexalith.Builds/Github/lib/tests/test_release_publish.py": true,
+    "references/Hexalith.Commons/scripts/pack-release-packages.py": true,
+    "references/Hexalith.Commons/scripts/validate-consumer-package-references.py": true,
+    "references/Hexalith.Commons/.github/actions/after-unit-tests/action.yml": true
+  },
+  "frozen_intent_unchanged": true,
+  "scripts_syntax": "pass",
+  "credential_scan": {
+    "result": "pass",
+    "files": {
+      "_bmad-output/implementation-artifacts/spec-11-pilot-migration-commons-and-polymorphicserializations.md": "83cdad9e7f13078cc448ab0b729a2deea0f4cd2a0e8253222955188656e0d5fd",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-after.json": "60ed3ac1b9393456b5c7ee559b050a7bede13d06f1fe9f107d6631c47d4c0487",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-before.json": "7870ef373dbda1e1960652d4ff35610f44a7299ba9f42f592568cd9630156002",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-browser-blocker.json": "465bfdf84ec995678f4e4fe79d5204f0e5fc303a4118d597624793485f69b1fe",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-readback.json": "76f29565ab241f797a32ab670c03c419d2d1860ede61d50cb435737dbc694ff2",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-readback.py": "2246d24dc92970941b544bd0036ebc3d653d543e7c4c4c1d06c328ff07c81de2",
+      "_bmad-output/specs/spec-cicd/evidence/11/app-selection-save.json": "63f7049cd6334b8aa8da36989f7a9b9cf5434f86706171a4a811b6c8c11db807",
+      "_bmad-output/specs/spec-cicd/evidence/11/builds-publisher-python312.log": "a5e463cd854185efae3c440bad717d9f59310f5510a9ebe924b72f4163dff66b",
+      "_bmad-output/specs/spec-cicd/evidence/11/builds-publisher-python314.log": "d9b0000a9f0b9e98353907b667462bd1102ed6d5650eddc054fed3e835504887",
+      "_bmad-output/specs/spec-cicd/evidence/11/deliver-null-python312.log": "f6a93fadb1ebd1154fd912f9e0bb120461c6edf6c8347b0c31c7ecba2d54d148",
+      "_bmad-output/specs/spec-cicd/evidence/11/deliver-python312.log": "f4c03027dd024f32c1b18654b9c1ac5dc47444b73edf0a5a7d489a4bd7a2417c",
+      "_bmad-output/specs/spec-cicd/evidence/11/deliver-python314.log": "41b033a72425f1e0907a28cc02bbf6ecd049647143ec397860453b0d169aa22d",
+      "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python312-initial.log": "317d5013c6e372e03ddc890dfa48cd478ce4a290c2ccbefe38c07613050e3616",
+      "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python312.log": "275491f6e999ab7e03ad459f18a32addd08df018eb67d7e3e14f1fc8debd0ccb",
+      "_bmad-output/specs/spec-cicd/evidence/11/delivery-runtime-python314.log": "4a5c9def2426b15338b5bee0af66e209aa4cd5cd581215a95757e1c5d329dd57",
+      "_bmad-output/specs/spec-cicd/evidence/11/dependabot-disabled-probe.log": "69331008b7216f344978d859acc2f54bef21927f8b0f351ff1b0eb391257f031",
+      "_bmad-output/specs/spec-cicd/evidence/11/final-local-checks.json": "0a58af0b0b61cf6611d0acd3b736da950234b5c43e1fa834fb4f9ec42abf61ac",
+      "_bmad-output/specs/spec-cicd/evidence/11/implementation-readiness.md": "7d43b91af963bec183c72ec7c836037f617727aebf9613158267afe9152a8c99",
+      "_bmad-output/specs/spec-cicd/evidence/11/module-fetch.log": "f7a314734dbe5c46150cb2caf51d82b3deb074e4d3fbb2f89456f83e0eab3865",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-access-readback.json": "7ff3d6bed4ab5d1749a0441d1d9240e4ccf4ce71f07ddfa31ecf84a18564e832",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-commons-proposed.json": "75729c24f60aebcf5f3f79fe25995dff7c82fc704d4cad52326c07bc6cfa9cc1",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-commons-readback.json": "bdb5eb9e3ef322ced608199c25ca6cab30c42b7c743a216157b1ddf57c874d4d",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-commons-submit.json": "6c9b1c45ed8306db8dd02896f111ff426628e927fa4b91f1de7fe26a4b2a027f",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-policy-ui.py": "90f745c1e81366f89df3d6e865f8e515b0d67f989b963b608b5b272e0ed664fe",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-session-expired.json": "14c704cb15b7936401660d025916801239a723face4dc4ce190b4c1df46a5cec",
+      "_bmad-output/specs/spec-cicd/evidence/11/nuget-signin-result.json": "459e8b29a11585e39a9a0e428348f26103e4369e888afda3cb67d99089e207fa",
+      "_bmad-output/specs/spec-cicd/evidence/11/package-mode-python314.log": "15acfdef473c2e91621491b68f9079977137edb4d4b8a0bd0f2fdfc7c6c7fad6",
+      "_bmad-output/specs/spec-cicd/evidence/11/package-mode-verification.py": "622364d5e98e6054a258ed7c9f6b6a77f648dcd3118fa6f16c55763f6936a57d",
+      "_bmad-output/specs/spec-cicd/evidence/11/planning.md": "ae8c82ac81868af2465a21a6d65b409a37b3b482ac2028d934791a0f989a958f",
+      "_bmad-output/specs/spec-cicd/evidence/11/pre-adoption-check-resolution.md": "728567dfe5073725cd7cc643f23f398bc5a95fe47e1b701fad13fb32ee08410a",
+      "_bmad-output/specs/spec-cicd/evidence/11/pre-adoption-prepush-blocker.json": "91cab9bbfd47211b1bc871ce770ed3cc870ad6900ab1db02d3a131da0408edbf",
+      "_bmad-output/specs/spec-cicd/evidence/11/preflight.json": "27716e46f400ab308bd828be2ef3a5410548550e05b6e33b61bbcd32b0835c7c",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-cleanup-initial.json": "c3a55496886e2c9f38118eb67086de6db2a2cd5a55f21a67d32e874b7373d558",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-cleanup-initial.log": "768fcc65733a638d8942e406a4607cbcea475e1f0e7d5f11b59f01a5c327efbb",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-cleanup.json": "c8a0d4609517647a6f60726235b3d720d3763edb9fe4a626e2454c628ac0f10f",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-cleanup.log": "80b768a1249ec372b3b252f2ea629e30710b45fa039c52b46b69dece5958257f",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-environments.json": "5ef8b15f5ccdaa324f072cace19e3f0a3f810f078f3f3aa4f4a5dafa02f8e7e8",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-environments.log": "a8a8310797224ee01c17854ae6f51cacd1c6f0bea5134d01222f2efb3b915c0b",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-github.py": "6cd67e27910aa0c5a5a88fa757828848e62b4e1c6125677e7d9e8b4ff2a67df3",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-registry.json": "710d6682a84c97f1c4e9d741230e1eaf97a91f0640f7040ae6ade77dd25ee12d",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-registry.log": "e523feb2327030bdc1ae3f67dc854e087fc9acc3eda9ea420e604a217e1193c3",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-registry.py": "5207d2ce43f754689a4fdce3df04432985ff44b2a102bcf2164a86ec652fe9ce",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-rulesets.json": "240225f17a3e34ce1527172779298e10fcfc9beac84f29513dded84432a14abb",
+      "_bmad-output/specs/spec-cicd/evidence/11/provision-rulesets.log": "1c0a039bcd591d30b6646329dc822ffce1a71943e7f5d4e82040ab83ea6338b9",
+      "_bmad-output/specs/spec-cicd/evidence/11/provisioning-after.json": "a14c476a24184734ce5ec4f12475535d98a2b8346cc7431ca4526f13834585cf",
+      "_bmad-output/specs/spec-cicd/evidence/11/provisioning-before.json": "2d262e02e1b6a10f270c1f66f9138968e8a3726acb95c53d0fc141778f1d8a5b",
+      "_bmad-output/specs/spec-cicd/evidence/11/provisioning-status.md": "d6a67cb9f3a335f91780a5cc021ece44a3d26b2bbcfa78eb9e2663262871a8b7",
+      "_bmad-output/specs/spec-cicd/evidence/11/recheck-preflight.json": "b90398a13234d6ca7a5a97b1f63696ccc3d1586716f7101bd8e84dfd26278d97",
+      "_bmad-output/specs/spec-cicd/evidence/11/recheck-preflight.log": "f6aa78a2c6432b3130c9b3e8c7a18dc613973e4e2a9df697d2877894d4edac83",
+      "_bmad-output/specs/spec-cicd/evidence/11/recheck-preflight.py": "db70840113d5f2a8be0c45710e25ad8b2765c48e595504acefd1563325298fdc",
+      "_bmad-output/specs/spec-cicd/evidence/11/render-check.log": "e215821c32266b776ada75616006777e1b263117ee0ee9ae22646a7d789879af",
+      "_bmad-output/specs/spec-cicd/evidence/11/resume-local-checks.json": "77f94cadb66d936541f919bb2a028e935f50fdcd5c58b23ca6cd136278b53f4e",
+      "_bmad-output/specs/spec-cicd/evidence/11/resume-prerequisites.json": "6a4b685431b564e7948f825e95c62f45c18b4158476cd8e5f2d1a589526959c6",
+      "_bmad-output/specs/spec-cicd/evidence/11/resume-prerequisites.log": "d72d9e7d8bd6fa866d5429f3f12f5eba0e14e6223cd75cb4fbcbe9ea5daa9dcd",
+      "_bmad-output/specs/spec-cicd/evidence/11/resume-prerequisites.py": "4b2a742226d1b44cf537e1416fbcaa942ce1f0f027db7085ffe56062aef368e8",
+      "_bmad-output/specs/spec-cicd/evidence/11/stale-tag-assessment.json": "e3f86b381e9d431918ef889de14b73c6d3cdf35a73cf777cdb5a4bb1bdef0016"
+    },
+    "checks": [
+      "exact protected module credential absent",
+      "GitHub credential values absent",
+      "private key headers absent",
+      "bcrypt credential hashes absent",
+      "generated Zot password-shaped hex values absent"
+    ]
+  },
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "pending": [
+    "Microsoft/NuGet human authentication and scoped additive policies",
+    "remaining ordered settings/org grants",
+    "human pre-adoption-check decision",
+    "shared publication and all subsequent product/adoption/nightly work"
+  ],
+  "long_suites_rerun": false
+}

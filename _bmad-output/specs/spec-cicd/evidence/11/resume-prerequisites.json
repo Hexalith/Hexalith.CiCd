@@ -1,0 +1,178 @@
+{
+  "recorded_at": "2026-11-16T07:33:19.398401+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "administration_profile": "/home/administrator/.config/gh",
+  "requests": [
+    {
+      "endpoint": "user",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "error": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "id": 1379430755,
+        "full_name": "Hexalith/Hexalith.CiCd",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations",
+      "exit": 0,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "total_count": 6,
+        "cicd_installations": [
+          {
+            "id": 179966090,
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            }
+          }
+        ]
+      },
+      "error": ""
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit": 1,
+      "headers": [
+        "HTTP/2.0 403 Forbidden",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    }
+  ],
+  "browser": {
+    "exit": 0,
+    "interaction": "read-only UIAutomation; no form fill, submit or authentication control invocation",
+    "windows": [
+      {
+        "title": "Confirm access - Google Chrome",
+        "url": "github.com/organizations/Hexalith/settings/installations/179966090",
+        "matched_names": [
+          "Confirm access",
+          "@jpiquot",
+          "Use passkey or security key",
+          "Use GitHub Mobile",
+          "Use your authenticator app",
+          "Use your password"
+        ]
+      }
+    ],
+    "error": ""
+  },
+  "modules": [
+    {
+      "repository": "Hexalith.Commons",
+      "revision": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n",
+      "committed_inputs": {
+        "exit": 0,
+        "stdout": "160000 commit 9f5d751f7ab0b7a621dcd18b589bf061fabac6ec\treferences/Hexalith.Builds\n",
+        "stderr": ""
+      },
+      "legacy_builds_pin": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+      "legacy_checker_files": {
+        "command": [
+          "git",
+          "ls-tree",
+          "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "check.py",
+          "Github/lib/local_check.py"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "repository": "Hexalith.PolymorphicSerializations",
+      "revision": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n",
+      "committed_inputs": {
+        "exit": 0,
+        "stdout": "160000 commit 9f5d751f7ab0b7a621dcd18b589bf061fabac6ec\treferences/Hexalith.Builds\n",
+        "stderr": ""
+      },
+      "legacy_builds_pin": "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+      "legacy_checker_files": {
+        "command": [
+          "git",
+          "ls-tree",
+          "9f5d751f7ab0b7a621dcd18b589bf061fabac6ec",
+          "check.py",
+          "Github/lib/local_check.py"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    }
+  ],
+  "authentication_after": {
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "override_presence": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    }
+  },
+  "nested_submodules_initialized": false,
+  "push_attempted": false,
+  "remote_mutations": false,
+  "completed_at": "2026-11-16T07:33:21.505095+00:00"
+}
