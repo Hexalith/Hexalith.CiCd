@@ -363,7 +363,7 @@
     "artifact_id": 14228292488,
     "authenticated_redelivery": true
   },
-  "only_remaining_acceptance": "one genuine scheduled nightly: CodeQL, authenticated release/no-release outcomes, duplicate scan, Builds bump/no-bump and delivery",
+  "only_remaining_acceptance": "genuine 2026-11-17 scheduled nightly and remaining full-story BMAD review; no acceptance claimed",
   "original_module_workspace_sync": {
     "result": "pass",
     "separate_from_earlier_preservation_proofs": true,
@@ -376,7 +376,7 @@
   },
   "terminal_delivery_states_rechecked": true,
   "resumed_nightly_investigation": {
-    "observed_at": "2026-11-16T14:29:10.909589+00:00",
+    "observed_at": "2026-11-16T14:52:01.112074+00:00",
     "failed_schedule": 43842471669,
     "diagnosis": "anonymous trusted Builds v5.2.2 release read returned 403; historical response details discarded; exact current anonymous and CiCd-agent reads return 200",
     "historical_cause": "unverified; no inferred permission denial or proven rate limit",
@@ -384,10 +384,36 @@
     "scoped_bmad_review": "all three lenses have no unresolved findings",
     "full_story_review": "pending real scheduled-night acceptance",
     "candidate": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
-    "full_candidate_gate": "running on fresh main; prior exact candidate passed all 399 tests/global/live checks",
-    "scheduled_continuation": "prepared and read-only authentication/CLI readiness verified; timer not yet installed",
+    "full_candidate_gate": "pass: all 399 tests and both live modules",
+    "scheduled_continuation": {
+      "installed_at": "2026-11-16T14:50:19.549476+00:00",
+      "unit": "hexalith-cicd-story11-20261117",
+      "service_path": "/home/administrator/.config/systemd/user/hexalith-cicd-story11-20261117.service",
+      "timer_path": "/home/administrator/.config/systemd/user/hexalith-cicd-story11-20261117.timer",
+      "source": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+      "genuine_nightly_expected_utc": "2026-11-17T02:17:00Z",
+      "observer_starts_utc": "2026-11-17T02:20:00Z",
+      "observer_starts_europe_paris": "2026-11-17T03:20:00+01:00",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "manual_workflow_dispatch": false,
+      "scope": "read-only scheduled-event watcher then authorized BMAD verification/review",
+      "readback": "ActiveState=active\nUnit=hexalith-cicd-story11-20261117.service\nNextElapseUSecRealtime=Tue 2026-11-17 03:20:00 CET\nLastTriggerUSec=\n",
+      "result": "active; future scheduled outcome remains unverified"
+    },
     "base": "bac15f4a8560b0e8b6363996d538e8c8dc0de755",
     "main_advance": "external reparented story commits preserved; root tracked tree/index unchanged; freshness guard stopped before push",
-    "separate_codeql_inventory_refusals": "HTTP 403; security_events=read required; inventory unverified; planned exact scheduled-job upload/processing/security-gate evidence"
+    "separate_codeql_inventory_refusals": "HTTP 403; security_events=read required; inventory unverified; planned exact scheduled-job upload/processing/security-gate evidence",
+    "push_confirmed": true,
+    "delivery_run": {
+      "id": 43889937298,
+      "head_sha": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+      "event": "push",
+      "head_branch": "main",
+      "path": ".github/workflows/deliver.yml",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43889937298"
+    }
   }
 }

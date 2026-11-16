@@ -73,6 +73,21 @@ context:
 
 ## Implementation Notes
 
+- Current resume checkpoint, 2026-11-16 14:50 UTC: diagnostic fix
+  `d04c9ab7a8fa43dc6dac1f15d34135aba8e79551` passed all 14 suites/399 tests,
+  the complete unchanged committed/global/live-module gate and released shared
+  commitlint, then was pushed using CiCd-agent. Actual push-created delivery
+  `43889937298` is in progress; no completed delivery outcome is inferred.
+  The prior exact candidate also passed 399 tests, but a concurrent main advance
+  was caught before any push. Final qualification preserves that main's story
+  evidence/gitlinks and the unchanged original index. The one-shot observer is
+  enabled for 2026-11-17 02:20 UTC (03:20 Paris), waiting for the genuine
+  02:17 UTC schedule event and then resuming acceptance and full-story BMAD
+  review. It uses only CiCd-agent, performs no manual dispatch/rerun and cannot
+  close this story without all criteria passing. Direct CodeQL inventories are
+  separately unverified: both return actual HTTP 403 requiring
+  `security_events=read`; exact scheduled upload, completed processing and
+  security-gate evidence must establish CodeQL or the criterion stays open.
 - Resume, 2026-11-16: the requested failed scheduled run `43842471669`
   predates pilot adoption and contains no registered modules. Its authenticated,
   digest-matched publish-ready artifact identifies an anonymous
@@ -394,6 +409,16 @@ Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
   omission-status assertions pass in `nightly-response-status-python312.log`
   and `-runner.log`. Superseded qualification attempts are retained explicitly
   and made no push; only the final candidate may establish deployment evidence.
+- `nightly-diagnostics-candidate-5.json`, `nightly-diagnostics-full-validation-5.log`,
+  `nightly-diagnostics-final-commitlint.json` and `nightly-diagnostics-push.json`:
+  exact fresh-main source passes all 399 tests/global/live checks, released
+  commitlint and confirmed ordinary push. `nightly-diagnostics-push-stale-base.json`
+  records the earlier pre-push stop; no failed or uncertain write was retried.
+  `nightly-continuation-schedule.json` authenticates the active local one-shot
+  timer and unchanged intended profile. `scheduled-night-preflight.json`
+  retains actual analysis-inventory permission refusals without inferring
+  absence. `resume-matrix-coverage-audit.json` maps all five frozen rows to
+  27 executed tests; its sole live gap remains the actual scheduled night.
 - `builds-publisher-python312.log` and `builds-publisher-python314.log`: 17
   publisher regressions passed on each interpreter, including actual composite
   rejection of missing, wrong-source and unauthorized feed responses.

@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-11-16T13:08:21.966706+00:00",
+  "observed_at": "2026-11-16T14:52:01.112074+00:00",
   "status": "pending, not accepted",
   "required_event": "schedule",
   "workflow": ".github/workflows/nightly.yml",
@@ -7,7 +7,7 @@
   "cron_utc": "17 2 * * *",
   "next_cron_occurrence_utc": "2026-11-17T02:17:00Z",
   "actual_start_may_be_delayed": true,
-  "reviewed_source_ancestor": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "reviewed_source_ancestor": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
   "registered_pilot_heads": {
     "Hexalith.Commons": "49187d47da882d5470deac982bb383486c90202c",
     "Hexalith.PolymorphicSerializations": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
@@ -20,5 +20,9 @@
     "delivery/propagation or authenticated no-change path"
   ],
   "manual_dispatch_acceptable_as_checkpoint": false,
-  "no_future_outcome_inferred": true
+  "no_future_outcome_inferred": true,
+  "prior_policy_source_ancestor": "3427f041c5f686c460c1fa027cf6f835791209c1",
+  "observer_schedule": "nightly-continuation-schedule.json",
+  "full_story_review": "pending genuine scheduled-night acceptance",
+  "direct_codeql_inventory": "unverified: actual security_events=read token refusal; exact scheduled-job processing/security-gate proof required"
 }
