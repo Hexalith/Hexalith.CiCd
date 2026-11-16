@@ -1,0 +1,207 @@
+{
+  "recorded_at": "2026-11-16T15:00:33.389011+00:00",
+  "cicd_base": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "admin_profile": "/home/administrator/.config/gh",
+  "credential_override_present": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot",
+      "exit": 0,
+      "data": {
+        "id": 1234748496,
+        "full_name": "Hexalith/Hexalith.ChatBot",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/commits/main",
+      "exit": 0,
+      "data": {
+        "sha": "6a4ca07b18e9b58500dc79dfede1f308da36c828"
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/rulesets?includes_parents=true",
+      "exit": 0,
+      "data": [],
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/environments",
+      "exit": 0,
+      "data": {
+        "total_count": 0,
+        "environments": []
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/actions/variables",
+      "exit": 0,
+      "data": {
+        "variables": [
+          {
+            "name": "NUGET_TRUSTED_PUBLISHING_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-31T22:19:16Z",
+            "updated_at": "2026-10-31T22:19:16Z"
+          }
+        ],
+        "total_count": 1
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/code-scanning/default-setup",
+      "exit": 0,
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/automated-security-fixes",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "paused": false
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.ChatBot/immutable-releases",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit": 1,
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "chatbot_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "chatbot_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "chatbot_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "chatbot_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "chatbot_selected": false,
+        "returned_count": 3
+      },
+      "stderr": ""
+    }
+  ],
+  "prepush_check": {
+    "cwd": "/home/administrator/projects/hexalith/cicd-story-19/references/Hexalith.ChatBot",
+    "command": [
+      "run-with-temp",
+      "python3",
+      "references/Hexalith.Builds/check.py"
+    ],
+    "exit": 2,
+    "stdout": "",
+    "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd-story-19/references/Hexalith.ChatBot/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n"
+  },
+  "nested_submodules_initialized": false,
+  "remote_mutations": false
+}

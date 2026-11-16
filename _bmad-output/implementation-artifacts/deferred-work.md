@@ -374,3 +374,8 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-10-1-module-agent-token.md`
   summary: Describe observed credential-source continuity without implying verified token-byte or grant continuity in the 10-1 closeout.
   evidence: Closeout review B6 (low): the current-disposition paragraph says "same protected module credential" but source path, account and expiration alone do not establish unchanged bytes or grants since the historical probes. Verification/recipe evidence and triage record this limit, and fresh read-only checks do not requalify write restrictions. The review workflow defers the spec wording correction.
+
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-19-migrate-chatbot.md`
+  summary: Ship bounded long-running nightly-hook support as a separate prerequisite before ChatBot adoption; see `_bmad-output/implementation-artifacts/prerequisite-19-long-running-nightly-hooks.md`.
+  evidence: On 2026-11-16 the human approved the recommendations. ChatBot preserves a real weekly recovery sweep with a 330-minute job allowance and ten serial 20-minute scenarios plus 30 minutes of topology margin. Builds v6.0.6 limits the hook to 45 minutes, while CiCd currently waits 300 minutes. Reuse the existing fresh-token polling slices and handoffs, retain the 45-minute default, and extend bounded waiting through subsequent release stages. Story 19 must not adopt before the prerequisite ships.
