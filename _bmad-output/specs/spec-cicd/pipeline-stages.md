@@ -39,6 +39,14 @@ Edge cases become knobs in the setup file or custom actions:
   - The other 9 (AI.Tools, Agents, Conversations, EventStore, FrontComposer, McpCli, Memories, PolymorphicSerializations, Timesheets) are clean: their sibling references are gated by `'$(UseHexalithProjectReferences)' == 'true'` or by per-dependency `*FromSource` switches.
 - **SDK:** comes from `global.json`.
 
+Story 23's next compatible Builds contract adds `ciTimeoutMinutes` (1–360,
+default 30), forwarded to the existing shared CI job timeout. Its environment
+step records a private Dapr initialization receipt before the single init and
+exports its path only after successful initialization and metadata inspection.
+Product consumers must verify the receipt against the current job and backend
+before provisioning private material; the receipt does not certify an empty
+database. These additions require a published compatible pin before adoption.
+
 ## Hook points
 
 - The hook points are exactly `after-unit-tests`, `after-integration-tests`, and `nightly` (the last runs in the release). Each has one action, at `.github/actions/<hook>`, run only when the setup file enables it.

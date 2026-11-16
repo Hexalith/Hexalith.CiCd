@@ -33,6 +33,16 @@ jobs:
 submodules: [references/MyModule.Sibling]
 ```
 
+When the selected Builds release declares `ciTimeoutMinutes`, the renderer
+materializes its default of 30 and forwards it to the shared workflow's
+`job-timeout-minutes` input. An explicit integer from 1 to 360 selects a longer
+or shorter build/test budget. Older pins retain their original contract and
+caller; update `builds-version` to the compatible published release before
+using the new registry field. Choose a module allowance from its measured
+serialized workload.
+Contracts that also declare the explicit native `job-timeout-minutes` override
+retain that override's precedence over `ciTimeoutMinutes`.
+
 Hooks are `after-unit-tests`, `after-integration-tests` and `nightly`; their actions
 and Windows job actions live at `.github/actions/<name>/action.yml` in the module.
 CI runs the two test hooks; `nightly` runs only in the Release workflow's

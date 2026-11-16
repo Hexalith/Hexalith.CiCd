@@ -122,6 +122,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - **Knobs:**
     - `solution`: a repo-relative path, or `none`, which runs stage 1 only and releases a GitHub release only.
     - `dapr`, `browsers`, `registry`.
+    - At the next compatible Builds release, `ciTimeoutMinutes`: an integer from 1 to 360, default 30, materialized in the complete document and forwarded to the existing numeric `job-timeout-minutes` workflow input. Earlier tags retain their own contract and callers (story 23).
     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
   - Adding an optional knob with a schema default is a minor Builds release (AD-10).
