@@ -575,6 +575,27 @@ sequenceDiagram
      - removes the repo from every legacy org secret, removes its package IDs from the legacy `NUGET_API_KEY` scope, and revokes the legacy Zot identity's push on its repositories.
   4. **Done** when the module's CI is green and its next nightly release succeeds, or reports nothing to release.
 
+  **AI.Tools applicability and preparation decisions (human-approved 2026-11-16):**
+  - `Hexalith.AI.Tools` is a documentation/skills repository registered with
+    `solution: none`. It has no product tests, packages, containers, custom actions
+    or NuGet waivers. Keep the main-only `hexalith-release` environment, normal
+    organization grants, and normal GitHub release behavior, with
+    `HEXALITH_RELEASE_PUBLISH_ENABLED` set to exactly `true`. Omit unused module
+    Zot publishing credentials and package-scoped NuGet publishing policy. Those
+    prerequisites become mandatory before adding any package or container target;
+    an empty inventory does not imply a nothing-to-release result.
+  - Before this repository's adoption only, its unavailable normal Builds checker
+    may be replaced for the product preparation push by the released shared
+    commitlint and audit checks, exact preservation of owned bytes, modes and
+    gitlinks, documentation/removal consistency and normalized entrypoint checks.
+    Save exact base/head revisions and results before any push. Do not author an
+    owned bootstrap or initialize nested submodules. After delivery, require the
+    normal checker in a standalone clone with Builds as a direct dependency.
+  - Both decisions apply only to AI.Tools; they do not extend the pilots'
+    preparation exception or waive AD-21 requirements for any other module.
+    Adoption still waits for story 11's genuine scheduled-night checkpoint and
+    acceptance. Local preparation and an unpushed registration are not adoption.
+
   **CiCd itself needs:**
   - the App, and the environment `cicd-app` (AD-7) holding `HEXALITH_CICD_APP_PRIVATE_KEY` and `HEXALITH_CICD_APP_CLIENT_ID`;
   - a ruleset that blocks deletion and force-push on `main`;

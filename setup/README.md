@@ -125,8 +125,11 @@ YAML. Apply the [gate rule](../AGENTS.md) during migration before enabling hooks
 or jobs. Agents fix product failures, report pipeline defects and credential
 refusals, and require a successful `python3 references/Hexalith.Builds/check.py`
 before pushing without audit/test bypasses or skip markers/trailers. Product
-branches start from freshly fetched current `main`; do not use PR Update branch
-until the CiCd pilot verifies it. Releases follow the central nightly process.
+branches start from freshly fetched current `main`. GitHub permits PR Update
+branch with the restricted module credential even when it imports workflows;
+do not use it to import owned CI/CD changes. Fetch current `main`, create a new
+product branch, and reapply only product changes. Releases follow the central
+nightly process.
 
 Rendering does not deliver, onboard, dispatch, publish, enforce drift, check
 acceptable GitHub releases, or orchestrate global checks. Updating these policy
