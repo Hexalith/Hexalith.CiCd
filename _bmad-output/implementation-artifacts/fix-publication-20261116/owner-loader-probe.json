@@ -1,0 +1,28 @@
+{
+  "source_sha256": "33068ae5c24c2f94594107a12a2bcb1a58ab95dd74236ffdf0418f7f88c44b0e",
+  "commands": [
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "LoaderProbe.csproj",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-noAutoResponse",
+        "-p:UseSharedCompilation=false",
+        "-warnaserror"
+      ],
+      "exit_code": 0,
+      "output": "  Determining projects to restore...\n  Restored /tmp/hexalith-job.7erbIGZB/probe/LoaderProbe.csproj (in 51 ms).\n  LoaderProbe -> /tmp/hexalith-job.7erbIGZB/probe/bin/Release/net11.0/LoaderProbe.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:01.75\n"
+    },
+    {
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.7erbIGZB/probe/bin/Release/net11.0/LoaderProbe.dll"
+      ],
+      "exit_code": 0,
+      "output": "PASS: replacement of a loaded path refuses\nPASS: identical intermediate library keeps the selected dependency graph\nPASS: output-local link to an outside owner refuses\nPASS: output-local directory link refuses\nPASS: matching on-disk SDK hashes cannot mask a stale loaded image\n"
+    }
+  ]
+}

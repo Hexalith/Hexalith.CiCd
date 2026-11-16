@@ -1,0 +1,573 @@
+{
+  "started_at": "2026-11-16T20:42:42.682399+00:00",
+  "phase": "environment",
+  "administration_profile": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "recorded_at": "2026-11-16T20:42:45.235309+00:00",
+      "method": "PUT",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release",
+      "input": {
+        "wait_timer": 0,
+        "reviewers": [],
+        "prevent_self_review": false,
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "exit": 0,
+      "data": {
+        "id": 27510578803,
+        "node_id": "EN_kwDORf3mrc8AAAAGZ8Iecw",
+        "name": "hexalith-release",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/hexalith-release",
+        "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=hexalith-release",
+        "created_at": "2026-11-16T20:42:45Z",
+        "updated_at": "2026-11-16T20:42:45Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 72760269,
+            "node_id": "GA_kwDORf3mrc4EVjvN",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "error": "",
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    },
+    {
+      "recorded_at": "2026-11-16T20:42:46.609672+00:00",
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies",
+      "input": {
+        "name": "main",
+        "type": "branch"
+      },
+      "exit": 0,
+      "data": {
+        "id": 67004477,
+        "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzAwNDQ3Nw==",
+        "name": "main",
+        "type": "branch"
+      },
+      "error": "",
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    }
+  ],
+  "readbacks": {
+    "recorded_at": "2026-11-16T20:42:42.682377+00:00",
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+    "override_presence": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    },
+    "requests": [
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "user",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1174",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3826"
+        ],
+        "data": {
+          "login": "jpiquot",
+          "id": 6775094
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1173",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3827"
+        ],
+        "data": {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants",
+          "default_branch": "main",
+          "permissions": {
+            "admin": true,
+            "maintain": true,
+            "push": true,
+            "triage": true,
+            "pull": true
+          },
+          "security_and_analysis": {
+            "secret_scanning": {
+              "status": "enabled"
+            },
+            "secret_scanning_push_protection": {
+              "status": "enabled"
+            },
+            "dependabot_security_updates": {
+              "status": "disabled"
+            },
+            "secret_scanning_non_provider_patterns": {
+              "status": "disabled"
+            },
+            "secret_scanning_validity_checks": {
+              "status": "disabled"
+            }
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1172",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3828"
+        ],
+        "data": {
+          "total_count": 1,
+          "environments": [
+            {
+              "id": 18745236815,
+              "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+              "name": "production",
+              "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+              "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+              "created_at": "2026-07-25T18:15:54Z",
+              "updated_at": "2026-07-25T18:15:54Z",
+              "can_admins_bypass": false,
+              "protection_rules": [
+                {
+                  "id": 60898544,
+                  "node_id": "GA_kwDORf3mrc4DoTzw",
+                  "type": "required_reviewers",
+                  "prevent_self_review": false,
+                  "reviewers": [
+                    {
+                      "type": "User",
+                      "reviewer": {
+                        "login": "jpiquot",
+                        "id": 6775094,
+                        "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                        "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                        "gravatar_id": "",
+                        "url": "https://api.github.com/users/jpiquot",
+                        "html_url": "https://github.com/jpiquot",
+                        "followers_url": "https://api.github.com/users/jpiquot/followers",
+                        "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                        "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                        "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                        "repos_url": "https://api.github.com/users/jpiquot/repos",
+                        "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                        "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                        "type": "User",
+                        "user_view_type": "public",
+                        "site_admin": false
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": 60898545,
+                  "node_id": "GA_kwDORf3mrc4DoTzx",
+                  "type": "branch_policy"
+                }
+              ],
+              "deployment_branch_policy": {
+                "protected_branches": false,
+                "custom_branch_policies": true
+              }
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/production",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4034",
+          "X-Ratelimit-Reset: 1794862396",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 966"
+        ],
+        "data": {
+          "id": 18745236815,
+          "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+          "name": "production",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+          "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+          "created_at": "2026-07-25T18:15:54Z",
+          "updated_at": "2026-07-25T18:15:54Z",
+          "can_admins_bypass": false,
+          "protection_rules": [
+            {
+              "id": 60898544,
+              "node_id": "GA_kwDORf3mrc4DoTzw",
+              "type": "required_reviewers",
+              "prevent_self_review": false,
+              "reviewers": [
+                {
+                  "type": "User",
+                  "reviewer": {
+                    "login": "jpiquot",
+                    "id": 6775094,
+                    "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/jpiquot",
+                    "html_url": "https://github.com/jpiquot",
+                    "followers_url": "https://api.github.com/users/jpiquot/followers",
+                    "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                    "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                    "repos_url": "https://api.github.com/users/jpiquot/repos",
+                    "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                    "type": "User",
+                    "user_view_type": "public",
+                    "site_admin": false
+                  }
+                }
+              ]
+            },
+            {
+              "id": 60898545,
+              "node_id": "GA_kwDORf3mrc4DoTzx",
+              "type": "branch_policy"
+            }
+          ],
+          "deployment_branch_policy": {
+            "protected_branches": false,
+            "custom_branch_policies": true
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4032",
+          "X-Ratelimit-Reset: 1794862396",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 968"
+        ],
+        "data": {
+          "id": 27510578803,
+          "node_id": "EN_kwDORf3mrc8AAAAGZ8Iecw",
+          "name": "hexalith-release",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/hexalith-release",
+          "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=hexalith-release",
+          "created_at": "2026-11-16T20:42:45Z",
+          "updated_at": "2026-11-16T20:42:45Z",
+          "can_admins_bypass": true,
+          "protection_rules": [
+            {
+              "id": 72760269,
+              "node_id": "GA_kwDORf3mrc4EVjvN",
+              "type": "branch_policy"
+            }
+          ],
+          "deployment_branch_policy": {
+            "protected_branches": false,
+            "custom_branch_policies": true
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1171",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3829"
+        ],
+        "data": {
+          "total_count": 0,
+          "branch_policies": []
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1169",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3831"
+        ],
+        "data": {
+          "total_count": 1,
+          "branch_policies": [
+            {
+              "id": 67004477,
+              "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzAwNDQ3Nw==",
+              "name": "main",
+              "type": "branch"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/production",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4031",
+          "X-Ratelimit-Reset: 1794862396",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 969"
+        ],
+        "data": {
+          "id": 18745236815,
+          "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+          "name": "production",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+          "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+          "created_at": "2026-07-25T18:15:54Z",
+          "updated_at": "2026-07-25T18:15:54Z",
+          "can_admins_bypass": false,
+          "protection_rules": [
+            {
+              "id": 60898544,
+              "node_id": "GA_kwDORf3mrc4DoTzw",
+              "type": "required_reviewers",
+              "prevent_self_review": false,
+              "reviewers": [
+                {
+                  "type": "User",
+                  "reviewer": {
+                    "login": "jpiquot",
+                    "id": 6775094,
+                    "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/jpiquot",
+                    "html_url": "https://github.com/jpiquot",
+                    "followers_url": "https://api.github.com/users/jpiquot/followers",
+                    "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                    "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                    "repos_url": "https://api.github.com/users/jpiquot/repos",
+                    "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                    "type": "User",
+                    "user_view_type": "public",
+                    "site_admin": false
+                  }
+                }
+              ]
+            },
+            {
+              "id": 60898545,
+              "node_id": "GA_kwDORf3mrc4DoTzx",
+              "type": "branch_policy"
+            }
+          ],
+          "deployment_branch_policy": {
+            "protected_branches": false,
+            "custom_branch_policies": true
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      }
+    ],
+    "collections": [
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments?per_page=100&page=1",
+        "item_key": "environments",
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/environments?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 18745236815,
+            "node_id": "EN_kwDORf3mrc8AAAAEXU2dTw",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.Tenants/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-07-25T18:15:54Z",
+            "updated_at": "2026-07-25T18:15:54Z",
+            "can_admins_bypass": false,
+            "protection_rules": [
+              {
+                "id": 60898544,
+                "node_id": "GA_kwDORf3mrc4DoTzw",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 60898545,
+                "node_id": "GA_kwDORf3mrc4DoTzx",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 1,
+        "observed_count": 1
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1",
+        "item_key": "branch_policies",
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [],
+        "complete": true,
+        "state": "complete",
+        "total_count": 0,
+        "observed_count": 0
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1",
+        "item_key": "branch_policies",
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 67004477,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzAwNDQ3Nw==",
+            "name": "main",
+            "type": "branch"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 1,
+        "observed_count": 1
+      }
+    ],
+    "remote_mutations": false,
+    "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+  },
+  "result": "pass",
+  "main_only_release_environment_verified": true,
+  "foreign_environments_preserved": true,
+  "completed_at": "2026-11-16T20:42:47.431918+00:00"
+}

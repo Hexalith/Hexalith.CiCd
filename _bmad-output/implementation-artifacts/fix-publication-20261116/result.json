@@ -1,0 +1,125 @@
+{
+  "status": "local fixes verified; complete publication remains blocked",
+  "published_in_this_fix": [],
+  "gate_selection": "Existing Folders/Parties/Projects pre-adoption substitutes apply; missing adoption checker is not the substantive gate.",
+  "archive_audit": {
+    "Folders": "passed",
+    "Projects": "passed"
+  },
+  "cicd": {
+    "renderer_tests": 43,
+    "validator_tests": 52,
+    "render_check_exit": 0
+  },
+  "loader_probes": {
+    "passed": 5,
+    "source_sha256": "33068ae5c24c2f94594107a12a2bcb1a58ab95dd74236ffdf0418f7f88c44b0e",
+    "matches_current_loader": true
+  },
+  "project_tests": [
+    {
+      "project": "tests/Hexalith.Projects.Cli.Tests/Hexalith.Projects.Cli.Tests.csproj",
+      "total": 22,
+      "failed": 0,
+      "passed": 22,
+      "skipped": 0
+    },
+    {
+      "project": "tests/Hexalith.Projects.Client.Tests/Hexalith.Projects.Client.Tests.csproj",
+      "total": 125,
+      "failed": 0,
+      "passed": 125,
+      "skipped": 0
+    },
+    {
+      "project": "tests/Hexalith.Projects.Contracts.Tests/Hexalith.Projects.Contracts.Tests.csproj",
+      "total": 207,
+      "failed": 0,
+      "passed": 207,
+      "skipped": 0
+    },
+    {
+      "project": "tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj",
+      "total": 183,
+      "failed": 0,
+      "passed": 183,
+      "skipped": 0
+    },
+    {
+      "project": "tests/Hexalith.Projects.Mcp.Tests/Hexalith.Projects.Mcp.Tests.csproj",
+      "total": 35,
+      "failed": 0,
+      "passed": 35,
+      "skipped": 0
+    },
+    {
+      "project": "tests/Hexalith.Projects.Server.Tests/Hexalith.Projects.Server.Tests.csproj",
+      "total": 1360,
+      "failed": 0,
+      "passed": 1359,
+      "skipped": 1
+    },
+    {
+      "project": "tests/Hexalith.Projects.Tests/Hexalith.Projects.Tests.csproj",
+      "total": 691,
+      "failed": 0,
+      "passed": 691,
+      "skipped": 0
+    },
+    {
+      "project": "tests/Hexalith.Projects.UI.Tests/Hexalith.Projects.UI.Tests.csproj",
+      "total": 277,
+      "failed": 0,
+      "passed": 277,
+      "skipped": 0
+    }
+  ],
+  "unique_project_passes": 2899,
+  "skipped_in_project_run": 1,
+  "deferred_dapr_case": "Hexalith.Projects.Server.Tests.Queries.SupportedProjectReadHttpTests.ProtectedSdkDispatchAndReadsSurviveHostAndStoreClientRestart; runtime hook stopped before its dedicated compatibility lane.",
+  "release_build": "passed; zero warnings/errors",
+  "owner_support_passes": 33,
+  "postgresql_passes": 1,
+  "tool_regression_passes": 20,
+  "browser_configuration_passes": 9,
+  "full_qualification_exit": 1,
+  "remaining_failure": "npm run test:package: actual-owner native main scenario canceled; gateway resource reports RouteCatalogUnavailableException, DaprException and RpcException. Root cause not yet established.",
+  "observed_loader_collision_reproduced": true,
+  "original_loader_collision_in_final_run": false,
+  "tested_source_revisions": {
+    "Hexalith.Projects": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+    "Hexalith.Builds": "05bda4e01d70afacb5048d5c336f383a301c0974",
+    "Hexalith.EventStore": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41",
+    "Hexalith.Tenants": "292dbf164f26bcf376ef86d749b149b075f8b502",
+    "Hexalith.Folders": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+    "Hexalith.Platform": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2"
+  },
+  "tested_source_digests": {
+    "Hexalith.Projects": "1499a25c4c382d381a9752a2039c2770db9cb2827545e7bffd146023d900d426",
+    "Hexalith.Builds": "e97d9250714e8257524d626a94469853e120cffc8e995f44ca05175962b18307",
+    "Hexalith.EventStore": "b0fca6e40907aa2c92b03cfcf5c3407bfd975f4733cdac39299c87fa9adbd3c7",
+    "Hexalith.Tenants": "2273d4d0aabfd230f5eabdf08d9f42a1ad22bb588e68f4a9f468bed70fcf34ed",
+    "Hexalith.Folders": "908e0345c15f5c22d0f537cf902f637124b8c122bde582bba1bbdb5070fd8d0c",
+    "Hexalith.Platform": "e4bbe91640187f624eb7c02a65d485a30f36120e476399fcf222e1b895f73638"
+  },
+  "current_fix_file_sha256": {
+    "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageOwnerLoadContext.cs": "33068ae5c24c2f94594107a12a2bcb1a58ab95dd74236ffdf0418f7f88c44b0e",
+    "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs": "8d6d69ee032bf15dd8744e4ab01fc948b7a31e3f44ec2e6b15e7b3ab25a6834e",
+    "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj": "56ee7af3cce973ed6205b4ed05db126fbce93a4ec904edc284ba5a0229a8e355",
+    "tests/Hexalith.Projects.Integration.Tests/PackageOwnerLoadContextTests.cs": "df22fde327d736be34bb97671d182a78cd068c664bfc271a28873fc940a61ef7",
+    "tests/Hexalith.Projects.Integration.Tests/PackageOwnerMetadataTests.cs": "2f4c9c66b311a5f17c07a431e19b53b373b718543cb96715d17ab24a6f2a887c",
+    "tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj": "08a3148b58003a2dbb621efc1398032f2d55e151eaa9248a6d5e1f4d7726bfa7"
+  },
+  "qualification_log_sha256": "afcbecfd2415a45f4d4aa1d0ffb358ba283edd6821b1ca019eb0027be4db46c3",
+  "cleanup": {
+    "scratch_root": "/tmp/hexalith-job.3tOGJAya",
+    "scratch_removed": true,
+    "processes_with_scratch_cwd": [],
+    "running_containers_with_scratch_mounts": [],
+    "g6_containers_removed": true
+  },
+  "required_scope_decision": {
+    "question": "Exclude held Folders from publication, or lift its frozen FR58 prerequisite hold?",
+    "answer": null
+  }
+}

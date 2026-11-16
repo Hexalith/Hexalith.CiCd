@@ -1,0 +1,300 @@
+{
+  "schema": "story-26-local-readiness/v1",
+  "observed_utc": "2026-11-16T21:30:35.545104+00:00",
+  "verdict": "blocked-prerequisite",
+  "scope": "Local inspection and nonmutating checks only. Local tags do not establish the latest remotely available release.",
+  "cicd_head": "f95d46357e5378f2ed8a3da186fb4a543dc7b7ff",
+  "selected_builds": {
+    "tag": "v6.0.6",
+    "source": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "schema_sha256": "dc3fde563eae469da06b74aa894fb26403d1f88b2f20affd1174136b6d0b85c5",
+    "schema_properties": [
+      "browsers",
+      "buildsTag",
+      "codeql",
+      "dapr",
+      "hooks",
+      "jobs",
+      "registry",
+      "schema",
+      "solution",
+      "submodules",
+      "tests"
+    ],
+    "pipeline_sha256": "24a9e8fea2fe91f9472a6483f711fbc601741e11b67dd146ab949f5471341f8c",
+    "restore_and_build_source": "def restore_and_build(prepared: PreparedConfig) -> None:\n    \"\"\"Restore once, then build Release with analyzers and mandatory settings.\"\"\"\n    if prepared.solution == \"none\":\n        return\n    solution = prepared.document[\"solution\"]\n    run_command([\"dotnet\", \"restore\", solution, *build_flags()], prepared.root)\n    run_command([\"dotnet\", \"build\", solution, \"--no-restore\", *build_flags()], prepared.root)",
+    "module_preparation_tree_entry": "",
+    "module_preparation_present": false
+  },
+  "local_unreleased_source": {
+    "head": "05bda4e01d70afacb5048d5c336f383a301c0974",
+    "preparation_tree_entry": "100644 blob 0d14f47b07c2b8da8a9890bc4df6aa6e8734c1ab\tGithub/lib/module_preparation.py",
+    "containing_local_tags": [],
+    "newest_local_stable_tag": "v6.0.6",
+    "status_porcelain": ""
+  },
+  "platform_inputs_sha256": {
+    "Directory.Build.props": "54a9ca728ff767b34707cba2f31e450e9258854db10dfe4f8cd622f23b2279d4",
+    "Directory.Build.targets": "e9bf3c872c8d6b5a308f1f6c047391880917144ecb750bfa0ccfd710b12de9a6",
+    "global.json": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05",
+    "eng/builds-tuple.json": "00c83aaffe8c5fe2594b21adeaf895c13cc7cae80b770cee14ad764ce87252be",
+    "eng/prepare_builds_artifacts.py": "8458b5f65e6529535ef55c67d59706dd6b475738eb773995b744128168290180",
+    "eng/run_tuple_ci.py": "b35770b30c72df17a488af76e13db6dcec1519349c353c94c7be99ae15db6fa5",
+    "eng/HistoricalPackageSecurity.props": "86318249efc90336fe9fd395d8e3742dc940d10e7b425936d6c23d1b7962a81b"
+  },
+  "platform_historical_producer": {
+    "repository": "https://github.com/Hexalith/Hexalith.Builds.git",
+    "sourceRevision": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+    "catalog": {
+      "path": "Props/Directory.Packages.props",
+      "blob": "42441eb4cefcff2f9c582fcda630d9ad15887df2",
+      "sha256": "d098dab50977041a536508f6df7e934f95678a4a0abedd80b28e9bae19ee0637"
+    }
+  },
+  "platform_before": {
+    "head": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+    "head_tree": "a0f876c8a4a12801822a4ac43d6ce48b63f52acf",
+    "index_sha256": "0e7492a7201573de31dc62bb3ad531a8d97cbbcc0b4963b89e0807c5bbbb4078",
+    "tracked_worktree_byte_mode_gitlink_sha256": "4b7cb2f7b35a4f8740fdcf4afa1082a3f4617b1b32690b55c037bbfac2f45bbe",
+    "tracked_entry_count": 29700,
+    "status_porcelain": "",
+    "direct_gitlinks": [
+      {
+        "path": "references/Hexalith.AI.Tools",
+        "gitlink": "17a37d83db193f0b7494c1b931fd1e82a67c1424",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Agents",
+        "gitlink": "4a65f67d040bec4d646a830ed72b65c0e8951048",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Builds",
+        "gitlink": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.ChatBot",
+        "gitlink": "6a4ca07b18e9b58500dc79dfede1f308da36c828",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Commons",
+        "gitlink": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Conversations",
+        "gitlink": "c34dc3c1e0469765c75ea608f2960381f649579c",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.EventStore",
+        "gitlink": "f85419d501f279e9a813435aa73538185ad26ada",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Folders",
+        "gitlink": "89e2fbb6bd965eae2008db4501e7b79cc6e1c8e1",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.FrontComposer",
+        "gitlink": "7063810a3eb940a8d803fcb977bde5a0a8a2ab59",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.McpCli",
+        "gitlink": "23072f04f423eea3f30456fe5af13d2d382624fe",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Memories",
+        "gitlink": "f20e8b8145a6c00310a2aed3d0c8758844b65fdc",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Parties",
+        "gitlink": "a494093da3e2656c49e539392284cd1b10f799b3",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.PolymorphicSerializations",
+        "gitlink": "e97b56930e213f674b64c157551f499b0473ec43",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Projects",
+        "gitlink": "fc58cefde69d72d7d3daa574b5022f73f830a85e",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Tenants",
+        "gitlink": "2ec938397c5b330cf1e694e8cc442cb4ad022f2b",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Timesheets",
+        "gitlink": "aafdae771e81f152671d18c506a0470ce0deee7f",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Works",
+        "gitlink": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3",
+        "initialized": false
+      }
+    ],
+    "parent_head_gitlink": "160000 commit c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2\treferences/Hexalith.Platform",
+    "parent_index_gitlink": "160000 c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2 0\treferences/Hexalith.Platform"
+  },
+  "platform_after": {
+    "head": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+    "head_tree": "a0f876c8a4a12801822a4ac43d6ce48b63f52acf",
+    "index_sha256": "0e7492a7201573de31dc62bb3ad531a8d97cbbcc0b4963b89e0807c5bbbb4078",
+    "tracked_worktree_byte_mode_gitlink_sha256": "4b7cb2f7b35a4f8740fdcf4afa1082a3f4617b1b32690b55c037bbfac2f45bbe",
+    "tracked_entry_count": 29700,
+    "status_porcelain": "",
+    "direct_gitlinks": [
+      {
+        "path": "references/Hexalith.AI.Tools",
+        "gitlink": "17a37d83db193f0b7494c1b931fd1e82a67c1424",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Agents",
+        "gitlink": "4a65f67d040bec4d646a830ed72b65c0e8951048",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Builds",
+        "gitlink": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.ChatBot",
+        "gitlink": "6a4ca07b18e9b58500dc79dfede1f308da36c828",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Commons",
+        "gitlink": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Conversations",
+        "gitlink": "c34dc3c1e0469765c75ea608f2960381f649579c",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.EventStore",
+        "gitlink": "f85419d501f279e9a813435aa73538185ad26ada",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Folders",
+        "gitlink": "89e2fbb6bd965eae2008db4501e7b79cc6e1c8e1",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.FrontComposer",
+        "gitlink": "7063810a3eb940a8d803fcb977bde5a0a8a2ab59",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.McpCli",
+        "gitlink": "23072f04f423eea3f30456fe5af13d2d382624fe",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Memories",
+        "gitlink": "f20e8b8145a6c00310a2aed3d0c8758844b65fdc",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Parties",
+        "gitlink": "a494093da3e2656c49e539392284cd1b10f799b3",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.PolymorphicSerializations",
+        "gitlink": "e97b56930e213f674b64c157551f499b0473ec43",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Projects",
+        "gitlink": "fc58cefde69d72d7d3daa574b5022f73f830a85e",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Tenants",
+        "gitlink": "2ec938397c5b330cf1e694e8cc442cb4ad022f2b",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Timesheets",
+        "gitlink": "aafdae771e81f152671d18c506a0470ce0deee7f",
+        "initialized": false
+      },
+      {
+        "path": "references/Hexalith.Works",
+        "gitlink": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3",
+        "initialized": false
+      }
+    ],
+    "parent_head_gitlink": "160000 commit c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2\treferences/Hexalith.Platform",
+    "parent_index_gitlink": "160000 c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2 0\treferences/Hexalith.Platform"
+  },
+  "platform_preserved": true,
+  "checks": [
+    {
+      "name": "standard-checker",
+      "command": [
+        "run-with-temp",
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "cwd": "references/Hexalith.Platform",
+      "started_utc": "2026-11-16T21:30:32.275066+00:00",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n",
+      "uv_offline": true,
+      "network_access_requested": false
+    },
+    {
+      "name": "renderer-check",
+      "command": [
+        "run-with-temp",
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-11-16T21:30:32.332449+00:00",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "uv_offline": true,
+      "network_access_requested": false
+    }
+  ],
+  "platform_registered": false,
+  "platform_rendered": false,
+  "candidate_validator": {
+    "executed": false,
+    "reason": "No registered committed Platform candidate; validator clones remote repositories, outside the local-only implementation scope."
+  },
+  "product_verification": {
+    "executed": false,
+    "reason": "Verified released shared prerequisite is required before dependent preparation. No preparation candidate exists."
+  },
+  "remote_operations": false,
+  "remote_mutations": false,
+  "nested_submodules_initialized": false,
+  "blocking_prerequisite": "_bmad-output/implementation-artifacts/prerequisite-26-platform-build-preparation.md",
+  "completion_claimed": false
+}

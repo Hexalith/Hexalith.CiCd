@@ -1,6 +1,6 @@
 # Projects G-6 narrow owner delivery — 2026-11-16
 
-**Latest outcome:** The gate decision is resolved and fresh hosted owner qualification passes. Actual delivery is blocked by HTTP 404 looking up the CiCd App installation for Projects. No module push occurred. See the [final authorized-resume handoff](authorized-resume-20261116T175933Z/README.md). The earlier status below is retained history.
+**Latest outcome:** Delivered successfully by [CiCd run 43939511545](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545) as Projects `146d0f7e9964c82da23d31b51e6ab62efdcfdda6`. Fresh exact-source CI fails in an unchanged shared-skill fixture, and G-6 is skipped. See the [actual delivery and hosted-failure evidence](accepted-resume-20261116T192656Z/README.md). The earlier status below is retained history.
 
 The CiCd-owned extension is implemented and independently reviewed. It uses a dispatch-only branch inside the existing Delivery workflow/job, preserving the `cicd-app` environment, shared delivery concurrency, scoped App token and normal delivery behavior. It never adopts Projects or writes an accepted ref.
 

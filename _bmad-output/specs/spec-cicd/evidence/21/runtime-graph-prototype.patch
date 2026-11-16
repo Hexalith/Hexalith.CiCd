@@ -1,0 +1,370 @@
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 48279186..4f195cd4 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -7,6 +7,7 @@
+          Require the fixed shared runtime for the UI as well as the central NuGet floor. -->
+     <RuntimeFrameworkVersion Condition="'$(MSBuildProjectName)' == 'Hexalith.Parties.UI'">11.0.0</RuntimeFrameworkVersion>
+     <TargetFramework>net11.0</TargetFramework>
++    <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
+     <!-- Keep the centrally selected closure when retained package dependencies target older frameworks. -->
+     <RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
+     <Nullable>enable</Nullable>
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index 0be548e7..61426980 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -1,18 +1,27 @@
+ <Project>
++  <PropertyGroup>
++    <PartiesRuntimeProjectProperties>HexalithUsePublishedSdkForHostedTests=true;HexalithEventStoreVersion=$(HexalithEventStoreVersion);HexalithTenantsVersion=$(HexalithTenantsVersion);HexalithMemoriesVersion=$(HexalithMemoriesVersion);HexalithFrontComposerVersion=$(HexalithFrontComposerVersion);HexalithMcpCliVersion=$(HexalithMcpCliVersion);HexalithPartiesRuntimeTargetFramework=$(TargetFramework);CustomAfterMicrosoftCommonProps=$(MSBuildThisFileDirectory)scripts/PartiesHostedRuntime.props;CopyLocalLockFileAssemblies=true</PartiesRuntimeProjectProperties>
++  </PropertyGroup>
++  <ItemGroup Condition="'$(MSBuildProjectName)' == 'Hexalith.Parties.RuntimeHosts'">
++    <ProjectReference Update="@(ProjectReference->WithMetadataValue('PartiesRuntimeOwner', 'true'))" AdditionalProperties="$(PartiesRuntimeProjectProperties)" />
++  </ItemGroup>
++  <ItemGroup Condition="'$(MSBuildProjectName)' == 'Hexalith.Parties.EventStoreAdminUI.TestHost'">
++    <ProjectReference Update="@(ProjectReference->WithMetadataValue('Filename', 'Hexalith.EventStore.Admin.UI'))" AdditionalProperties="$(PartiesRuntimeProjectProperties)" />
++  </ItemGroup>
+   <!-- Catalog API availability does not select native source hosts. Qualify exact package cohorts. -->
+   <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true'">
+     <DefineConstants>$(DefineConstants);HEXALITH_DEVELOPMENT_CATALOG_SOURCE</DefineConstants>
+   </PropertyGroup>
+-  <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '3.129.0' or '$(HexalithEventStoreVersion)' == '3.130.0' or '$(HexalithEventStoreVersion)' == '3.130.1' or '$(HexalithEventStoreVersion)' == '3.130.2' or '$(HexalithEventStoreVersion)' == '3.132.2' or '$(HexalithEventStoreVersion)' == '4.0.4' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0'">
++  <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '3.129.0' or '$(HexalithEventStoreVersion)' == '3.130.0' or '$(HexalithEventStoreVersion)' == '3.130.1' or '$(HexalithEventStoreVersion)' == '3.130.2' or '$(HexalithEventStoreVersion)' == '3.132.2' or '$(HexalithEventStoreVersion)' == '4.0.4' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0' or '$(HexalithEventStoreVersion)' == '5.1.1'">
+     <HexalithEventStoreCatalogApiSupported>true</HexalithEventStoreCatalogApiSupported>
+     <DefineConstants>$(DefineConstants);HEXALITH_EVENTSTORE_CATALOG_API</DefineConstants>
+   </PropertyGroup>
+   <!-- Owner-declared legacy query selectors first ship in the exact public 4.1.0 API. -->
+-  <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0'">
++  <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0' or '$(HexalithEventStoreVersion)' == '5.1.1'">
+     <DefineConstants>$(DefineConstants);HEXALITH_EVENTSTORE_QUERY_SELECTOR_BINDINGS</DefineConstants>
+   </PropertyGroup>
+   <!-- Complete private hosted topology requires APIs first published in 3.130.0. -->
+-  <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '3.130.0' or '$(HexalithEventStoreVersion)' == '3.130.1' or '$(HexalithEventStoreVersion)' == '3.130.2' or '$(HexalithEventStoreVersion)' == '3.132.2' or '$(HexalithEventStoreVersion)' == '4.0.4' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0'">
++  <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '3.130.0' or '$(HexalithEventStoreVersion)' == '3.130.1' or '$(HexalithEventStoreVersion)' == '3.130.2' or '$(HexalithEventStoreVersion)' == '3.132.2' or '$(HexalithEventStoreVersion)' == '4.0.4' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0' or '$(HexalithEventStoreVersion)' == '5.1.1'">
+     <HexalithEventStoreCatalogHostsSupported>true</HexalithEventStoreCatalogHostsSupported>
+     <DefineConstants>$(DefineConstants);HEXALITH_EVENTSTORE_CATALOG_HOSTS</DefineConstants>
+   </PropertyGroup>
+@@ -32,7 +41,7 @@
+   </ItemGroup>
+   <!-- Shared registration remains opt-in. Qualify exact package API cohorts. -->
+   <Target Name="ConfigureFrontComposerFeedbackCandidate" BeforeTargets="PrepareForBuild;CoreCompile">
+-    <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '4.0.4' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0'">
++    <PropertyGroup Condition="'$(HexalithEventStoreFromSource)' == 'true' or '$(HexalithEventStoreVersion)' == '4.0.4' or '$(HexalithEventStoreVersion)' == '4.1.0' or '$(HexalithEventStoreVersion)' == '4.2.0' or '$(HexalithEventStoreVersion)' == '5.1.0' or '$(HexalithEventStoreVersion)' == '5.1.1'">
+       <DefineConstants>$(DefineConstants);HES_CANCELLABLE_PROJECTIONS</DefineConstants>
+     </PropertyGroup>
+ 
+@@ -116,6 +125,9 @@
+     Loaded as .targets (post-project) so EnableContainer set in the project is visible.
+   -->
+   <PropertyGroup Condition="'$(EnableContainer)' == 'true'">
++    <!-- Consume the shared release identity; keep publisher-created time mandatory. -->
++    <ContainerProvenanceSourceSha Condition="'$(ContainerProvenanceSourceSha)' == ''">$(SourceRevisionId)</ContainerProvenanceSourceSha>
++    <ContainerProvenanceReleaseVersion Condition="'$(ContainerProvenanceReleaseVersion)' == ''">$(Version)</ContainerProvenanceReleaseVersion>
+     <IsPackable>false</IsPackable>
+     <IsPublishable>true</IsPublishable>
+     <ContainerBaseImage Condition="'$(ContainerBaseImage)' == ''">mcr.microsoft.com/dotnet/aspnet:11.0-alpine</ContainerBaseImage>
+@@ -168,6 +180,10 @@
+   <Target Name="ValidateContainerProvenanceInputs"
+           BeforeTargets="_PublishMultiArchContainers;_PublishSingleContainer"
+           Condition="'$(EnableContainer)' == 'true'">
++    <Error Condition="'$(SourceRevisionId)' != '' and '$(ContainerProvenanceSourceSha)' != '$(SourceRevisionId)'"
++           Text="ContainerProvenanceSourceSha must equal the shared SourceRevisionId." />
++    <Error Condition="'$(SourceRevisionId)' != '' and '$(ContainerProvenanceReleaseVersion)' != '$(Version)'"
++           Text="ContainerProvenanceReleaseVersion must equal the shared Version." />
+     <Error Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(ContainerProvenanceSourceSha)', '^[0-9a-f]{40}$')) != 'true'"
+            Text="ContainerProvenanceSourceSha must be an exact lowercase 40-character commit SHA." />
+     <Error Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(ContainerProvenanceReleaseVersion)', '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*)|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\.((0|[1-9][0-9]*)|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?$')) != 'true'"
+diff --git a/Hexalith.Parties.Standalone.slnx b/Hexalith.Parties.Standalone.slnx
+index 140064b2..8cb2ebbe 100644
+--- a/Hexalith.Parties.Standalone.slnx
++++ b/Hexalith.Parties.Standalone.slnx
+@@ -20,6 +20,7 @@
+     <Project Path="src/Hexalith.Parties/Hexalith.Parties.csproj" />
+   </Folder>
+   <Folder Name="/tests/">
++    <Project Path="tests/Hexalith.Parties.RuntimeHosts/Hexalith.Parties.RuntimeHosts.csproj" />
+     <Project Path="tests/Hexalith.Parties.Aspire.Tests/Hexalith.Parties.Aspire.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.AdminPortal.Tests/Hexalith.Parties.AdminPortal.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Authentication.Tests/Hexalith.Parties.Authentication.Tests.csproj" />
+@@ -33,16 +34,9 @@
+     <Project Path="tests/Hexalith.Parties.EventStoreSample.TestHost/Hexalith.Parties.EventStoreSample.TestHost.csproj" />
+     <Project Path="tests/Hexalith.Parties.EventStoreSample.Contracts.TestArtifact/Hexalith.Parties.EventStoreSample.Contracts.TestArtifact.csproj" />
+     <Project Path="tests/Hexalith.Parties.IntegrationTests/Hexalith.Parties.IntegrationTests.csproj" />
+-    <!-- Execute this declared native project directly; the pinned published fixture API is not yet available. -->
+-    <Project Path="tests/Hexalith.Parties.Platform.IntegrationTests/Hexalith.Parties.Platform.IntegrationTests.csproj">
+-      <Build Project="false" />
+-    </Project>
+-    <Project Path="tests/Hexalith.Parties.Platform.LifecycleTests/Hexalith.Parties.Platform.LifecycleTests.csproj">
+-      <Build Project="false" />
+-    </Project>
+-    <Project Path="tests/Hexalith.Parties.Platform.AttachedLifecycleTests/Hexalith.Parties.Platform.AttachedLifecycleTests.csproj">
+-      <Build Project="false" />
+-    </Project>
++    <Project Path="tests/Hexalith.Parties.Platform.IntegrationTests/Hexalith.Parties.Platform.IntegrationTests.csproj" />
++    <Project Path="tests/Hexalith.Parties.Platform.LifecycleTests/Hexalith.Parties.Platform.LifecycleTests.csproj" />
++    <Project Path="tests/Hexalith.Parties.Platform.AttachedLifecycleTests/Hexalith.Parties.Platform.AttachedLifecycleTests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Mcp.Tests/Hexalith.Parties.Mcp.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Picker.Tests/Hexalith.Parties.Picker.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Projections.Tests/Hexalith.Parties.Projections.Tests.csproj" />
+diff --git a/Hexalith.Parties.slnx b/Hexalith.Parties.slnx
+index f781f9c1..0eb6540c 100644
+--- a/Hexalith.Parties.slnx
++++ b/Hexalith.Parties.slnx
+@@ -67,6 +67,7 @@
+     <Project Path="references/Hexalith.Tenants/src/Hexalith.Tenants.Testing/Hexalith.Tenants.Testing.csproj" />
+   </Folder>
+   <Folder Name="/tests/">
++    <Project Path="tests/Hexalith.Parties.RuntimeHosts/Hexalith.Parties.RuntimeHosts.csproj" />
+     <Project Path="tests/Hexalith.Parties.Aspire.Tests/Hexalith.Parties.Aspire.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.AdminPortal.Tests/Hexalith.Parties.AdminPortal.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Authentication.Tests/Hexalith.Parties.Authentication.Tests.csproj" />
+@@ -80,16 +81,9 @@
+     <Project Path="tests/Hexalith.Parties.EventStoreSample.TestHost/Hexalith.Parties.EventStoreSample.TestHost.csproj" />
+     <Project Path="tests/Hexalith.Parties.EventStoreSample.Contracts.TestArtifact/Hexalith.Parties.EventStoreSample.Contracts.TestArtifact.csproj" />
+     <Project Path="tests/Hexalith.Parties.IntegrationTests/Hexalith.Parties.IntegrationTests.csproj" />
+-    <!-- Execute this declared native project directly; the pinned published fixture API is not yet available. -->
+-    <Project Path="tests/Hexalith.Parties.Platform.IntegrationTests/Hexalith.Parties.Platform.IntegrationTests.csproj">
+-      <Build Project="false" />
+-    </Project>
+-    <Project Path="tests/Hexalith.Parties.Platform.LifecycleTests/Hexalith.Parties.Platform.LifecycleTests.csproj">
+-      <Build Project="false" />
+-    </Project>
+-    <Project Path="tests/Hexalith.Parties.Platform.AttachedLifecycleTests/Hexalith.Parties.Platform.AttachedLifecycleTests.csproj">
+-      <Build Project="false" />
+-    </Project>
++    <Project Path="tests/Hexalith.Parties.Platform.IntegrationTests/Hexalith.Parties.Platform.IntegrationTests.csproj" />
++    <Project Path="tests/Hexalith.Parties.Platform.LifecycleTests/Hexalith.Parties.Platform.LifecycleTests.csproj" />
++    <Project Path="tests/Hexalith.Parties.Platform.AttachedLifecycleTests/Hexalith.Parties.Platform.AttachedLifecycleTests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Mcp.Tests/Hexalith.Parties.Mcp.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Picker.Tests/Hexalith.Parties.Picker.Tests.csproj" />
+     <Project Path="tests/Hexalith.Parties.Projections.Tests/Hexalith.Parties.Projections.Tests.csproj" />
+Submodule references/Hexalith.Tenants 2ec93839...292dbf16 (commits not present)
+diff --git a/scripts/prepare-aspire-runtime-hosts.sh b/scripts/prepare-aspire-runtime-hosts.sh
+index c9742942..b6b49ff3 100644
+--- a/scripts/prepare-aspire-runtime-hosts.sh
++++ b/scripts/prepare-aspire-runtime-hosts.sh
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-# Build selected runtime graphs serially so concurrent dotnet run launches are incremental.
++# Record the single declared graph build, or verify its outputs for reuse.
+ set -euo pipefail
+ 
+ script_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+@@ -8,6 +8,7 @@ gateway_profile="packaged"
+ configuration="Release"
+ artifacts_path=""
+ include_memory_qualification="false"
++record_build_started_ns=""
+ while (( $# > 0 )); do
+     if (( $# < 2 )); then
+         printf 'Usage: %s [--gateway-profile packaged|native] [--configuration Release|Debug] [--artifacts-path ABSOLUTE_PATH] [--include-memory-qualification true|false]\n' "$0" >&2
+@@ -18,6 +19,7 @@ while (( $# > 0 )); do
+         --configuration) configuration="$2" ;;
+         --artifacts-path) artifacts_path="$2" ;;
+         --include-memory-qualification) include_memory_qualification="$2" ;;
++        --record-build-started-ns) record_build_started_ns="$2" ;;
+         *) printf 'Unsupported runtime preparation option: %s\n' "$1" >&2; exit 2 ;;
+     esac
+     shift 2
+@@ -45,7 +47,10 @@ if [[ "$gateway_profile" == packaged ]]; then
+     receipt_directory="${artifacts_path:-$repository_root/artifacts}/runtime-profile/$configuration"
+     mkdir -p "$receipt_directory"
+     # An earlier completed manifest cannot qualify a failed or only partially completed preparation.
+-    rm -f -- "$receipt_directory/prepared.json"
++    if [[ -n "$record_build_started_ns" ]]; then
++        [[ "$record_build_started_ns" =~ ^[0-9]+$ ]] || { printf 'Invalid graph build start.\n' >&2; exit 2; }
++        rm -f -- "$receipt_directory/prepared.json"
++    fi
+ fi
+ runtime_hosts=(
+     "$gateway_project"
+@@ -65,7 +70,9 @@ fi
+ 
+ catalog_artifacts=()
+ if [[ "$gateway_profile" == packaged ]]; then
+-    runtime_hosts+=(src/Hexalith.Parties/Hexalith.Parties.csproj
++    runtime_hosts+=(references/Hexalith.EventStore/src/Hexalith.EventStore/Hexalith.EventStore.csproj
++        references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Hexalith.EventStore.Sample.csproj
++        src/Hexalith.Parties/Hexalith.Parties.csproj
+         src/Hexalith.Parties.UI/Hexalith.Parties.UI.csproj)
+     catalog_artifacts=(
+         src/Hexalith.Parties.EventStoreExtensions/Hexalith.Parties.EventStoreExtensions.csproj
+@@ -113,12 +120,18 @@ if [[ "$gateway_profile" == packaged ]]; then
+         "-p:HexalithTenantsVersion=$tenants_version" "-p:HexalithMemoriesVersion=$memories_version"
+         "-p:HexalithFrontComposerVersion=$frontcomposer_version" "-p:HexalithMcpCliVersion=$mcpcli_version")
+ fi
++if [[ -z "$record_build_started_ns" ]]; then
++    [[ "$gateway_profile" == packaged ]] || { printf 'Native execution must consume the recorded package-bound runtime graph.\n' >&2; exit 2; }
++    for project in "${runtime_hosts[@]}" "${catalog_artifacts[@]}"; do
++        python3 "$script_directory/validate-aspire-runtime-cohort.py" --manifest "$receipt_directory/prepared.json" \
++            --project "$project" --configuration "$configuration" --version "$sdk_version" --target-framework "$target_framework" --families-json "$families_json"
++    done
++    exit 0
++fi
+ for project in "${runtime_hosts[@]}" "${catalog_artifacts[@]}"; do
+     printf 'Preparing Aspire runtime/artifact: %s\n' "$project"
+     if [[ "$gateway_profile" == packaged ]]; then
+-        started_ns="$(python3 -c 'import time; print(time.time_ns())')"
+-        dotnet build "$project" --configuration "$configuration" --disable-build-servers \
+-            -t:Rebuild -m:1 -p:BuildInParallel=false -p:CopyLocalLockFileAssemblies=true -warnaserror "${output_arguments[@]}" "${cohort_arguments[@]}"
++        started_ns="$record_build_started_ns"
+         metadata="$(dotnet msbuild "$project" -nologo "-p:Configuration=$configuration" "${output_arguments[@]}" "${cohort_arguments[@]}" \
+             -getProperty:TargetPath,ProjectAssetsFile,Configuration,HexalithEventStoreVersion,TargetFramework,HexalithPartiesRuntimeTargetFramework,CustomAfterMicrosoftCommonProps)"
+         receipt="$receipt_directory/$(printf '%s' "$project" | sha256sum | cut -d ' ' -f 1).json"
+@@ -128,8 +141,7 @@ for project in "${runtime_hosts[@]}" "${catalog_artifacts[@]}"; do
+         if [[ "$project" == tests/Hexalith.Parties.IntegrationTests/Hexalith.Parties.IntegrationTests.csproj ]]; then
+             native_ui_project=tests/Hexalith.Parties.EventStoreAdminUI.TestHost/Hexalith.Parties.EventStoreAdminUI.TestHost.csproj
+             native_ui_arguments=(--private-admin-ui-receipt "$receipt_directory/$(printf '%s' "$native_ui_project" | sha256sum | cut -d ' ' -f 1).json")
+-            # The wrapper legitimately rebuilds the private host's static asset manifests.
+-            # Rebind that completed owner before checking the wrapper's exact artifact copy.
++            # Bind the completed graph owner before checking the wrapper copy.
+             for owner_index in "${!receipt_projects[@]}"; do
+                 if [[ "${receipt_projects[$owner_index]}" == "$native_ui_project" ]]; then
+                     python3 "$script_directory/validate-aspire-runtime-cohort.py" --record "${receipt_paths[$owner_index]}" --project "$native_ui_project" \
+@@ -146,14 +158,11 @@ for project in "${runtime_hosts[@]}" "${catalog_artifacts[@]}"; do
+         receipt_roles+=("$role")
+         receipt_paths+=("$receipt")
+         receipts+=(--receipt "$receipt")
+-    else
+-        dotnet build "$project" --configuration "$configuration" --disable-build-servers \
+-            -m:1 -p:BuildInParallel=false -warnaserror "${output_arguments[@]}"
++
+     fi
+ done
+ if [[ "$gateway_profile" == packaged ]]; then
+-    # Referencing qualification projects can rebuild earlier host dependencies. Bind final
+-    # bytes only after every compiler has succeeded, retaining each original rebuild start.
++    # Bind the completed graph bytes only after all declared dependencies succeeded.
+     for index in "${!receipt_projects[@]}"; do
+         native_ui_arguments=()
+         if [[ "${receipt_projects[$index]}" == tests/Hexalith.Parties.IntegrationTests/Hexalith.Parties.IntegrationTests.csproj ]]; then
+diff --git a/tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs b/tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs
+index ee314bb5..26554c4f 100644
+--- a/tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs
++++ b/tests/Hexalith.Parties.Ci.Tests/AspireRuntimePreparationTests.cs
+@@ -625,7 +625,7 @@ public sealed class AspireRuntimePreparationTests
+     [InlineData("4.2.1", false, false, false)]
+     [InlineData("5.0.0", false, false, false)]
+     [InlineData("5.1.0", false, true, true)]
+-    [InlineData("5.1.1", false, false, false)]
++    [InlineData("5.1.1", false, true, true)]
+     [InlineData("5.1.0-preview.1", false, false, false)]
+     [InlineData("5.1.0+build.1", false, false, false)]
+     [InlineData("5.2.0", false, false, false)]
+@@ -662,7 +662,7 @@ public sealed class AspireRuntimePreparationTests
+             constants.Contains("HEXALITH_EVENTSTORE_CATALOG_HOSTS", StringComparer.Ordinal).ShouldBe(hostsAvailable);
+             constants.Contains("HEXALITH_DEVELOPMENT_CATALOG_SOURCE", StringComparer.Ordinal).ShouldBe(source);
+             constants.Contains("HEXALITH_EVENTSTORE_QUERY_SELECTOR_BINDINGS", StringComparer.Ordinal)
+-                .ShouldBe(source || version is "4.1.0" or "4.2.0" or "5.1.0");
++                .ShouldBe(source || version is "4.1.0" or "4.2.0" or "5.1.0" or "5.1.1");
+         }
+         finally { Directory.Delete(workspace, recursive: true); }
+     }
+@@ -724,7 +724,7 @@ public sealed class AspireRuntimePreparationTests
+     [InlineData("4.2.1", false, false, false)]
+     [InlineData("5.0.0", false, false, false)]
+     [InlineData("5.1.0", false, true, true)]
+-    [InlineData("5.1.1", false, false, false)]
++    [InlineData("5.1.1", false, true, true)]
+     [InlineData("5.1.0-preview.1", false, false, false)]
+     [InlineData("5.1.0+build.1", false, false, false)]
+     [InlineData("5.2.0", false, false, false)]
+diff --git a/tests/Hexalith.Parties.EventStoreAdminUI.TestHost/Hexalith.Parties.EventStoreAdminUI.TestHost.csproj b/tests/Hexalith.Parties.EventStoreAdminUI.TestHost/Hexalith.Parties.EventStoreAdminUI.TestHost.csproj
+index e67fd027..f935acab 100644
+--- a/tests/Hexalith.Parties.EventStoreAdminUI.TestHost/Hexalith.Parties.EventStoreAdminUI.TestHost.csproj
++++ b/tests/Hexalith.Parties.EventStoreAdminUI.TestHost/Hexalith.Parties.EventStoreAdminUI.TestHost.csproj
+@@ -87,34 +87,15 @@
+       <Output TaskParameter="Endpoints" ItemName="StaticWebAssetEndpoint" />
+     </DefineStaticWebAssetEndpoints>
+   </Target>
+-  <Target Name="BuildNativeAdminUiArtifact" BeforeTargets="ResolveAssemblyReferences" DependsOnTargets="ValidateAdminUiSettingsRoot">
+-    <PropertyGroup>
+-      <_NativeAdminUiBuildProperties>Configuration=$(Configuration);HexalithUsePublishedSdkForHostedTests=true;HexalithEventStoreVersion=$(HexalithEventStoreVersion);StaticWebAssetsEnabled=false;CopyLocalLockFileAssemblies=true</_NativeAdminUiBuildProperties>
+-      <!-- The inherited mapper owns source selectors and reconciles the hosted SDK edges.
+-           Keep the explicit package profile only when no source mapping is active. -->
+-      <_NativeAdminUiBuildProperties Condition="'$(HexalithSourceMappingMode)' != 'source'">$(_NativeAdminUiBuildProperties);UseHexalithProjectReferences=false;UseNuGetDeps=true</_NativeAdminUiBuildProperties>
+-      <!-- Root's authenticated package catalog deliberately gives this external owner
+-           its ordinary SDK5 view. Qualify only the private SDK4 application artifact
+-           independently; mapped source keeps the original inherited mapper. -->
+-      <_NativeAdminUiPackageBoundary Condition="'$(HexalithSourceMappingApplies)' == 'true' and '$(HexalithSourceMappingMode)' == 'package'">true</_NativeAdminUiPackageBoundary>
+-      <_NativeAdminUiBoundaryRoot>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)native-admin-ui/qualified', '$(MSBuildProjectDirectory)/'))</_NativeAdminUiBoundaryRoot>
+-    </PropertyGroup>
+-    <Exec Condition="'$(_NativeAdminUiPackageBoundary)' == 'true'"
+-          Command="python3 &quot;$(_AdminUiRepositoryRoot)/scripts/prepare-native-admin-ui-artifact.py&quot; --owner-root &quot;$(_AdminUiEventStoreRoot)&quot; --output &quot;$(_NativeAdminUiBoundaryRoot)&quot; --configuration &quot;$(Configuration)&quot; --version &quot;$(HexalithEventStoreVersion)&quot; --target-framework &quot;$(TargetFramework)&quot;" />
+-    <ReadLinesFromFile Condition="'$(_NativeAdminUiPackageBoundary)' == 'true'" File="$(_NativeAdminUiBoundaryRoot)/target.txt">
+-      <Output TaskParameter="Lines" ItemName="_NativeAdminUiBuiltAssembly" />
+-    </ReadLinesFromFile>
+-    <ReadLinesFromFile Condition="'$(_NativeAdminUiPackageBoundary)' == 'true'" File="$(_NativeAdminUiBoundaryRoot)/evidence.txt">
+-      <Output TaskParameter="Lines" ItemName="_NativeAdminUiBoundaryEvidence" />
+-    </ReadLinesFromFile>
+-    <MSBuild Projects="$(_AdminUiEventStoreRoot)/src/Hexalith.EventStore.Admin.UI/Hexalith.EventStore.Admin.UI.csproj"
+-             Targets="Restore;Build;GetTargetPath" Properties="$(_NativeAdminUiBuildProperties)" BuildInParallel="false"
+-             Condition="'$(_NativeAdminUiPackageBoundary)' != 'true'">
+-      <Output TaskParameter="TargetOutputs" ItemName="_NativeAdminUiBuiltAssembly" />
+-    </MSBuild>
++  <ItemGroup>
++    <ProjectReference Include="$(_AdminUiEventStoreRoot)/src/Hexalith.EventStore.Admin.UI/Hexalith.EventStore.Admin.UI.csproj"
++                      AdditionalProperties="$(PartiesRuntimeProjectProperties)" />
++  </ItemGroup>
++  <Target Name="ResolveNativeAdminUiArtifact" BeforeTargets="ResolveAssemblyReferences" DependsOnTargets="ResolveProjectReferences;ValidateAdminUiSettingsRoot">
+     <ItemGroup>
+-      <Reference Include="@(_NativeAdminUiBuiltAssembly)"><Private>true</Private></Reference>
++      <_NativeAdminUiBuiltAssembly Include="@(_ResolvedProjectReferencePaths)" Condition="'%(_ResolvedProjectReferencePaths.Filename)' == 'Hexalith.EventStore.Admin.UI'" />
+     </ItemGroup>
++    <Error Condition="'@(_NativeAdminUiBuiltAssembly->Count())' != '1'" Text="The declared native Admin UI must produce exactly one assembly in the solution build." />
+   </Target>
+   <Target Name="ExposePrivateAdminUiOutput" BeforeTargets="GetAssemblyAttributes">
+     <ItemGroup><AssemblyMetadata Include="PrivateAdminUiOutputRoot" Value="$(TargetDir)" /></ItemGroup>
+diff --git a/Directory.Solution.props b/Directory.Solution.props
+new file mode 100644
+index 00000000..947bf6c0
+--- /dev/null
++++ b/Directory.Solution.props
+@@ -0,0 +1,6 @@
++<Project>
++  <!-- Preserve the hosted package profile on declared runtime-owner edges. -->
++  <PropertyGroup>
++    <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
++  </PropertyGroup>
++</Project>
+diff --git a/tests/Hexalith.Parties.RuntimeHosts/Hexalith.Parties.RuntimeHosts.csproj b/tests/Hexalith.Parties.RuntimeHosts/Hexalith.Parties.RuntimeHosts.csproj
+new file mode 100644
+index 00000000..3e7e117e
+--- /dev/null
++++ b/tests/Hexalith.Parties.RuntimeHosts/Hexalith.Parties.RuntimeHosts.csproj
+@@ -0,0 +1,34 @@
++<Project Sdk="Microsoft.NET.Sdk">
++  <PropertyGroup>
++    <IsTestProject>false</IsTestProject>
++    <IsPackable>false</IsPackable>
++    <IsPublishable>false</IsPublishable>
++    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
++    <_PartiesRuntimeBuildStartedNs>$([System.DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds())000000</_PartiesRuntimeBuildStartedNs>
++  </PropertyGroup>
++  <!-- Executable/composition source only. Each owner's hosted profile consumes
++       ordinary libraries as packages; the direct gitlinks bind these inputs. -->
++  <ItemGroup>
++    <ProjectReference Include="../../references/Hexalith.EventStore/src/Hexalith.EventStore/Hexalith.EventStore.csproj" />
++    <ProjectReference Include="../../references/Hexalith.EventStore/src/Hexalith.EventStore.Admin.Server.Host/Hexalith.EventStore.Admin.Server.Host.csproj" />
++    <ProjectReference Include="../../references/Hexalith.EventStore/src/Hexalith.EventStore.Admin.UI/Hexalith.EventStore.Admin.UI.csproj" />
++    <ProjectReference Include="../../references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample/Hexalith.EventStore.Sample.csproj" />
++    <ProjectReference Include="../../references/Hexalith.EventStore/samples/Hexalith.EventStore.Sample.BlazorUI/Hexalith.EventStore.Sample.BlazorUI.csproj" />
++    <ProjectReference Include="../../references/Hexalith.Tenants/src/Hexalith.Tenants/Hexalith.Tenants.csproj" />
++    <ProjectReference Include="../../references/Hexalith.Memories/src/Hexalith.Memories.Server/Hexalith.Memories.Server.csproj" />
++    <ProjectReference Include="../../references/Hexalith.Memories/src/Hexalith.Memories.DomainService/Hexalith.Memories.DomainService.csproj" />
++    <ProjectReference Update="@(ProjectReference)" ReferenceOutputAssembly="false" PartiesRuntimeOwner="true" />
++  </ItemGroup>
++  <ItemGroup>
++    <ProjectReference Include="../Hexalith.Parties.EventStoreGateway.TestHost/Hexalith.Parties.EventStoreGateway.TestHost.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="../Hexalith.Parties.EventStoreSample.TestHost/Hexalith.Parties.EventStoreSample.TestHost.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="../Hexalith.Parties.EventStoreAdminUI.TestHost/Hexalith.Parties.EventStoreAdminUI.TestHost.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="../Hexalith.Parties.Tests/Hexalith.Parties.Tests.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="../Hexalith.Parties.IntegrationTests/Hexalith.Parties.IntegrationTests.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="../../src/Hexalith.Parties.UI/Hexalith.Parties.UI.csproj" ReferenceOutputAssembly="false" />
++  </ItemGroup>
++  <Target Name="RecordPartiesRuntimeGraph" AfterTargets="Build">
++    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../../scripts/prepare-aspire-runtime-hosts.sh&quot; --configuration &quot;$(Configuration)&quot; --include-memory-qualification true --record-build-started-ns &quot;$(_PartiesRuntimeBuildStartedNs)&quot;"
++          WorkingDirectory="$(MSBuildThisFileDirectory)../.." />
++  </Target>
++</Project>

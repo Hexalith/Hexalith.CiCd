@@ -33,6 +33,14 @@ local Git objects only. Its retained
 - The published telemetry overlay still has the unchanged hash that differs
   from its retained approval. The profile remains blocked.
 
+The verifier now accepts explicit local publication and Builds object
+repositories. The isolated story checkout does not contain the published
+Memories revisions or the selected Builds tag; its default paths cannot
+reproduce this comparison. The repeated check used those objects read only
+from the primary checkout, with the exact invocation and repository paths
+retained in the result. Missing publication objects produce an explicit
+local-input error; the verifier never fetches them.
+
 Existing exact-input compilation, audit and test summaries remain the product
 verification evidence. These integrity checks do not extend that evidence to
 the rebased revision or claim any new product-suite, coverage or runtime pass.
@@ -40,6 +48,11 @@ The isolated committed-source renderer check passed with dependency networking
 disabled, as recorded in [resumed-renderer.json](resumed-renderer.json). Memories
 remains absent from the registry, so this check cannot supply a Memories
 validation verdict.
+
+Both checks were repeated against the isolated CiCd checkout at
+`61c558fc4a9b02fbfef262bebce76c2c15370194`. The disposable renderer checkout
+contained that committed source; the local evidence edits do not change its
+registry or renderer inputs. The product preparation worktree remains clean.
 
 ## Remaining gates
 

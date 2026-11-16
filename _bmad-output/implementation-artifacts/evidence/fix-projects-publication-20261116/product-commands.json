@@ -1,0 +1,47 @@
+[
+  {
+    "check": "restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "Hexalith.Projects.CI.slnx",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "build",
+    "command": [
+      "dotnet",
+      "build",
+      "Hexalith.Projects.CI.slnx",
+      "--no-restore",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 1
+  }
+]

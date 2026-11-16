@@ -1,0 +1,68 @@
+[
+  {
+    "name": "npm-clean-install",
+    "command": [
+      "npm",
+      "ci",
+      "--ignore-scripts"
+    ],
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "name": "npm-signatures",
+    "command": [
+      "npm",
+      "audit",
+      "signatures"
+    ],
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "name": "npm-vulnerabilities",
+    "command": [
+      "npm",
+      "audit",
+      "--json"
+    ],
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "name": "module-valid-message",
+    "command": [
+      "node",
+      "/tmp/hexalith-job.mM2cn2jf/projects/node_modules/@commitlint/cli/cli.js",
+      "--config",
+      "/tmp/hexalith-job.mM2cn2jf/projects/commitlint.config.mjs",
+      "--color=false"
+    ],
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "name": "module-invalid-type",
+    "command": [
+      "node",
+      "/tmp/hexalith-job.mM2cn2jf/projects/node_modules/@commitlint/cli/cli.js",
+      "--config",
+      "/tmp/hexalith-job.mM2cn2jf/projects/commitlint.config.mjs",
+      "--color=false"
+    ],
+    "exit": 1,
+    "expected_exit": 1
+  },
+  {
+    "name": "module-invalid-header",
+    "command": [
+      "node",
+      "/tmp/hexalith-job.mM2cn2jf/projects/node_modules/@commitlint/cli/cli.js",
+      "--config",
+      "/tmp/hexalith-job.mM2cn2jf/projects/commitlint.config.mjs",
+      "--color=false"
+    ],
+    "exit": 1,
+    "expected_exit": 1
+  }
+]

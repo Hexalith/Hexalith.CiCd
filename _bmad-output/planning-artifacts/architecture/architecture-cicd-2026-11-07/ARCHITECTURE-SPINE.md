@@ -554,13 +554,17 @@ sequenceDiagram
 
 ### AD-21 — Onboarding sequence
 
-Agents story 14 is in local preparation only. Preserve its original five floors,
+Agents story 14 has published product preparation and remains unadopted. Preserve its original five floors,
 SDK 11/net11/C#15, product checks and owned bytes. The approved preparation proof
 requires full package-mode verification, real package consumers, released audit
 and commit checks, and exact fresh-main base/head preservation before each push.
 After delivery, the normal standalone module checker is mandatory. A failed hook
 source scan blocks registration; no release, provisioned state or nightly result
 is inferred from local preparation.
+The [local snapshot qualification](../../../specs/spec-cicd/evidence/14/local-readiness-20261116/README.md)
+discovers every Agents hook source but remains incomplete on the local Commons
+snapshot. Keep registration blocked until complete fresh live-main discovery and
+duplication qualification pass; no scanner exception is approved.
 
 - **Binds:** CAP-4, CAP-7, CAP-10, CAP-12, CAP-16; every module onboarding
 - **Prevents:** migrations that need the App key in an agent session; deliveries rejected by rulesets; modules adopted with settings that bypass the ADs; legacy state misleading the new release; legacy credentials outliving their users; a first release failing on a waiver its tag lacks

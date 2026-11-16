@@ -1,0 +1,264 @@
+{
+  "recorded_at": "2026-11-16T21:26:47.372859+00:00",
+  "operation": "read legacy/default and Tenants authorization metadata only",
+  "remote_mutations": false,
+  "global_admin_policy": {
+    "users": [
+      "jpiquot",
+      "jpiquot@itaneo.com"
+    ],
+    "actions": [
+      "read",
+      "create",
+      "update",
+      "delete"
+    ]
+  },
+  "repository_policies": {
+    "**": {
+      "anonymousPolicy": [],
+      "policies": [
+        {
+          "users": [
+            "jpiquot",
+            "jpiquot@itaneo.com"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        },
+        {
+          "users": [
+            "cluster-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "ci-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-registry-pull"
+          ],
+          "actions": [
+            "read"
+          ]
+        }
+      ]
+    },
+    "tenants": {
+      "anonymousPolicy": [],
+      "policies": [
+        {
+          "users": [
+            "jpiquot",
+            "jpiquot@itaneo.com"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        },
+        {
+          "users": [
+            "cluster-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "ci-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-registry-pull"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-tenants-publish"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update"
+          ]
+        }
+      ]
+    },
+    "tenants/**": {
+      "anonymousPolicy": [],
+      "policies": [
+        {
+          "users": [
+            "jpiquot",
+            "jpiquot@itaneo.com"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        },
+        {
+          "users": [
+            "cluster-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "ci-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-registry-pull"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-tenants-publish"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update"
+          ]
+        }
+      ]
+    },
+    "tenants-api": {
+      "anonymousPolicy": [],
+      "policies": [
+        {
+          "users": [
+            "jpiquot",
+            "jpiquot@itaneo.com"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        },
+        {
+          "users": [
+            "cluster-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "ci-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-registry-pull"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-tenants-publish"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update"
+          ]
+        }
+      ]
+    },
+    "tenants-api/**": {
+      "anonymousPolicy": [],
+      "policies": [
+        {
+          "users": [
+            "jpiquot",
+            "jpiquot@itaneo.com"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        },
+        {
+          "users": [
+            "cluster-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "ci-reader"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-registry-pull"
+          ],
+          "actions": [
+            "read"
+          ]
+        },
+        {
+          "users": [
+            "hexalith-tenants-publish"
+          ],
+          "actions": [
+            "read",
+            "create",
+            "update"
+          ]
+        }
+      ]
+    }
+  }
+}

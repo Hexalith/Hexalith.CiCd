@@ -1,0 +1,1319 @@
+{
+  "started_at": "2026-11-16T21:03:56.764158+00:00",
+  "phase": "settings-grants",
+  "administration_profile": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "recorded_at": "2026-11-16T21:04:00.812146+00:00",
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1174267565",
+      "input": null,
+      "exit": 0,
+      "data": null,
+      "error": "",
+      "headers": [
+        "HTTP/2.0 204 No Content",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    },
+    {
+      "recorded_at": "2026-11-16T21:04:02.258932+00:00",
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1174267565",
+      "input": null,
+      "exit": 0,
+      "data": null,
+      "error": "",
+      "headers": [
+        "HTTP/2.0 204 No Content",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    },
+    {
+      "recorded_at": "2026-11-16T21:04:03.766086+00:00",
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1174267565",
+      "input": null,
+      "exit": 0,
+      "data": null,
+      "error": "",
+      "headers": [
+        "HTTP/2.0 204 No Content",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    },
+    {
+      "recorded_at": "2026-11-16T21:04:05.145350+00:00",
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1174267565",
+      "input": null,
+      "exit": 0,
+      "data": null,
+      "error": "",
+      "headers": [
+        "HTTP/2.0 204 No Content",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    },
+    {
+      "recorded_at": "2026-11-16T21:04:06.590558+00:00",
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories/1174267565",
+      "input": null,
+      "exit": 0,
+      "data": null,
+      "error": "",
+      "headers": [
+        "HTTP/2.0 204 No Content",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    }
+  ],
+  "readbacks": {
+    "recorded_at": "2026-11-16T21:03:56.764131+00:00",
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+    "override_presence": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    },
+    "requests": [
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "user",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4972",
+          "X-Ratelimit-Reset: 1794866090",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 28"
+        ],
+        "data": {
+          "login": "jpiquot",
+          "id": 6775094
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4971",
+          "X-Ratelimit-Reset: 1794866090",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 29"
+        ],
+        "data": {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants",
+          "default_branch": "main",
+          "permissions": {
+            "admin": true,
+            "maintain": true,
+            "push": true,
+            "triage": true,
+            "pull": true
+          },
+          "security_and_analysis": {
+            "secret_scanning": {
+              "status": "enabled"
+            },
+            "secret_scanning_push_protection": {
+              "status": "enabled"
+            },
+            "dependabot_security_updates": {
+              "status": "disabled"
+            },
+            "secret_scanning_non_provider_patterns": {
+              "status": "disabled"
+            },
+            "secret_scanning_validity_checks": {
+              "status": "disabled"
+            }
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/default-setup",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4970",
+          "X-Ratelimit-Reset: 1794866090",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 30"
+        ],
+        "data": {
+          "state": "not-configured",
+          "languages": [
+            "actions",
+            "csharp",
+            "javascript",
+            "javascript-typescript",
+            "python",
+            "typescript"
+          ],
+          "query_suite": "default",
+          "threat_model": "remote",
+          "updated_at": null,
+          "schedule": null,
+          "runner_type": "standard",
+          "runner_label": null
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/automated-security-fixes",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4998",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 2"
+        ],
+        "data": {
+          "enabled": false,
+          "paused": false
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4969",
+          "X-Ratelimit-Reset: 1794866090",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 31"
+        ],
+        "data": {
+          "variables": [
+            {
+              "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+              "value": "true",
+              "created_at": "2026-11-16T21:01:53Z",
+              "updated_at": "2026-11-16T21:01:53Z"
+            },
+            {
+              "name": "NUGET_USER",
+              "value": "jpiquot",
+              "created_at": "2026-10-08T16:11:27Z",
+              "updated_at": "2026-10-08T16:11:27Z"
+            }
+          ],
+          "total_count": 2
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/permissions/artifact-and-log-retention",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4968",
+          "X-Ratelimit-Reset: 1794866090",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 32"
+        ],
+        "data": {
+          "days": 90,
+          "maximum_allowed_days": 90
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4997",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3"
+        ],
+        "data": {
+          "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+          "created_at": "2026-11-08T23:43:36Z",
+          "updated_at": "2026-11-16T20:35:38Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4996",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 4"
+        ],
+        "data": {
+          "total_count": 5,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4994",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 6"
+        ],
+        "data": {
+          "total_count": 6,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            },
+            {
+              "id": 1174267565,
+              "full_name": "Hexalith/Hexalith.Tenants"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4993",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 7"
+        ],
+        "data": {
+          "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+          "created_at": "2026-11-08T23:43:37Z",
+          "updated_at": "2026-11-16T20:35:40Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4992",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 8"
+        ],
+        "data": {
+          "total_count": 5,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4990",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 10"
+        ],
+        "data": {
+          "total_count": 6,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            },
+            {
+              "id": 1174267565,
+              "full_name": "Hexalith/Hexalith.Tenants"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4989",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 11"
+        ],
+        "data": {
+          "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+          "created_at": "2026-11-08T23:43:38Z",
+          "updated_at": "2026-11-16T20:35:41Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories"
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4988",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 12"
+        ],
+        "data": {
+          "total_count": 5,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4986",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 14"
+        ],
+        "data": {
+          "total_count": 6,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            },
+            {
+              "id": 1174267565,
+              "full_name": "Hexalith/Hexalith.Tenants"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4985",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 15"
+        ],
+        "data": {
+          "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+          "created_at": "2026-11-08T23:43:39Z",
+          "updated_at": "2026-11-16T20:35:42Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories"
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4984",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 16"
+        ],
+        "data": {
+          "total_count": 5,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4982",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 18"
+        ],
+        "data": {
+          "total_count": 6,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            },
+            {
+              "id": 1174267565,
+              "full_name": "Hexalith/Hexalith.Tenants"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4981",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 19"
+        ],
+        "data": {
+          "name": "HEXALITH_NUGET_USER",
+          "value": "jpiquot",
+          "created_at": "2026-11-08T20:26:36Z",
+          "updated_at": "2026-11-16T20:35:43Z",
+          "visibility": "selected",
+          "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories"
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4980",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 20"
+        ],
+        "data": {
+          "total_count": 5,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: admin:org",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4978",
+          "X-Ratelimit-Reset: 1794866511",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 22"
+        ],
+        "data": {
+          "total_count": 6,
+          "repositories": [
+            {
+              "id": 952945989,
+              "full_name": "Hexalith/Hexalith.Builds"
+            },
+            {
+              "id": 952960148,
+              "full_name": "Hexalith/Hexalith.Commons"
+            },
+            {
+              "id": 1231551514,
+              "full_name": "Hexalith/Hexalith.Conversations"
+            },
+            {
+              "id": 1379417482,
+              "full_name": "Hexalith/Hexalith.McpCli"
+            },
+            {
+              "id": 957156862,
+              "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+            },
+            {
+              "id": 1174267565,
+              "full_name": "Hexalith/Hexalith.Tenants"
+            }
+          ]
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4967",
+          "X-Ratelimit-Reset: 1794866090",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 33"
+        ],
+        "data": {
+          "variables": [
+            {
+              "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+              "value": "true",
+              "created_at": "2026-11-16T21:01:53Z",
+              "updated_at": "2026-11-16T21:01:53Z"
+            },
+            {
+              "name": "NUGET_USER",
+              "value": "jpiquot",
+              "created_at": "2026-10-08T16:11:27Z",
+              "updated_at": "2026-10-08T16:11:27Z"
+            }
+          ],
+          "total_count": 2
+        },
+        "stderr": "",
+        "state": "ok"
+      }
+    ],
+    "collections": [
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1",
+        "item_key": "variables",
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true",
+            "created_at": "2026-11-16T21:01:53Z",
+            "updated_at": "2026-11-16T21:01:53Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-08T16:11:27Z",
+            "updated_at": "2026-10-08T16:11:27Z"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 2,
+        "observed_count": 2
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 5,
+        "observed_count": 5
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 6,
+        "observed_count": 6
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 5,
+        "observed_count": 5
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 6,
+        "observed_count": 6
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 5,
+        "observed_count": 5
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 6,
+        "observed_count": 6
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 5,
+        "observed_count": 5
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 6,
+        "observed_count": 6
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 5,
+        "observed_count": 5
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+        "item_key": "repositories",
+        "pages": [
+          "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 6,
+        "observed_count": 6
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1",
+        "item_key": "variables",
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/actions/variables?per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true",
+            "created_at": "2026-11-16T21:01:53Z",
+            "updated_at": "2026-11-16T21:01:53Z"
+          },
+          {
+            "name": "NUGET_USER",
+            "value": "jpiquot",
+            "created_at": "2026-10-08T16:11:27Z",
+            "updated_at": "2026-10-08T16:11:27Z"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "total_count": 2,
+        "observed_count": 2
+      }
+    ],
+    "remote_mutations": false,
+    "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+  },
+  "result": "pass",
+  "resumed_from": "_bmad-output/specs/spec-cicd/evidence/23/provision-settings-grants.json",
+  "prior_mutation_count": 1,
+  "shared_grants_verified": true,
+  "legacy_access_removed": false,
+  "completed_at": "2026-11-16T21:04:07.498471+00:00"
+}

@@ -18,8 +18,14 @@ unresolved gates against this rule during migration; the initial inventory is
 in [gate classification](_bmad-output/specs/spec-cicd/gate-classification.md).
 CiCd's own renderer and perimeter qualification verify the policy it produces.
 
-Require successful `python3 references/Hexalith.Builds/check.py` before module
-pushes. Fix product failures; report pipeline defects and permission refusals
+Require successful `python3 references/Hexalith.Builds/check.py` before adopted
+module pushes. Before adoption, consult the module's approved migration spec
+and use only its explicitly approved preparation verification substitute, if
+one exists, with all required exact-input checks. Missing adoption configuration
+alone neither grants publication nor invalidates an existing scoped approval.
+See [pre-adoption publication](docs/pre-adoption-publication.md). Without an
+approved substitute, stop before pushing. Fix product failures; report pipeline
+defects and permission refusals
 without weakening audits or tests, adding skip markers or trailers, editing
 owned portions, or switching credentials. Product branches start from freshly
 fetched current `main`. GitHub permits PR Update branch to import changed

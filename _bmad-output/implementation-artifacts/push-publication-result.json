@@ -1,0 +1,51 @@
+{
+  "status": "partial; remaining publication stopped on Projects qualification",
+  "published": {
+    "repository": "Hexalith/Hexalith.Builds",
+    "branch": "main",
+    "commit": "8d0f3ee66ea633665aefe27119764f99c177741c",
+    "verified_ancestor_of_remote_main": true,
+    "remote_main": "c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+    "profile": "/home/administrator/.config/gh-cicd-agent",
+    "behavioral_tests_passed": 36,
+    "exact_actual_six_consumer_probe_code_matched": true
+  },
+  "projects": {
+    "base": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+    "tested_snapshot_sha256": "7dc589bb067bac5dab7f0776cee9995c1ff13ecbcbaad3575edca968b04bc752",
+    "live_edits_changed_after_snapshot": true,
+    "release_build": "passed; zero warnings/errors",
+    "dotnet_suites": "passed on recorded snapshot",
+    "browser_configuration_cases_passed": 9,
+    "release_tool_tests_passed": 20,
+    "failed_gates": [
+      {
+        "gate": "npm run test:package",
+        "exit": 1,
+        "failure": "InvalidOperationException: Sequence contains no elements"
+      },
+      {
+        "gate": "owning G-6",
+        "exit": 1,
+        "failure": "Docker could not publish 127.0.0.1:51825; /forwards/expose HTTP 500"
+      }
+    ],
+    "qualification_log": "push-projects-qualification.log",
+    "committed_by_this_run": false,
+    "pushed_by_this_run": false
+  },
+  "cicd": {
+    "head": "ec481fd50b280e2d41f9baecbd03945c833e4538",
+    "committed_by_this_run": false,
+    "pushed_by_this_run": false,
+    "reason": "Submodule publication gate failed; repository Git instructions require stopping before the superproject commit."
+  },
+  "safety": {
+    "force_push": false,
+    "credential_fallback": false,
+    "gate_suppression": false,
+    "all_started_jobs_finished": true,
+    "own_g6_containers_removed": true
+  },
+  "commitlint": "Exact candidate messages validated; released v6.0.6 guard tools installed from lock and registry signatures verified."
+}

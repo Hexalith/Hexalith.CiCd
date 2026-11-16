@@ -1,0 +1,49 @@
+<Project>
+  <PropertyGroup>
+    <!-- Select the current public gateway and Contracts cohort before the Builds catalog import. -->
+    <HexalithEventStoreVersion Condition="'$(HexalithEventStoreVersion)' == ''">5.1.0</HexalithEventStoreVersion>
+    <HexalithProjectsVersion Condition="'$(HexalithProjectsVersion)' == ''">2.0.0-story66.3</HexalithProjectsVersion>
+    <HexalithMcpCliVersion Condition="'$(HexalithMcpCliVersion)' == ''">2.0.1</HexalithMcpCliVersion>
+    <HexalithPartiesVersion Condition="'$(HexalithPartiesVersion)' == ''">3.1.1</HexalithPartiesVersion>
+    <HexalithPartiesAspireVersion Condition="'$(HexalithPartiesAspireVersion)' == ''">3.1.1</HexalithPartiesAspireVersion>
+    <HexalithTenantsVersion Condition="'$(HexalithTenantsVersion)' == ''">8.0.0</HexalithTenantsVersion>
+    <HexalithBuildPackageVersions1>$(MSBuildThisFileDirectory)references/Hexalith.Builds/Props/Directory.Packages.props</HexalithBuildPackageVersions1>
+    <HexalithBuildPackageVersions2>$(MSBuildThisFileDirectory)../Hexalith.Builds/Props/Directory.Packages.props</HexalithBuildPackageVersions2>
+    <HexalithBuildPackageVersions3>$(MSBuildThisFileDirectory)../../Hexalith.Builds/Props/Directory.Packages.props</HexalithBuildPackageVersions3>
+  </PropertyGroup>
+  <Import Project="$(HexalithBuildPackageVersions1)" Condition="Exists('$(HexalithBuildPackageVersions1)') And '$(HexalithVersionsLoaded)' != 'true'" />
+  <Import Project="$(HexalithBuildPackageVersions2)" Condition="Exists('$(HexalithBuildPackageVersions2)') And '$(HexalithVersionsLoaded)' != 'true'" />
+  <Import Project="$(HexalithBuildPackageVersions3)" Condition="Exists('$(HexalithBuildPackageVersions3)') And '$(HexalithVersionsLoaded)' != 'true'" />
+  <ItemGroup>
+    <!-- Advance existing transitive stack packages to compatible releases without adding package references. -->
+    <PackageVersion Include="Google.Protobuf" Version="3.36.2" />
+    <PackageVersion Include="Grpc.Core.Api" Version="2.85.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.85.0" />
+    <PackageVersion Include="Grpc.Net.Common" Version="2.85.0" />
+    <PackageVersion Include="Grpc.Reflection" Version="2.85.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="11.0.0" />
+    <!-- Align the bundled analyzer compiler API and build-time rules with SDK 11. -->
+    <PackageVersion Update="Microsoft.CodeAnalysis.Analyzers" Version="5.12.0" />
+    <PackageVersion Update="Microsoft.CodeAnalysis.Common" Version="5.12.0" />
+    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
+    <!-- Select the current compatible Redis release across Builds catalog revisions. -->
+    <PackageVersion Update="StackExchange.Redis" Version="3.4.35" />
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <LangVersion>15.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+    <IsPublishable>false</IsPublishable>
+    <Version Condition="'$(Version)' == ''">2.0.1</Version>
+    <Authors>Hexalith Contributors</Authors>
+    <Company>Hexalith</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Hexalith/Hexalith.McpCli</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Hexalith/Hexalith.McpCli</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>

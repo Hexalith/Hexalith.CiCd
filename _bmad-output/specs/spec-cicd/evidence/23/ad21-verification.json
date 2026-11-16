@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-11-16T21:13:45.133875+00:00",
+  "result": "pass",
+  "scope": "AD-21 per-repository provisioning before product preparation",
+  "repository": "Hexalith.Tenants",
+  "repository_id": 1174267565,
+  "github_readback": "maintainer-preflight-provisioned.json",
+  "app_selection_readback": "app-selection-provisioned-readback.json",
+  "provisioning_packets": [
+    "legacy-codeql-cleanup-verification.json",
+    "provision-cleanup-tags.json",
+    "provision-rulesets.json",
+    "provision-environment.json",
+    "provision-registry.json",
+    "nuget-policy-verification.json",
+    "provision-settings-grants-resumed.json"
+  ],
+  "raw_failures_preserved": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.Tenants",
+      "status": 404,
+      "state": "not-found-or-inaccessible"
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100&page=1",
+      "status": 403,
+      "state": "refused"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/code-scanning/analyses?per_page=100&page=1",
+      "status": 404,
+      "state": "not-found-or-inaccessible"
+    }
+  ],
+  "product_preparation_allowed": true,
+  "adoption_ready": false,
+  "remaining_adoption_gates": [
+    "compatible published Builds release and pin",
+    "Tenants product implementation and verification",
+    "concrete legacy Zot publisher revocation plan",
+    "committed candidate validation, App delivery and immediate cleanup",
+    "green adopted CI and next genuine scheduled nightly outcome"
+  ]
+}

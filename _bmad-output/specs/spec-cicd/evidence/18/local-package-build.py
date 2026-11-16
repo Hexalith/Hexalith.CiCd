@@ -7,7 +7,10 @@ import subprocess
 import sys
 
 source = Path(__file__).resolve().parents[5]
+print('SUPERPROJECT SOURCE', subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True).strip(), flush=True)
+print('HARNESS SHA256', hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), flush=True)
 scratch = Path(os.environ['TMPDIR'])
+os.environ.update(DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER='1', DOTNET_CLI_USE_MSBUILD_SERVER='0', MSBUILDDISABLENODEREUSE='1')
 modules = ['Projects', 'Builds', 'EventStore', 'Tenants', 'Folders', 'Platform']
 for module in modules:
     name = 'Hexalith.' + module
@@ -35,12 +38,29 @@ for module in modules:
                 print('DIAGNOSTIC INPUT', relative, hashlib.sha256(output.read_bytes()).hexdigest(), flush=True)
         elif not path.exists() and (target / relative).is_file():
             (target / relative).unlink()
+    digest = hashlib.sha256()
+    candidate_names = set((subprocess.check_output(['git', '-C', str(target), 'ls-files', '-z'])
+                           + subprocess.check_output(['git', '-C', str(target), 'ls-files', '--others', '--exclude-standard', '-z'])).split(b'\0'))
+    for name_bytes in sorted(candidate_names - {b''}):
+        candidate = target / os.fsdecode(name_bytes)
+        if candidate.is_dir():
+            continue
+        digest.update(name_bytes + b'\0')
+        if candidate.is_symlink():
+            digest.update(b'link\0' + os.fsencode(os.readlink(candidate)))
+        elif candidate.is_file():
+            digest.update(b'file\0' + str(candidate.stat().st_mode & 0o777).encode() + b'\0' + hashlib.sha256(candidate.read_bytes()).digest())
+        else:
+            digest.update(b'absent')
+        digest.update(b'\0')
+    print('CANDIDATE', name, digest.hexdigest(), flush=True)
 root = scratch / 'Hexalith.Projects'
 config = root / 'references/Hexalith.Builds/NuGet.ci.Config'
 flags = ['-noAutoResponse', '-p:Configuration=Release', '-warnaserror', '-p:UseHexalithProjectReferences=false',
          '-p:ShouldUnsetParentConfigurationAndPlatform=false', f'-p:RestoreConfigFile={config}', '-p:EnableNETAnalyzers=true', '-p:RunAnalyzers=true',
          '-p:RunAnalyzersDuringBuild=true', '-p:UseSharedCompilation=false', '-nr:false', '-m:1']
-target = 'tests/Hexalith.Projects.PackageFixtures/Hexalith.Projects.PackageFixtures.csproj' if '--adapter-only' in sys.argv else 'Hexalith.Projects.CI.slnx'
+target = ('tests/Hexalith.Projects.PackageFixtures/Hexalith.Projects.PackageFixtures.csproj' if '--adapter-only' in sys.argv else
+          'tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj' if '--credential-preflight' in sys.argv else 'Hexalith.Projects.CI.slnx')
 for command in (['dotnet','restore',target,'--disable-build-servers',*flags],
                 ['dotnet','build',target,'--no-restore','--disable-build-servers',*flags]):
     print('RUN', *command, flush=True)
@@ -55,12 +75,38 @@ if '--test' in sys.argv:
     import ci_pipeline
     tests = ci_pipeline.discover_test_projects(root, 'Hexalith.Projects.CI.slnx')
     ci_pipeline.execute_test_projects(root, tests, runner=ci_pipeline.test_runner(root), stage='Preserved product')
-if '--fixture-safety' in sys.argv:
+if '--fixture-safety' in sys.argv or '--credential-preflight' in sys.argv:
     command = ['dotnet', 'tests/Hexalith.Projects.Integration.Tests/bin/Release/net11.0/Hexalith.Projects.Integration.Tests.dll',
-               '-class', 'Hexalith.Projects.Integration.Tests.PackageFixtureSafetyTests', '-noColor', '-failSkips']
+               '-class', 'Hexalith.Projects.Integration.Tests.PackageFixtureSafetyTests',
+               '-class', 'Hexalith.Projects.Integration.Tests.PackageCredentialMatrixTests',
+               '-class', 'Hexalith.Projects.Integration.Tests.PackageOwnerMetadataTests', '-noColor', '-failSkips']
     result = subprocess.run(command, cwd=root, check=False)
     if result.returncode:
         sys.exit(result.returncode)
+if '--folder-product' in sys.argv:
+    owner = root / 'references/Hexalith.Folders'
+    for name in ('Hexalith.Folders.Server.Tests', 'Hexalith.Folders.EventStore.Tests'):
+        project = f'tests/{name}/{name}.csproj'
+        for command in (['dotnet', 'restore', project, '--disable-build-servers', *flags],
+                        ['dotnet', 'build', project, '--no-restore', '--disable-build-servers', *flags]):
+            print('OWNER RUN', *command, flush=True)
+            result = subprocess.run(command, cwd=owner, check=False)
+            print('OWNER RESULT', command[1], 'exit', result.returncode, flush=True)
+            if result.returncode:
+                sys.exit(result.returncode)
+        assembly = f'tests/{name}/bin/Release/net11.0/{name}.dll'
+        if name == 'Hexalith.Folders.Server.Tests':
+            command = ['dotnet', assembly, '-class', 'Hexalith.Folders.Server.Tests.FolderServerCatalogAdapterSourceTests', '-noColor', '-failSkips']
+            print('OWNER FOCUSED', *command, flush=True)
+            result = subprocess.run(command, cwd=owner, check=False)
+            if result.returncode:
+                sys.exit(result.returncode)
+        command = ['dotnet', assembly, '-noColor']
+        print('OWNER PRODUCT', *command, flush=True)
+        result = subprocess.run(command, cwd=owner, check=False)
+        print('OWNER PRODUCT EXIT', result.returncode, flush=True)
+        if result.returncode:
+            sys.exit(result.returncode)
 if '--hooks' in sys.argv:
     for command in (['dotnet','tool','restore','--tool-manifest','.config/dotnet-tools.json','--configfile',str(config)],
                     ['python3','scripts/check-frontcomposer-output.py'],
@@ -72,7 +118,9 @@ if '--hooks' in sys.argv:
 if '--nightly' in sys.argv:
     workspace = root / 'tests/e2e'
     for command in (['npm','ci','--ignore-scripts'],['npm','audit','signatures'],
-                    ['node','node_modules/@playwright/test/cli.js','install','--with-deps'],
+                    ['npm','run','typecheck'],
+                    ['node','node_modules/@playwright/test/cli.js','test','specs/browser-configuration.spec.ts','--project','chromium','--workers','1','--retries','0'],
+                    ['node','node_modules/@playwright/test/cli.js','install'],
                     ['npm','run','test:package']):
         print('RUN', *command, flush=True)
         result = subprocess.run(command, cwd=workspace, check=False)

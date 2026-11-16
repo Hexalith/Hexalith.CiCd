@@ -1,0 +1,770 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "reportId": "87e1cf6b-3c56-4189-817d-cdd85da418e7",
+  "timestamp": "2026-11-16T20:30:39Z",
+  "generatedBy": "Xunit.Runner.Common.CtrfResultWriterMessageHandler, xunit.v3.runner.common, Version=4.0.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c",
+  "results": {
+    "tool": {
+      "name": "xUnit.net v3",
+      "version": "4.0.3+384aa7f0b4"
+    },
+    "environment": {
+      "osPlatform": "linux",
+      "osRelease": "Ubuntu 26.04 LTS",
+      "osVersion": "Ubuntu 26.04 LTS",
+      "extra": {
+        "user": "administrator"
+      }
+    },
+    "extra": {
+      "user": "administrator",
+      "suites": [
+        {
+          "id": "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/bin/Release/net11.0/Hexalith.EventStore.Server.Tests.dll",
+          "environment": "64-bit (x64) .NET 11.0.0 [collection-per-class, non-parallel]",
+          "testFramework": "xUnit.net v3 4.0.3+384aa7f0b4",
+          "targetFramework": ".NETCoreApp,Version=v11.0",
+          "start": 1794861038940,
+          "stop": 1794861039447,
+          "duration": 508,
+          "collections": [
+            {
+              "id": "ed230522e1b945965cfbe6e8c13bbb26b7c591027f2ac9719fe30913b79d48a6",
+              "name": "Test collection for Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionDirectoryActorTests (id: 86c9eeb868390b85db82b11ffcdc23007fde9ba879027f28fdc67a68377e298f)"
+            },
+            {
+              "id": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+              "name": "Test collection for Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests (id: 971ad234a02e3d2ac6847ef837071c7113a2c848ac5fbf7e43b001065969cdc3)"
+            },
+            {
+              "id": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+              "name": "Test collection for Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests (id: bf2d9da205fb67f4231b5008ba6b9a162cc6b04f85db2c39b765193ca4e8915a)"
+            },
+            {
+              "id": "6caa24112f886f6c0f50317375ecdd3e6e6934f8ad48a859a2227b545069d332",
+              "name": "Test collection for Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests (id: 92080db77e8e81f0b4ac1662824ce8d95f870d93aadf8f9b4ee42eebd79b910e)"
+            },
+            {
+              "id": "274e537fc0ddf1bc9cea4c049a86a0a1c3ca3ea78082186daa31047587e8a6ef",
+              "name": "Test collection for Hexalith.EventStore.Server.Tests.Actors.PublicationRecoveryActivationTests (id: 1e14b92329b2380b8c7daffaf7d51c2f04eb184a0986a5ae770677c1cec4ed2c)"
+            },
+            {
+              "id": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+              "name": "Test collection for Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests (id: 18f3a2267ba7d76af95f170680f9f775574c60b7988f3751abb0ab2105ccc29e)"
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "summary": {
+      "tests": 33,
+      "passed": 33,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "suites": 1,
+      "start": 1794861038940,
+      "stop": 1794861039447,
+      "duration": 507
+    },
+    "tests": [
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget(initialPhase: AuthorityFlipped)",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 524,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        ],
+        "start": 1794861039431,
+        "stop": 1794861039432,
+        "extra": {
+          "id": "3bfe73fe113bc4481a6ea21cc12bbc88100c0e94123ecc350a63a34f2e2d56d1",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.Coordinator_OrdinaryActivationResponseLossReprovesExactTargetBeforeAdvance(corruptProof: True)",
+        "status": "passed",
+        "duration": 2,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 619,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "Coordinator_OrdinaryActivationResponseLossReprovesExactTargetBeforeAdvance"
+        ],
+        "start": 1794861039356,
+        "stop": 1794861039359,
+        "extra": {
+          "id": "a26e212cb95ad74b6973f31bac228ee60d83c33eae17a42963c5a2349a9cc177",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "Coordinator_OrdinaryActivationResponseLossReprovesExactTargetBeforeAdvance"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget(sourceDecisionValue: 3)",
+        "status": "passed",
+        "duration": 3,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 659,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        ],
+        "start": 1794861039433,
+        "stop": 1794861039436,
+        "extra": {
+          "id": "92738d102d9a297ef30ab6d625f10170c9052ce035c4974413b5aa0f6e96b9a4",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget(initialPhase: Migrated)",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 524,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        ],
+        "start": 1794861039432,
+        "stop": 1794861039432,
+        "extra": {
+          "id": "9ca849435a9fdc98af24a47c30de05518d8c2249983a75cc06aa4587467d16a3",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_WriteAheadFailureAfterFenceMarksUnknownOutcome",
+        "status": "passed",
+        "duration": 16,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 514,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_WriteAheadFailureAfterFenceMarksUnknownOutcome"
+        ],
+        "start": 1794861039194,
+        "stop": 1794861039210,
+        "extra": {
+          "id": "4f49e6f014c5210ccf2ebabe821bc7b8d8ca2def41c6c6f50ceb0976639531be",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_WriteAheadFailureAfterFenceMarksUnknownOutcome"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget(initialPhase: Inventoried)",
+        "status": "passed",
+        "duration": 64,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 524,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        ],
+        "start": 1794861039363,
+        "stop": 1794861039427,
+        "extra": {
+          "id": "b76a38bcd23ee8b7fe276080856e42ef9c61be3e11f2905ea706c1167a8cfbff",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.Coordinator_UnsafeLegacyInventoryDoesNoLifecycleAdmissionDirectoryOrMigrationWork(decision: Unsafe)",
+        "status": "passed",
+        "duration": 1,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 736,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "Coordinator_UnsafeLegacyInventoryDoesNoLifecycleAdmissionDirectoryOrMigrationWork"
+        ],
+        "start": 1794861039335,
+        "stop": 1794861039337,
+        "extra": {
+          "id": "fe3d7bd841385899d93f67bed9cfc80b95b8a640de4910dcb26d8daaa832c2cf",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "Coordinator_UnsafeLegacyInventoryDoesNoLifecycleAdmissionDirectoryOrMigrationWork"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.Coordinator_OrdinaryActivationResponseLossReprovesExactTargetBeforeAdvance(corruptProof: False)",
+        "status": "passed",
+        "duration": 14,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 619,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "Coordinator_OrdinaryActivationResponseLossReprovesExactTargetBeforeAdvance"
+        ],
+        "start": 1794861039342,
+        "stop": 1794861039356,
+        "extra": {
+          "id": "d9ad6c021d46f31b15e7801e15d1dfa8a99cf568e752ec86a840fc4579c38b10",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "Coordinator_OrdinaryActivationResponseLossReprovesExactTargetBeforeAdvance"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget(sourceDecisionValue: 5)",
+        "status": "passed",
+        "duration": 2,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 659,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        ],
+        "start": 1794861039437,
+        "stop": 1794861039439,
+        "extra": {
+          "id": "0728cb61075c614f32b4ee0e1c4c4a63db6d5d16c81a739d9bbdfdd378436cae",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.AdmitAsync_VerificationTagMismatchFailsClosedAsCollision",
+        "status": "passed",
+        "duration": 11,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 1365,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "AdmitAsync_VerificationTagMismatchFailsClosedAsCollision"
+        ],
+        "start": 1794861039298,
+        "stop": 1794861039310,
+        "extra": {
+          "id": "974421fc90208ebf14d466620e48bb54efda659b32450b7857838551c03d7ee6",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "AdmitAsync_VerificationTagMismatchFailsClosedAsCollision"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_Conflict_DeniesBeforeAggregateAndAdvisoryStores",
+        "status": "passed",
+        "duration": 3,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 79,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_Conflict_DeniesBeforeAggregateAndAdvisoryStores"
+        ],
+        "start": 1794861039190,
+        "stop": 1794861039194,
+        "extra": {
+          "id": "2dd97a3734727e206ee9fa171cc11592df6ef48eeb622c4a1ec95755773504d9",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_Conflict_DeniesBeforeAggregateAndAdvisoryStores"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome(decision: Collision, expectedCode: \"idempotency_key_collision\")",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 142,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome"
+        ],
+        "start": 1794861039234,
+        "stop": 1794861039235,
+        "extra": {
+          "id": "3c3de084c76e6b200a62cde41e4c0dd91158a9cbb0ead7bf1e929f14c1901833",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_AdmissionStoreUnavailableFailsClosedBeforeRoute",
+        "status": "passed",
+        "duration": 6,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 592,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_AdmissionStoreUnavailableFailsClosedBeforeRoute"
+        ],
+        "start": 1794861039175,
+        "stop": 1794861039182,
+        "extra": {
+          "id": "5f412ca8254a0ec2d604b57b392f79fd706722a290774e7c670cf45ccc9abed2",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_AdmissionStoreUnavailableFailsClosedBeforeRoute"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_ContextThatLostDurableAuthorityPerformsZeroDownstreamWork",
+        "status": "passed",
+        "duration": 4,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 353,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_ContextThatLostDurableAuthorityPerformsZeroDownstreamWork"
+        ],
+        "start": 1794861039184,
+        "stop": 1794861039189,
+        "extra": {
+          "id": "5635b65d5042107e2b43382a9d5e82007ef18e640100251317bc74f2dd8c547e",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_ContextThatLostDurableAuthorityPerformsZeroDownstreamWork"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget(initialPhase: TargetAcknowledged)",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 524,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        ],
+        "start": 1794861039430,
+        "stop": 1794861039430,
+        "extra": {
+          "id": "6d6a7f42dfd9eac4b0a49b792330e1dbd25c974b00831f5fdd014fced92476b6",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests.ValidateAuthorityAsync_PendingAcceptsOnlyExactExecuteAuthorityWithoutMutation",
+        "status": "passed",
+        "duration": 1,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionExpiryTests.cs",
+        "line": 392,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "6caa24112f886f6c0f50317375ecdd3e6e6934f8ad48a859a2227b545069d332",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests",
+          "ValidateAuthorityAsync_PendingAcceptsOnlyExactExecuteAuthorityWithoutMutation"
+        ],
+        "start": 1794861039296,
+        "stop": 1794861039298,
+        "extra": {
+          "id": "a512850ea02d37ee1e3350a920044fe2b390a1151694615496d0e8ed453f8ec4",
+          "collection": "6caa24112f886f6c0f50317375ecdd3e6e6934f8ad48a859a2227b545069d332",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests",
+          "method": "ValidateAuthorityAsync_PendingAcceptsOnlyExactExecuteAuthorityWithoutMutation"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionDirectoryActorTests.AdvanceAsync_PromotionOrder_KeepsSourceCanonicalUntilDirectoryFlip",
+        "status": "passed",
+        "duration": 5,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionDirectoryActorTests.cs",
+        "line": 64,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "ed230522e1b945965cfbe6e8c13bbb26b7c591027f2ac9719fe30913b79d48a6",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionDirectoryActorTests",
+          "AdvanceAsync_PromotionOrder_KeepsSourceCanonicalUntilDirectoryFlip"
+        ],
+        "start": 1794861039440,
+        "stop": 1794861039445,
+        "extra": {
+          "id": "56c9a5a666e867eab1390f0295f048033dccf7d9fad4d21d1c18199867944f5a",
+          "collection": "ed230522e1b945965cfbe6e8c13bbb26b7c591027f2ac9719fe30913b79d48a6",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionDirectoryActorTests",
+          "method": "AdvanceAsync_PromotionOrder_KeepsSourceCanonicalUntilDirectoryFlip"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_TamperedCapabilityLeavesAdmissionUnchangedBeforeBegin",
+        "status": "passed",
+        "duration": 1,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 327,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_TamperedCapabilityLeavesAdmissionUnchangedBeforeBegin"
+        ],
+        "start": 1794861039239,
+        "stop": 1794861039241,
+        "extra": {
+          "id": "e38cc631441257a35c48242d5ef08ae0a0d95e3ed6415eb0866c2dd9ba5dceed",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_TamperedCapabilityLeavesAdmissionUnchangedBeforeBegin"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget(sourceDecisionValue: 6)",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 659,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        ],
+        "start": 1794861039439,
+        "stop": 1794861039439,
+        "extra": {
+          "id": "e658bfe7a155dab93fea6cd403f469f5c9cf989a4ba5fb20d131771596403ebe",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.Coordinator_UnsafeLegacyInventoryDoesNoLifecycleAdmissionDirectoryOrMigrationWork(decision: Uninventoried)",
+        "status": "passed",
+        "duration": 24,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 736,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "Coordinator_UnsafeLegacyInventoryDoesNoLifecycleAdmissionDirectoryOrMigrationWork"
+        ],
+        "start": 1794861039310,
+        "stop": 1794861039335,
+        "extra": {
+          "id": "9e4fa9700529c4c25a5f26876120cf53d2537ba808cf2875d97cbc4de9517869",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "Coordinator_UnsafeLegacyInventoryDoesNoLifecycleAdmissionDirectoryOrMigrationWork"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome(decision: Corrupt, expectedCode: \"idempotency_admission_corrupt\")",
+        "status": "passed",
+        "duration": 2,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 142,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome"
+        ],
+        "start": 1794861039231,
+        "stop": 1794861039234,
+        "extra": {
+          "id": "59cb4aafa1e9f82afd78532f447b016a4e6c850e8f464f0be1e5c156dc6d199d",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests.ValidateAuthorityAsync_UnknownOutcomeAcceptsOnlyExactReconciliationAuthorityWithoutMutation",
+        "status": "passed",
+        "duration": 6,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionExpiryTests.cs",
+        "line": 424,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "6caa24112f886f6c0f50317375ecdd3e6e6934f8ad48a859a2227b545069d332",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests",
+          "ValidateAuthorityAsync_UnknownOutcomeAcceptsOnlyExactReconciliationAuthorityWithoutMutation"
+        ],
+        "start": 1794861039289,
+        "stop": 1794861039296,
+        "extra": {
+          "id": "5b57f3cdff05b7dad3cfd97cb9e81cb9029e96d52b7a08e0620196fb80b12f9e",
+          "collection": "6caa24112f886f6c0f50317375ecdd3e6e6934f8ad48a859a2227b545069d332",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionExpiryTests",
+          "method": "ValidateAuthorityAsync_UnknownOutcomeAcceptsOnlyExactReconciliationAuthorityWithoutMutation"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_RouteFailure_MarksUnknownOutcomeUnderSameFence",
+        "status": "passed",
+        "duration": 113,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 495,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_RouteFailure_MarksUnknownOutcomeUnderSameFence"
+        ],
+        "start": 1794861039022,
+        "stop": 1794861039162,
+        "extra": {
+          "id": "fc85b1c1ca570dd32f010ef899b94f4f1ae7f6647586d15fc35f3444c46200a2",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_RouteFailure_MarksUnknownOutcomeUnderSameFence"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.PublicationRecoveryActivationTests.OnActivate_MissingCheckpointPruned_ReleasesTheRecoverableIdempotencyRecord",
+        "status": "passed",
+        "duration": 41,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/PublicationRecoveryActivationTests.cs",
+        "line": 248,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "274e537fc0ddf1bc9cea4c049a86a0a1c3ca3ea78082186daa31047587e8a6ef",
+          "Hexalith.EventStore.Server.Tests.Actors.PublicationRecoveryActivationTests",
+          "OnActivate_MissingCheckpointPruned_ReleasesTheRecoverableIdempotencyRecord"
+        ],
+        "start": 1794861039247,
+        "stop": 1794861039288,
+        "extra": {
+          "id": "f5118527fe7351e6e35d4e47d619c3336b807eb9ac86f7cbcb812640b66c248e",
+          "collection": "274e537fc0ddf1bc9cea4c049a86a0a1c3ca3ea78082186daa31047587e8a6ef",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.PublicationRecoveryActivationTests",
+          "method": "OnActivate_MissingCheckpointPruned_ReleasesTheRecoverableIdempotencyRecord"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget(initialPhase: SourceRedirected)",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 524,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        ],
+        "start": 1794861039430,
+        "stop": 1794861039431,
+        "extra": {
+          "id": "47b96f83b61aa30d4ea56c29d5ccbf744af50e72b5cfe3ec9f73d644aed171fa",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.AdmitAsync_UnknownSchema_FailsClosedAsCorrupt",
+        "status": "passed",
+        "duration": 1,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 1738,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "AdmitAsync_UnknownSchema_FailsClosedAsCorrupt"
+        ],
+        "start": 1794861039360,
+        "stop": 1794861039361,
+        "extra": {
+          "id": "7bbf50be9b987217d6bfa960af1ba72fe8f00adb5f38e5b6aec7517d978de49e",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "AdmitAsync_UnknownSchema_FailsClosedAsCorrupt"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests.AdmitAsync_StateStoreUnavailableFailsClosedWithoutReservation",
+        "status": "passed",
+        "duration": 3,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyAdmissionActorTests.cs",
+        "line": 1720,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "AdmitAsync_StateStoreUnavailableFailsClosedWithoutReservation"
+        ],
+        "start": 1794861039338,
+        "stop": 1794861039341,
+        "extra": {
+          "id": "d925fd821cd60f2045cbbf01c875bf68fd06a8280b1b6b82382984d155640c21",
+          "collection": "a7b9218e12b0b0b23d8540e39d98c5840f578b9491e02e710afc1ed72af239fe",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyAdmissionActorTests",
+          "method": "AdmitAsync_StateStoreUnavailableFailsClosedWithoutReservation"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_UnknownOutcome_ReconcilesReadOnlyAndFinalizesExactAggregateResult",
+        "status": "passed",
+        "duration": 7,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 437,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_UnknownOutcome_ReconcilesReadOnlyAndFinalizesExactAggregateResult"
+        ],
+        "start": 1794861039211,
+        "stop": 1794861039218,
+        "extra": {
+          "id": "f9a37bb6d5e390ff5061bf2428ad717b12dc30838f4a5814cadd23663fd0c730",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_UnknownOutcome_ReconcilesReadOnlyAndFinalizesExactAggregateResult"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget(initialPhase: TargetPrepared)",
+        "status": "passed",
+        "duration": 2,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 524,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        ],
+        "start": 1794861039427,
+        "stop": 1794861039429,
+        "extra": {
+          "id": "f2987d2ef71d64f48a7d44dce2d031f70376a041aa72fcfc04ea804b99a80627",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_RestartFromEveryDurablePhaseFinishesPinnedTarget"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_PendingEquivalent_ReturnsFirstWriterTaskEvidenceWithoutDownstreamWork",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 381,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_PendingEquivalent_ReturnsFirstWriterTaskEvidenceWithoutDownstreamWork"
+        ],
+        "start": 1794861039236,
+        "stop": 1794861039237,
+        "extra": {
+          "id": "e8292e54a1af524aae4d78c1168f36d65cabe957cb9860a1d6c507f5bcab62a7",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_PendingEquivalent_ReturnsFirstWriterTaskEvidenceWithoutDownstreamWork"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome(decision: UnsafeLegacy, expectedCode: \"idempotency_unsafe_legacy_state\")",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 142,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome"
+        ],
+        "start": 1794861039235,
+        "stop": 1794861039236,
+        "extra": {
+          "id": "d0f2410b46d7198422d55a753a537608ff9dd135f069eb8afc7a195408f6b654",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_UnverifiableAdmission_ReturnsStableFailClosedOutcome"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests.Handle_UnknownOutcomeWithoutAuthoritativeResult_RemainsFailClosed",
+        "status": "passed",
+        "duration": 1,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Pipeline/SubmitCommandHandlerIdempotencyAdmissionTests.cs",
+        "line": 473,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "Handle_UnknownOutcomeWithoutAuthoritativeResult_RemainsFailClosed"
+        ],
+        "start": 1794861039237,
+        "stop": 1794861039239,
+        "extra": {
+          "id": "784e6c8b57e82d353bdcc772297b1444de1a1dd719fada11d9b4912d0b8eb36c",
+          "collection": "0f36b65203e8b574381f2b43e8a816276cf4bfc334ca5eb9bba4b7630d95af60",
+          "type": "Hexalith.EventStore.Server.Tests.Pipeline.SubmitCommandHandlerIdempotencyAdmissionTests",
+          "method": "Handle_UnknownOutcomeWithoutAuthoritativeResult_RemainsFailClosed"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests.MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget(sourceDecisionValue: 4)",
+        "status": "passed",
+        "duration": 0,
+        "filePath": "/tmp/hexalith-job.HyhvCj2J/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Actors/IdempotencyTenantLifecycleActorTests.cs",
+        "line": 659,
+        "suite": [
+          "7131d9f0bf154d641d4f97ac0b563cfb4d6ab88d215e3ea7bd72bcb8854e7fad",
+          "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        ],
+        "start": 1794861039436,
+        "stop": 1794861039437,
+        "extra": {
+          "id": "eb4710e5ad3bff3bfa40c37128b4109261c0151fa245a1662239ef5b91c3cfb8",
+          "collection": "c35ea503f2cc38ad0136861a5025206638ba7d1b6189e064b69615443634a222",
+          "type": "Hexalith.EventStore.Server.Tests.Actors.IdempotencyTenantLifecycleActorTests",
+          "method": "MigrateLegacyAsync_UnsafeSourceEvidenceNeverPreparesTarget"
+        }
+      }
+    ]
+  }
+}

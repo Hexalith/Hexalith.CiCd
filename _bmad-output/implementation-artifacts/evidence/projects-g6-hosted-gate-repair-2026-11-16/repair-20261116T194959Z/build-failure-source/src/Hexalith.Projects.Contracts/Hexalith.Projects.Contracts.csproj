@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Hexalith.Projects.Contracts.Tests" />
+  </ItemGroup>
+  <!-- External contracts resolve from root-declared sibling source in Debug and from the centrally
+       versioned packages in Release. EventStore.Contracts brings IRejectionEvent / IEventPayload plus
+       AggregateIdentity. FrontComposer, ASP.NET Core, Fluxor and Fluent UI belong to the non-packable
+       Hexalith.Projects.UI.Contracts project, so CLI and MCP consumers never inherit Blazor (AD-16). -->
+  <ItemGroup Condition="'$(UseHexalithProjectReferences)' == 'true'">
+    <ProjectReference Include="$(HexalithMcpCliRoot)\src\Hexalith.McpCli.Abstractions\Hexalith.McpCli.Abstractions.csproj" />
+    <ProjectReference Include="$(HexalithEventStoreRoot)\src\Hexalith.EventStore.Contracts\Hexalith.EventStore.Contracts.csproj" />
+  </ItemGroup>
+  <!-- Standalone release-version isolation remains intact. Verified tool mappings reject per-edge global removals. -->
+  <ItemGroup Condition="'$(UseHexalithProjectReferences)' == 'true' and '$(HexalithSourceMappingHash)' == ''">
+    <ProjectReference Update="@(ProjectReference)">
+      <GlobalPropertiesToRemove>Version;PackageVersion</GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseHexalithProjectReferences)' != 'true'">
+    <PackageReference Include="Hexalith.EventStore.Contracts" />
+    <PackageReference Include="Hexalith.McpCli.Abstractions" />
+  </ItemGroup>
+</Project>

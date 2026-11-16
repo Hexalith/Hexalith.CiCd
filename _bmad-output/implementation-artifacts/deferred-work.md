@@ -383,3 +383,10 @@ status: open
 - source_spec: `prerequisite-25-candidate-signing.md`
   summary: Unverified medium: determine whether exact SDK timestamp/chain command transports need a separate per-command deadline.
   evidence: The wrapper has no independent deadline, but no indefinitely waiting SDK transport was demonstrated; inspect the installed transport cancellation/timeouts or reproduce a real stalled command. Hosted-job deadlines and explicit cancellation already bound ordinary CI use.
+- source_spec: `prerequisite-25-candidate-signing.md`
+  summary: Unverified medium: determine whether exact SDK timestamp/chain command transports need a separate per-command deadline.
+  evidence: The wrapper has no independent deadline, but no indefinitely waiting SDK transport was demonstrated; inspect the installed transport cancellation/timeouts or reproduce a real stalled command. Hosted-job deadlines and explicit cancellation already bound ordinary CI use.
+
+- source_spec: `spec-fix-projects-publication-checks.md`
+  summary: Verify native-library resolution if a selected Projects catalog adapter factory requires an unmanaged dependency.
+  evidence: Blind review identified a possible gap in the fixture-only managed owner loader, but no current selected factory requiring this path was demonstrated. Medium severity remains unverified; reproduce a real factory with a selected native dependency and conflicting ambient resolution before expanding the loader.

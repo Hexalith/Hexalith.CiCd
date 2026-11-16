@@ -1,0 +1,93 @@
+{
+  "validation": {
+    "schema": "hexalith.projects-ci-gates-validation.v1",
+    "status": "passed",
+    "base_commit": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+    "base_tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+    "result_tree": "acbbdb130ada835f00016d60402369182012c6c7",
+    "patch_sha256": "4da6eeab38607e8b24ad6bd721591a2ec3e3043d7ef9aeff488a1940c001d6ba",
+    "checks": {
+      "focused_suites": {
+        "status": "passed",
+        "log_sha256": "ce14d880590c95cd0b882425699d5e0af17e2d11e88dd1633a8716dce6945a24"
+      },
+      "workflow_gates": {
+        "status": "passed",
+        "log_sha256": "5537dc04f13af5ff11d5c739856c4cd9b93fff6214898f4bb3963a01a5028772"
+      },
+      "npm_install": {
+        "status": "passed",
+        "log_sha256": "c9bf62ff561a7eada15ecb5ffc3026b01bee5624139b80ea6be5ee3cc51760cd"
+      },
+      "npm_signatures": {
+        "status": "passed",
+        "log_sha256": "eb946578704ad2371acc43ed8d3b3762955fe0073d75ce9f337f53c32ab96238"
+      },
+      "commit_policy": {
+        "status": "passed",
+        "log_sha256": "079dff61052a80e214dbb1c9f688a634b2c9e811de2aedd26b74929ced70eeb1"
+      },
+      "npm_vulnerabilities": {
+        "status": "passed",
+        "log_sha256": "349af195cb65e8a8e45c5d737e673822aab85c04c48b47c730c04805701f021f"
+      }
+    }
+  },
+  "validation_sha256": "d3e37fd16f2bfffbc5dde1ae6b4e86d021d0e56ab8080861a5988052a62efa0f",
+  "evidence_files": {
+    "focused_suites": "module-focused-suites.log",
+    "workflow_gates": "workflow-validation-aggregate.json",
+    "npm_install": "final-npm-clean-install.log",
+    "npm_signatures": "final-npm-signatures.log",
+    "commit_policy": "final-commitlint-qualification.json",
+    "npm_vulnerabilities": "final-npm-vulnerabilities.log"
+  },
+  "module_file_blobs": {
+    "tests/tools/test_render_skill.py": [
+      "100644",
+      "blob",
+      "5eae32b210f88b73f3203c6cb7f0e76739a71683"
+    ],
+    "tests/tools/test_release_workflow.py": [
+      "100644",
+      "blob",
+      "45a73723232a59630c61f297f1a840ba98f46f21"
+    ],
+    "tests/tools/test_run_g6_candidate_gate.py": [
+      "100644",
+      "blob",
+      "80da3ddf221cf7f2af626160be3e3b02571929ef"
+    ],
+    "tests/tools/test_g6_mapper_build.py": [
+      "100644",
+      "blob",
+      "b7b69e3192475e2e95a88e2523c13618deb22527"
+    ],
+    "package.json": [
+      "100644",
+      "blob",
+      "76cdd6685438b2a82dc7348b2142680ddd68a1c5"
+    ],
+    "package-lock.json": [
+      "100644",
+      "blob",
+      "e026d52d08a92db51dd649481891e85925324cdb"
+    ],
+    "tests/tools/run-frontcomposer-inspect-gate.ps1": [
+      "100644",
+      "blob",
+      "e196444f877ef203f5960860f4b949da55cbd34f"
+    ],
+    "tests/tools/run-ci-workflow-gates.ps1": [
+      "100644",
+      "blob",
+      "9aba921c3acc352904b52fc834b39403fad7160e"
+    ],
+    "tests/tools/test_run_ci_workflow_gates.py": [
+      "100644",
+      "blob",
+      "4a204162aada59bd2a722f205bdf75d70104231a"
+    ]
+  },
+  "independent_hash_and_result_checks_passed": true
+}

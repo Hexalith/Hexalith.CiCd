@@ -5,7 +5,11 @@ created: '2026-11-16'
 status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
-context: []
+context:
+  - '/home/administrator/projects/hexalith/cicd/AGENTS.md'
+  - '/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/investigation.md'
+  - '/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/authorized-resume.md'
+  - '/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/product-workspace.json'
 baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 ---
 
@@ -42,6 +46,7 @@ baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 ## Code Map
 
 - `_bmad-output/specs/spec-cicd/evidence/23/investigation.md`: required gate, dependency and shared-capability inventory; `preflight.json` and `maintainer-preflight.json`: current settings and exact access limits.
+- `evidence/23/ad21-verification.json`, `authorized-resume.md`, `product-workspace.json`: completed onboarding prerequisite evidence, current execution checkpoint and isolated product branch based on fresh main.
 - Tenants `Hexalith.Tenants.slnx`, AppHost project, `Directory.Build.props`, `tests/`, `scripts/`: product graph, mixed assertions, live bootstrap and tooling.
 - Builds `Github/lib/{ci_environment,ci_config,guard_actions}.py`, schema and corresponding tests: shared environment, strict configuration and hook constraints.
 - CiCd `setup/README.md`, `templates/.github/workflows/ci.yml.j2`, `tools/{render,validate,check_global}.py`: generation and adoption interfaces.
@@ -49,7 +54,8 @@ baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `evidence/23/` — complete ordered AD-21 provisioning: App selection, release cleanup, exact rulesets, main-only release environment, scoped Zot/NuGet policy, publish switch and org grants. Preserve existing policies until adoption and record sanitized readbacks.
+- [x] `evidence/23/read-preflight.py` — prepare the next read-only AD-21 refresh locally: paginate every collection, retain permission metadata and partial/failure distinctions, use the actual legacy `HEXALITH_ZOT_API_KEY` secret name, and qualify multi-page and refused reads offline. Do not execute remote requests in this implementation phase.
+- [x] `evidence/23/` — complete ordered AD-21 provisioning: App selection, release cleanup, exact rulesets, main-only release environment, scoped Zot/NuGet policy, publish switch and org grants. Preserve existing policies until adoption and record sanitized readbacks.
 - [x] Builds `Github/lib/ci_environment.py`, `Github/ci-environment/action.yml`, schema/loader and corresponding tests — implement and locally qualify generic pre-Dapr initialization receipts and bounded `ciTimeoutMinutes`, default 30.
 - [ ] Builds shared prerequisite release and CiCd `builds-version` — publish and adopt the compatible shared contract before Tenants registration.
 - [ ] Tenants solution/AppHost and test projects — implement the selected source boundary, explicit integration/hook ownership and package-backed catalog coverage; retain every current product scenario without duplicate full-solution builds.
@@ -65,12 +71,18 @@ baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 
 ## Implementation Notes
 
+- Current implementation handoff: implement and locally qualify the remaining Tenants product tasks in `/home/administrator/projects/hexalith/tenants-story-23-product`, branch `story/23-tenants-product`, from freshly fetched main `0e0e85fd646da904c5528854e271b71a2b0b9066`. Reconcile the earlier investigation against that actual revision. Preserve the original checkout and all owned content; do not initialize nested submodules. This handoff covers product code and local verification only; the parent will inspect it before any remote product write. Do not register, deliver or adopt Tenants while the compatible shared release/pin and concrete legacy Zot revocation plan remain unverified.
+- AD-21 per-repository provisioning is complete: [`ad21-verification.json`](../specs/spec-cicd/evidence/23/ad21-verification.json) qualifies the current readbacks, actual scoped-registry checks and reloaded Active NuGet policy `27252`. App membership is independently verified in attended settings; API refusals remain recorded. Product preparation is now allowed. Full acceptance is not claimed; see [`authorized-resume.md`](../specs/spec-cicd/evidence/23/authorized-resume.md).
+- 2026-11-16 current remote-phase authorization: the human answered "yes" to continuing story 23's remote work, starting with the prepared AD-21 preflight. This supersedes the historical local-only restriction below and the Build implementation step's remote-operation restriction for this story. Continue the ordered provisioning, shared release/pin, product migration and adoption work using each intended credential profile, preserving unrelated workspace changes and all acceptance gates. This authorization does not establish that any prerequisite or hosted outcome has passed.
 - 2026-11-16: The human approved both recommended decisions after the detailed tradeoff discussion. The isolated CiCd branch was fast-forwarded to current origin/main before capturing the implementation baseline. Existing user work in the original CiCd and Builds checkouts remains untouched. Shared local prerequisites can proceed while AD-21 completion gates Tenants product preparation and adoption. No external provisioning, product push or delivery is claimed by this approval record.
 - The current Build implementation stage permits local work only: no pushes or other remote operations. Implement the shared local prerequisites in isolated owning-repository worktrees, verify them, and report live-gated tasks as incomplete. AD-21 is not yet satisfied, so Tenants product preparation and registration remain gated. Do not use that gate as a reason to leave independent shared local implementation unfinished.
 - 2026-11-16 local implementation: shared Dapr initialization receipts and required bounded `ciTimeoutMinutes` are implemented in the isolated Builds worktree `/home/administrator/projects/hexalith/builds-story-23`; CiCd's tagged-contract timeout forwarding is implemented here. Defaults remain 30; Builds' own complete document retains its existing 60-minute allowance. The tracked sample expected document was updated with its actual configuration, and the intact whole-file guard was qualified against those checked-in artifacts. Source baselines, final file hashes, verification outcomes and remaining gates are recorded in [`implementation-local.md`](../specs/spec-cicd/evidence/23/implementation-local.md) and `evidence/23/shared-local-changes.json`.
 - 2026-11-16 qualification: Python 3.12 and 3.14 each passed 34 locked renderer tests plus render `--check`, 18 final config tests, 31 final environment tests and 17 final expected-state tests. The retained 148-case combined runs each passed all 117 non-environment consumer cases and failed the earlier Docker-inspection exit-code assertion; the full final environment reruns passed after correcting that diagnostic. Both owning-worktree `git diff --check` commands passed. No publication, product push, registration, provisioning, delivery, adoption or scheduled-nightly outcome is claimed; all live gates and Tenants product work remain incomplete, and the story remains in progress.
 - Parent inspection checked the shared code and tests, confirmed all 179 existing contract fixtures preserve their prior values except the added timeout default, and documented the future released contract in AD-3 and pipeline stages. Local source changes are staged in their isolated owning worktrees. The full-story acceptance and matrix audit remain incomplete because Tenants provisioning, product migration and real delivery have not run; the workflow has not advanced to final story review.
 - The human subsequently explicitly requested pushing all current changes to main. That authorizes publishing this work to the two owning repositories despite the earlier local-only implementation phase. Migration, release and adoption completion still require their recorded gates; this publication does not claim them.
+- 2026-11-16 resumed local inspection: the shared prerequisites are committed in CiCd `76264aa9502bf73dc5acdc53780746e41e93c55b` and Builds `bf6ee6fec6a67b25fe74b4101d855ef6dfd2912a`; their relevant source remains unchanged. The current Build implementation step still forbids remote operations. Preparing a fully paginated, corrected read-only preflight is independent local work; AD-21, the shared release/pin and the remaining migration remain incomplete.
+- 2026-11-16 local preflight preparation: the reader now paginates all accessed collections, retains page-level permission/status evidence and incomplete inventories, and uses the corrected legacy secret name. Eleven offline tests pass on each of Python 3.12 and 3.14 with real subprocesses forbidden; no remote requests ran. The exact operator command, retained verification logs and remaining gates are recorded in [`preflight-preparation.md`](../specs/spec-cicd/evidence/23/preflight-preparation.md). AD-21 and full-story acceptance remain incomplete.
+- 2026-11-16 CodeQL pagination correction: only the metadata-verified Tenants numeric analyses route is accepted as an alias; other repository IDs and changed suffixes/hosts/filters/pages remain refused. All 14 offline tests pass on each of Python 3.12 and 3.14. The first incomplete authorized packet remains unchanged; this reader correction made no remote requests and does not establish AD-21 completion.
 
 ## Spec Change Log
 

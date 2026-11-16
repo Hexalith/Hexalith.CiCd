@@ -10,7 +10,7 @@ const kind = /\.tsx$/.test(input.path) ? ts.ScriptKind.TSX : /\.jsx$/.test(input
 const file = ts.createSourceFile(input.path, input.text, ts.ScriptTarget.Latest, true, kind);
 const result = { imports: [], literals: [], commands: [], errors: [] };
 const aliases = new Map();
-const processModules = new Set(['child_process', 'node:child_process', 'worker_threads', 'node:worker_threads', 'module', 'node:module', 'vm', 'node:vm']);
+const processModules = new Set(['child_process', 'node:child_process', 'worker_threads', 'node:worker_threads', 'module', 'node:module', 'vm', 'node:vm', 'process', 'node:process']);
 const syntaxModules = new Set([...processModules, '@playwright/test']);
 const line = node => file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1;
 const text = node => node && ts.isStringLiteralLike(node) ? node.text : null;
@@ -92,8 +92,11 @@ function visit(node) {
     imported(node, node.moduleSpecifier);
     if (processModules.has(text(node.moduleSpecifier))) error(node, 'unsupported JavaScript process API re-export');
   }
-  if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference))
+  if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference)) {
     imported(node, node.moduleReference.expression);
+    if (processModules.has(text(node.moduleReference.expression)))
+      bind(node.name, text(node.moduleReference.expression).replace('node:', ''));
+  }
   if (ts.isVariableDeclaration(node) && node.initializer) {
     const init = node.initializer;
     if (ts.isCallExpression(init) && name(init.expression) === 'require' && text(init.arguments[0]) !== null) {
@@ -162,11 +165,11 @@ function visit(node) {
       error(node, 'unresolved reflective JavaScript process/import API');
     }
   }
-  if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm)$/.test(name(node.expression))
+  if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm|process)$/.test(name(node.expression))
       && text(node.argumentExpression) === null) error(node, 'unresolved reflective JavaScript process/import API');
   if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node)) {
     const target = name(node);
-    if (/^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+    if (target === 'process' || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
       const parent = node.parent;
       const declaration = (ts.isVariableDeclaration(parent) && (parent.name === node || parent.initializer === node))
         || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)

@@ -1,0 +1,128 @@
+{
+  "phase": "local-only preparation; no push, adoption or acceptance credit",
+  "source": "a575021fc97a8eda664711089270b60f5e570ded",
+  "sourceDiffSha256": "0997f25bae46293b5d030a1728aeb2f338a860971b14bf82854e18dda514dece",
+  "sourceFilesSha256": "65c34a570508ea52de89c604bfac7f6cba0ef6717999a9a74b4ae50450f91507",
+  "buildsVersion": "v6.0.6",
+  "dependencies": {
+    "Hexalith.Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Hexalith.EventStore": "fdb59895975e86a1e234325a01237f259cdbd53b",
+    "Hexalith.Tenants": "2ec938397c5b330cf1e694e8cc442cb4ad022f2b",
+    "Hexalith.Memories": "65bfb98dca7f65c005213507b15fbe4ab45f2e19",
+    "Hexalith.Platform": "f6f85032598865b9123f16364448bfd02c0ff5b0",
+    "Hexalith.Commons": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+    "Hexalith.FrontComposer": "bca9dff291ce42c57516598732340a80703dfb6d",
+    "Hexalith.McpCli": "23072f04f423eea3f30456fe5af13d2d382624fe",
+    "Hexalith.PolymorphicSerializations": "e97b56930e213f674b64c157551f499b0473ec43",
+    "Hexalith.AI.Tools": "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+  },
+  "commands": [
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "Hexalith.Parties.Standalone.slnx",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-m:1",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-p:HexalithEventStoreVersion=5.1.1"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 321.186
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Parties.Ci.Tests/Hexalith.Parties.Ci.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-p:HexalithEventStoreVersion=5.1.1",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--filter-class",
+        "Hexalith.Parties.Ci.Tests.BrowserProductTests",
+        "--filter-class",
+        "Hexalith.Parties.Ci.Tests.ContainerProductTests",
+        "--filter-class",
+        "Hexalith.Parties.Ci.Tests.ReleaseArtifactVerificationTests",
+        "--filter-class",
+        "Hexalith.Parties.Ci.Tests.StandaloneSolutionTests"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 223.405
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Parties.Tests/Hexalith.Parties.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-p:HexalithEventStoreVersion=5.1.1",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--filter-class",
+        "Hexalith.Parties.Tests.FitnessTests.DependencyGraphTests",
+        "--filter-class",
+        "Hexalith.Parties.Tests.FitnessTests.RetiredLeafProjectFitnessTests"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 52.251
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/render-platform-declaration.py",
+        "--check"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "durationSeconds": 0.057
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_platform_declaration.py",
+        "-v"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 1,
+      "durationSeconds": 1.642
+    }
+  ]
+}

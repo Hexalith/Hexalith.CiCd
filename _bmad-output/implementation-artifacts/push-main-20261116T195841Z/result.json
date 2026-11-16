@@ -1,0 +1,60 @@
+{
+  "request": "push all changes to main",
+  "published": [
+    {
+      "repository": "Hexalith/Hexalith.Builds",
+      "branch": "main",
+      "remote_main_verified": true,
+      "tests_passed": 38,
+      "commitlint": "passed exact full message",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "commits": [
+        "1f1d42d8286835aa5e92c566ffd444732bee1c47",
+        "27ccaa36a87548fe2f7f66ed55cdadb1b55f332e"
+      ],
+      "remote_main": "27ccaa36a87548fe2f7f66ed55cdadb1b55f332e",
+      "followup_test": "six-consumer build/sign/restore execution and cleanup: passed",
+      "worktree_clean_at_final_verification": true
+    }
+  ],
+  "blocked": {
+    "Hexalith.Folders": {
+      "command": "run-with-temp python3 references/Hexalith.Builds/check.py",
+      "exit_code": 2,
+      "reason": "Required nested checker is absent; nested submodule initialization is prohibited.",
+      "output": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Folders/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory"
+    },
+    "Hexalith.Parties": {
+      "command": "run-with-temp python3 references/Hexalith.Builds/check.py",
+      "exit_code": 2,
+      "reason": "Required nested checker is absent; nested submodule initialization is prohibited.",
+      "output": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Parties/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory"
+    },
+    "Hexalith.Projects": {
+      "command": "run-with-temp python3 references/Hexalith.Builds/check.py",
+      "exit_code": 2,
+      "reason": "Required nested checker is absent; nested submodule initialization is prohibited.",
+      "output": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Projects/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory"
+    }
+  },
+  "cicd": {
+    "head": "ec481fd50b280e2d41f9baecbd03945c833e4538",
+    "committed": false,
+    "pushed": false,
+    "reason": "Module checker failures prevent superproject commit under repository Git instructions."
+  },
+  "instruction": "references/Hexalith.AI.Tools/hexalith-git-instructions.md: If a submodule commit, push, or remote verification fails, report the exact command and blocker and stop before creating the superproject commit.",
+  "status": "partial; remaining module and CiCd publication blocked",
+  "safety": {
+    "force_push": false,
+    "gate_bypass": false,
+    "credential_switch": false,
+    "nested_initialization": false,
+    "remaining_changes_preserved": true,
+    "all_started_jobs_finished": true
+  },
+  "gate_selection_correction": {
+    "superseded_by": "../fix-publication-20261116/",
+    "explanation": "Folders, Parties and Projects each already have an approved pre-adoption qualification substitute. The missing post-adoption checker was not the substantive blocker. Later qualification must use those substitutes and their actual product/audit results."
+  }
+}

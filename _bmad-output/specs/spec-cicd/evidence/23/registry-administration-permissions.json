@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-11-16T20:27:42.393754+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "remote_mutations": false,
+  "checks": [
+    {
+      "target": "secret/distribution-registry-htpasswd",
+      "verb": "patch",
+      "exit": 0,
+      "allowed": true,
+      "stderr": ""
+    },
+    {
+      "target": "configmap/distribution-registry-config",
+      "verb": "patch",
+      "exit": 0,
+      "allowed": true,
+      "stderr": ""
+    },
+    {
+      "target": "deployment/distribution-registry",
+      "verb": "patch",
+      "exit": 0,
+      "allowed": true,
+      "stderr": ""
+    }
+  ]
+}

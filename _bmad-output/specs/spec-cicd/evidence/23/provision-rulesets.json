@@ -1,0 +1,491 @@
+{
+  "started_at": "2026-11-16T20:42:39.051111+00:00",
+  "phase": "rulesets",
+  "administration_profile": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "recorded_at": "2026-11-16T20:42:40.862783+00:00",
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets",
+      "input": {
+        "name": "Protect main",
+        "target": "branch",
+        "enforcement": "active",
+        "bypass_actors": [],
+        "conditions": {
+          "ref_name": {
+            "include": [
+              "refs/heads/main"
+            ],
+            "exclude": []
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          }
+        ]
+      },
+      "exit": 0,
+      "data": {
+        "id": 27407790,
+        "name": "Protect main",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Tenants",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/heads/main"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNa4",
+        "created_at": "2026-11-16T21:42:41.580+01:00",
+        "updated_at": "2026-11-16T21:42:41.605+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407790"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407790"
+          }
+        }
+      },
+      "error": "",
+      "headers": [
+        "HTTP/2.0 201 Created",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    },
+    {
+      "recorded_at": "2026-11-16T20:42:41.439563+00:00",
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets",
+      "input": {
+        "name": "v tags",
+        "target": "tag",
+        "enforcement": "active",
+        "bypass_actors": [],
+        "conditions": {
+          "ref_name": {
+            "include": [
+              "refs/tags/v*"
+            ],
+            "exclude": []
+          }
+        },
+        "rules": [
+          {
+            "type": "update"
+          },
+          {
+            "type": "deletion"
+          }
+        ]
+      },
+      "exit": 0,
+      "data": {
+        "id": 27407792,
+        "name": "v tags",
+        "target": "tag",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Tenants",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/tags/v*"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "update"
+          },
+          {
+            "type": "deletion"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNbA",
+        "created_at": "2026-11-16T21:42:42.173+01:00",
+        "updated_at": "2026-11-16T21:42:42.193+01:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407792"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407792"
+          }
+        }
+      },
+      "error": "",
+      "headers": [
+        "HTTP/2.0 201 Created",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ]
+    }
+  ],
+  "readbacks": {
+    "recorded_at": "2026-11-16T20:42:39.051079+00:00",
+    "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+    "override_presence": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    },
+    "requests": [
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "user",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: ",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4037",
+          "X-Ratelimit-Reset: 1794862396",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 963"
+        ],
+        "data": {
+          "login": "jpiquot",
+          "id": 6775094
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4036",
+          "X-Ratelimit-Reset: 1794862396",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 964"
+        ],
+        "data": {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants",
+          "default_branch": "main",
+          "permissions": {
+            "admin": true,
+            "maintain": true,
+            "push": true,
+            "triage": true,
+            "pull": true
+          },
+          "security_and_analysis": {
+            "secret_scanning": {
+              "status": "enabled"
+            },
+            "secret_scanning_push_protection": {
+              "status": "enabled"
+            },
+            "dependabot_security_updates": {
+              "status": "disabled"
+            },
+            "secret_scanning_non_provider_patterns": {
+              "status": "disabled"
+            },
+            "secret_scanning_validity_checks": {
+              "status": "disabled"
+            }
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 4035",
+          "X-Ratelimit-Reset: 1794862396",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 965"
+        ],
+        "data": [],
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1177",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3823"
+        ],
+        "data": [
+          {
+            "id": 27407790,
+            "name": "Protect main",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "Hexalith/Hexalith.Tenants",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNa4",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407790"
+              },
+              "html": {
+                "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407790"
+              }
+            },
+            "created_at": "2026-11-16T21:42:41.580+01:00",
+            "updated_at": "2026-11-16T21:42:41.605+01:00"
+          },
+          {
+            "id": 27407792,
+            "name": "v tags",
+            "target": "tag",
+            "source_type": "Repository",
+            "source": "Hexalith/Hexalith.Tenants",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNbA",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407792"
+              },
+              "html": {
+                "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407792"
+              }
+            },
+            "created_at": "2026-11-16T21:42:42.173+01:00",
+            "updated_at": "2026-11-16T21:42:42.193+01:00"
+          }
+        ],
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets/27407790",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1176",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3824"
+        ],
+        "data": {
+          "id": 27407790,
+          "name": "Protect main",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Tenants",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/heads/main"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "deletion"
+            },
+            {
+              "type": "non_fast_forward"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNa4",
+          "created_at": "2026-11-16T21:42:41.580+01:00",
+          "updated_at": "2026-11-16T21:42:41.605+01:00",
+          "bypass_actors": [],
+          "current_user_can_bypass": "never",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407790"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407790"
+            }
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets/27407792",
+        "exit": 0,
+        "http_status": 200,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Accepted-Oauth-Scopes: repo",
+          "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+          "X-Ratelimit-Limit: 5000",
+          "X-Ratelimit-Remaining: 1175",
+          "X-Ratelimit-Reset: 1794862708",
+          "X-Ratelimit-Resource: core",
+          "X-Ratelimit-Used: 3825"
+        ],
+        "data": {
+          "id": 27407792,
+          "name": "v tags",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Tenants",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/tags/v*"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "update"
+            },
+            {
+              "type": "deletion"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNbA",
+          "created_at": "2026-11-16T21:42:42.173+01:00",
+          "updated_at": "2026-11-16T21:42:42.193+01:00",
+          "bypass_actors": [],
+          "current_user_can_bypass": "never",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407792"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407792"
+            }
+          }
+        },
+        "stderr": "",
+        "state": "ok"
+      }
+    ],
+    "collections": [
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1",
+        "item_key": null,
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [],
+        "complete": true,
+        "state": "complete",
+        "observed_count": 0
+      },
+      {
+        "credential": "maintainer-read-only",
+        "endpoint": "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1",
+        "item_key": null,
+        "pages": [
+          "repos/Hexalith/Hexalith.Tenants/rulesets?includes_parents=true&per_page=100&page=1"
+        ],
+        "successful_pages": 1,
+        "items": [
+          {
+            "id": 27407790,
+            "name": "Protect main",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "Hexalith/Hexalith.Tenants",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNa4",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407790"
+              },
+              "html": {
+                "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407790"
+              }
+            },
+            "created_at": "2026-11-16T21:42:41.580+01:00",
+            "updated_at": "2026-11-16T21:42:41.605+01:00"
+          },
+          {
+            "id": 27407792,
+            "name": "v tags",
+            "target": "tag",
+            "source_type": "Repository",
+            "source": "Hexalith/Hexalith.Tenants",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5F_eatzgGiNbA",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/Hexalith/Hexalith.Tenants/rulesets/27407792"
+              },
+              "html": {
+                "href": "https://github.com/Hexalith/Hexalith.Tenants/rules/27407792"
+              }
+            },
+            "created_at": "2026-11-16T21:42:42.173+01:00",
+            "updated_at": "2026-11-16T21:42:42.193+01:00"
+          }
+        ],
+        "complete": true,
+        "state": "complete",
+        "observed_count": 2
+      }
+    ],
+    "remote_mutations": false,
+    "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+  },
+  "result": "pass",
+  "exact_rulesets_verified": true,
+  "completed_at": "2026-11-16T20:42:42.625755+00:00"
+}

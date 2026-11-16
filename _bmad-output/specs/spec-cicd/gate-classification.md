@@ -104,7 +104,10 @@ observations are not acceptable runtime evidence.
 - Keep six-package inventory, archive integrity, UI static assets and isolated
   consumers. The prepared hook uses existing Release output and cleaned scratch,
   without rebuilding Agents or retaining receipts. Hook enablement is pending
-  complete cross-module duplication qualification. Local source discovery passes the unchanged scanner.
+  complete cross-module duplication qualification. Agents source discovery passes
+  the unchanged scanner. The [local three-module qualification](evidence/14/local-readiness-20261116/README.md)
+  remains incomplete because the local Commons snapshot has four unresolved
+  discovery expressions; zero reported copies does not establish clean coverage.
 - Delete pinned-workflow-source, npm tooling, workflow-text and story-evidence
   assertions, traceability-manifest checks and redundant full/focused runners.
   Remove the registered nested-submodule automation scan from

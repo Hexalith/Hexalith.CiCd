@@ -1,0 +1,450 @@
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj b/tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj
+index 1e7aa05e..5c19c615 100644
+--- a/tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj
+@@ -8,6 +8,7 @@
+     <IsPublishable>false</IsPublishable>
+   </PropertyGroup>
+   <ItemGroup>
++    <InternalsVisibleTo Include="Hexalith.Projects.Integration.Tests" />
+     <ProjectReference Include="../../src/Hexalith.Projects.Aspire/Hexalith.Projects.Aspire.csproj" IsAspireProjectResource="false" />
+     <ProjectReference Include="../../src/Hexalith.Projects.Server/Hexalith.Projects.Server.csproj" />
+     <ProjectReference Include="../../src/Hexalith.Projects.UI/Hexalith.Projects.UI.csproj" />
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+index d60e349b..edd9c5f6 100644
+--- a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+@@ -1,119 +1,135 @@
+-namespace Hexalith.Projects.PackageFixtures.AppHost;
+-
+-using System.Reflection;
+-using System.Security.Cryptography;
+-using System.Text.Json;
+-
+-using global::Aspire.Hosting;
+-using global::Aspire.Hosting.ApplicationModel;
+-
+-using Hexalith.EventStore.Aspire;
+-
+-/// <summary>Enrolls the disposable read lane through canonical SDK catalogs and Platform peer identity.</summary>
+-internal static class PackageActualOwnerInfrastructure
+-{
+-    /// <summary>Composes real owners after the six application sidecars have been declared.</summary>
+-    internal static DevelopmentRouteCatalogComposition Add(IDistributedApplicationBuilder builder,
+-        IResourceBuilder<ProjectResource> gateway, IResourceBuilder<ProjectResource> tenants,
+-        IResourceBuilder<ProjectResource> projects)
+-    {
+-        foreach (string key in new[] { "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey" })
+-            if (string.IsNullOrWhiteSpace(builder.Configuration["Projects:PackageFixtures:" + key]))
+-                throw new InvalidOperationException("The actual bound Tenants bootstrap requires private input: " + key);
+-        string isolation = builder.Configuration["Projects:PackageFixtures:IsolationId"]
+-            ?? throw new InvalidOperationException("Missing private read-lane ownership.");
+-        string privateDirectory = Path.GetDirectoryName(Path.GetFullPath(builder.Configuration["Projects:PackageFixtures:CertificatePath"]!))!;
+-        string root = builder.Configuration["Projects:PackageFixtures:Root"]!;
+-        string sentryConfiguration = Path.Combine(root, "src", "Hexalith.Projects.AppHost", "DaprComponents", "sentry.yaml");
+-        builder.Configuration["Dapr:Mtls:CertificateDirectory"] = Path.Combine(privateDirectory, "mtls");
+-        var owned = DaprSelfHostedMtls.AddLocalApplicationInfrastructure(builder, root, sentryConfiguration, isolation);
+-        WriteReceipt(privateDirectory, "mtls-plane.json", new
+-        {
+-            isolationId = isolation, runDirectory = owned.RunDirectory, certificateDirectory = owned.CertificateDirectory,
+-        });
+-        foreach (ContainerResource resource in builder.Resources.OfType<ContainerResource>()
+-            .Where(resource => resource.Name is "dapr-sentry" or "dapr-placement-mtls" or "dapr-scheduler-mtls"))
+-        {
+-            _ = builder.CreateResourceBuilder(resource).WithContainerRuntimeArgs(
+-                "--label", "hexalith.supported-reads=" + isolation);
+-        }
+-
+-        IResourceBuilder<ProjectResource> folders = builder.CreateResourceBuilder(builder.Resources.OfType<ProjectResource>()
+-            .Single(resource => resource.Name == "folders"));
+-        IResourceBuilder<ProjectResource> projectsWorkers = builder.CreateResourceBuilder(builder.Resources.OfType<ProjectResource>()
+-            .Single(resource => resource.Name == "projects-workers"));
+-        IResourceBuilder<ProjectResource> foldersWorkers = builder.CreateResourceBuilder(builder.Resources.OfType<ProjectResource>()
+-            .Single(resource => resource.Name == "folders-workers"));
+-        Assembly projectOwner = Load(projects.Resource, "Hexalith.Projects.Server.dll");
+-        Assembly folderOwner = Load(folders.Resource, "Hexalith.Folders.Server.dll");
+-        Assembly folderAdapters = Load(folders.Resource, "Hexalith.Folders.EventStore.dll");
+-        Assembly tenantOwner = Load(tenants.Resource, "Hexalith.Tenants.Contracts.dll");
+-        Assembly tenantAdapters = Load(tenants.Resource, "Hexalith.Tenants.Server.dll");
+-        string digestKey = builder.Configuration["Projects:PackageFixtures:CatalogDigestKey"]
+-            ?? throw new InvalidOperationException("The fresh disposable backend requires its private catalog digest key.");
+-        var options = new DevelopmentRouteCatalogCompositionOptions(Path.Combine(privateDirectory, "catalog-custody"),
+-            "readscatalog", isolation, "fixture-v1", new Dictionary<string, string> { ["fixture-v1"] = digestKey }, "fixture-v1");
+-        // This component is the exact literal backend already selected for this newly allocated fixture.
+-        string statePath = Path.Combine(privateDirectory, "catalog-statestore.json");
+-        WriteReceipt(privateDirectory, Path.GetFileName(statePath), new
+-        {
+-            apiVersion = "dapr.io/v1alpha1", kind = "Component", metadata = new { name = "statestore" },
+-            spec = new { type = "state.redis", version = "v1", metadata = new[]
+-            {
+-                new { name = "redisHost", value = builder.Configuration["Dapr:RedisHost"]! },
+-                new { name = "actorStateStore", value = "true" }, new { name = "keyPrefix", value = "none" },
+-            } },
+-        });
+-        DevelopmentRouteCatalogInvocation[] DomainCalls(params string[] methods) => methods.Select(method =>
+-            new DevelopmentRouteCatalogInvocation(gateway, method, ["POST"])).ToArray();
+-        DevelopmentRouteCatalogReceiver[] receivers =
+-        [
+-            new(gateway,
+-            [
+-                new(tenants, "api/v1/commands/bound/workload", ["POST"]),
+-                new(tenants, "api/v1/streams/read/workload", ["POST"]),
+-                new(projects, "api/v1/queries/owner-authority/workload", ["POST"]),
+-                new(projects, "api/v1/streams/read/workload", ["POST"]),
+-                new(projects, "api/v1/commands", ["POST"]),
+-                new(folders, "api/v1/commands", ["POST"]),
+-                new(folders, "api/v1/streams/read/workload", ["POST"]),
+-            ]) { TechnicalHttp = true },
+-            new(tenants, DomainCalls("process", "replay-state", "query", "project", "admin/operational-index-metadata")),
+-            new(projects, DomainCalls("process", "query", "project", "project/v2", "project/rebuild/v1", "admin/operational-index-metadata")),
+-            new(folders, DomainCalls("process", "query", "project", "project/v2", "admin/operational-index-metadata")),
+-            new(projectsWorkers, []), new(foldersWorkers, []),
+-        ];
+-        _ = projects.WithEnvironment("Projects__SupportedReads__Enabled", "true");
+-        _ = projectsWorkers.WithEnvironment("Projects__SupportedReads__Enabled", "true");
+-        DevelopmentRouteCatalogComposition catalog = builder.AddEventStoreDevelopmentRouteCatalog(gateway,
+-            [new(projects, projectOwner, projectOwner), new(tenants, tenantOwner, tenantAdapters), new(folders, folderOwner, folderAdapters)],
+-            receivers, statePath, options, isolation);
+-        builder.AddEventStoreDevelopmentSqliteStartupOrdering(tenants, gateway, projects, projectsWorkers, folders, foldersWorkers);
+-        _ = tenants.WithEnvironment("Tenants__BootstrapBoundWorkloadReceiptPath", Path.Combine(catalog.Directory, "tenants.bootstrap.json"));
+-        WriteReceipt(privateDirectory, "catalog-plane.json", new
+-        {
+-            isolationId = isolation, directory = catalog.Directory, rootDigest = catalog.RootDigest,
+-            custodyDirectory = options.CustodyDirectory,
+-        });
+-        return catalog;
+-    }
+-
+-    private static Assembly Load(ProjectResource project, string artifact)
+-    {
+-        string directory = Path.GetDirectoryName(project.GetProjectMetadata().ProjectPath)!;
+-        string path = Directory.GetFiles(Path.Combine(directory, "bin", "Release"), artifact, SearchOption.AllDirectories).Single();
+-        if (!File.Exists(path)) throw new InvalidOperationException("Build the selected Release/package owner before composing its catalog: " + path);
+-        Assembly loaded = Assembly.LoadFrom(path);
+-        if (!SHA256.HashData(File.ReadAllBytes(loaded.Location)).AsSpan().SequenceEqual(SHA256.HashData(File.ReadAllBytes(path))))
+-            throw new InvalidOperationException("The loaded owner differs from the selected executable artifact.");
+-        return loaded;
+-    }
+-
+-    private static void WriteReceipt(string directory, string file, object value)
+-    {
+-        var options = new FileStreamOptions { Mode = FileMode.CreateNew, Access = FileAccess.Write, Share = FileShare.None };
+-        if (!OperatingSystem.IsWindows()) options.UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+-        using var output = new FileStream(Path.Combine(directory, file), options);
+-        JsonSerializer.Serialize(output, value, JsonSerializerOptions.Web);
+-    }
+-}
++namespace Hexalith.Projects.PackageFixtures.AppHost;
++
++using System.Reflection;
++using System.Text.Json;
++
++using global::Aspire.Hosting;
++using global::Aspire.Hosting.ApplicationModel;
++
++using Hexalith.EventStore.Aspire;
++
++/// <summary>Enrolls the disposable read lane through canonical SDK catalogs and Platform peer identity.</summary>
++internal static class PackageActualOwnerInfrastructure
++{
++    /// <summary>Composes real owners after the six application sidecars have been declared.</summary>
++    internal static DevelopmentRouteCatalogComposition Add(IDistributedApplicationBuilder builder,
++        IResourceBuilder<ProjectResource> gateway, IResourceBuilder<ProjectResource> tenants,
++        IResourceBuilder<ProjectResource> projects)
++    {
++        var ownerContexts = new Dictionary<ProjectResource, PackageOwnerLoadContext>();
++
++        Assembly Load(ProjectResource project, string artifact)
++        {
++            string projectPath = project.GetProjectMetadata().ProjectPath;
++            string release = Path.Combine(Path.GetDirectoryName(projectPath)!, "bin", "Release");
++            string path = FindArtifact(release, artifact);
++            if (!ownerContexts.TryGetValue(project, out PackageOwnerLoadContext? context))
++            {
++                string executable = FindArtifact(release, Path.GetFileNameWithoutExtension(projectPath) + ".dll");
++                context = new PackageOwnerLoadContext(executable);
++                ownerContexts.Add(project, context);
++            }
++            return context.LoadOwner(path);
++        }
++
++        foreach (string key in new[] { "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey" })
++            if (string.IsNullOrWhiteSpace(builder.Configuration["Projects:PackageFixtures:" + key]))
++                throw new InvalidOperationException("The actual bound Tenants bootstrap requires private input: " + key);
++        string isolation = builder.Configuration["Projects:PackageFixtures:IsolationId"]
++            ?? throw new InvalidOperationException("Missing private read-lane ownership.");
++        string privateDirectory = Path.GetDirectoryName(Path.GetFullPath(builder.Configuration["Projects:PackageFixtures:CertificatePath"]!))!;
++        string root = builder.Configuration["Projects:PackageFixtures:Root"]!;
++        string sentryConfiguration = Path.Combine(root, "src", "Hexalith.Projects.AppHost", "DaprComponents", "sentry.yaml");
++        builder.Configuration["Dapr:Mtls:CertificateDirectory"] = Path.Combine(privateDirectory, "mtls");
++        var owned = DaprSelfHostedMtls.AddLocalApplicationInfrastructure(builder, root, sentryConfiguration, isolation);
++        WriteReceipt(privateDirectory, "mtls-plane.json", new
++        {
++            isolationId = isolation, runDirectory = owned.RunDirectory, certificateDirectory = owned.CertificateDirectory,
++        });
++        foreach (ContainerResource resource in builder.Resources.OfType<ContainerResource>()
++            .Where(resource => resource.Name is "dapr-sentry" or "dapr-placement-mtls" or "dapr-scheduler-mtls"))
++        {
++            _ = builder.CreateResourceBuilder(resource).WithContainerRuntimeArgs(
++                "--label", "hexalith.supported-reads=" + isolation);
++        }
++
++        IResourceBuilder<ProjectResource> folders = builder.CreateResourceBuilder(builder.Resources.OfType<ProjectResource>()
++            .Single(resource => resource.Name == "folders"));
++        IResourceBuilder<ProjectResource> projectsWorkers = builder.CreateResourceBuilder(builder.Resources.OfType<ProjectResource>()
++            .Single(resource => resource.Name == "projects-workers"));
++        IResourceBuilder<ProjectResource> foldersWorkers = builder.CreateResourceBuilder(builder.Resources.OfType<ProjectResource>()
++            .Single(resource => resource.Name == "folders-workers"));
++        Assembly projectOwner = Load(projects.Resource, "Hexalith.Projects.Server.dll");
++        Assembly folderOwner = Load(folders.Resource, "Hexalith.Folders.Server.dll");
++        Assembly folderAdapters = folderOwner;
++        Assembly tenantOwner = Load(tenants.Resource, "Hexalith.Tenants.Contracts.dll");
++        Assembly tenantAdapters = Load(tenants.Resource, "Hexalith.Tenants.Server.dll");
++        string digestKey = builder.Configuration["Projects:PackageFixtures:CatalogDigestKey"]
++            ?? throw new InvalidOperationException("The fresh disposable backend requires its private catalog digest key.");
++        var options = new DevelopmentRouteCatalogCompositionOptions(Path.Combine(privateDirectory, "catalog-custody"),
++            "readscatalog", isolation, "fixture-v1", new Dictionary<string, string> { ["fixture-v1"] = digestKey }, "fixture-v1");
++        // This component is the exact literal backend already selected for this newly allocated fixture.
++        string statePath = Path.Combine(privateDirectory, "catalog-statestore.json");
++        WriteReceipt(privateDirectory, Path.GetFileName(statePath), new
++        {
++            apiVersion = "dapr.io/v1alpha1", kind = "Component", metadata = new { name = "statestore" },
++            spec = new { type = "state.redis", version = "v1", metadata = new[]
++            {
++                new { name = "redisHost", value = builder.Configuration["Dapr:RedisHost"]! },
++                new { name = "actorStateStore", value = "true" }, new { name = "keyPrefix", value = "none" },
++            } },
++        });
++        DevelopmentRouteCatalogInvocation[] DomainCalls(params string[] methods) => methods.Select(method =>
++            new DevelopmentRouteCatalogInvocation(gateway, method, ["POST"])).ToArray();
++        DevelopmentRouteCatalogReceiver[] receivers =
++        [
++            new(gateway,
++            [
++                new(tenants, "api/v1/commands/bound/workload", ["POST"]),
++                new(tenants, "api/v1/streams/read/workload", ["POST"]),
++                new(projects, "api/v1/queries/owner-authority/workload", ["POST"]),
++                new(projects, "api/v1/streams/read/workload", ["POST"]),
++                new(projects, "api/v1/commands", ["POST"]),
++                new(folders, "api/v1/commands", ["POST"]),
++                new(folders, "api/v1/streams/read/workload", ["POST"]),
++            ]) { TechnicalHttp = true },
++            new(tenants, DomainCalls("process", "replay-state", "query", "project", "admin/operational-index-metadata")),
++            new(projects, DomainCalls("process", "query", "project", "project/v2", "project/rebuild/v1", "admin/operational-index-metadata")),
++            new(folders, DomainCalls("process", "query", "project", "project/v2", "admin/operational-index-metadata")),
++            new(projectsWorkers, []), new(foldersWorkers, []),
++        ];
++        _ = projects.WithEnvironment("Projects__SupportedReads__Enabled", "true");
++        _ = projectsWorkers.WithEnvironment("Projects__SupportedReads__Enabled", "true");
++        DevelopmentRouteCatalogComposition catalog = builder.AddEventStoreDevelopmentRouteCatalog(gateway,
++            [new(projects, projectOwner, projectOwner), new(tenants, tenantOwner, tenantAdapters), new(folders, folderOwner, folderAdapters)],
++            receivers, statePath, options, isolation);
++        builder.AddEventStoreDevelopmentSqliteStartupOrdering(tenants, gateway, projects, projectsWorkers, folders, foldersWorkers);
++        _ = tenants.WithEnvironment("Tenants__BootstrapBoundWorkloadReceiptPath", Path.Combine(catalog.Directory, "tenants.bootstrap.json"));
++        WriteReceipt(privateDirectory, "catalog-plane.json", new
++        {
++            isolationId = isolation, directory = catalog.Directory, rootDigest = catalog.RootDigest,
++            custodyDirectory = options.CustodyDirectory,
++        });
++        return catalog;
++    }
++
++    private static string FindArtifact(string directory, string artifact)
++    {
++        string[] candidates = Directory.Exists(directory)
++            ? Directory.GetFiles(directory, artifact, SearchOption.AllDirectories)
++            : [];
++        if (candidates.Length != 1)
++            throw new InvalidOperationException(
++                $"Expected exactly one {artifact} in the selected owner's Release output; found {candidates.Length}. "
++                + "Build the selected Release/package owner before composing its catalog.");
++        return candidates[0];
++    }
++
++    private static void WriteReceipt(string directory, string file, object value)
++    {
++        var options = new FileStreamOptions { Mode = FileMode.CreateNew, Access = FileAccess.Write, Share = FileShare.None };
++        if (!OperatingSystem.IsWindows()) options.UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
++        using var output = new FileStream(Path.Combine(directory, file), options);
++        JsonSerializer.Serialize(output, value, JsonSerializerOptions.Web);
++    }
++}
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageOwnerLoadContext.cs b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageOwnerLoadContext.cs
+new file mode 100644
+index 00000000..1f855235
+--- /dev/null
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageOwnerLoadContext.cs
+@@ -0,0 +1,75 @@
++using System.Reflection;
++using System.Runtime.Loader;
++using System.Security.Cryptography;
++
++namespace Hexalith.Projects.PackageFixtures.AppHost;
++
++/// <summary>Loads one prebuilt owner without substituting the AppHost's same-name package assemblies.</summary>
++internal sealed class PackageOwnerLoadContext : AssemblyLoadContext
++{
++    private readonly AssemblyDependencyResolver _resolver;
++    private readonly string _directory;
++    private readonly StringComparison _pathComparison = OperatingSystem.IsWindows()
++        ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
++
++    /// <summary>Uses the selected executable's existing dependency graph without building or restoring.</summary>
++    internal PackageOwnerLoadContext(string executable) : base(isCollectible: false)
++    {
++        _directory = Path.GetDirectoryName(Path.GetFullPath(executable))! + Path.DirectorySeparatorChar;
++        _resolver = new AssemblyDependencyResolver(executable);
++    }
++
++    /// <summary>Requires the exact selected file even when its assembly identity already exists elsewhere.</summary>
++    internal Assembly LoadOwner(string path)
++    {
++        path = SelectedPath(path);
++        byte[] selectedHash = SHA256.HashData(File.ReadAllBytes(path));
++        Assembly loaded = LoadFromAssemblyPath(path);
++        byte[] loadedHash = SHA256.HashData(File.ReadAllBytes(loaded.Location));
++        if (!string.Equals(Path.GetFullPath(loaded.Location), path, _pathComparison)
++            || !CryptographicOperations.FixedTimeEquals(selectedHash, loadedHash))
++            throw new InvalidOperationException($"The loaded owner differs from the selected executable artifact: {Path.GetFileName(path)}; selected={Convert.ToHexStringLower(selectedHash)}; loaded={Convert.ToHexStringLower(loadedHash)}.");
++        return loaded;
++    }
++
++    /// <inheritdoc/>
++    protected override Assembly? Load(AssemblyName assemblyName)
++    {
++        string? path = _resolver.ResolveAssemblyToPath(assemblyName);
++        if (path is null && assemblyName.Name is not null)
++        {
++            string adjacent = Path.Combine(_directory, assemblyName.Name + ".dll");
++            if (File.Exists(adjacent)) path = adjacent;
++        }
++        Assembly? shared = Default.Assemblies.SingleOrDefault(assembly => assembly.GetName().Name == assemblyName.Name);
++        bool contract = assemblyName.Name?.StartsWith("Hexalith.EventStore.", StringComparison.Ordinal) == true
++            || assemblyName.Name is "System.Text.Json" or "System.Text.Encodings.Web" or "System.IO.Pipelines";
++        if (path is not null)
++        {
++            path = SelectedPath(path);
++            if (shared is not null && shared.GetName().FullName == assemblyName.FullName
++                && AssemblyName.GetAssemblyName(path).FullName == assemblyName.FullName
++                && !string.IsNullOrEmpty(shared.Location)
++                && SHA256.HashData(File.ReadAllBytes(path)).AsSpan().SequenceEqual(SHA256.HashData(File.ReadAllBytes(shared.Location))))
++                return shared;
++            if (contract && shared is not null)
++                throw new InvalidOperationException("Selected owner SDK contract differs from the AppHost: " + assemblyName.Name);
++            return LoadOwner(path);
++        }
++        Assembly framework = Default.LoadFromAssemblyName(assemblyName);
++        string frameworkRoot = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(typeof(object).Assembly.Location)))!
++            + Path.DirectorySeparatorChar;
++        if (string.IsNullOrEmpty(framework.Location) || !framework.Location.StartsWith(frameworkRoot, _pathComparison)
++            || contract && framework.GetName().FullName != assemblyName.FullName)
++            throw new InvalidOperationException("Selected owner dependency is absent from its output: " + assemblyName.Name);
++        return framework;
++    }
++
++    private string SelectedPath(string path)
++    {
++        string full = Path.GetFullPath(path);
++        if (!full.StartsWith(_directory, _pathComparison))
++            throw new InvalidOperationException("Selected owner dependency escaped its output directory.");
++        return full;
++    }
++}
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageOwnerLoadContextTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageOwnerLoadContextTests.cs
+new file mode 100644
+index 00000000..b565fe42
+--- /dev/null
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageOwnerLoadContextTests.cs
+@@ -0,0 +1,92 @@
++extern alias PackageFixtureHost;
++
++using System.Reflection;
++using System.Runtime.Loader;
++using System.Security.Cryptography;
++using System.Text.Json;
++
++using Hexalith.EventStore.Contracts.Streams;
++using Hexalith.Projects.PackageFixtures;
++
++using PackageHost = PackageFixtureHost::Hexalith.Projects.PackageFixtures.AppHost;
++
++using Shouldly;
++
++using Xunit;
++
++namespace Hexalith.Projects.Integration.Tests;
++
++/// <summary>Checks selected image identity and shared SDK contracts without running an AppHost.</summary>
++public sealed class PackageOwnerLoadContextTests
++{
++    /// <summary>A default-context image with the same identity cannot replace a selected owner.</summary>
++    [Fact]
++    public async Task SameIdentityLoadsTheSelectedBytesAndReusesItsOwnerContext()
++    {
++        FixtureScratch scratch = new(false);
++        await using var cleanup = scratch.ConfigureAwait(true);
++        Assembly existing = typeof(PackageHost.PackageActualOwnerComposition).Assembly;
++        string selected = scratch.File(Path.GetFileName(existing.Location));
++        byte[] bytes = [.. File.ReadAllBytes(existing.Location), 0];
++        File.WriteAllBytes(selected, bytes);
++        var context = new PackageHost.PackageOwnerLoadContext(selected);
++
++        Assembly loaded = context.LoadOwner(selected);
++
++        loaded.FullName.ShouldBe(existing.FullName);
++        loaded.ShouldNotBeSameAs(existing);
++        AssemblyLoadContext.GetLoadContext(loaded).ShouldBeSameAs(context);
++        context.LoadOwner(selected).ShouldBeSameAs(loaded);
++        SHA256.HashData(File.ReadAllBytes(loaded.Location)).ShouldBe(SHA256.HashData(bytes));
++    }
++
++    /// <summary>Identical SDK and JSON contracts retain their AppHost type identity.</summary>
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    public async Task IdenticalSharedContractsUseTheDefaultContext(bool json)
++    {
++        FixtureScratch scratch = new(false);
++        await using var cleanup = scratch.ConfigureAwait(true);
++        Assembly shared = json ? typeof(JsonSerializer).Assembly : typeof(StreamReadRequest).Assembly;
++        string selected = scratch.File(Path.GetFileName(shared.Location));
++        File.Copy(shared.Location, selected);
++        var context = new PackageHost.PackageOwnerLoadContext(selected);
++
++        context.LoadFromAssemblyName(shared.GetName()).ShouldBeSameAs(shared);
++    }
++
++    /// <summary>Matching SDK assembly names do not hide byte drift.</summary>
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    public async Task ChangedSharedContractBytesAreRefused(bool json)
++    {
++        FixtureScratch scratch = new(false);
++        await using var cleanup = scratch.ConfigureAwait(true);
++        Assembly shared = json ? typeof(JsonSerializer).Assembly : typeof(StreamReadRequest).Assembly;
++        string selected = scratch.File(Path.GetFileName(shared.Location));
++        File.WriteAllBytes(selected, [.. File.ReadAllBytes(shared.Location), 0]);
++        var context = new PackageHost.PackageOwnerLoadContext(selected);
++
++        FileLoadException failure = Should.Throw<FileLoadException>(() => context.LoadFromAssemblyName(shared.GetName()));
++
++        failure.InnerException.ShouldBeOfType<InvalidOperationException>().Message.ShouldContain("SDK contract differs");
++    }
++
++    /// <summary>Another image with the same identity cannot substitute inside an owner's context either.</summary>
++    [Fact]
++    public async Task AnAlreadyLoadedOwnerCannotReplaceAnotherSelectedPath()
++    {
++        FixtureScratch scratch = new(false);
++        await using var cleanup = scratch.ConfigureAwait(true);
++        Assembly existing = typeof(PackageHost.PackageActualOwnerComposition).Assembly;
++        string first = scratch.File("first.dll"), second = scratch.File("second.dll");
++        File.Copy(existing.Location, first);
++        File.WriteAllBytes(second, [.. File.ReadAllBytes(existing.Location), 0]);
++        var context = new PackageHost.PackageOwnerLoadContext(first);
++        _ = context.LoadOwner(first);
++
++        Should.Throw<InvalidOperationException>(() => context.LoadOwner(second)).Message.ShouldContain("selected executable artifact");
++    }
++}

@@ -1,0 +1,85 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "reportId": "899c2da3-cffb-4e40-8825-83cd0c8b7a45",
+  "timestamp": "2026-11-16T20:50:36Z",
+  "generatedBy": "Xunit.Runner.Common.CtrfResultWriterMessageHandler, xunit.v3.runner.common, Version=4.0.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c",
+  "results": {
+    "tool": {
+      "name": "xUnit.net v3",
+      "version": "4.0.3+384aa7f0b4"
+    },
+    "environment": {
+      "osPlatform": "linux",
+      "osRelease": "Ubuntu 26.04 LTS",
+      "osVersion": "Ubuntu 26.04 LTS",
+      "extra": {
+        "user": "administrator"
+      }
+    },
+    "extra": {
+      "user": "administrator",
+      "suites": [
+        {
+          "id": "2004c0688ccf78e34a815231456e5a8e30a8b4a8dd26744dd3ba9c236ea70fa8",
+          "filePath": "/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.LiveSidecar.Tests/bin/Release/net11.0/Hexalith.EventStore.Server.LiveSidecar.Tests.dll",
+          "environment": "64-bit (x64) .NET 11.0.0 [collection-per-class, non-parallel]",
+          "testFramework": "xUnit.net v3 4.0.3+384aa7f0b4",
+          "targetFramework": ".NETCoreApp,Version=v11.0",
+          "start": 1794862194714,
+          "stop": 1794862236685,
+          "duration": 41980,
+          "collections": [
+            {
+              "id": "bcdbe02006ded67b205973559dbf5df14a1e5abbbf75f7ce19bf827bc3495f29",
+              "name": "Oq8Postgresql"
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "summary": {
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "suites": 1,
+      "start": 1794862194714,
+      "stop": 1794862236685,
+      "duration": 41971
+    },
+    "tests": [
+      {
+        "name": "Hexalith.EventStore.Server.LiveSidecar.Tests.Actors.IdempotencyAdmissionOq8PostgresqlTests.ProductionMatrix_IndependentProcessesPreserveAuthorityReplayExpiryAndLeakageInvariants",
+        "status": "passed",
+        "duration": 27505,
+        "filePath": "/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Actors/IdempotencyAdmissionOq8PostgresqlTests.cs",
+        "line": 20,
+        "suite": [
+          "2004c0688ccf78e34a815231456e5a8e30a8b4a8dd26744dd3ba9c236ea70fa8",
+          "bcdbe02006ded67b205973559dbf5df14a1e5abbbf75f7ce19bf827bc3495f29",
+          "Hexalith.EventStore.Server.LiveSidecar.Tests.Actors.IdempotencyAdmissionOq8PostgresqlTests",
+          "ProductionMatrix_IndependentProcessesPreserveAuthorityReplayExpiryAndLeakageInvariants"
+        ],
+        "start": 1794862206804,
+        "stop": 1794862234323,
+        "tags": [
+          "LiveSidecar"
+        ],
+        "labels": {
+          "Category": "LiveSidecar",
+          "Profile": "oq8-postgresql-v1"
+        },
+        "extra": {
+          "id": "22ede0cb5fd4aac7b199b2b4baf2d4e5413c2678d6650de0819c0b0f691e9a45",
+          "collection": "bcdbe02006ded67b205973559dbf5df14a1e5abbbf75f7ce19bf827bc3495f29",
+          "type": "Hexalith.EventStore.Server.LiveSidecar.Tests.Actors.IdempotencyAdmissionOq8PostgresqlTests",
+          "method": "ProductionMatrix_IndependentProcessesPreserveAuthorityReplayExpiryAndLeakageInvariants"
+        }
+      }
+    ]
+  }
+}

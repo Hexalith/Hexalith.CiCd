@@ -1,0 +1,35 @@
+{
+  "observedAt": "2026-11-16T19:37:01.216981+00:00",
+  "scope": "prospective committed registry and local committed module snapshots; no network",
+  "controllerBase": "0f25d19ba712eee9aae59d118251b854bbffd120",
+  "prospectiveController": "761405d3cda054ea381a3dcd271dfc6b24d9419f",
+  "prospectiveTree": "1135eb835609f81b1a7103ca58a54b489f26e71e",
+  "candidateSetupSha256": "3646fa5fc2e9f9a26622a77da164efd5bf4b4fc64bbebc3928163676a02dfd4b",
+  "modules": {
+    "Hexalith.Agents": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Agents",
+      "revision": "c5c22620cafaa0af2625896cf41022e614e9b490"
+    },
+    "Hexalith.Commons": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "revision": "49187d47da882d5470deac982bb383486c90202c"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "revision": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+    }
+  },
+  "scannerSourcesUnchanged": true,
+  "scannerSourceSha256": {
+    "tools/scan.py": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+    "tools/scan_discovery.py": "8a5e8cfeebd635d57f9bf84a3b029fa0dfed9021b8c47df68231fc3886f24ceb",
+    "tools/delivery_runtime.py": "dba53df3c84ee14f046cdf7b67ab8631b5e0b0b4d63510379764fe7c44b7dd65",
+    ".jscpd.json": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "tools/jscpd/package.json": "7e949a00e382d4903c174022b0879fdb40694ef331070093f72d0e3c2d30b4ff",
+    "tools/jscpd/package-lock.json": "fad24cc759c2d4b6fac056172ac2e9977858f9dd0a162fb10c18de4c8d0bfce2",
+    "tools/jscpd/discover.cjs": "b7eb533c051cfcf674bf6e23eca4776b78b8995d0f7e280dfcc76d5c51270004"
+  },
+  "npmTransport": "forced offline; existing public cache copied into disposable scratch",
+  "result": "fail",
+  "limitation": "Does not replace fresh live-main scan, accepted release or adoption prerequisites."
+}

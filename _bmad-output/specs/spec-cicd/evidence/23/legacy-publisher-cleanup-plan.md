@@ -1,0 +1,74 @@
+# Tenants legacy publisher cleanup checkpoint
+
+This is a prepared plan, not an executed cleanup or an adoption approval.
+Tenants remains unadopted. Preserve its old publishing path until actual App
+adoption has been authenticated, then perform the verified cleanup immediately.
+
+## Established targets
+
+| Target | Evidence and required action after adoption |
+| --- | --- |
+| Tenants repository | ID `1174267565`, `Hexalith/Hexalith.Tenants`; enable immutable releases and verify the authenticated setting. |
+| Legacy Trusted Publishing policy | Remove only policy `18796`, after rechecking owner/repository, `release.yml` and environment `production`. Preserve new Active policy `27252`, environment `hexalith-release`, glob `Hexalith.Tenants*`, and every other repository's policy. |
+| Legacy org secret membership | Fresh complete `legacy-publisher-org-selection.json` shows both `HEXALITH_ZOT_USERNAME` and `HEXALITH_ZOT_API_KEY` select EventStore, Memories, Parties and Tenants. Remove only Tenants' ID from each selection. Re-inventory every other legacy family and remove any exact Tenants membership while preserving all other selections and secret values. |
+| Repository and old environment secrets | Complete `legacy-credential-input-inventory.json` shows no Actions, Dependabot or `production` secrets. Recheck immediately before cleanup; preserve the foreign environment itself and the new `hexalith-release` pair. |
+| Registry publisher to retain | `hexalith-tenants-publish`, read/create/update on `tenants`, `tenants/**`, `tenants-api`, `tenants-api/**`; real foreign upload attempts returned 403. Preserve it and the read-only shared identities. |
+| Legacy NuGet API key | Recheck the account's visible key metadata and any active key's Tenants scope. Prior pilot evidence found only expired key `954800`; that historical observation is not a fresh Tenants scope readback or a mapping to an encrypted GitHub secret. |
+
+The legacy module release source at product base
+`0e0e85fd646da904c5528854e271b71a2b0b9066` passes the organization Zot pair to
+Semantic Release and artifact verification in `production`. There is no
+repository/environment secret overriding that pair. Tenants publishes both
+`tenants` and `tenants-api`, so the package-only pilots' no-target disposition
+does not apply.
+
+## Registry revocation dependency
+
+`legacy-registry-key-metadata.json` is an authenticated metadata-only read for
+`jpiquot@itaneo.com`. It lists three active keys with no API-key scope:
+
+| UUID | Label | Disposition |
+| --- | --- | --- |
+| `9eba6461-9d15-40d1-addf-2be14bc76ad8` | `JPIQ PC` | Preserve the existing local/maintainer credential. |
+| `099585e7-fd9e-4aac-9042-56426c1add7b` | `Github Actions Hexalith` | Candidate legacy automation key; label and usage timestamp alone do not establish the encrypted org-secret mapping or its complete consumer set. |
+| `d122a9d6-90c8-4f5f-afa5-cf8866cb6391` | `GITHUB` | Preserve until its actual consumers and role are established. |
+
+The live ACL in `legacy-publisher-acl-assessment.json` gives global admin access
+to `jpiquot` and `jpiquot@itaneo.com`. The only legacy write grant on the default
+and Tenants namespaces belongs to those administrators. Zot's documented
+[admin policy](https://zotregistry.dev/v2.1.11/articles/authn-authz/) overrides
+repository policies. Removing an administrator from only the Tenants namespace
+therefore does not revoke a global administrator-owned key's Tenants push.
+
+The documented [API-key endpoints](https://zotregistry.dev/v2.1.11/developer-guide/api-reference/)
+offer create, metadata list and delete, with no in-place scope-edit operation.
+The installed registry is identified by immutable digest in
+`registry-version-readback.json`; that packet does not establish a matching
+version tag, so any replacement-key scope behavior requires actual qualification
+on the installed instance before use.
+
+To complete revocation while preserving the other legacy publishers, establish
+the exact old key UUID and its consumers, replace the other still-authorized
+consumers with credentials that cannot write Tenants, verify those credentials,
+and delete the assessed old automation key at the registry. This is a wider
+credential rotation than removing Tenants from GitHub's selected repositories.
+Do not infer permission to rotate unrelated consumers or delete a key from its
+label. Do not remove either global administrator, revoke personal access, or
+claim that removing GitHub secret selection revokes the registry key.
+
+Adoption stays gated until this concrete mapping/rotation boundary is resolved.
+No old key, administrator, org-secret value or remaining module's selection has
+been changed by this investigation.
+
+## Shared release dependency
+
+`shared-release-product-phase-complete.json` contains a complete 216-release
+inventory and the latest-release endpoint readback: `v6.0.6`, immutable,
+published, authored by `github-actions[bot]`, target
+`fdda17c0a4538b0f7c99f813c20ca24b49006530`. It lacks the new shared contract.
+The first product-phase packet retains a deliberately incomplete inventory
+because GitHub changed the pagination route to the numeric repository alias;
+the subsequent packet starts from the metadata-verified numeric repository
+route and completes without changing the strict Tenants preflight reader.
+Use the central release process and verify/pin a compatible published tag before
+registration; unreleased Builds source is not a released prerequisite.

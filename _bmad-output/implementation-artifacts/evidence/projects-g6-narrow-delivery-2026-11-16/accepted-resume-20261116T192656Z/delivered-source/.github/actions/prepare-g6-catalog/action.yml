@@ -1,0 +1,25 @@
+name: Prepare reviewed G-6 catalog
+description: Acquire only the catalog commit selected by the reviewed direct Platform revision
+inputs:
+  platform-revision:
+    description: Full reviewed Platform commit, matching the outer workspace direct gitlink
+    required: true
+  diagnostics:
+    description: Output directory for catalog acquisition evidence
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Acquire and verify selected catalog without moving Builds HEAD
+      shell: bash
+      env:
+        REVIEWED_PLATFORM_REVISION: ${{ inputs.platform-revision }}
+        CATALOG_DIAGNOSTICS: ${{ inputs.diagnostics }}
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: |
+        set -euo pipefail
+        mkdir -p "$CATALOG_DIAGNOSTICS"
+        python3 "$GITHUB_ACTION_PATH/prepare.py" \
+          --workspace "$GITHUB_WORKSPACE" \
+          --platform-revision "$REVIEWED_PLATFORM_REVISION" \
+          > "$CATALOG_DIAGNOSTICS/catalog-acquisition.json"

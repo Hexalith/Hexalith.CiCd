@@ -1,0 +1,251 @@
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
+index 0a954b94..f518ead9 100644
+--- a/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
+@@ -1,3 +1,5 @@
++extern alias PackageFixtureHost;
++
+ namespace Hexalith.Projects.Integration.Tests;
+ 
+ using System.IdentityModel.Tokens.Jwt;
+@@ -9,6 +11,8 @@ using System.Text.Json;
+ using Hexalith.Projects.PackageFixtures;
+ 
+ using Microsoft.IdentityModel.Tokens;
++using Microsoft.Extensions.Configuration;
++using PackageHost = PackageFixtureHost::Hexalith.Projects.PackageFixtures.AppHost;
+ 
+ using Shouldly;
+ 
+@@ -54,6 +58,37 @@ public sealed class PackageCredentialMatrixTests
+             using JsonDocument configuration = JsonDocument.Parse(await File.ReadAllBytesAsync(scratch.File("configuration.json"), TestContext.Current.CancellationToken));
+             JsonElement settings = configuration.RootElement.GetProperty("Projects").GetProperty("PackageFixtures");
+             user.ExportSubjectPublicKeyInfo().ShouldNotBe(Convert.FromBase64String(settings.GetProperty("OwnerPublicKey").GetString()!));
++            HashSet<string> proofKeys = new(StringComparer.Ordinal);
++            foreach (string prefix in new[] { "FolderOwner", "FolderScan", "FolderWorker", "FolderWorkerScan" })
++            {
++                using RSA proof = RSA.Create();
++                proof.ImportPkcs8PrivateKey(Convert.FromBase64String(settings.GetProperty(prefix + "PrivateKey").GetString()!), out _);
++                byte[] actualPublic = proof.ExportSubjectPublicKeyInfo();
++                actualPublic.AsSpan().SequenceEqual(Convert.FromBase64String(settings.GetProperty(prefix + "PublicKey").GetString()!)).ShouldBeTrue();
++                actualPublic.AsSpan().SequenceEqual(user.ExportSubjectPublicKeyInfo()).ShouldBeFalse();
++                proofKeys.Add(Convert.ToHexString(SHA256.HashData(actualPublic))).ShouldBeTrue();
++            }
++            (settings.GetProperty("FoldersSecret").GetString() == settings.GetProperty("FolderWorkersSecret").GetString()).ShouldBeFalse();
++            IConfiguration complete = new ConfigurationBuilder().AddJsonFile(scratch.File("configuration.json")).Build();
++            PackageHost.PackageActualOwnerComposition.Validate(complete);
++            foreach (string missing in new[] { "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkerPrivateKey", "FolderWorkerPublicKey", "FolderWorkerScanPrivateKey", "FolderWorkerScanPublicKey", "FolderWorkersSecret" })
++            {
++                IConfiguration incomplete = new ConfigurationBuilder().AddJsonFile(scratch.File("configuration.json"))
++                    .AddInMemoryCollection(new Dictionary<string, string?> { ["Projects:PackageFixtures:" + missing] = null }).Build();
++                Should.Throw<InvalidOperationException>(() => PackageHost.PackageActualOwnerComposition.Validate(incomplete)).Message.ShouldContain(missing);
++            }
++            foreach (Dictionary<string, string?> invalidProof in new[]
++            {
++                new Dictionary<string, string?> { ["FolderScanPrivateKey"] = "malformed" },
++                new Dictionary<string, string?> { ["FolderScanPublicKey"] = settings.GetProperty("FolderWorkerPublicKey").GetString() },
++                new Dictionary<string, string?> { ["FolderScanPrivateKey"] = settings.GetProperty("FolderOwnerPrivateKey").GetString(), ["FolderScanPublicKey"] = settings.GetProperty("FolderOwnerPublicKey").GetString() },
++                new Dictionary<string, string?> { ["FolderWorkersSecret"] = settings.GetProperty("FoldersSecret").GetString() },
++            })
++            {
++                IConfiguration refusedProof = new ConfigurationBuilder().AddJsonFile(scratch.File("configuration.json"))
++                    .AddInMemoryCollection(invalidProof.ToDictionary(pair => "Projects:PackageFixtures:" + pair.Key, pair => pair.Value)).Build();
++                Should.Throw<InvalidOperationException>(() => PackageHost.PackageActualOwnerComposition.Validate(refusedProof));
++            }
+             Dictionary<string, string> browser = new()
+             {
+                 ["TenantToken"] = inputs.ReaderTokens["actor-1"], ["ForeignToken"] = inputs.ReaderTokens["foreign-actor"],
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs
+index 3681e0c2..a0353f4f 100644
+--- a/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs
+@@ -22,6 +22,23 @@ using Xunit;
+ /// <summary>Checks fixture refusal, bounded readiness and owned cleanup without a live backend.</summary>
+ public sealed class PackageFixtureSafetyTests
+ {
++    /// <summary>Failure stages keep owning method identities without exception data or source paths.</summary>
++    [Fact]
++    public async Task FailureStagesDoNotExposeExceptionData()
++    {
++        static async Task FailAsync()
++        {
++            await Task.Yield();
++            throw new InvalidOperationException("private-token");
++        }
++        Exception failure = await Should.ThrowAsync<InvalidOperationException>(FailAsync);
++        string[] stages = FixtureDiagnostics.FailureStages(failure);
++        stages.ShouldNotBeEmpty();
++        stages.Length.ShouldBeLessThanOrEqualTo(16);
++        stages.ShouldContain(stage => stage.Contains(nameof(FailAsync), StringComparison.Ordinal));
++        stages.ShouldAllBe(stage => !stage.Contains("private-token", StringComparison.Ordinal) && !stage.Contains("/", StringComparison.Ordinal));
++    }
++
+     /// <summary>The Release adapter cannot load in Production or without its explicit private activation.</summary>
+     [Theory]
+     [InlineData("Production", "1")]
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
+index ea394489..31c76bff 100644
+--- a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
+@@ -85,8 +85,9 @@ public static class PackageActualOwnerComposition
+         }
+         else if (configuration[Prefix + "Browser:TokenEndpoint"] is not null)
+             throw new InvalidOperationException("A browser token endpoint requires the explicit browser fixture.");
+-        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey" })
++        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey", "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkersSecret", "FolderWorkerPrivateKey", "FolderWorkerPublicKey", "FolderWorkerScanPrivateKey", "FolderWorkerScanPublicKey" })
+             _ = Required(configuration, Prefix + key);
++        ValidateFolderSourceKeys(configuration);
+         foreach (string key in new[] { "CertificatePath", "TrustBundle" })
+             if (!File.Exists(configuration[Prefix + key])) throw new InvalidOperationException("Fixture trust material is missing.");
+         if (configuration[Prefix + "Tenant"] == configuration[Prefix + "ForeignTenant"])
+@@ -261,20 +262,34 @@ public static class PackageActualOwnerComposition
+             .WithEnvironment("EventStore__Authentication__ClientId", "supported-read-bootstrap")
+             .WithEnvironment("EventStore__Authentication__Username", "actor-1")
+             .WithEnvironment("EventStore__Authentication__Password", bootstrapPassword);
+-        IResourceBuilder<ParameterResource> foldersSecret = Secret("folders-secret", "FoldersSecret");
+-        IResourceBuilder<ParameterResource> folderOwnerKey = Secret("folders-owner-key", "FolderOwnerPrivateKey");
+-        ConfigureClient(folders, "folders", foldersSecret);
+-        int folderGrant = ordinal;
+-        AddGrant("folders-owner-head", "folders", "FoldersSecret", "eventstore", ["eventstore:stream-read"], false);
+-        string grant = "Authentication__WorkloadAuthority__Grants__" + folderGrant + "__";
+-        _ = authority.WithEnvironment(grant + "AllowUnbound", "false")
+-            .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+-            .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+-            .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
+-        _ = folders.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", folderOwnerKey);
+-        _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__2", "folders")
+-            .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__folders", Required(configuration, Prefix + "FolderOwnerPublicKey"))
+-            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__folders", "folders");
++        foreach (var source in new[]
++        {
++            (Resource: folders, Workload: "folders", Secret: "FoldersSecret", ReadKey: "FolderOwner", ScanKey: "FolderScan", CallerIndex: 2),
++            (Resource: folderWorkers, Workload: "folders-workers", Secret: "FolderWorkersSecret", ReadKey: "FolderWorker", ScanKey: "FolderWorkerScan", CallerIndex: 3),
++        })
++        {
++            IResourceBuilder<ParameterResource> secret = Secret(source.Workload + "-secret", source.Secret);
++            IResourceBuilder<ParameterResource> readKey = Secret(source.Workload + "-owner-key", source.ReadKey + "PrivateKey");
++            IResourceBuilder<ParameterResource> scanKey = Secret(source.Workload + "-scan-key", source.ScanKey + "PrivateKey");
++            ConfigureClient(source.Resource, source.Workload, secret);
++            int folderSourceGrant = ordinal;
++            AddGrant(source.Workload + "-owner-source", source.Workload, source.Secret, "eventstore",
++                ["eventstore:stream-read", "eventstore:stream-scan-native"], false);
++            string grant = "Authentication__WorkloadAuthority__Grants__" + folderSourceGrant + "__";
++            _ = authority.WithEnvironment(grant + "AllowUnbound", "false")
++                .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
++                .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
++                .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
++            _ = source.Resource.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", readKey)
++                .WithEnvironment("Authentication__NativeSourceScan__PrivateKey", scanKey);
++            _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__" + source.CallerIndex, source.Workload)
++                .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__" + source.Workload, Required(configuration, Prefix + source.ReadKey + "PublicKey"))
++                .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__" + source.Workload, "folders")
++                .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__" + source.Workload, Required(configuration, Prefix + source.ScanKey + "PublicKey"))
++                .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__" + source.Workload, "folders");
++            if (source.Workload == "folders-workers")
++                _ = eventStore.WithEnvironment("Authentication__BoundStreamRead__MetadataOnlyCallers__folders-workers", "true");
++        }
+         _ = eventStore.WaitFor(authority);
+         _ = tenants.WaitFor(authority);
+         _ = projects.WithReference(eventStore).WithReference(tenants).WithReference(folders).WaitFor(eventStore).WaitFor(tenants).WaitFor(authority);
+@@ -355,6 +370,34 @@ public static class PackageActualOwnerComposition
+         return directory;
+     }
+ 
++    private static void ValidateFolderSourceKeys(IConfiguration configuration)
++    {
++        HashSet<string> fingerprints = new(StringComparer.Ordinal);
++        foreach (string prefix in new[] { "FolderOwner", "FolderScan", "FolderWorker", "FolderWorkerScan" })
++        {
++            try
++            {
++                byte[] privateBytes = Convert.FromBase64String(Required(configuration, Prefix + prefix + "PrivateKey"));
++                byte[] publicBytes = Convert.FromBase64String(Required(configuration, Prefix + prefix + "PublicKey"));
++                using RSA privateKey = RSA.Create();
++                using RSA publicKey = RSA.Create();
++                privateKey.ImportPkcs8PrivateKey(privateBytes, out int privateRead);
++                publicKey.ImportSubjectPublicKeyInfo(publicBytes, out int publicRead);
++                byte[] actualPublic = privateKey.ExportSubjectPublicKeyInfo();
++                if (privateRead != privateBytes.Length || publicRead != publicBytes.Length || privateKey.KeySize < 2048
++                    || !actualPublic.AsSpan().SequenceEqual(publicKey.ExportSubjectPublicKeyInfo())
++                    || !fingerprints.Add(Convert.ToHexString(SHA256.HashData(actualPublic))))
++                    throw new InvalidOperationException("Folder source read/scan proof keys must match and remain independent: " + prefix);
++            }
++            catch (Exception error) when (error is FormatException or CryptographicException)
++            {
++                throw new InvalidOperationException("Invalid Folder source proof key material: " + prefix, error);
++            }
++        }
++        if (Required(configuration, Prefix + "FoldersSecret") == Required(configuration, Prefix + "FolderWorkersSecret"))
++            throw new InvalidOperationException("Folder source workloads require independent issuer secrets.");
++    }
++
+     private static string Required(IConfiguration configuration, string key)
+         => !string.IsNullOrWhiteSpace(configuration[key]) ? configuration[key]! : throw new InvalidOperationException("Missing supported-read fixture configuration: " + key);
+ 
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+index 03e5fb52..9c04f01a 100644
+--- a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+@@ -92,6 +92,9 @@ internal static class PackageActualOwnerInfrastructure
+                 new(projects, "api/v1/commands", ["POST"]),
+                 new(folders, "api/v1/commands", ["POST"]),
+                 new(folders, "api/v1/streams/read/workload", ["POST"]),
++                new(folders, "api/v1/streams/scan/workload", ["POST"]),
++                new(foldersWorkers, "api/v1/streams/read/workload", ["POST"]),
++                new(foldersWorkers, "api/v1/streams/scan/workload", ["POST"]),
+             ]) { TechnicalHttp = true },
+             new(tenants, DomainCalls("process", "replay-state", "query", "project", "admin/operational-index-metadata")),
+             new(projects, DomainCalls("process", "query", "project", "project/v2", "project/rebuild/v1", "admin/operational-index-metadata")),
+diff --git a/tests/Hexalith.Projects.PackageFixtures/FixtureDiagnostics.cs b/tests/Hexalith.Projects.PackageFixtures/FixtureDiagnostics.cs
+index 0e8a7dd5..8883be44 100644
+--- a/tests/Hexalith.Projects.PackageFixtures/FixtureDiagnostics.cs
++++ b/tests/Hexalith.Projects.PackageFixtures/FixtureDiagnostics.cs
+@@ -13,6 +13,15 @@ using Microsoft.Extensions.DependencyInjection;
+ /// <summary>Reports bounded failure identities/categories without retaining raw response or resource text.</summary>
+ internal static class FixtureDiagnostics
+ {
++    /// <summary>Reports only bounded owning method identities, never exception data or source paths.</summary>
++    internal static string[] FailureStages(Exception failure)
++        => (new System.Diagnostics.StackTrace(failure, fNeedFileInfo: false).GetFrames() ?? [])
++            .Select(frame => frame.GetMethod())
++            .Where(method => method?.DeclaringType?.Assembly == typeof(FixtureDiagnostics).Assembly
++                || method?.DeclaringType?.Assembly.GetName().Name == "Hexalith.Projects.Integration.Tests")
++            .Select(method => method!.DeclaringType!.FullName + "." + method.Name)
++            .Distinct(StringComparer.Ordinal).Take(16).ToArray();
++
+     internal static string Status(JsonObject state, IEnumerable<string> protectedValues)
+     {
+         string[] protectedText = protectedValues.ToArray();
+diff --git a/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs b/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
+index 5a174f35..5567916b 100644
+--- a/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
++++ b/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
+@@ -147,10 +147,15 @@ internal sealed class FixtureInputs(FixtureScratch scratch, string root, bool ac
+             metadata = new { name = scratch.Isolation }, spec = new { accessControl = new { defaultAction = "deny", trustDomain = "public" },
+                 nameResolution = new { component = "sqlite", version = "v1", configuration = new { connectionString = scratch.File("discovery.sqlite") } } } }), cancellationToken).ConfigureAwait(false);
+         using RSA owner = RSA.Create(2048), tenantOwner = RSA.Create(2048), folderOwner = RSA.Create(2048);
++        using RSA folderScan = RSA.Create(2048), folderWorker = RSA.Create(2048), folderWorkerScan = RSA.Create(2048);
+         var fixture = new { Enabled = true, IsolationId = scratch.Isolation, Root = root, UserIssuer = Authority,
+             Mode = actualOwners ? "actual-owner" : "compatibility", Scenario = scenario == "browser" ? "main" : scenario, ChannelToken = Secret(),
+             FoldersSecret = Secret(), FolderOwnerPrivateKey = Convert.ToBase64String(folderOwner.ExportPkcs8PrivateKey()),
+             FolderOwnerPublicKey = Convert.ToBase64String(folderOwner.ExportSubjectPublicKeyInfo()),
++            FolderScanPrivateKey = Convert.ToBase64String(folderScan.ExportPkcs8PrivateKey()), FolderScanPublicKey = Convert.ToBase64String(folderScan.ExportSubjectPublicKeyInfo()),
++            FolderWorkersSecret = Secret(), FolderWorkerPrivateKey = Convert.ToBase64String(folderWorker.ExportPkcs8PrivateKey()),
++            FolderWorkerPublicKey = Convert.ToBase64String(folderWorker.ExportSubjectPublicKeyInfo()),
++            FolderWorkerScanPrivateKey = Convert.ToBase64String(folderWorkerScan.ExportPkcs8PrivateKey()), FolderWorkerScanPublicKey = Convert.ToBase64String(folderWorkerScan.ExportSubjectPublicKeyInfo()),
+             CertificatePath = scratch.File("certificate.pfx"), CertificatePassword = certificatePassword, TrustBundle = scratch.File("certificate.pem"),
+             BootstrapPassword = Password, DiscoveryConfiguration = scratch.File("discovery.json"), Tenant, ForeignTenant,
+             Browser = new { Enabled = true, PrimaryActor = Subjects["actor-1"], ForeignActor = Subjects["foreign-actor"], ClientSecret,
+diff --git a/tests/Hexalith.Projects.PackageFixtures/Program.cs b/tests/Hexalith.Projects.PackageFixtures/Program.cs
+index f76f653a..2f44c338 100644
+--- a/tests/Hexalith.Projects.PackageFixtures/Program.cs
++++ b/tests/Hexalith.Projects.PackageFixtures/Program.cs
+@@ -25,6 +25,8 @@ else
+     catch (Exception failure)
+     {
+         Console.Error.WriteLine("Package fixture failure: " + failure.GetType().Name + ": " + failure.Message);
++        foreach (string stage in FixtureDiagnostics.FailureStages(failure))
++            Console.Error.WriteLine("[package-fixtures] failure-stage=" + stage);
+         return 1;
+     }
+ }

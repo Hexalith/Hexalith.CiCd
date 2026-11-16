@@ -1,0 +1,71 @@
+{
+  "scope": "Review-derived closed nine-path ci-gates profile; no shared checkout edits, staging, commits or pushes",
+  "files": {
+    "tools/deliver_g6_catalog.py": "65d1642464519b027f11785250e7021cd0a03b6ca61406b2f740ae7d78ccbe5f",
+    "tools/tests/test_deliver_projects_ci_gates.py": "55576eb0df931dc6eecb1816fe7d7bed75d481bdd1473b39cb996b1ed2069a77",
+    "tools/tests/test_deliver_projects_ci_gates.py.lock": "c59e3d361f8f175c3d661018029aeb9df00761b74d70f79d6d1e3971fcc59082",
+    ".github/workflows/deliver-projects-ci-gates.yml": "3b43e83306b5074886a15483e06efaa1be4257dcf670182c304ccafdd360f390"
+  },
+  "unchanged_original_catalog_assets": [
+    "docs/proposals/projects-g6-catalog.json",
+    "docs/proposals/projects-g6-catalog.patch",
+    ".github/actions/prepare-g6-catalog/action.yml",
+    ".github/actions/prepare-g6-catalog/prepare.py",
+    ".github/workflows/deliver.yml",
+    "tools/delivery_runtime.py"
+  ],
+  "checks": {
+    "catalog_controller_python312": {
+      "tests": 28,
+      "passed": true,
+      "seconds": 84.909,
+      "log": "catalog-controller-nine-path-tests.log"
+    },
+    "ci_gates_python312": {
+      "tests": 8,
+      "passed": true,
+      "seconds": 13.499,
+      "log": "gate-profile-nine-path-tests.log"
+    },
+    "actionlint": {
+      "exit": 0,
+      "log": "gate-profile-nine-path-actionlint.log"
+    },
+    "git_diff_check": {
+      "exit": 0
+    },
+    "existing_path_symlink_mode_rejection": true,
+    "unexpected_extra_workflow_rejection": true
+  },
+  "profile": "ci-gates",
+  "paths": [
+    "tests/tools/test_render_skill.py",
+    "tests/tools/test_release_workflow.py",
+    "tests/tools/test_run_g6_candidate_gate.py",
+    "tests/tools/test_g6_mapper_build.py",
+    "package.json",
+    "package-lock.json",
+    "tests/tools/run-frontcomposer-inspect-gate.ps1",
+    "tests/tools/run-ci-workflow-gates.ps1",
+    "tests/tools/test_run_ci_workflow_gates.py"
+  ],
+  "app_permission_request": "Projects contents:write only",
+  "write_mutex": "deliver-owned-writes",
+  "manifest_schema": "hexalith.projects-ci-gates.v1",
+  "plan_schema": "hexalith.projects-ci-gates-plan.v1",
+  "plan_explicit_profile_binding": true,
+  "owner_workflow_ref": "Hexalith/Hexalith.CiCd/.github/workflows/deliver-projects-ci-gates.yml@refs/heads/main",
+  "before_existing_paths": [
+    "tests/tools/test_render_skill.py",
+    "tests/tools/run-frontcomposer-inspect-gate.ps1",
+    "tests/tools/run-ci-workflow-gates.ps1",
+    "tests/tools/test_run_ci_workflow_gates.py"
+  ],
+  "before_absent_paths": [
+    "tests/tools/test_release_workflow.py",
+    "tests/tools/test_run_g6_candidate_gate.py",
+    "tests/tools/test_g6_mapper_build.py",
+    "package.json",
+    "package-lock.json"
+  ]
+}

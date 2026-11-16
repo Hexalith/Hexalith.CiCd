@@ -1,0 +1,160 @@
+{
+  "source": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+  "six_file_repair_applied": true,
+  "results": [
+    {
+      "name": "production-authority",
+      "command": [
+        "/tmp/hexalith-job.sXlzBxY9/gate-venv/bin/python",
+        "-m",
+        "unittest",
+        "tests/tools/test_production_authority_guard.py",
+        "-v"
+      ],
+      "exit": 0,
+      "seconds": 32.591715265007224,
+      "tests": 49,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-production-authority.log"
+    },
+    {
+      "name": "bmad-loop-hook",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "tests/tools/test_bmad_loop_hook.py",
+        "-v"
+      ],
+      "exit": 0,
+      "seconds": 2.8216843029949814,
+      "tests": 10,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-bmad-loop-hook.log"
+    },
+    {
+      "name": "git-whitespace",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "tests/tools/test_git_whitespace_policy.py",
+        "-v"
+      ],
+      "exit": 0,
+      "seconds": 0.4891534869966563,
+      "tests": 5,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-git-whitespace.log"
+    },
+    {
+      "name": "workspace-ownership",
+      "command": [
+        "python3",
+        "-B",
+        ".agents/skills/bmad-build-auto/scripts/tests/test_workspace_ownership.py"
+      ],
+      "exit": 0,
+      "seconds": 9.848783385998104,
+      "tests": null,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-workspace-ownership.log"
+    },
+    {
+      "name": "cleanup-legacy",
+      "command": [
+        "python3",
+        "-B",
+        ".agents/skills/bmad-module-builder/scripts/tests/test-cleanup-legacy.py"
+      ],
+      "exit": 0,
+      "seconds": 9.43955362100678,
+      "tests": null,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-cleanup-legacy.log"
+    },
+    {
+      "name": "merge-atomicity",
+      "command": [
+        "/tmp/hexalith-job.sXlzBxY9/gate-venv/bin/python",
+        ".agents/skills/bmad-module-builder/scripts/tests/test-merge-atomicity.py"
+      ],
+      "exit": 0,
+      "seconds": 111.8720248019963,
+      "tests": null,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-merge-atomicity.log"
+    },
+    {
+      "name": "release-package-tools",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "tests/tools/test_release_package_tools.py",
+        "-v"
+      ],
+      "exit": 0,
+      "seconds": 13.382143269001972,
+      "tests": 20,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-release-package-tools.log"
+    },
+    {
+      "name": "archived-g6-packet",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "tests/tools/test_check_g6_packet_gitlinks.py",
+        "tests/tools/test_g6_packet_references.py",
+        "-v"
+      ],
+      "exit": 0,
+      "seconds": 0.7044401320017641,
+      "tests": 20,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-archived-g6-packet.log"
+    },
+    {
+      "name": "current-g6-selection",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "tests/tools/test_run_g6_ci_gate.py",
+        "tests/tools/test_current_g6_policy.py",
+        "-v"
+      ],
+      "exit": 0,
+      "seconds": 0.3834529869927792,
+      "tests": 10,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-current-g6-selection.log"
+    },
+    {
+      "name": "workflow-regression",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "tests/tools/test_run_ci_workflow_gates.py",
+        "-v"
+      ],
+      "exit": 1,
+      "seconds": 64.92314995000197,
+      "tests": 9,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-workflow-regression.log"
+    },
+    {
+      "name": "ci-invariants",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "./tests/tools/run-ci-workflow-gates.ps1"
+      ],
+      "exit": 1,
+      "seconds": 2.2288396030053264,
+      "tests": null,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/existing-gate-ci-invariants.log"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "environment": {
+    "node": "v26.4.0",
+    "npm": "11.18.0"
+  },
+  "files_unchanged": true,
+  "files": {
+    "package.json": "c247649851bdcec441bad40d5e7d5148cdde498524c576a35fa33a56557dc300",
+    "package-lock.json": "be1836041ceea161d6ca3454402620551674a1889db483c9e5ccaca737bb9017",
+    "commitlint.config.mjs": "51ed651cbefef01c7ab1965c089a36c3cfaf98a997a54ad04c97584a4a15d056"
+  },
+  "validated_message": "build(cicd): repair existing Projects gate prerequisites\n",
+  "results": [
+    {
+      "name": "npm-ci",
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exit": 0,
+      "seconds": 12.004548176002572,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/legacy-commitlint-npm-ci.log"
+    },
+    {
+      "name": "npm-signatures",
+      "command": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "exit": 0,
+      "seconds": 12.69038387099863,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/legacy-commitlint-npm-signatures.log"
+    },
+    {
+      "name": "module-commitlint",
+      "command": [
+        "node",
+        "node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "commitlint.config.mjs",
+        "--color=false",
+        "--edit",
+        "/tmp/hexalith-job.govcWMRZ/legacy-commitlint/commit-message"
+      ],
+      "exit": 1,
+      "seconds": 0.3779182389989728,
+      "log": "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/projects-g6-hosted-gate-repair-2026-11-16/repair-20261116T194959Z/legacy-commitlint-module-commitlint.log"
+    }
+  ],
+  "publication_executed": false
+}

@@ -1,0 +1,70 @@
+{
+  "verified_at": "2026-11-16T19:53:44.893838+00:00",
+  "node_version": "24.22.2",
+  "node_archive_url": "https://nodejs.org/dist/v24.22.2/node-v24.22.2-linux-x64.tar.xz",
+  "node_archive_sha256": "48cc0e21e048790e54c0cf5749c2725005313d652651c40b7a21feb9697aaf75",
+  "commitlint_cli": "21.2.4",
+  "config_conventional": "21.2.4",
+  "package_json_sha256": "c247649851bdcec441bad40d5e7d5148cdde498524c576a35fa33a56557dc300",
+  "package_lock_sha256": "be1836041ceea161d6ca3454402620551674a1889db483c9e5ccaca737bb9017",
+  "policy_sha256": "51ed651cbefef01c7ab1965c089a36c3cfaf98a997a54ad04c97584a4a15d056",
+  "results": [
+    {
+      "name": "npm-clean-install",
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exit": 0,
+      "expected_exit": 0
+    },
+    {
+      "name": "npm-signatures",
+      "command": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "exit": 0,
+      "expected_exit": 0
+    },
+    {
+      "name": "module-valid-message",
+      "command": [
+        "node",
+        "/tmp/hexalith-job.mM2cn2jf/projects/node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "/tmp/hexalith-job.mM2cn2jf/projects/commitlint.config.mjs",
+        "--color=false"
+      ],
+      "exit": 0,
+      "expected_exit": 0
+    },
+    {
+      "name": "module-invalid-type",
+      "command": [
+        "node",
+        "/tmp/hexalith-job.mM2cn2jf/projects/node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "/tmp/hexalith-job.mM2cn2jf/projects/commitlint.config.mjs",
+        "--color=false"
+      ],
+      "exit": 1,
+      "expected_exit": 1
+    },
+    {
+      "name": "module-invalid-header",
+      "command": [
+        "node",
+        "/tmp/hexalith-job.mM2cn2jf/projects/node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "/tmp/hexalith-job.mM2cn2jf/projects/commitlint.config.mjs",
+        "--color=false"
+      ],
+      "exit": 1,
+      "expected_exit": 1
+    }
+  ],
+  "status": "qualified"
+}

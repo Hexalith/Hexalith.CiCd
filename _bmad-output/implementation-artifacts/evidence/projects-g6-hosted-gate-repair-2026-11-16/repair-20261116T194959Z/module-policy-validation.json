@@ -1,0 +1,36 @@
+{
+  "validated_message": "build(cicd): repair existing Projects gate prerequisites\n",
+  "environment": {
+    "node": "v26.4.0",
+    "npm": "11.18.0"
+  },
+  "files_unchanged": true,
+  "results": [
+    {
+      "name": "install",
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exit": 0,
+      "seconds": 9.986838053999236
+    },
+    {
+      "name": "validate",
+      "command": [
+        "node",
+        "node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "commitlint.config.mjs",
+        "--color=false",
+        "--edit",
+        "/tmp/hexalith-job.uM8wfyuI/module-policy/commit-message"
+      ],
+      "exit": 0,
+      "seconds": 0.682320706997416
+    }
+  ],
+  "npm_signatures": "Previously passed; not repeated. See legacy-commitlint-qualification.json.",
+  "initial_harness_failure": "The first isolated npm directory lacked Git metadata required by --edit; corrected with private git init. No module source change."
+}

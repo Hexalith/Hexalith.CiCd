@@ -1,0 +1,133 @@
+--- a/references/Hexalith.Projects/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
++++ b/references/Hexalith.Projects/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
+@@ -147,10 +147,15 @@
+             metadata = new { name = scratch.Isolation }, spec = new { accessControl = new { defaultAction = "deny", trustDomain = "public" },
+                 nameResolution = new { component = "sqlite", version = "v1", configuration = new { connectionString = scratch.File("discovery.sqlite") } } } }), cancellationToken).ConfigureAwait(false);
+         using RSA owner = RSA.Create(2048), tenantOwner = RSA.Create(2048), folderOwner = RSA.Create(2048);
++        using RSA folderScan = RSA.Create(2048), folderWorker = RSA.Create(2048), folderWorkerScan = RSA.Create(2048);
+         var fixture = new { Enabled = true, IsolationId = scratch.Isolation, Root = root, UserIssuer = Authority,
+             Mode = actualOwners ? "actual-owner" : "compatibility", Scenario = scenario == "browser" ? "main" : scenario, ChannelToken = Secret(),
+             FoldersSecret = Secret(), FolderOwnerPrivateKey = Convert.ToBase64String(folderOwner.ExportPkcs8PrivateKey()),
+             FolderOwnerPublicKey = Convert.ToBase64String(folderOwner.ExportSubjectPublicKeyInfo()),
++            FolderScanPrivateKey = Convert.ToBase64String(folderScan.ExportPkcs8PrivateKey()), FolderScanPublicKey = Convert.ToBase64String(folderScan.ExportSubjectPublicKeyInfo()),
++            FolderWorkersSecret = Secret(), FolderWorkerPrivateKey = Convert.ToBase64String(folderWorker.ExportPkcs8PrivateKey()),
++            FolderWorkerPublicKey = Convert.ToBase64String(folderWorker.ExportSubjectPublicKeyInfo()),
++            FolderWorkerScanPrivateKey = Convert.ToBase64String(folderWorkerScan.ExportPkcs8PrivateKey()), FolderWorkerScanPublicKey = Convert.ToBase64String(folderWorkerScan.ExportSubjectPublicKeyInfo()),
+             CertificatePath = scratch.File("certificate.pfx"), CertificatePassword = certificatePassword, TrustBundle = scratch.File("certificate.pem"),
+             BootstrapPassword = Password, DiscoveryConfiguration = scratch.File("discovery.json"), Tenant, ForeignTenant,
+             Browser = new { Enabled = true, PrimaryActor = Subjects["actor-1"], ForeignActor = Subjects["foreign-actor"], ClientSecret,
+--- a/references/Hexalith.Projects/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
++++ b/references/Hexalith.Projects/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
+@@ -85,7 +85,7 @@
+         }
+         else if (configuration[Prefix + "Browser:TokenEndpoint"] is not null)
+             throw new InvalidOperationException("A browser token endpoint requires the explicit browser fixture.");
+-        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey" })
++        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey", "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkersSecret", "FolderWorkerPrivateKey", "FolderWorkerPublicKey", "FolderWorkerScanPrivateKey", "FolderWorkerScanPublicKey" })
+             _ = Required(configuration, Prefix + key);
+         foreach (string key in new[] { "CertificatePath", "TrustBundle" })
+             if (!File.Exists(configuration[Prefix + key])) throw new InvalidOperationException("Fixture trust material is missing.");
+@@ -261,20 +261,34 @@
+             .WithEnvironment("EventStore__Authentication__ClientId", "supported-read-bootstrap")
+             .WithEnvironment("EventStore__Authentication__Username", "actor-1")
+             .WithEnvironment("EventStore__Authentication__Password", bootstrapPassword);
+-        IResourceBuilder<ParameterResource> foldersSecret = Secret("folders-secret", "FoldersSecret");
+-        IResourceBuilder<ParameterResource> folderOwnerKey = Secret("folders-owner-key", "FolderOwnerPrivateKey");
+-        ConfigureClient(folders, "folders", foldersSecret);
+-        int folderGrant = ordinal;
+-        AddGrant("folders-owner-head", "folders", "FoldersSecret", "eventstore", ["eventstore:stream-read"], false);
+-        string grant = "Authentication__WorkloadAuthority__Grants__" + folderGrant + "__";
+-        _ = authority.WithEnvironment(grant + "AllowUnbound", "false")
+-            .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+-            .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+-            .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
+-        _ = folders.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", folderOwnerKey);
+-        _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__2", "folders")
+-            .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__folders", Required(configuration, Prefix + "FolderOwnerPublicKey"))
+-            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__folders", "folders");
++        foreach (var source in new[]
++        {
++            (Resource: folders, Workload: "folders", Secret: "FoldersSecret", ReadKey: "FolderOwner", ScanKey: "FolderScan", CallerIndex: 2),
++            (Resource: folderWorkers, Workload: "folders-workers", Secret: "FolderWorkersSecret", ReadKey: "FolderWorker", ScanKey: "FolderWorkerScan", CallerIndex: 3),
++        })
++        {
++            IResourceBuilder<ParameterResource> secret = Secret(source.Workload + "-secret", source.Secret);
++            IResourceBuilder<ParameterResource> readKey = Secret(source.Workload + "-owner-key", source.ReadKey + "PrivateKey");
++            IResourceBuilder<ParameterResource> scanKey = Secret(source.Workload + "-scan-key", source.ScanKey + "PrivateKey");
++            ConfigureClient(source.Resource, source.Workload, secret);
++            int folderSourceGrant = ordinal;
++            AddGrant(source.Workload + "-owner-source", source.Workload, source.Secret, "eventstore",
++                ["eventstore:stream-read", "eventstore:stream-scan-native"], false);
++            string grant = "Authentication__WorkloadAuthority__Grants__" + folderSourceGrant + "__";
++            _ = authority.WithEnvironment(grant + "AllowUnbound", "false")
++                .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
++                .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
++                .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
++            _ = source.Resource.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", readKey)
++                .WithEnvironment("Authentication__NativeSourceScan__PrivateKey", scanKey);
++            _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__" + source.CallerIndex, source.Workload)
++                .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__" + source.Workload, Required(configuration, Prefix + source.ReadKey + "PublicKey"))
++                .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__" + source.Workload, "folders")
++                .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__" + source.Workload, Required(configuration, Prefix + source.ScanKey + "PublicKey"))
++                .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__" + source.Workload, "folders");
++            if (source.Workload == "folders-workers")
++                _ = eventStore.WithEnvironment("Authentication__BoundStreamRead__MetadataOnlyCallers__folders-workers", "true");
++        }
+         _ = eventStore.WaitFor(authority);
+         _ = tenants.WaitFor(authority);
+         _ = projects.WithReference(eventStore).WithReference(tenants).WithReference(folders).WaitFor(eventStore).WaitFor(tenants).WaitFor(authority);
+--- a/references/Hexalith.Projects/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
++++ b/references/Hexalith.Projects/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+@@ -92,6 +92,9 @@
+                 new(projects, "api/v1/commands", ["POST"]),
+                 new(folders, "api/v1/commands", ["POST"]),
+                 new(folders, "api/v1/streams/read/workload", ["POST"]),
++                new(folders, "api/v1/streams/scan/workload", ["POST"]),
++                new(foldersWorkers, "api/v1/streams/read/workload", ["POST"]),
++                new(foldersWorkers, "api/v1/streams/scan/workload", ["POST"]),
+             ]) { TechnicalHttp = true },
+             new(tenants, DomainCalls("process", "replay-state", "query", "project", "admin/operational-index-metadata")),
+             new(projects, DomainCalls("process", "query", "project", "project/v2", "project/rebuild/v1", "admin/operational-index-metadata")),
+--- a/references/Hexalith.Projects/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
++++ b/references/Hexalith.Projects/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
+@@ -1,3 +1,5 @@
++extern alias PackageFixtureHost;
++
+ namespace Hexalith.Projects.Integration.Tests;
+ 
+ using System.IdentityModel.Tokens.Jwt;
+@@ -9,6 +11,8 @@
+ using Hexalith.Projects.PackageFixtures;
+ 
+ using Microsoft.IdentityModel.Tokens;
++using Microsoft.Extensions.Configuration;
++using PackageHost = PackageFixtureHost::Hexalith.Projects.PackageFixtures.AppHost;
+ 
+ using Shouldly;
+ 
+@@ -54,6 +58,25 @@
+             using JsonDocument configuration = JsonDocument.Parse(await File.ReadAllBytesAsync(scratch.File("configuration.json"), TestContext.Current.CancellationToken));
+             JsonElement settings = configuration.RootElement.GetProperty("Projects").GetProperty("PackageFixtures");
+             user.ExportSubjectPublicKeyInfo().ShouldNotBe(Convert.FromBase64String(settings.GetProperty("OwnerPublicKey").GetString()!));
++            HashSet<string> proofKeys = new(StringComparer.Ordinal);
++            foreach (string prefix in new[] { "FolderOwner", "FolderScan", "FolderWorker", "FolderWorkerScan" })
++            {
++                using RSA proof = RSA.Create();
++                proof.ImportPkcs8PrivateKey(Convert.FromBase64String(settings.GetProperty(prefix + "PrivateKey").GetString()!), out _);
++                byte[] actualPublic = proof.ExportSubjectPublicKeyInfo();
++                actualPublic.AsSpan().SequenceEqual(Convert.FromBase64String(settings.GetProperty(prefix + "PublicKey").GetString()!)).ShouldBeTrue();
++                actualPublic.AsSpan().SequenceEqual(user.ExportSubjectPublicKeyInfo()).ShouldBeFalse();
++                proofKeys.Add(Convert.ToHexString(SHA256.HashData(actualPublic))).ShouldBeTrue();
++            }
++            (settings.GetProperty("FoldersSecret").GetString() == settings.GetProperty("FolderWorkersSecret").GetString()).ShouldBeFalse();
++            IConfiguration complete = new ConfigurationBuilder().AddJsonFile(scratch.File("configuration.json")).Build();
++            PackageHost.PackageActualOwnerComposition.Validate(complete);
++            foreach (string missing in new[] { "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkerPrivateKey", "FolderWorkerPublicKey", "FolderWorkerScanPrivateKey", "FolderWorkerScanPublicKey", "FolderWorkersSecret" })
++            {
++                IConfiguration incomplete = new ConfigurationBuilder().AddJsonFile(scratch.File("configuration.json"))
++                    .AddInMemoryCollection(new Dictionary<string, string?> { ["Projects:PackageFixtures:" + missing] = null }).Build();
++                Should.Throw<InvalidOperationException>(() => PackageHost.PackageActualOwnerComposition.Validate(incomplete)).Message.ShouldContain(missing);
++            }
+             Dictionary<string, string> browser = new()
+             {
+                 ["TenantToken"] = inputs.ReaderTokens["actor-1"], ["ForeignToken"] = inputs.ReaderTokens["foreign-actor"],
