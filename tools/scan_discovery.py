@@ -1467,6 +1467,17 @@ class Discovery:
             target = cmd
         elif "$" in cmd or "`" in cmd:
             raise DeliveryError("unresolved computed command: " + clean(cmd))
+        elif not powershell and cmd == "mkdir":
+            # mkdir consumes directory data. Simple parameter expansion cannot
+            # turn that operand into a program; substitution and computed flags
+            # still require execution analysis and are deliberately refused.
+            for word in args:
+                if word.startswith("-") and word not in {"-p", "--parents", "-v", "--verbose", "--"}:
+                    raise DeliveryError("unsupported mkdir option")
+                expanded, _ = self.expand(word, path, action)
+                remaining = re.sub(r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)", "", expanded)
+                if any(value in remaining for value in ("$", "`", "<(", ">(")):
+                    raise DeliveryError("unsupported mkdir shell substitution or computed operand")
         elif builtin not in {"echo", "printf", "write-output", "write-host", "cat", "get-content", "[", "[[", "test"}:
             # An unknown consumer cannot certify an unresolved operand as
             # nonexecuting data. Follow a visible execution tool through the
@@ -1677,7 +1688,7 @@ class Discovery:
                                                             path=path, cwd=base, action=action))
                     if not targets:
                         # Bare imports must come from the locked workspace or Node's builtins.
-                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process"}:
+                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process", "process"}:
                             continue
                         package = "/".join(imported.split("/")[:2]) if imported.startswith("@") else imported.split("/")[0]
                         lock = self.json(posixpath.join(root, "package-lock.json"))
@@ -2089,7 +2100,7 @@ class Discovery:
                             executes(candidate) for candidate in names(ast.unparse(node.args[0]))):
                         raise DeliveryError("unsupported partial application of a process/import API")
                     for call in sorted(calls):
-                        self.python_call(call, node, path, cwd, action, roots, offset, names)
+                        self.python_call(call, node, path, cwd, action, roots, offset, names, parents, nodes)
             except (ValueError, RecursionError) as error:
                 self.error(path, getattr(node, "lineno", 1) + offset, "local-script discovery: " + clean(error))
         for candidate_cwd in dict.fromkeys(cwds):
@@ -2146,7 +2157,324 @@ class Discovery:
                 raise DeliveryError("unsupported reflective getattr of a process/import API")
         raise DeliveryError("unsupported reflective use of a process/import API: " + clean(sorted(candidates)[0]))
 
-    def python_call(self, call, node, path, cwd, action, roots, offset, names):
+    @staticmethod
+    def copied_environment(value, invocation, parents, all_nodes, names):
+        """Prove an unaliased local environment copy leaves interpreter lookup unchanged."""
+        if not isinstance(value, ast.Name) or len(all_nodes) > 4096:
+            return False
+        scope = parents.get(invocation)
+        while scope is not None and not isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Module)):
+            scope = parents.get(scope)
+        if scope is None:
+            return False
+        nodes = list(ast.walk(scope))
+        if len(nodes) > 4096:
+            return False
+        definitions = [entry for entry in scope.body if isinstance(entry, ast.Assign)
+                       and len(entry.targets) == 1 and isinstance(entry.targets[0], ast.Name)
+                       and entry.targets[0].id == value.id]
+        if len(definitions) != 1:
+            return False
+        definition = definitions[0]
+        if Discovery.proof_bindings(value.id, nodes) != [definition.targets[0]]:
+            return False
+        copy = definition.value
+        if (not isinstance(copy, ast.Call) or copy.args or copy.keywords
+                or not isinstance(copy.func, ast.Attribute) or copy.func.attr != "copy"
+                or names(ast.unparse(copy.func.value)) != {"os.environ"}):
+            return False
+        source = copy.func.value
+        while isinstance(source, ast.Attribute):
+            source = source.value
+        if not isinstance(source, ast.Name):
+            return False
+        source_name = source.id
+        if len(Discovery.proof_bindings(source_name, all_nodes)) != 1:
+            return False
+        imported = False
+        for entry in all_nodes:
+            if isinstance(entry, ast.Import):
+                for item in entry.names:
+                    if (item.asname or item.name) == source_name:
+                        if item.name != "os":
+                            return False
+                        imported = True
+            elif isinstance(entry, ast.ImportFrom):
+                for item in entry.names:
+                    if (item.asname or item.name) == source_name:
+                        if entry.module != "os" or item.name != "environ" or entry.level:
+                            return False
+                        imported = True
+            elif ((isinstance(entry, ast.Name) and isinstance(entry.ctx, (ast.Store, ast.Del)) and entry.id == source_name)
+                  or (isinstance(entry, ast.arg) and entry.arg == source_name)
+                  or (isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and entry.name == source_name)):
+                return False
+            elif isinstance(entry, (ast.Attribute, ast.Subscript)) and isinstance(entry.ctx, (ast.Store, ast.Del)):
+                if any(candidate == "os.environ" or candidate.startswith("os.environ.")
+                       or candidate.startswith("os.environ[")
+                       or candidate == "os.devnull" for candidate in names(ast.unparse(entry))):
+                    return False
+            elif isinstance(entry, (ast.Name, ast.Attribute)) and isinstance(entry.ctx, ast.Load):
+                if names(ast.unparse(entry)) == {"os.environ"}:
+                    access = parents.get(entry)
+                    access_call = parents.get(access)
+                    if (not isinstance(access, ast.Attribute) or access.attr not in {"copy", "get"}
+                            or not isinstance(access_call, ast.Call) or access_call.func is not access):
+                        return False
+            elif isinstance(entry, ast.Call):
+                # Neither the source module nor its mutable mapping may escape
+                # into an unknown callback before the supposedly honest copy.
+                if (names(ast.unparse(entry.func)) & {"globals", "locals", "vars", "setattr", "delattr"}
+                        or any(names(ast.unparse(argument)) & {"os", "os.environ"}
+                               for argument in [*entry.args, *(keyword.value for keyword in entry.keywords)])):
+                    return False
+        if not imported:
+            return False
+        container = invocation
+        while parents.get(container) is not scope:
+            container = parents.get(container)
+            if container is None:
+                return False
+        if scope.body.index(definition) >= scope.body.index(container):
+            return False
+
+        protected = RESOLUTION | {"PATH", "BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS", "ZDOTDIR", "FPATH"}
+        protected_prefixes = ("PYTHON", "NODE", "NPM_CONFIG_", "PS", "POWERSHELL")
+        def safe_key(key):
+            return isinstance(key, str) and key.upper() not in protected and not key.upper().startswith(protected_prefixes)
+        def safe_prefix(prefix):
+            return (isinstance(prefix, str) and bool(prefix) and safe_key(prefix)
+                    and not any(key.startswith(prefix.upper()) for key in protected)
+                    and not any(key.startswith(prefix.upper()) or prefix.upper().startswith(key) for key in protected_prefixes))
+        def data(expression):
+            return (isinstance(expression, ast.Constant) and isinstance(expression.value, str)
+                    or isinstance(expression, ast.Attribute) and names(ast.unparse(expression)) == {"os.devnull"}
+                    and isinstance(expression.value, ast.Name) and expression.value.id == source_name)
+        def receiver(call, method):
+            return (isinstance(call, ast.Call) and isinstance(call.func, ast.Attribute)
+                    and isinstance(call.func.value, ast.Name) and call.func.value.id == value.id and call.func.attr == method)
+        allowed = {definition.targets[0], value}
+        for entry in nodes:
+            if isinstance(entry, ast.Call) and names(ast.unparse(entry.func)) <= COMMAND_APIS:
+                allowed.update(keyword.value for keyword in entry.keywords if keyword.arg == "env"
+                               and isinstance(keyword.value, ast.Name) and keyword.value.id == value.id)
+        for statement in scope.body[scope.body.index(definition) + 1:scope.body.index(container)]:
+            valid = False
+            if isinstance(statement, ast.Expr) and receiver(statement.value, "update"):
+                update = statement.value
+                values = []
+                if not update.args:
+                    values = [(item.arg, item.value) for item in update.keywords]
+                elif len(update.args) == 1 and not update.keywords and isinstance(update.args[0], ast.Dict):
+                    values = [(key.value if isinstance(key, ast.Constant) else None, item)
+                              for key, item in zip(update.args[0].keys, update.args[0].values)]
+                valid = bool(values) and all(safe_key(key) and data(item) for key, item in values)
+            elif isinstance(statement, ast.For) and isinstance(statement.target, ast.Name) and not statement.orelse:
+                iterate = statement.iter
+                if (isinstance(iterate, ast.Call) and isinstance(iterate.func, ast.Name) and iterate.func.id == "tuple"
+                        and len(iterate.args) == 1 and not iterate.keywords and isinstance(iterate.args[0], ast.Name)
+                        and iterate.args[0].id == value.id and len(statement.body) == 1
+                        and isinstance(statement.body[0], ast.If) and not statement.body[0].orelse):
+                    branch = statement.body[0]
+                    test = branch.test
+                    pop = branch.body[0].value if len(branch.body) == 1 and isinstance(branch.body[0], ast.Expr) else None
+                    valid = (isinstance(test, ast.Call) and isinstance(test.func, ast.Attribute)
+                             and isinstance(test.func.value, ast.Name) and test.func.value.id == statement.target.id
+                             and test.func.attr == "startswith" and len(test.args) == 1 and not test.keywords
+                             and isinstance(test.args[0], ast.Constant) and safe_prefix(test.args[0].value)
+                             and receiver(pop, "pop") and len(pop.args) == 1 and not pop.keywords
+                             and isinstance(pop.args[0], ast.Name) and pop.args[0].id == statement.target.id)
+                    # A shadowed iteration helper can mutate the copy itself.
+                    if Discovery.proof_bindings("tuple", all_nodes):
+                        valid = False
+            if valid:
+                allowed.update(item for item in ast.walk(statement) if isinstance(item, ast.Name) and item.id == value.id)
+        return all(entry in allowed for entry in nodes if isinstance(entry, ast.Name) and entry.id == value.id)
+
+    @staticmethod
+    def proof_bindings(name, nodes):
+        """All syntactic bindings, including forms that have no Name(Store) node."""
+        result = []
+        for entry in nodes:
+            if (isinstance(entry, ast.Name) and isinstance(entry.ctx, (ast.Store, ast.Del)) and entry.id == name
+                    or isinstance(entry, ast.arg) and entry.arg == name
+                    or isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and entry.name == name
+                    or isinstance(entry, ast.ExceptHandler) and entry.name == name
+                    or isinstance(entry, (ast.MatchAs, ast.MatchStar)) and entry.name == name
+                    or isinstance(entry, ast.MatchMapping) and entry.rest == name
+                    or isinstance(entry, (ast.Global, ast.Nonlocal)) and name in entry.names):
+                result.append(entry)
+            elif isinstance(entry, ast.Import):
+                result.extend(item for item in entry.names if (item.asname or item.name.split(".")[0]) == name)
+            elif isinstance(entry, ast.ImportFrom):
+                result.extend(item for item in entry.names if (item.asname or item.name) == name)
+        return result
+
+    @staticmethod
+    def proof_namespace_safe(nodes):
+        """Reflection can replace bindings without a visible assignment; refuse that subset."""
+        reflective = {"globals", "locals", "vars", "getattr", "setattr", "delattr", "exec", "eval", "__import__"}
+        attributes = reflective | {"__dict__", "__globals__", "__code__", "__closure__", "__setattr__", "f_globals", "f_locals", "modules"}
+        return len(nodes) <= 4096 and not any(
+            isinstance(entry, ast.Call) and isinstance(entry.func, ast.Name) and entry.func.id in reflective
+            or isinstance(entry, ast.Attribute) and entry.attr in attributes
+            or isinstance(entry, ast.ImportFrom) and any(item.name == "*" or entry.module == "builtins"
+                                                       and item.name in reflective for item in entry.names)
+            for entry in nodes)
+
+    @staticmethod
+    def proof_function(name, nodes, parents):
+        bindings = Discovery.proof_bindings(name, nodes)
+        if (len(bindings) != 1 or not isinstance(bindings[0], ast.FunctionDef) or bindings[0].decorator_list
+                or not isinstance(parents.get(bindings[0]), ast.Module)):
+            return None
+        if any(isinstance(entry, ast.Name) and isinstance(entry.ctx, ast.Load) and entry.id == name
+               and (not isinstance(parents.get(entry), ast.Call) or parents[entry].func is not entry) for entry in nodes):
+            return None
+        return bindings[0]
+
+    @staticmethod
+    def proof_import(name, module, nodes, parents):
+        bindings = Discovery.proof_bindings(name, nodes)
+        if len(bindings) != 1 or not isinstance(bindings[0], ast.alias):
+            return False
+        declaration = parents.get(bindings[0])
+        if (not isinstance(declaration, ast.Import) or bindings[0].name != module
+                or not isinstance(parents.get(declaration), ast.Module)):
+            return False
+        def base(entry):
+            while isinstance(entry, (ast.Attribute, ast.Subscript)):
+                entry = entry.value
+            return entry.id if isinstance(entry, ast.Name) else None
+        return not any(
+            isinstance(entry, (ast.Attribute, ast.Subscript)) and isinstance(entry.ctx, (ast.Store, ast.Del)) and base(entry) == name
+            or isinstance(entry, ast.Name) and isinstance(entry.ctx, ast.Load) and entry.id == name
+            and (not isinstance(parents.get(entry), ast.Attribute) or parents[entry].value is not entry)
+            for entry in nodes)
+
+    @staticmethod
+    def forwarded_argv(expression, invocation, parents, nodes):
+        """Expand only direct immutable *args forwarding and finite literal tuple loops."""
+        if not Discovery.proof_namespace_safe(nodes):
+            raise ValueError("unsafe forwarded namespace or proof limit")
+        functions = {}
+        for entry in nodes:
+            if isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                functions.setdefault(entry.name, []).append(entry)
+        def owner(entry):
+            while entry is not None and not isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                entry = parents.get(entry)
+            return entry
+        def sequence(items, at, stack):
+            if len(stack) > 8 or len(items) > 256:
+                raise ValueError("forwarded argv expansion limit exceeded")
+            choices = [[]]
+            for item in items:
+                alternatives = variable(item.value, at, stack) if isinstance(item, ast.Starred) else [[item]]
+                if len(choices) * len(alternatives) > 128:
+                    raise ValueError("forwarded argv expansion limit exceeded")
+                choices = [left + right for left in choices for right in alternatives]
+                if len(choices) > 128 or any(len(choice) > 256 for choice in choices):
+                    raise ValueError("forwarded argv expansion limit exceeded")
+            return choices
+        def variable(item, at, stack):
+            if not isinstance(item, ast.Name):
+                raise ValueError("unresolved forwarded argv")
+            scope = owner(at)
+            cursor = at
+            while cursor is not None and cursor is not scope:
+                if (isinstance(cursor, ast.For) and isinstance(cursor.target, ast.Name)
+                        and cursor.target.id == item.id and not cursor.orelse):
+                    literal = ast.literal_eval(cursor.iter)
+                    if (not isinstance(literal, (tuple, list)) or not literal or len(literal) > 128
+                            or any(not isinstance(row, tuple) or len(row) > 256
+                                   or any(not isinstance(value, str) for value in row) for row in literal)
+                            or Discovery.proof_bindings(item.id, list(ast.walk(cursor))) != [cursor.target]):
+                        raise ValueError("unresolved forwarded tuple loop")
+                    return [[ast.Constant(value) for value in row] for row in literal]
+                cursor = parents.get(cursor)
+            if (scope is None or scope.decorator_list or scope.args.vararg is None or scope.args.vararg.arg != item.id
+                    or len(functions.get(scope.name, [])) != 1 or scope.name in stack
+                    or Discovery.proof_function(scope.name, nodes, parents) is not scope
+                    or Discovery.proof_bindings(item.id, list(ast.walk(scope))) != [scope.args.vararg]):
+                raise ValueError("unresolved forwarded argv")
+            # A wrapper alias, callback, shadowed callable or **kwargs cannot
+            # silently introduce callers outside this finite direct-call graph.
+            if any(isinstance(entry, ast.Name) and entry.id == scope.name
+                   and (not isinstance(entry.ctx, ast.Load) or not isinstance(parents.get(entry), ast.Call)
+                        or parents[entry].func is not entry) for entry in nodes):
+                raise ValueError("unsafe forwarded wrapper indirection")
+            if any(isinstance(entry, ast.arg) and entry.arg == scope.name for entry in nodes):
+                raise ValueError("shadowed forwarded wrapper")
+            calls = [entry for entry in nodes if isinstance(entry, ast.Call)
+                     and isinstance(entry.func, ast.Name) and entry.func.id == scope.name]
+            if not calls or len(calls) > 128:
+                raise ValueError("unresolved forwarded wrapper callers")
+            result = []
+            fixed = len(scope.args.posonlyargs) + len(scope.args.args)
+            for caller in calls:
+                if any(keyword.arg is None for keyword in caller.keywords) or len(caller.args) < fixed:
+                    raise ValueError("unresolved forwarded wrapper options")
+                result.extend(sequence(caller.args[fixed:], caller, (*stack, scope.name)))
+                if len(result) > 128:
+                    raise ValueError("forwarded argv expansion limit exceeded")
+            return result
+        if isinstance(expression, (ast.List, ast.Tuple)):
+            return sequence(expression.elts, invocation, ())
+        return variable(expression, invocation, ())
+
+    @staticmethod
+    def git_data_argv(arguments):
+        """Accept literal Git data operations; opaque values require stronger provenance."""
+        literal = lambda item: item.value if isinstance(item, ast.Constant) and isinstance(item.value, str) else None
+        if not arguments or literal(arguments[0]) != "git":
+            return False
+        values = list(arguments[1:])
+        while values and literal(values[0]) in {"-C", "-c"}:
+            option = literal(values.pop(0))
+            if not values:
+                return False
+            operand = values.pop(0)
+            if option == "-c" and literal(operand) not in {"submodule.recurse=false", "core.hooksPath=/dev/null"}:
+                return False
+        if not values:
+            return False
+        verb = literal(values.pop(0))
+        if verb not in {"rev-parse", "ls-tree", "ls-files", "for-each-ref", "cat-file", "show", "config", "remote", "fetch"}:
+            return False
+        # A regex guard alone does not prove that a repeated subscript read or
+        # concatenation returns the validated native string. Refuse every opaque
+        # operand until that provenance is proved, including metadata options.
+        if any(literal(item) is None for item in values):
+            return False
+        operands = [literal(item) for item in values]
+        forbidden = {"--exec", "--upload-pack", "--receive-pack", "--ext-diff", "--textconv", "--filters", "--edit", "-e", "-c", "--config-env"}
+        if any(item.split("=", 1)[0] in forbidden for item in operands):
+            return False
+        if verb == "config":
+            return bool(operands) and (operands[0] in {"--get", "--get-all", "--get-regexp"}
+                or len(operands) > 2 and operands[0] == "--blob" and operands[2] in {"--get", "--get-all", "--get-regexp"})
+        if verb == "remote":
+            return bool(operands) and operands[0] == "get-url"
+        if verb == "cat-file" and (not operands or operands[0] not in {"-t", "-s", "-e", "--batch-check"}
+                                   and not operands[0].startswith("--batch-check=")):
+            return False
+        if verb == "fetch":
+            if not {"--no-auto-maintenance", "--no-recurse-submodules"} <= set(operands):
+                return False
+            options = {"--no-auto-maintenance", "--no-recurse-submodules", "--no-tags", "--depth=1",
+                       "--no-write-fetch-head", "--refmap="}
+            while operands and operands[0] in options:
+                operands.pop(0)
+            if len(operands) != 2:
+                return False
+            remote, identity = operands
+            return (bool(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", remote)
+                         or re.fullmatch(r"https://[^\s]+", remote))
+                    and re.fullmatch(r"[0-9a-f]{40}", identity) is not None)
+        return True
+
+    def python_call(self, call, node, path, cwd, action, roots, offset, names, parents, nodes):
         if call.startswith(UNSUPPORTED_PREFIXES) or call in UNSUPPORTED_CALLS:
             raise DeliveryError("unsupported Python process/import API: " + clean(call))
         if call in {"importlib.import_module", "__import__"}:
@@ -2160,6 +2488,8 @@ class Discovery:
                     raise DeliveryError("unresolved subprocess positional/options expansion")
                 for keyword in node.keywords:
                     if keyword.arg not in {"cwd", "executable", "shell", "env"}:
+                        continue
+                    if keyword.arg == "env" and self.copied_environment(keyword.value, node, parents, nodes, names):
                         continue
                     try:
                         option = ast.literal_eval(keyword.value)
@@ -2189,6 +2519,33 @@ class Discovery:
             if not node.args:
                 raise DeliveryError("unresolved Python script invocation")
             first = node.args[0]
+            if (isinstance(first, ast.Name) or isinstance(first, (ast.List, ast.Tuple))
+                    and any(isinstance(item, ast.Starred) for item in first.elts)):
+                try:
+                    if (not call.startswith("subprocess.") or not isinstance(node.func, ast.Attribute)
+                            or not isinstance(node.func.value, ast.Name)
+                            or not self.proof_import(node.func.value.id, "subprocess", nodes, parents)
+                            or self.import_module("subprocess", path, cwd, action, roots=roots)):
+                        raise ValueError("untrusted forwarded subprocess namespace")
+                    if any(keyword.arg == "shell" and not (isinstance(keyword.value, ast.Constant)
+                            and keyword.value.value in (None, False)) for keyword in node.keywords):
+                        raise ValueError("unsupported forwarded shell option")
+                    variants = self.forwarded_argv(first, node, parents, nodes)
+                    for variant in variants:
+                        if self.git_data_argv(variant):
+                            if any(keyword.arg == "shell" and not isinstance(keyword.value, ast.Constant)
+                                   or keyword.arg == "shell" and keyword.value.value not in (None, False) for keyword in node.keywords):
+                                raise ValueError("unsupported shell execution of a metadata operation")
+                            continue
+                        if variant and isinstance(variant[0], ast.Constant) and variant[0].value == "git":
+                            raise ValueError("unsupported forwarded Git mode or operands")
+                        command = [ast.literal_eval(item) for item in variant]
+                        if not command or not all(isinstance(item, str) for item in command):
+                            raise ValueError("unresolved forwarded executable or argument")
+                        self.commands(path, shlex.join(command), target_cwd, action, offset=node.lineno - 1 + offset)
+                    return
+                except (ValueError, TypeError, SyntaxError):
+                    raise DeliveryError("unresolved computed Python script invocation; unsafe or unresolved forwarding") from None
             # Fixed .NET SDK operations consume project/output/property data.
             # Their C#/MSBuild graph is outside this source-language perimeter;
             # dynamic executable/verb/options expansion still cannot be certified.

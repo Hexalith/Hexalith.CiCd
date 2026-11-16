@@ -1,0 +1,70 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "b5e61315b0f14fd5b8ec45ad739ab09d",
+  "source": "b17382d0ba7b4dc6599a18b3567da8a18e5cbd9a",
+  "tree": "cad523ca21b8361f1a03e93bd41db09380dee745",
+  "sharedSource": "cbd13a1e93015182439112918cae4216b953f9bf",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "047eda057b0a288b86610f5c449f3b712677761660c6033f80d65c776d1dc793"
+    }
+  ],
+  "startedAt": 1794869636.8594024,
+  "events": [
+    {
+      "at": 1794869650.210493,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794869657.8862875,
+      "message": "Exact official DinD image available"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "047eda057b0a288b86610f5c449f3b712677761660c6033f80d65c776d1dc793"
+      },
+      "state": "already-removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.rSMZB8lG",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "7e09f94b3173604392aae08e95ff2a7f04752364b2f9e827b3397fd1cb1c759e",
+  "orchestratorSha256": "524ee15a836a6af7d13a1bcbe0f9e331eb8bc5d577d593be5613302eb349da40",
+  "status": "failed",
+  "exceptionType": "TimeoutError",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794869749.8104405,
+  "elapsedSeconds": 112.95103812217712,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

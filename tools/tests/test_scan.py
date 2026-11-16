@@ -418,6 +418,7 @@ class ScanTests(unittest.TestCase):
             ("globalThis.process.getBuiltinModule('child_process').spawn(process.env.TOOL, []);", "reflective JavaScript execution"),
             ("const runtime = globalThis.process; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
             ("import runtime from 'node:process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("import {default as runtime} from 'node:process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
             ("import runtime = require('node:process'); runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
             ("import runtime from 'node:process'; function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(runtime);", "API escape"),
             ("process[process.env.API]('child_process').exec(process.env.CMD);", "reflective JavaScript process/import API"),
@@ -427,6 +428,11 @@ class ScanTests(unittest.TestCase):
             ("const runtime = require('node:process'); runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
             ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(process);", "API escape"),
             ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis.process);", "API escape"),
+            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis['process']);", "API escape"),
+            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(global['process']);", "API escape"),
+            ("const root = globalThis; root.process.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("const root = global; root.process.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("function f(root) { root.process.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis);", "API escape"),
             ("import {exec} from 'node:child_process'; setTimeout(exec, 0, process.env.CMD);", "API escape"),
             ("import {spawn} from 'node:child_process'; spawn(process.env.TOOL, []);", "computed JavaScript process"),
             ("export default {globalSetup:process.env.SETUP};", "computed JavaScript test configuration"),
@@ -443,15 +449,205 @@ class ScanTests(unittest.TestCase):
     def test_builtin_process_imports_preserve_ordinary_environment_and_argument_reads(self):
         for source in (
             "import runtime from 'node:process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+            "import {default as runtime} from 'node:process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
             "import * as runtime from 'process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
             "import {env, argv} from 'node:process'; const mode = env.CI; const args = argv.slice(2);\n",
             "const runtime = require('process'); const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
             "const runtime = globalThis.process; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+            "const runtime = globalThis['process']; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+            "const root = globalThis; const mode = root.process.env.CI; const args = root.process.argv.slice(2);\n",
+            "const root = global; const mode = root.process.env.CI; const args = root.process.argv.slice(2);\n",
         ):
             with self.subTest(source=source):
                 report = self.coverage_case([("bash", "node script.js", "")], {"script.js": source})
+                self.assertEqual(report["result"], "pass", report)
                 self.assertTrue(all(not row["errors"] for row in report["modules"]), report)
-                self.assert_coverage(report, "script.js", None)
+                self.assertTrue(all("script.js" in {item["path"] for item in row["files"]} for row in report["modules"]), report)
+
+    def test_data_only_mkdir_accepts_parameters_but_not_execution(self):
+        report = self.coverage_case([("bash", 'mkdir -p "$REPORT_DIRECTORY"\npython3 leaf.py', "")], {"leaf.py": COPY})
+        self.assert_coverage(report, "leaf.py", None)
+        for command in ('mkdir -p "$(python3 hidden.py)"', 'mkdir -p "`python3 hidden.py`"',
+                        'mkdir -p "${DIRECTORY:-$(python3 hidden.py)}"', '$DIRECTORY_TOOL -p "$REPORT_DIRECTORY"'):
+            with self.subTest(command=command):
+                report = self.coverage_case([("bash", command, "")], {"hidden.py": COPY})
+                self.assertEqual(report["result"], "fail", report)
+                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
+
+    def test_subprocess_environment_copy_preserves_source_resolution(self):
+        source = (
+            "import os, subprocess\n"
+            "def invoke():\n"
+            "    environment = os.environ.copy()\n"
+            "    for key in tuple(environment):\n"
+            "        if key.startswith('GIT_'):\n"
+            "            environment.pop(key)\n"
+            "    environment.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull, GIT_NO_LAZY_FETCH='1')\n"
+            "    subprocess.run(['python3', 'leaf.py'], env=environment)\n"
+            "invoke()\n"
+        )
+        self.assert_coverage(self.coverage_case([("bash", "python3 entry.py", "")],
+                                               {"entry.py": source, "leaf.py": COPY}), "leaf.py", None)
+        cases = {
+            "resolution_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "PATH='.'"),
+            "python_prefix_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "PYTHONSAFEPATH='0'"),
+            "lowercase_npm_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "npm_config_script_shell='python3'"),
+            "node_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "NODE_OPTIONS='--require hidden.js'"),
+            "powershell_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "PSModulePath='.'"),
+            "resolution_delete": source.replace("key.startswith('GIT_')", "key.startswith('PATH')"),
+            "computed_update": source.replace("environment.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull, GIT_NO_LAZY_FETCH='1')", "environment.update(mapping)"),
+            "computed_value": source.replace("GIT_CONFIG_NOSYSTEM='1'", "GIT_CONFIG_NOSYSTEM=unknown()"),
+            "alias_escape": source.replace("    for key", "    alias = environment\n    for key", 1),
+            "imported_copy": source.replace("    subprocess.run", "    from injected import mapping as environment\n    subprocess.run"),
+            "class_copy": source.replace("    subprocess.run", "    class environment:\n        pass\n    subprocess.run"),
+            "callback_escape": source.replace("    for key", "    mutate(environment)\n    for key", 1),
+            "shadowed_source": source.replace("def invoke():", "def invoke(os):"),
+            "replaced_source": source.replace("def invoke():", "os.environ = replacement\ndef invoke():"),
+            "source_alias_escape": source.replace("def invoke():", "mapping = os.environ\ndef invoke():"),
+            "source_method_escape": source.replace("def invoke():", "mutate(os.environ.copy)\ndef invoke():"),
+            "source_bound_mapping_escape": source.replace("def invoke():", "mutate(os.environ.copy.__self__)\ndef invoke():"),
+            "source_clear": source.replace("def invoke():", "os.environ.clear()\ndef invoke():"),
+            "shadowed_tuple": source.replace("def invoke():", "def tuple(mapping):\n    mapping['PATH'] = '.'\n    return []\ndef invoke():"),
+            "imported_tuple": source.replace("def invoke():", "from collections import deque as tuple\ndef invoke():"),
+            "rebound_loop_key": source.replace("            environment.pop(key)", "            key = 'PATH'\n            environment.pop(key)"),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": unsafe, "leaf.py": COPY})
+                self.assertEqual(report["result"], "fail", report)
+                self.assertTrue(all(any("computed subprocess env" in error for error in row["errors"])
+                                    for row in report["modules"]), report)
+
+    def test_bounded_forwarding_includes_direct_and_literal_loop_sources(self):
+        for source in (
+            "import subprocess\ndef launch(*parts):\n    return subprocess.run(parts)\nlaunch('python3', 'leaf.py')\n",
+            "import subprocess\ndef launch(root, *parts):\n    return subprocess.run(['python3', *parts])\n"
+            "def forward(*parts):\n    return launch('.', *parts)\n"
+            "for parts in (('leaf.py',), ('leaf.py',)):\n    forward(*parts)\n",
+            "import subprocess\nfor parts in (('python3', 'leaf.py'), ('python3', 'leaf.py')):\n    subprocess.run(parts)\n",
+        ):
+            with self.subTest(source=source):
+                self.assert_coverage(self.coverage_case([("bash", "python3 entry.py", "")],
+                                                       {"entry.py": source, "leaf.py": COPY}), "leaf.py", None)
+
+    def test_forwarded_indirection_and_process_options_fail_closed(self):
+        base = "import os, subprocess\ndef launch(*parts):\n    return subprocess.run(['python3', *parts])\nlaunch('leaf.py')\n"
+        cases = {
+            "dynamic_executable": base.replace("['python3', *parts]", "parts").replace("launch('leaf.py')", "launch(os.environ['TOOL'], 'leaf.py')"),
+            "dynamic_interpreter_options": base.replace("launch('leaf.py')", "launch('-c', os.environ['CODE'])"),
+            "alias": base.replace("launch('leaf.py')", "alias = launch\nalias('leaf.py')"),
+            "import": base.replace("launch('leaf.py')", "from collections import deque as launch\nlaunch('leaf.py')"),
+            "class": base.replace("launch('leaf.py')", "class launch:\n    pass\nlaunch('leaf.py')"),
+            "local_shadow": base.replace("launch('leaf.py')", "def invoke(launch):\n    launch('leaf.py')\nlaunch('leaf.py')"),
+            "global_replacement": base.replace("launch('leaf.py')", "globals()['launch'] = replacement\nlaunch('leaf.py')"),
+            "callable_code_replacement": base.replace("launch('leaf.py')", "launch.__code__ = replacement\nlaunch('leaf.py')"),
+            "decorator": base.replace("def launch", "@replacement\ndef launch"),
+            "rebound_tuple": base.replace("    return subprocess", "    parts = unknown()\n    return subprocess"),
+            "imported_varargs": base.replace("    return subprocess", "    from injected import arguments as parts\n    return subprocess"),
+            "keyword_expansion": base.replace("launch('leaf.py')", "launch('leaf.py', **options)"),
+            "shell": base.replace("*parts])", "*parts], shell=True)"),
+            "cwd": base.replace("*parts])", "*parts], cwd=os.environ['DIR'])"),
+            "env": base.replace("*parts])", "*parts], env={'PATH': '.'})"),
+            "executable": base.replace("*parts])", "*parts], executable='other-python')"),
+            "subprocess_class": base.replace("launch('leaf.py')", "class subprocess:\n    pass\nlaunch('leaf.py')"),
+            "subprocess_import": base.replace("launch('leaf.py')", "import collections as subprocess\nlaunch('leaf.py')"),
+            "loop_rebinding": "import subprocess\nfor parts in (('python3','leaf.py'),):\n    parts = unknown()\n    subprocess.run(parts)\n",
+            "computed_loop": "import subprocess\nfor parts in unknown():\n    subprocess.run(parts)\n",
+            "mutable_loop_row": "import os, subprocess\nfor parts in (['python3', 'leaf.py'],):\n    parts[1] = os.environ['SCRIPT']\n    subprocess.run(parts)\n",
+        }
+        for label, source in cases.items():
+            with self.subTest(case=label):
+                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": source, "leaf.py": COPY})
+                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
+
+    @staticmethod
+    def guarded_git_source():
+        return (
+            "import os, re, subprocess\n"
+            "IDENTITY = re.compile('[0-9a-f]{40}')\n"
+            "CATALOG = 'object.txt'\n"
+            "def require(condition, message):\n"
+            "    if not condition:\n"
+            "        raise ValueError(message)\n"
+            "def checked(values):\n"
+            "    result = values[0]\n"
+            "    require(IDENTITY.fullmatch(result), 'invalid identity')\n"
+            "    return result\n"
+            "def launch(root, *parts):\n"
+            "    return subprocess.run(['git', '-c', 'submodule.recurse=false', '-C', str(root), *parts])\n"
+            "def output(root, *parts):\n"
+            "    return launch(root, *parts)\n"
+            "identity = checked(supplied)\n"
+            "output('.', 'show', identity + ':' + CATALOG)\n"
+            "output('.', 'fetch', '--no-recurse-submodules', '--no-tags', '--depth=1', '--no-write-fetch-head', '--refmap=', '--no-auto-maintenance', 'origin', identity)\n"
+        )
+
+    def test_opaque_git_forwarding_refuses_unproved_value_provenance(self):
+        source = self.guarded_git_source()
+        literal = ("import subprocess\ndef launch(root, *parts):\n"
+                   "    return subprocess.run(['git', '-C', str(root), *parts])\n"
+                   "for parts in (('rev-parse', 'HEAD'), ('config', '--get', 'remote.origin.url')):\n"
+                   "    launch('.', *parts)\n")
+        self.assert_coverage(self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
+                                               {"entry.py": literal, "leaf.py": COPY}), "leaf.py", None)
+        cases = {
+            "guarded_opaque_value": source,
+            "changing_subscript": source.replace("    result = values[0]\n", "").replace("result", "values[0]"),
+            "string_subclass": source.replace("identity = checked(supplied)",
+                "class Identity(str):\n    def __add__(self, other):\n        return '--ext-diff'\n"
+                "identity = checked([Identity('a' * 40)])"),
+            "opaque_metadata_options": literal.replace("'HEAD'", "unknown()"),
+            "fake_module": source.replace("IDENTITY =", "re = replacement\nIDENTITY =", 1),
+            "class_module": source.replace("IDENTITY =", "class re:\n    pass\nIDENTITY =", 1),
+            "imported_module": source.replace("IDENTITY =", "import collections as re\nIDENTITY =", 1),
+            "local_module": source.replace("def checked(values):", "def checked(values, re):"),
+            "replaced_compile": source.replace("IDENTITY =", "re.compile = replacement\nIDENTITY =", 1),
+            "replaced_pattern": source.replace("def require", "IDENTITY = replacement\ndef require", 1),
+            "local_pattern": source.replace("def checked(values):", "def checked(values, IDENTITY):"),
+            "replaced_fullmatch": source.replace("def require", "IDENTITY.fullmatch = replacement\ndef require", 1),
+            "escaped_pattern": source.replace("def require", "mutate(IDENTITY)\ndef require", 1),
+            "fake_guard": source.replace("    if not condition:\n        raise ValueError(message)", "    return True"),
+            "imported_guard": source.replace("identity = checked", "from collections import deque as require\nidentity = checked"),
+            "class_guard": source.replace("identity = checked", "class require:\n    pass\nidentity = checked"),
+            "local_guard": source.replace("def checked(values):", "def checked(values, require):"),
+            "global_guard": source.replace("identity = checked", "globals()['require'] = replacement\nidentity = checked"),
+            "guard_code": source.replace("identity = checked", "require.__code__ = replacement\nidentity = checked"),
+            "guard_alias": source.replace("identity = checked", "alias = require\nidentity = checked"),
+            "side_effect_after_validation": source.replace("'invalid identity')", "mutate(values))"),
+            "dynamic_suffix": source.replace("identity + ':' + CATALOG", "identity + os.environ['FLAGS']"),
+            "rebound_suffix": source.replace("identity = checked", "CATALOG = os.environ['FLAGS']\nidentity = checked"),
+            "config_editor": source.replace("'show', identity + ':' + CATALOG", "'config', '--edit'"),
+            "custom_fetch_helper": source.replace("'origin', identity", "'ext::python3 hidden.py', identity"),
+            "fetch_option_suffix": source.replace("'origin', identity", "'origin', identity + os.environ['FLAGS']"),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                report = self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
+                                            {"entry.py": unsafe, "leaf.py": COPY})
+                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
+        for filename in ("re.py", "subprocess.py"):
+            with self.subTest(local_module=filename):
+                report = self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
+                                            {"entry.py": source, "leaf.py": COPY, filename: "pass\n"})
+                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
+
+    def test_forwarding_recursion_and_expansion_are_bounded(self):
+        cases = {
+            "recursive": "import subprocess\ndef launch(*args):\n    subprocess.run(args)\n    launch(*args)\nlaunch('python3','leaf.py')\n",
+            "callers": "import subprocess\ndef launch(*args):\n    subprocess.run(args)\n" + "launch('python3','leaf.py')\n" * 129,
+            "tokens": "import subprocess\ndef launch(*args):\n    subprocess.run(args)\nlaunch(" + ",".join(repr("python3") for _ in range(257)) + ")\n",
+            "loop": "import subprocess\nfor args in " + repr(tuple(("python3", "leaf.py") for _ in range(129))) + ":\n    subprocess.run(args)\n",
+            "depth": "import subprocess\ndef launch0(*args):\n    subprocess.run(args)\n" + "".join(
+                f"def launch{index}(*args):\n    return launch{index - 1}(*args)\n" for index in range(1, 11)) + "launch10('python3', 'leaf.py')\n",
+            "cartesian": "import subprocess\ndef launch(*args):\n    subprocess.run([" + ",".join("*args" for _ in range(8))
+                + "])\nlaunch('python3', 'leaf.py')\nlaunch('python3', 'leaf.py')\n",
+        }
+        for label, source in cases.items():
+            with self.subTest(case=label):
+                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": source, "leaf.py": COPY})
+                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
+                self.assertTrue(all(not any("invalid Python source" in message for message in row["errors"])
+                                    for row in report["modules"]), report)
 
     def test_npm_later_flags_cannot_enable_unscanned_lifecycle_scripts(self):
         for command in ("npm ci --ignore-scripts --ignore-scripts=false",

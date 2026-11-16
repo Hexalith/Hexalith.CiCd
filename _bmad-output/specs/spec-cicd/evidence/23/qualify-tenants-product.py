@@ -15,7 +15,7 @@ import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--source', type=Path, default=Path('/home/administrator/projects/hexalith/tenants-story-23-product'))
-parser.add_argument('--phase', choices=('build', 'contracts', 'unit', 'python', 'audit', 'metadata', 'released'), default='build')
+parser.add_argument('--phase', choices=('build', 'contracts', 'unit', 'python', 'audit', 'metadata', 'released', 'focused'), default='build')
 parser.add_argument('--attempt', default=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
 args = parser.parse_args()
 if not args.attempt.replace('-', '').isalnum(): raise ValueError('An immutable attempt identifier is required.')
@@ -49,6 +49,10 @@ for name in ('Builds', 'EventStore', 'Platform', 'Memories'):
     revision = git(source, 'rev-parse', 'HEAD:references/' + module)
     record['directPins'][module] = revision
     clone(original / 'references' / module, root / 'references' / module, revision)
+subprocess.run(['git', '-C', str(root), '-c', 'core.safecrlf=false', 'add', '-A'], check=True)
+record['candidateTree'] = git(root, 'write-tree')
+subprocess.run(['git', '-C', str(root), '-c', 'core.autocrlf=false', 'checkout-index', '--force', '--all'], check=True)
+record['materialization'] = 'normalized Git index/tree, preserving explicit tracked eol attributes'
 manifest = {}
 for raw in subprocess.check_output(['git', '-C', str(source), 'ls-files', '-z']).split(b'\0') + subprocess.check_output(['git', '-C', str(source), 'ls-files', '--others', '--exclude-standard', '-z']).split(b'\0'):
     if not raw: continue
@@ -162,6 +166,48 @@ try:
         audit = run(['dotnet', 'package', 'list', '--project', 'Hexalith.Tenants.slnx', '--vulnerable', '--include-transitive', '--format', 'json', '--no-restore'])
         record['auditCommandExitCode'] = audit
         result = result or audit
+    elif args.phase == 'focused':
+        target = 'tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj'
+        result = run(['dotnet', 'restore', target, '--disable-build-servers', *flags])
+        if not result:
+            result = run(['dotnet', 'build', target, '--no-restore', '--disable-build-servers', *flags])
+        record['aspireRestoredAssets'] = {}
+        for project_directory in ('src/Hexalith.Tenants.AppHost', 'tests/Hexalith.Tenants.IntegrationTests'):
+            assets = root / project_directory / 'obj/project.assets.json'
+            if assets.is_file():
+                resolved = json.loads(assets.read_text())
+                record['aspireRestoredAssets'][project_directory] = {
+                    name: {'sha512': package.get('sha512'), 'type': package.get('type')}
+                    for name, package in resolved['libraries'].items() if name.lower().startswith(('aspire.', 'microsoft.developercontrolplane.'))}
+        record['nativeAspireCliInvoked'] = False
+        if not result:
+            result = run(['dotnet', 'test', '--project', target, '--no-build', '--no-restore', '--configuration', 'Release',
+                          '--filter-class', 'Hexalith.Tenants.IntegrationTests.CatalogRedisBackendTests', '--minimum-expected-tests', '13', '--fail-skips', 'on'])
+        if not result:
+            record['liveClassDiscovery'] = {}
+            for class_name in ('AuthenticatedTenantsRouteTests', 'AspireTopologyTests', 'TenantsUiRouteSmokeTests',
+                               'AuthenticatedTenantsUiRouteTests', 'SourceCatalogOwnerProfileTests'):
+                command = ['dotnet', 'test', '--project', target, '--no-build', '--no-restore', '--configuration', 'Release',
+                           '--list-tests', 'text', '--filter-class', 'Hexalith.Tenants.IntegrationTests.' + class_name]
+                discovered = subprocess.run(command, cwd=root, env=environment, text=True, capture_output=True, timeout=120)
+                print(discovered.stdout, flush=True)
+                print(discovered.stderr, file=sys.stderr, flush=True)
+                record['liveClassDiscovery'][class_name] = {'exitCode': discovered.returncode, 'output': discovered.stdout}
+                record['commands'].append({'arguments': command, 'exitCode': discovered.returncode})
+                result = result or discovered.returncode
+            record['ownerCohortDiscovered'] = 'ActualOwnerCohortCommitsCompleteV2AndPreservesOwnedBootstrapAndRestEffects' in record['liveClassDiscovery']['SourceCatalogOwnerProfileTests']['output']
+            if not record['ownerCohortDiscovered']: result = 1
+        for name in ('test_source_catalog_profile.py', 'test_product_integration.py'):
+            result = run([sys.executable, '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', name, '-v']) or result
+        patch = subprocess.check_output(['git', '-C', str(root), 'diff', '--cached', '--binary', '--no-ext-diff', 'HEAD'])
+        patch_path = evidence / ('product-candidate-' + args.attempt + '.patch')
+        patch_path.open('xb').write(patch)
+        record['candidatePatch'] = {'path': patch_path.name, 'sha256': hashlib.sha256(patch).hexdigest()}
+        final_inputs = {row.split('\t', 1)[1]: row.split()[1] for row in git(root, 'ls-files', '--stage').splitlines()}
+        prior_inputs = json.loads((evidence / 'product-normalized-inputs-released-03.json').read_text())
+        record['changesAfterReleased03'] = [entry['path'] for entry in prior_inputs['checks']
+            if final_inputs.get(entry['path']) != entry.get('testedBlob')]
+        record['normalizedInputs'] = final_inputs
     elif args.phase in ('build', 'contracts', 'unit', 'audit'):
         target = 'tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj' if args.phase == 'contracts' else 'Hexalith.Tenants.slnx'
         result = run(['dotnet', 'restore', target, '--disable-build-servers', *flags])
@@ -183,8 +229,11 @@ try:
                 result = run(['dotnet', 'test', '--project', 'samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj',
                               '--no-build', '--no-restore', '--configuration', 'Release', '--stop-on-fail', 'off', '--fail-skips', 'on'])
     elif args.phase == 'python':
-        for directory, pattern in (('scripts/tests', 'test_*.py'), ('tests/scripts', 'test_*.py')):
-            code = run([sys.executable, '-m', 'unittest', 'discover', '-s', directory, '-p', pattern, '-v'])
+        result = run([sys.executable, '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_*.py', '-v'])
+        for name in ('test_bootstrap_handoff.py', 'test_catalog_artifact_guards.py', 'test_catalog_package_consumer.py',
+                     'test_dapr_read_policy_evidence.py', 'test_hosted_package_profile.py', 'test_release_validation_context.py',
+                     'test_tenant_audit_source_provenance.py'):
+            code = run([sys.executable, 'tests/scripts/' + name])
             result = result or code
     else:
         for project in ('src/Hexalith.Tenants.AppHost/Hexalith.Tenants.AppHost.csproj',

@@ -2,9 +2,10 @@
 title: 'Fix Folders Server component fixtures for Release qualification'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'draft'
+status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
+baseline_commit: '92e4e0b0acf0a256078c330419734eafa69b84ed'
 context: []
 ---
 
@@ -58,6 +59,8 @@ context: []
 
 ## Implementation Notes
 
+- 2026-11-17: Resumed bmad-build implementation. Local baseline: CiCd `92e4e0b0acf0a256078c330419734eafa69b84ed`, Platform `c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2`, Folders `e5760ca105652f4d89c4f240e0ca455723c9a473`. Platform/Folders worktrees are clean; preserve existing unrelated CiCd changes. The implementation phase is sequential and local only: no pushes or remote operations during this phase.
+- 2026-11-17: Human approved the spec and requested stopping before implementation. The approved intent is frozen; resume from this file in a fresh bmad-build session.
 - Prior publication authorization persists. Publish dependencies/pointers only after applicable checks; retain independent AppHost/FR58 blockers and incomplete migration status.
 
 ## Spec Change Log

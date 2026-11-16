@@ -1,0 +1,350 @@
+{
+  "recorded_at": "2026-11-16T23:02:14.795708+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4971",
+        "X-Ratelimit-Reset: 1794873301",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 29"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Memories/git/trees/341ae091bc9a94bfab0c7741314419713188ae8d",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4970",
+        "X-Ratelimit-Reset: 1794873301",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 30"
+      ],
+      "data": {
+        "sha": "341ae091bc9a94bfab0c7741314419713188ae8d",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/341ae091bc9a94bfab0c7741314419713188ae8d",
+        "tree": [
+          {
+            "path": ".agent",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "b5baf0ff1138744354f7451daee1efead1258fc0",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/b5baf0ff1138744354f7451daee1efead1258fc0"
+          },
+          {
+            "path": ".agents",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "72d78a22b8291745e4ed3115206641dbd5ad6b86",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/72d78a22b8291745e4ed3115206641dbd5ad6b86"
+          },
+          {
+            "path": ".bmad-loop",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "853dcae907bc3725246a6639a2b0f3def8a12043",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/853dcae907bc3725246a6639a2b0f3def8a12043"
+          },
+          {
+            "path": ".claude",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "eba03c7a7f9de8bb8127685172d359efc3701a6b",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/eba03c7a7f9de8bb8127685172d359efc3701a6b"
+          },
+          {
+            "path": ".codex",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "7219bf0fb1506d0d05a1f9c978d1cfd5a531ca0e",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/7219bf0fb1506d0d05a1f9c978d1cfd5a531ca0e"
+          },
+          {
+            "path": ".editorconfig",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5675eb23eae4a2038cd8553c8f8d327710865a8c",
+            "size": 2240,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/5675eb23eae4a2038cd8553c8f8d327710865a8c"
+          },
+          {
+            "path": ".env.example",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "54d364e7bbb80dfff031a1a9a59b5cb78d6b1e56",
+            "size": 764,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/54d364e7bbb80dfff031a1a9a59b5cb78d6b1e56"
+          },
+          {
+            "path": ".gitattributes",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "28f6e555930be6145e4893d8fe7d8cf28578a701",
+            "size": 1479,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/28f6e555930be6145e4893d8fe7d8cf28578a701"
+          },
+          {
+            "path": ".github",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "0d181cdebf19eafb4694f1a9d23e95db8523eafb",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/0d181cdebf19eafb4694f1a9d23e95db8523eafb"
+          },
+          {
+            "path": ".gitignore",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4481fdac49cbcfafb357e595baefbcf54d951840",
+            "size": 7959,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/4481fdac49cbcfafb357e595baefbcf54d951840"
+          },
+          {
+            "path": ".gitmodules",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4d9b067ef0589e43114505fa04809939623e40f5",
+            "size": 1210,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/4d9b067ef0589e43114505fa04809939623e40f5"
+          },
+          {
+            "path": ".vscode",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "543bd399337a5b947e448a97e64969af7e3914fa",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/543bd399337a5b947e448a97e64969af7e3914fa"
+          },
+          {
+            "path": "AGENTS.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "e4d60afe736f26e7433d37b208c1e9464a8e3f50",
+            "size": 3734,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/e4d60afe736f26e7433d37b208c1e9464a8e3f50"
+          },
+          {
+            "path": "CHANGELOG.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "3e809bcc7f2a95d9724cfd15195743893c507324",
+            "size": 6421,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/3e809bcc7f2a95d9724cfd15195743893c507324"
+          },
+          {
+            "path": "CLAUDE.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "e4d60afe736f26e7433d37b208c1e9464a8e3f50",
+            "size": 3734,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/e4d60afe736f26e7433d37b208c1e9464a8e3f50"
+          },
+          {
+            "path": "CONTRIBUTING.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6a8aca87e060da2fd4d9fcc5adee5d86c6467675",
+            "size": 37877,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6a8aca87e060da2fd4d9fcc5adee5d86c6467675"
+          },
+          {
+            "path": "Directory.Build.props",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "597f9aa57e9ddef894c987eb6da441aa64bc9baf",
+            "size": 11061,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/597f9aa57e9ddef894c987eb6da441aa64bc9baf"
+          },
+          {
+            "path": "Directory.Build.targets",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "74c003edd834ff9fcb1ee3c313cd5b2630b8a772",
+            "size": 4237,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/74c003edd834ff9fcb1ee3c313cd5b2630b8a772"
+          },
+          {
+            "path": "Directory.Packages.props",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "3bbdf66a2454777acf89ebba000f4d98e3583c4f",
+            "size": 2651,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/3bbdf66a2454777acf89ebba000f4d98e3583c4f"
+          },
+          {
+            "path": "Hexalith.Memories.slnx",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "78554506752890091d59971600af98fdbd8a55cf",
+            "size": 3353,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/78554506752890091d59971600af98fdbd8a55cf"
+          },
+          {
+            "path": "LICENSE",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "246c1b90603704165af8fd9e0d06fc5e09f6f974",
+            "size": 1065,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/246c1b90603704165af8fd9e0d06fc5e09f6f974"
+          },
+          {
+            "path": "NuGet.config",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "b7b08948fbf2e4bb804209e31e12d66881c31c68",
+            "size": 2343,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/b7b08948fbf2e4bb804209e31e12d66881c31c68"
+          },
+          {
+            "path": "README.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "abb2fb2e0e0cd7d2e0c5b949a1b84c2dba046f9c",
+            "size": 13013,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/abb2fb2e0e0cd7d2e0c5b949a1b84c2dba046f9c"
+          },
+          {
+            "path": "_bmad-output",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "775296302985817cfbbac6db26323df2d94f147b",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/775296302985817cfbbac6db26323df2d94f147b"
+          },
+          {
+            "path": "_bmad",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "2b4aee2ae1c29936ddef403645ab13da2626a485",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/2b4aee2ae1c29936ddef403645ab13da2626a485"
+          },
+          {
+            "path": "aspire.config.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "b11402cc16e1d99e4446f1256e07424cc90aabf5",
+            "size": 99,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/b11402cc16e1d99e4446f1256e07424cc90aabf5"
+          },
+          {
+            "path": "deploy",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "ac6a18d71bb2b7dfb0f7bec718ba958f2464927b",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/ac6a18d71bb2b7dfb0f7bec718ba958f2464927b"
+          },
+          {
+            "path": "docs",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "c2894796bb033da77943682b08dc033e7abba9ad",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/c2894796bb033da77943682b08dc033e7abba9ad"
+          },
+          {
+            "path": "global.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "0fa611bc34c165fd6fab42e8559953e02f1493fd",
+            "size": 161,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/0fa611bc34c165fd6fab42e8559953e02f1493fd"
+          },
+          {
+            "path": "module",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "cd3c0305bde1245abd11e3102417965cc895f985",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/cd3c0305bde1245abd11e3102417965cc895f985"
+          },
+          {
+            "path": "project-context.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "09462a56054cc0fdf5c2b17b99194f9865b808a7",
+            "size": 783,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/09462a56054cc0fdf5c2b17b99194f9865b808a7"
+          },
+          {
+            "path": "references",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "a152e878aa1f6109d3a7b51f1e0ec3c63d589d1a",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/a152e878aa1f6109d3a7b51f1e0ec3c63d589d1a"
+          },
+          {
+            "path": "scripts",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "e81c066e2fe00303396e20f974b81632958346e0",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/e81c066e2fe00303396e20f974b81632958346e0"
+          },
+          {
+            "path": "src",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "f71a5582ee36c260ed3872ae9017e7e8ddf719be",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/f71a5582ee36c260ed3872ae9017e7e8ddf719be"
+          },
+          {
+            "path": "test-data",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "df4550cbe857d3581a255b4bb862167e4497f8d4",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/df4550cbe857d3581a255b4bb862167e4497f8d4"
+          },
+          {
+            "path": "tests",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "14e71316aee2d4f8f5665d983ce02bfbe80dbe04",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/14e71316aee2d4f8f5665d983ce02bfbe80dbe04"
+          },
+          {
+            "path": "tools",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "e00fb2ce1dafa7522bfd5960f9024e9e9b917d3a",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/e00fb2ce1dafa7522bfd5960f9024e9e9b917d3a"
+          }
+        ],
+        "truncated": false
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "assessment": {
+    "state": "ok",
+    "truncated": false,
+    "matches": [
+      {
+        "path": "Directory.Packages.props",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3bbdf66a2454777acf89ebba000f4d98e3583c4f",
+        "size": 2651,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/3bbdf66a2454777acf89ebba000f4d98e3583c4f"
+      }
+    ]
+  }
+}

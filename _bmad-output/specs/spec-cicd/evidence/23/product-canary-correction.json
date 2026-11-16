@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-11-16T23:28:23.217474+00:00",
+  "revision": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "tree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
+  "parent": "b17382d0ba7b4dc6599a18b3567da8a18e5cbd9a",
+  "changed_paths": [
+    "tests/Hexalith.Tenants.UI.Tests/Components/GlobalAdministratorsPageTests.cs"
+  ],
+  "reason": "Fresh SDK has no browser before shared environment setup. The startup-failure negative test now uses an executable canary and still asserts the forced startup failure and no browser invocation. The real Chromium focus qualification remains in after-unit-tests.",
+  "assertions_removed": false,
+  "skip_added": false,
+  "remote_product_write": false,
+  "qualification": "Fresh SDK Release build and complete UI suite passed: 8085 executed/passed, zero nonpassing outcomes; full combined sequence remains in progress.",
+  "commit_message": "build: migrate Tenants product checks",
+  "evidence": "local-isolated-20261116T232705Z-17d40dbd/result.json"
+}

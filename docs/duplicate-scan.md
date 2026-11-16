@@ -89,6 +89,15 @@ Recognized forms supply the exact working directory, import roots and language:
   a provenance read. Literal script references in these data operands still
   enter discovery. Computed executable/operation, shell, working-directory or
   resolution-environment changes remain failures.
+- Direct Python `*args` wrappers and finite literal tuple loops are expanded
+  within fixed depth, argument and variant budgets. Aliased or replaced
+  callables, reflective namespace changes, unknown callers and computed
+  process options fail. Copied `os.environ` mappings permit only proved
+  resolution-preserving mutations and cannot escape through aliases/callbacks.
+  Forwarded Git metadata/acquisition operations require literal modes and
+  operands. A regex guard does not certify opaque data: repeated computed
+  reads and string-subclass operations may differ from the validated value.
+  Such operands remain failures, including in otherwise legitimate scripts.
 
 ### Rule 1: literal references are included
 

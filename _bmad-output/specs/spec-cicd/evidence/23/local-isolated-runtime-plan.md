@@ -1,6 +1,6 @@
 # Disposable local live qualification proposal
 
-This plan has not run. It supplies local product evidence only; it cannot
+This plan is being executed with separately retained attempt packets. It supplies local product evidence only; it cannot
 establish App adoption, an acceptable Builds release or a genuine scheduled
 nightly outcome. Preserve the retained host `dapr_redis` and other sessions.
 
@@ -29,6 +29,14 @@ must carry their own objects, without alternates referring outside the mounted
 job workspace. Preserve exact root candidate and direct gitlink identities;
 initialize no nested submodules. Wait for all work and remove only the two
 recorded container IDs and their own scratch files in a `finally` block.
+Mount that private scratch root at the same absolute path in both containers.
+Put the worker's HOME and TMPDIR there too: Docker resolves workload bind-mount
+sources in the daemon's filesystem, so SDK/DCP private paths must also exist at
+the same paths in the daemon container. No host home or host daemon is needed.
+Use a container mount point under `/work`, rather than `/tmp`: the exact pinned
+DinD wrapper mounts its own tmpfs on `/tmp` and hides nested mounts there. Two
+pre-worker failures are retained; the second's startup log establishes this
+cause. All underlying host data still belongs to the wrapper's private TMPDIR.
 
 Use one source-bound shared Builds candidate for the entire local job. Candidate
 `cbd13a1e93015182439112918cae4216b953f9bf` supports the proposed setup; its

@@ -46,6 +46,26 @@ These gates failed in the sample but have no explicit verdict in the source. App
 - FrontComposer: "Gate 2b: Infrastructure governance", "Coverage Summary", "Quarantine Summary"
 - Builds: the `Props/` catalog validators in `Tools/`, about 13 PowerShell scripts (about 4,000 lines) that Builds' `ci.yml` runs today. They check the package catalog, so they are product checks (AD-11). Each is classified in the change that rewrites `builds-release.yml`. Kept ones go on running in `builds-ci.yml`, in their current language.
 
+## EventStore release-readiness classification
+
+Retire the `Phase 4 gate risk matrix` workflow's matrix-tool fixtures and live
+story-evidence evaluation during owner-controlled EventStore migration. The
+[failed run](https://github.com/Hexalith/Hexalith.EventStore/actions/runs/43981244557)
+at `8d409495926a568c5e2679f726b76f7de5dd85d5` reports missing human seals and
+attestations, unbound story-owned bindings and insufficient declared assurance.
+These check CI/story governance under the rule above. Preserve the original
+failed report; do not fabricate seals, relax its validator or edit the owned
+module workflow directly. The [source-bound readiness packet](../../implementation-artifacts/evidence/eventstore-release-readiness-2026-11-17/20261116T234322Z/README.md)
+records the actual failure and publication boundaries.
+
+Keep the independent product checks: package-mode compilation, Contracts and
+typed-query generator tests, Gateway behavior, published API compatibility,
+payload protection, Dapr broker/runtime controls, security/dependency scans,
+commitlint and package publication verification. This classification does not
+remove product tests or enable release publication. EventStore registration,
+complete owned-perimeter delivery and successful adoption qualification remain
+the separate story 20 prerequisites for central nightly eligibility.
+
 ## ChatBot runtime classification during story 19
 
 Keep the genuine runtime checks and preserve their roles with whole test projects:

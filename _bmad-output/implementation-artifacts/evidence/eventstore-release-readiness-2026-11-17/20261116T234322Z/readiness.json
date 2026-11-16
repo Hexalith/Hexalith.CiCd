@@ -1,0 +1,141 @@
+{
+  "observedAt": "2026-11-16T23:49:58.644555+00:00",
+  "scope": "Read-only EventStore release readiness. No checkout mutation, release, dispatch, edit of module source, commit or push.",
+  "intendedProfile": "/home/administrator/.config/gh-module-agent",
+  "account": "jpiquot",
+  "initialObservedMain": "8d409495926a568c5e2679f726b76f7de5dd85d5",
+  "lastObservedMain": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "lastObservedSubject": "refactor(deployment): isolate the production profile bridge build",
+  "mainAdvancedDuringInspection": true,
+  "sourceSnapshotBoundTo": "8d409495926a568c5e2679f726b76f7de5dd85d5",
+  "latestPublicRelease": {
+    "tag": "v5.2.0",
+    "tagCommit": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+    "producer": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+    "publishedAt": "2026-11-16T13:41:59Z",
+    "successfulReleaseRun": 43876205404
+  },
+  "api": {
+    "type": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+    "introducedBy": "0be0c922883d4ea61b18e843e24472162261d934",
+    "sourceBlobAtInspectedMain": "eb9064725344e6c3404ab453a3fa8fcd0c3747ca",
+    "latestOfficialStable": "5.2.0",
+    "publishedVersionsInspected": [
+      "5.1.1",
+      "5.2.0"
+    ],
+    "presentInThosePackages": false,
+    "proof": "official NuGet nupkg nuspec/XML/DLL metadata + corrected dotnet-inspect queries; Type not found is expected exit1",
+    "syntaxCorrection": "Installed dotnet-inspect no longer accepts skill example --oneline; corrected type query uses --json -n5."
+  },
+  "centralNightlyEligibility": {
+    "registered": false,
+    "committedSetupModules": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Commons",
+      "Hexalith.PolymorphicSerializations"
+    ],
+    "deliveredRefPresent": false,
+    "adoptionConfigPresentAtInspectedMain": false,
+    "selectedByNormalCentralNightly": false
+  },
+  "legacyRelease": {
+    "trigger": "workflow_dispatch only; no schedule",
+    "environment": "production",
+    "workflowBlob": "0ff025fd5aed2c74df66e119c87a6ecaecee4722",
+    "requiredSourceProof": "exact current approved branch with successful push CI + commitlint; additional integration proof only for named maintenance branch",
+    "publisherBuildsCommit": "30ea43a56330a9828ed0bb2e837289231d8630d1",
+    "manualInvocationAuthorized": false
+  },
+  "governingApproval": {
+    "story20SpecFound": false,
+    "eventStoreSpecificPreAdoptionSubstituteFound": false,
+    "planningSource": "_bmad-output/specs/spec-cicd/stories.yaml id20 and architecture AD21; docs/pre-adoption-publication.md lists only Folders/Parties/Projects approvals",
+    "localProductReadiness": "can inspect/fix/qualify source under user scope, independently of adoption/publication readiness",
+    "publicationStatus": "No module-specific pre-adoption push procedure or eligible normal central-nightly path established by these reads."
+  },
+  "inspectedMainCI": {
+    "head": "8d409495926a568c5e2679f726b76f7de5dd85d5",
+    "run": 43981245213,
+    "status": "in_progress",
+    "conclusion": null,
+    "jobs": [
+      {
+        "id": 133697969470,
+        "name": "ci / checkpointed process packages",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 133697969789,
+        "name": "ci / contracts",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 133697969856,
+        "name": "ci / tenants-source-mode",
+        "status": "completed",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 133697969971,
+        "name": "ci / folded-snapshot-compatibility",
+        "status": "completed",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 133697970041,
+        "name": "ci / semantic-release-governance",
+        "status": "completed",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 133697970193,
+        "name": "ci / build-and-test",
+        "status": "completed",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 133701494936,
+        "name": "ci / performance-tests",
+        "status": "completed",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 133701495419,
+        "name": "ci / aspire-tests",
+        "status": "completed",
+        "conclusion": "cancelled"
+      }
+    ],
+    "limitation": "Bound to first inspected main, superseded during read; no green proof claimed for last observed main, and no full-CI wait performed."
+  },
+  "firstCompletedFailure": {
+    "head": "8d409495926a568c5e2679f726b76f7de5dd85d5",
+    "workflow": "Phase4 gate risk matrix",
+    "run": 43981244557,
+    "job": 133697967697,
+    "step": "Evaluate and report the current matrix",
+    "classification": "Story/evidence/assurance gate, not a demonstrated product regression. Under canonical CiCd rule, retirement belongs to owner migration; do not fabricate seals or weaken policy.",
+    "codes": [
+      "BINDING_UNBOUND",
+      "SEAL_MISSING",
+      "ATTESTATION_MISSING",
+      "ACHIEVED_BELOW_REQUIRED"
+    ],
+    "evidence": "phase4-report.txt + phase4-result.json",
+    "reportSha256": "94069e581bde04da32fb2a0ca600c9a3fd265aba20f8b1e96fb92485a0f53c52"
+  },
+  "concreteRemainingWork": [
+    "Freeze and inspect a fresh immutable EventStore source before local product checks; moving main invalidates exact-source claims.",
+    "Build/package-check Contracts and typed-query generator/Gateway consumers against compatible pinned dependencies; inspect generated public API without inventing QueryResultContractAttribute or switching consumers to source mode.",
+    "Obtain full exact-source green product/CI evidence; no current complete green CI proof is present in this packet.",
+    "Establish approved EventStore-specific pre-adoption procedure and actual registry/adoption path before claiming normal-nightly publication eligibility.",
+    "After ordinary authorized nightly publishes an artifact containing the API, verify official NuGet producer/version and align consuming closures before rerunning Projects full proof."
+  ],
+  "originalCheckoutAfterRead": {
+    "head": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41",
+    "status": []
+  }
+}

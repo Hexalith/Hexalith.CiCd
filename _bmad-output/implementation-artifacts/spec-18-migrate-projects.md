@@ -66,6 +66,32 @@ context:
 
 ## Implementation Notes
 
+- 2026-11-17: Local implementation and reconciliation are recorded in
+  [the implementation evidence](../specs/spec-cicd/evidence/18/implementation.md).
+  The immutable combined six-module qualification restored successfully but
+  failed its unchanged Release/package build with fourteen CS0234 errors:
+  current Projects query declarations require `QueryResultContractAttribute`,
+  absent from the selected published SDK. No dependent product tests, hooks or
+  runtime phases ran, and the private workspace was removed. The exact source
+  trees and command results are in
+  [the qualification manifest](../specs/spec-cicd/evidence/18/matrix-reconciled-qualification.json).
+- Scanner parent audit rejected an opaque Git regex shortcut. Computed operands
+  now refuse until native value provenance is proved; the delivered G6 action
+  remains unchanged and included. Historical green discovery from the rejected
+  shortcut is not acceptance evidence. Full scanner results and the remaining
+  candidate diagnostic are tracked in the implementation evidence.
+  Full scanner suites passed 121 tests on both interpreters before the final
+  narrow hardening; all eight affected groups passed on the final source on both.
+  [Final verification](../specs/spec-cicd/evidence/18/matrix-final-verification.json)
+  preserves those boundaries and the remaining candidate refusal.
+- All tasks remain unchecked because each still has a qualification or adoption
+  requirement outstanding. The normal published SDK prerequisite must be met
+  before rerunning the complete combined product lane. The implementation step's
+  repository/hosted-operation restriction also leaves AD-21 administration,
+  authenticated adoption, required owner/release prerequisites, normal checker,
+  adopted CI and the genuine next scheduled night unperformed. Status remains
+  `in-progress`; no completion or CAP-16 acceptance is claimed.
+
 ## Spec Change Log
 
 ## Review Triage Log

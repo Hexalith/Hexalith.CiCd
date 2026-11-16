@@ -1,0 +1,90 @@
+{
+  "attempt": "scripts-04",
+  "phase": "python",
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-product",
+  "startedAt": 1794867007.70019,
+  "commands": [
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 29.925085538998246
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_bootstrap_handoff.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 27.352208598982543
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_catalog_artifact_guards.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 225.07103722702595
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_catalog_package_consumer.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.31559683999512345
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_dapr_read_policy_evidence.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.0496083979960531
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_hosted_package_profile.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 9.744397875998402
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_release_validation_context.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 5.42431932099862
+    },
+    {
+      "arguments": [
+        "/usr/bin/python3",
+        "tests/scripts/test_tenant_audit_source_provenance.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 4.111226793989772
+    }
+  ],
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "baseline": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+  "candidateManifestSha256": "6a62bca7ef4e7ef755c5994e30dac92fcebe897a76969866901254b18c14b36c",
+  "nestedSubmodulesInitialized": false,
+  "finishedAt": 1794867316.908697,
+  "exitCode": 0
+}

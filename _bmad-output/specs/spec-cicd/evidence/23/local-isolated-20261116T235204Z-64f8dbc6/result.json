@@ -1,0 +1,191 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "64f8dbc605604c39b82ff5a85a58e9b4",
+  "source": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "tree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
+  "sharedSource": "dd833d3a0f0e503da0cd00d723a7c72c6dc2d84b",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "af0dcf69a066bdb7a3ee9f9ea05e1eb23658fdf8a5726e031c275089dc630f24"
+    },
+    {
+      "kind": "worker",
+      "id": "9d573d31c8c92294e1294da5d3f7fd3a69f8c4e2ee2cc13e8899edfefe989593"
+    }
+  ],
+  "startedAt": 1794873124.610457,
+  "events": [
+    {
+      "at": 1794873136.1750424,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794873137.2059371,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794873138.8870773,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794873152.8989453,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794873156.9066553,
+      "message": "Worker phase: shared-tls-trust/running"
+    },
+    {
+      "at": 1794873160.9077537,
+      "message": "Worker phase: shared-tls-trust/failed"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "9d573d31c8c92294e1294da5d3f7fd3a69f8c4e2ee2cc13e8899edfefe989593"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "af0dcf69a066bdb7a3ee9f9ea05e1eb23658fdf8a5726e031c275089dc630f24"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.AwZZjyA2",
+  "scope": "prerequisites",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "4d9f5baf761cadaaa2c386b5e372af854acb26b8e9a4fb30298418ade53f1c44",
+  "orchestratorSha256": "5003a18630c1b4bdfadae303394ef2b91da3409b596c07e257932bf16f5cb6ea",
+  "innerDaemonId": "\"e3905eab-522d-4499-b2ac-0e53c01e4eb2\"",
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+    "sharedSource": "dd833d3a0f0e503da0cd00d723a7c72c6dc2d84b",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794873151.663498,
+        "elapsedSeconds": 3.9417829513549805
+      },
+      {
+        "name": "exact-prerequisite-runtime-check",
+        "status": "passed",
+        "startedAt": 1794873155.6056476,
+        "elapsedSeconds": 0.08954644203186035
+      },
+      {
+        "name": "shared-apt-preparation",
+        "status": "passed",
+        "startedAt": 1794873155.6954882,
+        "elapsedSeconds": 0.0997610092163086
+      },
+      {
+        "name": "shared-tls-trust",
+        "status": "failed",
+        "startedAt": 1794873155.7954965,
+        "exceptionType": "PipelineError",
+        "exitCode": 255,
+        "prerequisiteError": "certutil -L -d sql:/work/s23/home/.pki/nssdb -n hexalith-ci-dev-cert-0 failed (255)",
+        "publicTrustDiagnostic": {
+          "exit": 4,
+          "lines": [
+            "Trusting the HTTPS development certificate was requested. Trust is per-user and may require additional configuration. See https://aka.ms/dev-certs-trust for more information.",
+            "[1] Listing certificates from CurrentUser\\My",
+            "[2] Found certificates: 1 certificate",
+            "    1) 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true",
+            "[3] Checking certificates validity",
+            "[4] Valid certificates: 1 certificate",
+            "    1) 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true",
+            "[5] Invalid certificates: no certificates",
+            "[118] Meets minimum version certificates: 1 certificate",
+            "    1) 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true",
+            "[119] Below minimum version certificates: no certificates",
+            "[6] Finished listing certificates.",
+            "[1] Listing certificates from LocalMachine\\My",
+            "[8] Filtered certificates: 1 certificate",
+            "    1) 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true",
+            "[9] Excluded certificates: no certificates",
+            "[14] Valid certificates: 1 certificate",
+            "    1) 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true",
+            "[15] Selected certificate: 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true",
+            "[29] Trusting the certificate to: 1A2BCD6D33C06ACCC3F9D569F12D2994DEF6551E - CN=localhost - Valid from 2026-11-16 23:52:40Z to 2027-11-16 23:52:40Z - IsHttpsDevelopmentCertificate: true - IsExportable: true.",
+            "[89] Trusted the certificate in OpenSSL.",
+            "[91] Trusted the certificate in the NSS database in '/work/s23/home/.pki/nssdb'.",
+            "[110] For OpenSSL trust to take effect, '$HOME/.aspnet/dev-certs/trust' must be listed in the SSL_CERT_DIR environment variable. For example, `export SSL_CERT_DIR=\"$HOME/.aspnet/dev-certs/trust:/usr/lib/ssl/certs\"`. See https://aka.ms/dev-certs-trust for more information.",
+            "[30] Finished trusting the certificate.",
+            "There was an error trusting the HTTPS developer certificate. It will be trusted by some clients but not by others.",
+            "[7] An error occurred while listing the certificates: System.Security.Cryptography.CryptographicException: Cryptography_Unix_X509_MachineStoresRootOnly",
+            " ---> System.PlatformNotSupportedException: Cryptography_Unix_X509_MachineStoresRootOnly",
+            "   Exception_EndOfInnerExceptionStack",
+            "   at libaspnetcoretools!<BaseAddress>+0x7836c1",
+            "   at libaspnetcoretools!<BaseAddress>+0x788eae",
+            "   at libaspnetcoretools!<BaseAddress>+0x7d9cd3"
+          ]
+        },
+        "elapsedSeconds": 4.861891984939575
+      }
+    ],
+    "scope": "prerequisites",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794873151.5996237,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "status": "failed",
+    "exceptionType": "PipelineError",
+    "finishedAt": 1794873160.6577191,
+    "elapsedSeconds": 9.058095455169678
+  },
+  "supportSafeArtifacts": [],
+  "trxSummaries": [],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794873163.4506443,
+  "elapsedSeconds": 38.840187311172485,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

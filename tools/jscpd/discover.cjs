@@ -84,8 +84,11 @@ function visit(node) {
       if (clause.name) bind(clause.name, moduleName);
       const bindings = clause.namedBindings;
       if (bindings && ts.isNamespaceImport(bindings)) bind(bindings.name, moduleName);
-      else if (bindings) for (const entry of bindings.elements)
-        aliases.set(entry.name.text, moduleName + '.' + (entry.propertyName || entry.name).text);
+      else if (bindings) for (const entry of bindings.elements) {
+        const importedName = (entry.propertyName || entry.name).text;
+        aliases.set(entry.name.text, importedName === 'default' && processModules.has(text(node.moduleSpecifier))
+          ? moduleName : moduleName + '.' + importedName);
+      }
     }
   }
   if (ts.isExportDeclaration(node) && node.moduleSpecifier) {
@@ -104,7 +107,7 @@ function visit(node) {
     } else {
       const target = name(init);
       if (/^(?:child_process|worker_threads|module|vm|process)(?:\.|$)/.test(target)
-          || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) bind(node.name, target);
+          || ['globalThis', 'global', 'require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) bind(node.name, target);
     }
   }
   if (ts.isStringLiteralLike(node)) result.literals.push([line(node), node.text]);
@@ -167,9 +170,9 @@ function visit(node) {
   }
   if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm|process)$/.test(name(node.expression))
       && text(node.argumentExpression) === null) error(node, 'unresolved reflective JavaScript process/import API');
-  if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node)) {
+  if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
     const target = name(node);
-    if (target === 'process' || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+    if (['process', 'globalThis', 'global'].includes(target) || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
       const parent = node.parent;
       const declaration = (ts.isVariableDeclaration(parent) && (parent.name === node || parent.initializer === node))
         || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)

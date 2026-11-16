@@ -1,0 +1,147 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "7e15ef7102164b82ad46d835728f6773",
+  "source": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "tree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
+  "sharedSource": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "faa4fa4aee0f45b5a4f37ccd40b465c62074b359fc4f0d892b136b46950a4601"
+    },
+    {
+      "kind": "worker",
+      "id": "20d9ae317dc102ece8869969e7c4ca994b6005dbded5fabbf0dbc87720f8798d"
+    }
+  ],
+  "startedAt": 1794873286.2719054,
+  "events": [
+    {
+      "at": 1794873301.4760885,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794873302.723886,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794873304.4032524,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794873320.4218144,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794873324.4376376,
+      "message": "Worker phase: shared-tls-trust/running"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "20d9ae317dc102ece8869969e7c4ca994b6005dbded5fabbf0dbc87720f8798d"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "faa4fa4aee0f45b5a4f37ccd40b465c62074b359fc4f0d892b136b46950a4601"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.7mEV8waf",
+  "scope": "prerequisites",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "4d9f5baf761cadaaa2c386b5e372af854acb26b8e9a4fb30298418ade53f1c44",
+  "orchestratorSha256": "288002db6b339764397144ebe9dc4d8774a501ab294d1d4e0a2e2a403eef5ae2",
+  "innerDaemonId": "\"45760993-dff3-4dd7-9138-69c97948cda9\"",
+  "workerContainerExit": 0,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+    "sharedSource": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794873318.4966486,
+        "elapsedSeconds": 4.83967137336731
+      },
+      {
+        "name": "exact-prerequisite-runtime-check",
+        "status": "passed",
+        "startedAt": 1794873323.3367345,
+        "elapsedSeconds": 0.09149575233459473
+      },
+      {
+        "name": "shared-apt-preparation",
+        "status": "passed",
+        "startedAt": 1794873323.4285274,
+        "elapsedSeconds": 0.09314322471618652
+      },
+      {
+        "name": "shared-tls-trust",
+        "status": "passed",
+        "startedAt": 1794873323.5221632,
+        "elapsedSeconds": 4.169908761978149
+      }
+    ],
+    "scope": "prerequisites",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794873318.3922403,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "status": "passed",
+    "finishedAt": 1794873327.6922998,
+    "elapsedSeconds": 9.30005955696106
+  },
+  "supportSafeArtifacts": [],
+  "trxSummaries": [],
+  "status": "passed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794873329.4052162,
+  "elapsedSeconds": 43.13331079483032,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

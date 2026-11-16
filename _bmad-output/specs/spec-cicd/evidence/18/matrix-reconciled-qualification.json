@@ -1,0 +1,85 @@
+{
+  "harness_sha256": "784ea7c21e5ce24cc753896d1a1934a529f4ef464b626741a894e84750aa1277",
+  "modules": {
+    "Hexalith.Projects": {
+      "head_before_capture": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37",
+      "snapshot_tree": "4a968c058bab55db60e69d1cfe1d9cf1754d9638",
+      "head_after_capture": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37"
+    },
+    "Hexalith.Builds": {
+      "head_before_capture": "f12c37ad4265ea23bf2ed426a3c9c818f1fdf0e6",
+      "snapshot_tree": "a824b280b9cff500fa8356155b6f663ed14fc057",
+      "head_after_capture": "f12c37ad4265ea23bf2ed426a3c9c818f1fdf0e6"
+    },
+    "Hexalith.EventStore": {
+      "head_before_capture": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41",
+      "snapshot_tree": "ec9f2dafc8f81e0b87010a2b758aed568e265656",
+      "head_after_capture": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41"
+    },
+    "Hexalith.Tenants": {
+      "head_before_capture": "292dbf164f26bcf376ef86d749b149b075f8b502",
+      "snapshot_tree": "fc09d6b31103718aeecde1a7845068bbc92fb42a",
+      "head_after_capture": "292dbf164f26bcf376ef86d749b149b075f8b502"
+    },
+    "Hexalith.Folders": {
+      "head_before_capture": "e5760ca105652f4d89c4f240e0ca455723c9a473",
+      "snapshot_tree": "af10a0b011c9e696c9d1a1d276757015958ef08e",
+      "head_after_capture": "e5760ca105652f4d89c4f240e0ca455723c9a473"
+    },
+    "Hexalith.Platform": {
+      "head_before_capture": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+      "snapshot_tree": "a0f876c8a4a12801822a4ac43d6ce48b63f52acf",
+      "head_after_capture": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2"
+    }
+  },
+  "commands": [
+    {
+      "label": "restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "Hexalith.Projects.CI.slnx",
+        "--disable-build-servers",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.aybuxXQU/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1"
+      ],
+      "exit": 0,
+      "seconds": 3.6
+    },
+    {
+      "label": "build",
+      "argv": [
+        "dotnet",
+        "build",
+        "Hexalith.Projects.CI.slnx",
+        "--no-restore",
+        "--disable-build-servers",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.aybuxXQU/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1"
+      ],
+      "exit": 1,
+      "seconds": 10.954
+    }
+  ],
+  "complete": false
+}

@@ -1,0 +1,198 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "9e1f295db5764c5f909b13dbbb807fa7",
+  "source": "b17382d0ba7b4dc6599a18b3567da8a18e5cbd9a",
+  "tree": "cad523ca21b8361f1a03e93bd41db09380dee745",
+  "sharedSource": "cbd13a1e93015182439112918cae4216b953f9bf",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "e6c78f57fbf92f791948b83a7e4a01dfdf1777f13768a426007068931a8029d4"
+    },
+    {
+      "kind": "worker",
+      "id": "bc495b45710d72119fa166a0fae98722c91d617bd9c1079441088192078b9b5f"
+    }
+  ],
+  "startedAt": 1794871110.7348874,
+  "events": [
+    {
+      "at": 1794871118.6727996,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794871119.6785622,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794871120.9024422,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794871134.904693,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794871136.905233,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794871258.997574,
+      "message": "Worker phase: one-release-package-build/passed"
+    },
+    {
+      "at": 1794871265.0046458,
+      "message": "Worker phase: focused-ui-project/running"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "bc495b45710d72119fa166a0fae98722c91d617bd9c1079441088192078b9b5f"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "e6c78f57fbf92f791948b83a7e4a01dfdf1777f13768a426007068931a8029d4"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.adE0Wrj6",
+  "scope": "unit-ui",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "ca19eb891b8383adb55b581ea212b86881100c05d55535289e63f9dcb3f1843d",
+  "orchestratorSha256": "c1bfb71501eac6a4ded12418fe54ecc72b7549647acdc991eafb9638e429d88f",
+  "innerDaemonId": "\"994280d6-db90-4ee0-a51b-ec6aa06bcb1c\"",
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "b17382d0ba7b4dc6599a18b3567da8a18e5cbd9a",
+    "sharedSource": "cbd13a1e93015182439112918cae4216b953f9bf",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794871133.4379015,
+        "elapsedSeconds": 3.382801055908203
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794871136.8210316,
+        "elapsedSeconds": 121.61440849304199
+      },
+      {
+        "name": "focused-ui-project",
+        "status": "failed",
+        "startedAt": 1794871263.399023,
+        "exceptionType": "PipelineError",
+        "exitCode": 2,
+        "elapsedSeconds": 116.1251118183136
+      }
+    ],
+    "scope": "unit-ui",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794871133.384704,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "testProjects": {
+      "unit": [
+        "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj",
+        "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj",
+        "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj",
+        "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj",
+        "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj"
+      ],
+      "integration": [
+        "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj",
+        "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+      ],
+      "hookOwned": "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj"
+    },
+    "status": "failed",
+    "exceptionType": "PipelineError",
+    "finishedAt": 1794871379.5243995,
+    "elapsedSeconds": 246.13969540596008
+  },
+  "supportSafeArtifacts": [],
+  "trxSummaries": [
+    {
+      "path": "Hexalith.Tenants/TestResults/shared-ci/unit-po8ipjjt/37cdb90d7c73e2f9b50e86b874f68787d2802eaee8f918b55bfadee701e4f348/results.trx",
+      "counters": {
+        "total": "8085",
+        "executed": "8085",
+        "passed": "8084",
+        "failed": "1",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": [
+        {
+          "method": "Hexalith.Tenants.UI.Tests.Components.GlobalAdministratorsPageTests.RealChromiumFocusValidatorStopsBeforeChromiumWhenServerStartupFails",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "2e590aa9b52b68b1ad41a66d420d3f816104dbf9ee95be0d41ded121f056fd2c",
+          "testFrames": [],
+          "unitMessageSummary": "FAIL_SKIP : The restored UI assets, bash, python3, and Chromium are required for this browser subprocess check."
+        }
+      ]
+    }
+  ],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794871381.6847215,
+  "elapsedSeconds": 270.94983410835266,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

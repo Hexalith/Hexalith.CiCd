@@ -1,0 +1,55 @@
+{
+  "source_identity_scheme": "sha256-of-canonical-path-to-file-sha256-map-v1",
+  "source_identity_sha256": "147f728418c94585c1d7d6fe1cbd9b6e5ee1f588236e702357c3d4b29fc6f0c9",
+  "source_files": {
+    "tools/scan_discovery.py": "e23e6d4c2fa44134d1e9cfd13854604a84b4c18ba2a961b5cc23c68e3023f3c8",
+    "tools/jscpd/discover.cjs": "3528522523790112d2b053b6e0f8d7408f6a9b56e4a5588e295a66dbac8aad64",
+    "tools/tests/test_scan.py": "931012fd21f3f65ff4499128ce29efcf325f8c4516640bc9d22d9b7138e27b79",
+    "tools/scan.py": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+    "tools/jscpd/package.json": "7e949a00e382d4903c174022b0879fdb40694ef331070093f72d0e3c2d30b4ff",
+    "tools/jscpd/package-lock.json": "fad24cc759c2d4b6fac056172ac2e9977858f9dd0a162fb10c18de4c8d0bfce2"
+  },
+  "root_revision": "92e4e0b0acf0a256078c330419734eafa69b84ed",
+  "module_revision": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37",
+  "reviewed_action_revision": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+  "unchanged_delivered_action": {
+    ".github/actions/prepare-g6-catalog/action.yml": {
+      "sha256": "785876470342c7909abf891a8e981244a1478f0851e8c1d391a564cd46694d1c",
+      "matches_reviewed_bytes": true
+    },
+    ".github/actions/prepare-g6-catalog/prepare.py": {
+      "sha256": "ba96060612404bd628ee314f2d733f8918adbe6f79a63a85e873608f32aeb297",
+      "matches_reviewed_bytes": true
+    }
+  },
+  "observed_discovery": {
+    "result": "pass",
+    "errors": [],
+    "file_count": 56,
+    "delivered_action_in_scope": true
+  },
+  "focused_tests": {
+    "python_3_14": {
+      "groups": 9,
+      "exit_code": 0,
+      "seconds": 50.809,
+      "log": "matrix-scanner-bounded-final-314.log"
+    },
+    "python_3_12_with_PyYAML_6_0_3": {
+      "groups": 9,
+      "exit_code": 0,
+      "seconds": 37.414,
+      "log": "matrix-scanner-bounded-final-312.log"
+    }
+  },
+  "semantic_qualification": "incomplete",
+  "unresolved": [
+    "Opaque Git guard/return proof does not establish built-in immutable string/list provenance; repeated subscript reads and str-subclass operations can differ from the validated value."
+  ],
+  "cleanup": {
+    "retained_controller_exit_code": 0,
+    "retained_workspace_absent": true,
+    "focused_children_complete": true,
+    "apphost_allocated": false
+  }
+}

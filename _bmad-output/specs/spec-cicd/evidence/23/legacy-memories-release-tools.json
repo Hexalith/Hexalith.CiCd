@@ -1,0 +1,804 @@
+{
+  "recorded_at": "2026-11-16T23:10:49.789168+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4928",
+        "X-Ratelimit-Reset: 1794873301",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 72"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Memories/git/trees/e00fb2ce1dafa7522bfd5960f9024e9e9b917d3a",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4927",
+        "X-Ratelimit-Reset: 1794873301",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 73"
+      ],
+      "data": {
+        "sha": "e00fb2ce1dafa7522bfd5960f9024e9e9b917d3a",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/e00fb2ce1dafa7522bfd5960f9024e9e9b917d3a",
+        "tree": [
+          {
+            "path": "GenerateBenchmarkVectors",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "c69df221db8546319d25bc709a85f2c0a4677c2a",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/c69df221db8546319d25bc709a85f2c0a4677c2a"
+          },
+          {
+            "path": "MigrateEmbeddingVectors",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "ee402d3e8ee9017f2408a7d8d6eb0cba7cbcf8e1",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/ee402d3e8ee9017f2408a7d8d6eb0cba7cbcf8e1"
+          },
+          {
+            "path": "access-telemetry-c1-component-backend.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "24022924222834bf376e66f911e72a55f5444ab1",
+            "size": 25761,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/24022924222834bf376e66f911e72a55f5444ab1"
+          },
+          {
+            "path": "access-telemetry-c1-profile.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "40ac6f00a0f6ceb3a96b7fd92fe4df2ca963c593",
+            "size": 13836,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/40ac6f00a0f6ceb3a96b7fd92fe4df2ca963c593"
+          },
+          {
+            "path": "access_telemetry_c1_approval_policy.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "23c4d0b377eddeb7b34e0e426a0ae3af30e80538",
+            "size": 2221,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/23c4d0b377eddeb7b34e0e426a0ae3af30e80538"
+          },
+          {
+            "path": "access_telemetry_c1_authority_boundary.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6ebf03428c2fbef8d2239ecb3dc9cbf71cfa9856",
+            "size": 4015,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6ebf03428c2fbef8d2239ecb3dc9cbf71cfa9856"
+          },
+          {
+            "path": "access_telemetry_c1_capture_semantics.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "206e19a621c39aa618bb79f1573474a20b8d32d1",
+            "size": 6208,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/206e19a621c39aa618bb79f1573474a20b8d32d1"
+          },
+          {
+            "path": "access_telemetry_c1_capture_streams.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "dacf47a952268ff20a29f60cad50ca119f83de9e",
+            "size": 19888,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/dacf47a952268ff20a29f60cad50ca119f83de9e"
+          },
+          {
+            "path": "access_telemetry_c1_gate_semantics.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "457102ecd514c1c9107bfb1391f01156884bb916",
+            "size": 17151,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/457102ecd514c1c9107bfb1391f01156884bb916"
+          },
+          {
+            "path": "access_telemetry_c1_github_approvals.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "3dfb4b40b58f6c185f479be4e38c03345274f50d",
+            "size": 15823,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/3dfb4b40b58f6c185f479be4e38c03345274f50d"
+          },
+          {
+            "path": "access_telemetry_c1_github_authority.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "db11e1a43b342545d6e8fc8fe69dbc18306354e6",
+            "size": 34497,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/db11e1a43b342545d6e8fc8fe69dbc18306354e6"
+          },
+          {
+            "path": "access_telemetry_c1_interchange.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1ca5ba9c63852387b699ff808df478675bd53c2b",
+            "size": 47189,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1ca5ba9c63852387b699ff808df478675bd53c2b"
+          },
+          {
+            "path": "access_telemetry_c1_owner_authority.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "e93421d553c48149af5093889e9385d6f935ed04",
+            "size": 36452,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/e93421d553c48149af5093889e9385d6f935ed04"
+          },
+          {
+            "path": "access_telemetry_c1_owner_c115.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6c585316aaed6ec55806bdb3a80f80bfd153fd6f",
+            "size": 11315,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6c585316aaed6ec55806bdb3a80f80bfd153fd6f"
+          },
+          {
+            "path": "access_telemetry_c1_owner_c115_plan_files.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "9c78bd1ec8f7a088f9e74b2fbefbd83ae319a6ef",
+            "size": 5478,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/9c78bd1ec8f7a088f9e74b2fbefbd83ae319a6ef"
+          },
+          {
+            "path": "access_telemetry_c1_owner_c115_provenance.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "ceb430f1ca218d01cc5204c00eb0d869b9682271",
+            "size": 6678,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/ceb430f1ca218d01cc5204c00eb0d869b9682271"
+          },
+          {
+            "path": "access_telemetry_c1_owner_c115_retained.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "0839b236ac664a74b2afa00bb32aec34d32c1ba1",
+            "size": 11345,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/0839b236ac664a74b2afa00bb32aec34d32c1ba1"
+          },
+          {
+            "path": "access_telemetry_c1_owner_custody.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "309a23545821f179991379feae69cff328de2276",
+            "size": 7208,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/309a23545821f179991379feae69cff328de2276"
+          },
+          {
+            "path": "access_telemetry_c1_owner_dispatch.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "3b9b13ef25ef6f2d0183e2d375a58e38f9605321",
+            "size": 12556,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/3b9b13ef25ef6f2d0183e2d375a58e38f9605321"
+          },
+          {
+            "path": "access_telemetry_c1_owner_run.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "9efd7286f5af498220be9efe7abdf01add743f7b",
+            "size": 8321,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/9efd7286f5af498220be9efe7abdf01add743f7b"
+          },
+          {
+            "path": "access_telemetry_c1_producer_bindings.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "43b0a4f636e63295f2c24b7be80c900ecd136318",
+            "size": 17186,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/43b0a4f636e63295f2c24b7be80c900ecd136318"
+          },
+          {
+            "path": "access_telemetry_c1_retained_files.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "59cd34e51a92ac357b7297abc784ef7bf02f662f",
+            "size": 7864,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/59cd34e51a92ac357b7297abc784ef7bf02f662f"
+          },
+          {
+            "path": "access_telemetry_c1_source_provenance.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "b8e0ba2516c6259b6a3c9c09edf9309844cd7a72",
+            "size": 34033,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/b8e0ba2516c6259b6a3c9c09edf9309844cd7a72"
+          },
+          {
+            "path": "access_telemetry_c2_producer.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "46130974521d91bea45bb143cb49dc1383c1933d",
+            "size": 226,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/46130974521d91bea45bb143cb49dc1383c1933d"
+          },
+          {
+            "path": "access_telemetry_c3_producer.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "12d5f3de2075892a71f83316b26e2032959841f5",
+            "size": 226,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/12d5f3de2075892a71f83316b26e2032959841f5"
+          },
+          {
+            "path": "access_telemetry_c4_producer.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "d1037045d3baee502627bd860cf7a17ca70048ab",
+            "size": 244,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/d1037045d3baee502627bd860cf7a17ca70048ab"
+          },
+          {
+            "path": "access_telemetry_campaign_profile.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5b760515c66643c42ec1ff7357071066fc14cda6",
+            "size": 14315,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/5b760515c66643c42ec1ff7357071066fc14cda6"
+          },
+          {
+            "path": "access_telemetry_functional_guest.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "2d9e0d086b60a9a242ec3ea03b603d75f35c856a",
+            "size": 18048,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/2d9e0d086b60a9a242ec3ea03b603d75f35c856a"
+          },
+          {
+            "path": "access_telemetry_functional_retention.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5fbbb572786159e8ba1a398b736fbee288d83fa7",
+            "size": 134185,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/5fbbb572786159e8ba1a398b736fbee288d83fa7"
+          },
+          {
+            "path": "access_telemetry_functional_target.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "cfc9a7817c3e252fb94d581d75a7b2e3460401b5",
+            "size": 68456,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/cfc9a7817c3e252fb94d581d75a7b2e3460401b5"
+          },
+          {
+            "path": "access_telemetry_owner_discovery.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "0e367568aa20ed6a4dc0b302ec9521e06675e324",
+            "size": 33460,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/0e367568aa20ed6a4dc0b302ec9521e06675e324"
+          },
+          {
+            "path": "access_telemetry_producer_common.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "509681e132ab20f22ffcd7ec63e95e4e863fed9f",
+            "size": 234209,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/509681e132ab20f22ffcd7ec63e95e4e863fed9f"
+          },
+          {
+            "path": "archive-release-evidence.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "ed6619a470ca2929a6381c729a1c7fcb38c915a7",
+            "size": 23330,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/ed6619a470ca2929a6381c729a1c7fcb38c915a7"
+          },
+          {
+            "path": "builds-publication-qualification.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "a5511fb08d3f29f1895bb60834ebf009e5f8fdcb",
+            "size": 691,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/a5511fb08d3f29f1895bb60834ebf009e5f8fdcb"
+          },
+          {
+            "path": "check-approved-publication.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "70dba6078c78578fb08a0dcf96f2c50a4f5d5d97",
+            "size": 21186,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/70dba6078c78578fb08a0dcf96f2c50a4f5d5d97"
+          },
+          {
+            "path": "check-release-destinations.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5135925fe604a8a6c8a1dacfeee49eaa7112812f",
+            "size": 3212,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/5135925fe604a8a6c8a1dacfeee49eaa7112812f"
+          },
+          {
+            "path": "check-release-source.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "31d1a496cc875151db352177aae7a0f0e4c8d4e6",
+            "size": 3521,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/31d1a496cc875151db352177aae7a0f0e4c8d4e6"
+          },
+          {
+            "path": "ci",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "7f56ee6a047b9251432fc338e6a2d55f14b6663e",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/7f56ee6a047b9251432fc338e6a2d55f14b6663e"
+          },
+          {
+            "path": "complete-partial-release.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "c87cff6d68a11382938e8b5a9fc9a44c81b5aced",
+            "size": 22336,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/c87cff6d68a11382938e8b5a9fc9a44c81b5aced"
+          },
+          {
+            "path": "container-publication-contract.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4386459d4835735b0d823c71174c26e5f35cd915",
+            "size": 97123,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/4386459d4835735b0d823c71174c26e5f35cd915"
+          },
+          {
+            "path": "create-partial-publish-issue.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6f861646b65f3ee837d22cf5fa3838ad6d0fd4dd",
+            "size": 12920,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6f861646b65f3ee837d22cf5fa3838ad6d0fd4dd"
+          },
+          {
+            "path": "ensure-dotnet11.sh",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "84b55449c829a9608713dcad57fe6590befb5688",
+            "size": 973,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/84b55449c829a9608713dcad57fe6590befb5688"
+          },
+          {
+            "path": "init-dapr-runtime.sh",
+            "mode": "100755",
+            "type": "blob",
+            "sha": "7d4087331adb474f999f93a0b25c19fae5af4ee8",
+            "size": 1256,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/7d4087331adb474f999f93a0b25c19fae5af4ee8"
+          },
+          {
+            "path": "nuget-local-feeds",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "1184f15eb036922657576a9fce177f6f74783721",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/trees/1184f15eb036922657576a9fce177f6f74783721"
+          },
+          {
+            "path": "pack-release.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6d22d25d00578c0f5e202fcab9300c57544a37b3",
+            "size": 3926,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6d22d25d00578c0f5e202fcab9300c57544a37b3"
+          },
+          {
+            "path": "production-deployment-health.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "493ba22e4d71692fb9a4561f4bac2f2889103616",
+            "size": 3098,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/493ba22e4d71692fb9a4561f4bac2f2889103616"
+          },
+          {
+            "path": "production-deployment-openbao.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "539854fd353f01cb0e93ce96d2439a3209c021b3",
+            "size": 23938,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/539854fd353f01cb0e93ce96d2439a3209c021b3"
+          },
+          {
+            "path": "publish-containers.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1064f85014da6fc5e3902166aed865163ec97d8b",
+            "size": 28523,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1064f85014da6fc5e3902166aed865163ec97d8b"
+          },
+          {
+            "path": "publish-nuget.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "d0e1c4d3072f56cccb8d69bc210c9a91533ff655",
+            "size": 6712,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/d0e1c4d3072f56cccb8d69bc210c9a91533ff655"
+          },
+          {
+            "path": "publish-release.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "404c341d9a9f1b6bbcc7432722df1e0b7807bcdd",
+            "size": 8199,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/404c341d9a9f1b6bbcc7432722df1e0b7807bcdd"
+          },
+          {
+            "path": "qualify-builds-publication.py",
+            "mode": "100755",
+            "type": "blob",
+            "sha": "cf29b1b121bea8aa32b02f786065b8a1c87c7202",
+            "size": 128481,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/cf29b1b121bea8aa32b02f786065b8a1c87c7202"
+          },
+          {
+            "path": "release-containers.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "67faba0fb459148fb11b32607fbfd85e48f5b61a",
+            "size": 1091,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/67faba0fb459148fb11b32607fbfd85e48f5b61a"
+          },
+          {
+            "path": "release-identity-snapshot.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "598efbfe890b010b7d4d17d3787d3efcb3dae830",
+            "size": 29417,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/598efbfe890b010b7d4d17d3787d3efcb3dae830"
+          },
+          {
+            "path": "release-packages.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6539baafe5fdcfa93bcbbfba48c7abf8f8fecb38",
+            "size": 2096,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6539baafe5fdcfa93bcbbfba48c7abf8f8fecb38"
+          },
+          {
+            "path": "release-packages.schema.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "de48bc6c077e3fdb92ff4cd87c8635d8f5b92e62",
+            "size": 2176,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/de48bc6c077e3fdb92ff4cd87c8635d8f5b92e62"
+          },
+          {
+            "path": "release-preflight.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1a4467e10c25300a0ec387e83541713e156c7bc8",
+            "size": 13463,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1a4467e10c25300a0ec387e83541713e156c7bc8"
+          },
+          {
+            "path": "render-production-deployment.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "f2afd27900ee5bde10ce0b954feace99ce66d927",
+            "size": 5506,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/f2afd27900ee5bde10ce0b954feace99ce66d927"
+          },
+          {
+            "path": "stage-qualification-curl.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "097f017aed3e2da6d9ad7deb33c1fba17cb93a0a",
+            "size": 6177,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/097f017aed3e2da6d9ad7deb33c1fba17cb93a0a"
+          },
+          {
+            "path": "test-projects.benchmark.txt",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1ac5216ad526ca271551a91b513ca0b83c68b62d",
+            "size": 135,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1ac5216ad526ca271551a91b513ca0b83c68b62d"
+          },
+          {
+            "path": "test-projects.integration-fast.txt",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "e5f8097a1981d2fc76c25a1018b6d2224ca9d2d1",
+            "size": 159,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/e5f8097a1981d2fc76c25a1018b6d2224ca9d2d1"
+          },
+          {
+            "path": "test-projects.integration-slow.txt",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "b0fecd17be7b27ecb0732b9d23c6234b67b2fea3",
+            "size": 171,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/b0fecd17be7b27ecb0732b9d23c6234b67b2fea3"
+          },
+          {
+            "path": "test-projects.unit-contract.txt",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6b4d1498cda30a3f38b76938ec6bc56fdc5fc396",
+            "size": 808,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6b4d1498cda30a3f38b76938ec6bc56fdc5fc396"
+          },
+          {
+            "path": "test.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "8e8e4ced50960534c1505234a472ac66a1ac741a",
+            "size": 10530,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/8e8e4ced50960534c1505234a472ac66a1ac741a"
+          },
+          {
+            "path": "test.sh",
+            "mode": "100755",
+            "type": "blob",
+            "sha": "7b2029e9077b92d73a3047ead922b3cb6b92f50d",
+            "size": 8282,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/7b2029e9077b92d73a3047ead922b3cb6b92f50d"
+          },
+          {
+            "path": "validate-coverage.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "80b7dc3e1dc01fdc98febe1861241a58363c242a",
+            "size": 24736,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/80b7dc3e1dc01fdc98febe1861241a58363c242a"
+          },
+          {
+            "path": "validate-production-deployment-evidence.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "486c4c7ae4411f1657ff6a8db2ef4b0eaef95c65",
+            "size": 26079,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/486c4c7ae4411f1657ff6a8db2ef4b0eaef95c65"
+          },
+          {
+            "path": "validate-release-packages.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "d9161979eb5d39883665cb2a303a451394ba05d5",
+            "size": 20530,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/d9161979eb5d39883665cb2a303a451394ba05d5"
+          },
+          {
+            "path": "verify-access-telemetry-c1-linkage.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "838053dc30b4fcc6f99ac170dae1f5d32504edb2",
+            "size": 45970,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/838053dc30b4fcc6f99ac170dae1f5d32504edb2"
+          },
+          {
+            "path": "verify-access-telemetry-c1.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5f1b8653b4c77558872c048385ddf637fdf202e9",
+            "size": 83157,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/5f1b8653b4c77558872c048385ddf637fdf202e9"
+          },
+          {
+            "path": "verify-access-telemetry-lifecycle.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "7b8a4842ec51d2f9fd4c54c6d00e470fa462c016",
+            "size": 11751,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/7b8a4842ec51d2f9fd4c54c6d00e470fa462c016"
+          },
+          {
+            "path": "verify-backup-recovery.py",
+            "mode": "100755",
+            "type": "blob",
+            "sha": "245e4693ab29130b73cf2c3043d10e973162e7d9",
+            "size": 11758,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/245e4693ab29130b73cf2c3043d10e973162e7d9"
+          },
+          {
+            "path": "verify-cli-pack.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1a4a3f3b473c5b045dd61c0bf9a1980a5113ec0c",
+            "size": 4877,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1a4a3f3b473c5b045dd61c0bf9a1980a5113ec0c"
+          },
+          {
+            "path": "verify-cli-pack.sh",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "aa7d1cab188d3649229b85dd4fd6592ebf34c6e1",
+            "size": 3697,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/aa7d1cab188d3649229b85dd4fd6592ebf34c6e1"
+          },
+          {
+            "path": "verify-container-health.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "9167fec8459d6ad107ae3bcdb72d45e5a1544b0e",
+            "size": 18963,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/9167fec8459d6ad107ae3bcdb72d45e5a1544b0e"
+          },
+          {
+            "path": "verify-container-registry.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "702ce2bfb15e7e1138142cbc232b02c005e49997",
+            "size": 12319,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/702ce2bfb15e7e1138142cbc232b02c005e49997"
+          },
+          {
+            "path": "verify-production-deployment.ps1",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "2ef5ad42ca747d04dc7696d7956aaf3e9bfc5d8f",
+            "size": 71029,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/2ef5ad42ca747d04dc7696d7956aaf3e9bfc5d8f"
+          },
+          {
+            "path": "verify_access_telemetry_lifecycle.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "34107f2f6c62a890b5fcfe607fb671027fe05ea2",
+            "size": 259621,
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/34107f2f6c62a890b5fcfe607fb671027fe05ea2"
+          }
+        ],
+        "truncated": false
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "assessment": {
+    "state": "ok",
+    "truncated": false,
+    "matches": [
+      {
+        "path": "archive-release-evidence.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ed6619a470ca2929a6381c729a1c7fcb38c915a7",
+        "size": 23330,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/ed6619a470ca2929a6381c729a1c7fcb38c915a7"
+      },
+      {
+        "path": "check-release-destinations.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5135925fe604a8a6c8a1dacfeee49eaa7112812f",
+        "size": 3212,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/5135925fe604a8a6c8a1dacfeee49eaa7112812f"
+      },
+      {
+        "path": "check-release-source.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "31d1a496cc875151db352177aae7a0f0e4c8d4e6",
+        "size": 3521,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/31d1a496cc875151db352177aae7a0f0e4c8d4e6"
+      },
+      {
+        "path": "complete-partial-release.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c87cff6d68a11382938e8b5a9fc9a44c81b5aced",
+        "size": 22336,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/c87cff6d68a11382938e8b5a9fc9a44c81b5aced"
+      },
+      {
+        "path": "container-publication-contract.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4386459d4835735b0d823c71174c26e5f35cd915",
+        "size": 97123,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/4386459d4835735b0d823c71174c26e5f35cd915"
+      },
+      {
+        "path": "pack-release.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6d22d25d00578c0f5e202fcab9300c57544a37b3",
+        "size": 3926,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6d22d25d00578c0f5e202fcab9300c57544a37b3"
+      },
+      {
+        "path": "publish-containers.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1064f85014da6fc5e3902166aed865163ec97d8b",
+        "size": 28523,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1064f85014da6fc5e3902166aed865163ec97d8b"
+      },
+      {
+        "path": "publish-release.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "404c341d9a9f1b6bbcc7432722df1e0b7807bcdd",
+        "size": 8199,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/404c341d9a9f1b6bbcc7432722df1e0b7807bcdd"
+      },
+      {
+        "path": "release-containers.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "67faba0fb459148fb11b32607fbfd85e48f5b61a",
+        "size": 1091,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/67faba0fb459148fb11b32607fbfd85e48f5b61a"
+      },
+      {
+        "path": "release-identity-snapshot.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "598efbfe890b010b7d4d17d3787d3efcb3dae830",
+        "size": 29417,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/598efbfe890b010b7d4d17d3787d3efcb3dae830"
+      },
+      {
+        "path": "release-packages.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6539baafe5fdcfa93bcbbfba48c7abf8f8fecb38",
+        "size": 2096,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/6539baafe5fdcfa93bcbbfba48c7abf8f8fecb38"
+      },
+      {
+        "path": "release-packages.schema.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "de48bc6c077e3fdb92ff4cd87c8635d8f5b92e62",
+        "size": 2176,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/de48bc6c077e3fdb92ff4cd87c8635d8f5b92e62"
+      },
+      {
+        "path": "release-preflight.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1a4467e10c25300a0ec387e83541713e156c7bc8",
+        "size": 13463,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/1a4467e10c25300a0ec387e83541713e156c7bc8"
+      },
+      {
+        "path": "validate-release-packages.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d9161979eb5d39883665cb2a303a451394ba05d5",
+        "size": 20530,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/d9161979eb5d39883665cb2a303a451394ba05d5"
+      },
+      {
+        "path": "verify-container-health.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9167fec8459d6ad107ae3bcdb72d45e5a1544b0e",
+        "size": 18963,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/9167fec8459d6ad107ae3bcdb72d45e5a1544b0e"
+      },
+      {
+        "path": "verify-container-registry.ps1",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "702ce2bfb15e7e1138142cbc232b02c005e49997",
+        "size": 12319,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/702ce2bfb15e7e1138142cbc232b02c005e49997"
+      }
+    ]
+  }
+}

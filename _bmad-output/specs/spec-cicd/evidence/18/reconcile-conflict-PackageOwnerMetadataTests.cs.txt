@@ -1,0 +1,101 @@
+extern alias PackageFixtureHost;
+
+namespace Hexalith.Projects.Integration.Tests;
+
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Security.Cryptography;
+
+using Hexalith.EventStore.Contracts.Routing;
+using Hexalith.EventStore.DomainService;
+using Hexalith.EventStore.ServiceDefaults.Routing;
+using Hexalith.Projects.PackageFixtures;
+
+using PackageHost = PackageFixtureHost::Hexalith.Projects.PackageFixtures.AppHost;
+
+using Shouldly;
+
+using Xunit;
+
+/// <summary>Exercises real same-name package/owner collisions and preserves the SDK identity refusal.</summary>
+public sealed class PackageOwnerMetadataTests
+{
+    /// <summary>Actual prebuilt owner declarations and factories retain their selected bytes while sharing SDK contract types.</summary>
+    [Theory]
+    [InlineData("tenants")]
+    [InlineData("projects")]
+    [InlineData("folders")]
+    public void ActualOwnerMetadataSurvivesLoadedPackageNameCollisions(string owner)
+    {
+        Assembly published = typeof(Hexalith.Tenants.Contracts.Events.TenantAccessRefreshed).Assembly;
+        (string executable, string declaration, string adapters) = Artifacts(owner);
+        PackageHost.PackageOwnerLoadContext context = new(executable);
+        Assembly actual = context.LoadOwner(declaration);
+        Path.GetFullPath(actual.Location).ShouldBe(Path.GetFullPath(declaration));
+        SHA256.HashData(File.ReadAllBytes(actual.Location)).ShouldBe(SHA256.HashData(File.ReadAllBytes(declaration)));
+        AssemblyLoadContext.GetLoadContext(actual).ShouldNotBeSameAs(AssemblyLoadContext.Default);
+        if (owner == "tenants")
+        {
+            actual.GetName().Name.ShouldBe(published.GetName().Name);
+            actual.ShouldNotBeSameAs(published);
+        }
+        var routes = CompiledRouteCatalogDeclarations.Read([actual]);
+        routes.ShouldNotBeEmpty();
+        foreach (RouteContractDeclaration route in routes)
+            route.GetType().Assembly.ShouldBe(typeof(RouteContractDeclaration).Assembly);
+        Assembly policyOwner = context.LoadOwner(adapters);
+        RouteCatalogAdapterSourceAttribute source = policyOwner.GetCustomAttributes<RouteCatalogAdapterSourceAttribute>().Single();
+        var policies = source.SourceType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, null)
+            .ShouldBeAssignableTo<IReadOnlyList<IDeclaredIdempotencyIntentAdapter>>();
+        policies.ShouldNotBeEmpty();
+        foreach (IDeclaredIdempotencyIntentAdapter policy in policies)
+            policy.Declaration.GetType().Assembly.ShouldBe(typeof(RouteContractDeclaration).Assembly);
+    }
+
+    /// <summary>An altered SDK contract in a private owner copy cannot be silently shared or substituted.</summary>
+    [Fact]
+    public async Task ChangedOwnerSdkContractIsRefused()
+    {
+        (string executable, _, _) = Artifacts("tenants");
+        FixtureScratch scratch = new(true);
+        await using var cleanup = scratch.ConfigureAwait(true);
+        foreach (string path in Directory.GetFiles(Path.GetDirectoryName(executable)!))
+            File.Copy(path, scratch.File(Path.GetFileName(path)));
+        string contract = scratch.File("Hexalith.EventStore.Contracts.dll");
+        byte[] bytes = await File.ReadAllBytesAsync(contract, TestContext.Current.CancellationToken).ConfigureAwait(true);
+        bytes[^1] ^= 1;
+        await File.WriteAllBytesAsync(contract, bytes, TestContext.Current.CancellationToken).ConfigureAwait(true);
+        PackageHost.PackageOwnerLoadContext context = new(scratch.File(Path.GetFileName(executable)));
+<<<<<<< /tmp/hexalith-job.WZ3T5pdz/tmp80qbfcci/live
+        FileLoadException mismatch = Should.Throw<FileLoadException>(() =>
+            context.LoadFromAssemblyName(typeof(RouteContractDeclaration).Assembly.GetName()));
+        mismatch.InnerException.ShouldBeOfType<InvalidOperationException>().Message.ShouldContain("SDK contract differs");
+        Should.Throw<RouteCatalogUnavailableException>(() => CompiledRouteCatalogDeclarations.Read(
+            [context.LoadOwner(scratch.File(Path.GetFileName(declaration)))]));
+=======
+        Exception refused = Should.Throw<Exception>(() => context.LoadFromAssemblyName(typeof(RouteContractDeclaration).Assembly.GetName()));
+        refused.ToString().ShouldContain("SDK contract differs");
+>>>>>>> /tmp/hexalith-job.WZ3T5pdz/tmp80qbfcci/private
+    }
+
+    private static (string Executable, string Declarations, string Adapters) Artifacts(string owner)
+    {
+        string root = AppContext.BaseDirectory;
+        while (!File.Exists(Path.Combine(root, "Hexalith.Projects.CI.slnx")))
+            root = Directory.GetParent(root)?.FullName ?? throw new InvalidOperationException("Prebuilt fixture repository root is missing.");
+        (string project, string executable, string declarations, string adapters) = owner switch
+        {
+            "tenants" => (Path.Combine(SelectedRoot("PackageFixtureTenantsRoot"), "src/Hexalith.Tenants"), "Hexalith.Tenants.dll", "Hexalith.Tenants.Contracts.dll", "Hexalith.Tenants.Server.dll"),
+            "folders" => (Path.Combine(SelectedRoot("PackageFixtureFoldersRoot"), "src/Hexalith.Folders.Server"), "Hexalith.Folders.Server.dll", "Hexalith.Folders.Server.dll", "Hexalith.Folders.Server.dll"),
+            "projects" => ("src/Hexalith.Projects.Server", "Hexalith.Projects.Server.dll", "Hexalith.Projects.Server.dll", "Hexalith.Projects.Server.dll"),
+            _ => throw new InvalidOperationException("Unknown actual owner."),
+        };
+        string configuration = typeof(PackageOwnerMetadataTests).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>()!.Configuration;
+        string output = Path.Combine(root, project, "bin", configuration, "net11.0");
+        return (Path.Combine(output, executable), Path.Combine(output, declarations), Path.Combine(output, adapters));
+    }
+
+    private static string SelectedRoot(string name) => typeof(PackageOwnerMetadataTests).Assembly
+        .GetCustomAttributes<AssemblyMetadataAttribute>().Single(attribute => attribute.Key == name).Value
+        ?? throw new InvalidOperationException("Missing selected owner build root: " + name);
+}

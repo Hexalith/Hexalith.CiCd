@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-11-16T23:51:13.078381+00:00",
+  "version": "21.2.4",
+  "message": "fix(ci): configure OpenSSL trust before certificate validation\n",
+  "owning_config": "exact commitlint.config.mjs, bridge and raw-message policy",
+  "command": [
+    "npx",
+    "--no-install",
+    "commitlint",
+    "--edit",
+    "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/shared-tls-commit-message.txt",
+    "--verbose"
+  ],
+  "exit": 1,
+  "output": "file:///tmp/hexalith-job.DDo1XGPo/commitlint/node_modules/@commitlint/cli/lib/cli.js:142\n        throw err;\n        ^\n\nTypeError: Could not find git root from /tmp/hexalith-job.DDo1XGPo/commitlint\n    at getEditCommit (file:///tmp/hexalith-job.DDo1XGPo/commitlint/node_modules/@commitlint/read/lib/get-edit-commit.js:8:15)\n    at async main (file:///tmp/hexalith-job.DDo1XGPo/commitlint/node_modules/@commitlint/cli/lib/cli.js:211:19)\n\nNode.js v26.4.0\n",
+  "npm_locked_installation": "passed",
+  "npm_signature_verification": "passed"
+}

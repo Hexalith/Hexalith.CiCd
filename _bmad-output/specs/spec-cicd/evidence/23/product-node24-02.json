@@ -1,0 +1,43 @@
+{
+  "attempt": "02",
+  "nodeVersion": "24.22.3",
+  "npmVersion": "11.19.1",
+  "commands": [
+    {
+      "arguments": [
+        "/tmp/hexalith-job.JHRyaaHD/node-v24.22.3-linux-x64/bin/node",
+        "--version"
+      ],
+      "exitCode": 0
+    },
+    {
+      "arguments": [
+        "/tmp/hexalith-job.JHRyaaHD/node-v24.22.3-linux-x64/bin/npm",
+        "--version"
+      ],
+      "exitCode": 0
+    },
+    {
+      "arguments": [
+        "/tmp/hexalith-job.JHRyaaHD/node-v24.22.3-linux-x64/bin/node",
+        "/tmp/hexalith-job.JHRyaaHD/Hexalith.Tenants/tests/performance/tenant-audit/node_modules/playwright/cli.js",
+        "install",
+        "chromium"
+      ],
+      "exitCode": 0
+    },
+    {
+      "arguments": [
+        "/tmp/hexalith-job.JHRyaaHD/node-v24.22.3-linux-x64/bin/node",
+        "--test",
+        "/tmp/hexalith-job.JHRyaaHD/Hexalith.Tenants/tests/Hexalith.Tenants.UI.Tests/Browser/authenticated-live-route-waits.test.mjs",
+        "/tmp/hexalith-job.JHRyaaHD/Hexalith.Tenants/tests/Hexalith.Tenants.UI.Tests/Browser/authenticated-live-route-evidence.test.mjs",
+        "/tmp/hexalith-job.JHRyaaHD/Hexalith.Tenants/tests/Hexalith.Tenants.UI.Tests/Browser/published-frontcomposer-evidence.test.mjs"
+      ],
+      "exitCode": 1
+    }
+  ],
+  "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb",
+  "functionalWorkspaceLockSha256": "6bf66b87699deca7fc692bd92f830836ba170ea1033f1eeba857a4442a136ae4",
+  "exitCode": 1
+}

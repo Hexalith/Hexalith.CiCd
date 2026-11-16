@@ -1,0 +1,1230 @@
+diff --git a/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md b/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
+index cfec839..178bc36 100644
+--- a/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
++++ b/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
+@@ -51,6 +51,7 @@ context:
+ 
+ - [ ] `evidence/18/` — refresh revisions and verify/provision AD-21 in order: App selection, stale analyses/drafts/orphans, rulesets, main-only environment, scoped Zot/NuGet, disabled scans, publish switch, retention and grants. Adopt only after pilot acceptance.
+ - [ ] Projects `tests/Hexalith.Projects.PackageFixtures{,.AppHost}/`, `Hexalith.Projects.CI.slnx` — add nonpackable prebuilt fixture/driver; seed through authenticated product commands, verify independent durable state and complete browser phases. Test readiness/output/cleanup failures and production isolation.
++- [ ] Folders `src/Hexalith.Folders.Server/{Hexalith.Folders.Server.csproj,FolderServerCatalogAdapterSource.cs}`, shared `src/Hexalith.Folders.EventStore/{FoldersCatalogAdapterSource,FoldersCatalogAdapters}.cs`, and `tests/Hexalith.Folders.Server.Tests/` — expose the actual owner's existing compiled command policies through the public SDK catalog seam from one module implementation; retain all Debug guards. Qualify exact declarations and all 36 retained canonical-intent cases, owner/server/gateway product suites and available required checks. Require the independently qualified corrected remote owner commit before delivered gitlinks or Projects adoption; this nonpackable executable repair needs no new Folder adapter NuGet package/version. Normal Folder checker/push prerequisites apply; no Folder push/publication is authorized by the Projects preparation exception.
+ - [ ] Projects `src/Hexalith.Projects.UI.Contracts/*.csproj`, `tests/tools/run-*-gate.ps1`, `scripts/`, `.config/dotnet-tools.json`, `.github/actions/{after-unit-tests,nightly}/action.yml`, `tests/e2e/package.json` — retain generator output, use inspector 6.0.0 and no-rebuild package checks; run browser driver nightly. Preserve C# suites, OpenAPI assertions and owning cross-module tests. Delete workflow assertions and tool-only root npm files.
+ - [ ] Builds `schemas/hexalith.ci.v1.json`, `Github/lib/{ci_config,ci_environment,ci_pipeline}.py`, CI/environment/prepare composites and configurations — add default `npmWorkspaces: []`, `dotnetTools: false`; prepare locked tools/npm/browsers once. Cover defaults, strict readers, unsafe/missing inputs and install failures in existing contract/environment/prepare suites; qualify an acceptable release.
+ - [ ] CiCd `tools/{scan,scan_discovery}.py`, `tools/jscpd/`, `.jscpd.json`, `tools/tests/`, `docs/duplicate-scan.md`, SPEC/spine — add static JS/TS/npm/import reachability and document additive contract; test complete scope and fail-closed indirection. Preserve thresholds and cross-module semantics.
+@@ -65,6 +66,28 @@ context:
+ 
+ ## Implementation Notes
+ 
++- 2026-11-17: Local implementation and reconciliation are recorded in
++  [the implementation evidence](../specs/spec-cicd/evidence/18/implementation.md).
++  The immutable combined six-module qualification restored successfully but
++  failed its unchanged Release/package build with fourteen CS0234 errors:
++  current Projects query declarations require `QueryResultContractAttribute`,
++  absent from the selected published SDK. No dependent product tests, hooks or
++  runtime phases ran, and the private workspace was removed. The exact source
++  trees and command results are in
++  [the qualification manifest](../specs/spec-cicd/evidence/18/matrix-reconciled-qualification.json).
++- Scanner parent audit rejected an opaque Git regex shortcut. Computed operands
++  now refuse until native value provenance is proved; the delivered G6 action
++  remains unchanged and included. Historical green discovery from the rejected
++  shortcut is not acceptance evidence. Full scanner results and the remaining
++  candidate diagnostic are tracked in the implementation evidence.
++- All tasks remain unchecked because each still has a qualification or adoption
++  requirement outstanding. The normal published SDK prerequisite must be met
++  before rerunning the complete combined product lane. The implementation step's
++  repository/hosted-operation restriction also leaves AD-21 administration,
++  authenticated adoption, required owner/release prerequisites, normal checker,
++  adopted CI and the genuine next scheduled night unperformed. Status remains
++  `in-progress`; no completion or CAP-16 acceptance is claimed.
++
+ ## Spec Change Log
+ 
+ ## Review Triage Log
+diff --git a/docs/duplicate-scan.md b/docs/duplicate-scan.md
+index 58af222..1991145 100644
+--- a/docs/duplicate-scan.md
++++ b/docs/duplicate-scan.md
+@@ -59,6 +59,8 @@ Recognized forms supply the exact working directory, import roots and language:
+ - Direct script paths; `bash`, `sh`, `dash`, `zsh`, `ksh`, `pwsh` and
+   `powershell`; `source` and dot sourcing; literal `-c` and `-Command` strings;
+   PowerShell `Import-Module` (directly or through `-Name`) and `using module`.
++  Literal local modules in PowerShell `#requires -Modules` are traversed too.
++  Literal attached parameter values such as `-Command:` retain their AST type.
+   Interpreter options are read positionally, so later words are script
+   arguments. Versioned and `.exe` interpreter spellings are recognized.
+ - The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
+@@ -87,6 +89,15 @@ Recognized forms supply the exact working directory, import roots and language:
+   a provenance read. Literal script references in these data operands still
+   enter discovery. Computed executable/operation, shell, working-directory or
+   resolution-environment changes remain failures.
++- Direct Python `*args` wrappers and finite literal tuple loops are expanded
++  within fixed depth, argument and variant budgets. Aliased or replaced
++  callables, reflective namespace changes, unknown callers and computed
++  process options fail. Copied `os.environ` mappings permit only proved
++  resolution-preserving mutations and cannot escape through aliases/callbacks.
++  Forwarded Git metadata/acquisition operations require literal modes and
++  operands. A regex guard does not certify opaque data: repeated computed
++  reads and string-subclass operations may differ from the validated value.
++  Such operands remain failures, including in otherwise legitimate scripts.
+ 
+ ### Rule 1: literal references are included
+ 
+@@ -160,8 +171,13 @@ These fail coverage with a diagnostic naming the source file and line:
+ - A computed value in an execution position: a command word, interpreter
+   operand, sourced path, import or process-API target, or working directory.
+   The structural forms are command substitution (`$(...)` and backticks),
+-  subshells and other parenthesized syntax, and shell function definitions. So
+-  are brace groups that start a list, PowerShell script blocks (`& { ... }`),
++  Bash subshells and other parenthesized syntax, and Bash function definitions.
++  PowerShell declarations, assignments, conditions and function bodies are
++  parsed with PowerShell's AST parser; every nested command is inspected,
++  including commands in assignment values and interpolated subexpressions.
++  Computed PowerShell invocations, argument expressions, argument splatting,
++  method calls, and pipeline-fed `Invoke-Expression` remain unsupported. So
++  are brace groups that start a Bash list, PowerShell script blocks (`& { ... }`),
+   `pushd`/`popd`/`Set-Location` and their aliases, and PowerShell `cd`. Also
+   covered: a sourced or evaluated script that changes the caller's directory,
+   `find -execdir`/`-okdir` and `-exec {}`, `Start-Process` and `Invoke-Command`.
+@@ -183,7 +199,8 @@ These fail coverage with a diagnostic naming the source file and line:
+   or the name-based lookup paths `PSModulePath` and `CDPATH`, set by any means:
+   - a shell assignment, including `+=`, or `export`/`declare`;
+   - a composite step `env` entry, or a non-mapping step `env`;
+-  - PowerShell `$env:` or `Set-Item env:`;
++  - PowerShell `$env:` (including compound assignments and increment/decrement)
++    or `Set-Item env:`;
+   - Python `os.environ` or `os.environb` (a computed or resolution key, or
+     replacing or merging into the mapping with `=` or `|=`), `os.putenv` or a
+     subprocess `env`;
+@@ -293,8 +310,13 @@ stays data, including text that resembles the failing forms above.
+ ### Conservative failures and limits
+ 
+ Some ordinary constructs that call no local script still fail, because their
+-structure is unmodeled: `$(date)`, parenthesized `case` patterns, PowerShell
+-variable assignments, and PowerShell `if (...)` or `foreach (...)` blocks. Make
++structure is unmodeled: Bash `$(date)` and parenthesized `case` patterns,
++PowerShell method calls, and computed operands of unknown commands. PowerShell
++`param(...)`, variable assignments, arrays, hashtables, functions, `if (...)`
++and `foreach (...)` are parsed as syntax rather than executable command names.
++Direct, literal `&` and dot-source calls inside those constructs are followed.
++Property/index assignment targets and writes affecting PowerShell command
++resolution, including alias mutation, remain unsupported. Make
+ such a call statically identifiable, or extend central discovery and its
+ fixtures before onboarding a module whose actions rely on them. Never hide a
+ call through a module-specific exclusion. The scanner does not prove that
+@@ -343,7 +365,13 @@ For a local scan, retain outputs outside disposable scratch:
+ SCAN_DIRECTORY="$PWD/../cicd-duplicate-scan-observations" run-with-temp uv run --locked tools/scan.py
+ ```
+ 
+-Use Node 24 and Python 3.12 or later. Run from a checkout containing the committed
++Use Node 24 and Python 3.12 or later, plus PowerShell 7 (`pwsh`) when PowerShell
++sources are reachable. A fixed parser helper reads source on stdin through
++the native parser's `ModuleAnalysis` mode, avoiding host module lookup and type
++resolution. It never evaluates, imports or dot-sources module text. The internal
++analysis API must be present; incompatible PowerShell versions fail explicitly.
++An unavailable parser, timeout, parse error or malformed parser output fails
++coverage explicitly. Profiles are disabled. Run from a checkout containing the committed
+ policy and registry. The production registry is intentionally empty until
+ onboarding; local synthetic registrations belong in temporary test repositories.
+ 
+diff --git a/tools/jscpd/discover.cjs b/tools/jscpd/discover.cjs
+index 1f5ae6b..276e093 100644
+--- a/tools/jscpd/discover.cjs
++++ b/tools/jscpd/discover.cjs
+@@ -10,15 +10,18 @@ const kind = /\.tsx$/.test(input.path) ? ts.ScriptKind.TSX : /\.jsx$/.test(input
+ const file = ts.createSourceFile(input.path, input.text, ts.ScriptTarget.Latest, true, kind);
+ const result = { imports: [], literals: [], commands: [], errors: [] };
+ const aliases = new Map();
+-const processModules = new Set(['child_process', 'node:child_process', 'worker_threads', 'node:worker_threads', 'module', 'node:module', 'vm', 'node:vm']);
++const processModules = new Set(['child_process', 'node:child_process', 'worker_threads', 'node:worker_threads', 'module', 'node:module', 'vm', 'node:vm', 'process', 'node:process']);
+ const syntaxModules = new Set([...processModules, '@playwright/test']);
+ const line = node => file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1;
+ const text = node => node && ts.isStringLiteralLike(node) ? node.text : null;
+ const error = (node, message) => result.errors.push([line(node), message]);
+-const name = node => !node ? '' : ts.isIdentifier(node) ? (aliases.get(node.text) || node.text)
+-  : ts.isPropertyAccessExpression(node) ? name(node.expression) + '.' + node.name.text
+-  : ts.isElementAccessExpression(node) && text(node.argumentExpression) !== null
+-    ? name(node.expression) + '.' + text(node.argumentExpression) : '';
++const name = node => {
++  const value = !node ? '' : ts.isIdentifier(node) ? (aliases.get(node.text) || node.text)
++    : ts.isPropertyAccessExpression(node) ? name(node.expression) + '.' + node.name.text
++    : ts.isElementAccessExpression(node) && text(node.argumentExpression) !== null
++      ? name(node.expression) + '.' + text(node.argumentExpression) : '';
++  return value.replace(/^(?:globalThis|global)\.(?=(?:process|require)(?:\.|$))/, '');
++};
+ const literal = node => {
+   if (ts.isStringLiteralLike(node)) return node.text;
+   if (ts.isArrayLiteralExpression(node)) {
+@@ -81,23 +84,29 @@ function visit(node) {
+       if (clause.name) bind(clause.name, moduleName);
+       const bindings = clause.namedBindings;
+       if (bindings && ts.isNamespaceImport(bindings)) bind(bindings.name, moduleName);
+-      else if (bindings) for (const entry of bindings.elements)
+-        aliases.set(entry.name.text, moduleName + '.' + (entry.propertyName || entry.name).text);
++      else if (bindings) for (const entry of bindings.elements) {
++        const importedName = (entry.propertyName || entry.name).text;
++        aliases.set(entry.name.text, importedName === 'default' && processModules.has(text(node.moduleSpecifier))
++          ? moduleName : moduleName + '.' + importedName);
++      }
+     }
+   }
+   if (ts.isExportDeclaration(node) && node.moduleSpecifier) {
+     imported(node, node.moduleSpecifier);
+     if (processModules.has(text(node.moduleSpecifier))) error(node, 'unsupported JavaScript process API re-export');
+   }
+-  if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference))
++  if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference)) {
+     imported(node, node.moduleReference.expression);
++    if (processModules.has(text(node.moduleReference.expression)))
++      bind(node.name, text(node.moduleReference.expression).replace('node:', ''));
++  }
+   if (ts.isVariableDeclaration(node) && node.initializer) {
+     const init = node.initializer;
+     if (ts.isCallExpression(init) && name(init.expression) === 'require' && text(init.arguments[0]) !== null) {
+       if (processModules.has(text(init.arguments[0]))) bind(node.name, text(init.arguments[0]).replace('node:', ''));
+     } else {
+       const target = name(init);
+-      if (/^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target)
++      if (/^(?:child_process|worker_threads|module|vm|process)(?:\.|$)/.test(target)
+           || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) bind(node.name, target);
+     }
+   }
+@@ -129,6 +138,9 @@ function visit(node) {
+         imported(node, args[0]);
+         if (node.expression.kind === ts.SyntaxKind.ImportKeyword && processModules.has(text(args[0])))
+           error(node, 'unsupported dynamic JavaScript process-module import');
++        if (target === 'require' && processModules.has(text(args[0]))
++            && !(ts.isVariableDeclaration(node.parent) && node.parent.initializer === node))
++          error(node, 'unsupported inline JavaScript process-module require');
+       }
+     } else if (['eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'module.createRequire', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+       error(node, 'unsupported reflective JavaScript execution: ' + target);
+@@ -156,11 +168,11 @@ function visit(node) {
+       error(node, 'unresolved reflective JavaScript process/import API');
+     }
+   }
+-  if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm)$/.test(name(node.expression))
++  if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm|process)$/.test(name(node.expression))
+       && text(node.argumentExpression) === null) error(node, 'unresolved reflective JavaScript process/import API');
+-  if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node)) {
++  if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+     const target = name(node);
+-    if (/^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
++    if (target === 'process' || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+       const parent = node.parent;
+       const declaration = (ts.isVariableDeclaration(parent) && (parent.name === node || parent.initializer === node))
+         || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)
+diff --git a/tools/scan_discovery.py b/tools/scan_discovery.py
+index 5a8113e..5a48ccb 100644
+--- a/tools/scan_discovery.py
++++ b/tools/scan_discovery.py
+@@ -15,11 +15,13 @@ from __future__ import annotations
+ 
+ import ast
+ from collections import deque
++from functools import lru_cache
+ import json
+-from pathlib import PurePosixPath
++from pathlib import Path, PurePosixPath
+ import posixpath
+ import re
+ import shlex
++import subprocess
+ import tomllib
+ 
+ import yaml
+@@ -222,6 +224,55 @@ def shell_words(text, powershell):
+         return [word.strip("'\"") for word in text.split()]
+ 
+ 
++@lru_cache(maxsize=128)
++def powershell_ast(text):
++    """Use the language parser, with source only on stdin, never as code."""
++    try:
++        result = subprocess.run(
++            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File",
++             str(Path(__file__).with_name("scan_powershell.ps1"))],
++            input=text, text=True, encoding="utf-8", capture_output=True, timeout=30,
++            cwd=Path(__file__).resolve().parent)
++    except (OSError, subprocess.TimeoutExpired) as error:
++        raise DeliveryError("PowerShell parser unavailable: " + clean(error)) from None
++    if result.returncode:
++        raise DeliveryError("PowerShell parser failed: " + clean(result.stderr))
++    try:
++        events = json.loads(result.stdout)["events"]
++        if not isinstance(events, list):
++            raise ValueError("invalid event list")
++        for event in events:
++            if (not isinstance(event, dict) or type(event.get("line")) is not int or event["line"] < 1
++                    or event.get("kind") not in {"error", "command", "literal", "assignment", "member",
++                                                 "module", "here-expansion", "sequence", "unsupported"}):
++                raise ValueError("invalid parser event")
++            if event["kind"] == "sequence":
++                if not isinstance(event.get("values"), list) or not all(isinstance(v, str) for v in event["values"]):
++                    raise ValueError("invalid literal sequence")
++                continue
++            if not isinstance(event.get("text"), str):
++                raise ValueError("invalid parser text")
++            if event["kind"] == "command":
++                if (event.get("invocation") not in {"Unknown", "Ampersand", "Dot"}
++                        or not isinstance(event.get("words"), list) or not event["words"]
++                        or any(not isinstance(w, dict) or not isinstance(w.get("type"), str)
++                               or not isinstance(w.get("value"), str) or type(w.get("splatted")) is not bool
++                               or type(w.get("computed")) is not bool
++                               for w in event["words"])
++                        or not isinstance(event.get("redirects"), list)
++                        or not all(isinstance(r, str) for r in event["redirects"])):
++                    raise ValueError("invalid command event")
++            if event["kind"] == "assignment" and (
++                    type(event.get("simple")) is not bool or type(event.get("increment")) is not bool
++                    or not isinstance(event.get("operator"), str)
++                    or not isinstance(event.get("variables"), list)
++                    or not all(isinstance(v, str) for v in event["variables"])):
++                raise ValueError("invalid assignment event")
++        return events
++    except (KeyError, ValueError, TypeError):
++        raise DeliveryError("invalid PowerShell parser output") from None
++
++
+ def powershell_comments(text):
+     """Blank actual block comments, preserving quotes, positions and lines."""
+     result, quote, here, comment, index = [], None, None, False, 0
+@@ -889,11 +940,12 @@ class Discovery:
+         # Recognized calls carry the literal working directory. Literal words
+         # naming tracked scripts are included afterwards from every base.
+         text = text.removeprefix("\ufeff")
+-        if powershell:
+-            text = powershell_comments(text)
+         # Replace spaced Actions expressions before shell tokenization.
+         text = re.sub(r"\$\{\{\s*github\.(workspace|action_path)\s*\}\}",
+                       lambda m: "$GITHUB_WORKSPACE" if m[1] == "workspace" else "$GITHUB_ACTION_PATH", text)
++        if powershell:
++            self.powershell(path, text, cwd, action, offset=offset, sourced=sourced)
++            return
+         cwds, literals, modules = [cwd], [], []
+         for number, line, data in self.logical(text, offset, powershell, path):
+             for body_number, body, expands in data:
+@@ -939,6 +991,101 @@ class Discovery:
+             self.include(literals, path, candidate_cwd, action, self.bases(path, action, cwds))
+             self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, cwds))
+ 
++    def powershell(self, path, text, cwd, action, *, offset, sourced):
++        """Traverse AST commands inside all branches, functions and expressions.
++
++        Declarations, assignments and data expressions are not command words.
++        Literal fallback remains independent of invocation recognition.
++        """
++        try:
++            events = powershell_ast(text)
++        except DeliveryError as error:
++            self.error(path, offset + 1, "local-script discovery: " + clean(error))
++            return
++        cwds, literals, modules = [cwd], [], []
++        for event in events:
++            number, kind = event["line"] + offset, event["kind"]
++            if kind == "literal":
++                words = [event["text"], *shell_words(event["text"], True)]
++                literals.extend((number, word) for word in words)
++                modules.extend((number, module) for module in self.references(words, path, number))
++                continue
++            try:
++                if kind == "error":
++                    raise DeliveryError("invalid PowerShell syntax: " + event["text"])
++                if kind == "unsupported":
++                    raise DeliveryError(event["text"])
++                if kind == "here-expansion":
++                    raise DeliveryError("unsupported expanding heredoc execution")
++                if kind == "member":
++                    raise DeliveryError("unsupported PowerShell method invocation: " + event["text"])
++                if kind == "assignment":
++                    for variable in event["variables"]:
++                        if variable.lower().startswith("env:"):
++                            name = variable[4:].upper()
++                            if (name in RESOLUTION or (name == "PATH" and (
++                                    not event["simple"] or event["operator"] not in {"Equals", "PlusEquals"}))
++                                    or re.search(r"[$`*?]", name)):
++                                raise DeliveryError("unsupported environment assignment affecting script resolution")
++                        if (variable.lower().startswith(("function:", "alias:"))
++                                or variable.split(":")[-1].upper() in {
++                                    "PSDEFAULTPARAMETERVALUES", "PSMODULEAUTOLOADINGPREFERENCE", "EXECUTIONCONTEXT"}):
++                            raise DeliveryError("unsupported PowerShell assignment affecting command resolution")
++                    if not event["simple"]:
++                        raise DeliveryError("unsupported PowerShell assignment target")
++                    self.environment([], event["text"], True)
++                elif kind == "sequence":
++                    modules.extend((number, module) for module in self.references(event["values"], path, number))
++                elif kind == "module":
++                    self.segment(["using", "module", event["text"]], path, cwd, action, cwds, number, True, sourced)
++                elif kind == "command":
++                    words = [word["value"] for word in event["words"]]
++                    modules.extend((number, module) for module in self.references(words, path, number))
++                    # A computed command and a script-block invocation must not
++                    # become a harmless bare command after token removal.
++                    first = event["words"][0]
++                    if first["type"] == "ScriptBlockExpressionAst":
++                        raise DeliveryError("unsupported shell compound/subshell execution")
++                    if first["type"] not in {"StringConstantExpressionAst", "ExpandableStringExpressionAst"}:
++                        raise DeliveryError("unresolved computed command: " + words[0])
++                    if any(word["splatted"] for word in event["words"]):
++                        raise DeliveryError("unresolved PowerShell argument splatting")
++                    name = PurePosixPath(words[0]).name.lower().removesuffix(".exe")
++                    if name in {"set-alias", "sal", "new-alias", "nal", "import-alias", "ipal", "remove-alias",
++                                "new-psdrive", "ndr", "remove-psdrive", "rdr"}:
++                        raise DeliveryError("unsupported PowerShell alias mutation affecting command resolution")
++                    mutates_provider = (name.partition("-")[0] in {"set", "new", "remove", "clear", "copy",
++                                                                  "move", "rename", "add"}
++                                        or name in {"si", "ni", "sc", "ri", "cli", "clc", "ac", "cpi", "cp", "copy",
++                                                    "mi", "mv", "move", "rni", "ren", "sp", "cpp", "mp", "rnp",
++                                                    "rp", "clp", "sv", "rv", "clv"})
++                    if (mutates_provider
++                            and any(re.match(r"(?i)(?:-\w+:)?(?:alias|function):", word) for word in words[1:])):
++                        raise DeliveryError("unsupported PowerShell provider mutation affecting command resolution")
++                    if (name not in {"echo", "write-output", "write-host", "cat", "get-content"}
++                            and any(word["computed"] for word in event["words"][1:])):
++                        raise DeliveryError("unresolved computed PowerShell command operand: " + name)
++                    code_words = []
++                    if name in {"invoke-expression", "iex", "eval"}:
++                        code_words = event["words"][1:]
++                    elif name in SHELLS:
++                        mode, remaining = self.shell_options(words[1:], SHELLS[name] == "powershell")
++                        if mode == "inline" and remaining:
++                            code_words = event["words"][-len(remaining):]
++                    if any(word["computed"] or word["type"] not in {"StringConstantExpressionAst", "CommandParameterAst"}
++                           for word in code_words):
++                        raise DeliveryError("unresolved computed command: execution text")
++                    redirects = [word for value in event["redirects"] for word in shell_words(value, True)]
++                    self.environment([words + redirects], event["text"], True)
++                    if event["invocation"] == "Dot":
++                        words = [".", *words]
++                    cwd = self.segment(words + redirects, path, cwd, action, cwds, number, True, sourced)
++            except (ValueError, RecursionError) as error:
++                self.error(path, number, "local-script discovery: " + clean(error))
++        for candidate_cwd in dict.fromkeys(cwds):
++            self.include(literals, path, candidate_cwd, action, self.bases(path, action, cwds))
++            self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, cwds))
++
+     @staticmethod
+     def environment_output(words, *, marker="GITHUB_ENV", powershell=False):
+         """Understand a small literal producer, or fail the complete write.
+@@ -1163,6 +1310,8 @@ class Discovery:
+         if builtin in {"eval", "invoke-expression", "iex"}:
+             if args[:1] and args[0].lower() == "-command":
+                 args = args[1:]
++            if powershell and not args:
++                raise DeliveryError("unresolved computed command: missing execution text or pipeline-fed evaluation")
+             # Evaluated text runs in this shell, so a directory change inside
+             # it fails rather than leaving a stale caller cwd.
+             self.commands(path, " ".join(args), cwd, action, offset=number - 1, powershell=powershell, sourced=True)
+@@ -1318,6 +1467,17 @@ class Discovery:
+             target = cmd
+         elif "$" in cmd or "`" in cmd:
+             raise DeliveryError("unresolved computed command: " + clean(cmd))
++        elif not powershell and cmd == "mkdir":
++            # mkdir consumes directory data. Simple parameter expansion cannot
++            # turn that operand into a program; substitution and computed flags
++            # still require execution analysis and are deliberately refused.
++            for word in args:
++                if word.startswith("-") and word not in {"-p", "--parents", "-v", "--verbose", "--"}:
++                    raise DeliveryError("unsupported mkdir option")
++                expanded, _ = self.expand(word, path, action)
++                remaining = re.sub(r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)", "", expanded)
++                if any(value in remaining for value in ("$", "`", "<(", ">(")):
++                    raise DeliveryError("unsupported mkdir shell substitution or computed operand")
+         elif builtin not in {"echo", "printf", "write-output", "write-host", "cat", "get-content", "[", "[[", "test"}:
+             # An unknown consumer cannot certify an unresolved operand as
+             # nonexecuting data. Follow a visible execution tool through the
+@@ -1417,6 +1577,8 @@ class Discovery:
+                 remaining.extend([value, *args])
+                 break
+             key, equal, operand = value.partition("=")
++            if key == "--ignore-scripts" and equal and operand != "true":
++                raise DeliveryError("unsupported npm lifecycle-enabling option: " + key)
+             if key in {"--prefix", "--workspace", "-w"}:
+                 if not equal:
+                     if not args:
+@@ -1526,7 +1688,7 @@ class Discovery:
+                                                             path=path, cwd=base, action=action))
+                     if not targets:
+                         # Bare imports must come from the locked workspace or Node's builtins.
+-                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process"}:
++                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process", "process"}:
+                             continue
+                         package = "/".join(imported.split("/")[:2]) if imported.startswith("@") else imported.split("/")[0]
+                         lock = self.json(posixpath.join(root, "package-lock.json"))
+@@ -1938,7 +2100,7 @@ class Discovery:
+                             executes(candidate) for candidate in names(ast.unparse(node.args[0]))):
+                         raise DeliveryError("unsupported partial application of a process/import API")
+                     for call in sorted(calls):
+-                        self.python_call(call, node, path, cwd, action, roots, offset, names)
++                        self.python_call(call, node, path, cwd, action, roots, offset, names, parents, nodes)
+             except (ValueError, RecursionError) as error:
+                 self.error(path, getattr(node, "lineno", 1) + offset, "local-script discovery: " + clean(error))
+         for candidate_cwd in dict.fromkeys(cwds):
+@@ -1995,7 +2157,325 @@ class Discovery:
+                 raise DeliveryError("unsupported reflective getattr of a process/import API")
+         raise DeliveryError("unsupported reflective use of a process/import API: " + clean(sorted(candidates)[0]))
+ 
+-    def python_call(self, call, node, path, cwd, action, roots, offset, names):
++    @staticmethod
++    def copied_environment(value, invocation, parents, all_nodes, names):
++        """Prove an unaliased local environment copy leaves interpreter lookup unchanged."""
++        if not isinstance(value, ast.Name):
++            return False
++        scope = parents.get(invocation)
++        while scope is not None and not isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Module)):
++            scope = parents.get(scope)
++        if scope is None:
++            return False
++        nodes = list(ast.walk(scope))
++        if len(nodes) > 4096:
++            return False
++        definitions = [entry for entry in scope.body if isinstance(entry, ast.Assign)
++                       and len(entry.targets) == 1 and isinstance(entry.targets[0], ast.Name)
++                       and entry.targets[0].id == value.id]
++        if len(definitions) != 1:
++            return False
++        definition = definitions[0]
++        copy = definition.value
++        if (not isinstance(copy, ast.Call) or copy.args or copy.keywords
++                or not isinstance(copy.func, ast.Attribute) or copy.func.attr != "copy"
++                or names(ast.unparse(copy.func.value)) != {"os.environ"}):
++            return False
++        source = copy.func.value
++        while isinstance(source, ast.Attribute):
++            source = source.value
++        if not isinstance(source, ast.Name):
++            return False
++        source_name = source.id
++        imported = False
++        for entry in all_nodes:
++            if isinstance(entry, ast.Import):
++                for item in entry.names:
++                    if (item.asname or item.name) == source_name:
++                        if item.name != "os":
++                            return False
++                        imported = True
++            elif isinstance(entry, ast.ImportFrom):
++                for item in entry.names:
++                    if (item.asname or item.name) == source_name:
++                        if entry.module != "os" or item.name != "environ" or entry.level:
++                            return False
++                        imported = True
++            elif ((isinstance(entry, ast.Name) and isinstance(entry.ctx, (ast.Store, ast.Del)) and entry.id == source_name)
++                  or (isinstance(entry, ast.arg) and entry.arg == source_name)
++                  or (isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and entry.name == source_name)):
++                return False
++            elif isinstance(entry, (ast.Attribute, ast.Subscript)) and isinstance(entry.ctx, (ast.Store, ast.Del)):
++                if any(candidate == "os.environ" or candidate.startswith("os.environ.")
++                       or candidate.startswith("os.environ[")
++                       or candidate == "os.devnull" for candidate in names(ast.unparse(entry))):
++                    return False
++            elif isinstance(entry, (ast.Name, ast.Attribute)) and isinstance(entry.ctx, ast.Load):
++                if names(ast.unparse(entry)) == {"os.environ"}:
++                    access = parents.get(entry)
++                    access_call = parents.get(access)
++                    if (not isinstance(access, ast.Attribute) or access.attr not in {"copy", "get"}
++                            or not isinstance(access_call, ast.Call) or access_call.func is not access):
++                        return False
++            elif isinstance(entry, ast.Call):
++                # Neither the source module nor its mutable mapping may escape
++                # into an unknown callback before the supposedly honest copy.
++                if (names(ast.unparse(entry.func)) & {"globals", "locals", "vars", "setattr", "delattr"}
++                        or any(names(ast.unparse(argument)) & {"os", "os.environ"}
++                               for argument in [*entry.args, *(keyword.value for keyword in entry.keywords)])):
++                    return False
++        if not imported:
++            return False
++        container = invocation
++        while parents.get(container) is not scope:
++            container = parents.get(container)
++            if container is None:
++                return False
++        if scope.body.index(definition) >= scope.body.index(container):
++            return False
++
++        protected = RESOLUTION | {"PATH", "BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS", "ZDOTDIR", "FPATH"}
++        protected_prefixes = ("PYTHON", "NODE", "NPM_CONFIG_", "PS", "POWERSHELL")
++        def safe_key(key):
++            return isinstance(key, str) and key.upper() not in protected and not key.upper().startswith(protected_prefixes)
++        def safe_prefix(prefix):
++            return (isinstance(prefix, str) and bool(prefix) and safe_key(prefix)
++                    and not any(key.startswith(prefix.upper()) for key in protected)
++                    and not any(key.startswith(prefix.upper()) or prefix.upper().startswith(key) for key in protected_prefixes))
++        def data(expression):
++            return (isinstance(expression, ast.Constant) and isinstance(expression.value, str)
++                    or isinstance(expression, ast.Attribute) and names(ast.unparse(expression)) == {"os.devnull"}
++                    and isinstance(expression.value, ast.Name) and expression.value.id == source_name)
++        def receiver(call, method):
++            return (isinstance(call, ast.Call) and isinstance(call.func, ast.Attribute)
++                    and isinstance(call.func.value, ast.Name) and call.func.value.id == value.id and call.func.attr == method)
++        allowed = {definition.targets[0], value}
++        for entry in nodes:
++            if isinstance(entry, ast.Call) and names(ast.unparse(entry.func)) <= COMMAND_APIS:
++                allowed.update(keyword.value for keyword in entry.keywords if keyword.arg == "env"
++                               and isinstance(keyword.value, ast.Name) and keyword.value.id == value.id)
++        for statement in scope.body[scope.body.index(definition) + 1:scope.body.index(container)]:
++            valid = False
++            if isinstance(statement, ast.Expr) and receiver(statement.value, "update"):
++                update = statement.value
++                values = []
++                if not update.args:
++                    values = [(item.arg, item.value) for item in update.keywords]
++                elif len(update.args) == 1 and not update.keywords and isinstance(update.args[0], ast.Dict):
++                    values = [(key.value if isinstance(key, ast.Constant) else None, item)
++                              for key, item in zip(update.args[0].keys, update.args[0].values)]
++                valid = bool(values) and all(safe_key(key) and data(item) for key, item in values)
++            elif isinstance(statement, ast.For) and isinstance(statement.target, ast.Name) and not statement.orelse:
++                iterate = statement.iter
++                if (isinstance(iterate, ast.Call) and isinstance(iterate.func, ast.Name) and iterate.func.id == "tuple"
++                        and len(iterate.args) == 1 and not iterate.keywords and isinstance(iterate.args[0], ast.Name)
++                        and iterate.args[0].id == value.id and len(statement.body) == 1
++                        and isinstance(statement.body[0], ast.If) and not statement.body[0].orelse):
++                    branch = statement.body[0]
++                    test = branch.test
++                    pop = branch.body[0].value if len(branch.body) == 1 and isinstance(branch.body[0], ast.Expr) else None
++                    valid = (isinstance(test, ast.Call) and isinstance(test.func, ast.Attribute)
++                             and isinstance(test.func.value, ast.Name) and test.func.value.id == statement.target.id
++                             and test.func.attr == "startswith" and len(test.args) == 1 and not test.keywords
++                             and isinstance(test.args[0], ast.Constant) and safe_prefix(test.args[0].value)
++                             and receiver(pop, "pop") and len(pop.args) == 1 and not pop.keywords
++                             and isinstance(pop.args[0], ast.Name) and pop.args[0].id == statement.target.id)
++                    # A shadowed iteration helper can mutate the copy itself.
++                    if any(isinstance(item, ast.arg) and item.arg == "tuple"
++                           or isinstance(item, ast.Name) and isinstance(item.ctx, (ast.Store, ast.Del)) and item.id == "tuple"
++                           or isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and item.name == "tuple"
++                           or isinstance(item, (ast.Import, ast.ImportFrom))
++                           and any((alias.asname or alias.name) == "tuple" for alias in item.names) for item in all_nodes):
++                        valid = False
++            if valid:
++                allowed.update(item for item in ast.walk(statement) if isinstance(item, ast.Name) and item.id == value.id)
++        return all(entry in allowed for entry in nodes if isinstance(entry, ast.Name) and entry.id == value.id)
++
++    @staticmethod
++    def proof_bindings(name, nodes):
++        """All syntactic bindings, including forms that have no Name(Store) node."""
++        result = []
++        for entry in nodes:
++            if (isinstance(entry, ast.Name) and isinstance(entry.ctx, (ast.Store, ast.Del)) and entry.id == name
++                    or isinstance(entry, ast.arg) and entry.arg == name
++                    or isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and entry.name == name
++                    or isinstance(entry, ast.ExceptHandler) and entry.name == name
++                    or isinstance(entry, (ast.MatchAs, ast.MatchStar)) and entry.name == name
++                    or isinstance(entry, ast.MatchMapping) and entry.rest == name
++                    or isinstance(entry, (ast.Global, ast.Nonlocal)) and name in entry.names):
++                result.append(entry)
++            elif isinstance(entry, ast.Import):
++                result.extend(item for item in entry.names if (item.asname or item.name.split(".")[0]) == name)
++            elif isinstance(entry, ast.ImportFrom):
++                result.extend(item for item in entry.names if (item.asname or item.name) == name)
++        return result
++
++    @staticmethod
++    def proof_namespace_safe(nodes):
++        """Reflection can replace bindings without a visible assignment; refuse that subset."""
++        reflective = {"globals", "locals", "vars", "getattr", "setattr", "delattr", "exec", "eval", "__import__"}
++        attributes = reflective | {"__dict__", "__globals__", "__code__", "__closure__", "__setattr__", "f_globals", "f_locals", "modules"}
++        return len(nodes) <= 4096 and not any(
++            isinstance(entry, ast.Call) and isinstance(entry.func, ast.Name) and entry.func.id in reflective
++            or isinstance(entry, ast.Attribute) and entry.attr in attributes
++            or isinstance(entry, ast.ImportFrom) and any(item.name == "*" or entry.module == "builtins"
++                                                       and item.name in reflective for item in entry.names)
++            for entry in nodes)
++
++    @staticmethod
++    def proof_function(name, nodes, parents):
++        bindings = Discovery.proof_bindings(name, nodes)
++        if (len(bindings) != 1 or not isinstance(bindings[0], ast.FunctionDef) or bindings[0].decorator_list
++                or not isinstance(parents.get(bindings[0]), ast.Module)):
++            return None
++        if any(isinstance(entry, ast.Name) and isinstance(entry.ctx, ast.Load) and entry.id == name
++               and (not isinstance(parents.get(entry), ast.Call) or parents[entry].func is not entry) for entry in nodes):
++            return None
++        return bindings[0]
++
++    @staticmethod
++    def proof_import(name, module, nodes, parents):
++        bindings = Discovery.proof_bindings(name, nodes)
++        if len(bindings) != 1 or not isinstance(bindings[0], ast.alias):
++            return False
++        declaration = parents.get(bindings[0])
++        if (not isinstance(declaration, ast.Import) or bindings[0].name != module
++                or not isinstance(parents.get(declaration), ast.Module)):
++            return False
++        def base(entry):
++            while isinstance(entry, (ast.Attribute, ast.Subscript)):
++                entry = entry.value
++            return entry.id if isinstance(entry, ast.Name) else None
++        return not any(
++            isinstance(entry, (ast.Attribute, ast.Subscript)) and isinstance(entry.ctx, (ast.Store, ast.Del)) and base(entry) == name
++            or isinstance(entry, ast.Name) and isinstance(entry.ctx, ast.Load) and entry.id == name
++            and (not isinstance(parents.get(entry), ast.Attribute) or parents[entry].value is not entry)
++            for entry in nodes)
++
++    @staticmethod
++    def forwarded_argv(expression, invocation, parents, nodes):
++        """Expand only direct immutable *args forwarding and finite literal tuple loops."""
++        if not Discovery.proof_namespace_safe(nodes):
++            raise ValueError("unsafe forwarded namespace or proof limit")
++        functions = {}
++        for entry in nodes:
++            if isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef)):
++                functions.setdefault(entry.name, []).append(entry)
++        def owner(entry):
++            while entry is not None and not isinstance(entry, (ast.FunctionDef, ast.AsyncFunctionDef)):
++                entry = parents.get(entry)
++            return entry
++        def sequence(items, at, stack):
++            if len(stack) > 8 or len(items) > 256:
++                raise ValueError("forwarded argv expansion limit exceeded")
++            choices = [[]]
++            for item in items:
++                alternatives = variable(item.value, at, stack) if isinstance(item, ast.Starred) else [[item]]
++                if len(choices) * len(alternatives) > 128:
++                    raise ValueError("forwarded argv expansion limit exceeded")
++                choices = [left + right for left in choices for right in alternatives]
++                if len(choices) > 128 or any(len(choice) > 256 for choice in choices):
++                    raise ValueError("forwarded argv expansion limit exceeded")
++            return choices
++        def variable(item, at, stack):
++            if not isinstance(item, ast.Name):
++                raise ValueError("unresolved forwarded argv")
++            scope = owner(at)
++            cursor = at
++            while cursor is not None and cursor is not scope:
++                if (isinstance(cursor, ast.For) and isinstance(cursor.target, ast.Name)
++                        and cursor.target.id == item.id and not cursor.orelse):
++                    literal = ast.literal_eval(cursor.iter)
++                    if (not isinstance(literal, (tuple, list)) or not literal or len(literal) > 128
++                            or any(not isinstance(row, (tuple, list)) or len(row) > 256
++                                   or any(not isinstance(value, str) for value in row) for row in literal)
++                            or Discovery.proof_bindings(item.id, list(ast.walk(cursor))) != [cursor.target]):
++                        raise ValueError("unresolved forwarded tuple loop")
++                    return [[ast.Constant(value) for value in row] for row in literal]
++                cursor = parents.get(cursor)
++            if (scope is None or scope.decorator_list or scope.args.vararg is None or scope.args.vararg.arg != item.id
++                    or len(functions.get(scope.name, [])) != 1 or scope.name in stack
++                    or Discovery.proof_function(scope.name, nodes, parents) is not scope
++                    or any(isinstance(entry, ast.Name) and isinstance(entry.ctx, (ast.Store, ast.Del)) and entry.id == item.id
++                           for entry in ast.walk(scope))):
++                raise ValueError("unresolved forwarded argv")
++            # A wrapper alias, callback, shadowed callable or **kwargs cannot
++            # silently introduce callers outside this finite direct-call graph.
++            if any(isinstance(entry, ast.Name) and entry.id == scope.name
++                   and (not isinstance(entry.ctx, ast.Load) or not isinstance(parents.get(entry), ast.Call)
++                        or parents[entry].func is not entry) for entry in nodes):
++                raise ValueError("unsafe forwarded wrapper indirection")
++            if any(isinstance(entry, ast.arg) and entry.arg == scope.name for entry in nodes):
++                raise ValueError("shadowed forwarded wrapper")
++            calls = [entry for entry in nodes if isinstance(entry, ast.Call)
++                     and isinstance(entry.func, ast.Name) and entry.func.id == scope.name]
++            if not calls or len(calls) > 128:
++                raise ValueError("unresolved forwarded wrapper callers")
++            result = []
++            fixed = len(scope.args.posonlyargs) + len(scope.args.args)
++            for caller in calls:
++                if any(keyword.arg is None for keyword in caller.keywords) or len(caller.args) < fixed:
++                    raise ValueError("unresolved forwarded wrapper options")
++                result.extend(sequence(caller.args[fixed:], caller, (*stack, scope.name)))
++                if len(result) > 128:
++                    raise ValueError("forwarded argv expansion limit exceeded")
++            return result
++        if isinstance(expression, (ast.List, ast.Tuple)):
++            return sequence(expression.elts, invocation, ())
++        return variable(expression, invocation, ())
++
++    @staticmethod
++    def git_data_argv(arguments):
++        """Accept literal Git data operations; opaque values require stronger provenance."""
++        literal = lambda item: item.value if isinstance(item, ast.Constant) and isinstance(item.value, str) else None
++        if not arguments or literal(arguments[0]) != "git":
++            return False
++        values = list(arguments[1:])
++        while values and literal(values[0]) in {"-C", "-c"}:
++            option = literal(values.pop(0))
++            if not values:
++                return False
++            operand = values.pop(0)
++            if option == "-c" and literal(operand) not in {"submodule.recurse=false", "core.hooksPath=/dev/null"}:
++                return False
++        if not values:
++            return False
++        verb = literal(values.pop(0))
++        if verb not in {"rev-parse", "ls-tree", "ls-files", "for-each-ref", "cat-file", "show", "config", "remote", "fetch"}:
++            return False
++        # A regex guard alone does not prove that a repeated subscript read or
++        # concatenation returns the validated native string. Refuse every opaque
++        # operand until that provenance is proved, including metadata options.
++        if any(literal(item) is None for item in values):
++            return False
++        operands = [literal(item) for item in values]
++        forbidden = {"--exec", "--upload-pack", "--receive-pack", "--ext-diff", "--textconv", "--filters", "--edit", "-e", "-c", "--config-env"}
++        if any(item.split("=", 1)[0] in forbidden for item in operands):
++            return False
++        if verb == "config":
++            return bool(operands) and (operands[0] in {"--get", "--get-all", "--get-regexp"}
++                or len(operands) > 2 and operands[0] == "--blob" and operands[2] in {"--get", "--get-all", "--get-regexp"})
++        if verb == "remote":
++            return bool(operands) and operands[0] == "get-url"
++        if verb == "cat-file" and (not operands or operands[0] not in {"-t", "-s", "-e", "--batch-check"}
++                                   and not operands[0].startswith("--batch-check=")):
++            return False
++        if verb == "fetch":
++            if not {"--no-auto-maintenance", "--no-recurse-submodules"} <= set(operands):
++                return False
++            options = {"--no-auto-maintenance", "--no-recurse-submodules", "--no-tags", "--depth=1",
++                       "--no-write-fetch-head", "--refmap="}
++            while operands and operands[0] in options:
++                operands.pop(0)
++            if len(operands) != 2:
++                return False
++            remote, identity = operands
++            return (bool(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", remote)
++                         or re.fullmatch(r"https://[^\s]+", remote))
++                    and re.fullmatch(r"[0-9a-f]{40}", identity) is not None)
++        return True
++
++    def python_call(self, call, node, path, cwd, action, roots, offset, names, parents, nodes):
+         if call.startswith(UNSUPPORTED_PREFIXES) or call in UNSUPPORTED_CALLS:
+             raise DeliveryError("unsupported Python process/import API: " + clean(call))
+         if call in {"importlib.import_module", "__import__"}:
+@@ -2010,6 +2490,8 @@ class Discovery:
+                 for keyword in node.keywords:
+                     if keyword.arg not in {"cwd", "executable", "shell", "env"}:
+                         continue
++                    if keyword.arg == "env" and self.copied_environment(keyword.value, node, parents, nodes, names):
++                        continue
+                     try:
+                         option = ast.literal_eval(keyword.value)
+                     except (ValueError, TypeError):
+@@ -2038,6 +2520,33 @@ class Discovery:
+             if not node.args:
+                 raise DeliveryError("unresolved Python script invocation")
+             first = node.args[0]
++            if (isinstance(first, ast.Name) or isinstance(first, (ast.List, ast.Tuple))
++                    and any(isinstance(item, ast.Starred) for item in first.elts)):
++                try:
++                    if (not call.startswith("subprocess.") or not isinstance(node.func, ast.Attribute)
++                            or not isinstance(node.func.value, ast.Name)
++                            or not self.proof_import(node.func.value.id, "subprocess", nodes, parents)
++                            or self.import_module("subprocess", path, cwd, action, roots=roots)):
++                        raise ValueError("untrusted forwarded subprocess namespace")
++                    if any(keyword.arg == "shell" and not (isinstance(keyword.value, ast.Constant)
++                            and keyword.value.value in (None, False)) for keyword in node.keywords):
++                        raise ValueError("unsupported forwarded shell option")
++                    variants = self.forwarded_argv(first, node, parents, nodes)
++                    for variant in variants:
++                        if self.git_data_argv(variant):
++                            if any(keyword.arg == "shell" and not isinstance(keyword.value, ast.Constant)
++                                   or keyword.arg == "shell" and keyword.value.value not in (None, False) for keyword in node.keywords):
++                                raise ValueError("unsupported shell execution of a metadata operation")
++                            continue
++                        if variant and isinstance(variant[0], ast.Constant) and variant[0].value == "git":
++                            raise ValueError("unsupported forwarded Git mode or operands")
++                        command = [ast.literal_eval(item) for item in variant]
++                        if not command or not all(isinstance(item, str) for item in command):
++                            raise ValueError("unresolved forwarded executable or argument")
++                        self.commands(path, shlex.join(command), target_cwd, action, offset=node.lineno - 1 + offset)
++                    return
++                except (ValueError, TypeError, SyntaxError):
++                    raise DeliveryError("unresolved computed Python script invocation; unsafe or unresolved forwarding") from None
+             # Fixed .NET SDK operations consume project/output/property data.
+             # Their C#/MSBuild graph is outside this source-language perimeter;
+             # dynamic executable/verb/options expansion still cannot be certified.
+diff --git a/tools/tests/test_scan.py b/tools/tests/test_scan.py
+index ea14597..327c2ac 100644
+--- a/tools/tests/test_scan.py
++++ b/tools/tests/test_scan.py
+@@ -137,7 +137,7 @@ A1 = (
+      "scripts/helper.sh", "unsupported shell compound/subshell execution"),
+     ("ps-try", [("pwsh", "try { ./scripts/helper.ps1 } catch { exit 1 }", "")], {"scripts/helper.ps1": COPY},
+      "scripts/helper.ps1", None),
+-    ("ps-else", [("pwsh", "} else { ./scripts/helper.ps1 }", "")], {"scripts/helper.ps1": COPY},
++    ("ps-else", [("pwsh", "if ($false) { Write-Host x } else { ./scripts/helper.ps1 }", "")], {"scripts/helper.ps1": COPY},
+      "scripts/helper.ps1", None),
+     ("builtin-source", [("bash", "builtin source ./scripts/helper.sh", "")], {"scripts/helper.sh": COPY},
+      "scripts/helper.sh", None),
+@@ -220,6 +220,148 @@ A1 = (
+ )
+ 
+ 
++class PowerShellDiscoveryTests(unittest.TestCase):
++    def discover(self, source, files=None):
++        temporary = tempfile.TemporaryDirectory(prefix="powershell-discovery-")
++        self.addCleanup(temporary.cleanup)
++        w = Workspace(Path(temporary.name) / "workspace", ("Hexalith.Alpha",))
++        w.action("Hexalith.Alpha", "./scripts/start.ps1", shell="pwsh")
++        for path, text in {"scripts/start.ps1": source, **(files or {})}.items():
++            w.write("Hexalith.Alpha", path, text)
++        revision = w.commit(w.paths["Hexalith.Alpha"])
++        return sc.Discovery(rt.Git(w.paths["Hexalith.Alpha"]), revision).discover()
++
++    def test_parameters_assignments_and_data_expressions_are_not_commands(self):
++        files, errors = self.discover("""param([string]$Label = 'folders')
++$ErrorActionPreference = 'Stop'
++$values = @(1, 2)
++$count = 0
++$count++
++$data = @{ Label = $Label; Values = $values }
++foreach ($item in $values) { Write-Host "$($data.Label): $item" }
++""")
++        self.assertEqual(errors, [])
++        self.assertEqual(set(files), {".github/actions/dormant/action.yml", "scripts/start.ps1"})
++
++    def test_literal_calls_inside_functions_branches_and_assignment_rhs(self):
++        files, errors = self.discover("""using module @{ModuleName='./scripts/library.psm1'; ModuleVersion='1.0.0'}
++function Invoke-Checks {
++    param([string]$Label = 'folders')
++    if ($Label) { & "$PSScriptRoot/child.ps1" } else { . "$PSScriptRoot/library.psm1" }
++}
++Invoke-Checks -Label folders
++$output = (python ./scripts/check.py)
++try { ./scripts/direct.ps1 } catch { Write-Host 'failed' }
++pwsh -Command:"& ./scripts/direct.ps1"
++""", {"scripts/child.ps1": "Write-Host child\n", "scripts/library.psm1": "Write-Host library\n",
++       "scripts/check.py": "print('checked')\n", "scripts/direct.ps1": "Write-Host direct\n"})
++        self.assertEqual(errors, [])
++        self.assertTrue({"scripts/child.ps1", "scripts/library.psm1", "scripts/check.py",
++                         "scripts/direct.ps1"} <= set(files))
++
++    def test_unresolved_execution_and_resolution_mutations_still_fail(self):
++        probes = {
++            "& $Command": "unresolved computed command",
++            ". $Script": "unresolved computed command",
++            "$output = (& $Command)": "unresolved computed command",
++            'Write-Host "$(python $Script)"': "unresolved local-script target",
++            'pwsh -File "$Script"': "unresolved local-script target",
++            "Invoke-Expression $Code": "unresolved computed command",
++            "Start-Process python -ArgumentList $Args": "PowerShell process invocation",
++            "[System.Diagnostics.Process]::Start($Command)": "PowerShell method invocation",
++            "[scriptblock]::Create($Code).Invoke()": "PowerShell method invocation",
++            "Set-Location scripts": "working-directory command",
++            "$env:PYTHONPATH = 'support'": "environment assignment",
++            '$env:PATH = "$PWD/scripts;$env:PATH"': "PATH change",
++            "Set-Item env:PSModulePath ./modules": "environment assignment",
++            "unknown-launcher $Command": "computed operand of unknown command",
++            "unknown-launcher @Arguments": "argument splatting",
++            'pwsh -Command "$Code"': "unresolved computed command",
++            'python -c ("exec(" + "input())")': "computed PowerShell command operand",
++            'Invoke-Expression -Command:("./scripts/" + "hidden.ps1")': "computed PowerShell command operand",
++            'Invoke-Expression -Command:$Code': "unresolved computed command",
++            'unknown-launcher ("scripts/hid" + "den.ps1")': "computed PowerShell command operand",
++            '$env:PYTHONPATH[0] = "s"': "environment assignment",
++            '[Environment]::CurrentDirectory = "scripts"': "PowerShell assignment target",
++            '$env:PYTHONPATH++': "environment assignment",
++            '$env:PYTHONPATH ??= "support"': "environment assignment",
++            '$env:PATH ??= "scripts"': "environment assignment",
++            '--$env:PATH': "environment assignment",
++            '$function:InvokeHidden = $Code': "assignment affecting command resolution",
++            '$alias:InvokeHidden = $Command': "assignment affecting command resolution",
++            '$global:PSDefaultParameterValues = @{}': "assignment affecting command resolution",
++            '("./scripts/hid" + "den.ps1") | Invoke-Expression': "unresolved computed command",
++            'Set-Alias run Invoke-Expression; run "& (\'./scripts/hid\' + \'den.ps1\')"': "alias mutation",
++            'Set-Item alias:run Invoke-Expression': "provider mutation",
++        }
++        for source, diagnostic in probes.items():
++            with self.subTest(source=source):
++                _, errors = self.discover("param()\n" + source + "\n")
++                self.assertTrue(any("scripts/start.ps1:2:" in error and diagnostic in error
++                                    for error in errors), errors)
++
++    def test_alias_and_provider_mutations_are_rejected(self):
++        for command in ('Copy-Item alias:iex alias:run', 'cpi alias:iex alias:run',
++                        'Move-Item alias:iex alias:run', 'Rename-Item alias:iex run',
++                        'Import-Alias ./aliases.csv', 'New-PSDrive -Name commands -PSProvider Alias -Root ""'):
++            with self.subTest(command=command):
++                _, errors = self.discover(command + "\n")
++                self.assertTrue(any("affecting command resolution" in error for error in errors), errors)
++
++    def test_invalid_syntax_and_missing_parser_fail_closed(self):
++        _, errors = self.discover("if ($true { Write-Host x }\n")
++        self.assertTrue(any("invalid PowerShell syntax" in error for error in errors), errors)
++        import scan_discovery as discovery
++        discovery.powershell_ast.cache_clear()
++        with mock.patch.object(discovery.subprocess, "run", side_effect=FileNotFoundError("pwsh")):
++            with self.assertRaisesRegex(rt.DeliveryError, "PowerShell parser unavailable"):
++                discovery.powershell_ast("param()\n# missing parser probe\n")
++
++    def test_malformed_and_failed_parser_output_fail_closed(self):
++        import scan_discovery as discovery
++        for output in ("not JSON", '{"events":null}', '{"events":[{}]}',
++                       '{"events":[{"line":1,"kind":"command","text":"x"}]}'):
++            with self.subTest(output=output):
++                result = discovery.subprocess.CompletedProcess([], 0, output, "")
++                with mock.patch.object(discovery.subprocess, "run", return_value=result):
++                    with self.assertRaisesRegex(rt.DeliveryError, "invalid PowerShell parser output"):
++                        discovery.powershell_ast("# malformed output probe " + output)
++        with mock.patch.object(discovery.subprocess, "run", return_value=discovery.subprocess.CompletedProcess(
++                [], 1, "", "parser failure")):
++            with self.assertRaisesRegex(rt.DeliveryError, "PowerShell parser failed"):
++                discovery.powershell_ast("# failed parser probe")
++        with mock.patch.object(discovery.subprocess, "run", side_effect=discovery.subprocess.TimeoutExpired("pwsh", 30)):
++            with self.assertRaisesRegex(rt.DeliveryError, "PowerShell parser unavailable"):
++                discovery.powershell_ast("# parser timeout probe")
++
++    def test_data_array_literal_module_references_are_traversed(self):
++        files, errors = self.discover("$arguments = @('python', '-m', 'helper')\n", {"helper.py": "print('helper')\n"})
++        self.assertEqual(errors, [])
++        self.assertIn("helper.py", files)
++
++    def test_requires_literal_module_is_traversed(self):
++        files, errors = self.discover("#requires -Modules ./scripts/helper.psm1\nWrite-Host ready\n",
++                                      {"scripts/helper.psm1": "& $Command\n"})
++        self.assertIn("scripts/helper.psm1", files)
++        self.assertTrue(any("scripts/helper.psm1:1:" in error and "unresolved computed command" in error
++                            for error in errors), errors)
++
++    def test_source_is_never_executed(self):
++        temporary = tempfile.TemporaryDirectory(prefix="powershell-inert-")
++        self.addCleanup(temporary.cleanup)
++        marker = Path(temporary.name) / "must-not-exist"
++        _, errors = self.discover("Set-Content -Path '" + str(marker) + "' -Value executed\n")
++        self.assertEqual(errors, [])
++        self.assertFalse(marker.exists())
++        import scan_discovery as discovery
++        module = Path(temporary.name) / "must-not-load.psm1"
++        module.write_text("Set-Content -Path '" + str(marker) + "' -Value loaded\n")
++        for target in (module, module.with_name("does-not-exist.psm1")):
++            events = discovery.powershell_ast("using module '" + str(target) + "'\n")
++            self.assertFalse(any(event["kind"] == "error" for event in events), events)
++            self.assertFalse(marker.exists())
++
++
+ class ScanTests(unittest.TestCase):
+     @classmethod
+     def setUpClass(cls):
+@@ -270,6 +412,24 @@ class ScanTests(unittest.TestCase):
+             ("import(process.env.TARGET);", "computed JavaScript import"),
+             ("import {runInNewContext} from 'node:vm'; runInNewContext(process.env.CODE);", "VM/config execution"),
+             ("import('node:child_process').then(cp => cp.exec(process.env.CMD));", "dynamic JavaScript process-module import"),
++            ("require('node:child_process').spawn(process.env.TOOL, []);", "inline JavaScript process-module require"),
++            ("let execute; execute = require('node:child_process').exec; execute(process.env.CMD);", "inline JavaScript process-module require"),
++            ("globalThis.require('node:child_process').exec(process.env.CMD);", "inline JavaScript process-module require"),
++            ("globalThis.process.getBuiltinModule('child_process').spawn(process.env.TOOL, []);", "reflective JavaScript execution"),
++            ("const runtime = globalThis.process; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("import runtime from 'node:process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("import {default as runtime} from 'node:process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("import runtime = require('node:process'); runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("import runtime from 'node:process'; function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(runtime);", "API escape"),
++            ("process[process.env.API]('child_process').exec(process.env.CMD);", "reflective JavaScript process/import API"),
++
++            ("import * as runtime from 'process'; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("import {getBuiltinModule as load} from 'node:process'; load('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("const runtime = require('node:process'); runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(process);", "API escape"),
++            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis.process);", "API escape"),
++            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis['process']);", "API escape"),
++            ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(global['process']);", "API escape"),
+             ("import {exec} from 'node:child_process'; setTimeout(exec, 0, process.env.CMD);", "API escape"),
+             ("import {spawn} from 'node:child_process'; spawn(process.env.TOOL, []);", "computed JavaScript process"),
+             ("export default {globalSetup:process.env.SETUP};", "computed JavaScript test configuration"),
+@@ -283,6 +443,212 @@ class ScanTests(unittest.TestCase):
+                 self.assertEqual("fail", report["result"])
+                 self.assertTrue(all(any(diagnostic in message for message in row["errors"]) for row in report["modules"]), report)
+ 
++    def test_builtin_process_imports_preserve_ordinary_environment_and_argument_reads(self):
++        for source in (
++            "import runtime from 'node:process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++            "import {default as runtime} from 'node:process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++            "import * as runtime from 'process'; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++            "import {env, argv} from 'node:process'; const mode = env.CI; const args = argv.slice(2);\n",
++            "const runtime = require('process'); const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++            "const runtime = globalThis.process; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++            "const runtime = globalThis['process']; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++        ):
++            with self.subTest(source=source):
++                report = self.coverage_case([("bash", "node script.js", "")], {"script.js": source})
++                self.assertEqual(report["result"], "pass", report)
++                self.assertTrue(all(not row["errors"] for row in report["modules"]), report)
++                self.assertTrue(all("script.js" in {item["path"] for item in row["files"]} for row in report["modules"]), report)
++
++    def test_data_only_mkdir_accepts_parameters_but_not_execution(self):
++        report = self.coverage_case([("bash", 'mkdir -p "$REPORT_DIRECTORY"\npython3 leaf.py', "")], {"leaf.py": COPY})
++        self.assert_coverage(report, "leaf.py", None)
++        for command in ('mkdir -p "$(python3 hidden.py)"', 'mkdir -p "`python3 hidden.py`"',
++                        'mkdir -p "${DIRECTORY:-$(python3 hidden.py)}"', '$DIRECTORY_TOOL -p "$REPORT_DIRECTORY"'):
++            with self.subTest(command=command):
++                report = self.coverage_case([("bash", command, "")], {"hidden.py": COPY})
++                self.assertEqual(report["result"], "fail", report)
++                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
++
++    def test_subprocess_environment_copy_preserves_source_resolution(self):
++        source = (
++            "import os, subprocess\n"
++            "def invoke():\n"
++            "    environment = os.environ.copy()\n"
++            "    for key in tuple(environment):\n"
++            "        if key.startswith('GIT_'):\n"
++            "            environment.pop(key)\n"
++            "    environment.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull, GIT_NO_LAZY_FETCH='1')\n"
++            "    subprocess.run(['python3', 'leaf.py'], env=environment)\n"
++            "invoke()\n"
++        )
++        self.assert_coverage(self.coverage_case([("bash", "python3 entry.py", "")],
++                                               {"entry.py": source, "leaf.py": COPY}), "leaf.py", None)
++        cases = {
++            "resolution_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "PATH='.'"),
++            "python_prefix_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "PYTHONSAFEPATH='0'"),
++            "lowercase_npm_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "npm_config_script_shell='python3'"),
++            "node_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "NODE_OPTIONS='--require hidden.js'"),
++            "powershell_update": source.replace("GIT_CONFIG_NOSYSTEM='1'", "PSModulePath='.'"),
++            "resolution_delete": source.replace("key.startswith('GIT_')", "key.startswith('PATH')"),
++            "computed_update": source.replace("environment.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull, GIT_NO_LAZY_FETCH='1')", "environment.update(mapping)"),
++            "computed_value": source.replace("GIT_CONFIG_NOSYSTEM='1'", "GIT_CONFIG_NOSYSTEM=unknown()"),
++            "alias_escape": source.replace("    for key", "    alias = environment\n    for key", 1),
++            "callback_escape": source.replace("    for key", "    mutate(environment)\n    for key", 1),
++            "shadowed_source": source.replace("def invoke():", "def invoke(os):"),
++            "replaced_source": source.replace("def invoke():", "os.environ = replacement\ndef invoke():"),
++            "source_alias_escape": source.replace("def invoke():", "mapping = os.environ\ndef invoke():"),
++            "source_method_escape": source.replace("def invoke():", "mutate(os.environ.copy)\ndef invoke():"),
++            "source_bound_mapping_escape": source.replace("def invoke():", "mutate(os.environ.copy.__self__)\ndef invoke():"),
++            "source_clear": source.replace("def invoke():", "os.environ.clear()\ndef invoke():"),
++            "shadowed_tuple": source.replace("def invoke():", "def tuple(mapping):\n    mapping['PATH'] = '.'\n    return []\ndef invoke():"),
++            "imported_tuple": source.replace("def invoke():", "from collections import deque as tuple\ndef invoke():"),
++            "rebound_loop_key": source.replace("            environment.pop(key)", "            key = 'PATH'\n            environment.pop(key)"),
++        }
++        for label, unsafe in cases.items():
++            with self.subTest(case=label):
++                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": unsafe, "leaf.py": COPY})
++                self.assertEqual(report["result"], "fail", report)
++                self.assertTrue(all(any("computed subprocess env" in error for error in row["errors"])
++                                    for row in report["modules"]), report)
++
++    def test_bounded_forwarding_includes_direct_and_literal_loop_sources(self):
++        for source in (
++            "import subprocess\ndef launch(*parts):\n    return subprocess.run(parts)\nlaunch('python3', 'leaf.py')\n",
++            "import subprocess\ndef launch(root, *parts):\n    return subprocess.run(['python3', *parts])\n"
++            "def forward(*parts):\n    return launch('.', *parts)\n"
++            "for parts in (('leaf.py',), ('leaf.py',)):\n    forward(*parts)\n",
++            "import subprocess\nfor parts in (('python3', 'leaf.py'), ('python3', 'leaf.py')):\n    subprocess.run(parts)\n",
++        ):
++            with self.subTest(source=source):
++                self.assert_coverage(self.coverage_case([("bash", "python3 entry.py", "")],
++                                                       {"entry.py": source, "leaf.py": COPY}), "leaf.py", None)
++
++    def test_forwarded_indirection_and_process_options_fail_closed(self):
++        base = "import os, subprocess\ndef launch(*parts):\n    return subprocess.run(['python3', *parts])\nlaunch('leaf.py')\n"
++        cases = {
++            "dynamic_executable": base.replace("['python3', *parts]", "parts").replace("launch('leaf.py')", "launch(os.environ['TOOL'], 'leaf.py')"),
++            "dynamic_interpreter_options": base.replace("launch('leaf.py')", "launch('-c', os.environ['CODE'])"),
++            "alias": base.replace("launch('leaf.py')", "alias = launch\nalias('leaf.py')"),
++            "import": base.replace("launch('leaf.py')", "from collections import deque as launch\nlaunch('leaf.py')"),
++            "class": base.replace("launch('leaf.py')", "class launch:\n    pass\nlaunch('leaf.py')"),
++            "local_shadow": base.replace("launch('leaf.py')", "def invoke(launch):\n    launch('leaf.py')\nlaunch('leaf.py')"),
++            "global_replacement": base.replace("launch('leaf.py')", "globals()['launch'] = replacement\nlaunch('leaf.py')"),
++            "callable_code_replacement": base.replace("launch('leaf.py')", "launch.__code__ = replacement\nlaunch('leaf.py')"),
++            "decorator": base.replace("def launch", "@replacement\ndef launch"),
++            "rebound_tuple": base.replace("    return subprocess", "    parts = unknown()\n    return subprocess"),
++            "keyword_expansion": base.replace("launch('leaf.py')", "launch('leaf.py', **options)"),
++            "shell": base.replace("*parts])", "*parts], shell=True)"),
++            "cwd": base.replace("*parts])", "*parts], cwd=os.environ['DIR'])"),
++            "env": base.replace("*parts])", "*parts], env={'PATH': '.'})"),
++            "executable": base.replace("*parts])", "*parts], executable='other-python')"),
++            "subprocess_class": base.replace("launch('leaf.py')", "class subprocess:\n    pass\nlaunch('leaf.py')"),
++            "subprocess_import": base.replace("launch('leaf.py')", "import collections as subprocess\nlaunch('leaf.py')"),
++            "loop_rebinding": "import subprocess\nfor parts in (('python3','leaf.py'),):\n    parts = unknown()\n    subprocess.run(parts)\n",
++            "computed_loop": "import subprocess\nfor parts in unknown():\n    subprocess.run(parts)\n",
++        }
++        for label, source in cases.items():
++            with self.subTest(case=label):
++                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": source, "leaf.py": COPY})
++                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
++
++    @staticmethod
++    def guarded_git_source():
++        return (
++            "import os, re, subprocess\n"
++            "IDENTITY = re.compile('[0-9a-f]{40}')\n"
++            "CATALOG = 'object.txt'\n"
++            "def require(condition, message):\n"
++            "    if not condition:\n"
++            "        raise ValueError(message)\n"
++            "def checked(values):\n"
++            "    result = values[0]\n"
++            "    require(IDENTITY.fullmatch(result), 'invalid identity')\n"
++            "    return result\n"
++            "def launch(root, *parts):\n"
++            "    return subprocess.run(['git', '-c', 'submodule.recurse=false', '-C', str(root), *parts])\n"
++            "def output(root, *parts):\n"
++            "    return launch(root, *parts)\n"
++            "identity = checked(supplied)\n"
++            "output('.', 'show', identity + ':' + CATALOG)\n"
++            "output('.', 'fetch', '--no-recurse-submodules', '--no-tags', '--depth=1', '--no-write-fetch-head', '--refmap=', '--no-auto-maintenance', 'origin', identity)\n"
++        )
++
++    def test_opaque_git_forwarding_refuses_unproved_value_provenance(self):
++        source = self.guarded_git_source()
++        literal = ("import subprocess\ndef launch(root, *parts):\n"
++                   "    return subprocess.run(['git', '-C', str(root), *parts])\n"
++                   "for parts in (('rev-parse', 'HEAD'), ('config', '--get', 'remote.origin.url')):\n"
++                   "    launch('.', *parts)\n")
++        self.assert_coverage(self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
++                                               {"entry.py": literal, "leaf.py": COPY}), "leaf.py", None)
++        cases = {
++            "guarded_opaque_value": source,
++            "changing_subscript": source.replace("    result = values[0]\n", "").replace("result", "values[0]"),
++            "string_subclass": source.replace("identity = checked(supplied)",
++                "class Identity(str):\n    def __add__(self, other):\n        return '--ext-diff'\n"
++                "identity = checked([Identity('a' * 40)])"),
++            "opaque_metadata_options": literal.replace("'HEAD'", "unknown()"),
++            "fake_module": source.replace("IDENTITY =", "re = replacement\nIDENTITY =", 1),
++            "class_module": source.replace("IDENTITY =", "class re:\n    pass\nIDENTITY =", 1),
++            "imported_module": source.replace("IDENTITY =", "import collections as re\nIDENTITY =", 1),
++            "local_module": source.replace("def checked(values):", "def checked(values, re):"),
++            "replaced_compile": source.replace("IDENTITY =", "re.compile = replacement\nIDENTITY =", 1),
++            "replaced_pattern": source.replace("def require", "IDENTITY = replacement\ndef require", 1),
++            "local_pattern": source.replace("def checked(values):", "def checked(values, IDENTITY):"),
++            "replaced_fullmatch": source.replace("def require", "IDENTITY.fullmatch = replacement\ndef require", 1),
++            "escaped_pattern": source.replace("def require", "mutate(IDENTITY)\ndef require", 1),
++            "fake_guard": source.replace("    if not condition:\n        raise ValueError(message)", "    return True"),
++            "imported_guard": source.replace("identity = checked", "from collections import deque as require\nidentity = checked"),
++            "class_guard": source.replace("identity = checked", "class require:\n    pass\nidentity = checked"),
++            "local_guard": source.replace("def checked(values):", "def checked(values, require):"),
++            "global_guard": source.replace("identity = checked", "globals()['require'] = replacement\nidentity = checked"),
++            "guard_code": source.replace("identity = checked", "require.__code__ = replacement\nidentity = checked"),
++            "guard_alias": source.replace("identity = checked", "alias = require\nidentity = checked"),
++            "side_effect_after_validation": source.replace("'invalid identity')", "mutate(values))"),
++            "dynamic_suffix": source.replace("identity + ':' + CATALOG", "identity + os.environ['FLAGS']"),
++            "rebound_suffix": source.replace("identity = checked", "CATALOG = os.environ['FLAGS']\nidentity = checked"),
++            "config_editor": source.replace("'show', identity + ':' + CATALOG", "'config', '--edit'"),
++            "custom_fetch_helper": source.replace("'origin', identity", "'ext::python3 hidden.py', identity"),
++            "fetch_option_suffix": source.replace("'origin', identity", "'origin', identity + os.environ['FLAGS']"),
++        }
++        for label, unsafe in cases.items():
++            with self.subTest(case=label):
++                report = self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
++                                            {"entry.py": unsafe, "leaf.py": COPY})
++                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
++        for filename in ("re.py", "subprocess.py"):
++            with self.subTest(local_module=filename):
++                report = self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
++                                            {"entry.py": source, "leaf.py": COPY, filename: "pass\n"})
++                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
++
++    def test_forwarding_recursion_and_expansion_are_bounded(self):
++        cases = {
++            "recursive": "import subprocess\ndef launch(*args):\n    subprocess.run(args)\n    launch(*args)\nlaunch('python3','leaf.py')\n",
++            "callers": "import subprocess\ndef launch(*args):\n    subprocess.run(args)\n" + "launch('python3','leaf.py')\n" * 129,
++            "tokens": "import subprocess\ndef launch(*args):\n    subprocess.run(args)\nlaunch(" + ",".join(repr("python3") for _ in range(257)) + ")\n",
++            "loop": "import subprocess\nfor args in " + repr(tuple(("python3", "leaf.py") for _ in range(129))) + ":\n    subprocess.run(args)\n",
++            "depth": "import subprocess\ndef launch0(*args):\n    subprocess.run(args)\n" + "".join(
++                f"def launch{index}(*args):\n    return launch{index - 1}(*args)\n" for index in range(1, 11)) + "launch10('python3', 'leaf.py')\n",
++            "cartesian": "import subprocess\ndef launch(*args):\n    subprocess.run([" + ",".join("*args" for _ in range(8))
++                + "])\nlaunch('python3', 'leaf.py')\nlaunch('python3', 'leaf.py')\n",
++        }
++        for label, source in cases.items():
++            with self.subTest(case=label):
++                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": source, "leaf.py": COPY})
++                self.assertTrue(all(row["errors"] for row in report["modules"]), report)
++                self.assertTrue(all(not any("invalid Python source" in message for message in row["errors"])
++                                    for row in report["modules"]), report)
++
++    def test_npm_later_flags_cannot_enable_unscanned_lifecycle_scripts(self):
++        for command in ("npm ci --ignore-scripts --ignore-scripts=false",
++                        "npm --ignore-scripts ci --ignore-scripts=0"):
++            with self.subTest(command=command):
++                report = self.coverage_case([("bash", command, "")], {})
++                self.assertEqual("fail", report["result"])
++                self.assertTrue(all(any("lifecycle-enabling option" in message for message in row["errors"])
++                                    for row in report["modules"]), report)
++
+     def test_all_six_languages_use_actual_pinned_detector(self):
+         for fmt, suffix in (("yaml", "yml"), ("bash", "sh"), ("powershell", "ps1"), ("python", "py"),
+                             ("javascript", "js"), ("typescript", "ts")):

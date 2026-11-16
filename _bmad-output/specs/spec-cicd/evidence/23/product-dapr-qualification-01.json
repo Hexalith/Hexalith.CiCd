@@ -1,0 +1,49 @@
+{
+  "runtime": "1.19.1",
+  "hostDaprInitialized": false,
+  "profilesLaunched": false,
+  "commands": [
+    {
+      "arguments": [
+        "python3",
+        "tests/integration/qualify-dapr-read-retries.py",
+        "--daprd",
+        "/home/administrator/.dapr/bin/daprd",
+        "--output",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/product-dapr-read-normal-01.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 94.4266055879998,
+      "reportSha256": "a06c2d1894b6c7b40862fc194f36bb829118b599c4c3bd7176ce3a5217014a97",
+      "controls": 15,
+      "failures": [],
+      "passed": true
+    },
+    {
+      "arguments": [
+        "python3",
+        "tests/integration/qualify-dapr-read-retries.py",
+        "--daprd",
+        "/home/administrator/.dapr/bin/daprd",
+        "--output",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/product-dapr-read-mutation-01.json",
+        "--mutate-retries"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 3.849176969990367,
+      "reportSha256": "2fbe34575d426b92ac2fb3f621ec4f08d3fc121b3e6c3ab015be628615994d92",
+      "controls": 13,
+      "failures": [
+        {
+          "case": "no retry on 503",
+          "status": 503,
+          "backendCalls": 4,
+          "expected": 503,
+          "pass": false
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "exitCode": 0
+}

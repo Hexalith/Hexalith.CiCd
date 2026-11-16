@@ -6,6 +6,62 @@ was performed by this implementation run. Necessary locked package acquisition
 and the existing read-only online security audit were authorized separately.
 Jobs ran sequentially in `run-with-temp` workspaces; their child work was awaited.
 
+## Current qualification boundary — 2026-11-17
+
+Story 18 remains **in progress and unadopted**. The combined reconciled source
+has not passed qualification. Earlier successful checks below apply only to
+their recorded snapshots.
+
+`qualify-reconciled-snapshot.py` captured immutable Git trees for all six local
+modules using private indexes, then checked out standalone copies without
+initializing nested submodules. `matrix-reconciled-qualification.json` records
+those exact trees, source commits, flags, durations and exits. Restore passed;
+the unchanged Release/package build failed with fourteen CS0234 errors because
+the current Projects query declarations require `QueryResultContractAttribute`,
+absent from the selected published EventStore Contracts 5.1.1. Public API
+inspection also found no such type or API difference in Contracts 5.2.0
+(`matrix-published-sdk-{api-diff,query-result}.log`). A fresh read of the public
+NuGet index confirmed 5.2.0 is the latest stable Contracts release
+(`matrix-published-sdk-versions.json`). No declaration was removed,
+replacement type invented, source dependency substituted or manual release
+dispatched. Dependent tests, hooks and runtime phases did not start. The child
+exited 1, its private workspace was removed and no AppHost was allocated.
+
+The fixture reconciliation preserves concurrent product changes and the earlier
+qualified fixes for source-complete quiescence, setup-only exact read readiness,
+atomic owned Docker ports, private Keycloak origin handoff, URL normalization,
+bounded graceful shutdown and cleanup ordering. Its exact merge evidence is in
+`matrix-qualified-reconciliation.{json,patch}`. These combined files remain
+unqualified until the real package prerequisite is available.
+Later concurrent Projects, Builds and Platform commits were preserved and were
+not imported into that completed job. All eighteen reconciled fixture files
+still match their recorded applied hashes. `matrix-final-live-drift.json`
+records this later boundary; the next combined run must capture fresh inputs.
+
+Scanner forwarding now supports bounded direct wrappers and literal tuple
+loops. A parent audit rejected the initial opaque Git regex shortcut: identical
+guard/return ASTs do not prove immutable native values. That shortcut was removed;
+computed Git operands fail closed. Earlier zero-error candidate discovery and
+focused interpreter results are historical observations of the rejected shortcut,
+not acceptance evidence. The unchanged G6 preparation action needs supported,
+qualified value provenance before its computed Git operands can be certified.
+No action exclusion, path exception or delivered-action edit was introduced.
+
+Full scanner suites passed **121 tests** on the default interpreter in 327.542
+seconds and Python 3.12 in 320.034 seconds, including all six real-language
+detector calibrations (`matrix-scanner-conservative-full.log` and
+`matrix-scanner-final-312-full.log`). After those runs, the parent tightened
+binding checks, immutable loop rows and Node global-object aliases. All eight
+affected groups then passed on the final source on both interpreters: 77.741
+and 73.704 seconds (`matrix-scanner-final-controls{,-312}.log`). Bound-method
+escape regressions first reproduced two failures, then passed after the fix.
+The final source identities and verification boundaries are recorded in
+`matrix-final-verification.json`. Actual final-source
+candidate discovery selected **56 files** and refused exactly
+`.github/actions/prepare-g6-catalog/prepare.py:47` for computed forwarding
+(`matrix-candidate-conservative-final.json`). Both G6 files remain selected.
+This diagnostic is a migration prerequisite, not a passing closure verdict.
+
 ## Changes
 
 - Builds has the complete strict `npmWorkspaces`/`dotnetTools` contract,
@@ -37,7 +93,7 @@ Jobs ran sequentially in `run-with-temp` workspaces; their child work was awaite
   inputs after a tagged reader accepts those settings. The active registry,
   rendered module, Builds pin and Projects gitlink were not fabricated or adopted.
 
-## Completed checks
+## Earlier snapshot checks
 
 - Builds Python 3.12: the full run passed 15/16 groups, including all 591 shared
   library tests; the remaining unchanged real online zizmor test passed in a
@@ -65,7 +121,7 @@ Jobs ran sequentially in `run-with-temp` workspaces; their child work was awaite
   (`owning-g6-cleanup.json`). Historical source/workflow evidence gates were not
   substituted for these product assertions.
 
-## Revision boundary
+## Earlier revision boundary
 
 The initial Builds version was `fdda17c0a4538b0f7c99f813c20ca24b49006530`
 (`v6.0.6`). A concurrent independent change advanced it to
@@ -75,16 +131,21 @@ npm/tool preparation changes. EventStore also advanced independently to
 present there. Nothing was reset, amended or overwritten. Projects remained
 `981ceef13a1abc88219925e73c51a23eb9ac50c2`. Current full revisions and working
 candidate hashes are in `current-candidate-identities.json`; qualification logs
-name their exact cloned source revisions. A working-candidate hash is not a
+name their exact cloned source revisions. The newer immutable combined boundary
+is in `matrix-reconciled-qualification.json`. A working-candidate hash is not a
 delivered/adoption identity.
 
 ## Remaining acceptance
 
-The full compatibility smoke/full/repeat/retry and actual-owner browser/state
-lane must pass. Attempts 8 and 10 retained genuine startup failures and cleaned
-their private resources. Attempt 8 exposed authority health TLS trust; attempt
-10 progressed past it and exposed source-only worker bootstrap and UI readiness
-selection. Distinct fixture composition corrections are under qualification.
+All four native product scenarios, complete compatibility smoke/full/repeat/retry
+and the actual-owner browser/state lane must pass on the combined source.
+Earlier native iteration 4 passed the authorized-read, trust-separation and
+safe-denial rows before the process-restart failure. Iteration 6 remained red:
+zero of four native scenarios passed, the compatibility SDK restart passed once,
+smoke passed seven of eight cases and no skips occurred. Later fixes and 78
+focused controls passed on a private pre-reconciliation snapshot; none of those
+results establishes acceptance of the present combined source. The current
+compilation prerequisite stops the dependent lane before startup.
 
 The accepted story-11 scheduled pilot checkpoint, acceptable released Builds
 version, complete ordered AD-21 provisioning/readback, product preparation push,

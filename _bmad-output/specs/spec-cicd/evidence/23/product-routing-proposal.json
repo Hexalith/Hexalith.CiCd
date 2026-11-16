@@ -44,8 +44,20 @@
     "sdk": "11.0.100",
     "daprCli": "1.19.1",
     "daprRuntime": "1.19.1",
-    "aspire": "13.6.5",
-    "status": "exact source candidate and direct product catalog; real retry/catalog execution still required"
+    "status": "SDK11.0.100 built; native Dapr1.19.1 real normal15 controls and expected four-call retry mutation passed. All cold catalog/AppHost profiles and executed DCP version still require the fresh isolated job.",
+    "nativeAspireCli": {
+      "invoked": false,
+      "required": false,
+      "sharedOptionalPin": "13.6.5"
+    },
+    "appHostSdk": {
+      "projectDeclaration": "Aspire.AppHost.Sdk/13.6.5",
+      "restoredHostingAndDcp": {
+        "hostingAndTesting": "Aspire.Hosting, AppHost, Redis and Testing13.6.5; Keycloak13.6.5-preview.1.26559.7, from actual restored assets in product-local-focused-focused-06.json",
+        "dcp": "No AppHost launched; executed DCP version remains to be recorded in fresh isolated runtime qualification."
+      }
+    },
+    "transportEvidence": "product-dapr-qualification-01.json"
   },
   "timeoutBasis": {
     "ciTimeoutMinutes": "Provisional upper bound of preserved legacy build/test/profile budgets (one build, ordinary tier and five serial cold profiles), not a measured complete pass. Reduce or confirm from complete serialized execution before registration.",
@@ -96,7 +108,10 @@
         "redisDatabase": 1,
         "minimumExpectedTests": 8,
         "behavior": "request-path projections",
-        "failSkips": true
+        "failSkips": true,
+        "packageModeDiscoveredTests": 9,
+        "discoveryEvidence": "product-local-focused-focused-06.json",
+        "discoveryIsExecution": false
       },
       {
         "profile": "persisted",
@@ -104,7 +119,10 @@
         "redisDatabase": 2,
         "minimumExpectedTests": 7,
         "behavior": "background workers and Sample",
-        "failSkips": true
+        "failSkips": true,
+        "packageModeDiscoveredTests": 7,
+        "discoveryEvidence": "product-local-focused-focused-06.json",
+        "discoveryIsExecution": false
       },
       {
         "profile": "anonymous-ui",
@@ -112,7 +130,10 @@
         "redisDatabase": 3,
         "minimumExpectedTests": 6,
         "behavior": "anonymous denials",
-        "failSkips": true
+        "failSkips": true,
+        "packageModeDiscoveredTests": 6,
+        "discoveryEvidence": "product-local-focused-focused-06.json",
+        "discoveryIsExecution": false
       },
       {
         "profile": "authenticated-ui",
@@ -120,7 +141,10 @@
         "redisDatabase": 4,
         "minimumExpectedTests": 3,
         "behavior": "production OIDC and responsive authenticated browser",
-        "failSkips": true
+        "failSkips": true,
+        "packageModeDiscoveredTests": 3,
+        "discoveryEvidence": "product-local-focused-focused-06.json",
+        "discoveryIsExecution": false
       },
       {
         "profile": "catalog-owner",
@@ -128,7 +152,10 @@
         "redisDatabase": 5,
         "minimumExpectedTests": 1,
         "behavior": "COHORT package capability, owned bootstrap, authority and persisted effects",
-        "failSkips": true
+        "failSkips": true,
+        "packageModeDiscoveredTests": 1,
+        "discoveryEvidence": "product-local-focused-focused-06.json",
+        "discoveryIsExecution": false
       }
     ],
     "scheduled": {
@@ -186,8 +213,20 @@
     "receiptProtocol": "scripts/tests/test_source_catalog_profile.py",
     "privateProcessCleanup": "scripts/tests/test_product_integration.py",
     "readerAndAuthorityDb": "tests/Hexalith.Tenants.IntegrationTests/CatalogRedisBackendTests.cs",
-    "publishedBrowserClosure": "tests/Hexalith.Tenants.UI.Tests/Browser/published-frontcomposer-evidence.test.mjs"
+    "publishedBrowserClosure": "tests/Hexalith.Tenants.UI.Tests/Browser/published-frontcomposer-evidence.test.mjs",
+    "privateDirectoryCleanup": "Canonical current-user/private tenants-source-catalog-* immediately under RUNNER_TEMP; success and failure paths refuse root, ancestors, siblings, nested and linked targets. Python3.12/3.14 protocol7+cleanup3 pass."
   },
   "ownedContentEdits": false,
-  "nestedSubmoduleInitialization": false
+  "nestedSubmoduleInitialization": false,
+  "finalLocalCandidateTree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
+  "finalLocalProductRevision": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "freshUiQualification": {
+    "evidence": "local-isolated-20261116T232705Z-17d40dbd/result.json",
+    "executed": 8085,
+    "passed": 8085,
+    "failed": 0,
+    "skips": 0,
+    "syntheticLocalIdentity": true,
+    "hostedCi": false
+  }
 }

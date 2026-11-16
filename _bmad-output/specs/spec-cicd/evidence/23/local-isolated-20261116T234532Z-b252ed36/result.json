@@ -1,0 +1,155 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "b252ed36a80743d4bcc87123e2b5f3fe",
+  "source": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "tree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
+  "sharedSource": "cbd13a1e93015182439112918cae4216b953f9bf",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "83cda4e45628b744e7b4475739fe33b434a9bd7dcc4bf85ab3192d4dc551f2cd"
+    },
+    {
+      "kind": "worker",
+      "id": "4dfdb5c1393d68f9b88dd91b65d442c771e65ad320ad6f8fa8a9c35c505ebf03"
+    }
+  ],
+  "startedAt": 1794872732.3729928,
+  "events": [
+    {
+      "at": 1794872751.41564,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794872752.6527174,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794872754.4635448,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794872772.4811244,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794872776.4835758,
+      "message": "Worker phase: shared-tls-trust/running"
+    },
+    {
+      "at": 1794872780.4902735,
+      "message": "Worker phase: shared-tls-trust/failed"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "4dfdb5c1393d68f9b88dd91b65d442c771e65ad320ad6f8fa8a9c35c505ebf03"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "83cda4e45628b744e7b4475739fe33b434a9bd7dcc4bf85ab3192d4dc551f2cd"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.VKxa0R4t",
+  "scope": "prerequisites",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "c0f1c3cce86e555c0d277ed2595b25e23c5ec93ed6eb64073e504d226fa14ef9",
+  "orchestratorSha256": "aa25edddaff552e795b4349cc07ab7749d95e961dfa50deb1ff8967439b95371",
+  "innerDaemonId": "\"3124b14f-6431-46be-a553-aa4b023b1c78\"",
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+    "sharedSource": "cbd13a1e93015182439112918cae4216b953f9bf",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794872770.4996414,
+        "elapsedSeconds": 4.158887147903442
+      },
+      {
+        "name": "exact-prerequisite-runtime-check",
+        "status": "passed",
+        "startedAt": 1794872774.6641502,
+        "elapsedSeconds": 0.09185528755187988
+      },
+      {
+        "name": "shared-apt-preparation",
+        "status": "passed",
+        "startedAt": 1794872774.7563627,
+        "elapsedSeconds": 0.09325861930847168
+      },
+      {
+        "name": "shared-tls-trust",
+        "status": "failed",
+        "startedAt": 1794872774.8498282,
+        "exceptionType": "PipelineError",
+        "exitCode": 4,
+        "prerequisiteError": "dotnet dev-certs https --trust failed (4)",
+        "elapsedSeconds": 5.3236658573150635
+      }
+    ],
+    "scope": "prerequisites",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794872770.4175694,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "status": "failed",
+    "exceptionType": "PipelineError",
+    "finishedAt": 1794872780.1738439,
+    "elapsedSeconds": 9.756274461746216
+  },
+  "supportSafeArtifacts": [],
+  "trxSummaries": [],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794872783.1042976,
+  "elapsedSeconds": 50.73130488395691,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

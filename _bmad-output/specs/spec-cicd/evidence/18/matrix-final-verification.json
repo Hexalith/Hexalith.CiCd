@@ -1,0 +1,95 @@
+{
+  "observed_at": "2026-11-16T23:48:07.778963+00:00",
+  "status": "incomplete-not-adopted",
+  "story_status": "in-progress",
+  "baseline_commit": "c74b5c8f5787fb33bfd85c1c4430b6de39674198",
+  "default_python": "3.14.4",
+  "source_sha256": {
+    ".jscpd.json": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "tools/scan.py": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+    "tools/scan_discovery.py": "7a1b99c5b2df241c9c4d7e9482453fb6a3230bf4fe94c5c4022a819827bd2962",
+    "tools/jscpd/discover.cjs": "0037cf4b8e868f9ca0a8cacf01f612d0e015c3fd26cc019e19d51e260b5734a1",
+    "tools/jscpd/package.json": "7e949a00e382d4903c174022b0879fdb40694ef331070093f72d0e3c2d30b4ff",
+    "tools/jscpd/package-lock.json": "fad24cc759c2d4b6fac056172ac2e9977858f9dd0a162fb10c18de4c8d0bfce2",
+    "tools/scan_powershell.ps1": "b21c0e6678741b5c779f91cfa919dab4f122296f75898151fffeab162fc0acc6",
+    "tools/tests/test_scan.py": "2e1e99ba4708d5856edd9f1999d349572ed94379eb16424fcec5acfe8c25eb66"
+  },
+  "full_suite_before_final_hardening": {
+    "default_interpreter": {
+      "tests": 121,
+      "exit": 0,
+      "seconds": 327.542,
+      "log": "matrix-scanner-conservative-full.log"
+    },
+    "python_3_12": {
+      "tests": 121,
+      "exit": 0,
+      "seconds": 320.034,
+      "source_tree": "d6839a1bd4dc15f1052f09d950c6b21bb741ad97",
+      "log": "matrix-scanner-final-312-full.log"
+    }
+  },
+  "final_source_focused_controls": {
+    "default_interpreter": {
+      "groups": 8,
+      "exit": 0,
+      "seconds": 77.741,
+      "log": "matrix-scanner-final-controls.log"
+    },
+    "python_3_12": {
+      "groups": 8,
+      "exit": 0,
+      "seconds": 73.704,
+      "log": "matrix-scanner-final-controls-312.log"
+    }
+  },
+  "final_candidate_discovery": {
+    "result": "fail",
+    "file_count": 56,
+    "errors": [
+      ".github/actions/prepare-g6-catalog/prepare.py:47: local-script discovery: unresolved computed Python script invocation; unsafe or unresolved forwarding"
+    ],
+    "exit": 1
+  },
+  "delivered_g6_action": {
+    ".github/actions/prepare-g6-catalog/action.yml": {
+      "sha256": "785876470342c7909abf891a8e981244a1478f0851e8c1d391a564cd46694d1c",
+      "matches_reviewed_bytes": true,
+      "in_scope": true
+    },
+    ".github/actions/prepare-g6-catalog/prepare.py": {
+      "sha256": "ba96060612404bd628ee314f2d733f8918adbe6f79a63a85e873608f32aeb297",
+      "matches_reviewed_bytes": true,
+      "in_scope": true
+    }
+  },
+  "combined_product_qualification": {
+    "manifest": "matrix-reconciled-qualification.json",
+    "restore_exit": 0,
+    "build_exit": 1,
+    "compiler_errors": 14,
+    "apphost_allocated": false,
+    "dependent_lane_executed": false,
+    "private_workspace_removed": true
+  },
+  "published_sdk_metadata": "matrix-published-sdk-versions.json",
+  "remaining": [
+    "Normal published SDK containing QueryResultContractAttribute and aligned actual consuming closures",
+    "Qualified native value provenance for the unchanged G6 preparation forwarding; no exclusion or shortcut",
+    "Complete combined product, hook, native and browser qualification",
+    "Accepted pilot and ordered AD-21 prerequisites, qualified owner and Builds release inputs",
+    "Authenticated adoption/tree preservation, immutability/legacy cleanup, normal checker, green CI and genuine next scheduled night"
+  ],
+  "workflow_constraint": {
+    "skill": ".agents/skills/bmad-build/SKILL.md",
+    "step": "step-03-implement.md",
+    "instruction": "No push. No remote ops."
+  },
+  "cleanup": {
+    "all_started_jobs_awaited": true,
+    "no_apphost_created_by_combined_job": true,
+    "retained_agent_controller_removed": true
+  },
+  "live_drift_manifest": "matrix-final-live-drift.json",
+  "source_audit_manifest": "parent-final-audit.json"
+}

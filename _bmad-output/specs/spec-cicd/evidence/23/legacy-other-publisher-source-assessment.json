@@ -1,0 +1,83 @@
+{
+  "recorded_at": "2026-11-16T22:22:02.346422+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4726",
+        "X-Ratelimit-Reset: 1794869696",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 274"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Memories/contents/.releaserc.json?ref=341ae091bc9a94bfab0c7741314419713188ae8d",
+      "exit": 1,
+      "http_status": 404,
+      "headers": [
+        "HTTP/2.0 404 Not Found",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4725",
+        "X-Ratelimit-Reset: 1794869696",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 275"
+      ],
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/repos/contents#get-repository-content",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)",
+      "state": "not-found-or-inaccessible"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "assessment": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/contents/.github/workflows/release.yml?ref=d8171e6cc18cd4b67ea310822b36e49d007fa2ec",
+      "blob": "0ff025fd5aed2c74df66e119c87a6ecaecee4722",
+      "literal_project_namespace_rows": [
+        "src/Hexalith.EventStore/Hexalith.EventStore.csproj|eventstore"
+      ],
+      "legacy_zot_secret_references": true
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Memories/contents/.github/workflows/release.yml?ref=341ae091bc9a94bfab0c7741314419713188ae8d",
+      "blob": "bb0e482457080d74683fe7a1c5763c95a36b2671",
+      "literal_project_namespace_rows": [],
+      "legacy_zot_secret_references": true
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Parties/contents/.github/workflows/release.yml?ref=0f261ccd3b461102dcac35da2e074d15a195ebb4",
+      "blob": "8768e0b442956c67e9f86e5973a9692374097f28",
+      "literal_project_namespace_rows": [
+        "src/Hexalith.Parties.Mcp/Hexalith.Parties.Mcp.csproj|parties-mcp",
+        "src/Hexalith.Parties.UI/Hexalith.Parties.UI.csproj|parties-ui",
+        "src/Hexalith.Parties/Hexalith.Parties.csproj|parties"
+      ],
+      "legacy_zot_secret_references": true
+    }
+  ],
+  "memories_release_configuration": null
+}

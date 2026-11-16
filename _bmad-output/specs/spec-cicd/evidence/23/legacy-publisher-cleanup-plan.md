@@ -40,6 +40,32 @@ and Tenants namespaces belongs to those administrators. Zot's documented
 repository policies. Removing an administrator from only the Tenants namespace
 therefore does not revoke a global administrator-owned key's Tenants push.
 
+Fresh live-main workflow reads in
+`legacy-other-publisher-source-assessment.json` positively confirm that all three
+other selected modules still reference the legacy pair. EventStore declares
+`eventstore`; Parties declares `parties`, `parties-mcp`, and `parties-ui`.
+Memories routes publishing through scripts and its complete namespace set is
+not established by that workflow packet. The initial block-only extraction missed
+EventStore's inline value and is not evidence of absence; the subsequent
+assessment captures it. The `.releaserc.json` request returned 404 and remains
+unverified, rather than a reason to change credentials or claim there is no
+Memories publisher. These reads do not establish an API-key UUID or complete
+external consumer mapping.
+
+The subsequent complete root/tools tree reads and exact manifest blob
+`67faba0fb459148fb11b32607fbfd85e48f5b61a`, at Memories source
+`341ae091bc9a94bfab0c7741314419713188ae8d`, establish its five declared
+repositories: `memories`, `memories-mcp`, `memories-access-telemetry`,
+`memories-access-telemetry-clock`, and `memories-domain-service`.
+See `legacy-memories-container-manifest.json`. Together these are nine known
+non-Tenants publishing repositories, each with its own possible nested paths.
+Any assessed replacement must preserve their required reads and writes, and
+preserve needed cross-module pulls while refusing Tenants writes. Recheck live
+sources/selections before an actual rotation; these declarations do not establish
+that the API key has no additional consumers. The complete root tree also
+resolves the earlier `.releaserc.json` 404 as no such root file at that exact
+commit, without changing the preserved raw request classification.
+
 The documented [API-key endpoints](https://zotregistry.dev/v2.1.11/developer-guide/api-reference/)
 offer create, metadata list and delete, with no in-place scope-edit operation.
 The installed registry is identified by immutable digest in

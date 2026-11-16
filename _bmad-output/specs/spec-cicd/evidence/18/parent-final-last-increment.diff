@@ -1,0 +1,148 @@
+diff --git a/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md b/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
+index 178bc36..2695189 100644
+--- a/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
++++ b/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
+@@ -80,6 +80,10 @@ context:
+   remains unchanged and included. Historical green discovery from the rejected
+   shortcut is not acceptance evidence. Full scanner results and the remaining
+   candidate diagnostic are tracked in the implementation evidence.
++  Full scanner suites passed 121 tests on both interpreters before the final
++  narrow hardening; all eight affected groups passed on the final source on both.
++  [Final verification](../specs/spec-cicd/evidence/18/matrix-final-verification.json)
++  preserves those boundaries and the remaining candidate refusal.
+ - All tasks remain unchecked because each still has a qualification or adoption
+   requirement outstanding. The normal published SDK prerequisite must be met
+   before rerunning the complete combined product lane. The implementation step's
+diff --git a/tools/jscpd/discover.cjs b/tools/jscpd/discover.cjs
+index 276e093..9b1571b 100644
+--- a/tools/jscpd/discover.cjs
++++ b/tools/jscpd/discover.cjs
+@@ -107,7 +107,7 @@ function visit(node) {
+     } else {
+       const target = name(init);
+       if (/^(?:child_process|worker_threads|module|vm|process)(?:\.|$)/.test(target)
+-          || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) bind(node.name, target);
++          || ['globalThis', 'global', 'require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) bind(node.name, target);
+     }
+   }
+   if (ts.isStringLiteralLike(node)) result.literals.push([line(node), node.text]);
+@@ -172,7 +172,7 @@ function visit(node) {
+       && text(node.argumentExpression) === null) error(node, 'unresolved reflective JavaScript process/import API');
+   if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+     const target = name(node);
+-    if (target === 'process' || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
++    if (['process', 'globalThis', 'global'].includes(target) || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+       const parent = node.parent;
+       const declaration = (ts.isVariableDeclaration(parent) && (parent.name === node || parent.initializer === node))
+         || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)
+diff --git a/tools/scan_discovery.py b/tools/scan_discovery.py
+index 5a48ccb..e9c305b 100644
+--- a/tools/scan_discovery.py
++++ b/tools/scan_discovery.py
+@@ -2160,7 +2160,7 @@ class Discovery:
+     @staticmethod
+     def copied_environment(value, invocation, parents, all_nodes, names):
+         """Prove an unaliased local environment copy leaves interpreter lookup unchanged."""
+-        if not isinstance(value, ast.Name):
++        if not isinstance(value, ast.Name) or len(all_nodes) > 4096:
+             return False
+         scope = parents.get(invocation)
+         while scope is not None and not isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Module)):
+@@ -2176,6 +2176,8 @@ class Discovery:
+         if len(definitions) != 1:
+             return False
+         definition = definitions[0]
++        if Discovery.proof_bindings(value.id, nodes) != [definition.targets[0]]:
++            return False
+         copy = definition.value
+         if (not isinstance(copy, ast.Call) or copy.args or copy.keywords
+                 or not isinstance(copy.func, ast.Attribute) or copy.func.attr != "copy"
+@@ -2187,6 +2189,8 @@ class Discovery:
+         if not isinstance(source, ast.Name):
+             return False
+         source_name = source.id
++        if len(Discovery.proof_bindings(source_name, all_nodes)) != 1:
++            return False
+         imported = False
+         for entry in all_nodes:
+             if isinstance(entry, ast.Import):
+@@ -2281,11 +2285,7 @@ class Discovery:
+                              and receiver(pop, "pop") and len(pop.args) == 1 and not pop.keywords
+                              and isinstance(pop.args[0], ast.Name) and pop.args[0].id == statement.target.id)
+                     # A shadowed iteration helper can mutate the copy itself.
+-                    if any(isinstance(item, ast.arg) and item.arg == "tuple"
+-                           or isinstance(item, ast.Name) and isinstance(item.ctx, (ast.Store, ast.Del)) and item.id == "tuple"
+-                           or isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and item.name == "tuple"
+-                           or isinstance(item, (ast.Import, ast.ImportFrom))
+-                           and any((alias.asname or alias.name) == "tuple" for alias in item.names) for item in all_nodes):
++                    if Discovery.proof_bindings("tuple", all_nodes):
+                         valid = False
+             if valid:
+                 allowed.update(item for item in ast.walk(statement) if isinstance(item, ast.Name) and item.id == value.id)
+@@ -2387,7 +2387,7 @@ class Discovery:
+                         and cursor.target.id == item.id and not cursor.orelse):
+                     literal = ast.literal_eval(cursor.iter)
+                     if (not isinstance(literal, (tuple, list)) or not literal or len(literal) > 128
+-                            or any(not isinstance(row, (tuple, list)) or len(row) > 256
++                            or any(not isinstance(row, tuple) or len(row) > 256
+                                    or any(not isinstance(value, str) for value in row) for row in literal)
+                             or Discovery.proof_bindings(item.id, list(ast.walk(cursor))) != [cursor.target]):
+                         raise ValueError("unresolved forwarded tuple loop")
+@@ -2396,8 +2396,7 @@ class Discovery:
+             if (scope is None or scope.decorator_list or scope.args.vararg is None or scope.args.vararg.arg != item.id
+                     or len(functions.get(scope.name, [])) != 1 or scope.name in stack
+                     or Discovery.proof_function(scope.name, nodes, parents) is not scope
+-                    or any(isinstance(entry, ast.Name) and isinstance(entry.ctx, (ast.Store, ast.Del)) and entry.id == item.id
+-                           for entry in ast.walk(scope))):
++                    or Discovery.proof_bindings(item.id, list(ast.walk(scope))) != [scope.args.vararg]):
+                 raise ValueError("unresolved forwarded argv")
+             # A wrapper alias, callback, shadowed callable or **kwargs cannot
+             # silently introduce callers outside this finite direct-call graph.
+diff --git a/tools/tests/test_scan.py b/tools/tests/test_scan.py
+index 327c2ac..48c2c8d 100644
+--- a/tools/tests/test_scan.py
++++ b/tools/tests/test_scan.py
+@@ -430,6 +430,9 @@ class ScanTests(unittest.TestCase):
+             ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis.process);", "API escape"),
+             ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis['process']);", "API escape"),
+             ("function f(p) { p.getBuiltinModule('child_process').exec(process.env.CMD); } f(global['process']);", "API escape"),
++            ("const root = globalThis; root.process.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("const root = global; root.process.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
++            ("function f(root) { root.process.getBuiltinModule('child_process').exec(process.env.CMD); } f(globalThis);", "API escape"),
+             ("import {exec} from 'node:child_process'; setTimeout(exec, 0, process.env.CMD);", "API escape"),
+             ("import {spawn} from 'node:child_process'; spawn(process.env.TOOL, []);", "computed JavaScript process"),
+             ("export default {globalSetup:process.env.SETUP};", "computed JavaScript test configuration"),
+@@ -452,6 +455,8 @@ class ScanTests(unittest.TestCase):
+             "const runtime = require('process'); const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+             "const runtime = globalThis.process; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
+             "const runtime = globalThis['process']; const mode = runtime.env.CI; const args = runtime.argv.slice(2);\n",
++            "const root = globalThis; const mode = root.process.env.CI; const args = root.process.argv.slice(2);\n",
++            "const root = global; const mode = root.process.env.CI; const args = root.process.argv.slice(2);\n",
+         ):
+             with self.subTest(source=source):
+                 report = self.coverage_case([("bash", "node script.js", "")], {"script.js": source})
+@@ -493,6 +498,8 @@ class ScanTests(unittest.TestCase):
+             "computed_update": source.replace("environment.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull, GIT_NO_LAZY_FETCH='1')", "environment.update(mapping)"),
+             "computed_value": source.replace("GIT_CONFIG_NOSYSTEM='1'", "GIT_CONFIG_NOSYSTEM=unknown()"),
+             "alias_escape": source.replace("    for key", "    alias = environment\n    for key", 1),
++            "imported_copy": source.replace("    subprocess.run", "    from injected import mapping as environment\n    subprocess.run"),
++            "class_copy": source.replace("    subprocess.run", "    class environment:\n        pass\n    subprocess.run"),
+             "callback_escape": source.replace("    for key", "    mutate(environment)\n    for key", 1),
+             "shadowed_source": source.replace("def invoke():", "def invoke(os):"),
+             "replaced_source": source.replace("def invoke():", "os.environ = replacement\ndef invoke():"),
+@@ -536,6 +543,7 @@ class ScanTests(unittest.TestCase):
+             "callable_code_replacement": base.replace("launch('leaf.py')", "launch.__code__ = replacement\nlaunch('leaf.py')"),
+             "decorator": base.replace("def launch", "@replacement\ndef launch"),
+             "rebound_tuple": base.replace("    return subprocess", "    parts = unknown()\n    return subprocess"),
++            "imported_varargs": base.replace("    return subprocess", "    from injected import arguments as parts\n    return subprocess"),
+             "keyword_expansion": base.replace("launch('leaf.py')", "launch('leaf.py', **options)"),
+             "shell": base.replace("*parts])", "*parts], shell=True)"),
+             "cwd": base.replace("*parts])", "*parts], cwd=os.environ['DIR'])"),
+@@ -545,6 +553,7 @@ class ScanTests(unittest.TestCase):
+             "subprocess_import": base.replace("launch('leaf.py')", "import collections as subprocess\nlaunch('leaf.py')"),
+             "loop_rebinding": "import subprocess\nfor parts in (('python3','leaf.py'),):\n    parts = unknown()\n    subprocess.run(parts)\n",
+             "computed_loop": "import subprocess\nfor parts in unknown():\n    subprocess.run(parts)\n",
++            "mutable_loop_row": "import os, subprocess\nfor parts in (['python3', 'leaf.py'],):\n    parts[1] = os.environ['SCRIPT']\n    subprocess.run(parts)\n",
+         }
+         for label, source in cases.items():
+             with self.subTest(case=label):

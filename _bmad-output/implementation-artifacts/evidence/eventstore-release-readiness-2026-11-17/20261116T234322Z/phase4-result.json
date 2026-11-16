@@ -1,0 +1,666 @@
+{
+  "schema": "hexalith.eventstore.phase-4-gate-risk-matrix-result.v1",
+  "result": "FAIL",
+  "exit_code": 1,
+  "evidence_only": true,
+  "seal": false,
+  "authority": "none",
+  "evaluated_at": "2026-11-16T23:42:45Z",
+  "source_sha": "8d409495926a568c5e2679f726b76f7de5dd85d5",
+  "workflow": {
+    "path": ".github/workflows/phase-4-gate-risk-matrix.yml",
+    "sha256": "2df57bf30b651d75a5806cf0e2dda7c55066450973712583bc24a40013b6f6e3"
+  },
+  "validator_sha256": "f298bb5cfc05b6757c09a8b0cef3048e0da599b133133042a328e5c20189db77",
+  "inputs": [
+    {
+      "path": "_bmad-output/implementation-artifacts/phase-4-gate-risk-matrix.json",
+      "sha256": "0b131469d0ff4e1f47503b094b4f8f83d5b6a4140b10e23f259bd1a3f952be88"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/owner-role-registry.json",
+      "sha256": "8157727a13034789f85ac7cbefbdade549a350528df27733f7dc1320adba240f"
+    },
+    {
+      "path": "_bmad-output/planning-artifacts/prd.md",
+      "sha256": "04965ddc3e648e41b99cf553895deb7d2eb83ac6c1057e9a7ce80987671d0a78"
+    }
+  ],
+  "registry": {
+    "humans": 1,
+    "required_level": "single-maintainer-attested"
+  },
+  "rows": [
+    {
+      "gate": "G-BASELINE",
+      "classification": "standard-control",
+      "reason": "planning-consistency",
+      "codes": [],
+      "result": "PASS"
+    },
+    {
+      "gate": "G-OQ8",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [],
+      "binding_owner": null,
+      "subjects": [
+        {
+          "path": ".github/workflows/oq8-governing-design.yml",
+          "sha256": "8f7da70ec3ae1119828b6fdc99cc1120b14fef25e48b0302b463279bf52f040f"
+        },
+        {
+          "path": "docs/architecture/oq8/LICENSE",
+          "sha256": "6af66baf053023d456706de321e3cea6a6edbb288ffec10f673186b1befe7ac2"
+        },
+        {
+          "path": "docs/architecture/oq8/README.md",
+          "sha256": "f85617d7be48e27e79bb4ec6215867c4155cf46de2d17d60280d3593669e4307"
+        },
+        {
+          "path": "docs/architecture/oq8/oq8-idempotency-design.md",
+          "sha256": "1a55b0302e91233e12db91e6e245f0a22d6bf13fcf6cdf5ee0cbe5759f08dcd8"
+        },
+        {
+          "path": "tools/tests/test_oq8_governing_design.py",
+          "sha256": "ab61bf9d1255dd280e76625cb9fca22cf4463929172ff7310594c8fbc21f3c85"
+        },
+        {
+          "path": "tools/validate-oq8-governing-design.py",
+          "sha256": "29d804598e1a3d7720e3412019a43db3890e7f0af369e3795dcae7cfdb2bb29e"
+        }
+      ],
+      "subject_sha256": "4e4fb215221011f26f4fe24c3a7d2d32aa62dd00058cba2b3a7f7181ce7b08d4",
+      "row_sha256": "6c36fc4ecec90e2836c20f28d865c3269e619c6587a5410066731b3a976d04fa",
+      "codes": [
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-TENANT",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 2.14",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "af223fbecee258f4504860a060522448340ac846cd5ba76580ab0d5829a91484",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-STATUS-ID",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 2.15",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "12dcf8d3b72b002c251f5d7d8378fbfbbc095767aafe538d3ecd55e81a2dc4fc",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-APPEND",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 4.16",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "74297c15c5eb5b9759a877d68d291568edf7619668efd16301e8853328b64f9b",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-CLAUSE",
+      "classification": "standard-control",
+      "reason": "traceability-accounting",
+      "codes": [],
+      "result": "PASS"
+    },
+    {
+      "gate": "G-NFR8",
+      "classification": "standard-control",
+      "reason": "approved-spec-no-seal",
+      "codes": [],
+      "result": "PASS"
+    },
+    {
+      "gate": "G-COMPAT",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 3.18",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "94e5c0d23005bbf1d5a9529ba7014cb66ce947815b5a11f9fa11300c0a234c2b",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-AUTH-HOSTS",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 5.11",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "954691a575dcb1a5ba5dddcc35ff87aa16e14f77baa6a0a9d309e5fc106cd262",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-RUNTIME-PARITY",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 3.15",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "687cfd8d648be11ae3b5be16fc677e4910ac911bbe00aa868e1869ba6060cbb6",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-PUBLICATION-AUTH",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 3.19",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "27f52fb3ea86ec5e83b05b76944abbd741e4e86ffaea744c266e89f07a981d1c",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-CONSUMER",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 3.20",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "b2ea07375736535ae95d67afd904f00264cd96a1b941e0841da52f08e29b07cf",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-HIGH-RISK",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [],
+      "binding_owner": null,
+      "subjects": [
+        {
+          "path": ".github/workflows/phase-4-gate-risk-matrix.yml",
+          "sha256": "2df57bf30b651d75a5806cf0e2dda7c55066450973712583bc24a40013b6f6e3"
+        },
+        {
+          "path": "_bmad-output/implementation-artifacts/owner-role-registry.json",
+          "sha256": "8157727a13034789f85ac7cbefbdade549a350528df27733f7dc1320adba240f"
+        },
+        {
+          "path": "tools/tests/test_phase_4_gate_risk_matrix.py",
+          "sha256": "12d0e1437d6a5bc8f99529881ce541de3874f0f928c580918cc09aed13b22818"
+        },
+        {
+          "path": "tools/validate-phase-4-gate-risk-matrix.py",
+          "sha256": "f298bb5cfc05b6757c09a8b0cef3048e0da599b133133042a328e5c20189db77"
+        }
+      ],
+      "subject_sha256": "e0702341b9807c5576020d53f3559840b68d9f968dd8584a3bca8bb7ed89ddeb",
+      "row_sha256": "e5c077881b0a597684f8b88098620a80d94441d7b6a141e12cbd4863a13d55c1",
+      "codes": [
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-NFR18",
+      "classification": "standard-control",
+      "reason": "documentation-review",
+      "codes": [],
+      "result": "PASS"
+    },
+    {
+      "gate": "G-NFR-OWNERSHIP",
+      "classification": "standard-control",
+      "reason": "ownership-accounting",
+      "codes": [],
+      "result": "PASS"
+    },
+    {
+      "gate": "G-MVP-COVERAGE",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "Story 9.5",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "811249c297eff22c7e1b652c8d8f0dc1695d793d7797fc6b67f06d5720e64faf",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "gate": "G-READINESS",
+      "classification": "high-risk",
+      "required_level": "single-maintainer-attested",
+      "declared_required_level": "single-maintainer-attested",
+      "achieved_level": "none",
+      "declared_achieved_level": "none",
+      "unbound": [
+        "command",
+        "trigger",
+        "subject_paths",
+        "evidence_identity",
+        "pass_condition"
+      ],
+      "binding_owner": "OR1",
+      "subjects": [],
+      "subject_sha256": null,
+      "row_sha256": "b3b9f287efd0de487ed7a6f24e045df591a7e5d59747149b96a4dedb97398c9c",
+      "codes": [
+        "BINDING_UNBOUND",
+        "SEAL_MISSING",
+        "ATTESTATION_MISSING",
+        "ACHIEVED_BELOW_REQUIRED"
+      ],
+      "result": "FAIL"
+    }
+  ],
+  "downstream": [
+    {
+      "scope": "downstream[0]",
+      "record": "READY",
+      "inputs": [
+        "G-OQ8",
+        "G-TENANT",
+        "G-STATUS-ID",
+        "G-APPEND",
+        "G-COMPAT",
+        "G-AUTH-HOSTS",
+        "G-RUNTIME-PARITY",
+        "G-PUBLICATION-AUTH",
+        "G-CONSUMER",
+        "G-HIGH-RISK",
+        "G-MVP-COVERAGE",
+        "G-READINESS"
+      ],
+      "declared_level": "none",
+      "lowest_input_level": "none",
+      "result": "PASS",
+      "codes": []
+    }
+  ],
+  "findings": [
+    {
+      "scope": "G-OQ8",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-OQ8",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-OQ8",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-TENANT",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 2.14'"
+    },
+    {
+      "scope": "G-TENANT",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-TENANT",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-TENANT",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-STATUS-ID",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 2.15'"
+    },
+    {
+      "scope": "G-STATUS-ID",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-STATUS-ID",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-STATUS-ID",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-APPEND",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 4.16'"
+    },
+    {
+      "scope": "G-APPEND",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-APPEND",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-APPEND",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-COMPAT",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 3.18'"
+    },
+    {
+      "scope": "G-COMPAT",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-COMPAT",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-COMPAT",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-AUTH-HOSTS",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 5.11'"
+    },
+    {
+      "scope": "G-AUTH-HOSTS",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-AUTH-HOSTS",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-AUTH-HOSTS",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-RUNTIME-PARITY",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 3.15'"
+    },
+    {
+      "scope": "G-RUNTIME-PARITY",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-RUNTIME-PARITY",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-RUNTIME-PARITY",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-PUBLICATION-AUTH",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 3.19'"
+    },
+    {
+      "scope": "G-PUBLICATION-AUTH",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-PUBLICATION-AUTH",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-PUBLICATION-AUTH",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-CONSUMER",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 3.20'"
+    },
+    {
+      "scope": "G-CONSUMER",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-CONSUMER",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-CONSUMER",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-HIGH-RISK",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-HIGH-RISK",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-HIGH-RISK",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-MVP-COVERAGE",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'Story 9.5'"
+    },
+    {
+      "scope": "G-MVP-COVERAGE",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-MVP-COVERAGE",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-MVP-COVERAGE",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    },
+    {
+      "scope": "G-READINESS",
+      "code": "BINDING_UNBOUND",
+      "message": "command, trigger, subject_paths, evidence_identity, pass_condition not yet defined; owner 'OR1'"
+    },
+    {
+      "scope": "G-READINESS",
+      "code": "SEAL_MISSING",
+      "message": "no seal record: the achieved level stays none"
+    },
+    {
+      "scope": "G-READINESS",
+      "code": "ATTESTATION_MISSING",
+      "message": "no valid attestation by a registry human holding an evaluator role"
+    },
+    {
+      "scope": "G-READINESS",
+      "code": "ACHIEVED_BELOW_REQUIRED",
+      "message": "achieved none is below required single-maintainer-attested"
+    }
+  ]
+}

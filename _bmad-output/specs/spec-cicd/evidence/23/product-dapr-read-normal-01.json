@@ -1,0 +1,128 @@
+{
+  "runtime": "1.19.1",
+  "mutation": false,
+  "deadlineControls": "normal-only: 31-second success and configured finite exhaustion",
+  "originalControlCount": 13,
+  "namespace": "tenants-retries-107faff91a05",
+  "productionAclSha256": "21dc7d747d9465d4f3e93c7c5ad66431dd55574d1a62a478f5cc12171dee666b",
+  "productionResiliencySha256": "5ac59d117ff27326121fdcdb77f152e90acada09a4e212e9d29ed45482061fb3",
+  "loadedResiliencySha256": "ba0f46979e1b06e55f2da120fc793f914603af98b71b0610cf035c4ee87f718a",
+  "loadedResiliencyPolicy": "apiVersion: dapr.io/v1alpha1\nkind: Resiliency\nmetadata:\n  name: resiliency\nspec:\n  policies:\n    retries:\n      # An explicit app target also bypasses Dapr's built-in service invocation retries.\n      noReadRetry:\n        policy: constant\n        duration: 1ms\n        maxRetries: 0\n      defaultRetry:\n        policy: constant\n        duration: 1s\n        maxRetries: 3\n      pubsubRetryOutbound:\n        policy: exponential\n        maxInterval: 10s\n        maxRetries: 3\n      pubsubRetryInbound:\n        policy: exponential\n        maxInterval: 30s\n        maxRetries: 10\n    timeouts:\n      daprSidecar: 5s\n      # A generated read can include a native authority read and final observation.\n      tenantsApiInvocation: 60s\n      # App-wide EventStore invocation limit, including commands, reads and readiness.\n      eventStoreInvocation: 55s\n      # Tenants processing includes the complete native authority check.\n      tenantsInvocation: 50s\n      pubsubTimeout: 10s\n      subscriberTimeout: 30s\n    circuitBreakers:\n      defaultBreaker:\n        maxRequests: 1\n        interval: 10s\n        timeout: 30s\n        trip: consecutiveFailures > 3\n      pubsubBreaker:\n        maxRequests: 1\n        interval: 10s\n        timeout: 30s\n        trip: consecutiveFailures > 5\n  targets:\n    apps:\n      tenants-api-6beb19c60c5e:\n        retry: noReadRetry\n        timeout: tenantsApiInvocation\n      eventstore:\n        retry: defaultRetry\n        timeout: eventStoreInvocation\n        circuitBreaker: defaultBreaker\n      tenants:\n        retry: defaultRetry\n        timeout: tenantsInvocation\n        circuitBreaker: defaultBreaker\n    components:\n      pubsub:\n        outbound:\n          retry: pubsubRetryOutbound\n          timeout: pubsubTimeout\n          circuitBreaker: pubsubBreaker\n        inbound:\n          retry: pubsubRetryInbound\n          timeout: subscriberTimeout\n      statestore:\n        retry: defaultRetry\n        timeout: daprSidecar\n        circuitBreaker: defaultBreaker\n",
+  "results": [
+    {
+      "case": "tenants-ui cannot load Memories capabilities",
+      "status": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "case": "tenants-api cannot load Memories capabilities",
+      "status": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "case": "authorized /api/tenants",
+      "status": 200,
+      "expected": 200,
+      "diagnostic": "",
+      "pass": true
+    },
+    {
+      "case": "authorized /api/tenants/tenant.alpha",
+      "status": 200,
+      "expected": 200,
+      "diagnostic": "",
+      "pass": true
+    },
+    {
+      "case": "authorized /api/tenants/tenant.alpha/users",
+      "status": 200,
+      "expected": 200,
+      "diagnostic": "",
+      "pass": true
+    },
+    {
+      "case": "authorized /api/tenants/tenant.alpha/audit",
+      "status": 200,
+      "expected": 200,
+      "diagnostic": "",
+      "pass": true
+    },
+    {
+      "case": "authorized /api/users/user.alpha/tenants",
+      "status": 200,
+      "expected": 200,
+      "diagnostic": "",
+      "pass": true
+    },
+    {
+      "case": "authorized /api/global-administrators",
+      "status": 200,
+      "expected": 200,
+      "diagnostic": "",
+      "pass": true
+    },
+    {
+      "case": "conditional304",
+      "status": 304,
+      "expected": 304,
+      "pass": true
+    },
+    {
+      "case": "denied caller",
+      "status": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "case": "denied verb",
+      "status": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "case": "no retry on 503",
+      "status": 503,
+      "backendCalls": 1,
+      "expected": 503,
+      "pass": true
+    },
+    {
+      "case": "denied unrelated path",
+      "status": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "case": "31-second HTTPS read survives former timeout",
+      "expected": 200,
+      "pass": true,
+      "status": 200,
+      "elapsedSeconds": 31.00979376200121,
+      "backendCalls": 1
+    },
+    {
+      "case": "configured Dapr deadline rejects one HTTPS read",
+      "expected": 500,
+      "configuredTimeoutSeconds": 60,
+      "pass": true,
+      "status": 500,
+      "errorCode": "ERR_DIRECT_INVOKE",
+      "elapsedSeconds": 60.0028654349735,
+      "backendCalls": 1
+    }
+  ],
+  "backendCounts": {
+    "('GET', '/dapr/config')": 1,
+    "('GET', '/api/tenants')": 1,
+    "('GET', '/api/tenants/tenant.alpha')": 2,
+    "('GET', '/api/tenants/tenant.alpha/users')": 1,
+    "('GET', '/api/tenants/tenant.alpha/audit')": 1,
+    "('GET', '/api/users/user.alpha/tenants')": 1,
+    "('GET', '/api/global-administrators')": 1,
+    "('GET', '/api/tenants/failure')": 1,
+    "('GET', '/api/tenants/slow-success')": 1,
+    "('GET', '/api/tenants/deadline-exhaustion')": 1
+  }
+}

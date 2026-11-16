@@ -2,11 +2,14 @@
 title: 'Repair Projects publication qualification'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'draft'
+status: 'ready-for-dev'
 route: 'dispatch'
 baseline_commit: 'ec481fd50b280e2d41f9baecbd03945c833e4538'
 review_loop_iteration: 0
-context: []
+context:
+  - '/home/administrator/projects/hexalith/cicd/AGENTS.md'
+  - '/home/administrator/projects/hexalith/cicd/docs/pre-adoption-publication.md'
+  - '/home/administrator/projects/hexalith/cicd/docs/nightly.md'
 ---
 
 <frozen-after-approval reason="user requested fixes for the two reported publication failures">
@@ -14,6 +17,10 @@ context: []
 ## Intent
 
 Repair the Projects preparation checks blocking the already requested push. Load each selected prebuilt owner's declarations and adapters in one dependency-resolved assembly context, preserving exact artifact identity and shared SDK contract identity without rebuilding. Losslessly gzip only the twelve historical XML artifacts rejected by the released audit; preserve original paths, modes, Git identities and hashes in a manifest with scratch-only reconstruction instructions. Keep historical receipts, active product inputs, audit enforcement, all product assertions and owned module portions unchanged. Verify assembly collisions and shared-contract refusal, archive roundtrips and active audit negative controls, then rerun the complete approved Projects preparation proof. Continue the existing authorization to push all qualified changes using their intended credentials, preserving concurrent work. No adoption or product/package release is authorized by this repair.
+
+### Human decision — 2026-11-17
+
+Extend this repair to EventStore release readiness, retaining normal nightly publication. Investigate current producer source, published API availability and exact required checks; repair reachable product failures and prepare any owner-controlled pipeline correction here. Preserve concurrent work, all product enforcement and existing publication boundaries. Do not manually release, invent a future SDK version or silently adopt a module.
 
 </frozen-after-approval>
 
@@ -31,9 +38,21 @@ Repair the Projects preparation checks blocking the already requested push. Load
 - `tests/Hexalith.Projects.Integration.Tests/PackageOwner*Tests.cs`: functional loading and real factories.
 - `evidence/fix-projects-publication-20261116/`: immutable archive audit, source snapshots, SDK evidence and failed full proof.
 
-## Open Questions
+## Tasks & Acceptance
 
-1. Prepare EventStore release readiness too, retaining normal nightly publication, or leave this repair scoped until its normal SDK release? No package release or new SDK version can be assumed.
+- [ ] Bind fresh EventStore main, package metadata and exact CI/release outcomes in a new dated evidence packet. Given the required query API, when inspecting published packages and producer source, then report their actual API availability and source identities.
+- [ ] Reproduce the first reachable producer product failure with the repository's retained checks; apply the smallest product correction on fresh main, if necessary. Given a pipeline/story-governance failure, when classifying it, then preserve product checks and prepare its owner-side disposition without editing owned module files.
+- [ ] Verify changed behavior and retain exact results. Given unavailable publication prerequisites, when qualification stops, then identify each external prerequisite and leave no false green acceptance or package-version change.
+- [ ] Resume Projects' approved exact-input proof only when a real compatible SDK is available; retain current fixture reconciliation. Given all required dependency and module checks pass, when publishing already authorized work, then publish dependencies before parent gitlinks with intended credentials. Otherwise preserve the reviewable candidate and exact failure.
+
+## Readiness Code Map
+
+- Use `/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/` for new source-bound evidence. Freeze a freshly fetched producer commit and its actual Builds pin, preserving shared checkouts. Run disposable standalone copies under `run-with-temp`, without nested submodule initialization.
+- Verify the entire EventStore Contracts and RestApi.Generators test projects plus Gateway compilation in ordinary Release/package mode with analyzers, warnings-as-errors and auditing unchanged. Reuse their existing runners. If these fail, repair only the demonstrated product defect and verify it; do not manufacture a change when checks pass. Source API verification is producer readiness evidence, not published package availability or full release acceptance.
+- EventStore `scripts/verify-release-source.sh`, `tools/release-packages.json` and current CI/release jobs: exact source qualification and package inventory.
+- `setup/`, `docs/ordered-module-adoption.md`, `stories.yaml` story 20: central nightly eligibility and the separate adoption prerequisites. No substitute approval is assumed.
+- Projects' current reconciliation receipts under `spec-cicd/evidence/18/`: preserve newer native/telemetry changes; old focused results cannot qualify current main.
+- Projects reconciliation is now clean and published at `3361f2e3b5655fa1ad50a2d12c640bbd5edcbb4b`; do not reapply earlier patches. Preserve the concurrent guarded-write job in `/home/administrator/projects/hexalith/eventstore`.
 
 ## Review Triage Log
 

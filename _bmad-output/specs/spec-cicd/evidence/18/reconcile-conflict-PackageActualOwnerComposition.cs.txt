@@ -1,0 +1,457 @@
+namespace Hexalith.Projects.PackageFixtures.AppHost;
+
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
+
+using global::Aspire.Hosting;
+using global::Aspire.Hosting.ApplicationModel;
+
+using CommunityToolkit.Aspire.Hosting.Dapr;
+
+using Hexalith.EventStore.Aspire;
+using Hexalith.Projects.Aspire;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using YamlDotNet.Serialization;
+
+/// <summary>Composes the explicitly isolated, synthetic supported-read qualification topology.</summary>
+public static class PackageActualOwnerComposition
+{
+    /// <summary>The explicit opt-in configuration key.</summary>
+    public const string EnabledConfigurationKey = "Projects:PackageFixtures:Enabled";
+    /// <summary>The private, launcher-owned configuration file.</summary>
+    public const string ConfigurationFileKey = "Projects:PackageFixtures:ConfigurationFile";
+    /// <summary>The recovery scenario's bounded tenant-access freshness policy, with cold-seed headroom.</summary>
+    public const string TenantAccessRecoveryFreshnessBudget = "00:01:30";
+    private const string Prefix = "Projects:PackageFixtures:";
+
+    /// <summary>Returns whether the profile was explicitly selected.</summary>
+    public static bool IsEnabled(IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+        return string.Equals(configuration[EnabledConfigurationKey], "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(configuration[EnabledConfigurationKey], "1", StringComparison.Ordinal);
+    }
+
+    /// <summary>Loads and validates launcher-owned inputs before normal resources are composed.</summary>
+    public static void Configure(IDistributedApplicationBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        if (!IsEnabled(builder.Configuration)) return;
+
+        if (!builder.Environment.IsDevelopment()) throw new InvalidOperationException("Supported-read fixtures require Development.");
+        if (string.Equals(builder.Configuration["EnableKeycloak"], "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(builder.Configuration["KeycloakPersistent"], "true", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Conflicting fixture or persistent security configuration cannot be overridden by fixture inputs.");
+        string path = Path.GetFullPath(Required(builder.Configuration, ConfigurationFileKey));
+        if (!File.Exists(path)) throw new InvalidOperationException("The private fixture configuration is missing.");
+        if (!OperatingSystem.IsWindows()
+            && (File.GetUnixFileMode(path) & (UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.OtherRead | UnixFileMode.OtherWrite)) != 0)
+            throw new InvalidOperationException("Fixture configuration must be private to its owner.");
+        builder.Configuration.AddJsonFile(path, optional: false, reloadOnChange: false);
+        Validate(builder.Configuration);
+    }
+
+    /// <summary>Rejects ambiguous profiles, shared dependencies and incomplete synthetic trust.</summary>
+    public static void Validate(IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+        if (!string.Equals(configuration["EnableKeycloak"], "false", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(configuration["KeycloakPersistent"], "true", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Supported-read fixtures cannot share the browser or persistent security profile.");
+        string isolation = Required(configuration, Prefix + "IsolationId");
+        if (!Regex.IsMatch(isolation, "^reads-[a-z0-9]{12,40}$", RegexOptions.CultureInvariant))
+            throw new InvalidOperationException("A unique supported-read namespace is required.");
+        foreach ((string key, int reserved) in new[] { ("RedisHost", 6379), ("PlacementHostAddress", 50005), ("SchedulerHostAddress", 50006) })
+        {
+            string endpoint = Required(configuration, "Dapr:" + key);
+            if (!IPEndPoint.TryParse(endpoint, out IPEndPoint? parsed) || !IPAddress.IsLoopback(parsed.Address) || parsed.Port == reserved || parsed.Port == 0)
+                throw new InvalidOperationException("Supported-read dependencies must use owned loopback endpoints and dedicated ports.");
+        }
+        if (!Uri.TryCreate(Required(configuration, Prefix + "UserIssuer"), UriKind.Absolute, out Uri? user)
+            || user.Scheme != "https" || !user.IsLoopback)
+            throw new InvalidOperationException("The synthetic public issuer must use trusted loopback HTTPS.");
+        if (configuration.GetValue<bool>(Prefix + "Browser:Enabled"))
+        {
+            if (Required(configuration, Prefix + "Browser:Authority") != user.AbsoluteUri.TrimEnd('/')
+                || Required(configuration, Prefix + "Browser:TokenEndpoint") != user.AbsoluteUri.TrimEnd('/') + "/protocol/openid-connect/token")
+                throw new InvalidOperationException("Browser credentials require the same trusted isolated issuer as the native owner calls.");
+            _ = Required(configuration, Prefix + "Browser:ClientSecret");
+        }
+        else if (configuration[Prefix + "Browser:TokenEndpoint"] is not null)
+            throw new InvalidOperationException("A browser token endpoint requires the explicit browser fixture.");
+<<<<<<< /tmp/hexalith-job.WZ3T5pdz/tmpsvn0myyu/live
+        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey", "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkersSecret", "FolderWorkerPrivateKey", "FolderWorkerPublicKey", "FolderWorkerScanPrivateKey", "FolderWorkerScanPublicKey" })
+=======
+        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey", "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkersSecret", "FolderWorkersScanPrivateKey", "FolderWorkersScanPublicKey" })
+>>>>>>> /tmp/hexalith-job.WZ3T5pdz/tmpsvn0myyu/private
+            _ = Required(configuration, Prefix + key);
+        ValidateFolderSourceKeys(configuration);
+        foreach (string key in new[] { "CertificatePath", "TrustBundle" })
+            if (!File.Exists(configuration[Prefix + key])) throw new InvalidOperationException("Fixture trust material is missing.");
+        if (configuration[Prefix + "Tenant"] == configuration[Prefix + "ForeignTenant"])
+            throw new InvalidOperationException("The foreign tenant must be distinct and populated.");
+        string discoveryPath = Path.GetFullPath(Required(configuration, Prefix + "DiscoveryConfiguration"));
+        string privateDirectory = Path.GetDirectoryName(discoveryPath)!;
+        byte[] digestKey;
+        try { digestKey = Convert.FromBase64String(Required(configuration, Prefix + "CatalogDigestKey")); }
+        catch (FormatException exception) { throw new InvalidOperationException("The private catalog digest key must be base64.", exception); }
+        if (digestKey.Length < 32) throw new InvalidOperationException("The private catalog digest key needs at least 32 random bytes.");
+        if (!File.Exists(discoveryPath) || privateDirectory != Path.GetDirectoryName(Path.GetFullPath(Required(configuration, Prefix + "CertificatePath"))))
+            throw new InvalidOperationException("Discovery configuration must belong to the private fixture directory.");
+        using JsonDocument discovery = JsonDocument.Parse(File.ReadAllBytes(discoveryPath));
+        JsonElement resolver = discovery.RootElement.GetProperty("spec").GetProperty("nameResolution");
+        string registry = resolver.GetProperty("configuration").GetProperty("connectionString").GetString()!;
+        if (resolver.GetProperty("component").GetString() != "sqlite" || resolver.GetProperty("version").GetString() != "v1"
+            || !Path.IsPathFullyQualified(registry) || Path.GetDirectoryName(registry) != privateDirectory || File.Exists(registry))
+            throw new InvalidOperationException("Discovery requires a fresh fixture-private SQLite registry; mDNS is not isolated by NAMESPACE.");
+    }
+
+    /// <summary>Adds real Folder hosts, Dapr discovery, platform broker grants and distinct receiver trust.</summary>
+    public static void AddResources(
+        IDistributedApplicationBuilder builder,
+        IResourceBuilder<ProjectResource> eventStore,
+        IResourceBuilder<ProjectResource> tenants,
+        IResourceBuilder<ProjectResource> projects,
+        IResourceBuilder<ProjectResource> projectsWorkers,
+        string resourcesPath)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(eventStore);
+        ArgumentNullException.ThrowIfNull(tenants);
+        ArgumentNullException.ThrowIfNull(projects);
+        ArgumentNullException.ThrowIfNull(projectsWorkers);
+        Validate(builder.Configuration);
+        IConfiguration configuration = builder.Configuration;
+        string isolation = Required(configuration, Prefix + "IsolationId");
+        string ownerResources = AddQualificationResiliency(configuration, resourcesPath, "eventstore");
+        string projectResources = AddQualificationResiliency(configuration, resourcesPath, "projects");
+        string root = ResolveProjectRoot(configuration["HexalithFoldersRoot"] ?? builder.AppHostDirectory);
+        IResourceBuilder<ProjectResource> folders = builder.AddProject<PrebuiltMetadata<global::Projects.Hexalith_Folders_Server>>("folders",
+            options => options.ExcludeLaunchProfile = true).WithHttpEndpoint().WithHttpHealthCheck("/alive");
+        IResourceBuilder<ProjectResource> folderWorkers = builder.AddProject<PrebuiltMetadata<global::Projects.Hexalith_Folders_Workers>>("folders-workers",
+            options => options.ExcludeLaunchProfile = true).WithHttpEndpoint().WithHttpHealthCheck("/alive");
+
+        var (state, pubsub) = builder.AddProjectsSharedDaprComponents(Required(configuration, "Dapr:RedisHost"));
+        var conversationStartStore = builder.AddDaprComponent("projects-conversation-start-setup", "state.redis")
+            .WithMetadata("redisHost", Required(configuration, "Dapr:RedisHost"))
+            .WithMetadata("keyPrefix", "name");
+        IResourceBuilder<ParameterResource> channel = Secret("channel", "ChannelToken");
+        IResourceBuilder<ParameterResource> receipt = Secret("receipt", "ReceiptKey");
+        IResourceBuilder<ParameterResource> certificatePassword = Secret("certificate-password", "CertificatePassword");
+        IResourceBuilder<ParameterResource> eventStoreSecret = Secret("gateway-secret", "EventStoreSecret");
+        IResourceBuilder<ParameterResource> projectsSecret = Secret("projects-secret", "ProjectsSecret");
+        IResourceBuilder<ParameterResource> ownerKey = Secret("owner-key", "OwnerPrivateKey");
+        IResourceBuilder<ProjectResource> authority = builder.AddProject<PrebuiltMetadata<global::Projects.Hexalith_Projects_PackageFixtures>>("supported-read-authority", options => options.ExcludeLaunchProfile = true)
+            .WithArgs("--authority")
+
+            .WithHttpsEndpoint(name: "https")
+            .WithHttpEndpoint(name: "http")
+            .WithEnvironment("Kestrel__Certificates__Default__Path", Required(configuration, Prefix + "CertificatePath"))
+            .WithEnvironment("Kestrel__Certificates__Default__Password", certificatePassword);
+        _ = authority.WithHttpHealthCheck(() => authority.GetEndpoint("http"), path: "/alive");
+        ReferenceExpression issuer = ReferenceExpression.Create($"{authority.GetEndpoint("https")}/workload-authority");
+        foreach (IResourceBuilder<ProjectResource> resource in new[] { eventStore, tenants, projects, projectsWorkers, folders, folderWorkers })
+        {
+            string name = resource.Resource.Name;
+            _ = resource.WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+                .WithEnvironment("Logging__Console__FormatterName", "json")
+                .WithEnvironment("EventStore__RouteCatalog__ScopedDecodeReuse", "true")
+                .WithEnvironment("EventStore__RouteCatalog__SerializeLocalLeaseRelease", "false")
+                .WithEnvironment("EventStore__RouteCatalog__RetainValidatedCatalogBytes", "true")
+                .WithEnvironment("EventStore__RouteCatalog__ReuseHeldMetadataDispatch", name == "folders" ? "true" : "false")
+                .WithEnvironment("EventStore__DomainService__AppId", name)
+                .WithEnvironment("Authentication__Workload__Audience", name)
+                .WithEnvironment("Authentication__Workload__AllowedCallers__0", "eventstore")
+                .WithEnvironment("XDG_DATA_HOME", Path.Combine(Path.GetDirectoryName(Required(configuration, Prefix + "CertificatePath"))!, "data-" + name))
+                .WithEnvironment("SSL_CERT_FILE", Required(configuration, Prefix + "TrustBundle"))
+                .WithEnvironment("NAMESPACE", isolation)
+                .WithEnvironment("Authentication__JwtBearer__Authority", Required(configuration, Prefix + "UserIssuer"))
+                .WithEnvironment("Authentication__JwtBearer__Issuer", Required(configuration, Prefix + "UserIssuer"))
+                .WithEnvironment("Authentication__JwtBearer__Audience", "supported-read-users")
+                .WithEnvironment("Authentication__JwtBearer__SigningKey", string.Empty)
+                .WithEnvironment("Authentication__JwtBearer__AllowedAlgorithms__0", "RS256")
+                .WithEnvironment("Authentication__JwtBearer__RequireHttpsMetadata", "true")
+                .WithEnvironment("Authentication__JwtBearer__AllowAnonymousDevelopment", "false")
+                .WithEnvironment("Authentication__WorkloadJwtBearer__Authority", issuer)
+                .WithEnvironment("Authentication__WorkloadJwtBearer__Issuer", issuer)
+                .WithEnvironment("Authentication__WorkloadJwtBearer__Audience", name)
+                .WithEnvironment("Authentication__WorkloadJwtBearer__AllowedAlgorithms__0", "RS256")
+                .WithEnvironment("Authentication__WorkloadJwtBearer__RequireHttpsMetadata", "true")
+                .WithEnvironment("Authentication__HumanAuthorityReceipt__SigningKey", receipt);
+            _ = resource.WithDaprSidecar(sidecar =>
+            {
+                _ = sidecar.WithOptions(new DaprSidecarOptions
+                {
+                    AppId = name, Config = Required(configuration, Prefix + "DiscoveryConfiguration"),
+                    ResourcesPaths = name switch { "eventstore" => [ownerResources], "projects" => [projectResources], _ => [resourcesPath] },
+                    PlacementHostAddress = Required(configuration, "Dapr:PlacementHostAddress"),
+                    SchedulerHostAddress = Required(configuration, "Dapr:SchedulerHostAddress"),
+                    EnableAppHealthCheck = true, AppHealthCheckPath = "/alive",
+                }).WithReference(state).WithReference(pubsub);
+                if (name == "projects") _ = sidecar.WithReference(conversationStartStore);
+                sidecar.Resource.Annotations.Add(new EnvironmentCallbackAnnotation(context => context.EnvironmentVariables["NAMESPACE"] = isolation));
+            }).WithEventStoreAppChannelToken(channel);
+        }
+        _ = authority.WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+                .WithEnvironment("Logging__Console__FormatterName", "json")
+            .WithEnvironment("Authentication__WorkloadAuthority__Enabled", "true")
+            .WithEnvironment("Authentication__WorkloadAuthority__NonconformingDevelopmentFixture", "true")
+            .WithEnvironment("Authentication__WorkloadAuthority__Issuer", issuer)
+            .WithEnvironment("Authentication__WorkloadAuthority__KeyId", isolation)
+            .WithEnvironment("Authentication__WorkloadAuthority__SigningCertificatePath", Required(configuration, Prefix + "CertificatePath"))
+            .WithEnvironment("Authentication__WorkloadAuthority__SigningCertificatePassword", certificatePassword);
+        _ = eventStore
+            .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__projects", Required(configuration, Prefix + "OwnerPublicKey"))
+            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__projects", "projects")
+            .WithEnvironment("Authentication__BoundOwnerQuery__AllowedQueries__projects", "Hexalith.Folders.Queries.AuthorizeFolderRead.v1")
+            .WithEnvironment("Authentication__QueryAuthority__RequiredQueries__projects__0", "Hexalith.Projects.Queries.ListProjects.v1")
+            .WithEnvironment("Authentication__QueryAuthority__RequiredQueries__projects__1", "Hexalith.Projects.Queries.GetProject.v1")
+            .WithEnvironment("Authentication__QueryAuthority__RequiredQueries__projects__2", "Hexalith.Projects.Queries.GetProjectContext.v1")
+            .WithEnvironment("Authentication__QueryAuthority__RequiredQueries__projects__3", "Hexalith.Projects.Queries.GetConversationStartSetup.v1")
+            .WithEnvironment("Authentication__QueryAuthority__RequiredQueries__projects__4", "Hexalith.Projects.Queries.ResolveProjectFromConversation.v1")
+            .WithEnvironment("Authentication__QueryAuthority__RequiredQueries__projects__5", "Hexalith.Projects.Queries.ResolveProjectFromAttachments.v1")
+            .WithEnvironment("Authentication__DaprInternal__AllowedCallers__0", "projects")
+            .WithEnvironment("EventStore__DomainServices__Registrations__system|global-administrators|v1__AppId", "tenants")
+            .WithEnvironment("EventStore__DomainServices__Registrations__system|global-administrators|v1__Domain", "global-administrators")
+            .WithEnvironment("EventStore__DomainServices__Registrations__*|folders|v1__AppId", "folders")
+            .WithEnvironment("EventStore__DomainServices__Registrations__*|folders|v1__Domain", "folders")
+            .WithEnvironment("EventStore__Publisher__TopicOverrides__folders", "folders.events");
+        _ = folders.WithEnvironment("Folders__Authentication__Authority", Required(configuration, Prefix + "UserIssuer"))
+            .WithEnvironment("Folders__Authentication__ValidIssuer", Required(configuration, Prefix + "UserIssuer"))
+            .WithEnvironment("Folders__Authentication__Audience", "supported-read-users")
+            .WithEnvironment("Folders__Authentication__RequireHttpsMetadata", "true");
+        _ = eventStore.WithEnvironment("Authentication__HumanAuthorityReceipt__SigningKey", receipt);
+        _ = projects.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", ownerKey)
+            .WithEnvironment("EventStore__OwnerQueries__OperationTimeout", "00:00:03");
+        if (configuration[Prefix + "Scenario"] == "tenant-access-recovery")
+        {
+            _ = projects.WithEnvironment("Projects__TenantAccess__MutationFreshnessBudget", TenantAccessRecoveryFreshnessBudget)
+                .WithEnvironment("Projects__TenantAccess__DiagnosticStalenessBudget", TenantAccessRecoveryFreshnessBudget);
+        }
+        ConfigureClient(eventStore, "eventstore", eventStoreSecret);
+        ConfigureClient(projects, "projects", projectsSecret);
+        int ordinal = 0;
+        foreach (string domain in new[] { "projects", "folders", "tenants" })
+            AddGrant(domain, "eventstore", "EventStoreSecret", domain,
+                ["domain-service:query", "domain-service:process",
+                    "domain-service:project", "domain-service:metadata",
+                    "domain-service:replay-state"], domain != "tenants");
+        AddGrant("owner-gateway", "projects", "ProjectsSecret", "eventstore", ["eventstore:owner-authority-query"], false);
+        IResourceBuilder<ParameterResource> tenantsSecret = Secret("tenants-secret", "TenantsSecret");
+        IResourceBuilder<ParameterResource> tenantsOwnerKey = Secret("tenants-owner-key", "TenantOwnerPrivateKey");
+        IResourceBuilder<ParameterResource> bootstrapPassword = Secret("bootstrap-password", "BootstrapPassword");
+        ConfigureClient(tenants, "tenants", tenantsSecret);
+        AddGrant("tenants-bootstrap", "tenants", "TenantsSecret", "eventstore",
+            ["eventstore:command-submit", "eventstore:stream-read"], false);
+        int bootstrapSourceGrant = ordinal;
+        AddGrant("tenants-bootstrap-source", "tenants", "TenantsSecret", "eventstore", ["eventstore:stream-read"], false);
+        string sourceGrant = "Authentication__WorkloadAuthority__Grants__" + bootstrapSourceGrant + "__";
+        _ = authority.WithEnvironment(sourceGrant + "AllowUnbound", "false")
+            .WithEnvironment(sourceGrant + "Bindings__eventstore:bound-tenant__0", "platform:global-administrators")
+            .WithEnvironment(sourceGrant + "Bindings__eventstore:bound-domain__0", "global-administrators");
+        _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__1", "tenants")
+            .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__tenants", Required(configuration, Prefix + "TenantOwnerPublicKey"))
+            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__tenants", "tenants,global-administrators")
+            .WithEnvironment("Authentication__BoundCommand__AllowedDomains__tenants", "global-administrators");
+        _ = tenants.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", tenantsOwnerKey)
+            .WithEnvironment("Tenants__BootstrapGlobalAdminEnabled", "true")
+            .WithEnvironment("Tenants__BootstrapGlobalAdminUserId", configuration.GetValue<bool>(Prefix + "Browser:Enabled") ? Required(configuration, Prefix + "Browser:PrimaryActor") : "actor-1")
+            .WithEnvironment("Tenants__BootstrapBoundWorkloadEnabled", "true")
+            .WithEnvironment("EventStore__Authentication__Authority", Required(configuration, Prefix + "UserIssuer"))
+            .WithEnvironment("EventStore__Authentication__TokenEndpoint", configuration[Prefix + "Browser:TokenEndpoint"] ?? Required(configuration, Prefix + "UserIssuer").TrimEnd('/') + "/token")
+            .WithEnvironment("EventStore__Authentication__ClientId", "supported-read-bootstrap")
+            .WithEnvironment("EventStore__Authentication__Username", "actor-1")
+            .WithEnvironment("EventStore__Authentication__Password", bootstrapPassword);
+<<<<<<< /tmp/hexalith-job.WZ3T5pdz/tmpsvn0myyu/live
+        foreach (var source in new[]
+        {
+            (Resource: folders, Workload: "folders", Secret: "FoldersSecret", ReadKey: "FolderOwner", ScanKey: "FolderScan", CallerIndex: 2),
+            (Resource: folderWorkers, Workload: "folders-workers", Secret: "FolderWorkersSecret", ReadKey: "FolderWorker", ScanKey: "FolderWorkerScan", CallerIndex: 3),
+        })
+        {
+            IResourceBuilder<ParameterResource> secret = Secret(source.Workload + "-secret", source.Secret);
+            IResourceBuilder<ParameterResource> readKey = Secret(source.Workload + "-owner-key", source.ReadKey + "PrivateKey");
+            IResourceBuilder<ParameterResource> scanKey = Secret(source.Workload + "-scan-key", source.ScanKey + "PrivateKey");
+            ConfigureClient(source.Resource, source.Workload, secret);
+            int folderSourceGrant = ordinal;
+            AddGrant(source.Workload + "-owner-source", source.Workload, source.Secret, "eventstore",
+                ["eventstore:stream-read", "eventstore:stream-scan-native"], false);
+            string grant = "Authentication__WorkloadAuthority__Grants__" + folderSourceGrant + "__";
+            _ = authority.WithEnvironment(grant + "AllowUnbound", "false")
+                .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+                .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+                .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
+            _ = source.Resource.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", readKey)
+                .WithEnvironment("Authentication__NativeSourceScan__PrivateKey", scanKey);
+            _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__" + source.CallerIndex, source.Workload)
+                .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__" + source.Workload, Required(configuration, Prefix + source.ReadKey + "PublicKey"))
+                .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__" + source.Workload, "folders")
+                .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__" + source.Workload, Required(configuration, Prefix + source.ScanKey + "PublicKey"))
+                .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__" + source.Workload, "folders");
+            if (source.Workload == "folders-workers")
+                _ = eventStore.WithEnvironment("Authentication__BoundStreamRead__MetadataOnlyCallers__folders-workers", "true");
+        }
+=======
+        IResourceBuilder<ParameterResource> foldersSecret = Secret("folders-secret", "FoldersSecret");
+        IResourceBuilder<ParameterResource> folderOwnerKey = Secret("folders-owner-key", "FolderOwnerPrivateKey");
+        ConfigureClient(folders, "folders", foldersSecret);
+        int folderGrant = ordinal;
+        AddGrant("folders-owner-head", "folders", "FoldersSecret", "eventstore", ["eventstore:stream-read"], false);
+        string grant = "Authentication__WorkloadAuthority__Grants__" + folderGrant + "__";
+        _ = authority.WithEnvironment(grant + "AllowUnbound", "false")
+            .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+            .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+            .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
+        int scanGrant = ordinal;
+        AddGrant("folders-native-scan", "folders", "FoldersSecret", "eventstore", ["eventstore:stream-scan-native"], false);
+        string scan = "Authentication__WorkloadAuthority__Grants__" + scanGrant + "__";
+        _ = authority.WithEnvironment(scan + "AllowUnbound", "false")
+            .WithEnvironment(scan + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+            .WithEnvironment(scan + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+            .WithEnvironment(scan + "Bindings__eventstore:bound-domain__0", "folders");
+        _ = folders.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", folderOwnerKey)
+            .WithEnvironment("Authentication__NativeSourceScan__PrivateKey", Secret("folders-scan-key", "FolderScanPrivateKey"));
+        _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__2", "folders")
+            .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__folders", Required(configuration, Prefix + "FolderOwnerPublicKey"))
+            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__folders", "folders")
+            .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__folders", Required(configuration, Prefix + "FolderScanPublicKey"))
+            .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__folders", "folders");
+        ConfigureClient(folderWorkers, "folders-workers", Secret("folders-workers-secret", "FolderWorkersSecret"));
+        int workersScanGrant = ordinal;
+        AddGrant("folders-workers-native-scan", "folders-workers", "FolderWorkersSecret", "eventstore", ["eventstore:stream-scan-native"], false);
+        string workersScan = "Authentication__WorkloadAuthority__Grants__" + workersScanGrant + "__";
+        _ = authority.WithEnvironment(workersScan + "AllowUnbound", "false")
+            .WithEnvironment(workersScan + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+            .WithEnvironment(workersScan + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+            .WithEnvironment(workersScan + "Bindings__eventstore:bound-domain__0", "folders");
+        _ = folderWorkers.WithEnvironment("Authentication__NativeSourceScan__PrivateKey", Secret("folders-workers-scan-key", "FolderWorkersScanPrivateKey"))
+            .WaitFor(authority);
+        _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__3", "folders-workers")
+            .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__folders-workers", Required(configuration, Prefix + "FolderWorkersScanPublicKey"))
+            .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__folders-workers", "folders");
+>>>>>>> /tmp/hexalith-job.WZ3T5pdz/tmpsvn0myyu/private
+        _ = eventStore.WaitFor(authority);
+        _ = tenants.WaitFor(authority);
+        _ = projects.WithReference(eventStore).WithReference(tenants).WithReference(folders).WaitFor(eventStore).WaitFor(tenants).WaitFor(authority);
+        _ = folders.WithReference(eventStore).WithReference(tenants).WaitFor(tenants);
+        _ = projectsWorkers.WithReference(eventStore).WithReference(tenants);
+        _ = folderWorkers.WithReference(eventStore).WithReference(tenants);
+
+        IResourceBuilder<ParameterResource> Secret(string name, string key)
+            => builder.AddParameter("supported-reads-" + name, () => Required(configuration, Prefix + key), secret: true);
+        void ConfigureClient(IResourceBuilder<ProjectResource> resource, string workload, IResourceBuilder<ParameterResource> secret)
+        {
+            _ = resource.WithEnvironment("Authentication__WorkloadIssuer__Workload", workload)
+                .WithEnvironment("Authentication__WorkloadIssuer__ClientId", workload + "-fixture")
+                .WithEnvironment("Authentication__WorkloadIssuer__ClientSecret", secret)
+                .WithEnvironment("Authentication__WorkloadIssuer__EnableResourceBindingRequests", "true")
+                .WithEnvironment("Authentication__WorkloadIssuer__TokenEndpoint", ReferenceExpression.Create($"{issuer}/token"));
+        }
+        void AddGrant(string id, string workload, string secretKey, string audience, string[] operations, bool queryBindings)
+        {
+            string prefix = $"Authentication__WorkloadAuthority__Grants__{ordinal++}__";
+            _ = authority.WithEnvironment(prefix + "GrantId", isolation + "-" + id)
+                .WithEnvironment(prefix + "Revision", "1").WithEnvironment(prefix + "ClientId", workload + "-fixture")
+                .WithEnvironment(prefix + "Workload", workload).WithEnvironment(prefix + "Audience", audience)
+                .WithEnvironment(prefix + "Surface", "service")
+                .WithEnvironment(prefix + "ClientSecretSha256", Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Required(configuration, Prefix + secretKey)))))
+                .WithEnvironment(prefix + "AllowUnbound", "true")
+                .WithEnvironment(prefix + "AllowQueryAuthorityDigest", queryBindings ? "true" : "false")
+                .WithEnvironment(prefix + "NotBefore", DateTimeOffset.UtcNow.AddMinutes(-1).ToString("O"))
+                .WithEnvironment(prefix + "ExpiresAt", DateTimeOffset.UtcNow.AddHours(2).ToString("O"));
+            for (int i = 0; i < operations.Length; i++) _ = authority.WithEnvironment(prefix + $"Operations__{i}", operations[i]);
+            if (queryBindings)
+            {
+                _ = authority.WithEnvironment(prefix + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+                    .WithEnvironment(prefix + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+                    .WithEnvironment(prefix + "Bindings__eventstore:bound-domain__0", audience);
+            }
+        }
+    }
+
+    private static string AddQualificationResiliency(IConfiguration configuration, string resourcesPath, string appId)
+    {
+        if (appId is not ("eventstore" or "projects")) throw new InvalidOperationException("Only the two actual audit-writing sidecars select this qualification policy.");
+        string directory = Path.Combine(Path.GetDirectoryName(Required(configuration, Prefix + "CertificatePath"))!,
+            appId == "eventstore" ? "components" : "components-projects");
+        _ = Directory.CreateDirectory(directory);
+        string path = Path.Combine(directory, appId == "eventstore" ? "owner-resiliency.yaml" : "projects-resiliency.yaml");
+        object baseline = new DeserializerBuilder().WithAttemptingUnquotedStringTypeDeserialization().Build()
+            .Deserialize<object>(File.ReadAllText(Path.Combine(resourcesPath, "resiliency.yaml")));
+        JsonObject policy = JsonNode.Parse(new SerializerBuilder().JsonCompatible().Build().Serialize(baseline))!.AsObject();
+        if (policy["apiVersion"]?.GetValue<string>() != "dapr.io/v1alpha1" || policy["kind"]?.GetValue<string>() != "Resiliency")
+            throw new InvalidOperationException("The actual baseline resiliency policy is required.");
+        JsonObject policies = policy["spec"]!["policies"]!.AsObject();
+        JsonObject apps = policy["spec"]!["targets"]!["apps"]!.AsObject();
+        JsonObject projects = apps["projects"]!.AsObject();
+        if (apps.ContainsKey("folders") || projects["timeout"] is null
+            || policies["timeouts"]?[projects["timeout"]!.GetValue<string>()] is null)
+            throw new InvalidOperationException("The private profile requires the existing Project timeout and no competing Folder target.");
+        policy["metadata"]!["name"] = appId == "eventstore" ? "supported-reads-owner-deadline" : "supported-reads-project-state";
+        policy["scopes"] = new JsonArray(JsonValue.Create(appId));
+        policies["retries"]!["supportedReadsOwnerNoRetry"] = new JsonObject
+        {
+            ["policy"] = "constant", ["duration"] = "1ms", ["maxRetries"] = 0,
+        };
+        JsonObject state = policy["spec"]!["targets"]!["components"]!["statestore"]!["outbound"]!.AsObject();
+        if (state["timeout"] is null || policies["timeouts"]?[state["timeout"]!.GetValue<string>()]?.GetValue<string>() != "15s")
+            throw new InvalidOperationException("Qualification must retain the actual fifteen-second state timeout.");
+        state["retry"] = "supportedReadsOwnerNoRetry";
+        _ = state.Remove("circuitBreaker");
+        if (appId == "eventstore")
+        {
+            policies["timeouts"]!["supportedReadsOwnerTimeout"] = "2s";
+            projects["retry"] = "supportedReadsOwnerNoRetry";
+            _ = projects.Remove("circuitBreaker");
+            apps["folders"] = new JsonObject { ["timeout"] = "supportedReadsOwnerTimeout", ["retry"] = "supportedReadsOwnerNoRetry" };
+        }
+        File.WriteAllText(path, policy.ToJsonString());
+        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+        return directory;
+    }
+
+    private static void ValidateFolderSourceKeys(IConfiguration configuration)
+    {
+        HashSet<string> fingerprints = new(StringComparer.Ordinal);
+        foreach (string prefix in new[] { "FolderOwner", "FolderScan", "FolderWorker", "FolderWorkerScan" })
+        {
+            try
+            {
+                byte[] privateBytes = Convert.FromBase64String(Required(configuration, Prefix + prefix + "PrivateKey"));
+                byte[] publicBytes = Convert.FromBase64String(Required(configuration, Prefix + prefix + "PublicKey"));
+                using RSA privateKey = RSA.Create();
+                using RSA publicKey = RSA.Create();
+                privateKey.ImportPkcs8PrivateKey(privateBytes, out int privateRead);
+                publicKey.ImportSubjectPublicKeyInfo(publicBytes, out int publicRead);
+                byte[] actualPublic = privateKey.ExportSubjectPublicKeyInfo();
+                if (privateRead != privateBytes.Length || publicRead != publicBytes.Length || privateKey.KeySize < 2048
+                    || !actualPublic.AsSpan().SequenceEqual(publicKey.ExportSubjectPublicKeyInfo())
+                    || !fingerprints.Add(Convert.ToHexString(SHA256.HashData(actualPublic))))
+                    throw new InvalidOperationException("Folder source read/scan proof keys must match and remain independent: " + prefix);
+            }
+            catch (Exception error) when (error is FormatException or CryptographicException)
+            {
+                throw new InvalidOperationException("Invalid Folder source proof key material: " + prefix, error);
+            }
+        }
+        if (Required(configuration, Prefix + "FoldersSecret") == Required(configuration, Prefix + "FolderWorkersSecret"))
+            throw new InvalidOperationException("Folder source workloads require independent issuer secrets.");
+    }
+
+    private static string Required(IConfiguration configuration, string key)
+        => !string.IsNullOrWhiteSpace(configuration[key]) ? configuration[key]! : throw new InvalidOperationException("Missing supported-read fixture configuration: " + key);
+
+    private static string ResolveProjectRoot(string directory)
+    {
+        foreach (string start in new[] { directory, Directory.GetCurrentDirectory() })
+            for (DirectoryInfo? candidate = new(start); candidate is not null; candidate = candidate.Parent)
+                if (File.Exists(Path.Combine(candidate.FullName, "Hexalith.Projects.slnx"))) return candidate.FullName;
+        throw new DirectoryNotFoundException("The supported-read profile requires the owning Projects checkout.");
+    }
+}

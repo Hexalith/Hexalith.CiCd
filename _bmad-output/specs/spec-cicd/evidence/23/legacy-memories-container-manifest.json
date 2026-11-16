@@ -1,0 +1,102 @@
+{
+  "recorded_at": "2026-11-16T23:11:24.033586+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4924",
+        "X-Ratelimit-Reset: 1794873301",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 76"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.Memories/git/blobs/67faba0fb459148fb11b32607fbfd85e48f5b61a",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4923",
+        "X-Ratelimit-Reset: 1794873301",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 77"
+      ],
+      "data": {
+        "sha": "67faba0fb459148fb11b32607fbfd85e48f5b61a",
+        "node_id": "B_kwDORs_eOdoAKDY3ZmFiYTBmYjQ1OTE0OGZiMTFiMzI2MDdmYmZkODVlNDhmNWI2MWE",
+        "size": 1091,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Memories/git/blobs/67faba0fb459148fb11b32607fbfd85e48f5b61a",
+        "content": "ewogICJzY2hlbWFWZXJzaW9uIjogImhleGFsaXRoLm1lbW9yaWVzLmNvbnRh\naW5lci1wdWJsaWNhdGlvbi52MSIsCiAgImJ1aWxkc1NoYSI6ICJhZTc3ZDU2\nOTBhOTQxMWEyMTU0ZmE0ZWQ1MjMxZWRjMzczOTQyNTczIiwKICAicGxhdGZv\ncm1zIjogWyJsaW51eC9hbWQ2NCIsICJsaW51eC9hcm02NCJdLAogICJpbWFn\nZXMiOiBbCiAgICB7Im5hbWUiOiAic2VydmVyIiwgInByb2plY3QiOiAic3Jj\nL0hleGFsaXRoLk1lbW9yaWVzLlNlcnZlci9IZXhhbGl0aC5NZW1vcmllcy5T\nZXJ2ZXIuY3Nwcm9qIiwgInJlcG9zaXRvcnkiOiAibWVtb3JpZXMiLCAiaGVh\nbHRoIjogImxpdmVuZXNzIn0sCiAgICB7Im5hbWUiOiAibWNwIiwgInByb2pl\nY3QiOiAic3JjL0hleGFsaXRoLk1lbW9yaWVzLk1jcC9IZXhhbGl0aC5NZW1v\ncmllcy5NY3AuY3Nwcm9qIiwgInJlcG9zaXRvcnkiOiAibWVtb3JpZXMtbWNw\nIiwgImhlYWx0aCI6ICJsaXZlbmVzcyJ9LAogICAgeyJuYW1lIjogImFjY2Vz\ncy10ZWxlbWV0cnkiLCAicHJvamVjdCI6ICJzcmMvSGV4YWxpdGguTWVtb3Jp\nZXMuQWNjZXNzVGVsZW1ldHJ5L0hleGFsaXRoLk1lbW9yaWVzLkFjY2Vzc1Rl\nbGVtZXRyeS5jc3Byb2oiLCAicmVwb3NpdG9yeSI6ICJtZW1vcmllcy1hY2Nl\nc3MtdGVsZW1ldHJ5IiwgImhlYWx0aCI6ICJkaXNhYmxlZC1yZWFkaW5lc3Mi\nfSwKICAgIHsibmFtZSI6ICJhY2Nlc3MtdGVsZW1ldHJ5LWNsb2NrIiwgInBy\nb2plY3QiOiAic3JjL0hleGFsaXRoLk1lbW9yaWVzLkFjY2Vzc1RlbGVtZXRy\neS5DbG9jay9IZXhhbGl0aC5NZW1vcmllcy5BY2Nlc3NUZWxlbWV0cnkuQ2xv\nY2suY3Nwcm9qIiwgInJlcG9zaXRvcnkiOiAibWVtb3JpZXMtYWNjZXNzLXRl\nbGVtZXRyeS1jbG9jayIsICJoZWFsdGgiOiAic2lnbmVkLXJlYWRpbmVzcyJ9\nLAogICAgeyJuYW1lIjogImRvbWFpbi1zZXJ2aWNlIiwgInByb2plY3QiOiAi\nc3JjL0hleGFsaXRoLk1lbW9yaWVzLkRvbWFpblNlcnZpY2UvSGV4YWxpdGgu\nTWVtb3JpZXMuRG9tYWluU2VydmljZS5jc3Byb2oiLCAicmVwb3NpdG9yeSI6\nICJtZW1vcmllcy1kb21haW4tc2VydmljZSIsICJoZWFsdGgiOiAibGl2ZW5l\nc3MifQogIF0KfQo=\n",
+        "encoding": "base64"
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "manifest": {
+    "schemaVersion": "hexalith.memories.container-publication.v1",
+    "buildsSha": "ae77d5690a9411a2154fa4ed5231edc373942573",
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "images": [
+      {
+        "name": "server",
+        "project": "src/Hexalith.Memories.Server/Hexalith.Memories.Server.csproj",
+        "repository": "memories",
+        "health": "liveness"
+      },
+      {
+        "name": "mcp",
+        "project": "src/Hexalith.Memories.Mcp/Hexalith.Memories.Mcp.csproj",
+        "repository": "memories-mcp",
+        "health": "liveness"
+      },
+      {
+        "name": "access-telemetry",
+        "project": "src/Hexalith.Memories.AccessTelemetry/Hexalith.Memories.AccessTelemetry.csproj",
+        "repository": "memories-access-telemetry",
+        "health": "disabled-readiness"
+      },
+      {
+        "name": "access-telemetry-clock",
+        "project": "src/Hexalith.Memories.AccessTelemetry.Clock/Hexalith.Memories.AccessTelemetry.Clock.csproj",
+        "repository": "memories-access-telemetry-clock",
+        "health": "signed-readiness"
+      },
+      {
+        "name": "domain-service",
+        "project": "src/Hexalith.Memories.DomainService/Hexalith.Memories.DomainService.csproj",
+        "repository": "memories-domain-service",
+        "health": "liveness"
+      }
+    ]
+  },
+  "source_commit": "341ae091bc9a94bfab0c7741314419713188ae8d",
+  "source_path": "tools/release-containers.json",
+  "qualification_limit": "Declarative publisher namespace metadata only; not key UUID/consumer mapping or rotation authorization."
+}

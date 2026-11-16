@@ -1,0 +1,234 @@
+using Hexalith.EventStore.Testing.CatalogInvocation;
+using Hexalith.EventStore.Testing.OwnerSourceRead;
+using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Win32.SafeHandles;
+
+namespace Hexalith.Projects.PackageFixtures;
+
+/// <summary>Private, link-free, bounded atomic IPC; files are technical test data only.</summary>
+internal sealed class PackageIpcFiles
+{
+    /// <summary>The maximum serialized private message size.</summary>
+    internal const int MaximumBytes = 8 * 1024 * 1024;
+    /// <summary>Closed request/result serialization with unknown fields refused.</summary>
+    internal static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
+    {
+        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+    };
+    private readonly string _directory;
+    private readonly ulong _inode;
+    private readonly ulong _device;
+    private readonly int _maximumBytes;
+
+    /// <summary>Captures the existing private directory identity and verifies its link-free ancestry.</summary>
+    /// <param name="directory">The canonical existing private directory.</param>
+    internal PackageIpcFiles(string directory, int maximumBytes = MaximumBytes)
+    {
+        if (!OperatingSystem.IsLinux() || !Path.IsPathFullyQualified(directory)
+            || Path.GetFullPath(directory) != directory.TrimEnd(Path.DirectorySeparatorChar))
+            throw new IOException("Private catalog IPC requires a canonical absolute Linux path.");
+        _directory = directory;
+        if (maximumBytes is < 2 or > MaximumBytes) throw new ArgumentOutOfRangeException(nameof(maximumBytes));
+        _maximumBytes = maximumBytes;
+        CheckParents();
+        byte[] identity = Stat(directory);
+        RequirePrivate(identity, directory: true);
+        _inode = BitConverter.ToUInt64(identity, 32);
+        _device = BitConverter.ToUInt64(identity, 136);
+    }
+
+    /// <summary>Resolves one validated identity only beneath the unchanged private directory.</summary>
+    /// <param name="id">The one-shot random identity.</param>
+    /// <param name="extension">The protocol-owned file suffix.</param>
+    /// <returns>The exact private protocol path.</returns>
+    internal string PathFor(string id, string extension)
+    {
+        if (id.Length != 32 || id.Any(character => !char.IsAsciiHexDigitLower(character)))
+            throw new IOException("Invalid one-shot request identity.");
+        Check();
+        return Path.Combine(_directory, id + extension);
+    }
+
+    /// <summary>Observes pending atomically published requests in stable order.</summary>
+    /// <returns>The private request paths.</returns>
+    internal string[] Pending()
+    {
+        Check();
+        return System.IO.Directory.GetFiles(_directory, "*.request").Order(StringComparer.Ordinal).ToArray();
+    }
+
+    /// <summary>Observes existing private controls without changing their original identities or deadlines.</summary>
+    internal string[] Existing(string extension)
+    {
+        Check();
+        return System.IO.Directory.GetFiles(_directory, "*" + extension).Order(StringComparer.Ordinal).ToArray();
+    }
+
+    /// <summary>Holds exclusive kernel ownership of the verified directory until disposal or process exit.</summary>
+    internal IDisposable AcquireExclusiveDirectoryOwnership()
+    {
+        Check();
+        int descriptor = OpenDirectory(_directory, 0x10000 | 0x20000 | 0x80000);
+        if (descriptor < 0) throw new IOException("Private source directory ownership unavailable.");
+        var handle = new SafeFileHandle(descriptor, ownsHandle: true);
+        try
+        {
+            byte[] identity = new byte[256];
+            if (Statx(descriptor, "", 0x1000, 0x7ff, identity) != 0
+                || BitConverter.ToUInt64(identity, 32) != _inode || BitConverter.ToUInt64(identity, 136) != _device
+                || LockDirectory(descriptor, 2 | 4) != 0) throw new IOException("Private source directory already owned or changed.");
+            Check();
+            return handle;
+        }
+        catch { handle.Dispose(); throw; }
+    }
+
+    /// <summary>Claims one private regular request by atomic rename without replacing a prior claim.</summary>
+    /// <param name="id">The one-shot request identity.</param>
+    internal void Claim(string id)
+    {
+        string path = PathFor(id, ".request");
+        RequirePrivate(Stat(path), directory: false);
+        File.Move(path, PathFor(id, ".working"), overwrite: false);
+    }
+
+    /// <summary>Removes only a completed private regular control message owned by this directory.</summary>
+    internal void Delete(string id, string extension)
+    {
+        string path = PathFor(id, extension);
+        if (!File.Exists(path)) return;
+        RequirePrivate(Stat(path), directory: false);
+        File.Delete(path);
+    }
+
+    /// <summary>Reads a bounded private regular message and refuses changed identity or unknown JSON fields.</summary>
+    /// <typeparam name="T">The closed protocol message type.</typeparam>
+    /// <param name="id">The one-shot identity.</param>
+    /// <param name="extension">The protocol-owned suffix.</param>
+    /// <param name="token">The complete operation deadline.</param>
+    /// <returns>The verified deserialized message.</returns>
+    internal async Task<T> ReadAsync<T>(string id, string extension, CancellationToken token)
+    {
+        string path = PathFor(id, extension);
+        byte[] before = Stat(path);
+        RequirePrivate(before, directory: false);
+        int descriptor = OpenDirectory(path, 0x800 | 0x20000 | 0x80000);
+        if (descriptor < 0) throw new IOException("Private IPC could not be opened without following links or blocking.");
+        using FileStream stream = new(new SafeFileHandle(descriptor, ownsHandle: true), FileAccess.Read);
+        if (!stream.CanSeek || stream.Length < 2 || stream.Length > _maximumBytes) throw new IOException("Private IPC size refused.");
+        byte[] bytes = new byte[checked((int)stream.Length)];
+        await stream.ReadExactlyAsync(bytes, token).ConfigureAwait(false);
+        byte[] after = Stat(path);
+        if (BitConverter.ToUInt64(before, 32) != BitConverter.ToUInt64(after, 32)
+            || BitConverter.ToUInt64(before, 136) != BitConverter.ToUInt64(after, 136)) throw new IOException("Private IPC identity changed.");
+        RequirePrivate(after, directory: false);
+        Check();
+        return JsonSerializer.Deserialize<T>(bytes, Json) ?? throw new IOException("Private IPC body missing.");
+    }
+
+    /// <summary>Publishes a bounded private message using create-new bytes and atomic rename.</summary>
+    /// <typeparam name="T">The closed protocol message type.</typeparam>
+    /// <param name="id">The one-shot identity.</param>
+    /// <param name="extension">The protocol-owned suffix.</param>
+    /// <param name="value">The private message.</param>
+    /// <param name="token">The complete operation deadline.</param>
+    internal async Task WriteAsync<T>(string id, string extension, T value, CancellationToken token, bool replace = false, Action? beforePublish = null)
+    {
+        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, Json);
+        if (bytes.Length > _maximumBytes) throw new IOException("Private IPC size refused.");
+        string temporary = PathFor(Guid.NewGuid().ToString("N"), extension + ".tmp");
+        var options = new FileStreamOptions { Mode = FileMode.CreateNew, Access = FileAccess.Write,
+            Share = FileShare.None, Options = FileOptions.Asynchronous };
+        if (OperatingSystem.IsLinux()) options.UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+        byte[]? temporaryIdentity = null;
+        bool published = false;
+        try
+        {
+            var stream = new FileStream(temporary, options);
+            await using (stream.ConfigureAwait(false))
+            {
+                temporaryIdentity = Stat(temporary);
+                RequirePrivate(temporaryIdentity, directory: false);
+                await stream.WriteAsync(bytes, token).ConfigureAwait(false);
+                await stream.FlushAsync(token).ConfigureAwait(false);
+                stream.Flush(flushToDisk: true);
+            }
+            Check();
+            string destination = PathFor(id, extension);
+            if (replace && File.Exists(destination)) RequirePrivate(Stat(destination), directory: false);
+            token.ThrowIfCancellationRequested();
+            beforePublish?.Invoke();
+            File.Move(temporary, destination, overwrite: replace);
+            published = true;
+        }
+        finally
+        {
+            if (!published && temporaryIdentity is not null && File.Exists(temporary))
+            {
+                Check();
+                byte[] observed = Stat(temporary);
+                RequirePrivate(observed, directory: false);
+                if (BitConverter.ToUInt64(observed, 32) != BitConverter.ToUInt64(temporaryIdentity, 32)
+                    || BitConverter.ToUInt64(observed, 136) != BitConverter.ToUInt64(temporaryIdentity, 136))
+                    throw new IOException("Private unpublished message identity changed.");
+                File.Delete(temporary);
+            }
+        }
+    }
+
+    private void Check()
+    {
+        CheckParents();
+        byte[] identity = Stat(_directory);
+        RequirePrivate(identity, directory: true);
+        if (BitConverter.ToUInt64(identity, 32) != _inode || BitConverter.ToUInt64(identity, 136) != _device)
+            throw new IOException("Private IPC directory replaced.");
+    }
+
+    private void CheckParents()
+    {
+        for (DirectoryInfo? item = new(_directory); item is not null; item = item.Parent)
+            if (!item.Exists || item.LinkTarget is not null || (item.Attributes & FileAttributes.ReparsePoint) != 0)
+                throw new IOException("Private IPC ancestors must be existing directories without links.");
+    }
+
+    private static void RequirePrivate(byte[] stat, bool directory)
+    {
+        ushort mode = BitConverter.ToUInt16(stat, 28);
+        if (BitConverter.ToUInt32(stat, 20) != GetEffectiveUserId() || (mode & 0x3f) != 0
+            || (mode & 0xf000) != (directory ? 0x4000 : 0x8000)
+            || (!directory && BitConverter.ToUInt32(stat, 16) != 1))
+            throw new IOException("Private IPC ownership, permissions or file type refused.");
+    }
+
+    private static byte[] Stat(string path)
+    {
+        byte[] buffer = new byte[256];
+        if (Statx(-100, path, 0x100, 0x7ff, buffer) != 0) throw new IOException("Private IPC identity observation failed.");
+        return buffer;
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "SYSLIB1054:Use LibraryImportAttribute instead of DllImportAttribute", Justification = "The fixed Linux statx record is read without enabling unsafe code.")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+    [DllImport("libc", EntryPoint = "statx", SetLastError = true)]
+    private static extern int Statx(int directory, [MarshalAs(UnmanagedType.LPUTF8Str)] string path, int flags, uint mask, [Out] byte[] buffer);
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "SYSLIB1054:Use LibraryImportAttribute instead of DllImportAttribute", Justification = "Read the current Linux uid without enabling unsafe code.")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+    [DllImport("libc", EntryPoint = "geteuid")]
+    private static extern uint GetEffectiveUserId();
+
+    internal static uint EffectiveUserId => GetEffectiveUserId();
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "SYSLIB1054:Use LibraryImportAttribute instead of DllImportAttribute", Justification = "Open only the verified Linux directory without unsafe code.")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+    [DllImport("libc", EntryPoint = "open", SetLastError = true)]
+    private static extern int OpenDirectory([MarshalAs(UnmanagedType.LPUTF8Str)] string path, int flags);
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "SYSLIB1054:Use LibraryImportAttribute instead of DllImportAttribute", Justification = "Hold kernel directory ownership until the safe handle closes.")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+    [DllImport("libc", EntryPoint = "flock", SetLastError = true)]
+    private static extern int LockDirectory(int descriptor, int operation);
+}
