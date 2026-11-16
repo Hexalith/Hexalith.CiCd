@@ -1,12 +1,26 @@
 {
-  "recordedUtc": "2026-11-16T19:45:51.965240+00:00",
+  "recordedUtc": "2026-11-16T20:03:38.504097+00:00",
   "scope": "Story 16 changes only; concurrent original-workspace work preserved",
   "Builds": {
     "pushed": true,
     "branch": "feat/story-16-managed-preparation",
     "head": "dc66c537ae06f7b56bf652025d71c6b464198b4e",
     "draftPrCreated": false,
-    "draftPrError": "GraphQL: Resource not accessible by personal access token (createPullRequest)"
+    "draftPrError": "GraphQL: Resource not accessible by personal access token (createPullRequest)",
+    "mergedIntoMain": true,
+    "mergeCommit": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "releaseHandoffAssertionFix": "05bda4e01d70afacb5048d5c336f383a301c0974",
+    "verifiedMain": "05bda4e01d70afacb5048d5c336f383a301c0974",
+    "hostedCi": {
+      "id": 43945550788,
+      "url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43945550788",
+      "observedStatus": "queued",
+      "conclusion": null
+    },
+    "targetedReleaseTests": {
+      "Python3.12": "37 passed",
+      "Python3.14": "37 passed"
+    }
   },
   "Conversations": {
     "committed": true,
@@ -20,15 +34,31 @@
     ],
     "gateExitCode": 1,
     "gateError": "/tmp/hexalith-job.w6goNGxA/Conversations/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.w6goNGxA/Conversations/.github/hexalith-ci.json'\n",
-    "preAdoptionAlternative": "requires acceptable published new Builds/CLI prerequisites and genuine exact-input qualification; neither is established by source-only tests"
+    "preAdoptionAlternative": "requires acceptable published new Builds/CLI prerequisites and genuine exact-input qualification; neither is established by source-only tests",
+    "observedMain": "f1a2b3da468760d4188f604045deb098af8ead52",
+    "mergedIntoMain": false,
+    "reason": "Required shared checker failed; approved pre-adoption path still lacks published prerequisites and genuine exact-input qualification."
   },
   "CiCd": {
     "branch": "story/16-migrate-conversations",
-    "committed": false,
-    "pushed": false,
-    "reason": "Parent commit held because required module push qualification did not pass; no unpublished product gitlinks recorded"
+    "committed": true,
+    "pushed": true,
+    "mergedIntoMain": true,
+    "sourceMergeCommit": "f0ec52d2cae38424cf661d4d79bdebdd29bc981c",
+    "incomingMain": "2375693",
+    "preservedIncomingGitlinks": true,
+    "buildsVersion": "v6.0.6",
+    "registeredOrAdoptedConversations": false,
+    "verification": {
+      "rendererTests": 36,
+      "validatorTests": 52,
+      "qualificationControlTests": 4,
+      "renderCheck": "passed"
+    }
   },
   "credentialFallback": false,
   "forcePush": false,
-  "skipMarkersOrTrailers": false
+  "skipMarkersOrTrailers": false,
+  "previousAttemptRecordedUtc": "2026-11-16T19:45:51.965240+00:00",
+  "request": "push all changes to main and merge branch"
 }

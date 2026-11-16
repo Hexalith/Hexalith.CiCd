@@ -1,0 +1,33 @@
+{
+  "commands": [
+    [
+      "uv",
+      "export",
+      "--frozen",
+      "--script",
+      "Tools/ci/run_python_tests.py",
+      "--format",
+      "requirements-txt",
+      "--output-file",
+      "/tmp/hexalith-job.sQyZeTOL/requirements.txt"
+    ],
+    [
+      "uv",
+      "run",
+      "--python",
+      "3.14",
+      "--with-requirements",
+      "/tmp/hexalith-job.sQyZeTOL/requirements.txt",
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "Github/lib/tests",
+      "-p",
+      "test_release_outcome.py",
+      "-v"
+    ]
+  ],
+  "exitCode": 0
+}
