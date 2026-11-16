@@ -119,7 +119,7 @@ def proposal(owner, source, target, value):
     before = entries(target, base, value["before"])
     target.run("read-tree", value["base_tree"])
     target.run("apply", "--cached", "--whitespace=nowarn", data=patch)
-    tree = target.resolve(target.run("write-tree").decode().strip())
+    tree = target.resolve(target.run("write-tree", "--missing-ok").decode().strip())
     require(tree == value["result_tree"], "complete proposal output tree mismatch")
     after = entries(target, tree, value["after"])
     changed = {path for path in set(before) | set(after) if before.get(path) != after.get(path)}
@@ -142,6 +142,43 @@ def parents(git, revision):
     return [line[7:].decode("ascii") for line in header.splitlines() if line.startswith(b"parent ")]
 
 
+def exclude_full_writer(owner, source, transport, receipt, phase):
+    """Prove this unregistered target is absent from both full-writer selectors."""
+    proof = {"phase": phase, "owner_source": source, "registry_absent": None, "accepted_ref_absent": None,
+             "advertised_main": None, "owner_main_matches_source": None}
+    receipt["full_writer_exclusion"].append(proof)
+    receipt["failed_operation"] = "verify Projects registry absence during " + phase
+    registry = rt.registry(owner, source)
+    registered = [name for name in registry if name.casefold() == PROJECTS.casefold()]
+    proof.update(registry_count=len(registry), registry_sha256=digest(json.dumps(registry, separators=(",", ":")).encode()),
+                 registry_absent=not registered, matching_registry_entries=registered[:32])
+    require(proof["registry_absent"], "Projects is present in the exact committed full-delivery registry")
+    receipt["failed_operation"] = "verify atomic owner-main/accepted-ref advertisement during " + phase
+    output = owner.run("ls-remote", "--heads", transport.remote(rt.CICD), "refs/heads/main", "refs/heads/delivered/*")
+    proof.update(advertisement_sha256=digest(output), advertisement_bytes=len(output))
+    refs = {}
+    for row in output.decode("utf-8").splitlines():
+        parts = row.split("\t")
+        require(len(parts) == 2, "invalid live owner/ref advertisement row")
+        revision, reference = parts
+        revision = rt.sha(revision)
+        if reference == "refs/heads/main":
+            require(proof["advertised_main"] is None, "duplicate live owner main advertisement")
+            proof["advertised_main"] = revision
+            continue
+        require(reference.startswith("refs/heads/delivered/"), "unexpected live owner/ref advertisement")
+        name = rt.name(reference.removeprefix("refs/heads/delivered/"))
+        require(reference not in refs, "duplicate live accepted ref")
+        refs[reference] = (name, revision)
+    require(proof["advertised_main"] is not None, "missing live owner main advertisement")
+    proof["owner_main_matches_source"] = proof["advertised_main"] == source
+    require(proof["owner_main_matches_source"], "advertised owner main differs from reviewed source")
+    matches = [reference for reference, (name, _) in refs.items() if name.casefold() == PROJECTS.casefold()]
+    proof.update(accepted_ref_count=len(refs), accepted_refs_sha256=digest(json.dumps(refs, sort_keys=True).encode()),
+                 accepted_ref_absent=not matches, matching_accepted_refs=matches[:32])
+    require(proof["accepted_ref_absent"], "Projects has a live full-delivery accepted ref")
+
+
 def execute(operation, context, report_path, *, transport=None, token="", scratch=None, local_root=None):
     """Qualify or deliver using private objects/index, retaining bounded failure receipts."""
     rt._SECRETS.extend([token] if token else [])
@@ -149,7 +186,8 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
                "repository": PROJECTS, "owner_source": None,
                "status": "failed", "failed_operation": "authorize owner invocation", "reason": None,
                "observed_main": None, "delivered_sha": None, "delivered_tree": None,
-               "candidate_sha": None, "candidate_tree": None, "push_attempted": False, "plan": None}
+               "candidate_sha": None, "candidate_tree": None, "push_attempted": False, "plan": None,
+               "full_writer_exclusion": []}
     try:
         receipt["failed_operation"] = "verify secret-free behavioral suites"
         require(context.get("G6_BEHAVIORAL_RESULT", "success") == "success", "secret-free behavioral qualification failed or was skipped")
@@ -185,6 +223,7 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
             value = manifest(raw)
             receipt["failed_operation"] = "verify source-bound pre-push owner gate"
             require(value["pre_push_gate"] == "reviewed-tree-owner-authorized", "pre-push gate is pending owner decision")
+            exclude_full_writer(owner, source, transport, receipt, "qualification" if operation == "qualify" else "delivery source verification")
             target = Git(root / "projects.git", budget, index=root / "private-index")
             target.init()
             receipt["failed_operation"] = "fetch exact Projects main"
@@ -212,6 +251,9 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
                 require(transport.module(owner, rt.CICD) == source, "CiCd main advanced before unchanged confirmation")
                 receipt["failed_operation"] = "reread exact Projects main before unchanged confirmation"
                 require(transport.module(target, PROJECTS) == live, "Projects main advanced before unchanged confirmation")
+                exclude_full_writer(owner, source, transport, receipt, "unchanged confirmation")
+                receipt["failed_operation"] = "reread exact Projects main after unchanged exclusion"
+                require(transport.module(target, PROJECTS) == live, "Projects main advanced during unchanged exclusion")
                 receipt.update(status="unchanged", delivered_sha=live, delivered_tree=tree)
             else:
                 receipt["failed_operation"] = "create direct child commit"
@@ -223,6 +265,9 @@ def execute(operation, context, report_path, *, transport=None, token="", scratc
                 require(transport.module(owner, rt.CICD) == source, "CiCd main advanced before push")
                 receipt["failed_operation"] = "reread exact Projects main before push"
                 require(transport.module(target, PROJECTS) == live, "Projects main advanced before push")
+                exclude_full_writer(owner, source, transport, receipt, "push")
+                receipt["failed_operation"] = "reread exact Projects main after push exclusion"
+                require(transport.module(target, PROJECTS) == live, "Projects main advanced during push exclusion")
                 receipt["failed_operation"] = "git push " + commit + ":refs/heads/main"
                 receipt["push_attempted"] = True
                 try:

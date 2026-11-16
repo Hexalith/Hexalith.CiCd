@@ -1,0 +1,121 @@
+{
+  "scope": "unreleased source catalog qualification only; no owned module edits, registration or pre-push acceptance",
+  "revisions": {
+    "module": "b325a0b47d642f1711f49e589509ca89ac585bca",
+    "builds_source": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.Builds": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+  "catalog_candidate_sha256": "e87d7a01991f41e5fe693f3f4f945019038c6c3e73d0ef12e9740f52a8188e23",
+  "results": [
+    {
+      "job": "fixture-esrch-red-regression",
+      "command": [
+        "python3",
+        "-B",
+        "scripts/test_isolated_magic_link_dapr.py",
+        "-v",
+        "IsolatedFixtureTests.test_process_group_scan_ignores_only_disappearing_processes"
+      ],
+      "exit_code": 1,
+      "expected_failure": true,
+      "log": "fixture-esrch-red-regression.log"
+    },
+    {
+      "job": "scoped-followup-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Timesheets.slnx",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 0,
+      "log": "scoped-followup-build.log"
+    },
+    {
+      "job": "fixture-esrch-focused",
+      "command": [
+        "python3",
+        "-B",
+        "scripts/test_isolated_magic_link_dapr.py",
+        "-v",
+        "IsolatedFixtureTests.test_process_group_scan_ignores_only_disappearing_processes",
+        "IsolatedFixtureTests.test_process_group_scan_preserves_permission_and_malformed_stat_refusals",
+        "IsolatedFixtureTests.test_vanished_proc_entry_during_timeout_still_kills_and_reaps_descendants",
+        "IsolatedFixtureTests.test_real_journey_interruption_terminates_and_reaps_descendants"
+      ],
+      "exit_code": 0,
+      "log": "fixture-esrch-focused.log"
+    },
+    {
+      "job": "fixture-privacy-followup",
+      "command": [
+        "python3",
+        "-B",
+        "scripts/test_isolated_magic_link_dapr.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "fixture-privacy-followup.log"
+    },
+    {
+      "job": "server-polling-source-complete",
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Timesheets.Server.Tests/bin/Release/net10.0/Hexalith.Timesheets.Server.Tests.dll",
+        "-method",
+        "Hexalith.Timesheets.Server.Tests.MagicLinkDurableSubmissionServiceTests.ProcessingStatusIsPolledToTheConfiguredDeadlineAndDenied",
+        "-xml",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/server-polling-source-complete.xml"
+      ],
+      "exit_code": 0,
+      "log": "server-polling-source-complete.log"
+    },
+    {
+      "job": "server-suite-source-complete",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Timesheets.Server.Tests/Hexalith.Timesheets.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false"
+      ],
+      "exit_code": 0,
+      "log": "server-suite-source-complete.log"
+    },
+    {
+      "job": "current-runner-real-packages",
+      "command": [
+        "python3",
+        "-B",
+        "-I",
+        "/tmp/hexalith-job.UIr5TDPl/Timesheets/references/Hexalith.Builds/Github/lib/product_validation.py",
+        "--workspace",
+        "/tmp/hexalith-job.UIr5TDPl/Timesheets",
+        "--contract",
+        "tools/product-validation.json"
+      ],
+      "exit_code": 1,
+      "log": "current-runner-real-packages.log"
+    }
+  ],
+  "live_catalog_still_matches_source": false,
+  "complete": true,
+  "inputs": {
+    "module_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runner_sha256": "bfd12c3daf7dfa6258c1b274ccca0c71da0fbf859964c47d6394b9449bae61d1",
+    "catalog_source_sha256": "7df5b2462cd0d823dd7d813bfbe248f6cc9e27768b735728fcfcb2869c783a83",
+    "catalog_candidate_sha256": "e87d7a01991f41e5fe693f3f4f945019038c6c3e73d0ef12e9740f52a8188e23"
+  }
+}

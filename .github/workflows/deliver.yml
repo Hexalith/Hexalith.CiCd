@@ -18,7 +18,7 @@ permissions: {}
 cache-mode: none
 
 concurrency:
-  group: ${{ github.ref == 'refs/heads/main' && 'deliver' || format('deliver-validate-{0}', github.ref) }}
+  group: ${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.delivery == 'projects-g6-catalog' && 'deliver-projects-g6-catalog' || (github.ref == 'refs/heads/main' && 'deliver' || format('deliver-validate-{0}', github.ref)) }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
@@ -106,6 +106,9 @@ jobs:
 
   deliver:
     needs: validate
+    concurrency:
+      group: deliver-owned-writes
+      cancel-in-progress: false
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 40

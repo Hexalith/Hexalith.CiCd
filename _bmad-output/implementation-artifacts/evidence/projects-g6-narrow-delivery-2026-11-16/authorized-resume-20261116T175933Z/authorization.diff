@@ -1,0 +1,124 @@
+diff --git a/_bmad-output/implementation-artifacts/spec-projects-g6-narrow-delivery.md b/_bmad-output/implementation-artifacts/spec-projects-g6-narrow-delivery.md
+index e828be3..c326eaf 100644
+--- a/_bmad-output/implementation-artifacts/spec-projects-g6-narrow-delivery.md
++++ b/_bmad-output/implementation-artifacts/spec-projects-g6-narrow-delivery.md
+@@ -2,7 +2,7 @@
+ title: 'Deliver the reviewed Projects G-6 catalog acquisition correction'
+ type: 'bugfix'
+ created: '2026-11-16'
+-status: 'in-review'
++status: 'in-progress'
+ route: 'dispatch'
+ baseline_commit: 'eba7514e02904c741f6a0a80930d85eb358d385c'
+ review_loop_iteration: 0
+@@ -35,6 +35,10 @@ Use `run-with-temp` for disposable repositories/checks. Delivery is explicitly a
+ | Scoped App mint inaccessible | No write; retain GitHub failure |
+ | Hosted G-6 subsequent failure | Retain logs/artifacts and diagnose separately from acquisition acceptance |
+ 
++## Owner decision — 2026-11-16
++
++The user replied “fix” to the explicit request to authorize the qualified CiCd reviewed-tree owner gate instead of the adoption-only pinned checker for this exact three-file correction. Record `reviewed-tree-owner-authorized` in the closed manifest and proceed through the existing owner workflow. This exception is limited to Projects base `981ceef13a1abc88219925e73c51a23eb9ac50c2`, unchanged proposal, and result tree `238d933a813d0453e950e1080175d74f12e82975`; all original scope constraints remain in force.
++
+ </frozen-after-approval>
+ 
+ ## Code Map
+@@ -105,3 +109,11 @@ The production manifest remains `pending-owner-decision`; a source-bound choice
+ Final locked Python 3.12 controller qualification: 20 tests passed. Pinned actionlint 1.7.12 and online zizmor 1.32.0 passed the final owner workflow hash `118dde04b95074f04666c855172125284d8d035cca1ecafe10c9c8bc63b6dae0`. The full normal/narrow workflow regression is still being awaited by root; its result will be recorded separately.
+ 
+ Final full locked Python 3.12 workflow regression: all 15 tests passed in 413.228 seconds, including the 17-slot existing path and five narrow-path cases. Root awaited the complete child; no regression run remains active. Local qualification is complete. Owner delivery and fresh Projects CI/G-6 remain pending the source-bound pre-push decision.
++
++### Authorized delivery continuation — 2026-11-16
++
++The user’s “fix” resolves the pending source-bound gate decision. Current remote CiCd is `b836159cea272e5211333296936106cf82833a27`; Projects remains at the reviewed base. Only the manifest decision and explanatory owner documentation/spec are being updated. The acquisition helper, mapper, proposal, workflow mechanism and all normal product gates are unchanged.
++
++The first authorized-manifest rerun failed only because the production-state assertion still required pending-owner-decision. The pending-gate CLI refusal test remains unchanged in behavior; the production-state assertion now belongs with the production manifest/payload check and requires the authorized state. No controller behavior or scope guard changed.
++
++Authorized continuation qualification: all 20 controller tests pass on locked Python 3.12, with the pending refusal behavior retained. The previously published owner source also completed hosted validation and delivery successfully in CiCd run `43920301403`. No workflow/controller runtime change is needed for activation.
+diff --git a/docs/projects-g6-catalog-acquisition.md b/docs/projects-g6-catalog-acquisition.md
+index 1ea874d..8be2705 100644
+--- a/docs/projects-g6-catalog-acquisition.md
++++ b/docs/projects-g6-catalog-acquisition.md
+@@ -67,13 +67,13 @@ unchanged. Acquisition precedes Conversations prepare-build; the mapper stays
+ offline and fail-closed. All pins, product gates and other tree entries survive
+ byte for byte.
+ 
+-The manifest also binds `pre_push_gate`. Its production value is currently
+-`pending-owner-decision`: qualification fails at `verify source-bound pre-push
+-owner gate`, emits no plan and prevents token minting. Only an explicit owner
+-decision for this exact source/proposal/result may authorize
+-`reviewed-tree-owner-authorized` as the pre-adoption gate. This does not alter
+-the normal checker, adoption policy, or any module product gate. An unanswered
+-question is not authorization.
++The manifest also binds `pre_push_gate`. On 2026-11-16 the owner responded
++“fix” to the explicit request to authorize the reviewed-tree gate for this exact
++three-file correction. Its production value is therefore
++`reviewed-tree-owner-authorized`. That decision applies only to the base,
++proposal and complete result tree above. It does not alter the normal checker,
++adoption policy, dependency pins, credentials or any module product gate.
++Any unexpected source or proposal still fails closed before delivery.
+ 
+ The secret-free validation job runs the acquisition, narrow delivery and existing
+ workflow behavioral suites, then constructs a plan from current exact CiCd main
+@@ -97,7 +97,7 @@ or automatic reapplication. An exact delivered tree with the reviewed base as
+ its sole direct parent is an idempotent no-op.
+ 
+ The owner invocation, after publishing and qualifying the task-owned CiCd source
+-and satisfying the module pre-push prerequisite, is:
++and recording the exact-source owner authorization, is:
+ 
+ ```bash
+ gh workflow run deliver.yml --repo Hexalith/Hexalith.CiCd --ref main \
+@@ -121,12 +121,13 @@ run-with-temp uv run --locked --script --python 3.12 tools/tests/test_delivery_w
+ 
+ These tests qualify the delivery mechanism; they do not establish actual delivery
+ or hosted acquisition/G-6 acceptance. The normal exact pinned Builds checker
+-remains a separate pre-push prerequisite. On the clean proposed pre-adoption
+-Projects source, `python3 references/Hexalith.Builds/check.py` currently exits 1
+-because `.github/hexalith-ci.json` is absent. Do not register/adopt Projects, add
+-configuration, suppress the checker or weaken a gate to bypass that refusal.
+-Retain the prerequisite failure for owner resolution before an actual module
+-write. After any authorized successful delivery, inspect Projects' exact three-path
++is unchanged. On the clean proposed pre-adoption Projects source,
++`python3 references/Hexalith.Builds/check.py` exits 1 because
++`.github/hexalith-ci.json` is absent; the original failure remains retained.
++The owner's exact-source exception permits this pre-adoption CiCd operation to
++use its qualified reviewed-tree gate. It does not authorize adding adoption
++configuration, suppressing the normal checker, or weakening a product gate.
++After successful delivery, inspect Projects' exact three-path
+ diff and collect fresh CI/G-6 logs and artifacts tied to its delivered SHA.
+ Diagnose any subsequent hosted failure separately from catalog acquisition.
+ Publishing, A8 audit, deployment and v2 activation remain outside this correction.
+diff --git a/docs/proposals/projects-g6-catalog.json b/docs/proposals/projects-g6-catalog.json
+index 58f61a0..ed00837 100644
+--- a/docs/proposals/projects-g6-catalog.json
++++ b/docs/proposals/projects-g6-catalog.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "hexalith.projects-g6-catalog.v1",
+   "repository": "Hexalith.Projects",
+-  "pre_push_gate": "pending-owner-decision",
++  "pre_push_gate": "reviewed-tree-owner-authorized",
+   "base_commit": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+   "base_tree": "b8a7a8b3b5532cb954f36835685d5b8dcd9577ab",
+   "patch_sha256": "3b4e5540391f585c778f21953f4b2a37be1a87aa9df9ae7e2b56b6e05cefb588",
+diff --git a/tools/tests/test_deliver_g6_catalog.py b/tools/tests/test_deliver_g6_catalog.py
+index f5ba447..a343bad 100644
+--- a/tools/tests/test_deliver_g6_catalog.py
++++ b/tools/tests/test_deliver_g6_catalog.py
+@@ -350,8 +350,6 @@ class CatalogDeliveryTests(unittest.TestCase):
+         receipt = json.loads(self.w.report_path.read_bytes())
+         self.assert_refused(receipt, "pending owner decision")
+         self.assertEqual(receipt["failed_operation"], "verify source-bound pre-push owner gate")
+-        production = delivery.manifest((ROOT / delivery.MANIFEST).read_bytes())
+-        self.assertEqual(production["pre_push_gate"], "pending-owner-decision")
+ 
+     def test_isolated_qualification_cli_publishes_exact_receipt_plan(self):
+         result, output = self.w.cli_qualify()
+@@ -434,6 +432,7 @@ class CatalogDeliveryTests(unittest.TestCase):
+ 
+     def test_production_manifest_is_closed_and_payload_matches_reviewed_blobs(self):
+         value = delivery.manifest((ROOT / delivery.MANIFEST).read_bytes())
++        self.assertEqual(value["pre_push_gate"], "reviewed-tree-owner-authorized")
+         self.assertEqual(value["patch_sha256"], hashlib.sha256((ROOT / delivery.PATCH).read_bytes()).hexdigest())
+         for path in delivery.PATHS[1:]:
+             data = (ROOT / path).read_bytes()

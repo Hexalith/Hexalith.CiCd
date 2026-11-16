@@ -381,6 +381,7 @@ class NarrowWorkflowTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         w = Workspace(Path(temporary.name) / "workspace", (delivery.PROJECTS,))
+        (w.candidate / "setup" / (delivery.PROJECTS + ".yml")).unlink()
         catalog = CatalogWorkspace(w.root / "catalog")
         for path in delivery.SOURCES:
             target = w.candidate / path
@@ -404,6 +405,8 @@ class NarrowWorkflowTests(unittest.TestCase):
         w, catalog, binding = self.fixture()
         workflow = Workflow(w, event="workflow_dispatch", delivery="projects-g6-catalog", g6_plan=binding)
         self.assertEqual(workflow.execute(), "success")
+        self.assertEqual(workflow.concurrency_group, "deliver-projects-g6-catalog")
+        self.assertFalse(workflow.cancel_in_progress)
         self.assertEqual([inputs["repositories"] for _, inputs in workflow.mints], ["Hexalith.Projects"])
         self.assertEqual(set(workflow.mints[0][1]), {"client-id", "private-key", "owner", "repositories",
                                                    "permission-contents", "permission-workflows"})
@@ -416,6 +419,28 @@ class NarrowWorkflowTests(unittest.TestCase):
         self.assertEqual(result["owner_source"], w.sha)
         self.assertEqual(result["delivered_tree"], catalog.result_tree)
         self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
+        self.assertEqual(git(w.remote, "ls-tree", "-r", "--name-only", w.sha, "--", "setup"), "")
+
+    def test_concurrency_keeps_normal_default_and_pr_groups(self):
+        w, _, binding = self.fixture()
+        scenarios = (
+            ({"event": "workflow_dispatch", "delivery": "projects-g6-catalog"}, "deliver-projects-g6-catalog", False),
+            ({"event": "workflow_dispatch", "delivery": "full"}, "deliver", False),
+            ({"event": "workflow_dispatch", "delivery": ""}, "deliver", False),
+            ({"event": "push", "delivery": "projects-g6-catalog"}, "deliver", False),
+            ({"event": "schedule", "delivery": ""}, "deliver", False),
+            ({"event": "pull_request", "ref": "refs/pull/1/merge", "delivery": "projects-g6-catalog"},
+             "deliver-validate-refs/pull/1/merge", True),
+            ({"event": "workflow_dispatch", "ref": "refs/heads/feature", "delivery": "projects-g6-catalog"},
+             "deliver-validate-refs/heads/feature", True),
+        )
+        for options, group, cancel in scenarios:
+            with self.subTest(options=options):
+                workflow = Workflow(w, validation="cancelled", g6_plan=binding, **options)
+                self.assertEqual(workflow.execute(), "skipped")
+                self.assertEqual(workflow.concurrency_group, group)
+                self.assertEqual(workflow.cancel_in_progress, cancel)
+                self.assertEqual(workflow.mints, [])
 
     def test_narrow_qualification_failure_missing_plan_or_wrong_ref_mints_nothing(self):
         for options in ({"validation": "failure"}, {"g6_plan": None}, {"ref": "refs/heads/feature"},

@@ -32,9 +32,10 @@ Repository configuration is never a detector input: `.jscpd*`, `.gitignore`,
 
 ## Discovery coverage model
 
-Initial sources are the YAML, shell, PowerShell and Python files beneath
+Initial sources are the YAML, shell, PowerShell, Python, JavaScript and TypeScript files beneath
 `.github/actions/**`, including dormant action directories. The selected
-extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1` and `.py`. An
+extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1`, `.py`,
+`.js`, `.mjs`, `.cjs`, `.ts`, `.mts` and `.cts`. An
 extensionless file with a shebang is selected too, and fails as an unsupported
 language unless the shebang names a shell, PowerShell or Python. A dormant file's
 action context, which `$GITHUB_ACTION_PATH` names, is its nearest ancestor
@@ -79,6 +80,13 @@ Recognized forms supply the exact working directory, import roots and language:
   APIs, and `sys.executable` (or an alias of it) as argv[0]. A literal subprocess
   `cwd` applies to its child. File invocations keep the script's import root;
   `-m`, `-c` and inline Python action shells start from the working directory.
+- Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
+  `tool run NAME` prefix consumes project, output and property data at the
+  compiled-language boundary. The executable, operation and tool name must be
+  literal, with no argv expansion. Fixed `git -C DIRECTORY rev-parse HEAD` is
+  a provenance read. Literal script references in these data operands still
+  enter discovery. Computed executable/operation, shell, working-directory or
+  resolution-environment changes remain failures.
 
 ### Rule 1: literal references are included
 
@@ -235,8 +243,9 @@ These fail coverage with a diagnostic naming the source file and line:
   - `pytest`, `py.test`, `python -m pytest`, `python -m unittest` or
     `python -m nose2` when the module tracks `conftest.py` or a file named
     `test*.py` or `*_test.py`;
-  - `npm`, `pnpm`, `yarn` or `bun` with a tracked `package.json`, unless the
-    subcommand runs no scripts. `--ignore-scripts` disables lifecycle hooks for
+  - unmodeled `npm` execution forms, or `pnpm`, `yarn` or `bun` with a tracked
+    `package.json`, unless the subcommand runs no scripts. Supported literal npm
+    recipes are described below. `--ignore-scripts` disables lifecycle hooks for
     dependency installation, but never exempts explicitly named `run` scripts;
   - `uv`, `poetry`, `pipenv`, `pdm` or `hatch run` of a script name defined in a
     tracked `pyproject.toml`, `Pipfile` or `hatch.toml`, including installed
@@ -395,3 +404,27 @@ Save useful results and logs outside the wrapper's temporary directory. No test
 may silently skip detector integration. Moving shared code into Builds and
 deleting module copies is a separate authorized change after inspecting the
 reported fragments.
+
+
+## Literal npm and JavaScript/TypeScript reachability
+
+Story 18 adds JavaScript and TypeScript without changing the 10-line/50-token
+threshold, bounds, suppression rejection or cross-module-only failure policy.
+A literal `npm --prefix <directory> run <script>` or declared literal npm
+workspace follows its named recipe and applicable lifecycle recipes. The selected
+workspace must have regular committed `package.json` and `package-lock.json`
+inputs. All tracked JavaScript/TypeScript in that workspace is selected, including
+Playwright configuration, global setup and reporters. Fixed installed Playwright
+CLI invocations use this same scope; discovery never calls npx or evaluates a
+module's configuration to determine files.
+
+The controller's integrity-locked TypeScript 6.0.3 parser reads source through
+stdin and emits syntax facts. Relative imports, literal tsconfig baseUrl/path
+aliases and supported cross-language process literals extend closure beyond the
+workspace. Bare package imports must be in its lock; Node builtins are external.
+Computed imports, process commands, process resolution changes, indirect
+TypeScript configuration and computed setup/configuration paths fail with source
+diagnostics. A conservative whole-workspace selection does not excuse an unsafe
+path or unresolved execution. Unmodeled package managers and recipe forms remain
+fail-closed. The parser and detector are installed and signature-verified in
+controller scratch before discovery, including zero-scope scans.

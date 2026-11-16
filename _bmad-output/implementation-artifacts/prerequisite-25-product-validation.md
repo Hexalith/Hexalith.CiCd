@@ -2,8 +2,8 @@
 
 Story 25 must not register Timesheets against the current shared contract until
 the product checks below have a qualified execution and discovery path. This
-document records the prerequisite boundary; it does not claim implementation,
-publication or an approved design change.
+document records the prerequisite boundary. Local implementation progress is
+recorded below; no publication or production qualification is claimed.
 
 ## Observed inputs
 
@@ -99,7 +99,22 @@ consumers. Do not silently retarget products or add ineffective duplicate
 PackageReferences. Catalog data may name products; the shared runtime remains
 module-agnostic.
 
-## Completion boundary
+## Local preparation, 2026-11-16
+
+The shared runner/composite and behavioral tests are now implemented locally,
+alongside Timesheets' product-only consumer sources and input contract. No hook
+or production registration is enabled against them. See
+`../specs/spec-cicd/evidence/25/local-preparation.md` for exact inputs, checks and
+remaining qualifications. The final runner passes 27 cases; fixture/privacy
+passes 270. The retained six .NET suites, 30 package and 30 selected-index tests
+pass against the recorded net10 catalog candidate. Six metadata cases verify its
+finite identities, source/package semantics and unrelated/explicit overrides.
+Real packing reuses fresh compiled `2.1.1-preview.0.3` outputs and all six archive,
+symbol, payload and dependency checks pass. Required signatures still refuse the
+first unsigned isolated consumer (`NU3004`); a signed-candidate execution path,
+complete discovery, cross-module scan and published compatibility remain open.
+
+## Publication boundary
 
 Publish required Builds changes through the central release process, select an
 acceptable immutable release containing them, and qualify the final product

@@ -96,6 +96,17 @@ context:
 
 ## Spec Change Log
 
+- Local resume, 2026-11-16: the six held registration additions pass existing
+  committed render/input, schema, caller and direct-submodule checks on a
+  disposable candidate from current local main
+  `771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1`, whose AI.Tools gitlink already
+  records published preparation `cfd1ebea92587cdea41b9aa2cff47358bf2f32f6`.
+  Existing registrations and all other committed files are preserved. This
+  local observation does not refresh remote state, integrate the held branch,
+  satisfy the future pilot-night gate or claim adoption. Exact results and the
+  remaining live sequence are in `evidence/12/resume-local.md` and
+  `resume-local-check.json`; status and acceptance tasks remain unchanged.
+
 ## Review Triage Log
 
 ## Verification

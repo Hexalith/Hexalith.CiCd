@@ -52,8 +52,14 @@ Projects adoption in CiCd Story 18 and change policy/pins beyond this correction
 
 The `projects-g6-catalog` dispatch choice in the existing `deliver.yml` is a
 task-specific AD-6 exception for this source-preparation correction. It keeps
-AD-7's existing main-only `deliver` job, `cicd-app` environment, `deliver`
-concurrency group and pinned App action. It neither registers Projects nor
+AD-7's existing main-only `deliver` job, `cicd-app` environment and pinned App
+action. Only main + workflow_dispatch + projects-g6-catalog uses the scoped
+`deliver-projects-g6-catalog` concurrency group. Normal main/default runs retain
+`deliver`; non-main validation groups and cancellation behavior stay unchanged.
+Validation lanes run independently. Both modes' existing `deliver` job uses the
+shared `deliver-owned-writes` job mutex with cancellation disabled, so their write
+phases serialize. This key differs from the workflow-level `deliver` key.
+It neither registers Projects nor
 creates an accepted ref, resolves a Builds version, or applies a rendered
 perimeter. The architecture document and Story 1.17 tracking are unchanged.
 
@@ -83,13 +89,30 @@ tree. Failed qualification, a missing plan or a non-main/non-dispatch invocation
 prevents the narrow write job from running. Normal triggers and the default
 `full` choice retain the existing delivery behavior.
 
+Qualification proves that Projects is absent from both full-writer selectors:
+the exact committed `setup/*.yml` registry and live `refs/heads/delivered/*` heads,
+including case variants of its repository name. Only committed tree metadata and
+a bounded anonymous `ls-remote` against the approved CiCd origin are read. That
+single advertisement includes owner main and accepted heads together and requires
+exactly one main SHA equal to the reviewed owner source. Accepted histories and
+dependencies are never acquired. After the final owner/module source rereads,
+the controller repeats those checks, then checks Projects main again after the
+advertisement before a push or successful no-op. Any registration, accepted ref,
+changed main or unavailable/malformed advertisement fails closed without a write.
+Receipts retain each phase, exact owner and advertised main, advertisement and
+registry/ref inventory hashes/counts, and both absence results. This exclusion keeps
+the isolated pre-adoption correction from overlapping a full Projects writer.
+
 The narrow write branch checks out the exact qualified CiCd source and mints
 only Projects Contents/Workflows write. It skips normal selection, accepted-ref
 and freshness tokens, module slots, report finalization and the normal artifact.
 Only stdlib CiCd Python and bounded Git run with that token; no module code,
 build, tests, dependency initialization or mapper runs there. Proposal application
 uses a private bare object store and index, never a module working tree. The
-controller rejects changed source, bytes, trees, missing blobs, symlinks,
+controller requires the reviewed workflow, action, manifest and patch blobs to
+be available and verified. Unchanged promised blob contents may remain missing;
+the complete committed tree and three-path output checks still apply. It rejects
+changed source, bytes, trees, missing required blobs, symlinks,
 unexpected modes or extra paths before writing. It rereads owner and module main,
 makes one non-forced push, then rereads the actual main SHA/tree. Refusal or a
 race is retained with the exact failed operation, without retry, force, rebase

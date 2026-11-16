@@ -1,0 +1,1138 @@
+{
+  "recorded_at": "2026-11-16T15:57:14.954178+00:00",
+  "cicd_base": "c74b5c8f5787fb33bfd85c1c4430b6de39674198",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "admin_profile": "/home/administrator/.config/gh",
+  "credential_override_present": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform",
+      "exit": 0,
+      "data": {
+        "id": 1328589450,
+        "full_name": "Hexalith/Hexalith.Platform",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/commits/main",
+      "exit": 0,
+      "data": {
+        "sha": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2"
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/rulesets?includes_parents=true",
+      "exit": 0,
+      "data": [
+        {
+          "id": 24657570,
+          "name": "Platform immutable tags",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Platform",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5PMKqKzgF4PqI",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Platform/rulesets/24657570"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Platform/rules/24657570"
+            }
+          },
+          "created_at": "2026-10-07T16:10:23.263+02:00",
+          "updated_at": "2026-10-07T16:10:23.295+02:00"
+        },
+        {
+          "id": 24657106,
+          "name": "Platform main reviewed changes",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Platform",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5PMKqKzgF4PNI",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Platform/rulesets/24657106"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Platform/rules/24657106"
+            }
+          },
+          "created_at": "2026-10-07T16:02:23.904+02:00",
+          "updated_at": "2026-10-07T16:02:23.997+02:00"
+        },
+        {
+          "id": 24657217,
+          "name": "Platform tag creation authorization",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.Platform",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5PMKqKzgF4PUE",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.Platform/rulesets/24657217"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.Platform/rules/24657217"
+            }
+          },
+          "created_at": "2026-10-07T16:03:35.050+02:00",
+          "updated_at": "2026-11-07T00:20:46.245+01:00"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/environments",
+      "exit": 0,
+      "data": {
+        "total_count": 1,
+        "environments": [
+          {
+            "id": 26714001499,
+            "node_id": "EN_kwDOTzCqis8AAAAGOEdQWw",
+            "name": "production",
+            "url": "https://api.github.com/repos/Hexalith/Hexalith.Platform/environments/production",
+            "html_url": "https://github.com/Hexalith/Hexalith.Platform/deployments/activity_log?environments_filter=production",
+            "created_at": "2026-11-09T13:24:02Z",
+            "updated_at": "2026-11-09T13:24:02Z",
+            "can_admins_bypass": false,
+            "protection_rules": [
+              {
+                "id": 71815002,
+                "node_id": "GA_kwDOTzCqis4ER89a",
+                "type": "required_reviewers",
+                "prevent_self_review": false,
+                "reviewers": [
+                  {
+                    "type": "User",
+                    "reviewer": {
+                      "login": "jpiquot",
+                      "id": 6775094,
+                      "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/jpiquot",
+                      "html_url": "https://github.com/jpiquot",
+                      "followers_url": "https://api.github.com/users/jpiquot/followers",
+                      "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+                      "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+                      "repos_url": "https://api.github.com/users/jpiquot/repos",
+                      "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+                      "type": "User",
+                      "user_view_type": "public",
+                      "site_admin": false
+                    }
+                  }
+                ]
+              },
+              {
+                "id": 71815004,
+                "node_id": "GA_kwDOTzCqis4ER89c",
+                "type": "branch_policy"
+              }
+            ],
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            }
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/actions/variables",
+      "exit": 0,
+      "data": {
+        "total_count": 2,
+        "variables": [
+          {
+            "name": "HEXALITH_TEST_EXTENSION_PUBLISH_ENABLED"
+          },
+          {
+            "name": "NUGET_TRUSTED_PUBLISHING_USER"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/code-scanning/default-setup",
+      "exit": 0,
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "c-cpp",
+          "csharp",
+          "go",
+          "java-kotlin",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/automated-security-fixes",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "paused": false
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/immutable-releases",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/releases?per_page=100",
+      "exit": 0,
+      "data": [
+        {
+          "id": 446924890,
+          "tag_name": "v2.1.10",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.10",
+          "published_at": "2026-11-16T11:03:27Z"
+        },
+        {
+          "id": 446850603,
+          "tag_name": "v2.1.9",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.9",
+          "published_at": "2026-11-16T09:52:02Z"
+        },
+        {
+          "id": 446486806,
+          "tag_name": "v2.1.8",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.8",
+          "published_at": "2026-11-16T00:45:00Z"
+        },
+        {
+          "id": 446453024,
+          "tag_name": "v2.1.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.7",
+          "published_at": "2026-11-15T23:40:28Z"
+        },
+        {
+          "id": 446306968,
+          "tag_name": "v2.1.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.6",
+          "published_at": "2026-11-15T19:26:51Z"
+        },
+        {
+          "id": 445859847,
+          "tag_name": "v2.1.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.5",
+          "published_at": "2026-11-15T06:32:39Z"
+        },
+        {
+          "id": 445560428,
+          "tag_name": "v2.1.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.4",
+          "published_at": "2026-11-14T20:11:06Z"
+        },
+        {
+          "id": 445518276,
+          "tag_name": "v2.1.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.3",
+          "published_at": "2026-11-14T18:55:48Z"
+        },
+        {
+          "id": 445442496,
+          "tag_name": "v2.1.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.2",
+          "published_at": "2026-11-14T16:48:27Z"
+        },
+        {
+          "id": 445006810,
+          "tag_name": "v2.1.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.1",
+          "published_at": "2026-11-14T04:16:58Z"
+        },
+        {
+          "id": 444496758,
+          "tag_name": "v2.1.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.1.0",
+          "published_at": "2026-11-13T17:02:49Z"
+        },
+        {
+          "id": 444010416,
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v2.0.0",
+          "published_at": "2026-11-13T08:55:50Z"
+        },
+        {
+          "id": 442867795,
+          "tag_name": "v1.11.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.11.3",
+          "published_at": "2026-11-12T11:42:54Z"
+        },
+        {
+          "id": 442800714,
+          "tag_name": "v1.11.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.11.2",
+          "published_at": "2026-11-12T10:37:46Z"
+        },
+        {
+          "id": 442694278,
+          "tag_name": "v1.11.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.11.1",
+          "published_at": "2026-11-12T08:54:14Z"
+        },
+        {
+          "id": 442547130,
+          "tag_name": "v1.11.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.11.0",
+          "published_at": "2026-11-12T05:52:23Z"
+        },
+        {
+          "id": 439745556,
+          "tag_name": "v1.10.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.10.0",
+          "published_at": "2026-11-09T23:00:03Z"
+        },
+        {
+          "id": 439523739,
+          "tag_name": "v1.9.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.9.0",
+          "published_at": "2026-11-09T19:08:27Z"
+        },
+        {
+          "id": 438515652,
+          "tag_name": "v1.8.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.8.1",
+          "published_at": "2026-11-08T20:55:42Z"
+        },
+        {
+          "id": 438486988,
+          "tag_name": "v1.8.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.8.0",
+          "published_at": "2026-11-08T20:01:26Z"
+        },
+        {
+          "id": 438196836,
+          "tag_name": "v1.7.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.7.1",
+          "published_at": "2026-11-08T11:19:47Z"
+        },
+        {
+          "id": 437571384,
+          "tag_name": "v1.7.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.7.0",
+          "published_at": "2026-11-07T12:44:17Z"
+        },
+        {
+          "id": 437237461,
+          "tag_name": "v1.6.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.6.0",
+          "published_at": "2026-11-07T01:23:44Z"
+        },
+        {
+          "id": 436963852,
+          "tag_name": "v1.5.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "ed991837945571a12743214fc18a87fbd323fc30",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.7",
+          "published_at": "2026-11-06T20:19:19Z"
+        },
+        {
+          "id": 436802949,
+          "tag_name": "v1.5.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "01e5b6530af96ad6eaa69cc1867d43def56c43ca",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.6",
+          "published_at": "2026-11-06T17:38:49Z"
+        },
+        {
+          "id": 436579305,
+          "tag_name": "v1.5.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "64858f25f49407847c9651e626da68c505e98867",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.5",
+          "published_at": "2026-11-06T14:11:13Z"
+        },
+        {
+          "id": 436175551,
+          "tag_name": "v1.5.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "13fc1a8978b4e6dcf8233b443c23c4e4258c49c7",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.4",
+          "published_at": "2026-11-06T06:28:49Z"
+        },
+        {
+          "id": 436080860,
+          "tag_name": "v1.5.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "d1da347db92ef3272beda90005be5239878ff901",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.3",
+          "published_at": "2026-11-06T03:53:36Z"
+        },
+        {
+          "id": 436031078,
+          "tag_name": "v1.5.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "e7e16f621365337e7d6f81c242c9e5c355b3556f",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.2",
+          "published_at": "2026-11-06T02:27:18Z"
+        },
+        {
+          "id": 435876044,
+          "tag_name": "v1.5.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "7122fa4d056f0f9edb74f98d66aa41115cfdc702",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.1",
+          "published_at": "2026-11-05T23:29:08Z"
+        },
+        {
+          "id": 435641325,
+          "tag_name": "v1.5.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "8946209702a6c1c48239f206dd452ae7d729a307",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.5.0",
+          "published_at": "2026-11-05T19:33:49Z"
+        },
+        {
+          "id": 435214708,
+          "tag_name": "v1.4.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "4afa0421794f7e6f3fcbd5d84664eae206e9daa5",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.4.1",
+          "published_at": "2026-11-05T13:07:02Z"
+        },
+        {
+          "id": 435095801,
+          "tag_name": "v1.4.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "ae7516ee6961dd31a5e319be59ead76449ab04a0",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.4.0",
+          "published_at": "2026-11-05T11:08:15Z"
+        },
+        {
+          "id": 433814405,
+          "tag_name": "v1.3.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "338a6afc31850761f49c0de7d399266dd15cfe84",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.3.0",
+          "published_at": "2026-11-04T11:10:27Z"
+        },
+        {
+          "id": 433615812,
+          "tag_name": "v1.2.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "991e2df97dc8493e41096006b0d3203a71730ae8",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.2.3",
+          "published_at": "2026-11-04T07:16:55Z"
+        },
+        {
+          "id": 433537696,
+          "tag_name": "v1.2.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "bd0d370d5b2b59f6a9f2f01aa67a34b115055006",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.2.2",
+          "published_at": "2026-11-04T05:11:52Z"
+        },
+        {
+          "id": 433460382,
+          "tag_name": "v1.2.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "728baa7c0f006d86e71d6c9b29527dabc8e16e49",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.2.1",
+          "published_at": "2026-11-04T02:58:23Z"
+        },
+        {
+          "id": 433416004,
+          "tag_name": "v1.2.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "c077c0c8fab3e112db5e2bc5b756ac8e8672ab66",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.2.0",
+          "published_at": "2026-11-04T01:41:22Z"
+        },
+        {
+          "id": 433321310,
+          "tag_name": "v1.1.8",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "e2cc081e539942563ec0d6a243b308b4cab77898",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.8",
+          "published_at": "2026-11-03T23:14:20Z"
+        },
+        {
+          "id": 433135247,
+          "tag_name": "v1.1.7",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "ed1560a57f4d4cb55b6b03f485cbfa01316837a7",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.7",
+          "published_at": "2026-11-03T19:36:58Z"
+        },
+        {
+          "id": 432882420,
+          "tag_name": "v1.1.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "main",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.6",
+          "published_at": "2026-11-03T15:32:42Z"
+        },
+        {
+          "id": 432677396,
+          "tag_name": "v1.1.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "bf101b9d5f19ba741852b0230e526d1f01422022",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.5",
+          "published_at": "2026-11-03T12:38:28Z"
+        },
+        {
+          "id": 432593787,
+          "tag_name": "v1.1.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "0635826905d88049bc8a9531206178e289ebb316",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.4",
+          "published_at": "2026-11-03T11:13:37Z"
+        },
+        {
+          "id": 432053537,
+          "tag_name": "v1.1.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "9274fb225541987221617006183bcc8bb9eb98c1",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.3",
+          "published_at": "2026-11-02T22:51:41Z"
+        },
+        {
+          "id": 431877169,
+          "tag_name": "v1.1.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "c869f1c7b6b86bd693911ad10e328235ea697da8",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.2",
+          "published_at": "2026-11-02T19:25:18Z"
+        },
+        {
+          "id": 431423230,
+          "tag_name": "v1.1.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "f5929380f0fadc2d6efc3f252e966888cd33523c",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.1",
+          "published_at": "2026-11-02T12:14:50Z"
+        },
+        {
+          "id": 430598571,
+          "tag_name": "v1.1.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false,
+          "target_commitish": "064a2e1561f2a2b9ba22df4bb14224e338b8a1ec",
+          "html_url": "https://github.com/Hexalith/Hexalith.Platform/releases/tag/v1.1.0",
+          "published_at": "2026-11-01T13:20:37Z"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/code-scanning/analyses?per_page=100",
+      "exit": 1,
+      "data": {
+        "message": "no analysis found",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+        "status": "404"
+      },
+      "stderr": "gh: no analysis found (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook\n"
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 6,
+        "installations": [
+          {
+            "id": 31615326,
+            "app_slug": "travis-ci",
+            "app_id": 67,
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            }
+          },
+          {
+            "id": 31626264,
+            "app_slug": "codacy-production",
+            "app_id": 56611,
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            }
+          },
+          {
+            "id": 31641834,
+            "app_slug": "codecov",
+            "app_id": 254,
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            }
+          },
+          {
+            "id": 77847816,
+            "app_slug": "chatgpt-codex-connector",
+            "app_id": 1144995,
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            }
+          },
+          {
+            "id": 97329264,
+            "app_slug": "sonarqubecloud",
+            "app_id": 12526,
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            }
+          },
+          {
+            "id": 179966090,
+            "app_slug": "hexalith-cicd",
+            "app_id": 5671811,
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            }
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100",
+      "exit": 0,
+      "data": {
+        "total_count": 3,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/rulesets/24657570",
+      "exit": 0,
+      "data": {
+        "id": 24657570,
+        "name": "Platform immutable tags",
+        "target": "tag",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Platform",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "~ALL"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "update"
+          },
+          {
+            "type": "deletion"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5PMKqKzgF4PqI",
+        "created_at": "2026-10-07T16:10:23.263+02:00",
+        "updated_at": "2026-10-07T16:10:23.295+02:00",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Platform/rulesets/24657570"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Platform/rules/24657570"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/rulesets/24657106",
+      "exit": 0,
+      "data": {
+        "id": 24657106,
+        "name": "Platform main reviewed changes",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Platform",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/heads/main"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          },
+          {
+            "type": "pull_request",
+            "parameters": {
+              "required_approving_review_count": 1,
+              "dismiss_stale_reviews_on_push": false,
+              "required_reviewers": [],
+              "require_code_owner_review": true,
+              "dismissal_restriction": {
+                "enabled": false,
+                "allowed_actors": []
+              },
+              "require_last_push_approval": false,
+              "required_review_thread_resolution": false,
+              "require_extra_approval_for_unattributed_changes": true,
+              "allowed_merge_methods": [
+                "merge",
+                "squash",
+                "rebase"
+              ]
+            }
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5PMKqKzgF4PNI",
+        "created_at": "2026-10-07T16:02:23.904+02:00",
+        "updated_at": "2026-10-07T16:02:23.997+02:00",
+        "bypass_actors": [
+          {
+            "actor_id": 6775094,
+            "actor_type": "User",
+            "bypass_mode": "always"
+          }
+        ],
+        "current_user_can_bypass": "always",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Platform/rulesets/24657106"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Platform/rules/24657106"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Platform/rulesets/24657217",
+      "exit": 0,
+      "data": {
+        "id": 24657217,
+        "name": "Platform tag creation authorization",
+        "target": "tag",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.Platform",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [
+              "refs/tags/v[0-9]*"
+            ],
+            "include": [
+              "~ALL"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "creation"
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5PMKqKzgF4PUE",
+        "created_at": "2026-10-07T16:03:35.050+02:00",
+        "updated_at": "2026-11-07T00:20:46.245+01:00",
+        "bypass_actors": [
+          {
+            "actor_id": 6775094,
+            "actor_type": "User",
+            "bypass_mode": "always"
+          }
+        ],
+        "current_user_can_bypass": "always",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.Platform/rulesets/24657217"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.Platform/rules/24657217"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit": 1,
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user\n"
+    }
+  ],
+  "remote_mutations": false,
+  "nuget_policy": "Unverified: no authenticated NuGet policy read performed.",
+  "registry_identity": "Unverified: environment secret names do not establish module-only Zot ACLs.",
+  "prepush_check": {
+    "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform",
+    "command": [
+      "run-with-temp",
+      "python3",
+      "references/Hexalith.Builds/check.py"
+    ],
+    "exit": 2,
+    "stdout": "",
+    "stderr": "python3: can't open file '/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform/references/Hexalith.Builds/check.py': [Errno 2] No such file or directory\n"
+  },
+  "nested_builds_checker_present": false,
+  "normal_checker_passed": false,
+  "app_selection": "Unverified: installation exists, repository selection not established by this API response."
+}

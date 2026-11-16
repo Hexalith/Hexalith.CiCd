@@ -2,7 +2,8 @@
 title: '18 — Migrate Projects'
 type: 'chore'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'c74b5c8f5787fb33bfd85c1c4430b6de39674198'
 route: 'dispatch'
 review_loop_iteration: 0
 context:

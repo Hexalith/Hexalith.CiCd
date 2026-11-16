@@ -1,0 +1,99 @@
+{
+  "/home/administrator/projects/hexalith/cicd": {
+    "head_before": "eba7514e02904c741f6a0a80930d85eb358d385c",
+    "head_now": "eba7514e02904c741f6a0a80930d85eb358d385c",
+    "index_preserved": true,
+    "staged_entries_preserved": true,
+    "gitlinks_preserved": true,
+    "concurrent_working_file_changes": {
+      "_bmad-output/implementation-artifacts/prerequisite-25-product-validation.md": {
+        "before": "dbda3c3d5a67c418a5f95e2eed24084c0ed4b3a139f127b7336a5e78d41d156e",
+        "now": "73722a5f217ee89032a4a9135c6bda3b22018320cf6ce6df605c81ea78688eb6"
+      },
+      "_bmad-output/implementation-artifacts/spec-25-migrate-timesheets.md": {
+        "before": "67abdcd72e0eeee378e8cbd2d017ac7fdcf5946dd89bf0cf3a86b4fdeda261aa",
+        "now": "862111e0be55846990461ad413f52b0d1e4870ff22b17cdb339798b4b63b3405"
+      },
+      "tools/scan_discovery.py": {
+        "before": "075c7537941d6038882a25d76755dc99a388bb6354e2cb097e5d3cf551f85a3e",
+        "now": "dfc125354dbcc6d24a0afaf4ad26a0978878c303c649a0d112d4b2dacf86da20"
+      },
+      "tools/tests/test_scan.py": {
+        "before": "9287f77f6b000c99fce5d533ffe3004b5a8936c461e6c197b876cc3ecf51e0da",
+        "now": "b8629306570999ed04de043020c66e5a5af0514e0b79c6f636c61a9b1d91f9c5"
+      }
+    },
+    "protected_owner_sources": {
+      "tools/delivery_runtime.py": true,
+      "tools/deliver.py": true,
+      ".github/actions/prepare-g6-catalog/action.yml": true,
+      ".github/actions/prepare-g6-catalog/prepare.py": true,
+      "tools/tests/test_prepare_g6_catalog.py": true,
+      "docs/proposals/projects-g6-catalog.patch": true,
+      "builds-version": true
+    }
+  },
+  "/home/administrator/projects/hexalith/projects": {
+    "head_before": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+    "head_now": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+    "index_preserved": true,
+    "staged_entries_preserved": true,
+    "gitlinks_preserved": true,
+    "concurrent_working_file_changes": {
+      "src/Hexalith.Projects.Client/Generated/HexalithProjectsClient.g.cs": {
+        "before": "76002fd71bb360b321c57b2684e5725b5b377781418dcab4f3ba994f857a8e72",
+        "now": "b4fde440b6488d9a683da6f625199178a274fcdd870e18b0908c551a093e48f1"
+      },
+      "src/Hexalith.Projects.Client/Generation/Program.cs": {
+        "before": "e27181495fc4cff045951c06d25ddee5285098eb280f01302e695343769edc4c",
+        "now": "68ecfcb67bc0be4a4d2b722ef976dba1540e9e54e0b98e12e15e5d9872b2211d"
+      },
+      "src/Hexalith.Projects.Client/Hexalith.Projects.Client.csproj": {
+        "before": "456c3abc434496c5effdbaaa136759c000fbd99251c0d38c735d0cb4a7a56b7c",
+        "now": "c5b760f11386a36701170c3ca061f0dee96b4fa71c32af0b5b62834b01b521fe"
+      },
+      "src/Hexalith.Projects.Server/Conversations/ConversationsProjectConversationResolutionDirectory.cs": {
+        "before": "2cde3c10c354ecab3223cbaba2d6909982706fc01743b173a028fa6a41700018",
+        "now": "7a0b8ad3de402092423cbd72cf561d1d1234f75f78be4627e535e19586b5c27d"
+      },
+      "src/Hexalith.Projects.Server/Queries/ProjectQueryRequestPreamble.cs": {
+        "before": "3c432d0724f47f628b58dac582cdf3377a480f7658c8fdeea2fcea4231b3f4a5",
+        "now": "3ce20f8f0a1f9178cab472de2681923b3247bf76e99d6d9faa8761d4472f85ef"
+      },
+      "src/Hexalith.Projects.Server/Queries/RefreshProjectContextEndpoint.cs": {
+        "before": "1a1b5bb894e1540b96333ea67e1ed0d5f0fdb57cde20d781051f91270c648595",
+        "now": "422481a36319a4a5d7217698fa344b3cee219bcf90ed47192ce5c6c552a24fd6"
+      },
+      "tests/Hexalith.Projects.Server.Tests/Authentication/ProjectsAuthenticationContractTests.cs": {
+        "before": "ddffa94ff2bdcc3c2c4f45637ddb764c207886b938a42ff803c2119dacdc13be",
+        "now": "e2a831a86f8ea2d594afd914288b2d06500f3634db861447969f005672ed8d11"
+      },
+      "tests/Hexalith.Projects.Server.Tests/CreateProjectEndpointTests.cs": {
+        "before": "e4d55242a12d770b59343fc5c11e32496b7b6ce31bbfbf2067af50410b48f532",
+        "now": "316ee4b24d3ea83bb3374e51326e5438162db9c20c45263cc782db6a96321e0f"
+      },
+      "tests/Hexalith.Projects.Server.Tests/Queries/GetConversationStartSetupTests.cs": {
+        "before": "aed15f9dc0ea2d09498b2e01a3e9037a02ffb34438cda20425f06b29bf77f390",
+        "now": "02948cf945d2f630fcc77a9527a6991ccee4e2d38bc23d9df5cf97cbd2823551"
+      },
+      "tests/Hexalith.Projects.Server.Tests/Queries/RefreshProjectContextTests.cs": {
+        "before": "4e1f2a310020fee44b0617387cb119c1876f67d8a1af65c2e076d13e9702d9d8",
+        "now": "ee6fcef53b3b096007d9bb658f10c81214bacf7c79012f452504f4ca59c3729e"
+      },
+      "tests/Hexalith.Projects.Server.Tests/Queries/SupportedProjectReadHttpTests.cs": {
+        "before": "d1b5d1c4f641ea553093f9c1564c6e9339bfca26fc36c86027a00eb916553103",
+        "now": "d35f2dba7b66c7ef3183ad9f2d3bfbcef413cc4900ab5258968bda1bdf6e22c2"
+      }
+    }
+  },
+  "/home/administrator/projects/hexalith/folders": {
+    "head_before": "f2bf547b457a4db3e7eb65d425a22f62dfb9f09a",
+    "head_now": "f2bf547b457a4db3e7eb65d425a22f62dfb9f09a",
+    "index_preserved": true,
+    "staged_entries_preserved": true,
+    "gitlinks_preserved": true,
+    "concurrent_working_file_changes": {},
+    "story_tracking_preserved": true,
+    "protected_tracking_files": 92
+  }
+}

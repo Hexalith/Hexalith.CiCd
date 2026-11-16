@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import ast
 from collections import deque
+import json
 from pathlib import PurePosixPath
 import posixpath
 import re
@@ -26,8 +27,11 @@ import yaml
 from delivery_runtime import DeliveryError, clean
 
 FORMATS = {".yml": "yaml", ".yaml": "yaml", ".sh": "bash", ".bash": "bash",
-           ".ps1": "powershell", ".psm1": "powershell", ".py": "python"}
-SCRIPTS = {"bash", "powershell", "python"}
+           ".ps1": "powershell", ".psm1": "powershell", ".py": "python",
+           ".js": "javascript", ".mjs": "javascript", ".cjs": "javascript",
+           ".ts": "typescript", ".mts": "typescript", ".cts": "typescript",
+           ".jsx": "javascript", ".tsx": "typescript"}
+SCRIPTS = {"bash", "powershell", "python", "javascript", "typescript"}
 MAX_FILES = 2000
 MAX_BYTES = 32 * 1024 * 1024
 MAX_LITERAL = 4096
@@ -35,7 +39,8 @@ MAX_LITERAL = 4096
 # an environment-file selector that can set them, and the PowerShell module and
 # shell cd search paths, which redirect name-based module and directory lookup.
 RESOLUTION = {"PYTHONPATH", "PYTHONHOME", "PYTHONSAFEPATH", "PYTHONUSERBASE", "UV_ENV_FILE", "PSMODULEPATH",
-              "CDPATH"}
+              "CDPATH", "NODE_PATH", "NODE_OPTIONS", "NPM_CONFIG_SCRIPT_SHELL", "NPM_CONFIG_NODE_OPTIONS",
+              "NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG", "NPM_CONFIG_PREFIX", "NPM_CONFIG_WORKSPACE"}
 ENVIRON = {"os.environ", "os.environb"}
 ENVIRON_WRITES = {"setdefault", "update", "__setitem__", "__ior__"}
 MODULE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
@@ -49,7 +54,7 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
 KEYWORDS = {"then", "do", "else", "if", "elif", "while", "until", "!", "&", "{", "}", "try", "catch", "finally"}
 SHELLS = {"bash": "bash", "sh": "bash", "dash": "bash", "zsh": "bash", "ksh": "bash",
           "pwsh": "powershell", "powershell": "powershell"}
-OTHER_LANGUAGES = {".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".rb", ".pl", ".pm", ".php"}
+OTHER_LANGUAGES = {".rb", ".pl", ".pm", ".php"}
 COMMAND_APIS = {"subprocess.run", "subprocess.call", "subprocess.Popen", "subprocess.check_call",
                 "subprocess.check_output", "subprocess.getoutput", "subprocess.getstatusoutput",
                 "os.system", "os.popen", "runpy.run_path", "runpy.run_module"}
@@ -453,7 +458,7 @@ def scalars(value, skip=()):
 
 
 class Discovery:
-    def __init__(self, git, revision):
+    def __init__(self, git, revision, *, javascript_parser=None):
         self.git, self.revision = git, revision
         self.items = git.items(revision)
         self.directories = set()
@@ -463,6 +468,9 @@ class Discovery:
         self.files, self.errors, self.queue, self.visited = {}, [], deque(), set()
         self.headers, self.recipes = {}, {}
         self.total = 0
+        self.javascript_parser = javascript_parser
+        self.npm_seen = set()
+        self.npm_roots = set()
 
     def error(self, path, line, message):
         self.errors.append(f"{clean(path)}:{line}: {clean(message)}")
@@ -488,7 +496,7 @@ class Discovery:
         if not self.regular(path):
             raise DeliveryError("missing or unsafe regular script/action: " + clean(path))
         fmt = fmt or FORMATS.get(PurePosixPath(path).suffix.lower()) or self.header(path)
-        if fmt not in {"yaml", "bash", "powershell", "python"}:
+        if fmt not in set(FORMATS.values()):
             raise DeliveryError("unsupported local-script language: " + clean(path))
         if path not in self.files:
             if len(self.files) >= MAX_FILES:
@@ -1183,6 +1191,9 @@ class Discovery:
             self.task_runner(base, args, bases)
             return cwd
         if base in NODE_RUNNERS:
+            if base == "npm":
+                self.npm(args, path, number, cwd, action)
+                return cwd
             if base == "bun":
                 self.other_language(args, path, cwd, action)
             if any(argument.split("=", 1)[0] in RECIPE_LOCATIONS | {"--workspace", "--workspaces", "-w"} or (
@@ -1210,6 +1221,27 @@ class Discovery:
                 return cwd
             if self.recipe(("package.json",), bases):
                 raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(base))
+            raise DeliveryError("unsupported JavaScript task runner execution: " + clean(base))
+        if base in {"node", "nodejs", "tsx", "ts-node"}:
+            if args in (["--version"], ["-v"], ["--help"]):
+                return cwd
+            if not args or args[0].startswith("-"):
+                raise DeliveryError("unsupported JavaScript interpreter options")
+            target = self.resolve(args[0], path=path, cwd=cwd, action=action)
+            for suffix in ("node_modules/@playwright/test/cli.js", "node_modules/playwright/cli.js"):
+                if target == suffix or target.endswith("/" + suffix):
+                    directory = target[:-len(suffix)].rstrip("/") or "."
+                    self.npm_workspace(directory, path, number, action)
+                    self.playwright(args[1:], path, number, directory, action)
+                    return cwd
+            fmt = FORMATS.get(PurePosixPath(target).suffix.lower())
+            if fmt not in {"javascript", "typescript"}:
+                raise DeliveryError("unsupported JavaScript interpreter target")
+            self.add(target, fmt, cwd, action)
+            return cwd
+        if base == "playwright":
+            self.npm_workspace(cwd, path, number, action)
+            self.playwright(args, path, number, cwd, action)
             return cwd
         if cmd == "cd":
             if sourced:
@@ -1317,6 +1349,216 @@ class Discovery:
                     continue
                 if resolved in self.items:
                     raise DeliveryError("unsupported local-script language: " + clean(resolved))
+
+    def json(self, path):
+        """Read regular committed JSON with duplicate keys rejected."""
+        path = safe_path(posixpath.normpath(path))
+        if not self.regular(path):
+            raise DeliveryError("missing or unsafe npm/config input: " + clean(path))
+        def pairs(items):
+            result = {}
+            for key, value in items:
+                if key in result:
+                    raise DeliveryError("duplicate npm/config JSON key: " + clean(path))
+                result[key] = value
+            return result
+        return json.loads(self.git.blob(self.revision, path), object_pairs_hook=pairs,
+                          parse_constant=lambda _: (_ for _ in ()).throw(DeliveryError("non-JSON constant")))
+
+    def npm_workspace(self, directory, path, number, action):
+        """Include every tracked JS/TS source in the selected literal workspace."""
+        manifest = posixpath.join(directory, "package.json")
+        for parent in (PurePosixPath(directory), *PurePosixPath(directory).parents):
+            if posixpath.normpath(posixpath.join(str(parent), ".npmrc")) in self.items:
+                raise DeliveryError("unsupported tracked npm configuration affecting execution")
+        package = self.json(manifest)
+        lock = self.json(posixpath.join(directory, "package-lock.json"))
+        if (not isinstance(package, dict) or not isinstance(lock, dict)
+                or lock.get("lockfileVersion") not in (2, 3) or not isinstance(lock.get("packages"), dict)):
+            raise DeliveryError("npm workspace requires a manifest and committed lock")
+        self.npm_roots.add(directory)
+        prefix = "" if directory == "." else directory + "/"
+        for source in sorted(self.items):
+            if source.startswith(prefix) and FORMATS.get(PurePosixPath(source).suffix.lower()) in {"javascript", "typescript"}:
+                self.add(source, cwd=directory, action=action)
+        return package
+
+    def playwright(self, args, path, number, directory, action):
+        """Validate fixed installed invocation and follow explicit config overrides."""
+        if not args or args[0] not in {"test", "install", "show-report"}:
+            raise DeliveryError("unsupported Playwright invocation")
+        if any(any(character in argument for character in "$`") for argument in args):
+            raise DeliveryError("unresolved computed Playwright invocation")
+        args = list(args[1:])
+        while args:
+            option = args.pop(0)
+            key, equal, operand = option.partition("=")
+            if key in {"--config", "-c", "--tsconfig", "--reporter"}:
+                if not equal:
+                    if not args:
+                        raise DeliveryError("missing Playwright configuration operand")
+                    operand = args.pop(0)
+                if key == "--reporter" and not operand.startswith(".") and "/" not in operand:
+                    continue
+                target = self.resolve(operand, path=path, cwd=directory, action=action)
+                if key == "--tsconfig":
+                    self.json(target)
+                else:
+                    self.add(target, cwd=directory, action=action)
+
+    def npm(self, args, path, number, cwd, action):
+        """Follow literal npm --prefix/workspace run recipes without executing them."""
+        ignore_scripts = "--ignore-scripts" in args
+        args, directory, workspace = list(args), cwd, None
+        remaining = []
+        while args:
+            value = args.pop(0)
+            if value == "--":
+                remaining.extend([value, *args])
+                break
+            key, equal, operand = value.partition("=")
+            if key == "--ignore-scripts" and equal and operand != "true":
+                raise DeliveryError("unsupported npm lifecycle-enabling option: " + key)
+            if key in {"--prefix", "--workspace", "-w"}:
+                if not equal:
+                    if not args:
+                        raise DeliveryError("unresolved npm workspace directory")
+                    operand = args.pop(0)
+                if key == "--prefix":
+                    directory = self.resolve(operand, path=path, cwd=cwd, action=action, allow_root=True)
+                else:
+                    workspace = operand
+            elif key in {"--workspaces", "--if-present", "--script-shell", "--ignore-scripts=false"}:
+                raise DeliveryError("unsupported npm execution option: " + key)
+            else:
+                remaining.append(value)
+        if workspace is not None:
+            root = self.json(posixpath.join(directory, "package.json"))
+            declared = root.get("workspaces") if isinstance(root, dict) else None
+            if not isinstance(declared, list) or any(not isinstance(item, str) or any(c in item for c in "*?{}") for item in declared):
+                raise DeliveryError("npm workspace selection requires literal workspace paths")
+            if workspace not in declared:
+                raise DeliveryError("npm workspace must name a declared literal path")
+            directory = self.resolve(workspace, path=path, cwd=directory, action=action)
+        while remaining and remaining[0].startswith("-"):
+            option = remaining.pop(0)
+            if option in NODE_SAFE:
+                return
+            if option not in NODE_FLAGS:
+                raise DeliveryError("unsupported task runner leading option: npm")
+        subcommand = remaining.pop(0) if remaining else None
+        if subcommand == "audit":
+            if any(not argument.startswith("-") and argument != "signatures" for argument in remaining):
+                raise DeliveryError("unsupported mutating npm audit operation")
+            return
+        if subcommand in NODE_SAFE:
+            if subcommand == "config" and (not remaining or remaining[0] not in {"get", "list", "ls"}):
+                raise DeliveryError("unsupported mutating npm configuration")
+            return
+        if subcommand in {"install", "ci", "add", "remove", "uninstall"} and ignore_scripts:
+            return
+        if subcommand not in {"run", "run-script", "test", "start", "stop", "restart"}:
+            if self.recipe(("package.json",), [directory]):
+                raise DeliveryError("unsupported task runner with tracked module recipes: npm")
+            raise DeliveryError("unsupported npm execution without a literal recipe")
+        recipe = remaining.pop(0) if subcommand in {"run", "run-script"} and remaining else subcommand
+        if not recipe or recipe.startswith("-"):
+            raise DeliveryError("unresolved npm recipe")
+        package = self.npm_workspace(directory, path, number, action)
+        scripts = package.get("scripts", {})
+        if not isinstance(scripts, dict) or not isinstance(scripts.get(recipe), str):
+            raise DeliveryError("missing or computed npm recipe: " + clean(str(recipe)))
+        for selected in ("pre" + recipe, recipe, "post" + recipe):
+            if selected not in scripts:
+                continue
+            if not isinstance(scripts[selected], str):
+                raise DeliveryError("unresolved npm lifecycle recipe")
+            key = (directory, selected)
+            if key in self.npm_seen:
+                continue
+            self.npm_seen.add(key)
+            command = scripts[selected]
+            if selected == recipe and remaining:
+                command += " " + shlex.join(remaining[1:] if remaining[0] == "--" else remaining)
+            self.commands(posixpath.join(directory, "package.json"), command, directory, action)
+
+    def javascript(self, path, text, cwd, action):
+        """Resolve parser-proven imports and execution literals; indirection fails."""
+        if self.javascript_parser is None:
+            raise DeliveryError("trusted TypeScript 6.0.3 parser is unavailable")
+        parsed = self.javascript_parser(path, text)
+        for number, message in parsed["errors"]:
+            self.error(path, number, message)
+        bases = self.bases(path, action, [cwd])
+        self.include(parsed["literals"], path, cwd, action, bases)
+        parent = str(PurePosixPath(path).parent)
+        roots = sorted((root for root in self.npm_roots if root == "." or path.startswith(root + "/")), key=len, reverse=True)
+        root = roots[0] if roots else parent
+        config = posixpath.join(root, "tsconfig.json")
+        aliases, base = {}, root
+        if config in self.items:
+            document = self.json(config)
+            if not isinstance(document, dict) or "extends" in document or "references" in document:
+                raise DeliveryError("unsupported indirect TypeScript configuration")
+            options = document.get("compilerOptions", {})
+            if not isinstance(options, dict):
+                raise DeliveryError("unsupported TypeScript compilerOptions")
+            if "baseUrl" in options:
+                base = self.resolve(options["baseUrl"], path=path, cwd=root, action=action, allow_root=True)
+            aliases = options.get("paths", {})
+            if not isinstance(aliases, dict):
+                raise DeliveryError("unsupported TypeScript path aliases")
+        for number, imported in parsed["imports"]:
+            try:
+                targets = []
+                if imported.startswith("."):
+                    targets = [self.resolve(imported, path=path, cwd=parent, action=action)]
+                elif imported.startswith(("/", "\\")) or re.match(r"[A-Za-z]:", imported):
+                    raise DeliveryError("unsafe JavaScript import path")
+                else:
+                    for pattern, replacements in aliases.items():
+                        if not isinstance(pattern, str) or pattern.count("*") > 1 or not isinstance(replacements, list):
+                            raise DeliveryError("unsupported TypeScript alias")
+                        match = re.fullmatch(re.escape(pattern).replace(r"\*", "(.*)"), imported)
+                        if match:
+                            for replacement in replacements:
+                                if not isinstance(replacement, str) or replacement.count("*") > 1:
+                                    raise DeliveryError("unsupported TypeScript alias target")
+                                targets.append(self.resolve(replacement.replace("*", match[1] if match.lastindex else ""),
+                                                            path=path, cwd=base, action=action))
+                    if not targets:
+                        # Bare imports must come from the locked workspace or Node's builtins.
+                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process"}:
+                            continue
+                        package = "/".join(imported.split("/")[:2]) if imported.startswith("@") else imported.split("/")[0]
+                        lock = self.json(posixpath.join(root, "package-lock.json"))
+                        if "node_modules/" + package not in lock.get("packages", {}):
+                            raise DeliveryError("unresolved unlocked JavaScript import: " + clean(imported))
+                        continue
+                found = False
+                for target in targets:
+                    stem, suffix = posixpath.splitext(target)
+                    candidates = [target, *([stem + extension for extension in (".ts", ".mts", ".cts")] if suffix in {".js", ".mjs", ".cjs"} else []),
+                                  *(target + extension for extension in (".ts", ".js", ".mts", ".mjs", ".cts", ".cjs")),
+                                  posixpath.join(target, "index.ts"), posixpath.join(target, "index.js")]
+                    for candidate in candidates:
+                        if candidate in self.items:
+                            fmt = FORMATS.get(PurePosixPath(candidate).suffix.lower())
+                            if fmt not in {"javascript", "typescript"}:
+                                if PurePosixPath(candidate).suffix == ".json":
+                                    self.json(candidate)
+                                    found = True
+                                    continue
+                                raise DeliveryError("unsupported local JavaScript import language")
+                            self.add(candidate, fmt, cwd, action)
+                            found = True
+                if not found:
+                    raise DeliveryError("missing JavaScript import: " + clean(imported))
+            except (ValueError, UnicodeError) as error:
+                self.error(path, number, str(error))
+        for command in parsed["commands"]:
+            directory = self.resolve(command["cwd"], path=path, cwd=cwd, action=action, allow_root=True) if "cwd" in command else cwd
+            self.commands(path, command.get("command", shlex.join(command.get("argv", []))), directory, action, offset=command["line"] - 1)
 
     @staticmethod
     def uv_options(words, run=False):
@@ -1798,6 +2040,24 @@ class Discovery:
             if not node.args:
                 raise DeliveryError("unresolved Python script invocation")
             first = node.args[0]
+            # Fixed .NET SDK operations consume project/output/property data.
+            # Their C#/MSBuild graph is outside this source-language perimeter;
+            # dynamic executable/verb/options expansion still cannot be certified.
+            # The fixed read-only Git provenance operation likewise executes no
+            # repository script. Every literal in the operands is still visited
+            # by the enclosing AST traversal's normal literal-reference rule.
+            if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
+                fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
+                compiler = (fixed[:1] == ["dotnet"] and (
+                    fixed[1:2] in (["build"], ["pack"], ["restore"], ["msbuild"])
+                    or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
+                provenance = len(fixed) == 5 and fixed[:2] == ["git", "-C"] and fixed[-2:] == ["rev-parse", "HEAD"]
+                if compiler or provenance:
+                    if any(keyword.arg == "shell" and not (
+                            isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
+                           for keyword in node.keywords):
+                        raise DeliveryError("unsupported shell execution of a compiled operation")
+                    return
             try:
                 if (isinstance(first, (ast.List, ast.Tuple)) and first.elts
                         and "sys.executable" in names(ast.unparse(first.elts[0]))):
@@ -1858,6 +2118,8 @@ class Discovery:
                     self.action(path, item["text"])
                 elif item["format"] == "python":
                     self.python(path, item["text"], cwd, action, roots=python_roots)
+                elif item["format"] in {"javascript", "typescript"}:
+                    self.javascript(path, item["text"], cwd, action)
                 elif item["format"] in {"bash", "powershell"}:
                     self.commands(path, item["text"], cwd, action, powershell=item["format"] == "powershell", sourced=sourced)
             except (ValueError, UnicodeError, RecursionError) as error:

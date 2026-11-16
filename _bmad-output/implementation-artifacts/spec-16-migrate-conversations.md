@@ -2,7 +2,7 @@
 title: '16 — Migrate Conversations'
 type: 'chore'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
 baseline_commit: 'd04c9ab7a8fa43dc6dac1f15d34135aba8e79551'
 route: 'dispatch'
 review_loop_iteration: 0

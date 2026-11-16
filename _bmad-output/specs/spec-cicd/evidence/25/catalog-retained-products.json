@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "job": "bootstrap-latency-before-fix",
+      "command": [
+        "dotnet",
+        "tests/Hexalith.Timesheets.Projections.Tests/bin/Release/net10.0/Hexalith.Timesheets.Projections.Tests.dll",
+        "-method",
+        "Hexalith.Timesheets.Projections.Tests.MagicLinkBootstrapLatencyTests.DelayedCombinedInventoryPersistsV7WithinGatewayAttemptBudget",
+        "-xml",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/25/bootstrap-latency-before-fix.xml"
+      ],
+      "exit_code": 0,
+      "log": "bootstrap-latency-before-fix.log"
+    },
+    {
+      "job": "catalog-product-fix-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Timesheets.slnx",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit_code": 1,
+      "log": "catalog-product-fix-build.log"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "capturedUtc": "2026-11-16T18:14:39.262252+00:00",
+  "repositories": {
+    ".": {
+      "revision": "61c558fc4a9b02fbfef262bebce76c2c15370194",
+      "trackedCandidateDiffSha256": "f8cba9f15c532a20e576a782496c6e7d087188d66b2474ff241c9e8982bc2761",
+      "trackedChanges": [
+        "M\t.jscpd.json",
+        "M\t_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md",
+        "M\t_bmad-output/specs/spec-cicd/SPEC.md",
+        "M\t_bmad-output/specs/spec-cicd/pipeline-stages.md",
+        "M\tdocs/duplicate-scan.md",
+        "M\ttools/jscpd/package-lock.json",
+        "M\ttools/jscpd/package.json",
+        "M\ttools/scan.py",
+        "M\ttools/scan_discovery.py",
+        "M\ttools/tests/test_scan.py",
+        "M\ttools/tests/test_validate.py",
+        "M\ttools/validate.py"
+      ],
+      "untrackedFilesSha256": {}
+    },
+    "references/Hexalith.Builds": {
+      "revision": "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+      "trackedCandidateDiffSha256": "2c12f5c6f8112001bda81cd6d0fac2bfe5f65edecc8df7768bfa56ad37675c0b",
+      "trackedChanges": [
+        "M\tGithub/lib/ci_environment.py",
+        "M\tGithub/lib/product_validation.py",
+        "M\tGithub/lib/tests/test_ci_environment.py",
+        "M\tGithub/lib/tests/test_product_validation.py",
+        "M\tGithub/lib/tests/test_release_adapters.py",
+        "M\tProps/Directory.Packages.props"
+      ],
+      "untrackedFilesSha256": {
+        "Github/product-validation/README.md": "43ea771207c1f703db76dd4f2a37ecd9dd9cf5468c0db82dab92017bc96d9cc3"
+      }
+    },
+    "references/Hexalith.Projects": {
+      "revision": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+      "trackedCandidateDiffSha256": "2cc17d75fb30f6b4bd118ebcc308a3e30d8ecf192b564cf05388c095bd30f1e8",
+      "trackedChanges": [
+        "M\tHexalith.Projects.CI.slnx",
+        "D\tpackage-lock.json",
+        "D\tpackage.json",
+        "M\tscripts/_nuget.py",
+        "M\tscripts/pack-release-packages.py",
+        "M\tscripts/validate-consumer-package-references.py",
+        "M\tsrc/Hexalith.Projects.UI.Contracts/Hexalith.Projects.UI.Contracts.csproj",
+        "M\ttests/Hexalith.Projects.E2E.Fixtures/Hexalith.Projects.E2E.Fixtures.csproj",
+        "M\ttests/Hexalith.Projects.E2E.Fixtures/PersistedReadObserver.cs",
+        "M\ttests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj",
+        "M\ttests/e2e/package.json",
+        "M\ttests/e2e/playwright.config.ts",
+        "M\ttests/e2e/specs/browser-configuration.spec.ts",
+        "M\ttests/tools/run-frontcomposer-inspect-gate.ps1",
+        "M\ttests/tools/run-package-dependency-gate.ps1",
+        "M\ttests/tools/test_bmad_loop_hook.py",
+        "D\ttests/tools/test_g6_mapper_build.py",
+        "M\ttests/tools/test_production_authority_guard.py",
+        "M\ttests/tools/test_release_package_tools.py",
+        "D\ttests/tools/test_release_workflow.py",
+        "M\ttests/tools/test_render_skill.py",
+        "M\ttests/tools/test_run_ci_workflow_gates.py",
+        "D\ttests/tools/test_run_g6_candidate_gate.py",
+        "M\ttests/tools/test_run_g6_ci_gate.py",
+        "M\ttests/tools/test_run_g6_current.py"
+      ],
+      "untrackedFilesSha256": {
+        ".config/dotnet-tools.json": "62bd1f80dd4dde25995458ef2c5e4231d7d317a79a9d162e7931ef06f9efb690",
+        ".github/actions/after-unit-tests/action.yml": "997b5b38ac1a74df91dd7c0b812a065e28a6680e608a0b1f51bdb84d72d720c6",
+        ".github/actions/nightly/action.yml": "dfb7e611d2ff7902672d4d8f5e55e1092587309dd4bd7731a1b4169773192993",
+        "scripts/_consumer_packages.py": "0dadbffda6464addc8be7d865b26597c000f346f176fdca7932af7c2c39d00da",
+        "scripts/_pack_release_packages.py": "b71b91da267e6758ce9e807437e713eed9a4572f6b908463e02827c5f03e2c08",
+        "scripts/check-frontcomposer-output.py": "cd64f3bcac3cf0c093c6e481e763a961db64f8e94535c22de18c040c902c7a46",
+        "scripts/check-package-dependencies.py": "630ca03e002dbdd5cf970ca250af5483257382656813f4d614bb6bc429f40f4a",
+        "tests/Hexalith.Projects.E2E.Fixtures/RedisFixtureClient.cs": "df4e89ed23fdd9c0457a51bb2157ef042ee53a4f1443adce9518c401032f907f",
+        "tests/Hexalith.Projects.Integration.Tests/MissingPackageFixtureMetadata.cs": "7ee6b8acf8343dc922516e3eb8ddbfbbac29813b414cc6e8aba5de8f3e527af3",
+        "tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs": "082e514e23e6ff814a4f3f5ba4dc1d85ec5154a7f18b6cf4650c9dd972195505",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj": "88162e35ff89a803611a59b1aaaf7d36c84f410edee00ae49d4c5b67e33b4030",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs": "41a2efcfd0eb91f6a9c6e0d7821e259d8ba87e7ccf5d4fe56153746de35e2ecf",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs": "b792fd1fb6f6aaed1852e8b954c89344a65d6194fa1ab4dd2c78891ea1bfead9",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageCompatibilityComposition.cs": "70dc29796d5ca93a7071f922e566ec1c746bfd6312c2e0c74a40f81530f0e0fa",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/PrebuiltMetadata.cs": "04dcd84bdd7a5b8244ac4d1124321ecddca4ee99c5b1649e1a949532c16ad312",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/Program.cs": "879f82989f2ca016550c308bac44595236c16adfc1684b607c13c826de7e5c7e",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureDiagnostics.cs": "d962dc6f2578331b76d7656e64c143ec14400d1346bc54038ae835b65c7d57b5",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs": "20ed872fe2dd1974dd02696d80845093886c6c311425e4aabde999912dcf0f94",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureProcess.cs": "3364e1f2db4ab19fdbca5dcc2a708d9dab860a24fd8cf0d12588a6fa16c51619",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureProductChecks.cs": "5429a73be50e26275280a04cb9e59262cf68a89d21f87db880e134cd800b0532",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureReadiness.cs": "7067259f0b6b01b4be5b1a6e5e3d8fce160128b7784a7f4f6ac5db0c3703f8f9",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureScratch.cs": "0d62ba7f6df604cb38ae6601893dc21d93ac288b269d90933bad1ee6601ff10d",
+        "tests/Hexalith.Projects.PackageFixtures/FixtureTelemetry.cs": "36cf05e7e0bfbb2aee90e88dc1b7f3532b1905a54d72b5500080b7dc292ef53a",
+        "tests/Hexalith.Projects.PackageFixtures/Hexalith.Projects.PackageFixtures.csproj": "15baad17b4ab9604d7ce9aac9ea40bfe0b4c2d09fe016ad08bc30115597d3898",
+        "tests/Hexalith.Projects.PackageFixtures/PackageApplicationFactory.cs": "2e71085f3bd59c1dcae8893db5321b30acf945eca7bfc2993338f79f84370882",
+        "tests/Hexalith.Projects.PackageFixtures/PackageFixtureRun.cs": "425e368f8fa360ec52e3665e3084598cca41e59f6bc1a95aee9fd0c511829f09",
+        "tests/Hexalith.Projects.PackageFixtures/PackageWorkerHost.cs": "872540d6cb69bd7fc12e70255128bd4f8a7f86dc8ea3df1b9c712af7543ac0e0",
+        "tests/Hexalith.Projects.PackageFixtures/Program.cs": "b5730df6740a97152ab68d1454e79c8700a6e8c6781716fee68b8dc69bca3d32",
+        "tests/e2e/support/helpers/browser-configuration.ts": "542fb1127da91a25b4ccd1841527ca5f5cc901675f4c9f21862e4400ecda4922"
+      }
+    },
+    "references/Hexalith.EventStore": {
+      "revision": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41",
+      "trackedCandidateDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trackedChanges": [],
+      "untrackedFilesSha256": {}
+    },
+    "references/Hexalith.Tenants": {
+      "revision": "292dbf164f26bcf376ef86d749b149b075f8b502",
+      "trackedCandidateDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trackedChanges": [],
+      "untrackedFilesSha256": {}
+    },
+    "references/Hexalith.Folders": {
+      "revision": "a448d20873dc9e809623f85da206e8d8a13bb9ab",
+      "trackedCandidateDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trackedChanges": [],
+      "untrackedFilesSha256": {}
+    },
+    "references/Hexalith.Platform": {
+      "revision": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+      "trackedCandidateDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trackedChanges": [],
+      "untrackedFilesSha256": {}
+    }
+  },
+  "controllerOwnedFilesSha256": {
+    ".jscpd.json": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "tools/scan.py": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+    "tools/scan_discovery.py": "e41a19c9803c882cf0fff28589c0533252815e3635e74f9044326fcdbc3ba9c1",
+    "tools/validate.py": "7ff5159a5461af143a749302aabd97ec45e2781eb04ed740c19af44579f6c674",
+    "tools/tests/test_scan.py": "66af06d0ea670f08adbd2a99b5ad0d0272a5e8ba9403405ce9cc4e0f030f4a01",
+    "tools/tests/test_validate.py": "a9dd1caa4651dfd7aec3bb818d2e9464dd97981f64e06d32cc3f98a07ebfb6b6",
+    "tools/jscpd/package.json": "7e949a00e382d4903c174022b0879fdb40694ef331070093f72d0e3c2d30b4ff",
+    "tools/jscpd/package-lock.json": "fad24cc759c2d4b6fac056172ac2e9977858f9dd0a162fb10c18de4c8d0bfce2",
+    "tools/jscpd/discover.cjs": "8e7caec86a1bb84cc30c06e44d1b6899ae86113979333f4af058f0b35fb90858",
+    "docs/duplicate-scan.md": "49144eb238085a7c828896e8efd964434393cc81585fc631e28ce0344395257f",
+    "_bmad-output/specs/spec-cicd/SPEC.md": "adb0c000f078a87b30a3d3e02af4d10aab1062cc23e390679bb80879852b10a9",
+    "_bmad-output/specs/spec-cicd/pipeline-stages.md": "e65e40760f87389e5c1b5a4435f608389478400809811413bf147c02bbe61c3c",
+    "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md": "762a769535a89a060edfc5775457ac50e9173d278712d9ada2678b25d0d50c18"
+  },
+  "initialBuildsRevision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "initialProjectsRevision": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+  "initialEventStoreRevision": "f85419d501f279e9a813435aa73538185ad26ada"
+}

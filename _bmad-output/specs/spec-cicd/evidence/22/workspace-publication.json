@@ -1,0 +1,353 @@
+{
+  "recordedAt": "2026-11-16T18:33:44.332328+00:00",
+  "publicationDirective": "After disclosure of unresolved validation, user repeated push all changes and on main. Publish existing workspace work in progress; preserve all failures and incomplete adoption.",
+  "qualificationComplete": false,
+  "adoptionChangedByThisPublication": false,
+  "records": {
+    "module-push-results.json": [
+      {
+        "repository": "Hexalith.Projects",
+        "base": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+        "commit": "7e8acbd1e17ea76f814bb2335ce4b72742f73161",
+        "messagesValidated": [
+          "7e8acbd1e17ea76f814bb2335ce4b72742f73161"
+        ],
+        "pushExitCode": 0,
+        "stdout": "",
+        "stderr": "To https://github.com/Hexalith/Hexalith.Projects.git\n   981ceef1..7e8acbd1  HEAD -> main\n",
+        "authentication": "module-agent",
+        "qualificationComplete": false,
+        "publication": "existing work in progress per repeated user instruction"
+      },
+      {
+        "repository": "Hexalith.Timesheets",
+        "base": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+        "commit": "b325a0b47d642f1711f49e589509ca89ac585bca",
+        "messagesValidated": [
+          "b325a0b47d642f1711f49e589509ca89ac585bca"
+        ],
+        "pushExitCode": 0,
+        "stdout": "",
+        "stderr": "To https://github.com/Hexalith/Hexalith.Timesheets.git\n   bbb9131..b325a0b  HEAD -> main\n",
+        "authentication": "module-agent",
+        "qualificationComplete": false,
+        "publication": "existing work in progress per repeated user instruction"
+      },
+      {
+        "repository": "Hexalith.Memories",
+        "base": "5c1c22583fb4037997b266942a4fd4e05a245ebf",
+        "commit": "262232e498511b51b5d01e769725ecc299519238",
+        "messagesValidated": [
+          "39d1ad8b5d53b34fc077fb2cbe8c1171e290e356",
+          "5be6fba1470185bd8ee706204dea69b521e5017e",
+          "038038dfd99fb5f74072d0104d6bea83ab56bf50",
+          "72d2bde9d148a35a66ed75f5f5a8a9ed42dd05d7",
+          "262232e498511b51b5d01e769725ecc299519238"
+        ],
+        "pushExitCode": 0,
+        "stdout": "",
+        "stderr": "remote: Bypassed rule violations for refs/heads/main:        \nremote: \nremote: - Changes must be made through a pull request.        \nremote: \nremote: - 3 of 3 required status checks are expected.        \nremote: \nTo https://github.com/Hexalith/Hexalith.Memories.git\n   5c1c2258..262232e4  HEAD -> main\n",
+        "authentication": "module-agent",
+        "qualificationComplete": false,
+        "publication": "existing work in progress per repeated user instruction"
+      }
+    ],
+    "module-prepush-status.json": {
+      "recordedAt": "2026-11-16T18:20:32.805877+00:00",
+      "repositories": [
+        {
+          "repository": "Hexalith.Projects",
+          "base": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+          "candidate": "7e8acbd1e17ea76f814bb2335ce4b72742f73161",
+          "ownedContentUnchanged": true,
+          "checkerExitCode": 1,
+          "checkerOutput": "/tmp/hexalith-job.qRPMFw1r/Hexalith.Projects/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.qRPMFw1r/Hexalith.Projects/.github/hexalith-ci.json'\n",
+          "qualificationPassed": false,
+          "publicationDirective": "User repeated push all changes on main after disclosure of verification blockers; publish existing work in progress without changing checks or claiming qualification."
+        },
+        {
+          "repository": "Hexalith.Timesheets",
+          "base": "bbb91319ee209333d29f07e53bd9b5e4adc40267",
+          "candidate": "b325a0b47d642f1711f49e589509ca89ac585bca",
+          "ownedContentUnchanged": true,
+          "checkerExitCode": 1,
+          "checkerOutput": "/tmp/hexalith-job.qRPMFw1r/Hexalith.Timesheets/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.qRPMFw1r/Hexalith.Timesheets/.github/hexalith-ci.json'\n",
+          "qualificationPassed": false,
+          "publicationDirective": "User repeated push all changes on main after disclosure of verification blockers; publish existing work in progress without changing checks or claiming qualification."
+        },
+        {
+          "repository": "Hexalith.Memories",
+          "base": "5c1c22583fb4037997b266942a4fd4e05a245ebf",
+          "candidate": "262232e498511b51b5d01e769725ecc299519238",
+          "ownedContentUnchanged": true,
+          "checkerExitCode": 1,
+          "checkerOutput": "/tmp/hexalith-job.qRPMFw1r/Hexalith.Memories/.github/hexalith-ci.json: [Errno 2] No such file or directory: '/tmp/hexalith-job.qRPMFw1r/Hexalith.Memories/.github/hexalith-ci.json'\n",
+          "qualificationPassed": false,
+          "publicationDirective": "User repeated push all changes on main after disclosure of verification blockers; publish existing work in progress without changing checks or claiming qualification."
+        }
+      ]
+    },
+    "builds-push-result.json": {
+      "repository": "Hexalith.Builds",
+      "authentication": "CiCd-agent",
+      "commit": "3546c4f973624efbbfdecee5913c23cb25b95ce7",
+      "operations": [
+        {
+          "command": [
+            "git",
+            "-c",
+            "submodule.recurse=false",
+            "fetch",
+            "--no-recurse-submodules",
+            "origin"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "git",
+            "push",
+            "origin",
+            "HEAD:refs/heads/main"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": "To https://github.com/Hexalith/Hexalith.Builds.git\n   bf6ee6fe..3546c4f9  HEAD -> main\n"
+        },
+        {
+          "command": [
+            "git",
+            "-c",
+            "submodule.recurse=false",
+            "fetch",
+            "--no-recurse-submodules",
+            "origin"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "remoteMain": "3546c4f973624efbbfdecee5913c23cb25b95ce7",
+      "remoteContainsCandidate": true
+    },
+    "projects-followup-push.json": {
+      "repository": "Hexalith.Projects",
+      "authentication": "module-agent",
+      "commit": "49f0a9e31482891fe8c1376d2ccdb1637f1f20dd",
+      "qualificationComplete": false,
+      "publication": "existing work in progress per repeated user instruction",
+      "operations": [
+        {
+          "command": [
+            "git",
+            "-c",
+            "submodule.recurse=false",
+            "fetch",
+            "--no-recurse-submodules",
+            "origin"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "git",
+            "push",
+            "origin",
+            "HEAD:refs/heads/main"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": "To https://github.com/Hexalith/Hexalith.Projects.git\n   7e8acbd1..49f0a9e3  HEAD -> main\n"
+        },
+        {
+          "command": [
+            "git",
+            "-c",
+            "submodule.recurse=false",
+            "fetch",
+            "--no-recurse-submodules",
+            "origin"
+          ],
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "remoteMain": "49f0a9e31482891fe8c1376d2ccdb1637f1f20dd",
+      "remoteContainsCandidate": true
+    },
+    "builds-environment-tests.json": {
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--with",
+        "PyYAML==6.0.3",
+        "--with",
+        "jsonschema==4.26.0",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_ci_environment.py"
+      ],
+      "exitCode": 0,
+      "seconds": 71.11
+    },
+    "builds-focused-tests.json": {
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--with",
+        "PyYAML==6.0.3",
+        "--with",
+        "jsonschema==4.26.0",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "test_ci_config",
+        "test_product_validation",
+        "test_release_adapters",
+        "test_expected_state",
+        "test_guard_adapter",
+        "test_release_state"
+      ],
+      "exitCode": 1,
+      "seconds": 119.2
+    },
+    "builds-release-adapters-final.json": {
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--with",
+        "PyYAML==6.0.3",
+        "--with",
+        "jsonschema==4.26.0",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_release_adapters.py"
+      ],
+      "exitCode": 0,
+      "seconds": 38.97
+    },
+    "builds-merged-library-tests.json": {
+      "candidate": "b8dc3dfcad058b3122435516a48099284fa0eecd",
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--with",
+        "PyYAML==6.0.3",
+        "--with",
+        "jsonschema==4.26.0",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_*.py"
+      ],
+      "exitCode": 124,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-all-audit/builds-merged-library-tests.log"
+    }
+  },
+  "submodulePointers": [
+    {
+      "path": "references/Hexalith.Builds",
+      "commit": "3546c4f973624efbbfdecee5913c23cb25b95ce7",
+      "availableOnOriginMain": true
+    },
+    {
+      "path": "references/Hexalith.EventStore",
+      "commit": "54f83e3b6a6eca3c8cf0caeb734cbcad30e18e41",
+      "availableOnOriginMain": true
+    },
+    {
+      "path": "references/Hexalith.Memories",
+      "commit": "262232e498511b51b5d01e769725ecc299519238",
+      "availableOnOriginMain": true
+    },
+    {
+      "path": "references/Hexalith.Projects",
+      "commit": "49f0a9e31482891fe8c1376d2ccdb1637f1f20dd",
+      "availableOnOriginMain": true
+    },
+    {
+      "path": "references/Hexalith.Timesheets",
+      "commit": "b325a0b47d642f1711f49e589509ca89ac585bca",
+      "availableOnOriginMain": true
+    }
+  ],
+  "limitations": [
+    "Builds full library run timed out after 240 seconds; focused tests are recorded separately.",
+    "The focused 125-test run had 11 adapter fixture failures for missing ciTimeoutMinutes. After the fixture correction all 14 release adapter tests passed; unrelated passed suites were not repeated.",
+    "Normal pre-adoption module checkers refuse missing .github/hexalith-ci.json. Publishing this work in progress does not claim completion of the alternate preparation procedure.",
+    "Memories C1 overlay approval/input mismatch and shared support/runtime/coverage qualification remain unresolved.",
+    "Projects diagnostic follow-up was published as existing work in progress without a new product build.",
+    "GitHub reported bypassing Memories main PR requirement and three required status checks."
+  ],
+  "commitValidation": [
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "commit": "38e5a69fc8d04e5ba16eb40ef7a1203b3a90bfa3",
+      "message": "test(ci): verify trusted configuration in any checkout",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "38e5a69fc8d04e5ba16eb40ef7a1203b3a90bfa3",
+        "4b68863d930efb727b512df8e5804a51861ae433",
+        "b8dc3dfcad058b3122435516a48099284fa0eecd",
+        "93f29a5c60a331fcb4ba923bc2a16362813faaf9",
+        "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+        "b1edf82c9b74963918a5f27545961a2619e17f0a"
+      ]
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "commit": "3546c4f973624efbbfdecee5913c23cb25b95ce7",
+      "message": "test(release): include required timeout in adapter fixture",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "3546c4f973624efbbfdecee5913c23cb25b95ce7",
+        "38e5a69fc8d04e5ba16eb40ef7a1203b3a90bfa3",
+        "4b68863d930efb727b512df8e5804a51861ae433",
+        "b8dc3dfcad058b3122435516a48099284fa0eecd",
+        "93f29a5c60a331fcb4ba923bc2a16362813faaf9",
+        "1e4f68d3f7e5925d33acffdadbf224e186711b5b",
+        "b1edf82c9b74963918a5f27545961a2619e17f0a"
+      ]
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Projects",
+      "commit": "49f0a9e31482891fe8c1376d2ccdb1637f1f20dd",
+      "message": "test: retain bounded product command failure categories",
+      "commitlintPin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "candidateAndCommittedMessageValidated": true,
+      "pendingMessagesValidated": [
+        "49f0a9e31482891fe8c1376d2ccdb1637f1f20dd"
+      ]
+    }
+  ]
+}

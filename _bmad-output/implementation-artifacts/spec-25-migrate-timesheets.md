@@ -2,9 +2,10 @@
 title: '25: Migrate Timesheets'
 type: 'chore'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
+baseline_commit: 'eba7514e02904c741f6a0a80930d85eb358d385c'
 context: []
 ---
 
@@ -47,7 +48,7 @@ context: []
 **Execution:**
 - [ ] `evidence/25/` — refresh canonical refs and AD-21 checks; provision App selection, exact rulesets, module-specific release environment/Zot identity, scoped NuGet policy and org access in order. Preserve current publish switch; recheck existing security/retention settings.
 - [ ] `prerequisite-25-product-validation.md`, `builds-version` — require verified shared support and a published compatible catalog before registration; do not substitute local unreleased Builds files.
-- [ ] Timesheets `scripts/tests/`, architecture `FitnessTests/`, `package.json`, `package-lock.json` — remove the classified agent/CI/story/YAML gates and tool-only manifests, retaining mixed-file product assertions and package validators. Delivery handles owned configuration removals.
+- [x] Timesheets `scripts/tests/`, architecture `FitnessTests/`, `package.json`, `package-lock.json` — remove the classified agent/CI/story/YAML gates and tool-only manifests, retaining mixed-file product assertions and package validators. Delivery handles owned configuration removals.
 - [ ] Timesheets `scripts/`, `.github/actions/after-unit-tests/action.yml` — integrate the qualified shared runner, reuse the existing Release build and its actual version, and retain all six archive/symbol/dependency/isolated-consumer contracts plus compiled AppHost, selected-index and fixture/privacy checks. Prove full discovery and fail-fast behavior.
 - [ ] `setup/Hexalith.Timesheets.yml`, `references/Hexalith.Timesheets`, `rendered/Hexalith.Timesheets/`, `rendered/Hexalith.Timesheets.perimeter.json` — register remotely available product revision, solution `Hexalith.Timesheets.slnx`, hook `after-unit-tests`, direct EventStore/Works dependencies, false Dapr/browser/registry flags and default test routing. Commit registration/render/gitlink together, then validate that candidate before delivery.
 - [ ] `evidence/25/` — authenticate delivery, preserved foreign content, immediate immutable-release/legacy-credential cleanup, green CI and next nightly; leave incomplete acceptance open.
@@ -60,6 +61,21 @@ context: []
 ## Implementation Notes
 
 - 2026-11-16: The human approved the full migration spec and requested stopping before implementation, then pushing the planning changes. The Timesheets-only pre-adoption verification decision remains in force. Shared-support, compatibility, onboarding and adoption tasks remain unexecuted.
+- 2026-11-16: Local product cleanup is implemented; retained tests pass (30 package, 30 selected-index, 95 architecture). Added the isolated shared-runner prerequisite and six module-owned consumer inputs; its 25 behavioral tests pass. Full package build is blocked by recorded net10/net11 catalog incompatibilities. Real SDK packing reuses existing outputs; strict NuGet policy correctly refuses unsigned candidates (NU3004), leaving a signed-candidate path unqualified. No remote operations, production hook, registry/render/gitlink update or adoption was performed. Evidence: `../specs/spec-cicd/evidence/25/local-preparation.md`.
+- 2026-11-16: Final local qualification passes all six retained .NET suites (Architecture 95, Contracts 108, Projections 792, Server 746, Works 76, Integration 1,057 plus five existing skips), AppHost configuration/construction, 270 fixture/privacy, 27 runner and six catalog metadata cases. Fixed repeated streamed-bootstrap metadata reads with reservation revalidation and transient `/proc` cleanup races; no deadlines/assertions/skips were weakened. Fresh build at `b325a0b47d642f1711f49e589509ca89ac585bca` packs six validated package/symbol pairs at `2.1.1-preview.0.3`, then correctly stops on unsigned-consumer NU3004. External commits were preserved and were not performed by this agent. Signing/discovery/publication, exact pre-push verification, registration and all adoption acceptance remain open. Final identities and receipts: `../specs/spec-cicd/evidence/25/verification-summary.json`.
+
+- 2026-11-16: The human requested fixing the push-blocking verification failures.
+  Applied the finite net10 catalog correction in central Builds, preserving SDK
+  11.0.100 and the module's net10 contract. Added evaluated catalog regressions
+  for selected, unrelated and future project identities; six tests and six
+  source/package/override metadata cases pass. Replaced the 80 ms wall-clock
+  polling test with controlled time while retaining poll-count, deadline,
+  single-submit and no-readback assertions. The existing public constructor
+  still uses System time; the explicit clock is internal to the test seam.
+  All 42 polling tests and all 746 Server tests pass without skips; see
+  `../specs/spec-cicd/evidence/25/polling-deadline-fix.json`. Candidate-package
+  signing trust remains a separate pending human decision in
+  `prerequisite-25-candidate-signing.md`; no signature/audit bypass was applied.
 
 ## Spec Change Log
 

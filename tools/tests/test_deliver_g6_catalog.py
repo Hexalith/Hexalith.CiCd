@@ -83,6 +83,8 @@ class CatalogWorkspace:
         self.refuse = False
         self.race = None
         self.final_race = None
+        self.final_registry = None
+        self.final_accepted_ref = None
         self.push_outcome = None
         self.fail_reconciliation = False
         self.read_counts = {}
@@ -104,6 +106,18 @@ class CatalogWorkspace:
                     newer = git(remote, "commit-tree", git(remote, "rev-parse", head + "^{tree}"),
                                 "-p", head, data=b"test: final read race\n")
                     git(remote, "update-ref", "refs/heads/main", newer)
+                if workspace.final_registry and repository == rt.CICD and workspace.read_counts[repository] == 2:
+                    remote = rt.Git(workspace.owner_remote, index=workspace.root / "late-registry-index")
+                    head = remote.resolve("refs/heads/main")
+                    blob = remote.run("hash-object", "-w", "--stdin", data=b"{}\n").decode().strip()
+                    remote.run("read-tree", head)
+                    remote.run("update-index", "--add", "--cacheinfo", "100644", blob,
+                               "setup/" + workspace.final_registry + ".yml")
+                    tree = remote.run("write-tree", "--missing-ok").decode().strip()
+                    newer = remote.run("commit-tree", tree, "-p", head, data=b"test: register Projects concurrently\n").decode().strip()
+                    remote.run("update-ref", "refs/heads/main", newer)
+                if workspace.final_accepted_ref and repository == delivery.PROJECTS and workspace.read_counts[repository] == 2:
+                    git(workspace.owner_remote, "update-ref", "refs/heads/delivered/" + workspace.final_accepted_ref, workspace.sha)
                 if workspace.fail_reconciliation and workspace.pushes:
                     raise rt.DeliveryError("reconciliation unavailable")
                 if workspace.token and any(workspace.token in value for value in target.env.values()):
@@ -227,6 +241,9 @@ class CatalogDeliveryTests(unittest.TestCase):
         self.assertFalse((w.root / "executed").exists())
         self.assertNotIn(w.token.encode(), w.report_path.read_bytes())
         self.assertEqual(w.fetches.count(delivery.PROJECTS), 4)
+        self.assertEqual([proof["phase"] for proof in result["full_writer_exclusion"]], ["delivery source verification", "push"])
+        self.assertTrue(all(proof["registry_absent"] and proof["accepted_ref_absent"]
+                            for proof in result["full_writer_exclusion"]))
 
     def test_already_delivered_exact_tree_and_parent_is_idempotent(self):
         delivered = self.w.deliver()
@@ -236,6 +253,89 @@ class CatalogDeliveryTests(unittest.TestCase):
         self.assertEqual(result["delivered_sha"], delivered["delivered_sha"])
         self.assertEqual(result["owner_source"], self.w.sha)
         self.assertEqual(self.w.pushes, [])
+
+    def test_partial_clone_proposal_preserves_unrelated_missing_promised_blob(self):
+        w = self.w
+        target = delivery.Git(w.root / "filtered.git", index=w.root / "filtered-index")
+        target.init()
+        self.assertEqual(w.transport.module(target, delivery.PROJECTS), w.base)
+        self.assertEqual(target.run("config", "--get", "remote.origin.promisor"), b"true\n")
+        unrelated_blob = w.before["foreign.txt"][2]
+        missing = "?" + unrelated_blob
+        before = target.run("rev-list", "--objects", "--missing=print", w.base).decode().splitlines()
+        self.assertIn(missing, before)
+        owner = rt.Git(w.owner)
+        tree = delivery.proposal(owner, w.sha, target, w.value)
+        self.assertEqual(tree, w.result_tree)
+        self.assertEqual({path: list(item) for path, item in target.items(tree).items()}, w.after)
+        after = target.run("rev-list", "--objects", "--missing=print", tree).decode().splitlines()
+        self.assertIn(missing, after)
+
+    def test_registered_projects_and_live_accepted_refs_fail_qualification_case_insensitively(self):
+        w = self.w
+        for name in (delivery.PROJECTS, delivery.PROJECTS.lower(), delivery.PROJECTS.upper()):
+            for selector in ("registry", "accepted_ref"):
+                with self.subTest(name=name, selector=selector):
+                    if selector == "registry":
+                        path = w.owner / ("setup/" + name + ".yml")
+                        path.parent.mkdir(exist_ok=True)
+                        path.write_text("{}\n")
+                        w.write_manifest()
+                    else:
+                        git(w.owner_remote, "update-ref", "refs/heads/delivered/" + name, w.sha)
+                    code, output = w.cli_qualify()
+                    self.assertEqual(code.returncode, 1)
+                    self.assertEqual(output, "")
+                    result = json.loads(w.report_path.read_bytes())
+                    self.assert_refused(result)
+                    proof = result["full_writer_exclusion"][-1]
+                    self.assertEqual(proof["phase"], "qualification")
+                    self.assertFalse(proof["registry_absent" if selector == "registry" else "accepted_ref_absent"])
+                    self.assertEqual(proof["matching_registry_entries"], [name] if selector == "registry" else [])
+                    self.assertIn("during qualification", result["failed_operation"])
+                    if selector == "registry":
+                        path.unlink()
+                        w.write_manifest()
+                    else:
+                        git(w.owner_remote, "update-ref", "-d", "refs/heads/delivered/" + name)
+
+    def test_registry_appearance_at_final_source_read_refuses_push_and_unchanged(self):
+        w = self.w
+        for unchanged in (False, True):
+            if unchanged:
+                self.assertEqual(w.deliver()["status"], "delivered")
+                w.pushes.clear()
+            qualified = w.run()
+            w.final_registry = delivery.PROJECTS.upper()
+            result = w.deliver(qualified)
+            self.assertEqual(result["status"], "failed")
+            self.assertEqual(w.pushes, [])
+            self.assertIn("reread exact CiCd main before", result["failed_operation"])
+            self.assertIn("CiCd main advanced", result["reason"])
+            self.assertIn("setup/" + w.final_registry + ".yml", w.items(w.owner_remote, "main"))
+            git(w.owner_remote, "update-ref", "refs/heads/main", w.sha)
+            w.final_registry = None
+
+    def test_accepted_ref_appearance_at_final_boundary_refuses_push_and_unchanged(self):
+        w = self.w
+        for unchanged in (False, True):
+            if unchanged:
+                self.assertEqual(w.deliver()["status"], "delivered")
+                w.pushes.clear()
+            qualified = w.run()
+            w.final_accepted_ref = delivery.PROJECTS.lower()
+            result = w.deliver(qualified)
+            self.assertEqual(result["status"], "failed")
+            self.assertEqual(w.pushes, [])
+            expected = "unchanged confirmation" if unchanged else "push"
+            self.assertEqual(result["failed_operation"], "verify live Projects accepted-ref absence during " + expected)
+            proof = result["full_writer_exclusion"][-1]
+            self.assertEqual(proof["phase"], expected)
+            self.assertTrue(proof["registry_absent"])
+            self.assertFalse(proof["accepted_ref_absent"])
+            self.assertEqual(proof["matching_accepted_refs"], ["refs/heads/delivered/" + w.final_accepted_ref])
+            git(w.owner_remote, "update-ref", "-d", "refs/heads/delivered/" + w.final_accepted_ref)
+            w.final_accepted_ref = None
 
     def test_different_live_source_refuses_without_push(self):
         self.w.advance()

@@ -1,0 +1,78 @@
+"""Standalone local Release/package qualification; initialize no nested submodules."""
+from pathlib import Path
+import os
+import shutil
+import subprocess
+import sys
+
+source = Path(__file__).resolve().parents[5]
+scratch = Path(os.environ['TMPDIR'])
+modules = ['Projects', 'Builds', 'EventStore', 'Tenants', 'Folders', 'Platform']
+for module in modules:
+    name = 'Hexalith.' + module
+    repository = source / 'references' / name
+    target = scratch / name if module == 'Projects' else scratch / 'Hexalith.Projects/references' / name
+    print('SOURCE', name, subprocess.check_output(['git', '-C', str(repository), 'rev-parse', 'HEAD'], text=True).strip(), flush=True)
+    subprocess.run(['git', 'clone', '--quiet', '--local', '--shared', '--no-recurse-submodules', str(repository), str(target)], check=True)
+    names = (subprocess.check_output(['git', '-C', str(repository), 'diff', '--name-only', '--no-ext-diff', 'HEAD', '-z']) + subprocess.check_output(['git', '-C', str(repository), 'ls-files', '--others', '--exclude-standard', '-z'])).split(b'\0')
+    for raw in names:
+        if not raw:
+            continue
+        relative = os.fsdecode(raw)
+        path = repository / relative
+        if path.is_file() and not path.is_symlink():
+            output = target / relative
+            output.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, output)
+        elif not path.exists() and (target / relative).is_file():
+            (target / relative).unlink()
+root = scratch / 'Hexalith.Projects'
+config = root / 'references/Hexalith.Builds/NuGet.ci.Config'
+flags = ['-noAutoResponse', '-p:Configuration=Release', '-warnaserror', '-p:UseHexalithProjectReferences=false',
+         '-p:ShouldUnsetParentConfigurationAndPlatform=false', f'-p:RestoreConfigFile={config}', '-p:EnableNETAnalyzers=true', '-p:RunAnalyzers=true',
+         '-p:RunAnalyzersDuringBuild=true', '-m:1']
+for command in (['dotnet','restore','Hexalith.Projects.CI.slnx',*flags],
+                ['dotnet','build','Hexalith.Projects.CI.slnx','--no-restore',*flags]):
+    print('RUN', *command, flush=True)
+    result = subprocess.run(command, cwd=root, check=False)
+    if result.returncode:
+        sys.exit(result.returncode)
+
+failures = []
+if '--test' in sys.argv:
+    sys.path.insert(0, str(root / 'references/Hexalith.Builds/Github/lib'))
+    import ci_pipeline
+    tests = ci_pipeline.discover_test_projects(root, 'Hexalith.Projects.CI.slnx')
+    ci_pipeline.execute_test_projects(root, tests, runner=ci_pipeline.test_runner(root), stage='Preserved product')
+if '--hooks' in sys.argv:
+    for command in (['dotnet','tool','restore','--tool-manifest','.config/dotnet-tools.json','--configfile',str(config)],
+                    ['python3','scripts/check-frontcomposer-output.py'],
+                    ['python3','scripts/check-package-dependencies.py']):
+        print('RUN', *command, flush=True)
+        result = subprocess.run(command, cwd=root, check=False)
+        if result.returncode:
+            failures.append((command, result.returncode))
+if '--nightly' in sys.argv:
+    workspace = root / 'tests/e2e'
+    for command in (['npm','ci','--ignore-scripts'],['npm','audit','signatures'],
+                    ['node','node_modules/@playwright/test/cli.js','install','--with-deps'],
+                    ['npm','run','test:package']):
+        print('RUN', *command, flush=True)
+        result = subprocess.run(command, cwd=workspace, check=False)
+        if result.returncode:
+            failures.append((command, result.returncode))
+            break
+if '--g6' in sys.argv:
+    import runpy
+    try:
+        runpy.run_path(str(Path(__file__).with_name('qualify-owning-g6.py')))['run'](root, scratch)
+    except Exception as failure:
+        print('OWNING G6 FAILURE', type(failure).__name__, str(failure), flush=True)
+        failures.append(('owning-g6', 1))
+if '--tools' in sys.argv:
+    command = ['python3', '-B', '-m', 'unittest', 'discover', '-s', 'tests/tools', '-p', 'test_release_package_tools.py', '-v']
+    result = subprocess.run(command, cwd=root, check=False)
+    if result.returncode:
+        failures.append((command, result.returncode))
+print('QUALIFICATION FAILURES', failures, flush=True)
+sys.exit(bool(failures))

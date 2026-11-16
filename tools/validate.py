@@ -112,6 +112,12 @@ def check_module(project: Path, repository: str, contract) -> None:
     # The sole tagged reader already enforces name disjointness and enabled
     # exclusion targets. The union includes exclusions explicitly for clarity.
     actions = sorted(set(config["hooks"]) | set(config["jobs"]) | set(config["tests"]["exclude"].values()))
+    required = {f".github/actions/{action}/action.yml": "enabled action" for action in actions}
+    for workspace in config.get("npmWorkspaces", []):
+        for name in ("package.json", "package-lock.json"):
+            required[f"{workspace}/{name}"] = "npm preparation input"
+    if config.get("dotnetTools", False):
+        required[".config/dotnet-tools.json"] = ".NET tool preparation input"
     with tempfile.TemporaryDirectory(prefix="hexalith-validate-module-") as directory:
         clone = Path(directory) / "module"
         clone_module(repository, clone)
@@ -124,16 +130,15 @@ def check_module(project: Path, repository: str, contract) -> None:
         main = anonymous_git(clone, "rev-parse", "--verify", "refs/remotes/origin/main^{commit}")
         if head != main:
             raise checks.CheckError(f"{repository}: cloned HEAD differs from fetched origin/main")
-        for action in actions:
-            path = f".github/actions/{action}/action.yml"
+        for path, label in sorted(required.items()):
             records = anonymous_git(clone, "ls-tree", "-z", "HEAD", "--", path).split(b"\0")
             records = [record for record in records if record]
             if len(records) != 1:
-                raise checks.CheckError(f"{repository}: live main is missing enabled action {path}")
+                raise checks.CheckError(f"{repository}: live main is missing {label} {path}")
             header, raw_path = records[0].split(b"\t", 1)
             mode, kind, _ = header.decode("ascii").split()
             if kind != "blob" or mode not in ("100644", "100755") or raw_path.decode("utf-8") != path:
-                raise checks.CheckError(f"{repository}: live-main enabled action {path} must be a committed regular file")
+                raise checks.CheckError(f"{repository}: live-main {label} {path} must be a committed regular file")
 
 
 def validate(project: Path) -> tuple[dict, int]:

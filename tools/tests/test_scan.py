@@ -54,7 +54,7 @@ class Workspace:
         (self.cicd / "setup").mkdir()
         (self.cicd / "tools/jscpd").mkdir(parents=True)
         shutil.copy(ROOT / ".jscpd.json", self.cicd)
-        for name in ("package.json", "package-lock.json"):
+        for name in ("package.json", "package-lock.json", "discover.cjs"):
             shutil.copy(ROOT / "tools/jscpd" / name, self.cicd / "tools/jscpd")
         self.paths = {}
         for module in modules:
@@ -97,6 +97,8 @@ class Workspace:
 def block(fmt, label="shared", count=18):
     if fmt == "python":
         return "".join(f'print("{label} operation {i:02d}", {i}, {i + 1})\n' for i in range(count))
+    if fmt in {"javascript", "typescript"}:
+        return "".join(f'console.log("{label} operation {i:02d}", {i}, {i+1});\n' for i in range(count))
     if fmt == "bash":
         return "".join(f"printf '%s\\n' '{label} operation {i:02d}'\n" for i in range(count))
     if fmt == "powershell":
@@ -205,7 +207,7 @@ A1 = (
      None, "unsupported task runner with tracked module recipes: just"),
     ("npm-recipe", [("bash", "npm run lint", "")],
      {"package.json": '{"scripts": {"lint": "python -m helper"}}\n', "helper.py": COPY},
-     None, "unsupported task runner with tracked module recipes: npm"),
+     None, "missing or unsafe npm/config input: package-lock.json"),
     ("poetry-recipe", [("bash", "poetry run lint", "")],
      {"pyproject.toml": "[tool.poetry.scripts]\nlint = 'helper:main'\n", "helper.py": COPY},
      None, "unsupported task runner with tracked module recipes: poetry"),
@@ -245,8 +247,59 @@ class ScanTests(unittest.TestCase):
                 w.action(module, command or "python " + path)
             w.commit(w.paths[module])
 
-    def test_all_four_languages_use_actual_pinned_detector(self):
-        for fmt, suffix in (("yaml", "yml"), ("bash", "sh"), ("powershell", "ps1"), ("python", "py")):
+    def test_npm_recipe_covers_complete_workspace_aliases_and_cross_language_calls(self):
+        files = {
+            "tests/e2e/package.json": json.dumps({"scripts":{"test:package":"playwright test --project=chromium"}}),
+            "tests/e2e/package-lock.json": '{"lockfileVersion":3,"packages":{}}',
+            "tests/e2e/tsconfig.json": json.dumps({"compilerOptions":{"baseUrl":".","paths":{"@helpers/*":["../shared/*"]}}}),
+            "tests/e2e/playwright.config.ts": "export default {globalSetup:'./setup.ts'};\n",
+            "tests/e2e/setup.ts": "import '@helpers/copied.js';\n",
+            "tests/e2e/specs/only-npm.spec.ts": block("typescript", "npm-only"),
+            "tests/shared/copied.ts": block("typescript", "aliased-only"),
+            "tests/e2e/process.ts": "import {execFileSync as run} from 'node:child_process'; run('python3',['../../scripts/helper.py']);\n",
+            "scripts/helper.py": block("python", "javascript-process-only"),
+        }
+        report = self.coverage_case([("bash", "npm --prefix tests/e2e run test:package", "")], files)
+        self.assert_coverage(report, "tests/shared/copied.ts", None)
+        self.assert_coverage(report, "tests/e2e/specs/only-npm.spec.ts", None)
+        self.assert_coverage(report, "scripts/helper.py", None)
+        self.assertTrue(all(not row["errors"] for row in report["modules"]), report)
+
+    def test_javascript_computed_import_process_and_config_fail_closed(self):
+        for source, diagnostic in (
+            ("import(process.env.TARGET);", "computed JavaScript import"),
+            ("import {runInNewContext} from 'node:vm'; runInNewContext(process.env.CODE);", "VM/config execution"),
+            ("import('node:child_process').then(cp => cp.exec(process.env.CMD));", "dynamic JavaScript process-module import"),
+            ("require('node:child_process').spawn(process.env.TOOL, []);", "inline JavaScript process-module require"),
+            ("let execute; execute = require('node:child_process').exec; execute(process.env.CMD);", "inline JavaScript process-module require"),
+            ("globalThis.require('node:child_process').exec(process.env.CMD);", "inline JavaScript process-module require"),
+            ("globalThis.process.getBuiltinModule('child_process').spawn(process.env.TOOL, []);", "reflective JavaScript execution"),
+            ("const runtime = globalThis.process; runtime.getBuiltinModule('child_process').exec(process.env.CMD);", "reflective JavaScript execution"),
+            ("import {exec} from 'node:child_process'; setTimeout(exec, 0, process.env.CMD);", "API escape"),
+            ("import {spawn} from 'node:child_process'; spawn(process.env.TOOL, []);", "computed JavaScript process"),
+            ("export default {globalSetup:process.env.SETUP};", "computed JavaScript test configuration"),
+            ("export default {reporter:process.env.REPORTER};", "computed JavaScript reporter"),
+            ("export default {webServer:{command:process.env.CMD}};", "computed JavaScript webServer command"),
+            ("import '../outside.js';", "source path escapes module"),
+            ("const cp=require('node:child_process'); cp[process.env.API]('python');", "reflective JavaScript process"),
+        ):
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "node script.js", "")], {"script.js":source})
+                self.assertEqual("fail", report["result"])
+                self.assertTrue(all(any(diagnostic in message for message in row["errors"]) for row in report["modules"]), report)
+
+    def test_npm_later_flags_cannot_enable_unscanned_lifecycle_scripts(self):
+        for command in ("npm ci --ignore-scripts --ignore-scripts=false",
+                        "npm --ignore-scripts ci --ignore-scripts=0"):
+            with self.subTest(command=command):
+                report = self.coverage_case([("bash", command, "")], {})
+                self.assertEqual("fail", report["result"])
+                self.assertTrue(all(any("lifecycle-enabling option" in message for message in row["errors"])
+                                    for row in report["modules"]), report)
+
+    def test_all_six_languages_use_actual_pinned_detector(self):
+        for fmt, suffix in (("yaml", "yml"), ("bash", "sh"), ("powershell", "ps1"), ("python", "py"),
+                            ("javascript", "js"), ("typescript", "ts")):
             with self.subTest(format=fmt):
                 w = self.workspace()
                 path = ".github/actions/dormant/shared." + suffix
@@ -490,7 +543,6 @@ class ScanTests(unittest.TestCase):
             ('Invoke-Command -FilePath scripts/helper.ps1', "pwsh", "Invoke-Command"),
             ('pwsh -WorkingDirectory scripts -File helper.ps1', "pwsh", "working-directory"),
             ('pwsh -EncodedCommand ZQBjAGgAbwA=', "pwsh", "encoded"),
-            ('node scripts/tool.js', "bash", "unsupported local-script language"),
         )
         for command, shell, diagnostic in cases:
             with self.subTest(command=command):
@@ -1505,7 +1557,7 @@ class ScanTests(unittest.TestCase):
             with self.subTest(command=command):
                 self.assert_coverage(self.coverage_case([("bash", command, "")], {
                     "package.json": '{"scripts":{"go":"python -m helper","lint":"python -m helper"}}',
-                    "helper.py": COPY}), None, "unsupported task runner with tracked module recipes: npm")
+                    "helper.py": COPY}), None, "missing or unsafe npm/config input: package-lock.json")
         for command in ("npm --ignore-scripts --version", "npm view jscpd version", "npm ci --ignore-scripts"):
             with self.subTest(probe=command):
                 w = self.workspace(("Hexalith.Alpha",))
@@ -1731,7 +1783,8 @@ class ScanTests(unittest.TestCase):
                 self.assert_coverage(self.coverage_case([("bash", command, "")], {
                     "info/package.json": '{"scripts":{"lint":"python3 -m helper"}}', "info/helper.py": COPY,
                     "tools/pyproject.toml": '[tool.poetry.scripts]\nlint="helper:main"\n',
-                    "tools/helper.py": COPY}), None, "unsupported task runner recipe location")
+                    "tools/helper.py": COPY}), None, "missing or unsafe npm/config input: info/package-lock.json" if command.startswith("npm")
+                                     else "unsupported task runner recipe location")
         for command in ("npm info jscpd", "npm --version", "npm audit signatures"):
             with self.subTest(probe=command):
                 w = self.workspace(("Hexalith.Alpha",))
@@ -1976,7 +2029,7 @@ class ScanTests(unittest.TestCase):
         for command in ("npm --workspace info run lint", "npm --workspace=info run lint", "npm -w info run lint"):
             with self.subTest(command=command):
                 self.assert_coverage(self.coverage_case([("bash", command, "")], files), None,
-                                     "unsupported task runner recipe location")
+                                     "missing or unsafe npm/config input: info/package-lock.json")
         self.assert_coverage(self.coverage_case([("bash", "npm --registry info run lint", "")], files), None,
                              "unsupported task runner leading option")
         for command in ("npm info jscpd", "npm --ignore-scripts --version", "npm audit signatures"):
@@ -2020,6 +2073,23 @@ class ScanTests(unittest.TestCase):
         report = self.coverage_case([("bash", "python scripts/start.py", "")], {
             "scripts/start.py": source, "scripts/start.sh": "python -m helper\n", "work/helper.py": COPY})
         self.assert_coverage(report, "work/helper.py", None)
+
+    def test_fixed_compiler_operands_preserve_literal_scope_and_reject_execution_indirection(self):
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+            "scripts/start.py": "import subprocess\nsubprocess.run(['dotnet', 'build', project, '--no-restore', 'scripts/payload.py'])\n",
+            "scripts/payload.py": COPY,
+        })
+        self.assert_coverage(report, "scripts/payload.py", None)
+        for command, diagnostic in (
+                ("subprocess.run(['dotnet', operation, project])", "computed Python script invocation"),
+                ("subprocess.run([executable, 'build', project])", "computed Python script invocation"),
+                ("subprocess.run(['dotnet', 'build', project], shell=True)", "shell execution"),
+                ("subprocess.run(['dotnet', 'build', project], cwd=directory)", "subprocess cwd"),
+                ("subprocess.run(['dotnet', 'build', project], env={'PATH':'scripts'})", "environment affecting resolution")):
+            with self.subTest(command=command):
+                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": "import subprocess\n" + command + "\n",
+                }), None, diagnostic)
 
     def test_each_central_policy_rule_fails_alone(self):
         # C16: one single-violation subtest per central-policy rule.

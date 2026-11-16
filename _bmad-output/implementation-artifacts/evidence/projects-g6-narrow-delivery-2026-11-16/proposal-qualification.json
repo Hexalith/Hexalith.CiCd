@@ -1,0 +1,30 @@
+{
+  "base": "981ceef13a1abc88219925e73c51a23eb9ac50c2",
+  "base_tree": "b8a7a8b3b5532cb954f36835685d5b8dcd9577ab",
+  "result_tree": "238d933a813d0453e950e1080175d74f12e82975",
+  "qualification_commit": "7de5d855add8b51ec16cff960387d84c077d6626",
+  "proposal_sha256": "3b4e5540391f585c778f21953f4b2a37be1a87aa9df9ae7e2b56b6e05cefb588",
+  "changes": [
+    ".github/actions/prepare-g6-catalog/action.yml",
+    ".github/actions/prepare-g6-catalog/prepare.py",
+    ".github/workflows/ci.yml"
+  ],
+  "builds_pin": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "checker_command": [
+    "python3",
+    "references/Hexalith.Builds/check.py"
+  ],
+  "checker_exit": 1,
+  "before": {
+    ".github/actions/prepare-g6-catalog/action.yml": "",
+    ".github/actions/prepare-g6-catalog/prepare.py": "",
+    ".github/workflows/ci.yml": "100644 blob 66ab41495043051c5ffe9b51bf8fdb1eb5c5f2ff\t.github/workflows/ci.yml"
+  },
+  "after": {
+    ".github/actions/prepare-g6-catalog/action.yml": "100644 blob e50095bcb31b192cb09c628ce58f2c5ace698cde\t.github/actions/prepare-g6-catalog/action.yml",
+    ".github/actions/prepare-g6-catalog/prepare.py": "100644 blob 7bc405449d0060084cb84b02cba62d31e36bfe72\t.github/actions/prepare-g6-catalog/prepare.py",
+    ".github/workflows/ci.yml": "100644 blob 960a63947bc9584454a7a3dca080a9c1664231f3\t.github/workflows/ci.yml"
+  },
+  "gitlinks_preserved": true,
+  "all_other_entries_preserved": true
+}

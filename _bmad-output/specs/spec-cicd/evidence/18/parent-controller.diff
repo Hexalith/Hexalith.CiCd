@@ -1,0 +1,1177 @@
+diff --git a/.jscpd.json b/.jscpd.json
+index 4cb4c8b..7f2bed3 100644
+--- a/.jscpd.json
++++ b/.jscpd.json
+@@ -5,8 +5,17 @@
+   "maxSize": "2mb",
+   "maxLines": 2097152,
+   "workers": 1,
+-  "format": ["yaml", "bash", "powershell", "python"],
+-  "reporters": ["json"],
++  "format": [
++    "yaml",
++    "bash",
++    "powershell",
++    "python",
++    "javascript",
++    "typescript"
++  ],
++  "reporters": [
++    "json"
++  ],
+   "absolute": true,
+   "skipLocal": true,
+   "noGitignore": true,
+diff --git a/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md b/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
+index abfc6ab..cfec839 100644
+--- a/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
++++ b/_bmad-output/implementation-artifacts/spec-18-migrate-projects.md
+@@ -2,7 +2,8 @@
+ title: '18 — Migrate Projects'
+ type: 'chore'
+ created: '2026-11-16'
+-status: 'ready-for-dev'
++status: 'in-progress'
++baseline_commit: 'c74b5c8f5787fb33bfd85c1c4430b6de39674198'
+ route: 'dispatch'
+ review_loop_iteration: 0
+ context:
+diff --git a/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md b/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
+index 5e5b5b1..923f26a 100644
+--- a/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
++++ b/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
+@@ -97,7 +97,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
+ - **Binds:** CAP-1, CAP-2, CAP-3, CAP-5, CAP-12
+ - **Prevents:** a SHA's CI or release result depending on CiCd's state at run time
+ - **Rule:**
+-  - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `codeql`, `tests`, `hooks` and `jobs`.
++  - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `npmWorkspaces`, `dotnetTools`, `codeql`, `tests`, `hooks`, `jobs` and `submodules`.
+   - Builds' CI, Builds' release and `check.py` read it from the checkout, through the AD-4 loader.
+   - It is complete: every knob is written out, so no reader applies a default or accepts a missing key.
+   - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, the Windows jobs (which take `solution` from the `ci` job's output, AD-12) and the publish job with its environment.
+@@ -118,10 +118,10 @@ These arrows are the allowed dependencies. Builds never names a module, module f
+   - A setup file is `hexalith-ci.json` without `schema` and `buildsTag`; a setup file that contains either key fails.
+   - The render adds `schema` (the `const` of the schema file at `builds-version`) and `buildsTag` (from `builds-version` only), and writes every knob explicitly: schema `default` values, plus the `codeql` rule below.
+   - Validation checks that rendered `hexalith-ci.json` against Builds' `schemas/hexalith.ci.v<N>.json` at `builds-version`, never the raw setup file. Unknown keys fail.
+-  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr` and `browsers` are `false`.
++  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr`, `browsers` and `dotnetTools` are `false`, and `npmWorkspaces` is empty.
+   - **Knobs:**
+     - `solution`: a repo-relative path, or `none`, which runs stage 1 only and releases a GitHub release only.
+-    - `dapr`, `browsers`, `registry`.
++    - `dapr`, `browsers`, `registry`; default-disabled `dotnetTools` and `npmWorkspaces` (story 18).
+     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
+     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
+   - Adding an optional knob with a schema default is a minor Builds release (AD-10).
+@@ -324,7 +324,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
+   - Only the Builds submodule is checked out.
+   - No CodeQL runs on a push or PR.
+   - The module `ci.yml` triggers on `push` to `main`, `pull_request` and `workflow_dispatch`.
+-  - A custom action that needs browsers or Dapr is a hook with that knob on.
++  - A custom action that needs browsers or Dapr is a hook with that knob on. Locked npm workspaces and exact local .NET tools are optional generic preparation knobs, run once after successful units and once in a separate nightly-hook job; hooks reuse Release/package outputs (story 18).
+   - `jobs` exist only for Windows. The reusable `ci.yml` outputs every knob that Windows `prepare` uses, as the loader validated it: `solution` (workspace-relative, including `module-root` when set) and, once added, `submodules`. Each job is rendered with `needs: ci`, `runs-on: windows-latest` and two steps: `uses: Hexalith/Hexalith.Builds/Github/prepare@<tag>` with those outputs as inputs, then a literal `uses: ./.github/actions/<job-name>`.
+   - On Windows, `prepare` checks out, sets up .NET, restores and builds, and sets up no environment. On Linux, it reads the knobs through the AD-4 loader and runs the environment setup after the build.
+ 
+@@ -575,6 +575,27 @@ sequenceDiagram
+      - removes the repo from every legacy org secret, removes its package IDs from the legacy `NUGET_API_KEY` scope, and revokes the legacy Zot identity's push on its repositories.
+   4. **Done** when the module's CI is green and its next nightly release succeeds, or reports nothing to release.
+ 
++  **AI.Tools applicability and preparation decisions (human-approved 2026-11-16):**
++  - `Hexalith.AI.Tools` is a documentation/skills repository registered with
++    `solution: none`. It has no product tests, packages, containers, custom actions
++    or NuGet waivers. Keep the main-only `hexalith-release` environment, normal
++    organization grants, and normal GitHub release behavior, with
++    `HEXALITH_RELEASE_PUBLISH_ENABLED` set to exactly `true`. Omit unused module
++    Zot publishing credentials and package-scoped NuGet publishing policy. Those
++    prerequisites become mandatory before adding any package or container target;
++    an empty inventory does not imply a nothing-to-release result.
++  - Before this repository's adoption only, its unavailable normal Builds checker
++    may be replaced for the product preparation push by the released shared
++    commitlint and audit checks, exact preservation of owned bytes, modes and
++    gitlinks, documentation/removal consistency and normalized entrypoint checks.
++    Save exact base/head revisions and results before any push. Do not author an
++    owned bootstrap or initialize nested submodules. After delivery, require the
++    normal checker in a standalone clone with Builds as a direct dependency.
++  - Both decisions apply only to AI.Tools; they do not extend the pilots'
++    preparation exception or waive AD-21 requirements for any other module.
++    Adoption still waits for story 11's genuine scheduled-night checkpoint and
++    acceptance. Local preparation and an unpushed registration are not adoption.
++
+   **CiCd itself needs:**
+   - the App, and the environment `cicd-app` (AD-7) holding `HEXALITH_CICD_APP_PRIVATE_KEY` and `HEXALITH_CICD_APP_CLIENT_ID`;
+   - a ruleset that blocks deletion and force-push on `main`;
+@@ -729,3 +750,22 @@ Hexalith.<Module>/
+ - **The `hexalith-module` candidate gate (diagnostic HXP301).** This product command is enrolled against `candidate-policy.yml` at a pinned SHA. Story 27 decides whether to retire it when that workflow is deleted; it is product, not CI/CD.
+ - **Skipping CodeQL on modules unchanged since the last analysis.** An optimization; revisit if nightly queue time matters.
+ - **Duplicate-scan threshold and early noise** from Python tooling in Memories and Tenants, until the gate rule deletes it. Tuned in story 9.
++
++
++### Story 18 additive preparation and scan clarification (AD-3, AD-12, AD-14)
++
++`npmWorkspaces: []` and `dotnetTools: false` become complete required fields only
++at the next released schema/reader. Old tagged consumers remain unchanged. Paths,
++committed manifests/locks, exact tool versions and install failures fail closed.
++Node 24, locked npm without lifecycle scripts plus signature verification, trusted
++NuGet tool restore and locked npm/built .NET Playwright preparation belong to
++Builds. A hook adds only product inspection/execution and distinct consumer tests.
++The nightly bump retains the default-only new-key rule.
++
++Duplicate-scan closure adds JS/TS and literal npm/Playwright execution using a
++controller-owned locked TypeScript 6.0.3 static parser. It includes complete test
++workspaces and resolves relative/aliased imports and supported process literals,
++without executing module configuration. Unresolved execution and unsafe paths
++remain failures. Existing thresholds, limits, suppression rejection and
++cross-module-only semantics are unchanged; `docs/duplicate-scan.md` specifies the
++supported syntax and failure boundary.
+diff --git a/_bmad-output/specs/spec-cicd/SPEC.md b/_bmad-output/specs/spec-cicd/SPEC.md
+index 605e236..00b9f69 100644
+--- a/_bmad-output/specs/spec-cicd/SPEC.md
++++ b/_bmad-output/specs/spec-cicd/SPEC.md
+@@ -160,6 +160,7 @@ The architecture spine (first companion) decides how each capability is built, i
+ - Nothing runs twice:
+   - CodeQL runs only in the nightly release.
+   - CI checks out Builds and only the other submodules that the module's package-mode build or its tests read, as listed in its `submodules` knob (`pipeline-stages.md`).
++  - Optional `npmWorkspaces` and `dotnetTools` preparation is default-disabled, strict, contained and performed once before hooks; it never makes hooks rebuild shared outputs (`pipeline-stages.md`, story 18).
+   - Commitlint runs inside the guard.
+   - The release trusts green CI for the same SHA, skips the tests, and packs once.
+   - Dependency review is dropped. NuGet audit runs only in the release build.
+diff --git a/_bmad-output/specs/spec-cicd/pipeline-stages.md b/_bmad-output/specs/spec-cicd/pipeline-stages.md
+index 5d53f67..7d5339b 100644
+--- a/_bmad-output/specs/spec-cicd/pipeline-stages.md
++++ b/_bmad-output/specs/spec-cicd/pipeline-stages.md
+@@ -11,6 +11,7 @@ The stage order and step sequence of each pipeline. Serves CAP-2, 3, 5, 6, 12, 1
+ 
+ Edge cases become knobs in the setup file or custom actions:
+ - Dapr, browsers, and a registry login: the `dapr`, `browsers`, and `registry` knobs.
++- Optional locked npm workspaces and exact local .NET tools: `npmWorkspaces: []` and `dotnetTools: false`.
+ - Aspire AppHost tests: shared stage 4.
+ - Windows: an extra job.
+ 
+@@ -21,7 +22,7 @@ Edge cases become knobs in the setup file or custom actions:
+ | 1 | Guard (`enforcement.md`) plus the commit-format check (commitlint) | seconds |
+ | 2 | Restore, then a Release build in package mode with `-warnaserror`, analyzers included, and NuGet audit off | minutes |
+ | 3 | Unit tests, project by project. Stops at the first failing project; all tests inside that project still run. | — |
+-| 4 | Environment setup, run once (Dapr, browsers, registry pull login, as enabled). Then the `after-unit-tests` hook, integration tests project by project, and the `after-integration-tests` hook. | — |
++| 4 | Environment setup, run once (locked npm workspaces, exact .NET tools, Dapr, browsers, registry pull login, as enabled). Then the `after-unit-tests` hook, integration tests project by project, and the `after-integration-tests` hook. | — |
+ 
+ - **Order rule:** cheapest and most likely to fail first. Whenever a stage is added, review the order with the run-history method in `baseline-and-targets.md`.
+ - **Test stages:** test projects are the solution's projects with `IsTestProject=true`. A name ending in `IntegrationTests`, `Integration.Tests`, or `AppHost.Tests`, or containing `E2E`, goes to stage 4. Everything else goes to stage 3. The setup file can only move a project to stage 4 or hand it to an enabled hook or job. There is never a plain skip (AD-13).
+@@ -112,3 +113,21 @@ Dependency review is dropped:
+ - Audit waivers exist only in Builds' `Props/`. When a module is onboarded, a CiCd agent adds its waivers there, and adoption waits for a `builds-version` that contains them.
+ 
+ What is lost: the license check and the npm coverage. Today dependency review runs only on PRs, so with direct pushes to `main` it rarely runs.
++
++
++Story 18 extends the additive CI contract at the next acceptable Builds release.
++The renderer materializes `npmWorkspaces: []` and `dotnetTools: false` from that
++pinned schema; strict readers still require every field. Both are disabled when
++`solution` is `none`. Existing tagged readers and rendered modules retain their
++unchanged contract until adoption. The nightly bump may add only default-valued
++keys; enabling a workspace/tool manifest requires an explicit setup change.
++
++Preparation validates contained committed package/lock inputs and exact local
++tool versions before installing anything. It performs `npm ci --ignore-scripts`,
++signature verification and trusted-config tool restore once after successful unit
++tests. The separate nightly-hook job prepares the same environment once. Node 24
++is supplied by the guard in CI and set up without caching in nightly preparation.
++Browsers use locked npm Playwright or existing built .NET Playwright tooling;
++requesting browsers without either fails. Module hooks inspect or run the shared
++Release/package outputs and contain no generic tool/browser setup or solution
++rebuilds. New API consumers remain distinct package product checks.
+diff --git a/docs/duplicate-scan.md b/docs/duplicate-scan.md
+index 0496122..58af222 100644
+--- a/docs/duplicate-scan.md
++++ b/docs/duplicate-scan.md
+@@ -32,9 +32,10 @@ Repository configuration is never a detector input: `.jscpd*`, `.gitignore`,
+ 
+ ## Discovery coverage model
+ 
+-Initial sources are the YAML, shell, PowerShell and Python files beneath
++Initial sources are the YAML, shell, PowerShell, Python, JavaScript and TypeScript files beneath
+ `.github/actions/**`, including dormant action directories. The selected
+-extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1` and `.py`. An
++extensions are `.yml`, `.yaml`, `.sh`, `.bash`, `.ps1`, `.psm1`, `.py`,
++`.js`, `.mjs`, `.cjs`, `.ts`, `.mts` and `.cts`. An
+ extensionless file with a shebang is selected too, and fails as an unsupported
+ language unless the shebang names a shell, PowerShell or Python. A dormant file's
+ action context, which `$GITHUB_ACTION_PATH` names, is its nearest ancestor
+@@ -79,6 +80,13 @@ Recognized forms supply the exact working directory, import roots and language:
+   APIs, and `sys.executable` (or an alias of it) as argv[0]. A literal subprocess
+   `cwd` applies to its child. File invocations keep the script's import root;
+   `-m`, `-c` and inline Python action shells start from the working directory.
++- Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
++  `tool run NAME` prefix consumes project, output and property data at the
++  compiled-language boundary. The executable, operation and tool name must be
++  literal, with no argv expansion. Fixed `git -C DIRECTORY rev-parse HEAD` is
++  a provenance read. Literal script references in these data operands still
++  enter discovery. Computed executable/operation, shell, working-directory or
++  resolution-environment changes remain failures.
+ 
+ ### Rule 1: literal references are included
+ 
+@@ -235,8 +243,9 @@ These fail coverage with a diagnostic naming the source file and line:
+   - `pytest`, `py.test`, `python -m pytest`, `python -m unittest` or
+     `python -m nose2` when the module tracks `conftest.py` or a file named
+     `test*.py` or `*_test.py`;
+-  - `npm`, `pnpm`, `yarn` or `bun` with a tracked `package.json`, unless the
+-    subcommand runs no scripts. `--ignore-scripts` disables lifecycle hooks for
++  - unmodeled `npm` execution forms, or `pnpm`, `yarn` or `bun` with a tracked
++    `package.json`, unless the subcommand runs no scripts. Supported literal npm
++    recipes are described below. `--ignore-scripts` disables lifecycle hooks for
+     dependency installation, but never exempts explicitly named `run` scripts;
+   - `uv`, `poetry`, `pipenv`, `pdm` or `hatch run` of a script name defined in a
+     tracked `pyproject.toml`, `Pipfile` or `hatch.toml`, including installed
+@@ -395,3 +404,27 @@ Save useful results and logs outside the wrapper's temporary directory. No test
+ may silently skip detector integration. Moving shared code into Builds and
+ deleting module copies is a separate authorized change after inspecting the
+ reported fragments.
++
++
++## Literal npm and JavaScript/TypeScript reachability
++
++Story 18 adds JavaScript and TypeScript without changing the 10-line/50-token
++threshold, bounds, suppression rejection or cross-module-only failure policy.
++A literal `npm --prefix <directory> run <script>` or declared literal npm
++workspace follows its named recipe and applicable lifecycle recipes. The selected
++workspace must have regular committed `package.json` and `package-lock.json`
++inputs. All tracked JavaScript/TypeScript in that workspace is selected, including
++Playwright configuration, global setup and reporters. Fixed installed Playwright
++CLI invocations use this same scope; discovery never calls npx or evaluates a
++module's configuration to determine files.
++
++The controller's integrity-locked TypeScript 6.0.3 parser reads source through
++stdin and emits syntax facts. Relative imports, literal tsconfig baseUrl/path
++aliases and supported cross-language process literals extend closure beyond the
++workspace. Bare package imports must be in its lock; Node builtins are external.
++Computed imports, process commands, process resolution changes, indirect
++TypeScript configuration and computed setup/configuration paths fail with source
++diagnostics. A conservative whole-workspace selection does not excuse an unsafe
++path or unresolved execution. Unmodeled package managers and recipe forms remain
++fail-closed. The parser and detector are installed and signature-verified in
++controller scratch before discovery, including zero-scope scans.
+diff --git a/tools/jscpd/discover.cjs b/tools/jscpd/discover.cjs
+new file mode 100644
+index 0000000..1f5ae6b
+--- /dev/null
++++ b/tools/jscpd/discover.cjs
+@@ -0,0 +1,187 @@
++/* Static syntax only. Never load, transpile or evaluate module configuration. */
++'use strict';
++const fs = require('node:fs');
++const ts = require('typescript');
++
++if (ts.version !== '6.0.3') throw new Error('unsupported TypeScript parser version');
++const input = JSON.parse(fs.readFileSync(0, 'utf8'));
++const kind = /\.tsx$/.test(input.path) ? ts.ScriptKind.TSX : /\.jsx$/.test(input.path) ? ts.ScriptKind.JSX
++  : /\.[cm]?ts$/.test(input.path) ? ts.ScriptKind.TS : ts.ScriptKind.JS;
++const file = ts.createSourceFile(input.path, input.text, ts.ScriptTarget.Latest, true, kind);
++const result = { imports: [], literals: [], commands: [], errors: [] };
++const aliases = new Map();
++const processModules = new Set(['child_process', 'node:child_process', 'worker_threads', 'node:worker_threads', 'module', 'node:module', 'vm', 'node:vm']);
++const syntaxModules = new Set([...processModules, '@playwright/test']);
++const line = node => file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1;
++const text = node => node && ts.isStringLiteralLike(node) ? node.text : null;
++const error = (node, message) => result.errors.push([line(node), message]);
++const name = node => !node ? '' : ts.isIdentifier(node) ? (aliases.get(node.text) || node.text)
++  : ts.isPropertyAccessExpression(node) ? name(node.expression) + '.' + node.name.text
++  : ts.isElementAccessExpression(node) && text(node.argumentExpression) !== null
++    ? name(node.expression) + '.' + text(node.argumentExpression) : '';
++const literal = node => {
++  if (ts.isStringLiteralLike(node)) return node.text;
++  if (ts.isArrayLiteralExpression(node)) {
++    const entries = node.elements.map(literal);
++    return entries.every(entry => typeof entry === 'string') ? entries : undefined;
++  }
++  return undefined;
++};
++function bind(binding, prefix) {
++  if (ts.isIdentifier(binding)) aliases.set(binding.text, prefix);
++  else if (ts.isObjectBindingPattern(binding)) for (const item of binding.elements) {
++    if (!ts.isIdentifier(item.name) || item.dotDotDotToken || (item.propertyName && !ts.isIdentifier(item.propertyName))) {
++      error(item, 'unsupported reflective process/import binding');
++    } else aliases.set(item.name.text, prefix + '.' + (item.propertyName || item.name).text);
++  }
++}
++function imported(node, specifier) {
++  const value = text(specifier);
++  if (value === null) error(node, 'unresolved computed JavaScript import');
++  else result.imports.push([line(node), value]);
++}
++function options(node) {
++  if (!node) return {};
++  if (!ts.isObjectLiteralExpression(node)) throw new Error('unresolved JavaScript process options');
++  const result = {};
++  for (const entry of node.properties) {
++    if (!ts.isPropertyAssignment(entry) || ts.isComputedPropertyName(entry.name))
++      throw new Error('unresolved JavaScript process option');
++    const key = entry.name.text;
++    if (key === 'cwd') {
++      result.cwd = text(entry.initializer);
++      if (result.cwd === null) throw new Error('unresolved JavaScript process cwd');
++    } else if (['env', 'shell', 'execPath', 'execArgv'].includes(key)) {
++      throw new Error('unsupported JavaScript process resolution option: ' + key);
++    }
++  }
++  return result;
++}
++function staticConfig(node) {
++  if (text(node) !== null || ts.isObjectLiteralExpression(node)) return true;
++  if (ts.isAsExpression(node) || ts.isSatisfiesExpression(node) || ts.isParenthesizedExpression(node)) return staticConfig(node.expression);
++  if (ts.isSpreadElement(node)) return staticConfig(node.expression);
++  if (ts.isArrayLiteralExpression(node)) return node.elements.every(staticConfig);
++  if (ts.isConditionalExpression(node)) return staticConfig(node.whenTrue) && staticConfig(node.whenFalse);
++  return false;
++}
++function visit(node) {
++  const scoped = ts.isBlock(node) || ts.isFunctionLike(node);
++  const savedAliases = scoped ? new Map(aliases) : null;
++  if (ts.isFunctionLike(node)) for (const parameter of node.parameters || []) {
++    if (ts.isIdentifier(parameter.name)) {
++      aliases.delete(parameter.name.text);
++    }
++  }
++  if (ts.isImportDeclaration(node)) {
++    imported(node, node.moduleSpecifier);
++    if (syntaxModules.has(text(node.moduleSpecifier)) && node.importClause) {
++      const moduleName = text(node.moduleSpecifier) === '@playwright/test' ? 'playwright' : text(node.moduleSpecifier).replace('node:', '');
++      const clause = node.importClause;
++      if (clause.name) bind(clause.name, moduleName);
++      const bindings = clause.namedBindings;
++      if (bindings && ts.isNamespaceImport(bindings)) bind(bindings.name, moduleName);
++      else if (bindings) for (const entry of bindings.elements)
++        aliases.set(entry.name.text, moduleName + '.' + (entry.propertyName || entry.name).text);
++    }
++  }
++  if (ts.isExportDeclaration(node) && node.moduleSpecifier) {
++    imported(node, node.moduleSpecifier);
++    if (processModules.has(text(node.moduleSpecifier))) error(node, 'unsupported JavaScript process API re-export');
++  }
++  if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference))
++    imported(node, node.moduleReference.expression);
++  if (ts.isVariableDeclaration(node) && node.initializer) {
++    const init = node.initializer;
++    if (ts.isCallExpression(init) && name(init.expression) === 'require' && text(init.arguments[0]) !== null) {
++      if (processModules.has(text(init.arguments[0]))) bind(node.name, text(init.arguments[0]).replace('node:', ''));
++    } else {
++      const target = name(init);
++      if (/^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target)
++          || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) bind(node.name, target);
++    }
++  }
++  if (ts.isStringLiteralLike(node)) result.literals.push([line(node), node.text]);
++  if (ts.isPropertyAssignment(node) && ['globalSetup', 'globalTeardown', 'testDir', 'tsconfig'].includes(node.name.text)) {
++    if (text(node.initializer) === null) error(node, 'unresolved computed JavaScript test configuration');
++  }
++  if (ts.isPropertyAssignment(node) && node.name.text === 'reporter' && !staticConfig(node.initializer))
++    error(node, 'unresolved computed JavaScript reporter configuration');
++  if (ts.isPropertyAssignment(node) && node.name.text === 'webServer') {
++    const servers = ts.isArrayLiteralExpression(node.initializer) ? node.initializer.elements : [node.initializer];
++    for (const server of servers) {
++      if (!ts.isObjectLiteralExpression(server)) { error(node, 'unresolved JavaScript webServer configuration'); continue; }
++      const entries = new Map(server.properties.filter(ts.isPropertyAssignment).map(property => [property.name.text, property.initializer]));
++      const command = text(entries.get('command'));
++      if (command === null) error(node, 'unresolved computed JavaScript webServer command');
++      else if (entries.has('cwd') && text(entries.get('cwd')) === null) error(node, 'unresolved JavaScript webServer cwd');
++      else result.commands.push({ line: line(node), command, ...(entries.has('cwd') ? {cwd: text(entries.get('cwd'))} : {}) });
++    }
++  }
++  if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
++    const target = name(node.expression);
++    const args = node.arguments || [];
++    if (['defineConfig', 'playwright.defineConfig'].includes(target)) {
++      if (args.length !== 1 || !ts.isObjectLiteralExpression(args[0])) error(node, 'unresolved JavaScript test configuration object');
++    } else if (node.expression.kind === ts.SyntaxKind.ImportKeyword || ['require', 'require.resolve', 'module.require'].includes(target)) {
++      if (args.length !== 1) error(node, 'unsupported JavaScript import arguments');
++      else {
++        imported(node, args[0]);
++        if (node.expression.kind === ts.SyntaxKind.ImportKeyword && processModules.has(text(args[0])))
++          error(node, 'unsupported dynamic JavaScript process-module import');
++      }
++    } else if (['eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'module.createRequire', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
++      error(node, 'unsupported reflective JavaScript execution: ' + target);
++    } else if (target.startsWith('vm.')) {
++      error(node, 'unresolved JavaScript VM/config execution');
++    } else if (target.startsWith('worker_threads.') || target === 'Worker') {
++      error(node, 'unsupported JavaScript worker execution');
++    } else if (target.startsWith('child_process.')) {
++      try {
++        const api = target.slice('child_process.'.length);
++        if (['exec', 'execSync'].includes(api)) {
++          const command = text(args[0]);
++          if (command === null) throw new Error('unresolved computed JavaScript process command');
++          result.commands.push({line: line(node), command, ...options(args[1] && !ts.isFunctionLike(args[1]) ? args[1] : null)});
++        } else if (['execFile', 'execFileSync', 'spawn', 'spawnSync'].includes(api)) {
++          const command = text(args[0]);
++          const operands = args[1] ? literal(args[1]) : [];
++          if (command === null || !Array.isArray(operands)) throw new Error('unresolved computed JavaScript process arguments');
++          result.commands.push({line: line(node), argv: [command, ...operands], ...options(args[2] && !ts.isFunctionLike(args[2]) ? args[2] : null)});
++        } else throw new Error('unsupported JavaScript process API: ' + target);
++      } catch (failure) { error(node, failure.message); }
++    } else if (['Object.assign', 'Object.defineProperty', 'Reflect.set', 'Reflect.defineProperty'].includes(target) && name(args[0]) === 'process.env') {
++      error(node, 'unsupported JavaScript environment mutation affecting resolution');
++    } else if (ts.isElementAccessExpression(node.expression) && /^(?:child_process|module|worker_threads)$/.test(name(node.expression.expression))) {
++      error(node, 'unresolved reflective JavaScript process/import API');
++    }
++  }
++  if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm)$/.test(name(node.expression))
++      && text(node.argumentExpression) === null) error(node, 'unresolved reflective JavaScript process/import API');
++  if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node)) {
++    const target = name(node);
++    if (/^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
++      const parent = node.parent;
++      const declaration = (ts.isVariableDeclaration(parent) && (parent.name === node || parent.initializer === node))
++        || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)
++        || ts.isBindingElement(parent) || ts.isPropertyAccessExpression(parent) || ts.isElementAccessExpression(parent)
++        || ts.isPropertyAssignment(parent) && parent.name === node;
++      const invocation = (ts.isCallExpression(parent) || ts.isNewExpression(parent)) && parent.expression === node;
++      if (!declaration && !invocation) error(node, 'unsupported JavaScript process/import API escape');
++    }
++  }
++  if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment
++      && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment) {
++    const target = name(node.left);
++    if (target === 'process.env' || /^process\.env\.(?:PATH|NODE_PATH|NODE_OPTIONS)$/.test(target)
++        || (/^process\.env$/.test(name(node.left.expression)) && !target))
++      error(node, 'unsupported JavaScript environment change affecting resolution');
++  }
++  ts.forEachChild(node, visit);
++  if (scoped) {
++    aliases.clear(); for (const entry of savedAliases) aliases.set(...entry);
++  }
++}
++for (const diagnostic of file.parseDiagnostics) error(file, ts.flattenDiagnosticMessageText(diagnostic.messageText, ' '));
++visit(file);
++process.stdout.write(JSON.stringify(result));
+diff --git a/tools/jscpd/package-lock.json b/tools/jscpd/package-lock.json
+index cc7bd2b..a5f8267 100644
+--- a/tools/jscpd/package-lock.json
++++ b/tools/jscpd/package-lock.json
+@@ -8,7 +8,8 @@
+       "name": "hexalith-cicd-duplicate-scan",
+       "version": "1.0.0",
+       "dependencies": {
+-        "jscpd": "5.4.3"
++        "jscpd": "5.4.3",
++        "typescript": "6.0.3"
+       }
+     },
+     "node_modules/jscpd": {
+@@ -151,6 +152,19 @@
+       "os": [
+         "win32"
+       ]
++    },
++    "node_modules/typescript": {
++      "version": "6.0.3",
++      "resolved": "https://registry.npmjs.org/typescript/-/typescript-6.0.3.tgz",
++      "integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
++      "license": "Apache-2.0",
++      "bin": {
++        "tsc": "bin/tsc",
++        "tsserver": "bin/tsserver"
++      },
++      "engines": {
++        "node": ">=14.17"
++      }
+     }
+   }
+ }
+diff --git a/tools/jscpd/package.json b/tools/jscpd/package.json
+index 4c3efa1..68a2a66 100644
+--- a/tools/jscpd/package.json
++++ b/tools/jscpd/package.json
+@@ -3,5 +3,8 @@
+   "version": "1.0.0",
+   "private": true,
+   "description": "Integrity-locked nightly duplicate detector",
+-  "dependencies": {"jscpd": "5.4.3"}
++  "dependencies": {
++    "jscpd": "5.4.3",
++    "typescript": "6.0.3"
++  }
+ }
+diff --git a/tools/scan.py b/tools/scan.py
+index a9139d1..6beec52 100644
+--- a/tools/scan.py
++++ b/tools/scan.py
+@@ -24,6 +24,7 @@ MAX_REPORT = 16 * 1024 * 1024
+ MAX_EXPORT = 128 * 1024 * 1024
+ MAX_FINDINGS = 1000
+ VERSION = "5.4.3"
++TYPESCRIPT_VERSION = "6.0.3"
+ 
+ 
+ def read_json(data):
+@@ -59,10 +60,11 @@ class Detector:
+                     "NPM_CONFIG_CACHE": str(self.root / "cache"), "JSCPD_NO_TIPS": "1"}
+         for target in ("package.json", "package-lock.json"):
+             (self.root / target).write_bytes(git.blob(revision, "tools/jscpd/" + target))
++        (self.root / "discover.cjs").write_bytes(git.blob(revision, "tools/jscpd/discover.cjs"))
+         config = git.blob(revision, ".jscpd.json")
+         self.policy = rt.json_read(config)
+         if (not isinstance(self.policy, dict)
+-                or self.policy.get("format") != ["yaml", "bash", "powershell", "python"]
++                or self.policy.get("format") != ["yaml", "bash", "powershell", "python", "javascript", "typescript"]
+                 or self.policy.get("skipLocal") is not True or self.policy.get("noGitignore") is not True
+                 or self.policy.get("absolute") is not True
+                 or self.policy.get("reporters") != ["json"]
+@@ -73,8 +75,9 @@ class Detector:
+         self.policy_sha256 = hashlib.sha256(config).hexdigest()
+         package = rt.json_read((self.root / "package.json").read_bytes())
+         lock = rt.json_read((self.root / "package-lock.json").read_bytes())
+-        if (package.get("dependencies") != {"jscpd": VERSION} or lock.get("lockfileVersion") != 3
+-                or lock.get("packages", {}).get("node_modules/jscpd", {}).get("version") != VERSION):
++        if (package.get("dependencies") != {"jscpd": VERSION, "typescript": TYPESCRIPT_VERSION} or lock.get("lockfileVersion") != 3
++                or lock.get("packages", {}).get("node_modules/jscpd", {}).get("version") != VERSION
++                or lock.get("packages", {}).get("node_modules/typescript", {}).get("version") != TYPESCRIPT_VERSION):
+             raise rt.DeliveryError("detector manifest/lock version mismatch")
+         for key, value in lock.get("packages", {}).items():
+             if key and (not isinstance(value.get("integrity"), str)
+@@ -91,6 +94,24 @@ class Detector:
+         if version != "jscpd " + VERSION:
+             raise rt.DeliveryError("detector reported unexpected version")
+ 
++    def javascript(self, path, text):
++        """Parse trusted syntax in scratch, with module input only on stdin."""
++        node = shutil.which("node", path=self.tool_path)
++        if not node:
++            raise rt.DeliveryError("Node unavailable for trusted TypeScript parser")
++        try:
++            result = subprocess.run([node, str(self.root / "discover.cjs")], cwd=self.root, env=self.env,
++                                    input=json.dumps({"path": path, "text": text}),
++                                    text=True, capture_output=True, timeout=30, check=False)
++        except (OSError, subprocess.TimeoutExpired):
++            raise rt.DeliveryError("trusted TypeScript parser failed or timed out") from None
++        if result.returncode or len(result.stdout.encode()) > MAX_REPORT or len(result.stderr.encode()) > MAX_REPORT:
++            raise rt.DeliveryError("trusted TypeScript parser failed or exceeded output limit")
++        parsed = read_json(result.stdout)
++        if not isinstance(parsed, dict) or set(parsed) != {"imports", "literals", "commands", "errors"}:
++            raise rt.DeliveryError("unsupported trusted TypeScript parser output")
++        return parsed
++
+     def run(self, command, operation, timeout):
+         with tempfile.TemporaryFile(dir=self.root) as out, tempfile.TemporaryFile(dir=self.root) as err:
+             try:
+@@ -243,6 +264,13 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
+         with tempfile.TemporaryDirectory(prefix="hexalith-duplicate-scan-") as temporary:
+             scratch = Path(temporary)
+             manifest, roots, total = {}, [], 0
++            detector = None
++            try:
++                detector = detector_factory(trusted, revision, scratch)
++                report["policy"] = detector.policy
++                report["detector"].update({"signatures": "verified", "policySha256": detector.policy_sha256})
++            except Exception as error:
++                report["errors"].append(rt.clean(error))
+             for index, module in enumerate(modules):
+                 row = {"module": module, "revision": "", "result": "fail", "files": [], "errors": []}
+                 report["modules"].append(row)
+@@ -250,7 +278,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
+                     git = git_factory(scratch / "git" / str(index))
+                     git.init()
+                     row["revision"] = rt.sha((transport or rt.Transport()).module(git, module))
+-                    selected, row["errors"] = Discovery(git, row["revision"]).discover()
++                    selected, row["errors"] = Discovery(git, row["revision"],
++                        javascript_parser=getattr(detector, "javascript", None)).discover()
+                     root = scratch / "sources" / module
+                     for path, item in sorted(selected.items()):
+                         data = item["text"].encode()
+@@ -263,7 +292,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
+                         # A unique flat staged name prevents a literal source
+                         # such as helper and helper.sh from overwriting each
+                         # other when the shebang-only source needs an extension.
+-                        extension = {"yaml": ".yml", "bash": ".sh", "python": ".py", "powershell": ".ps1"}[item["format"]]
++                        extension = {"yaml": ".yml", "bash": ".sh", "python": ".py", "powershell": ".ps1",
++                                     "javascript": ".js", "typescript": ".ts"}[item["format"]]
+                         target = root / (str(len(row["files"])) + extension)
+                         target.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                         target.write_text(staged, encoding="utf-8")
+@@ -278,10 +308,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
+             # cannot be presented as a successful scan. No detector invocation is
+             # needed for empty roots (jscpd otherwise scans its cwd).
+             try:
+-                detector = detector_factory(trusted, revision, scratch)
+-                report["policy"] = detector.policy
+-                report["detector"].update({"signatures": "verified", "policySha256": detector.policy_sha256})
+-                if roots:
++                if roots and detector is not None:
+                     report["findings"] = findings(detector.detect(roots), manifest)
+             except Exception as error:
+                 report["errors"].append(rt.clean(error))
+diff --git a/tools/scan_discovery.py b/tools/scan_discovery.py
+index aca92cf..5a8113e 100644
+--- a/tools/scan_discovery.py
++++ b/tools/scan_discovery.py
+@@ -15,6 +15,7 @@ from __future__ import annotations
+ 
+ import ast
+ from collections import deque
++import json
+ from pathlib import PurePosixPath
+ import posixpath
+ import re
+@@ -26,8 +27,11 @@ import yaml
+ from delivery_runtime import DeliveryError, clean
+ 
+ FORMATS = {".yml": "yaml", ".yaml": "yaml", ".sh": "bash", ".bash": "bash",
+-           ".ps1": "powershell", ".psm1": "powershell", ".py": "python"}
+-SCRIPTS = {"bash", "powershell", "python"}
++           ".ps1": "powershell", ".psm1": "powershell", ".py": "python",
++           ".js": "javascript", ".mjs": "javascript", ".cjs": "javascript",
++           ".ts": "typescript", ".mts": "typescript", ".cts": "typescript",
++           ".jsx": "javascript", ".tsx": "typescript"}
++SCRIPTS = {"bash", "powershell", "python", "javascript", "typescript"}
+ MAX_FILES = 2000
+ MAX_BYTES = 32 * 1024 * 1024
+ MAX_LITERAL = 4096
+@@ -35,7 +39,8 @@ MAX_LITERAL = 4096
+ # an environment-file selector that can set them, and the PowerShell module and
+ # shell cd search paths, which redirect name-based module and directory lookup.
+ RESOLUTION = {"PYTHONPATH", "PYTHONHOME", "PYTHONSAFEPATH", "PYTHONUSERBASE", "UV_ENV_FILE", "PSMODULEPATH",
+-              "CDPATH"}
++              "CDPATH", "NODE_PATH", "NODE_OPTIONS", "NPM_CONFIG_SCRIPT_SHELL", "NPM_CONFIG_NODE_OPTIONS",
++              "NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG", "NPM_CONFIG_PREFIX", "NPM_CONFIG_WORKSPACE"}
+ ENVIRON = {"os.environ", "os.environb"}
+ ENVIRON_WRITES = {"setdefault", "update", "__setitem__", "__ior__"}
+ MODULE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
+@@ -49,7 +54,7 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
+ KEYWORDS = {"then", "do", "else", "if", "elif", "while", "until", "!", "&", "{", "}", "try", "catch", "finally"}
+ SHELLS = {"bash": "bash", "sh": "bash", "dash": "bash", "zsh": "bash", "ksh": "bash",
+           "pwsh": "powershell", "powershell": "powershell"}
+-OTHER_LANGUAGES = {".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".rb", ".pl", ".pm", ".php"}
++OTHER_LANGUAGES = {".rb", ".pl", ".pm", ".php"}
+ COMMAND_APIS = {"subprocess.run", "subprocess.call", "subprocess.Popen", "subprocess.check_call",
+                 "subprocess.check_output", "subprocess.getoutput", "subprocess.getstatusoutput",
+                 "os.system", "os.popen", "runpy.run_path", "runpy.run_module"}
+@@ -453,7 +458,7 @@ def scalars(value, skip=()):
+ 
+ 
+ class Discovery:
+-    def __init__(self, git, revision):
++    def __init__(self, git, revision, *, javascript_parser=None):
+         self.git, self.revision = git, revision
+         self.items = git.items(revision)
+         self.directories = set()
+@@ -463,6 +468,9 @@ class Discovery:
+         self.files, self.errors, self.queue, self.visited = {}, [], deque(), set()
+         self.headers, self.recipes = {}, {}
+         self.total = 0
++        self.javascript_parser = javascript_parser
++        self.npm_seen = set()
++        self.npm_roots = set()
+ 
+     def error(self, path, line, message):
+         self.errors.append(f"{clean(path)}:{line}: {clean(message)}")
+@@ -488,7 +496,7 @@ class Discovery:
+         if not self.regular(path):
+             raise DeliveryError("missing or unsafe regular script/action: " + clean(path))
+         fmt = fmt or FORMATS.get(PurePosixPath(path).suffix.lower()) or self.header(path)
+-        if fmt not in {"yaml", "bash", "powershell", "python"}:
++        if fmt not in set(FORMATS.values()):
+             raise DeliveryError("unsupported local-script language: " + clean(path))
+         if path not in self.files:
+             if len(self.files) >= MAX_FILES:
+@@ -1183,6 +1191,9 @@ class Discovery:
+             self.task_runner(base, args, bases)
+             return cwd
+         if base in NODE_RUNNERS:
++            if base == "npm":
++                self.npm(args, path, number, cwd, action)
++                return cwd
+             if base == "bun":
+                 self.other_language(args, path, cwd, action)
+             if any(argument.split("=", 1)[0] in RECIPE_LOCATIONS | {"--workspace", "--workspaces", "-w"} or (
+@@ -1210,6 +1221,27 @@ class Discovery:
+                 return cwd
+             if self.recipe(("package.json",), bases):
+                 raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(base))
++            raise DeliveryError("unsupported JavaScript task runner execution: " + clean(base))
++        if base in {"node", "nodejs", "tsx", "ts-node"}:
++            if args in (["--version"], ["-v"], ["--help"]):
++                return cwd
++            if not args or args[0].startswith("-"):
++                raise DeliveryError("unsupported JavaScript interpreter options")
++            target = self.resolve(args[0], path=path, cwd=cwd, action=action)
++            for suffix in ("node_modules/@playwright/test/cli.js", "node_modules/playwright/cli.js"):
++                if target == suffix or target.endswith("/" + suffix):
++                    directory = target[:-len(suffix)].rstrip("/") or "."
++                    self.npm_workspace(directory, path, number, action)
++                    self.playwright(args[1:], path, number, directory, action)
++                    return cwd
++            fmt = FORMATS.get(PurePosixPath(target).suffix.lower())
++            if fmt not in {"javascript", "typescript"}:
++                raise DeliveryError("unsupported JavaScript interpreter target")
++            self.add(target, fmt, cwd, action)
++            return cwd
++        if base == "playwright":
++            self.npm_workspace(cwd, path, number, action)
++            self.playwright(args, path, number, cwd, action)
+             return cwd
+         if cmd == "cd":
+             if sourced:
+@@ -1318,6 +1350,214 @@ class Discovery:
+                 if resolved in self.items:
+                     raise DeliveryError("unsupported local-script language: " + clean(resolved))
+ 
++    def json(self, path):
++        """Read regular committed JSON with duplicate keys rejected."""
++        path = safe_path(posixpath.normpath(path))
++        if not self.regular(path):
++            raise DeliveryError("missing or unsafe npm/config input: " + clean(path))
++        def pairs(items):
++            result = {}
++            for key, value in items:
++                if key in result:
++                    raise DeliveryError("duplicate npm/config JSON key: " + clean(path))
++                result[key] = value
++            return result
++        return json.loads(self.git.blob(self.revision, path), object_pairs_hook=pairs,
++                          parse_constant=lambda _: (_ for _ in ()).throw(DeliveryError("non-JSON constant")))
++
++    def npm_workspace(self, directory, path, number, action):
++        """Include every tracked JS/TS source in the selected literal workspace."""
++        manifest = posixpath.join(directory, "package.json")
++        for parent in (PurePosixPath(directory), *PurePosixPath(directory).parents):
++            if posixpath.normpath(posixpath.join(str(parent), ".npmrc")) in self.items:
++                raise DeliveryError("unsupported tracked npm configuration affecting execution")
++        package = self.json(manifest)
++        lock = self.json(posixpath.join(directory, "package-lock.json"))
++        if (not isinstance(package, dict) or not isinstance(lock, dict)
++                or lock.get("lockfileVersion") not in (2, 3) or not isinstance(lock.get("packages"), dict)):
++            raise DeliveryError("npm workspace requires a manifest and committed lock")
++        self.npm_roots.add(directory)
++        prefix = "" if directory == "." else directory + "/"
++        for source in sorted(self.items):
++            if source.startswith(prefix) and FORMATS.get(PurePosixPath(source).suffix.lower()) in {"javascript", "typescript"}:
++                self.add(source, cwd=directory, action=action)
++        return package
++
++    def playwright(self, args, path, number, directory, action):
++        """Validate fixed installed invocation and follow explicit config overrides."""
++        if not args or args[0] not in {"test", "install", "show-report"}:
++            raise DeliveryError("unsupported Playwright invocation")
++        if any(any(character in argument for character in "$`") for argument in args):
++            raise DeliveryError("unresolved computed Playwright invocation")
++        args = list(args[1:])
++        while args:
++            option = args.pop(0)
++            key, equal, operand = option.partition("=")
++            if key in {"--config", "-c", "--tsconfig", "--reporter"}:
++                if not equal:
++                    if not args:
++                        raise DeliveryError("missing Playwright configuration operand")
++                    operand = args.pop(0)
++                if key == "--reporter" and not operand.startswith(".") and "/" not in operand:
++                    continue
++                target = self.resolve(operand, path=path, cwd=directory, action=action)
++                if key == "--tsconfig":
++                    self.json(target)
++                else:
++                    self.add(target, cwd=directory, action=action)
++
++    def npm(self, args, path, number, cwd, action):
++        """Follow literal npm --prefix/workspace run recipes without executing them."""
++        ignore_scripts = "--ignore-scripts" in args
++        args, directory, workspace = list(args), cwd, None
++        remaining = []
++        while args:
++            value = args.pop(0)
++            if value == "--":
++                remaining.extend([value, *args])
++                break
++            key, equal, operand = value.partition("=")
++            if key in {"--prefix", "--workspace", "-w"}:
++                if not equal:
++                    if not args:
++                        raise DeliveryError("unresolved npm workspace directory")
++                    operand = args.pop(0)
++                if key == "--prefix":
++                    directory = self.resolve(operand, path=path, cwd=cwd, action=action, allow_root=True)
++                else:
++                    workspace = operand
++            elif key in {"--workspaces", "--if-present", "--script-shell", "--ignore-scripts=false"}:
++                raise DeliveryError("unsupported npm execution option: " + key)
++            else:
++                remaining.append(value)
++        if workspace is not None:
++            root = self.json(posixpath.join(directory, "package.json"))
++            declared = root.get("workspaces") if isinstance(root, dict) else None
++            if not isinstance(declared, list) or any(not isinstance(item, str) or any(c in item for c in "*?{}") for item in declared):
++                raise DeliveryError("npm workspace selection requires literal workspace paths")
++            if workspace not in declared:
++                raise DeliveryError("npm workspace must name a declared literal path")
++            directory = self.resolve(workspace, path=path, cwd=directory, action=action)
++        while remaining and remaining[0].startswith("-"):
++            option = remaining.pop(0)
++            if option in NODE_SAFE:
++                return
++            if option not in NODE_FLAGS:
++                raise DeliveryError("unsupported task runner leading option: npm")
++        subcommand = remaining.pop(0) if remaining else None
++        if subcommand == "audit":
++            if any(not argument.startswith("-") and argument != "signatures" for argument in remaining):
++                raise DeliveryError("unsupported mutating npm audit operation")
++            return
++        if subcommand in NODE_SAFE:
++            if subcommand == "config" and (not remaining or remaining[0] not in {"get", "list", "ls"}):
++                raise DeliveryError("unsupported mutating npm configuration")
++            return
++        if subcommand in {"install", "ci", "add", "remove", "uninstall"} and ignore_scripts:
++            return
++        if subcommand not in {"run", "run-script", "test", "start", "stop", "restart"}:
++            if self.recipe(("package.json",), [directory]):
++                raise DeliveryError("unsupported task runner with tracked module recipes: npm")
++            raise DeliveryError("unsupported npm execution without a literal recipe")
++        recipe = remaining.pop(0) if subcommand in {"run", "run-script"} and remaining else subcommand
++        if not recipe or recipe.startswith("-"):
++            raise DeliveryError("unresolved npm recipe")
++        package = self.npm_workspace(directory, path, number, action)
++        scripts = package.get("scripts", {})
++        if not isinstance(scripts, dict) or not isinstance(scripts.get(recipe), str):
++            raise DeliveryError("missing or computed npm recipe: " + clean(str(recipe)))
++        for selected in ("pre" + recipe, recipe, "post" + recipe):
++            if selected not in scripts:
++                continue
++            if not isinstance(scripts[selected], str):
++                raise DeliveryError("unresolved npm lifecycle recipe")
++            key = (directory, selected)
++            if key in self.npm_seen:
++                continue
++            self.npm_seen.add(key)
++            command = scripts[selected]
++            if selected == recipe and remaining:
++                command += " " + shlex.join(remaining[1:] if remaining[0] == "--" else remaining)
++            self.commands(posixpath.join(directory, "package.json"), command, directory, action)
++
++    def javascript(self, path, text, cwd, action):
++        """Resolve parser-proven imports and execution literals; indirection fails."""
++        if self.javascript_parser is None:
++            raise DeliveryError("trusted TypeScript 6.0.3 parser is unavailable")
++        parsed = self.javascript_parser(path, text)
++        for number, message in parsed["errors"]:
++            self.error(path, number, message)
++        bases = self.bases(path, action, [cwd])
++        self.include(parsed["literals"], path, cwd, action, bases)
++        parent = str(PurePosixPath(path).parent)
++        roots = sorted((root for root in self.npm_roots if root == "." or path.startswith(root + "/")), key=len, reverse=True)
++        root = roots[0] if roots else parent
++        config = posixpath.join(root, "tsconfig.json")
++        aliases, base = {}, root
++        if config in self.items:
++            document = self.json(config)
++            if not isinstance(document, dict) or "extends" in document or "references" in document:
++                raise DeliveryError("unsupported indirect TypeScript configuration")
++            options = document.get("compilerOptions", {})
++            if not isinstance(options, dict):
++                raise DeliveryError("unsupported TypeScript compilerOptions")
++            if "baseUrl" in options:
++                base = self.resolve(options["baseUrl"], path=path, cwd=root, action=action, allow_root=True)
++            aliases = options.get("paths", {})
++            if not isinstance(aliases, dict):
++                raise DeliveryError("unsupported TypeScript path aliases")
++        for number, imported in parsed["imports"]:
++            try:
++                targets = []
++                if imported.startswith("."):
++                    targets = [self.resolve(imported, path=path, cwd=parent, action=action)]
++                elif imported.startswith(("/", "\\")) or re.match(r"[A-Za-z]:", imported):
++                    raise DeliveryError("unsafe JavaScript import path")
++                else:
++                    for pattern, replacements in aliases.items():
++                        if not isinstance(pattern, str) or pattern.count("*") > 1 or not isinstance(replacements, list):
++                            raise DeliveryError("unsupported TypeScript alias")
++                        match = re.fullmatch(re.escape(pattern).replace(r"\*", "(.*)"), imported)
++                        if match:
++                            for replacement in replacements:
++                                if not isinstance(replacement, str) or replacement.count("*") > 1:
++                                    raise DeliveryError("unsupported TypeScript alias target")
++                                targets.append(self.resolve(replacement.replace("*", match[1] if match.lastindex else ""),
++                                                            path=path, cwd=base, action=action))
++                    if not targets:
++                        # Bare imports must come from the locked workspace or Node's builtins.
++                        if imported.startswith("node:") or imported in {"fs", "path", "url", "os", "util", "crypto", "assert", "child_process"}:
++                            continue
++                        package = "/".join(imported.split("/")[:2]) if imported.startswith("@") else imported.split("/")[0]
++                        lock = self.json(posixpath.join(root, "package-lock.json"))
++                        if "node_modules/" + package not in lock.get("packages", {}):
++                            raise DeliveryError("unresolved unlocked JavaScript import: " + clean(imported))
++                        continue
++                found = False
++                for target in targets:
++                    stem, suffix = posixpath.splitext(target)
++                    candidates = [target, *([stem + extension for extension in (".ts", ".mts", ".cts")] if suffix in {".js", ".mjs", ".cjs"} else []),
++                                  *(target + extension for extension in (".ts", ".js", ".mts", ".mjs", ".cts", ".cjs")),
++                                  posixpath.join(target, "index.ts"), posixpath.join(target, "index.js")]
++                    for candidate in candidates:
++                        if candidate in self.items:
++                            fmt = FORMATS.get(PurePosixPath(candidate).suffix.lower())
++                            if fmt not in {"javascript", "typescript"}:
++                                if PurePosixPath(candidate).suffix == ".json":
++                                    self.json(candidate)
++                                    found = True
++                                    continue
++                                raise DeliveryError("unsupported local JavaScript import language")
++                            self.add(candidate, fmt, cwd, action)
++                            found = True
++                if not found:
++                    raise DeliveryError("missing JavaScript import: " + clean(imported))
++            except (ValueError, UnicodeError) as error:
++                self.error(path, number, str(error))
++        for command in parsed["commands"]:
++            directory = self.resolve(command["cwd"], path=path, cwd=cwd, action=action, allow_root=True) if "cwd" in command else cwd
++            self.commands(path, command.get("command", shlex.join(command.get("argv", []))), directory, action, offset=command["line"] - 1)
++
+     @staticmethod
+     def uv_options(words, run=False):
+         """Consume uv options so that an option value never becomes the command.
+@@ -1798,6 +2038,24 @@ class Discovery:
+             if not node.args:
+                 raise DeliveryError("unresolved Python script invocation")
+             first = node.args[0]
++            # Fixed .NET SDK operations consume project/output/property data.
++            # Their C#/MSBuild graph is outside this source-language perimeter;
++            # dynamic executable/verb/options expansion still cannot be certified.
++            # The fixed read-only Git provenance operation likewise executes no
++            # repository script. Every literal in the operands is still visited
++            # by the enclosing AST traversal's normal literal-reference rule.
++            if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
++                fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
++                compiler = (fixed[:1] == ["dotnet"] and (
++                    fixed[1:2] in (["build"], ["pack"], ["restore"], ["msbuild"])
++                    or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
++                provenance = len(fixed) == 5 and fixed[:2] == ["git", "-C"] and fixed[-2:] == ["rev-parse", "HEAD"]
++                if compiler or provenance:
++                    if any(keyword.arg == "shell" and not (
++                            isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
++                           for keyword in node.keywords):
++                        raise DeliveryError("unsupported shell execution of a compiled operation")
++                    return
+             try:
+                 if (isinstance(first, (ast.List, ast.Tuple)) and first.elts
+                         and "sys.executable" in names(ast.unparse(first.elts[0]))):
+@@ -1858,6 +2116,8 @@ class Discovery:
+                     self.action(path, item["text"])
+                 elif item["format"] == "python":
+                     self.python(path, item["text"], cwd, action, roots=python_roots)
++                elif item["format"] in {"javascript", "typescript"}:
++                    self.javascript(path, item["text"], cwd, action)
+                 elif item["format"] in {"bash", "powershell"}:
+                     self.commands(path, item["text"], cwd, action, powershell=item["format"] == "powershell", sourced=sourced)
+             except (ValueError, UnicodeError, RecursionError) as error:
+diff --git a/tools/tests/test_scan.py b/tools/tests/test_scan.py
+index 7970efc..ea14597 100644
+--- a/tools/tests/test_scan.py
++++ b/tools/tests/test_scan.py
+@@ -54,7 +54,7 @@ class Workspace:
+         (self.cicd / "setup").mkdir()
+         (self.cicd / "tools/jscpd").mkdir(parents=True)
+         shutil.copy(ROOT / ".jscpd.json", self.cicd)
+-        for name in ("package.json", "package-lock.json"):
++        for name in ("package.json", "package-lock.json", "discover.cjs"):
+             shutil.copy(ROOT / "tools/jscpd" / name, self.cicd / "tools/jscpd")
+         self.paths = {}
+         for module in modules:
+@@ -97,6 +97,8 @@ class Workspace:
+ def block(fmt, label="shared", count=18):
+     if fmt == "python":
+         return "".join(f'print("{label} operation {i:02d}", {i}, {i + 1})\n' for i in range(count))
++    if fmt in {"javascript", "typescript"}:
++        return "".join(f'console.log("{label} operation {i:02d}", {i}, {i+1});\n' for i in range(count))
+     if fmt == "bash":
+         return "".join(f"printf '%s\\n' '{label} operation {i:02d}'\n" for i in range(count))
+     if fmt == "powershell":
+@@ -205,7 +207,7 @@ A1 = (
+      None, "unsupported task runner with tracked module recipes: just"),
+     ("npm-recipe", [("bash", "npm run lint", "")],
+      {"package.json": '{"scripts": {"lint": "python -m helper"}}\n', "helper.py": COPY},
+-     None, "unsupported task runner with tracked module recipes: npm"),
++     None, "missing or unsafe npm/config input: package-lock.json"),
+     ("poetry-recipe", [("bash", "poetry run lint", "")],
+      {"pyproject.toml": "[tool.poetry.scripts]\nlint = 'helper:main'\n", "helper.py": COPY},
+      None, "unsupported task runner with tracked module recipes: poetry"),
+@@ -245,8 +247,45 @@ class ScanTests(unittest.TestCase):
+                 w.action(module, command or "python " + path)
+             w.commit(w.paths[module])
+ 
+-    def test_all_four_languages_use_actual_pinned_detector(self):
+-        for fmt, suffix in (("yaml", "yml"), ("bash", "sh"), ("powershell", "ps1"), ("python", "py")):
++    def test_npm_recipe_covers_complete_workspace_aliases_and_cross_language_calls(self):
++        files = {
++            "tests/e2e/package.json": json.dumps({"scripts":{"test:package":"playwright test --project=chromium"}}),
++            "tests/e2e/package-lock.json": '{"lockfileVersion":3,"packages":{}}',
++            "tests/e2e/tsconfig.json": json.dumps({"compilerOptions":{"baseUrl":".","paths":{"@helpers/*":["../shared/*"]}}}),
++            "tests/e2e/playwright.config.ts": "export default {globalSetup:'./setup.ts'};\n",
++            "tests/e2e/setup.ts": "import '@helpers/copied.js';\n",
++            "tests/e2e/specs/only-npm.spec.ts": block("typescript", "npm-only"),
++            "tests/shared/copied.ts": block("typescript", "aliased-only"),
++            "tests/e2e/process.ts": "import {execFileSync as run} from 'node:child_process'; run('python3',['../../scripts/helper.py']);\n",
++            "scripts/helper.py": block("python", "javascript-process-only"),
++        }
++        report = self.coverage_case([("bash", "npm --prefix tests/e2e run test:package", "")], files)
++        self.assert_coverage(report, "tests/shared/copied.ts", None)
++        self.assert_coverage(report, "tests/e2e/specs/only-npm.spec.ts", None)
++        self.assert_coverage(report, "scripts/helper.py", None)
++        self.assertTrue(all(not row["errors"] for row in report["modules"]), report)
++
++    def test_javascript_computed_import_process_and_config_fail_closed(self):
++        for source, diagnostic in (
++            ("import(process.env.TARGET);", "computed JavaScript import"),
++            ("import {runInNewContext} from 'node:vm'; runInNewContext(process.env.CODE);", "VM/config execution"),
++            ("import('node:child_process').then(cp => cp.exec(process.env.CMD));", "dynamic JavaScript process-module import"),
++            ("import {exec} from 'node:child_process'; setTimeout(exec, 0, process.env.CMD);", "API escape"),
++            ("import {spawn} from 'node:child_process'; spawn(process.env.TOOL, []);", "computed JavaScript process"),
++            ("export default {globalSetup:process.env.SETUP};", "computed JavaScript test configuration"),
++            ("export default {reporter:process.env.REPORTER};", "computed JavaScript reporter"),
++            ("export default {webServer:{command:process.env.CMD}};", "computed JavaScript webServer command"),
++            ("import '../outside.js';", "source path escapes module"),
++            ("const cp=require('node:child_process'); cp[process.env.API]('python');", "reflective JavaScript process"),
++        ):
++            with self.subTest(source=source):
++                report = self.coverage_case([("bash", "node script.js", "")], {"script.js":source})
++                self.assertEqual("fail", report["result"])
++                self.assertTrue(all(any(diagnostic in message for message in row["errors"]) for row in report["modules"]), report)
++
++    def test_all_six_languages_use_actual_pinned_detector(self):
++        for fmt, suffix in (("yaml", "yml"), ("bash", "sh"), ("powershell", "ps1"), ("python", "py"),
++                            ("javascript", "js"), ("typescript", "ts")):
+             with self.subTest(format=fmt):
+                 w = self.workspace()
+                 path = ".github/actions/dormant/shared." + suffix
+@@ -490,7 +529,6 @@ class ScanTests(unittest.TestCase):
+             ('Invoke-Command -FilePath scripts/helper.ps1', "pwsh", "Invoke-Command"),
+             ('pwsh -WorkingDirectory scripts -File helper.ps1', "pwsh", "working-directory"),
+             ('pwsh -EncodedCommand ZQBjAGgAbwA=', "pwsh", "encoded"),
+-            ('node scripts/tool.js', "bash", "unsupported local-script language"),
+         )
+         for command, shell, diagnostic in cases:
+             with self.subTest(command=command):
+@@ -1505,7 +1543,7 @@ class ScanTests(unittest.TestCase):
+             with self.subTest(command=command):
+                 self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                     "package.json": '{"scripts":{"go":"python -m helper","lint":"python -m helper"}}',
+-                    "helper.py": COPY}), None, "unsupported task runner with tracked module recipes: npm")
++                    "helper.py": COPY}), None, "missing or unsafe npm/config input: package-lock.json")
+         for command in ("npm --ignore-scripts --version", "npm view jscpd version", "npm ci --ignore-scripts"):
+             with self.subTest(probe=command):
+                 w = self.workspace(("Hexalith.Alpha",))
+@@ -1731,7 +1769,8 @@ class ScanTests(unittest.TestCase):
+                 self.assert_coverage(self.coverage_case([("bash", command, "")], {
+                     "info/package.json": '{"scripts":{"lint":"python3 -m helper"}}', "info/helper.py": COPY,
+                     "tools/pyproject.toml": '[tool.poetry.scripts]\nlint="helper:main"\n',
+-                    "tools/helper.py": COPY}), None, "unsupported task runner recipe location")
++                    "tools/helper.py": COPY}), None, "missing or unsafe npm/config input: info/package-lock.json" if command.startswith("npm")
++                                     else "unsupported task runner recipe location")
+         for command in ("npm info jscpd", "npm --version", "npm audit signatures"):
+             with self.subTest(probe=command):
+                 w = self.workspace(("Hexalith.Alpha",))
+@@ -1976,7 +2015,7 @@ class ScanTests(unittest.TestCase):
+         for command in ("npm --workspace info run lint", "npm --workspace=info run lint", "npm -w info run lint"):
+             with self.subTest(command=command):
+                 self.assert_coverage(self.coverage_case([("bash", command, "")], files), None,
+-                                     "unsupported task runner recipe location")
++                                     "missing or unsafe npm/config input: info/package-lock.json")
+         self.assert_coverage(self.coverage_case([("bash", "npm --registry info run lint", "")], files), None,
+                              "unsupported task runner leading option")
+         for command in ("npm info jscpd", "npm --ignore-scripts --version", "npm audit signatures"):
+@@ -2021,6 +2060,23 @@ class ScanTests(unittest.TestCase):
+             "scripts/start.py": source, "scripts/start.sh": "python -m helper\n", "work/helper.py": COPY})
+         self.assert_coverage(report, "work/helper.py", None)
+ 
++    def test_fixed_compiler_operands_preserve_literal_scope_and_reject_execution_indirection(self):
++        report = self.coverage_case([("bash", "python scripts/start.py", "")], {
++            "scripts/start.py": "import subprocess\nsubprocess.run(['dotnet', 'build', project, '--no-restore', 'scripts/payload.py'])\n",
++            "scripts/payload.py": COPY,
++        })
++        self.assert_coverage(report, "scripts/payload.py", None)
++        for command, diagnostic in (
++                ("subprocess.run(['dotnet', operation, project])", "computed Python script invocation"),
++                ("subprocess.run([executable, 'build', project])", "computed Python script invocation"),
++                ("subprocess.run(['dotnet', 'build', project], shell=True)", "shell execution"),
++                ("subprocess.run(['dotnet', 'build', project], cwd=directory)", "subprocess cwd"),
++                ("subprocess.run(['dotnet', 'build', project], env={'PATH':'scripts'})", "environment affecting resolution")):
++            with self.subTest(command=command):
++                self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
++                    "scripts/start.py": "import subprocess\n" + command + "\n",
++                }), None, diagnostic)
++
+     def test_each_central_policy_rule_fails_alone(self):
+         # C16: one single-violation subtest per central-policy rule.
+         policy = json.loads((ROOT / ".jscpd.json").read_bytes())
+diff --git a/tools/tests/test_validate.py b/tools/tests/test_validate.py
+index 87e13d5..ead98ec 100644
+--- a/tools/tests/test_validate.py
++++ b/tools/tests/test_validate.py
+@@ -277,6 +277,37 @@ class ValidateTests(unittest.TestCase):
+                 self.assertEqual(status, 1)
+                 self.assertIn("nightly/action.yml", diagnostic)
+ 
++    def test_enabled_preparation_requires_live_committed_regular_inputs(self):
++        inputs = ("tests/e2e/package.json", "tests/e2e/package-lock.json", ".config/dotnet-tools.json")
++        for changed in inputs:
++            for failure in (None, "missing", "symlink"):
++                with self.subTest(changed=changed, failure=failure), workspace() as fixture:
++                    remote = fixture.module(setup={"solution": "src/F.slnx"})
++                    for name in inputs:
++                        target = remote / name
++                        target.parent.mkdir(parents=True, exist_ok=True)
++                        target.write_text("{}\n")
++                    if failure:
++                        (remote / changed).unlink()
++                        if failure == "symlink":
++                            (remote / changed).symlink_to("../../README.md" if changed.startswith("tests/") else "../README.md")
++                    git(remote, "add", ".")
++                    git(remote, "commit", "--quiet", "-m", "Preparation inputs")
++                    fixture.commit()
++                    # The active released tag deliberately lacks the additive
++                    # fields. Exercise the preparation-input boundary after an
++                    # upgraded tagged reader has returned its complete document.
++                    config = fixture.json() | {"npmWorkspaces": ["tests/e2e"], "dotnetTools": True}
++                    contract = mock.Mock(tag=config["buildsTag"])
++                    contract.validate.return_value = config
++                    with mock.patch.object(validator, "clone_module", side_effect=fixture.clone):
++                        if failure:
++                            with self.assertRaises(validator.checks.CheckError) as raised:
++                                validator.check_module(fixture.root, "Hexalith.Fixture", contract)
++                            self.assertIn(changed, str(raised.exception))
++                        else:
++                            validator.check_module(fixture.root, "Hexalith.Fixture", contract)
++
+     def test_clone_failure_does_not_drop_other_modules(self):
+         with workspace() as fixture:
+             fixture.module("Hexalith.Alpha")
+diff --git a/tools/validate.py b/tools/validate.py
+index 4f03ff8..1b1d328 100644
+--- a/tools/validate.py
++++ b/tools/validate.py
+@@ -112,6 +112,12 @@ def check_module(project: Path, repository: str, contract) -> None:
+     # The sole tagged reader already enforces name disjointness and enabled
+     # exclusion targets. The union includes exclusions explicitly for clarity.
+     actions = sorted(set(config["hooks"]) | set(config["jobs"]) | set(config["tests"]["exclude"].values()))
++    required = {f".github/actions/{action}/action.yml": "enabled action" for action in actions}
++    for workspace in config.get("npmWorkspaces", []):
++        for name in ("package.json", "package-lock.json"):
++            required[f"{workspace}/{name}"] = "npm preparation input"
++    if config.get("dotnetTools", False):
++        required[".config/dotnet-tools.json"] = ".NET tool preparation input"
+     with tempfile.TemporaryDirectory(prefix="hexalith-validate-module-") as directory:
+         clone = Path(directory) / "module"
+         clone_module(repository, clone)
+@@ -124,16 +130,15 @@ def check_module(project: Path, repository: str, contract) -> None:
+         main = anonymous_git(clone, "rev-parse", "--verify", "refs/remotes/origin/main^{commit}")
+         if head != main:
+             raise checks.CheckError(f"{repository}: cloned HEAD differs from fetched origin/main")
+-        for action in actions:
+-            path = f".github/actions/{action}/action.yml"
++        for path, label in sorted(required.items()):
+             records = anonymous_git(clone, "ls-tree", "-z", "HEAD", "--", path).split(b"\0")
+             records = [record for record in records if record]
+             if len(records) != 1:
+-                raise checks.CheckError(f"{repository}: live main is missing enabled action {path}")
++                raise checks.CheckError(f"{repository}: live main is missing {label} {path}")
+             header, raw_path = records[0].split(b"\t", 1)
+             mode, kind, _ = header.decode("ascii").split()
+             if kind != "blob" or mode not in ("100644", "100755") or raw_path.decode("utf-8") != path:
+-                raise checks.CheckError(f"{repository}: live-main enabled action {path} must be a committed regular file")
++                raise checks.CheckError(f"{repository}: live-main {label} {path} must be a committed regular file")
+ 
+ 
+ def validate(project: Path) -> tuple[dict, int]:

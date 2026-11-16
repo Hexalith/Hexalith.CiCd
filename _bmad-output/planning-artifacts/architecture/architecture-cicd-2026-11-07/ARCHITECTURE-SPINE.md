@@ -97,7 +97,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Binds:** CAP-1, CAP-2, CAP-3, CAP-5, CAP-12
 - **Prevents:** a SHA's CI or release result depending on CiCd's state at run time
 - **Rule:**
-  - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `codeql`, `tests`, `hooks` and `jobs`.
+  - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `npmWorkspaces`, `dotnetTools`, `codeql`, `tests`, `hooks`, `jobs` and `submodules`.
   - Builds' CI, Builds' release and `check.py` read it from the checkout, through the AD-4 loader.
   - It is complete: every knob is written out, so no reader applies a default or accepts a missing key.
   - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, the Windows jobs (which take `solution` from the `ci` job's output, AD-12) and the publish job with its environment.
@@ -118,10 +118,10 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - A setup file is `hexalith-ci.json` without `schema` and `buildsTag`; a setup file that contains either key fails.
   - The render adds `schema` (the `const` of the schema file at `builds-version`) and `buildsTag` (from `builds-version` only), and writes every knob explicitly: schema `default` values, plus the `codeql` rule below.
   - Validation checks that rendered `hexalith-ci.json` against Builds' `schemas/hexalith.ci.v<N>.json` at `builds-version`, never the raw setup file. Unknown keys fail.
-  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr` and `browsers` are `false`.
+  - The schema constrains every string a template writes into YAML: hook, job and action names match `^[a-z0-9]+(-[a-z0-9]+)*$`, job names exclude `ci`, the runner is `windows-latest`, and paths contain no control character and no `${{`. With `solution: none`, `jobs`, `hooks` and `tests` are empty, and `dapr`, `browsers` and `dotnetTools` are `false`, and `npmWorkspaces` is empty.
   - **Knobs:**
     - `solution`: a repo-relative path, or `none`, which runs stage 1 only and releases a GitHub release only.
-    - `dapr`, `browsers`, `registry`.
+    - `dapr`, `browsers`, `registry`; default-disabled `dotnetTools` and `npmWorkspaces` (story 18).
     - At the next compatible Builds release, `ciTimeoutMinutes`: an integer from 1 to 360, default 30, materialized in the complete document and forwarded to the existing numeric `job-timeout-minutes` workflow input. Earlier tags retain their own contract and callers (story 23).
     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
@@ -325,7 +325,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - Only the Builds submodule is checked out.
   - No CodeQL runs on a push or PR.
   - The module `ci.yml` triggers on `push` to `main`, `pull_request` and `workflow_dispatch`.
-  - A custom action that needs browsers or Dapr is a hook with that knob on.
+  - A custom action that needs browsers or Dapr is a hook with that knob on. Locked npm workspaces and exact local .NET tools are optional generic preparation knobs, run once after successful units and once in a separate nightly-hook job; hooks reuse Release/package outputs (story 18).
   - `jobs` exist only for Windows. The reusable `ci.yml` outputs every knob that Windows `prepare` uses, as the loader validated it: `solution` (workspace-relative, including `module-root` when set) and, once added, `submodules`. Each job is rendered with `needs: ci`, `runs-on: windows-latest` and two steps: `uses: Hexalith/Hexalith.Builds/Github/prepare@<tag>` with those outputs as inputs, then a literal `uses: ./.github/actions/<job-name>`.
   - On Windows, `prepare` checks out, sets up .NET, restores and builds, and sets up no environment. On Linux, it reads the knobs through the AD-4 loader and runs the environment setup after the build.
 
@@ -765,3 +765,22 @@ Hexalith.<Module>/
 - **The `hexalith-module` candidate gate (diagnostic HXP301).** This product command is enrolled against `candidate-policy.yml` at a pinned SHA. Story 27 decides whether to retire it when that workflow is deleted; it is product, not CI/CD.
 - **Skipping CodeQL on modules unchanged since the last analysis.** An optimization; revisit if nightly queue time matters.
 - **Duplicate-scan threshold and early noise** from Python tooling in Memories and Tenants, until the gate rule deletes it. Tuned in story 9.
+
+
+### Story 18 additive preparation and scan clarification (AD-3, AD-12, AD-14)
+
+`npmWorkspaces: []` and `dotnetTools: false` become complete required fields only
+at the next released schema/reader. Old tagged consumers remain unchanged. Paths,
+committed manifests/locks, exact tool versions and install failures fail closed.
+Node 24, locked npm without lifecycle scripts plus signature verification, trusted
+NuGet tool restore and locked npm/built .NET Playwright preparation belong to
+Builds. A hook adds only product inspection/execution and distinct consumer tests.
+The nightly bump retains the default-only new-key rule.
+
+Duplicate-scan closure adds JS/TS and literal npm/Playwright execution using a
+controller-owned locked TypeScript 6.0.3 static parser. It includes complete test
+workspaces and resolves relative/aliased imports and supported process literals,
+without executing module configuration. Unresolved execution and unsafe paths
+remain failures. Existing thresholds, limits, suppression rejection and
+cross-module-only semantics are unchanged; `docs/duplicate-scan.md` specifies the
+supported syntax and failure boundary.
