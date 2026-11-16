@@ -1,0 +1,25 @@
+{
+  "commands": [
+    [
+      "uv",
+      "export",
+      "--frozen",
+      "--script",
+      "tools/qualify_conversations.py",
+      "--format",
+      "requirements-txt",
+      "--output-file",
+      "/tmp/hexalith-job.bvbDKtWI/requirements.txt"
+    ],
+    [
+      "uv",
+      "run",
+      "--with-requirements",
+      "/tmp/hexalith-job.bvbDKtWI/requirements.txt",
+      "python3",
+      "tools/tests/test_conversations_qualification.py"
+    ]
+  ],
+  "exitCode": 0,
+  "supersedes": "merged-conversations-qualification.json (missing invocation dependencies)"
+}

@@ -1,0 +1,387 @@
+{
+  "schema": "story16.local-source-verification.v1",
+  "recordedUtc": "2026-11-16T18:59:03.258009+00:00",
+  "status": "local-source-qualified; external acceptance pending",
+  "worktree": "/home/administrator/projects/hexalith/cicd-story-16",
+  "repositoryHeads": {
+    "CiCd": "c74b5c8f5787fb33bfd85c1c4430b6de39674198",
+    "Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Conversations": "9e24c280efd5e9c13826eab9bc8b8b687a7bee09"
+  },
+  "commands": [
+    "run-with-temp _bmad-output/specs/spec-cicd/evidence/16/run-source-qualification.sh references/Hexalith.Builds _bmad-output/specs/spec-cicd/evidence/16",
+    "run-with-temp python3 _bmad-output/specs/spec-cicd/evidence/16/run-python-qualification.py /home/administrator/.local/bin/python3.12",
+    "run-with-temp bash -euc 'UV_CACHE_DIR=\"$TMPDIR/uv-cache\" uv run --no-project --python /home/administrator/.local/bin/python3.12 --with Jinja2==3.1.6 --with PyYAML==6.0.3 --with jsonschema==4.26.0 python _bmad-output/specs/spec-cicd/evidence/16/run-python-qualification.py --failed'",
+    "run-with-temp python3 _bmad-output/specs/spec-cicd/evidence/16/run-python-qualification.py /home/administrator/.local/bin/python3.12 --groups=builds-test_module_preparation",
+    "run-with-temp python3 _bmad-output/specs/spec-cicd/evidence/16/run-python-qualification.py /home/administrator/.local/bin/python3.12 --groups=builds-test_windows_checkout",
+    "run-with-temp python3 _bmad-output/specs/spec-cicd/evidence/16/run-python-qualification.py /home/administrator/.local/bin/python3.12 --groups=builds-test_ci_dapr_scope",
+    "run-with-temp python3 _bmad-output/specs/spec-cicd/evidence/16/run-python-qualification.py",
+    "run-with-temp uv run --locked --script tools/tests/test_render.py",
+    "run-with-temp uv run --locked --script tools/tests/test_validate.py",
+    "run-with-temp uv run --locked --script tools/render.py --check",
+    "run-with-temp uv lock --offline --check --script tools/qualify_conversations.py"
+  ],
+  "python": {
+    "3.12.13": [
+      {
+        "group": "builds-test_ci_pipeline",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_ci_pipeline.log",
+        "tests": 34,
+        "seconds": 58.903,
+        "passed": true
+      },
+      {
+        "group": "builds-test_local_check",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_local_check.log",
+        "tests": 37,
+        "seconds": 50.257,
+        "passed": true
+      },
+      {
+        "group": "builds-test_release_state",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_release_state.log",
+        "tests": 33,
+        "seconds": 7.052,
+        "passed": true
+      },
+      {
+        "group": "fixture-protocol",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-fixture-protocol.log",
+        "tests": 4,
+        "seconds": 0.001,
+        "passed": true
+      },
+      {
+        "group": "module-package-products",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-module-package-products.log",
+        "tests": 9,
+        "seconds": 5.693,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_config",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_ci_config.log",
+        "tests": 21,
+        "seconds": 1.492,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_prepare",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_ci_prepare.log",
+        "tests": 25,
+        "seconds": 140.852,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_environment",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_ci_environment.log",
+        "tests": 24,
+        "seconds": 29.685,
+        "passed": true
+      },
+      {
+        "group": "builds-test_release_build",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_release_build.log",
+        "tests": 15,
+        "seconds": 186.657,
+        "passed": true
+      },
+      {
+        "group": "candidate-qualification",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-candidate-qualification.log",
+        "tests": 4,
+        "seconds": 0.017,
+        "passed": true
+      },
+      {
+        "group": "builds-test_module_preparation",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_module_preparation.log",
+        "tests": 10,
+        "seconds": 0.067,
+        "passed": true
+      },
+      {
+        "group": "builds-test_windows_checkout",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_windows_checkout.log",
+        "tests": 10,
+        "seconds": 2.355,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_dapr_scope",
+        "python": "3.12.13",
+        "exitCode": 0,
+        "log": "python-3.12.13-builds-test_ci_dapr_scope.log",
+        "tests": 7,
+        "seconds": 0.626,
+        "passed": true
+      }
+    ],
+    "3.14.4": [
+      {
+        "group": "builds-test_ci_config",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_ci_config.log",
+        "tests": 21,
+        "seconds": 3.244,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_pipeline",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_ci_pipeline.log",
+        "tests": 34,
+        "seconds": 147.731,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_prepare",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_ci_prepare.log",
+        "tests": 25,
+        "seconds": 258.947,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_environment",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_ci_environment.log",
+        "tests": 24,
+        "seconds": 60.696,
+        "passed": true
+      },
+      {
+        "group": "builds-test_module_preparation",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_module_preparation.log",
+        "tests": 10,
+        "seconds": 0.036,
+        "passed": true
+      },
+      {
+        "group": "builds-test_windows_checkout",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_windows_checkout.log",
+        "tests": 10,
+        "seconds": 1.418,
+        "passed": true
+      },
+      {
+        "group": "builds-test_ci_dapr_scope",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_ci_dapr_scope.log",
+        "tests": 7,
+        "seconds": 0.311,
+        "passed": true
+      },
+      {
+        "group": "builds-test_local_check",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_local_check.log",
+        "tests": 37,
+        "seconds": 112.707,
+        "passed": true
+      },
+      {
+        "group": "builds-test_release_state",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_release_state.log",
+        "tests": 33,
+        "seconds": 8.929,
+        "passed": true
+      },
+      {
+        "group": "builds-test_release_build",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-builds-test_release_build.log",
+        "tests": 15,
+        "seconds": 242.769,
+        "passed": true
+      },
+      {
+        "group": "fixture-protocol",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-fixture-protocol.log",
+        "tests": 4,
+        "seconds": 0.001,
+        "passed": true
+      },
+      {
+        "group": "candidate-qualification",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-candidate-qualification.log",
+        "tests": 4,
+        "seconds": 0.01,
+        "passed": true
+      },
+      {
+        "group": "module-package-products",
+        "python": "3.14.4",
+        "exitCode": 0,
+        "log": "python-3.14.4-module-package-products.log",
+        "tests": 9,
+        "seconds": 9.642,
+        "passed": true
+      }
+    ]
+  },
+  "dotnet": {
+    "strictBuild": {
+      "warnings": 0,
+      "errors": 0,
+      "log": "managed-producer-build.log"
+    },
+    "newContractTests": {
+      "tests": 12,
+      "failed": 0,
+      "skipped": 0,
+      "log": "managed-producer-tests.log"
+    },
+    "legacyTests": {
+      "tests": 138,
+      "failed": 0,
+      "skipped": 0,
+      "log": "legacy-producer-regression.log"
+    },
+    "privateToolPackage": {
+      "version": "6.1.0",
+      "published": false,
+      "exclusiveLocalFeed": true,
+      "positiveInstalledQualifiedCommand": true,
+      "log": "source-package-qualification.log"
+    },
+    "productSource": {
+      "strictProjects": [
+        "Conformance",
+        "Portable",
+        "TestSupport"
+      ],
+      "projectionKeyAssertions": 1,
+      "portableAssertions": 20,
+      "fixtureAssertions": 7,
+      "overlayAssertions": 3,
+      "packageSymbolPairs": 5,
+      "isolatedConsumers": [
+        "public",
+        "testing"
+      ],
+      "tamperedGeneratedImportRefused": true,
+      "tamperedAssetsGraphRefused": true,
+      "log": "managed-adapter-source-qualification.log"
+    }
+  },
+  "nativeWindows": {
+    "protectedSparseIndex": "windows-implementation-qualification.json",
+    "fullTestSupportDll": {
+      "tests": 44,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "filtered": false,
+      "runtime": "11.0.0",
+      "runtimeInstalledOnlyInPrivateScratch": true,
+      "sha512VerifiedAgainstMicrosoftReleaseMetadata": true,
+      "log": "testsupport-native-windows-source.log"
+    },
+    "physicalGitRootSpellingVerified": true,
+    "fullModuleReleasedInputAcceptance": "pending"
+  },
+  "rootTools": {
+    "renderer": {
+      "tests": 33,
+      "seconds": 82.757,
+      "passed": true,
+      "log": "renderer-regressions.log"
+    },
+    "validator": {
+      "tests": 51,
+      "seconds": 59.677,
+      "passed": true,
+      "log": "validator-regressions.log"
+    },
+    "renderCheck": {
+      "exitCode": 0,
+      "log": "render-check.log"
+    },
+    "qualificationLockCheck": {
+      "exitCode": 0,
+      "log": "qualification-lock-check.log"
+    }
+  },
+  "preservation": {
+    "moduleFilesByteIdenticalToHead": [
+      "package.json",
+      "package-lock.json",
+      ".config/dotnet-tools.json",
+      ".gitmodules",
+      "global.json"
+    ],
+    "frozenFixtureTreeUnchanged": true,
+    "moduleOwnedWorkflowsConfigGitmodulesUnchanged": true,
+    "productionBuildsPinRegistrationRenderedTreeUnchanged": true,
+    "specFrozenBlockBaselineUnchanged": true,
+    "specStatus": "in-progress",
+    "whitespaceChecks": [
+      "CiCd",
+      "Builds",
+      "Conversations"
+    ]
+  },
+  "limitations": [
+    "Private source package and synthetic local identity fixtures are not a published producer or production qualification receipt.",
+    "Successor locks were qualified against the existing v6.0.6 catalog (EventStore 5.1.1); recheck the actual new release catalog before adoption.",
+    "Broad Workspace suite did not pass: HXR021 failures, three contextual skips, terminated after twenty minutes; causality unverified. See broad-workspace-regression.log.",
+    "Genuine local Dapr integration refused because all four existing user control-plane containers are present; their IDs/names were unchanged. See dapr-occupied-host-refusal.log.",
+    "Full tools/validate.py live-module/online qualification was not run in this local/no-remote-operations implementation phase."
+  ],
+  "pendingExternal": [
+    "AD-21 administrative preflight/provisioning and acceptable published Builds/CLI release.",
+    "Real Conversations tool/Platform prerequisites, committed exact-input qualification and protected product-preparation push.",
+    "Released pin plus registration/render; App delivery and authenticated preservation.",
+    "Green genuine Linux/browser/Dapr/AppHost and full Windows module CI; adopted normal check.py.",
+    "Immutable-release readback, legacy access retirement, scheduled nightly CodeQL/publication or authenticated nothing-to-release outcome.",
+    "After adoption removes owned npm selectors: product npm cleanup after selector absence and normal checker success."
+  ],
+  "operations": {
+    "commits": false,
+    "pushes": false,
+    "remoteAdministration": false,
+    "allTaskWrapperJobsCompleted": true
+  }
+}

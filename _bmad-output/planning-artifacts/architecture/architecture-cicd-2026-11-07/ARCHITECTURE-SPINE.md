@@ -190,6 +190,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Prevents:** several writers pushing conflicting owned-file states; unvalidated renders reaching modules or the guard; a skipped module receiving its rejected render through the guard or restore; stale renders written back after a race or a re-run; drift persisting in a skipped module or while CiCd `main` is broken; validate-only runs cancelling deliveries
 - **Rule:**
   - CiCd `deliver.yml` is the only writer of owned files into modules. The one exception is the AD-8 restore job.
+  - Opt-in managed producer preparation takes active catalog authority from the exact accepted delivered Builds release. The actual released Platform identity, its tool range and its historical catalog pin remain separately verified provenance. A caller-authored receipt grants no acceptance: the existing fixed anonymous delivered-state transport and successful perimeter comparison authenticate it. Candidate qualification is a distinct local-only authority and is rejected by production entry points.
   - `deliver.yml` is a top-level workflow with two jobs:
     - `validate`, with no secrets: the global checks and the anonymous per-module checks (AD-3). It outputs one JSON object: the global-check verdict and the names of the modules that passed.
     - `deliver`, on `main` only, after `validate` whatever its result, in environment `cicd-app` (AD-7). It treats a missing `validate` output as a failed global check, and accepts only module names in `setup/*.yml`.
@@ -263,6 +264,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Prevents:** modules on different Builds versions; auto-bumps to an interface the render doesn't match; rollbacks undone overnight; central package changes that never release; waivers spread across modules; an unvetted tag reaching every module; a minor breaking custom actions or module imports
 - **Rule:**
   - **Public API (semver).** Builds' public API is:
+    - nullable `moduleManifest` and `windowsCheckout`, validated CI preparation outputs and the `prepare-managed-build`/`prepare-qualified-build` runtime-free producer commands are additive minor interfaces. Omitted/null defaults retain legacy behavior; existing source/package producer modes and absent-authority serialized hashes remain unchanged. The mapping binds active managed catalog authority and truthful Platform provenance independently.
     - the reusable workflows' `workflow_call` inputs, secrets and outputs (including `ci.yml`'s `solution` output and `release.yml`'s `delivered-sha` input), and the caller permissions they require;
     - the `prepare` and `publish` composite interfaces;
     - the AD-14 hook and job contract: hook names, the action path, the inputs and environment passed, and the workspace guarantees;
@@ -300,7 +302,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
     - npm tools through a committed lockfile, `npm ci --ignore-scripts`, then `npm audit signatures`;
     - binaries that a Builds or CiCd script downloads itself, through a SHA-256 it checks before use. Tool-managed downloads (Playwright browsers, the Dapr runtime) are pinned by the tool's version.
     - the OCI publisher runs the official Skopeo container distribution at the version/image digest and upstream source commit pinned in Builds `Tools/spikes/publish-tools.json`; it verifies the exact reported version/source before copy.
-  - The parts of `prepare` that run on Windows (checkout, .NET setup, restore, build) contain no Python and read no JSON.
+  - Windows `prepare` consumes only validated CI outputs to select behavior; it never loads the module CI document. Opt-in protected checkout and producer preparation may use the runner's existing native Python 3.12+ for duplicate-safe byte/metadata handling. It installs no Python or product environment. Null callers retain the existing checkout and PowerShell build path.
   - A workflow `run:` step only invokes a script, except for one-liners. Expressions never appear inside `run:`; values reach scripts through `env:`.
   - Custom actions are module-owned and not bound by this rule.
   - The `Props/` catalog validators in Builds' `Tools/` are product checks, as in AD-2's `Props/` exception. Each is classified with the gate rule (`gate-classification.md`); the ones kept run in `builds-ci.yml` in their current language.
@@ -313,6 +315,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - CI is one job, in this order:
     1. Guard, which includes commitlint.
     2. Restore, then a Release build in package mode without audit: `-warnaserror -p:UseHexalithProjectReferences=false -p:NuGetAudit=false`, plus the restore settings of the SDK convention.
+       With `moduleManifest`, guard/configuration/direct identities and SDK setup precede one managed preparation, which runs before all project evaluation. A private revision-bound receipt and byte inventory keep that same producer workspace alive through every later job step. Local checking uses one scoped lifetime without fetch/init; release prepares before publication discovery and retains its audited flags and release import targets.
     3. Unit tests, project by project, stopping at the first failing project (AD-13).
     4. Builds environment setup, run once:
        - Dapr if `dapr`, at the one Dapr version pinned in Builds;
@@ -328,6 +331,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - A custom action that needs browsers or Dapr is a hook with that knob on. Locked npm workspaces and exact local .NET tools are optional generic preparation knobs, run once after successful units and once in a separate nightly-hook job; hooks reuse Release/package outputs (story 18).
   - `jobs` exist only for Windows. The reusable `ci.yml` outputs every knob that Windows `prepare` uses, as the loader validated it: `solution` (workspace-relative, including `module-root` when set) and, once added, `submodules`. Each job is rendered with `needs: ci`, `runs-on: windows-latest` and two steps: `uses: Hexalith/Hexalith.Builds/Github/prepare@<tag>` with those outputs as inputs, then a literal `uses: ./.github/actions/<job-name>`.
   - On Windows, `prepare` checks out, sets up .NET, restores and builds, and sets up no environment. On Linux, it reads the knobs through the AD-4 loader and runs the environment setup after the build.
+  - Optional `windowsCheckout` binds exact immutable archive tree IDs. Validated CI outputs also carry `global-json`, `module-manifest`, `module-authority`, `windows-checkout` and `source-revision`. The remote composite validates complete Git metadata, native ordinal path collisions and a protected temporary index for the materialized complement, computes a cone sparse-index checkout, and verifies exact tree/index identities. It never disables NTFS protection or expands the complete native index. Required direct gitlinks use contained separate exact checkouts, with no recursive or parent-helper initialization.
 
 ### AD-13 — Test-stage classification
 
@@ -766,6 +770,20 @@ Hexalith.<Module>/
 - **Skipping CodeQL on modules unchanged since the last analysis.** An optimization; revisit if nightly queue time matters.
 - **Duplicate-scan threshold and early noise** from Python tooling in Memories and Tenants, until the gate rule deletes it. Tuned in story 9.
 
+### Additive managed build-order interface
+
+`HexalithIsolatedBuildContract` / `hexalith.isolated-build.v1` is an opt-in public
+interface of the managed package producer. A nonshipping, non-test adapter may
+name tracked source roots, exact build-order children, framework, namespaced
+options and separate props/targets. The producer binds the declaration and
+source bytes to the authenticated module revision and the actual active catalog,
+retains strict locked restore/audits and preserves inherited release targets.
+Only SDK-originated NuGet imports may be regenerated and compared against an
+independent locked restore; arbitrary generated or authored imports are refused.
+Legacy producer modes and ordinary project-reference property guards are unchanged.
+The detailed interface/rationale and source-only evidence are recorded in
+`evidence/16/implementation-and-verification.md`; this is shared generic support,
+not a module-name exception or a qualification receipt that grants adoption.
 
 ### Story 18 additive preparation and scan clarification (AD-3, AD-12, AD-14)
 

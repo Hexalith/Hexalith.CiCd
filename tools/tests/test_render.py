@@ -839,6 +839,41 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(next(entry for entry in entries if entry["kind"] == "absent-line"),
                              {"kind": "absent-line", "path": ".husky/commit-msg", "pattern": r"\bcommitlint\b"})
 
+    def test_additive_windows_outputs_require_a_contract_that_defines_the_fields(self):
+        configuration = {"jobs": {"product-tests": {"runner": "windows-latest"}},
+                         "moduleManifest": None, "windowsCheckout": None}
+        context = {"config": configuration, "ci_workflow": "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@source-fixture",
+                   "ci_permissions": {"contents": "read"}, "ci_timeout_minutes": None,
+                   "prepare_action": "Hexalith/Hexalith.Builds/Github/prepare@source-fixture"}
+        environment = renderer.templates(ROOT)
+        rendered = renderer.rendered_bytes(environment, ".github/workflows/ci.yml.j2", context)
+        workflow = renderer.yaml_document(rendered, "source Windows caller")
+        forwarded = workflow["jobs"]["windows-product-tests"]["steps"][0]["with"]
+        names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
+        self.assertEqual({name: "${{ needs.ci.outputs." + name + " }}" for name in names}, forwarded)
+        # Model the next released interface in tagged Git objects. The owning
+        # checkout may still be pinned to an older release during preparation.
+        with workspace() as fixture:
+            workflow_path = ".github/workflows/ci.yml"
+            action_path = "Github/prepare/action.yml"
+            producer = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{workflow_path}"), "tagged producer")
+            prepare = renderer.yaml_document(git(fixture.builds, "show", f"{fixture.tag}:{action_path}"), "tagged prepare")
+            for name in names[3:]:
+                producer["on"]["workflow_call"]["outputs"][name] = {
+                    "description": "Synthetic additive interface fixture.",
+                    "value": "${{ jobs.ci.outputs." + name + " }}"}
+                prepare["inputs"][name] = {"description": "Synthetic additive interface fixture.", "default": ""}
+            fixture.change_tag({workflow_path: json.dumps(producer).encode(), action_path: json.dumps(prepare).encode()})
+            with renderer.pinned_contract(fixture.root) as contract:
+                outputs = renderer.yaml_document((contract.root / workflow_path).read_bytes(), "tagged producer")["on"]["workflow_call"]["outputs"]
+                inputs = renderer.yaml_document((contract.root / action_path).read_bytes(), "tagged prepare")["inputs"]
+                self.assertTrue(set(forwarded) <= outputs.keys())
+                self.assert_arguments_supplied(forwarded, inputs)
+        del configuration["moduleManifest"]
+        del configuration["windowsCheckout"]
+        legacy = renderer.yaml_document(renderer.rendered_bytes(environment, ".github/workflows/ci.yml.j2", context), "legacy caller")
+        self.assertEqual(set(names[:3]), set(legacy["jobs"]["windows-product-tests"]["steps"][0]["with"]))
+
     def test_callers_match_pinned_workflow_and_composite_interfaces(self):
         with workspace() as fixture, renderer.pinned_contract(fixture.root) as contract:
             fixture.setup("full")
