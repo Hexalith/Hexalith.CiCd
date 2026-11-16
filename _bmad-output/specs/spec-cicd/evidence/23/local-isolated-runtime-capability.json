@@ -1,0 +1,84 @@
+{
+  "recorded_at": "2026-11-16T21:54:53.937546+00:00",
+  "scope": "read-only isolated-runtime capability inventory",
+  "uid": 1000,
+  "tools": {
+    "docker": "/usr/bin/docker",
+    "dockerd": null,
+    "rootlesskit": null,
+    "unshare": "/usr/bin/unshare",
+    "sudo": "/usr/bin/sudo"
+  },
+  "commands": [
+    {
+      "command": [
+        "docker",
+        "context",
+        "show"
+      ],
+      "exit": 0,
+      "stdout": "default",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "context",
+        "inspect",
+        "--format",
+        "{{json .Endpoints.docker.Host}}"
+      ],
+      "exit": 0,
+      "stdout": "\"unix:///var/run/docker.sock\"",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "info",
+        "--format",
+        "{{json .SecurityOptions}} {{json .DockerRootDir}}"
+      ],
+      "exit": 0,
+      "stdout": "[\"name=seccomp,profile=builtin\",\"name=cgroupns\"] \"/var/lib/docker\"",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sudo",
+        "-n",
+        "true"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "image",
+        "ls",
+        "--format",
+        "{{.Repository}}:{{.Tag}}",
+        "docker:dind*"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "image",
+        "ls",
+        "--format",
+        "{{.Repository}}:{{.Tag}}",
+        "mcr.microsoft.com/dotnet/sdk:11*"
+      ],
+      "exit": 0,
+      "stdout": "mcr.microsoft.com/dotnet/sdk:11.0.100",
+      "stderr": ""
+    }
+  ],
+  "remote_mutations": false
+}

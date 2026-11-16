@@ -1,0 +1,69 @@
+{
+  "phase": "build",
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-product",
+  "startedAt": 1794864857.294971,
+  "commands": [
+    {
+      "arguments": [
+        "dotnet",
+        "restore",
+        "Hexalith.Tenants.slnx",
+        "--disable-build-servers",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:HexalithFrontComposerFromSource=false",
+        "-p:HexalithMemoriesFromSource=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.hx26ab7p/Hexalith.Tenants/references/Hexalith.Builds/NuGet.ci.Config"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 3.4080397819925565
+    },
+    {
+      "arguments": [
+        "dotnet",
+        "build",
+        "Hexalith.Tenants.slnx",
+        "--no-restore",
+        "--disable-build-servers",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:HexalithFrontComposerFromSource=false",
+        "-p:HexalithMemoriesFromSource=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.hx26ab7p/Hexalith.Tenants/references/Hexalith.Builds/NuGet.ci.Config"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 144.79992455700994
+    }
+  ],
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "baseline": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+  "candidateManifestSha256": "a57aa76d31115df79bf2cb23d1c7db1a950776cf3e9154161e88aadf532c8904",
+  "nestedSubmodulesInitialized": false,
+  "finishedAt": 1794865030.3399942,
+  "exitCode": 1
+}

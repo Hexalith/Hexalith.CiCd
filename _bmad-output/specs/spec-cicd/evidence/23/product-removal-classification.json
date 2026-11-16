@@ -1,0 +1,523 @@
+{
+  "baseline": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+  "pythonInventoryCount": 28,
+  "pythonInventory": [
+    {
+      "path": "tests/Hexalith.Tenants.UI.Tests/Browser/deferred-nvda-observer.py",
+      "disposition": "retained",
+      "reason": "shipped accessibility observer"
+    },
+    {
+      "path": "tests/Hexalith.Tenants.UI.Tests/Browser/test-deferred-nvda-observer.py",
+      "disposition": "retained",
+      "reason": "shipped accessibility observer behavior"
+    },
+    {
+      "path": "tests/integration/qualify-dapr-read-retries.py",
+      "disposition": "retained",
+      "reason": "real Dapr/HTTPS authorization, deadlines and no-retry product assertions"
+    },
+    {
+      "path": "tests/scripts/recovery_execution_fixture.py",
+      "disposition": "retained",
+      "reason": "synthetic immutable fixture for shipped recovery tooling; actual workflow-reading mode removed"
+    },
+    {
+      "path": "tests/scripts/release_registry_fixture.py",
+      "disposition": "retained",
+      "reason": "offline package/OCI registry fixture used by product tooling tests"
+    },
+    {
+      "path": "tests/scripts/test_bootstrap_compatibility.py",
+      "disposition": "removed",
+      "reason": "obsolete CI-job-specific SDK setup and parsed workflow commands"
+    },
+    {
+      "path": "tests/scripts/test_bootstrap_handoff.py",
+      "disposition": "retained",
+      "reason": "real documented bootstrap/auth functions and safe HTTP handoff; only YAML scheduling assertion removed"
+    },
+    {
+      "path": "tests/scripts/test_candidate_version.py",
+      "disposition": "removed",
+      "reason": "obsolete module-local semantic-release proposal pipeline"
+    },
+    {
+      "path": "tests/scripts/test_catalog_artifact_guards.py",
+      "disposition": "retained",
+      "reason": "real ordinary pack, compiled artifact and stale/archive refusal behavior"
+    },
+    {
+      "path": "tests/scripts/test_catalog_package_consumer.py",
+      "disposition": "retained",
+      "reason": "actual catalog package admission and provenance refusal behavior"
+    },
+    {
+      "path": "tests/scripts/test_dapr_read_policy_evidence.py",
+      "disposition": "retained",
+      "reason": "real Dapr retry qualification policy identity; no workflow reads"
+    },
+    {
+      "path": "tests/scripts/test_elicitation_numbers.py",
+      "disposition": "removed",
+      "reason": "BMAD agent elicitation tooling"
+    },
+    {
+      "path": "tests/scripts/test_hosted_package_profile.py",
+      "disposition": "retained",
+      "reason": "evaluated product host package/source boundary"
+    },
+    {
+      "path": "tests/scripts/test_nuget_dependency_ranges.py",
+      "disposition": "retained",
+      "reason": "executable package metadata/framework and dependency range controls; owned by Contracts.Tests wrapper"
+    },
+    {
+      "path": "tests/scripts/test_partial_release_recovery.py",
+      "disposition": "retained",
+      "reason": "shipped package/destination recovery tooling; only obsolete source-CI gate proof methods removed"
+    },
+    {
+      "path": "tests/scripts/test_public_release_verification.py",
+      "disposition": "removed",
+      "reason": "retained story/release evidence verifier recipes"
+    },
+    {
+      "path": "tests/scripts/test_pushall_default_branch.py",
+      "disposition": "removed",
+      "reason": "agent version-control tooling"
+    },
+    {
+      "path": "tests/scripts/test_pushall_detached_head.py",
+      "disposition": "removed",
+      "reason": "agent version-control tooling"
+    },
+    {
+      "path": "tests/scripts/test_release_artifact_verification.py",
+      "disposition": "retained",
+      "reason": "shipped package and OCI destination byte verification; owned by Contracts.Tests wrapper"
+    },
+    {
+      "path": "tests/scripts/test_release_evidence_replays.py",
+      "disposition": "removed",
+      "reason": "retained story/release evidence replay recipes"
+    },
+    {
+      "path": "tests/scripts/test_release_resume_verification.py",
+      "disposition": "removed",
+      "reason": "retained story/release evidence verifier recipes"
+    },
+    {
+      "path": "tests/scripts/test_release_validation_context.py",
+      "disposition": "retained",
+      "reason": "actual package validator preparation/publication handoff and byte/refusal controls"
+    },
+    {
+      "path": "tests/scripts/test_release_workflow_governance.py",
+      "disposition": "removed",
+      "reason": "workflow YAML and obsolete source-gate proof"
+    },
+    {
+      "path": "tests/scripts/test_resolve_customization.py",
+      "disposition": "removed",
+      "reason": "BMAD agent customization tooling"
+    },
+    {
+      "path": "tests/scripts/test_tea_enforcement.py",
+      "disposition": "removed",
+      "reason": "BMAD agent testing-tooling enforcement"
+    },
+    {
+      "path": "tests/scripts/test_tenant_audit_source_provenance.py",
+      "disposition": "retained",
+      "reason": "performance product tooling source identity refusal controls; no added performance runner gate"
+    },
+    {
+      "path": "tests/scripts/test_validate_changed_story_gitlinks.py",
+      "disposition": "removed",
+      "reason": "story evidence and CI guard tooling"
+    },
+    {
+      "path": "tests/scripts/test_validate_story_gitlinks.py",
+      "disposition": "removed",
+      "reason": "story evidence tooling"
+    }
+  ],
+  "csharpMethodChanges": [
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/CiQualityGateScriptTests.cs",
+      "method": "FrozenBootstrapJobsBindTheCompletePublishedSdkCohort",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/CiQualityGateScriptTests.cs",
+      "method": "AspireLaneRequiresBlockingBrowserAndSkipInputs",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/CiQualityGateScriptTests.cs",
+      "method": "AspireResultGateRequiresPassingExecutedTests",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/CiQualityGateScriptTests.cs",
+      "method": "AspireResultGateRejectsNonpassingSummaries",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Source_reference_workflow_avoids_forbidden_shared_builds_and_artifacts",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "AppHost_EventStore_child_projects_are_build_only_in_Debug_source_mode",
+      "disposition": "retained-and-rebound",
+      "reason": "product source/package boundary assertion updated for approved composition exception; replacement AppHost_EventStore_child_projects_are_build_only_for_the_pinned_composition"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "No_EventStore_project_reference_is_reachable_in_package_mode",
+      "disposition": "retained-and-rebound",
+      "reason": "product source/package boundary assertion updated for approved composition exception; replacement Only_the_named_EventStore_executables_are_reachable_in_package_mode"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "FrontComposer_source_routing_is_available_by_default_and_explicitly_overridable",
+      "disposition": "retained-and-rebound",
+      "reason": "product source/package boundary assertion updated for approved composition exception; replacement FrontComposer_package_routing_is_default_and_source_is_explicitly_overridable"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Ci_workflow_enforces_build_test_coverage_and_artifact_governance",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Release_workflow_packs_validates_and_publishes_only_expected_packages",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Release_workflows_publish_to_nuget_through_trusted_publishing",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Partial_release_recovery_is_protected_and_never_skips_duplicate_packages",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Release_workflow_requires_a_published_tag_at_the_exact_dispatched_source",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Release_workflow_proves_the_tag_floor_covers_the_registry_before_approval",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseWorkflowIgnoresTagsOutsidePlainReleasePolicy",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseWorkflowCannotEstablishFloorFromInvalidTag",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseWorkflowAcceptsSemanticReleaseNumericBoundaries",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseWorkflowOrdersSafeIntegerBoundariesBeforeReachability",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseRegistryRejectsInvalidVersionBeforeClassification",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseRegistryExcludesOnlyValidPrereleaseVersions",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseRegistryRejectsInvalidIndexEntries",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseRegistryReportsStableDriftAlongsideValidPrerelease",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "ReleaseRegistryPreservesStableVersionBoundaries",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Release_workflow_registry_drift_guard_fails_closed_on_every_unprovable_state",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PackageGovernanceTests.cs",
+      "method": "Ci_workflow_runs_package_consumer_validation_after_release_build_and_pack",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "RecoveryInitializesEverySolutionSubmodule",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "RecoveryCredentialsDependOnValidatedMissingPackages",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "MissingOrChangedPreparationBindingMutationIsRejected",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "ContinuedPreparationFailureMutationIsRejected",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "AccountGuardExecutesBeforeLogin",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "CredentialHandoffUsesRequiredConditions",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "DisabledCredentialGateMutationIsRejected",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "EmptyCredentialBindingMutationIsRejected",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "MissingLoginOutputStopsRecoveryBeforeAnyClientRuns",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "MissingLoginOutputStopsNormalReleaseBeforeAnyClientRuns",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "ExternalReleaseActionsUseImmutableRevisions",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "NormalPublicationVerifiesDestinationsBeforeRetainingEvidence",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "ChangedDestinationVerificationBindingIsRejected",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "StandaloneProvenancePrecedesSensitivePreparation",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "ShippedWorkflowAdmissionAndBootstrapPassExecutableControls",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "CandidatePreparationCanReadRequiredWorkflowGates",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "ProtectedPublisherPreparesItsOwnRuntimePrerequisites",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "InvalidPublisherRuntimePrerequisiteMutationIsRejected",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/PartialReleaseRecoveryWorkflowTests.cs",
+      "method": "Arm64CapabilityProbePropagatesRuntimeResultWithoutCredentials",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Source_reference_workflow_executes_real_handler_projection_provenance",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_accepts_equivalent_scalar_and_whitespace_formatting",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_accepts_explicit_shell_line_continuations",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_ineffective_commands",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_conditional_or_overridden_execution",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_overridden_shell_defaults",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_missing_duplicate_or_malformed_yaml",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_accepts_additional_manual_trigger",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_accepts_only_the_qualified_additional_push_branch",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_unqualified_branch_selections",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_non_scalar_qualification_branches",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_missing_automated_main_triggers",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_suppressing_event_filters",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.Contracts.Tests/SourceReferenceWorkflowGovernanceTests.cs",
+      "method": "Workflow_governance_rejects_job_dependencies_on_skipped_preflight",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    },
+    {
+      "file": "tests/Hexalith.Tenants.UI.Tests/TenantsUiCompositionTests.cs",
+      "method": "Release_workflow_does_not_claim_an_unsupported_tenants_ui_container_handoff",
+      "disposition": "removed",
+      "reason": "workflow YAML, workflow mutation or obsolete pipeline proof"
+    }
+  ],
+  "mixedMethodsPreserved": [
+    {
+      "method": "Release_package_manifest_matches_every_other_copy_of_the_inventory",
+      "change": "retain exact package inventory and shipped preflight count; remove only workflow count assertion"
+    },
+    {
+      "method": "Coverage_gate_script_enforces_overall_and_named_isolation_thresholds",
+      "change": "retain actual coverage validator assertions; remove only workflow text assertion"
+    },
+    {
+      "method": "test_documentation_syntax_and_owned_links",
+      "change": "retain real bootstrap/documentation product syntax and links; remove only workflow scheduling assertion"
+    }
+  ],
+  "rootTooling": {
+    "package.json": "removed tool-only manifest",
+    "package-lock.json": "removed tool-only lock",
+    "Husky": "no tracked Husky files existed at baseline"
+  },
+  "preservedOwnedState": "No owned workflow/config/Builds gitlink/instruction/deny/.gitmodules file is edited by product candidate.",
+  "sequencingLimitation": "Preparation removes obsolete tests and tool-only root npm files while legacy owned workflow text remains temporarily incompatible. Parent holds remote publication until compatible release/pin and cleanup plan are ready, then coordinates preparation -> registration -> delivery. Existing legacy credentials/policies/grants remain until adoption."
+}

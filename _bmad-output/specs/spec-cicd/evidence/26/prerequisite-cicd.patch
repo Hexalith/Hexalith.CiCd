@@ -1,0 +1,126 @@
+diff --git a/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md b/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
+index 90caae0..129d120 100644
+--- a/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
++++ b/_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
+@@ -806,3 +806,36 @@ without executing module configuration. Unresolved execution and unsafe paths
+ remain failures. Existing thresholds, limits, suppression rejection and
+ cross-module-only semantics are unchanged; `docs/duplicate-scan.md` specifies the
+ supported syntax and failure boundary.
++
++
++### Story 26 prerequisite: authenticated build preparation (AD-12, AD-16, AD-17)
++
++The shared preparation lifetime accepts optional `publishedBuilds: null`, mutually
++exclusive with `moduleManifest`, selecting a committed closed historical signed
++Builds handoff. Active accepted Builds/catalog authority remains independent of
++the historical producer tag, source and catalog. Shared code authenticates release
++metadata, manifest, archive/signature, extracted assemblies and executable before
++project evaluation, revalidates identities and bytes on reuse and owns cleanup.
++Only `HexalithBuildsPublishedToolRoot` and Release are producer exports.
++
++Optional `buildProjects: []` declares at most 32 committed non-test compatibility
++consumers, each with unique kebab-case `id`, safe `.csproj` `project` and finite
++EventStore/Tenants/Memories version selections. Preparation is required. Shared
++CI/local/release orchestration evaluates/restores/builds cases in order after the
++root solution with unchanged strict package-mode flags and private SDK artifacts
++paths. Cases never enter package discovery. Read-only product actions consume
++`HexalithBuildProjects`, a validated JSON mapping from case IDs to private output
++locations and selections, retained through the owning job. No hook builds or
++privileged module callbacks are introduced; unsupported platform jobs fail closed.
++
++Evaluated `HexalithVerifyPublishedPackage=true` enrolls a real packable project,
++consistently across TFMs. The authenticated original release manifest carries
++`verifyPublishedPackage: true` only when enabled. The existing publisher retains
++every original nonsignature member digest in private state and requires a verified
++public NuGet signature plus the identical nonsignature member body inventory.
++ZIP encoding and the root `.signature.p7s` may differ. Unsafe/duplicate members,
++changed bodies and unsigned packages fail before finalization. Verification uses
++credential-free private processes and never runs module code.
++
++These additions are source contracts pending central release and genuine Platform
++qualification. Production pins, registrations, adoption and CAP-16 do not change.
+diff --git a/setup/README.md b/setup/README.md
+index b184ecd..855ee48 100644
+--- a/setup/README.md
++++ b/setup/README.md
+@@ -552,3 +552,26 @@ Windows callers forward the additive preparation outputs when the selected
+ released schema defines both nullable knobs. Older pinned contracts retain their
+ original caller inputs, so introducing this source interface does not change
+ existing module defaults before the supporting release is selected.
++
++
++### Platform prerequisite source contract
++
++The next supporting Builds release adds `publishedBuilds: null` and
++`buildProjects: []`; existing selected releases and production registrations stay
++unchanged. `publishedBuilds` names a committed closed shared-release tuple JSON,
++mutually exclusive with `moduleManifest`. Shared preparation authenticates the
++historical signed tool independently of the active accepted catalog and exports
++`HexalithBuildsPublishedToolRoot` before evaluation.
++
++`buildProjects` contains up to 32 `{id, project, versions}` declarations. IDs are
++unique kebab-case; projects are committed non-test `.csproj` consumers outside
++package discovery. Only `HexalithEventStoreVersion`, `HexalithTenantsVersion` and
++`HexalithMemoriesVersion` exact stable selections are accepted. Preparation and
++Linux execution are required; custom platform jobs are rejected. Shared code
++builds each case with private SDK artifacts and publishes the JSON environment
++mapping `HexalithBuildProjects` for read-only product actions through the job.
++
++Packable projects may evaluate `HexalithVerifyPublishedPackage=true`, consistently
++across TFMs, to require public NuGet signature verification and exact original
++nonsignature member bodies. No module callback runs in the privileged publisher.
++These source additions require a qualified immutable Builds release before use.
+diff --git a/tools/tests/test_render.py b/tools/tests/test_render.py
+index 87a24f3..dc37aa5 100644
+--- a/tools/tests/test_render.py
++++ b/tools/tests/test_render.py
+@@ -140,6 +140,27 @@ class RenderTests(unittest.TestCase):
+         return {"jobs": jobs, "buildsTag": "v9.8.7", "solution": "Fixture.slnx", "registry": False,
+                 "submodules": [], "tests": {}}
+ 
++    def test_tagged_platform_prerequisite_schema_reader_and_defaults_round_trip(self):
++        with workspace() as fixture:
++            changes = {path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in (
++                "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")}
++            fixture.change_tag(changes)
++            fixture.document({"solution": "Fixture.slnx"})
++            fixture.cli()
++            self.assertIsNone(fixture.json()["publishedBuilds"])
++            self.assertEqual([], fixture.json()["buildProjects"])
++            declaration = {"id": "sdk-420", "project": "compat/Consumer.csproj",
++                "versions": {"HexalithEventStoreVersion": "4.2.0"}}
++            fixture.document({"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json", "buildProjects": [declaration]})
++            fixture.cli()
++            self.assertEqual([declaration], fixture.json()["buildProjects"])
++            self.assertEqual("eng/tuple.json", fixture.json()["publishedBuilds"])
++            before = fixture.output(".github/hexalith-ci.json").read_bytes()
++            fixture.document({"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json", "buildProjects": [
++                dict(declaration, versions={"NuGetAudit": "false"})]})
++            self.assertNotEqual(0, fixture.cli(check=False).returncode)
++            self.assertEqual(before, fixture.output(".github/hexalith-ci.json").read_bytes())
++
+     def test_linux_matrix_is_fresh_jobs_with_independent_setup_and_json_parameters(self):
+         config = self.execution_config({"routes": {"runner": "ubuntu-latest", "timeoutMinutes": 90,
+             "matrix": {"include": [{"id": "route-a"}, {"id": "route-b", "engine": "firefox"}]}, "maxParallel": 2}})
+diff --git a/tools/tests/test_validate.py b/tools/tests/test_validate.py
+index ead98ec..ccf44b3 100644
+--- a/tools/tests/test_validate.py
++++ b/tools/tests/test_validate.py
+@@ -325,6 +325,17 @@ class ValidateTests(unittest.TestCase):
+             self.assertEqual(status, 1)
+             self.assertIn("Hexalith.Broken", diagnostic.getvalue())
+ 
++    def test_platform_prerequisite_uses_the_same_tagged_schema_and_reader(self):
++        with workspace() as fixture:
++            fixture.change_tag({path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in (
++                "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")})
++            declaration = {"id": "sdk-420", "project": "compat/Consumer.csproj", "versions": {"HexalithEventStoreVersion": "4.2.0"}}
++            fixture.module(setup={"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json", "buildProjects": [declaration]})
++            fixture.commit()
++            self.assertEqual(self.verdict(fixture)[:2], ({"global": True, "modules": ["Hexalith.Fixture"]}, 0))
++            fixture.config(publishedBuilds=None)
++            self.assertEqual(self.verdict(fixture, global_ok=False)[:2], ({"global": False, "modules": []}, 1))
++
+     def test_invalid_candidate_configuration_is_module_and_global_failure(self):
+         cases = {
+             "malformed": b'{"schema":',

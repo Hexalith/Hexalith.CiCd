@@ -1,5 +1,5 @@
 {
-  "status": "local fixes verified; complete publication remains blocked",
+  "status": "Loader/audit fixes verified; current source and native runtime still block complete publication",
   "published_in_this_fix": [],
   "gate_selection": "Existing Folders/Parties/Projects pre-adoption substitutes apply; missing adoption checker is not the substantive gate.",
   "archive_audit": {
@@ -83,7 +83,7 @@
   "tool_regression_passes": 20,
   "browser_configuration_passes": 9,
   "full_qualification_exit": 1,
-  "remaining_failure": "npm run test:package: actual-owner native main scenario canceled; gateway resource reports RouteCatalogUnavailableException, DaprException and RpcException. Root cause not yet established.",
+  "remaining_failure": "Full-current-source compilation fails CS0234 for QueryResultContractAttribute against pinned EventStore 5.1.1. The separate frozen diagnostic builds cleanly but native main fails HttpClient.Timeout after 45 seconds with catalog/Dapr failures; authorized recovery is not proven. Frozen Folders scope decision remains pending.",
   "observed_loader_collision_reproduced": true,
   "original_loader_collision_in_final_run": false,
   "tested_source_revisions": {
@@ -121,5 +121,86 @@
   "required_scope_decision": {
     "question": "Exclude held Folders from publication, or lift its frozen FR58 prerequisite hold?",
     "answer": null
+  },
+  "followup": {
+    "as_of_utc": "2026-11-16T21:59:14.906916+00:00",
+    "scope": "Focused frozen-source diagnostic only; not qualification of newer complete main.",
+    "previous_native_result": "Seven main cases passed, then folder-service authorized recovery failed within its unchanged budget.",
+    "current_main_build_blocker": {
+      "project_head": "cd1fcd62e3180e5b037850cacb1c1756668b2866",
+      "pinned_eventstore_version": "5.1.1",
+      "missing_api": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+      "error": "CS0234",
+      "log": "native-recovery-transition.log",
+      "annotations_preserved": true,
+      "published_api_evidence": "../evidence/fix-projects-publication-20261116/sdk-prerequisite.json"
+    },
+    "frozen_overlay_compile_failure": {
+      "log": "native-recovery-frozen-inputs.log",
+      "exit_code": 1,
+      "cause": "Newer PackageFixtureRun was mixed with older PackageApplicationFactory. Removed unrelated run/diagnostic overlays to retain a coherent frozen fixture closure."
+    },
+    "frozen_recovery_diagnostic": {
+      "log": "native-recovery-frozen-closure.log",
+      "status": "finished; exit 1",
+      "qualifies_current_main": false,
+      "exit_code": 1,
+      "release_package_build": "passed; zero warnings/errors",
+      "browser_configuration_passes": 9,
+      "native_main": "failed before any completed native case: HttpClient.Timeout 45 seconds; gateway RouteCatalogUnavailableException, DaprException and RpcException; Folders resource cancellation/transport failures",
+      "recovery_fix_proven": false,
+      "source_digests": {
+        "Hexalith.Projects": "554bc05326afe0f83d7a9f781090b4add092ccaa49f0c3a2ce4aea7e4bec92b8",
+        "Hexalith.Builds": "e97d9250714e8257524d626a94469853e120cffc8e995f44ca05175962b18307",
+        "Hexalith.EventStore": "b0fca6e40907aa2c92b03cfcf5c3407bfd975f4733cdac39299c87fa9adbd3c7",
+        "Hexalith.Tenants": "2273d4d0aabfd230f5eabdf08d9f42a1ad22bb588e68f4a9f468bed70fcf34ed",
+        "Hexalith.Folders": "98230d6c97186f700c4af83fbe820c8107f6d57dd07909e24942e77d203c2f85",
+        "Hexalith.Platform": "e4bbe91640187f624eb7c02a65d485a30f36120e476399fcf222e1b895f73638"
+      },
+      "fix_overlay_sha256": {
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageOwnerLoadContext.cs": "33068ae5c24c2f94594107a12a2bcb1a58ab95dd74236ffdf0418f7f88c44b0e",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs": "8d6d69ee032bf15dd8744e4ab01fc948b7a31e3f44ec2e6b15e7b3ab25a6834e",
+        "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj": "4a9d118ab16f6785de50e6fada6f9604ab3891d79e586a75e043affcd51ab427",
+        "tests/Hexalith.Projects.Integration.Tests/PackageOwnerLoadContextTests.cs": "df22fde327d736be34bb97671d182a78cd068c664bfc271a28873fc940a61ef7",
+        "tests/Hexalith.Projects.Integration.Tests/PackageOwnerMetadataTests.cs": "2f4c9c66b311a5f17c07a431e19b53b373b718543cb96715d17ab24a6f2a887c",
+        "tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj": "08a3148b58003a2dbb621efc1398032f2d55e151eaa9248a6d5e1f4d7726bfa7",
+        "tests/Hexalith.Projects.Integration.Tests/PackageReadFixture.cs": "b3e1e43fa26986a1d3c3a7927e4f75ccf96068d25e7ccc4237ee0c16db46387b",
+        "tests/Hexalith.Projects.PackageFixtures/PackageCatalogWorker.cs": "f0d7bafcf888bf9d6619958bc6c441a8b0a28523cc9abc46f81348bba9e00d53",
+        "tests/Hexalith.Projects.PackageFixtures/PackageOwnerWorker.cs": "8534ad89e6f301fa8482e074b62133447ae4498b35bdec2bbf5f5e2e57c699bb",
+        "tests/Hexalith.Projects.PackageFixtures/PackageHostingStartup.cs": "c2b3e69ca7481e7391f0c2e479c368bccf7a93f9f60edfbf95c2e7a5dfddfe03"
+      }
+    },
+    "latest_process_exit_race_fix": {
+      "file": "tests/Hexalith.Projects.Integration.Tests/PackageReadFixture.cs",
+      "sha256": "aeaa0e3fe72ed5cd035bf66db76146626579c027d977f036bf043e7be082ee90",
+      "change": "Treat StartTime InvalidOperationException after associated process exit as exited; permission exceptions propagate.",
+      "review": "Independent read-only review found the real exit race and verified bounded diagnostics.",
+      "verification_limit": "Added after the focused diagnostic snapshot; that run does not qualify this one-line correction."
+    },
+    "publication": {
+      "session_created_commit": false,
+      "session_pushed": false,
+      "observed_cicd_local_head": "4d5a41c69b1c57e049a3d3a5c084259d896c6e5b",
+      "observed_cicd_remote_main": "5da249288476d21095c3c677563974bf90dccbbe",
+      "barrier": "docs/pre-adoption-publication.md: a failed module check, push or remote verification stops the superproject commit. Concurrent sessions have committed preparation locally; this session preserves them.",
+      "latest_observed_projects_head": "cd1fcd62e3180e5b037850cacb1c1756668b2866",
+      "latest_observed_projects_status": [],
+      "latest_concurrent_change": "Another session committed remaining fixture preparation, including the process-exit race correction. This session neither created that commit nor qualified/pushed it."
+    },
+    "cleanup": {
+      "scratch_roots": {
+        "/tmp/hexalith-job.SPgBf19X": false,
+        "/tmp/hexalith-job.AsmSEwO7": false
+      },
+      "processes_with_scratch_cwd": [],
+      "running_containers_with_scratch_mounts": []
+    },
+    "log_sha256": {
+      "native-refusal-diagnostic.log": "0216b78045ae944a914b65ebf609758c158ab73c5625175b55098189ee4751fa",
+      "native-recovery-transition.log": "0cddd55996604e6ba727c6a68ce41ad5fe3ee67ff5d4fcc8436c52f3537e844c",
+      "native-recovery-frozen-queries.log": "1f2e19b4fa14f6aad93da900e4434eb7defde192c868135470e8c0234b8e9866",
+      "native-recovery-frozen-inputs.log": "60743ea6ac717e51a8a607e22be594c52f5bdb85c658178750293fb8b73dcd68",
+      "native-recovery-frozen-closure.log": "a6efc040da7098bff595cf9dd0571ac9dd3983f44aef205b84d39072a85a3f2d"
+    }
   }
 }

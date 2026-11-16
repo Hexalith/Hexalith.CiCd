@@ -44,4 +44,3 @@ run("focused-repair-tests", ["dotnet", "tests/Hexalith.Projects.Integration.Test
     "-class", "Hexalith.Projects.Integration.Tests.PackageOwnerMetadataTests",
     "-class", "Hexalith.Projects.Integration.Tests.PackageFixtureSafetyTests",
     "-class", "Hexalith.Projects.Integration.Tests.PackageCredentialMatrixTests", "-noColor", "-failSkips"])
-run("unchanged-complete-fixture-diagnostic", ["npm", "run", "test:package"], module / "tests/e2e")

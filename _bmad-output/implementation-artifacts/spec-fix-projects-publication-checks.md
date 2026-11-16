@@ -2,8 +2,8 @@
 title: 'Repair Projects publication qualification'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'in-progress'
-route: 'oneshot'
+status: 'draft'
+route: 'dispatch'
 baseline_commit: 'ec481fd50b280e2d41f9baecbd03945c833e4538'
 review_loop_iteration: 0
 context: []
@@ -19,10 +19,21 @@ Repair the Projects preparation checks blocking the already requested push. Load
 
 ## Implementation Notes
 
-- The user's existing push-all requests and subsequent fix instruction authorize repair of the known dirty preparation; preserve it and every concurrent migration. Investigation found no intent gap. The local repair is reversible and bounded: fixture assembly loader and its product regressions, twelve compressed evidence files, archive manifest/documentation and focused archive/audit verification. Publication remains subject to the existing Projects-only pre-adoption approval and ordinary repository rules.
-- Root cause: `Assembly.LoadFrom` unifies a selected child with a different default-context assembly of the same identity. The SHA-256 guard is correct and must remain. Use a context per selected executable, and the same context for split Tenant declaration/adapter assemblies. Share SDK/JSON contracts only on matching full identity and bytes; allow framework-only unresolved fallback.
-- Released audit lint examines XML roots in every regular blob, so changing filename suffixes is insufficient. Gzip preserves the original evidence bytes; the original twelve paths have no live build, script, test or workflow inputs. Historical receipts stay intact. Verify roundtrip bytes/modes against the baseline Git blobs and retain active XML rejection controls.
-- Initial Release qualification passes 37 existing fixture/credential controls and all six new assembly cases, with zero warnings, failures or skips. The released full-tree audit passes all twelve lossless archive roundtrips and both active XML negative controls. Review found additional image-replacement and transitive-binding cases; concurrent improvements were preserved and are included in the final qualification rather than overwritten.
+- Existing push/fix authorization covers the dirty preparation. Preserve concurrent migrations and the approved Projects-only pre-adoption publication procedure.
+- `Assembly.LoadFrom` unified differing same-identity images. Use one context per owner, including split Tenant adapters. Share only byte-identical SDK/JSON contracts; retain SHA/MVID checks and framework-only fallback.
+- Released audit examines every blob's XML root. Gzip preserves twelve inactive historical inputs; verify baseline bytes/modes and active rejection controls. Original receipts stay intact.
+- Focused qualification now passes 57 cases with no warnings, failures or skips, including functional assembly replacement, transitive binding, real owner factories and diagnostic safety. Full-tree audit and twelve archive roundtrips pass. Preserve concurrent improvements.
+- Replan trigger: fresh Projects main now requires an unreleased SDK API. Published EventStore 5.1.1 and latest 5.2.0 lack QueryResultContractAttribute. Full qualification stops at fourteen compile errors; a release is beyond this repair. Scoped checks use retained binaries and cannot qualify current main. See the evidence packet's README for exact results and preserved candidates.
+
+## Code Map
+
+- `tests/Hexalith.Projects.PackageFixtures.AppHost/PackageOwnerLoadContext.cs`: isolated artifact resolution; retain hash/MVID guards.
+- `tests/Hexalith.Projects.Integration.Tests/PackageOwner*Tests.cs`: functional loading and real factories.
+- `evidence/fix-projects-publication-20261116/`: immutable archive audit, source snapshots, SDK evidence and failed full proof.
+
+## Open Questions
+
+1. Prepare EventStore release readiness too, retaining normal nightly publication, or leave this repair scoped until its normal SDK release? No package release or new SDK version can be assumed.
 
 ## Review Triage Log
 
@@ -36,3 +47,4 @@ Repair the Projects preparation checks blocking the already requested push. Load
 - Medium, patch — twelve rows could duplicate paths. The verifier now requires twelve unique originals, unique archives, exact mappings and the original reported scope.
 - Medium, patch — worktree reads were not bound to the audited candidate. The verifier now freezes a Git tree first and reads archive/manifest bytes and original-path absence from that immutable snapshot.
 - Low, patch — compression reproduction was unspecified. The manifest records Python/zlib, level 9 and timestamp 0; the reconstruction README records the exact compression call and hash check.
+- Medium, patch — malformed escaped surrogate strings threw from transport diagnostics. Catch InvalidOperationException and cover the reproduced input; never replace the original fixture failure.

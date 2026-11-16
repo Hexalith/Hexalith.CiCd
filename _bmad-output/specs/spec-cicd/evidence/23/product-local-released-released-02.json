@@ -1,0 +1,80 @@
+{
+  "attempt": "released-02",
+  "phase": "released",
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-product",
+  "startedAt": 1794865671.7837179,
+  "commands": [
+    {
+      "arguments": [
+        "dotnet",
+        "package",
+        "list",
+        "--project",
+        "Hexalith.Tenants.slnx",
+        "--vulnerable",
+        "--include-transitive",
+        "--format",
+        "json",
+        "--no-restore"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 36.50378925999394
+    }
+  ],
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "baseline": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+  "candidateManifestSha256": "8af708a7f00b797dbf6cbcb55385dfe9bc17da8a264a283ca939abd0471811f1",
+  "nestedSubmodulesInitialized": false,
+  "releasedContract": {
+    "tag": "v6.0.6",
+    "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "inMemoryTestRoutingOnly": {
+      "schema": "hexalith.ci.v1",
+      "buildsTag": "v6.0.6",
+      "solution": "Hexalith.Tenants.slnx",
+      "dapr": true,
+      "browsers": true,
+      "registry": false,
+      "codeql": [
+        "csharp"
+      ],
+      "hooks": [
+        "after-unit-tests",
+        "after-integration-tests",
+        "nightly"
+      ],
+      "jobs": {},
+      "submodules": [
+        "references/Hexalith.EventStore",
+        "references/Hexalith.Platform",
+        "references/Hexalith.Memories"
+      ],
+      "tests": {
+        "integration": [
+          "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+        ],
+        "exclude": {
+          "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj": "after-integration-tests"
+        }
+      }
+    },
+    "deliveredStateFabricated": false
+  },
+  "candidateTree": "a37afb90c8ce22012715707461872f273a3997bc",
+  "customActionPolicy": "passed released guard_actions.lint on exact candidate tree",
+  "commitlint": {
+    "version": "21.2.4",
+    "message": "build: migrate Tenants product checks\n",
+    "releasedPolicy": "passed",
+    "owningModulePolicy": "passed"
+  },
+  "releasedRoutineFailure": "dotnet build Hexalith.Tenants.slnx --no-restore -noAutoResponse -p:Configuration=Release -warnaserror -p:UseHexalithProjectReferences=false -p:NuGetAudit=false -p:RestoreConfigFile=/tmp/hexalith-job.aoKsHE4h/released-builds/NuGet.ci.Config -p:EnableNETAnalyzers=true -p:RunAnalyzers=true -p:RunAnalyzersDuringBuild=true failed (1)",
+  "auditCommandExitCode": 0,
+  "finishedAt": 1794865903.851883,
+  "exitCode": 1
+}

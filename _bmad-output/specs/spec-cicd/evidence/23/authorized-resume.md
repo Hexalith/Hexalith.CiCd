@@ -133,3 +133,29 @@ external infrastructure-release gate, not permission to qualify unreleased
 source as a published contract.
 
 Full story acceptance, matrix qualification and final review remain incomplete.
+
+## Product-phase sequencing checkpoint
+
+`shared-release-product-phase-complete.json` completes the current 216-release
+inventory and latest-release readback; `v6.0.6` is still the latest published,
+immutable, bot-authored release. The earlier product-phase packet retains its
+incomplete pagination result. Builds main continues to advance independently;
+that does not satisfy the published-contract gate.
+
+`legacy-publisher-cleanup-plan.md` identifies the exact Tenants cleanup targets,
+the current four legacy-selected repositories, and the unresolved old Zot key
+mapping/rotation boundary. The parent requested that exact mapping from the
+human while local product implementation continues. No response or registry
+revocation is inferred.
+
+The final local product candidate removes root semantic-release tooling and
+obsolete tests which the preserved old workflows still reference. AD-21 step 2
+expressly requires those preparation deletions before App adoption in step 3.
+The prohibition on revoking legacy publication before adoption preserves the
+legacy credential/policy/grant cleanup boundary; it does not cancel the ordered
+product deletions. The approved bootstrap proof applies to that transitional
+product revision. Preserve the old workflow bytes and report their expected
+incompatibility, rather than restoring obsolete gates or editing owned files.
+Hold the final product publication until the released prerequisite and concrete
+cleanup plan are ready so preparation, registration and App delivery can be
+coordinated. The current implementation handoff remains local-only.

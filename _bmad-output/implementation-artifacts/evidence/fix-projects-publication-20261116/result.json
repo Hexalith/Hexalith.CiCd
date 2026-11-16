@@ -1,0 +1,43 @@
+{
+  "asOfUtc": "2026-11-16T21:45:29.338702+00:00",
+  "status": "local repairs verified; complete publication not qualified",
+  "candidateWorktree": "/home/administrator/projects/hexalith/cicd-projects-publication-fix-20261116T204551Z",
+  "candidateTree": "d4954ec456f50810e1eeb9f21ede79af234d8bff",
+  "changedPaths": 63,
+  "ownedPerimeterChanges": false,
+  "finalFocusedExit": 0,
+  "focusedTests": {
+    "passed": 57,
+    "failed": 0,
+    "skipped": 0,
+    "notRun": 0,
+    "scope": "repair source with retained older product binaries; not current-main acceptance"
+  },
+  "fullReleasedAudit": "pass",
+  "historicalRoundtrips": 12,
+  "negativeControls": [
+    {
+      "path": "NuGet.Config",
+      "declaration": "auditSources",
+      "result": "rejected"
+    },
+    {
+      "path": "arbitrary.txt",
+      "declaration": "MSBuildWarningsAsMessages",
+      "result": "rejected"
+    }
+  ],
+  "currentMainBuild": "blocked: QueryResultContractAttribute absent in published SDK",
+  "retainedRuntimeDiagnostic": "failed: HTTP command seeding timeout; no deadline/assertion changes",
+  "foldersPrerequisite": "eleven explicit source/runtime cases still require matching real verifier inputs",
+  "noCommitPushOrReleaseByThisRepair": true,
+  "scopeDecision": "pending: prepare SDK release readiness or retain current scope",
+  "verificationScratchRemoved": true,
+  "runnerSha256": {
+    "verify-focused.py": "40c6a9370d67bf690cb0e32395457678f1ae84e4b855197310ed79607f5baf10",
+    "verify-focused-with-runtime.py.txt": "66f4e8401741a43d950da78ada6d44a09fcae5cb8d85292a505100f65757868e",
+    "verify-archives.py": "e072fd003d55d5890fd2422e6e39510ef6665fffe2bb6ead9c23bd8dda31e499",
+    "qualify-product.py": "c7154d5d8adcaf9d012381b9f9db6735286d871d3ceb77c34cd940e6e43bbe1e",
+    "verify-sdk-prerequisite.py": "d0dc3ff1ddd2f47253fd6e77ba61d9d81044bd9886abf6941b318dea92d250c8"
+  }
+}

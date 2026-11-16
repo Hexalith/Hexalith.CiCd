@@ -552,3 +552,26 @@ Windows callers forward the additive preparation outputs when the selected
 released schema defines both nullable knobs. Older pinned contracts retain their
 original caller inputs, so introducing this source interface does not change
 existing module defaults before the supporting release is selected.
+
+
+### Platform prerequisite source contract
+
+The next supporting Builds release adds `publishedBuilds: null` and
+`buildProjects: []`; existing selected releases and production registrations stay
+unchanged. `publishedBuilds` names a committed closed shared-release tuple JSON,
+mutually exclusive with `moduleManifest`. Shared preparation authenticates the
+historical signed tool independently of the active accepted catalog and exports
+`HexalithBuildsPublishedToolRoot` before evaluation.
+
+`buildProjects` contains up to 32 `{id, project, versions}` declarations. IDs are
+unique kebab-case; projects are committed non-test `.csproj` consumers outside
+package discovery. Only `HexalithEventStoreVersion`, `HexalithTenantsVersion` and
+`HexalithMemoriesVersion` exact stable selections are accepted. Preparation and
+Linux execution are required; custom platform jobs are rejected. Shared code
+builds each case with private SDK artifacts and publishes the JSON environment
+mapping `HexalithBuildProjects` for read-only product actions through the job.
+
+Packable projects may evaluate `HexalithVerifyPublishedPackage=true`, consistently
+across TFMs, to require public NuGet signature verification and exact original
+nonsignature member bodies. No module callback runs in the privileged publisher.
+These source additions require a qualified immutable Builds release before use.

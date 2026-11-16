@@ -1,0 +1,940 @@
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
+index 0a954b94..bd9cac98 100644
+--- a/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageCredentialMatrixTests.cs
+@@ -7,6 +7,8 @@ using System.Security.Cryptography;
+ using System.Text.Json;
+ 
+ using Hexalith.Projects.PackageFixtures;
++using Hexalith.EventStore.Client.Gateway;
++using Hexalith.EventStore.Contracts.Streams;
+ 
+ using Microsoft.IdentityModel.Tokens;
+ 
+@@ -54,6 +56,25 @@ public sealed class PackageCredentialMatrixTests
+             using JsonDocument configuration = JsonDocument.Parse(await File.ReadAllBytesAsync(scratch.File("configuration.json"), TestContext.Current.CancellationToken));
+             JsonElement settings = configuration.RootElement.GetProperty("Projects").GetProperty("PackageFixtures");
+             user.ExportSubjectPublicKeyInfo().ShouldNotBe(Convert.FromBase64String(settings.GetProperty("OwnerPublicKey").GetString()!));
++            string scanPrivate = settings.GetProperty("FolderScanPrivateKey").GetString()!;
++            string scanPublic = settings.GetProperty("FolderScanPublicKey").GetString()!;
++            string readPrivate = settings.GetProperty("FolderOwnerPrivateKey").GetString()!;
++            string readPublic = settings.GetProperty("FolderOwnerPublicKey").GetString()!;
++            scanPublic.ShouldNotBe(readPublic);
++            string workersPublic = settings.GetProperty("FolderWorkersScanPublicKey").GetString()!;
++            workersPublic.ShouldNotBe(scanPublic);
++            workersPublic.ShouldNotBe(readPublic);
++            StreamReadRequest scanRequest = new(inputs.Tenant, "folders", "synthetic-folder", ToSequence: 1) { RequireNativeProof = true };
++            DateTimeOffset now = DateTimeOffset.UtcNow;
++            string scanProof = BoundNativeSourceScanProof.Issue(scanRequest, "folders", scanPrivate, now);
++            BoundNativeSourceScanProof.Verify(scanProof, scanRequest, "folders", scanPublic, now).ShouldBeTrue();
++            BoundNativeSourceScanProof.Verify(scanProof, scanRequest, "folders", readPublic, now).ShouldBeFalse();
++            BoundNativeSourceScanProof.Verify(scanProof, scanRequest, "folders", workersPublic, now).ShouldBeFalse();
++            BoundNativeSourceScanProof.Verify(scanProof, scanRequest with { Tenant = inputs.ForeignTenant }, "folders", scanPublic, now).ShouldBeFalse();
++            BoundNativeSourceScanProof.Verify(scanProof, scanRequest with { Domain = "projects" }, "folders", scanPublic, now).ShouldBeFalse();
++            BoundNativeSourceScanProof.Verify(scanProof, scanRequest, "projects", scanPublic, now).ShouldBeFalse();
++            string readProof = BoundStreamReadProof.Issue(scanRequest, "folders", readPrivate, now);
++            BoundNativeSourceScanProof.Verify(readProof, scanRequest, "folders", scanPublic, now).ShouldBeFalse();
+             Dictionary<string, string> browser = new()
+             {
+                 ["TenantToken"] = inputs.ReaderTokens["actor-1"], ["ForeignToken"] = inputs.ReaderTokens["foreign-actor"],
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs
+index 3681e0c2..1c2f0c07 100644
+--- a/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageFixtureSafetyTests.cs
+@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
+ using Microsoft.AspNetCore.Hosting;
+ using Microsoft.AspNetCore.Builder;
+ using Microsoft.Extensions.Hosting;
++using Microsoft.Extensions.DependencyInjection;
+ 
+ using Shouldly;
+ 
+@@ -77,6 +78,41 @@ public sealed class PackageFixtureSafetyTests
+         Should.Throw<InvalidOperationException>(() => builder.Build()).Message.ShouldContain("actual owner identity and proof key");
+     }
+ 
++    /// <summary>Private resource shutdown cancels a blocked hosted service before the orchestrator stop deadline.</summary>
++    [Fact]
++    public async Task PrivateOwnerShutdownBoundsItsGracefulDrain()
++    {
++        FixtureScratch scratch = new(true);
++        await using var cleanup = scratch.ConfigureAwait(true);
++        BlockingShutdownService blocker = new();
++        IHostBuilder builder = Host.CreateDefaultBuilder().UseEnvironment("Development").ConfigureWebHost(web =>
++        {
++            web.UseKestrel().UseUrls("http://127.0.0.1:0")
++                .UseSetting("HEXALITH_PACKAGE_STARTUP", "1").UseSetting("HEXALITH_PACKAGE_ROLE", "projects")
++                .UseSetting("HEXALITH_PACKAGE_DIRECTORY", scratch.Directory).UseSetting("DAPR_HTTP_ENDPOINT", "http://127.0.0.1:3500")
++                .Configure(_ => { });
++            new PackageHostingStartup().Configure(web);
++        }).ConfigureServices(services => services.AddSingleton<IHostedService>(blocker));
++        using IHost host = builder.Build();
++        await host.StartAsync(TestContext.Current.CancellationToken);
++        using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(10));
++        var elapsed = System.Diagnostics.Stopwatch.StartNew();
++        await host.StopAsync(deadline.Token);
++        blocker.DrainCancelled.ShouldBeTrue();
++        elapsed.Elapsed.ShouldBeLessThan(TimeSpan.FromSeconds(8));
++    }
++
++    private sealed class BlockingShutdownService : IHostedService
++    {
++        internal bool DrainCancelled { get; private set; }
++        public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
++        public async Task StopAsync(CancellationToken cancellationToken)
++        {
++            try { await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken).ConfigureAwait(false); }
++            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { DrainCancelled = true; }
++        }
++    }
++
+     /// <summary>IPC refuses traversal, linked input and oversized output, and its scratch is disposed on failure.</summary>
+     [Fact]
+     public async Task AdapterIpcRefusesUnsafeInputAndBoundsOutput()
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageOwnerMetadataTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageOwnerMetadataTests.cs
+index 8e6e59ac..0f04f744 100644
+--- a/tests/Hexalith.Projects.Integration.Tests/PackageOwnerMetadataTests.cs
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageOwnerMetadataTests.cs
+@@ -8,6 +8,7 @@ using System.Security.Cryptography;
+ 
+ using Hexalith.EventStore.Contracts.Routing;
+ using Hexalith.EventStore.DomainService;
++using Hexalith.EventStore.ServiceDefaults.Routing;
+ using Hexalith.Projects.PackageFixtures;
+ 
+ using PackageHost = PackageFixtureHost::Hexalith.Projects.PackageFixtures.AppHost;
+@@ -55,7 +56,7 @@ public sealed class PackageOwnerMetadataTests
+     [Fact]
+     public async Task ChangedOwnerSdkContractIsRefused()
+     {
+-        (string executable, string declaration, _) = Artifacts("tenants");
++        (string executable, _, _) = Artifacts("tenants");
+         FixtureScratch scratch = new(true);
+         await using var cleanup = scratch.ConfigureAwait(true);
+         foreach (string path in Directory.GetFiles(Path.GetDirectoryName(executable)!))
+@@ -65,8 +66,7 @@ public sealed class PackageOwnerMetadataTests
+         bytes[^1] ^= 1;
+         await File.WriteAllBytesAsync(contract, bytes, TestContext.Current.CancellationToken);
+         PackageHost.PackageOwnerLoadContext context = new(scratch.File(Path.GetFileName(executable)));
+-        Exception refused = Should.Throw<Exception>(() => CompiledRouteCatalogDeclarations.Read(
+-            [context.LoadOwner(scratch.File(Path.GetFileName(declaration)))]));
++        Exception refused = Should.Throw<Exception>(() => context.LoadFromAssemblyName(typeof(RouteContractDeclaration).Assembly.GetName()));
+         refused.ToString().ShouldContain("SDK contract differs");
+     }
+ 
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackagePhaseSequenceTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackagePhaseSequenceTests.cs
+new file mode 100644
+index 00000000..18a8bcb6
+--- /dev/null
++++ b/tests/Hexalith.Projects.Integration.Tests/PackagePhaseSequenceTests.cs
+@@ -0,0 +1,50 @@
++namespace Hexalith.Projects.Integration.Tests;
++
++using Hexalith.Projects.PackageFixtures;
++using Shouldly;
++using Xunit;
++
++/// <summary>Distinguishes a retained assertion result from failure to release the preceding runtime.</summary>
++public sealed class PackagePhaseSequenceTests
++{
++    /// <summary>The next allocation follows successful disposal while the original assertion remains red.</summary>
++    [Fact]
++    public async Task DisposedAssertionFailureContinuesAndIsRetained()
++    {
++        List<string> events = [];
++        IReadOnlyList<string> failures = await PackagePhaseSequence.RunAsync(new[] { 1, 2 }, async phase =>
++        {
++            events.Add("allocate:" + phase);
++            await using var cleanup = new ControlledCleanup(events, phase, fail: false).ConfigureAwait(true);
++            await Task.Yield();
++            return phase == 1 ? "main:AssertionFailure" : null;
++        });
++        failures.ShouldBe(["main:AssertionFailure"]);
++        events.ShouldBe(["allocate:1", "cleanup:1", "allocate:2", "cleanup:2"]);
++    }
++
++    /// <summary>A failed disposal prevents a phase from returning its assertion result or allocating a later runtime.</summary>
++    [Fact]
++    public async Task CleanupFailureHaltsLaterAllocation()
++    {
++        List<string> events = [];
++        IOException failure = await Should.ThrowAsync<IOException>(() => PackagePhaseSequence.RunAsync(new[] { 1, 2 }, async phase =>
++        {
++            events.Add("allocate:" + phase);
++            await using var cleanup = new ControlledCleanup(events, phase, fail: true).ConfigureAwait(true);
++            await Task.Yield();
++            return "main:AssertionFailure";
++        }));
++        failure.Message.ShouldBe("owned cleanup failed");
++        events.ShouldBe(["allocate:1", "cleanup:1"]);
++    }
++
++    private sealed class ControlledCleanup(List<string> events, int phase, bool fail) : IAsyncDisposable
++    {
++        public ValueTask DisposeAsync()
++        {
++            events.Add("cleanup:" + phase);
++            return fail ? ValueTask.FromException(new IOException("owned cleanup failed")) : ValueTask.CompletedTask;
++        }
++    }
++}
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageReadFixture.cs b/tests/Hexalith.Projects.Integration.Tests/PackageReadFixture.cs
+index 8bd4f5a3..ecf1cf1f 100644
+--- a/tests/Hexalith.Projects.Integration.Tests/PackageReadFixture.cs
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageReadFixture.cs
+@@ -112,7 +112,7 @@ internal sealed partial class PackageReadFixture : IDisposable
+     internal async Task InitializeWriterProtocolAsync()
+     {
+         StreamReadPage bootstrap = await AwaitHostedBootstrapAsync().ConfigureAwait(false);
+-        await ActivateFreshDeliveryWriterProtocolAsync(bootstrap).ConfigureAwait(false);
++        await PrepareFreshWriterProtocolAsync(bootstrap).ConfigureAwait(false);
+     }
+ 
+     /// <summary>Requires the exact native method selected in this launcher's private configuration.</summary>
+@@ -189,7 +189,7 @@ internal sealed partial class PackageReadFixture : IDisposable
+         Require(!_seedAttempted, "Each owned fixture may seed its genuine commands only once.");
+         _seedAttempted = true;
+         StreamReadPage bootstrap = await AwaitHostedBootstrapAsync().ConfigureAwait(false);
+-        await ActivateFreshDeliveryWriterProtocolAsync(bootstrap).ConfigureAwait(false);
++        await PrepareFreshWriterProtocolAsync(bootstrap).ConfigureAwait(false);
+         foreach (string tenant in new[] { ForeignTenant, Tenant })
+         {
+             string actor = ActorFor(tenant);
+@@ -293,6 +293,18 @@ internal sealed partial class PackageReadFixture : IDisposable
+             _browserReadToken = await FreshBrowserReadCredentialAsync(browser).ConfigureAwait(false);
+             await WaitForBrowserAdvisoryReadinessAsync(_browserReadToken).ConfigureAwait(false);
+         }
++        if (_inputs.NativeCredentials)
++        {
++            foreach (string tenant in new[] { Tenant, ForeignTenant })
++                await PackageReadSetupReadiness.WaitAsync(async token =>
++                {
++                    using HttpResponseMessage response = await QueryAsync(tenant: tenant, tenantActor: true, cancellationToken: token).ConfigureAwait(false);
++                    SubmitQueryResponse? result = response.StatusCode == HttpStatusCode.OK
++                        ? await response.Content.ReadFromJsonAsync<SubmitQueryResponse>(Json, token).ConfigureAwait(false) : null;
++                    return (response.StatusCode, result is { Success: true } ? result.Payload.Deserialize<ProjectListPage>(Json) : null);
++                }, ["project-a", "project-b"], TimeSpan.FromSeconds(90), TimeSpan.FromSeconds(1), Cancellation).ConfigureAwait(false);
++            Console.WriteLine("[package-native] setup=expected-reads-complete");
++        }
+     }
+ 
+     private async Task<string> FreshBrowserReadCredentialAsync(JsonElement browser)
+@@ -424,6 +436,8 @@ internal sealed partial class PackageReadFixture : IDisposable
+         Require(response.StatusCode == HttpStatusCode.OK, "Supported read returned HTTP " + (int)response.StatusCode + ".");
+         SubmitQueryResponse? result = await response.Content.ReadFromJsonAsync<SubmitQueryResponse>(Json, Cancellation).ConfigureAwait(false);
+         T value = result!.Payload.Deserialize<T>(Json)!;
++        if (value is ProjectListPage diagnostic)
++            Console.WriteLine("[package-native] read-admission=" + CreateCursorControlEvidence(diagnostic).GetRawText());
+         if (value is ProjectListPage page)
+             await AppendReadEvidenceAsync(_readEvidence, Path.Combine(Evidence, "list-admission-observations.jsonl"), JsonSerializer.Serialize(new
+             {
+@@ -999,6 +1013,7 @@ internal sealed partial class PackageReadFixture : IDisposable
+                 if (outcome == "Completed")
+                 {
+                     await File.AppendAllTextAsync(Path.Combine(Evidence, "seed-progress.log"), "Completed " + domain + " " + type + Environment.NewLine, Cancellation).ConfigureAwait(false);
++                    Console.WriteLine("[package-native] seed-completed domain=" + domain + " type=" + type);
+                     return messageId;
+                 }
+                 Require(outcome is not ("Rejected" or "TimedOut" or "PublishFailed"), "Fixture command failed: " + type + " (" + outcome + "). "
+@@ -1746,6 +1761,58 @@ internal sealed partial class PackageReadFixture : IDisposable
+     }
+ 
+     /// <summary>Initializes the brand-new disposable store through the real authenticated SDK maintenance protocol before any domain seed.</summary>
++    private async Task PrepareFreshWriterProtocolAsync(StreamReadPage bootstrap)
++    {
++        Console.WriteLine("[package-native] setup=hosted-bootstrap-source-complete");
++        await ObserveStableFreshInventoryAsync(ReadFreshCutoverInventoryAsync, TimeSpan.FromSeconds(30),
++            TimeSpan.FromSeconds(2), TimeSpan.FromMilliseconds(100), Cancellation).ConfigureAwait(false);
++        Console.WriteLine("[package-native] setup=fresh-inventory-stable");
++        for (int attempt = 0; ; attempt++)
++        {
++            try
++            {
++                await ActivateFreshDeliveryWriterProtocolAsync(bootstrap).ConfigureAwait(false);
++                Console.WriteLine("[package-native] setup=writer-protocol-active");
++                return;
++            }
++            catch (Xunit.Sdk.XunitException error) when (attempt < 3
++                && error.Message == "Fresh cutover delivery inventory changed or has missing state."
++                && !File.Exists(Path.Combine(Path.GetDirectoryName(Setting("InvocationDirectory"))!, "delivery-cutover.rdb")))
++            {
++                await Task.Delay(100, Cancellation).ConfigureAwait(false);
++            }
++        }
++    }
++
++    /// <summary>Observes complete identical provider inventories before any backup or activation can begin.</summary>
++    internal static async Task ObserveStableFreshInventoryAsync(Func<CancellationToken, Task<Dictionary<string, PackageReadStateSnapshot>>> read,
++        TimeSpan budget, TimeSpan stableWindow, TimeSpan pollDelay, CancellationToken cancellation)
++    {
++        using CancellationTokenSource quiet = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
++        quiet.CancelAfter(budget);
++        Dictionary<string, PackageReadStateSnapshot>? previous = null;
++        Stopwatch stable = new();
++        while (true)
++        {
++            quiet.Token.ThrowIfCancellationRequested();
++            try
++            {
++                Dictionary<string, PackageReadStateSnapshot> current = await read(quiet.Token).ConfigureAwait(false);
++                bool same = previous is not null && SameCutoverInventory(previous, current);
++                if (!same) stable.Restart();
++                previous = current;
++                if (same && stable.Elapsed >= stableWindow) return;
++            }
++            catch (Xunit.Sdk.XunitException error) when (error.Message == "Fresh cutover delivery inventory changed or has missing state."
++                && !quiet.IsCancellationRequested)
++            {
++                previous = null;
++                stable.Reset();
++            }
++            await Task.Delay(pollDelay, quiet.Token).ConfigureAwait(false);
++        }
++    }
++
+     private async Task ActivateFreshDeliveryWriterProtocolAsync(StreamReadPage bootstrap)
+     {
+         using var budget = CancellationTokenSource.CreateLinkedTokenSource(Cancellation);
+@@ -1851,6 +1918,24 @@ internal sealed partial class PackageReadFixture : IDisposable
+         string[] reobserved = await KeysAsync().ConfigureAwait(false);
+         if (values.Values.Any(value => value is null) || !keys.SequenceEqual(reobserved, StringComparer.Ordinal))
+         {
++            var after = reobserved.Length == 0 ? new Dictionary<string, PackageReadStateSnapshot?>()
++                : await ReadSeedDeliveryStatesAsync(reobserved, cancellation).ConfigureAwait(false);
++            static object Fingerprint(PackageReadStateSnapshot? value) => new
++            {
++                present = value is not null, versionSha256 = value is null ? null : Digest(value.ETag),
++                bytesSha256 = value is null ? null : Convert.ToHexString(SHA256.HashData(value.Bytes)), byteCount = value?.Bytes.Length ?? 0,
++            };
++            string[] changed = keys.Union(reobserved, StringComparer.Ordinal).Where(key =>
++                !values.TryGetValue(key, out var beforeValue) || beforeValue is null
++                || !after.TryGetValue(key, out var afterValue) || afterValue is null
++                || beforeValue.ETag != afterValue.ETag || !beforeValue.Bytes.AsSpan().SequenceEqual(afterValue.Bytes)).Order(StringComparer.Ordinal).ToArray();
++            Console.Error.WriteLine("[package-native] cutover-inventory-observation " + JsonSerializer.Serialize(new
++            {
++                observedAt = DateTimeOffset.UtcNow, firstKeyCount = keys.Length, finalKeyCount = reobserved.Length,
++                changedKeyCount = changed.Length, truncated = changed.Length > 16,
++                changed = changed.Take(16).Select(key => new { keySha256 = Digest(key),
++                    before = Fingerprint(values.GetValueOrDefault(key)), after = Fingerprint(after.GetValueOrDefault(key)) }).ToArray(),
++            }, Json));
+             await File.AppendAllTextAsync(Path.Combine(Evidence, "fresh-cutover-inventory-observations.jsonl"), JsonSerializer.Serialize(new
+             {
+                 firstKeyCount = keys.Length, finalKeyCount = reobserved.Length,
+@@ -1907,10 +1992,20 @@ internal sealed partial class PackageReadFixture : IDisposable
+                 && ProjectionDeliveryCompletionObserver.IsComplete(source, scope.Projection, checkpoint.Bytes, prior.Bytes,
+                     before[scope.Actor + "||projection-lifecycle"] is null && after[scope.Actor + "||projection-lifecycle"] is null,
+                     current.Bytes, dapr.JsonSerializerOptions));
++        DateTimeOffset diagnosticsAt = DateTimeOffset.UtcNow.AddSeconds(15);
+         while (true)
+         {
+             cancellation.ThrowIfCancellationRequested();
+             var before = await ReadSeedDeliveryStatesAsync(keys, cancellation).ConfigureAwait(false);
++            if (DateTimeOffset.UtcNow >= diagnosticsAt)
++            {
++                foreach (var scope in scopes)
++                    Console.WriteLine("[package-native] seed-projection domain=" + domain + " projection=" + scope.Projection
++                        + " checkpointPresent=" + (before[scope.Checkpoint] is not null)
++                        + " epochPresent=" + (before[scope.Actor + "||projection-lifecycle-epoch"] is not null)
++                        + " lifecyclePresent=" + (before[scope.Actor + "||projection-lifecycle"] is not null));
++                diagnosticsAt = DateTimeOffset.UtcNow.AddSeconds(15);
++            }
+             if (Complete(before, before))
+             {
+                 StreamReadPage currentSource = await StreamAsync(tenant, domain, aggregate, tenant, cancellation).ConfigureAwait(false);
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageReadSetupReadiness.cs b/tests/Hexalith.Projects.Integration.Tests/PackageReadSetupReadiness.cs
+new file mode 100644
+index 00000000..53bc1a3b
+--- /dev/null
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageReadSetupReadiness.cs
+@@ -0,0 +1,54 @@
++namespace Hexalith.Projects.Integration.Tests;
++
++using System.Net;
++using System.Text.Json;
++
++using Hexalith.Projects.Contracts.Queries;
++using Hexalith.Projects.Contracts.Ui;
++using Hexalith.Projects.Contracts.Models;
++
++/// <summary>Establishes exact seeded admission before any product state, audit or cursor baseline is captured.</summary>
++internal static class PackageReadSetupReadiness
++{
++    internal static async Task WaitAsync(Func<CancellationToken, Task<(HttpStatusCode Status, ProjectListPage? Page)>> query,
++        string[] expected, TimeSpan timeout, TimeSpan interval, CancellationToken cancellation)
++    {
++        using CancellationTokenSource budget = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
++        budget.CancelAfter(timeout);
++        string last = "no-response";
++        try
++        {
++            while (true)
++            {
++                var (status, page) = await query(budget.Token).WaitAsync(budget.Token).ConfigureAwait(false);
++                budget.Token.ThrowIfCancellationRequested();
++                last = page is null ? "httpStatus=" + (int)status
++                    : PackageReadFixture.CreateCursorControlEvidence(page).GetRawText();
++                if (status != HttpStatusCode.OK || page is null)
++                    throw new InvalidOperationException("Seed read admission was unexpectedly refused: " + last);
++                if (page.Snapshot.ResponseState == AdmissionResponseState.Complete)
++                {
++                    if (!page.Items.Select(item => item.ProjectId).SequenceEqual(expected, StringComparer.Ordinal)
++                        || page.HasMore || page.Cursor is not null || page.Snapshot.AsOf == default)
++                        throw new InvalidOperationException("Seed read admission differed from the exact expected rows: " + last);
++                    Console.WriteLine("[package-native] setup-readiness=" + last);
++                    return;
++                }
++                if (page.Snapshot.ResponseState != AdmissionResponseState.Unavailable || page.Items.Count != 0
++                    || page.HasMore || page.Cursor is not null || page.Snapshot.AsOf == default || page.Snapshot.ProjectVersion != 0
++                    || page.Snapshot.Components.Count != 1 || !ExpectedUnavailable(page.Snapshot.Components[0]))
++                    throw new InvalidOperationException("Seed read admission returned an unexpected unavailable shape: " + last);
++                await Task.Delay(interval, budget.Token).ConfigureAwait(false);
++            }
++        }
++        catch (OperationCanceledException) when (!cancellation.IsCancellationRequested)
++        {
++            throw new InvalidOperationException("Seed read admission did not become Complete within its setup budget; last=" + last);
++        }
++    }
++
++    private static bool ExpectedUnavailable(AdmissionComponent component)
++        => !component.Included && component.Freshness is EvidenceFreshnessState.Stale or EvidenceFreshnessState.Unavailable
++            && (component.Name, component.Reason) is ("Enumeration", "ProjectionUnavailable")
++                or ("Authorization", "AuthorizationUnavailable") or ("FolderVisibility", "FolderUnavailable");
++}
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageReadSetupReadinessTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageReadSetupReadinessTests.cs
+new file mode 100644
+index 00000000..a82712d2
+--- /dev/null
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageReadSetupReadinessTests.cs
+@@ -0,0 +1,108 @@
++namespace Hexalith.Projects.Integration.Tests;
++
++using System.Net;
++
++using Hexalith.Projects.Contracts.Models;
++using Hexalith.Projects.Contracts.Queries;
++using Hexalith.Projects.Contracts.Ui;
++
++using Shouldly;
++using Xunit;
++
++/// <summary>Keeps eventual setup observations separate from every unchanged product assertion and baseline.</summary>
++public sealed class PackageReadSetupReadinessTests
++{
++    /// <summary>A known cold dependency must reach the exact Complete seeded view.</summary>
++    [Fact]
++    public async Task KnownUnavailableRequiresExactCompleteRows()
++    {
++        int calls = 0;
++        await PackageReadSetupReadiness.WaitAsync(_ => Task.FromResult((HttpStatusCode.OK, (ProjectListPage?)(++calls == 1 ? Unavailable() : Complete()))),
++            ["project-a", "project-b"], TimeSpan.FromSeconds(2), TimeSpan.Zero, TestContext.Current.CancellationToken);
++        calls.ShouldBe(2);
++    }
++
++    /// <summary>A wrong Complete result is a product error and cannot be retried into acceptance.</summary>
++    [Fact]
++    public async Task WrongCompleteRowsAreNeverRetried()
++    {
++        int calls = 0;
++        InvalidOperationException failure = await Should.ThrowAsync<InvalidOperationException>(() => PackageReadSetupReadiness.WaitAsync(_ =>
++        {
++            calls++;
++            return Task.FromResult((HttpStatusCode.OK, (ProjectListPage?)(Complete() with { Items = [] })));
++        }, ["project-a", "project-b"], TimeSpan.FromSeconds(2), TimeSpan.Zero, TestContext.Current.CancellationToken));
++        calls.ShouldBe(1);
++        failure.Message.ShouldContain("exact expected rows");
++    }
++
++    /// <summary>Unexpected unavailable evidence is a hard failure with safe last-response diagnostics.</summary>
++    [Fact]
++    public async Task UnexpectedUnavailableIsNeverRetried()
++    {
++        int calls = 0;
++        InvalidOperationException failure = await Should.ThrowAsync<InvalidOperationException>(() => PackageReadSetupReadiness.WaitAsync(_ =>
++        {
++            calls++;
++            return Task.FromResult((HttpStatusCode.OK, (ProjectListPage?)Unavailable("private-component", "private-reason")));
++        }, ["project-a", "project-b"], TimeSpan.FromSeconds(2), TimeSpan.Zero, TestContext.Current.CancellationToken));
++        calls.ShouldBe(1);
++        failure.Message.ShouldContain("unexpected unavailable");
++        failure.Message.ShouldNotContain("private-component");
++        failure.Message.ShouldNotContain("private-reason");
++    }
++
++    /// <summary>Persistent known Unavailable remains red and retains the safe final reason and snapshot component.</summary>
++    [Fact]
++    public async Task PersistentUnavailableTimesOutWithLastSafeObservation()
++    {
++        int calls = 0;
++        InvalidOperationException failure = await Should.ThrowAsync<InvalidOperationException>(() => PackageReadSetupReadiness.WaitAsync(_ =>
++        {
++            calls++;
++            return Task.FromResult((HttpStatusCode.OK, (ProjectListPage?)Unavailable()));
++        }, ["project-a", "project-b"], TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(1), TestContext.Current.CancellationToken));
++        calls.ShouldBeGreaterThan(1);
++        failure.Message.ShouldContain("setup budget");
++        failure.Message.ShouldContain("FolderVisibility");
++        failure.Message.ShouldContain("FolderUnavailable");
++    }
++
++    /// <summary>Authentication failure is not a readiness race.</summary>
++    [Fact]
++    public async Task AuthenticationRefusalIsNeverRetried()
++    {
++        int calls = 0;
++        await Should.ThrowAsync<InvalidOperationException>(() => PackageReadSetupReadiness.WaitAsync(_ =>
++        {
++            calls++;
++            return Task.FromResult((HttpStatusCode.Unauthorized, (ProjectListPage?)null));
++        }, ["project-a", "project-b"], TimeSpan.FromSeconds(2), TimeSpan.Zero, TestContext.Current.CancellationToken));
++        calls.ShouldBe(1);
++    }
++
++    /// <summary>A child that ignores cancellation cannot publish a late Complete result past setup's complete deadline.</summary>
++    [Fact]
++    public async Task LateCompleteCannotOutliveSetupBudget()
++    {
++        var reply = new TaskCompletionSource<(HttpStatusCode, ProjectListPage?)>();
++        try
++        {
++            await Should.ThrowAsync<InvalidOperationException>(() => PackageReadSetupReadiness.WaitAsync(_ => reply.Task,
++                ["project-a", "project-b"], TimeSpan.FromMilliseconds(10), TimeSpan.Zero, TestContext.Current.CancellationToken));
++        }
++        finally { reply.SetResult((HttpStatusCode.OK, Complete())); }
++    }
++
++    private static ProjectListPage Complete()
++    {
++        AdmissionSnapshot snapshot = new(AdmissionResponseState.Complete, DateTimeOffset.UtcNow, 2,
++            [new("Project", true, EvidenceFreshnessState.Current, "Current")], []);
++        return new([new("project-a", null, ProjectLifecycle.Active, ReferenceState.Included, snapshot),
++            new("project-b", null, ProjectLifecycle.Active, ReferenceState.Included, snapshot)], null, false, snapshot);
++    }
++
++    private static ProjectListPage Unavailable(string component = "FolderVisibility", string reason = "FolderUnavailable")
++        => new([], null, false, new(AdmissionResponseState.Unavailable, DateTimeOffset.UtcNow, 0,
++            [new(component, false, EvidenceFreshnessState.Unavailable, reason)], []));
++}
+diff --git a/tests/Hexalith.Projects.Integration.Tests/PackageReadStartupTests.cs b/tests/Hexalith.Projects.Integration.Tests/PackageReadStartupTests.cs
+new file mode 100644
+index 00000000..826e5be2
+--- /dev/null
++++ b/tests/Hexalith.Projects.Integration.Tests/PackageReadStartupTests.cs
+@@ -0,0 +1,46 @@
++namespace Hexalith.Projects.Integration.Tests;
++
++using Shouldly;
++
++using Xunit;
++
++/// <summary>Requires complete stable provider observations before the unchanged writer protocol is allowed to start.</summary>
++public sealed class PackageReadStartupTests
++{
++    /// <summary>A changed byte/version observation resets readiness and requires the next identical complete inventory.</summary>
++    [Fact]
++    public async Task ChangedInventoryRequiresANewConsecutiveStableObservation()
++    {
++        int reads = 0;
++        await PackageReadFixture.ObserveStableFreshInventoryAsync(_ => Task.FromResult(Inventory(++reads == 1 ? "1" : "2")),
++            TimeSpan.FromSeconds(2), TimeSpan.Zero, TimeSpan.FromMilliseconds(1), TestContext.Current.CancellationToken);
++        reads.ShouldBe(3);
++    }
++
++    /// <summary>Missing startup state remains bounded and can never establish a quiet store.</summary>
++    [Fact]
++    public async Task PermanentlyChangingInventoryTimesOut()
++    {
++        int reads = 0;
++        await Should.ThrowAsync<OperationCanceledException>(() => PackageReadFixture.ObserveStableFreshInventoryAsync(
++            _ => Task.FromResult(Inventory((++reads).ToString(System.Globalization.CultureInfo.InvariantCulture))),
++            TimeSpan.FromMilliseconds(100), TimeSpan.Zero, TimeSpan.FromMilliseconds(1), TestContext.Current.CancellationToken));
++        reads.ShouldBeGreaterThan(1);
++    }
++
++    /// <summary>A permanent provider/contract error is propagated rather than retried as a transient inventory race.</summary>
++    [Fact]
++    public async Task ProviderContractRefusalIsNotRetried()
++    {
++        int reads = 0;
++        await Should.ThrowAsync<InvalidOperationException>(() => PackageReadFixture.ObserveStableFreshInventoryAsync(_ =>
++        {
++            reads++;
++            throw new InvalidOperationException("provider contract refused");
++        }, TimeSpan.FromSeconds(2), TimeSpan.Zero, TimeSpan.FromMilliseconds(1), TestContext.Current.CancellationToken));
++        reads.ShouldBe(1);
++    }
++
++    private static Dictionary<string, PackageReadStateSnapshot> Inventory(string version)
++        => new() { ["projection-delivery-control"] = new("projection-delivery-control", [1], version) };
++}
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
+index ea394489..28259b6e 100644
+--- a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerComposition.cs
+@@ -85,7 +85,7 @@ public static class PackageActualOwnerComposition
+         }
+         else if (configuration[Prefix + "Browser:TokenEndpoint"] is not null)
+             throw new InvalidOperationException("A browser token endpoint requires the explicit browser fixture.");
+-        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey" })
++        foreach (string key in new[] { "CertificatePath", "CertificatePassword", "TrustBundle", "EventStoreSecret", "ProjectsSecret", "OwnerPrivateKey", "OwnerPublicKey", "ReceiptKey", "ChannelToken", "Tenant", "ForeignTenant", "DiscoveryConfiguration", "CatalogDigestKey", "TenantsSecret", "TenantOwnerPrivateKey", "TenantOwnerPublicKey", "BootstrapPassword", "FoldersSecret", "FolderOwnerPrivateKey", "FolderOwnerPublicKey", "FolderScanPrivateKey", "FolderScanPublicKey", "FolderWorkersSecret", "FolderWorkersScanPrivateKey", "FolderWorkersScanPublicKey" })
+             _ = Required(configuration, Prefix + key);
+         foreach (string key in new[] { "CertificatePath", "TrustBundle" })
+             if (!File.Exists(configuration[Prefix + key])) throw new InvalidOperationException("Fixture trust material is missing.");
+@@ -271,10 +271,33 @@ public static class PackageActualOwnerComposition
+             .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
+             .WithEnvironment(grant + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
+             .WithEnvironment(grant + "Bindings__eventstore:bound-domain__0", "folders");
+-        _ = folders.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", folderOwnerKey);
++        int scanGrant = ordinal;
++        AddGrant("folders-native-scan", "folders", "FoldersSecret", "eventstore", ["eventstore:stream-scan-native"], false);
++        string scan = "Authentication__WorkloadAuthority__Grants__" + scanGrant + "__";
++        _ = authority.WithEnvironment(scan + "AllowUnbound", "false")
++            .WithEnvironment(scan + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
++            .WithEnvironment(scan + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
++            .WithEnvironment(scan + "Bindings__eventstore:bound-domain__0", "folders");
++        _ = folders.WithEnvironment("Authentication__BoundStreamRead__PrivateKey", folderOwnerKey)
++            .WithEnvironment("Authentication__NativeSourceScan__PrivateKey", Secret("folders-scan-key", "FolderScanPrivateKey"));
+         _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__2", "folders")
+             .WithEnvironment("Authentication__BoundStreamRead__PublicKeys__folders", Required(configuration, Prefix + "FolderOwnerPublicKey"))
+-            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__folders", "folders");
++            .WithEnvironment("Authentication__BoundStreamRead__AllowedDomains__folders", "folders")
++            .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__folders", Required(configuration, Prefix + "FolderScanPublicKey"))
++            .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__folders", "folders");
++        ConfigureClient(folderWorkers, "folders-workers", Secret("folders-workers-secret", "FolderWorkersSecret"));
++        int workersScanGrant = ordinal;
++        AddGrant("folders-workers-native-scan", "folders-workers", "FolderWorkersSecret", "eventstore", ["eventstore:stream-scan-native"], false);
++        string workersScan = "Authentication__WorkloadAuthority__Grants__" + workersScanGrant + "__";
++        _ = authority.WithEnvironment(workersScan + "AllowUnbound", "false")
++            .WithEnvironment(workersScan + "Bindings__eventstore:bound-tenant__0", Required(configuration, Prefix + "Tenant"))
++            .WithEnvironment(workersScan + "Bindings__eventstore:bound-tenant__1", Required(configuration, Prefix + "ForeignTenant"))
++            .WithEnvironment(workersScan + "Bindings__eventstore:bound-domain__0", "folders");
++        _ = folderWorkers.WithEnvironment("Authentication__NativeSourceScan__PrivateKey", Secret("folders-workers-scan-key", "FolderWorkersScanPrivateKey"))
++            .WaitFor(authority);
++        _ = eventStore.WithEnvironment("Authentication__DaprInternal__AllowedCallers__3", "folders-workers")
++            .WithEnvironment("Authentication__NativeSourceScan__PublicKeys__folders-workers", Required(configuration, Prefix + "FolderWorkersScanPublicKey"))
++            .WithEnvironment("Authentication__NativeSourceScan__AllowedDomains__folders-workers", "folders");
+         _ = eventStore.WaitFor(authority);
+         _ = tenants.WaitFor(authority);
+         _ = projects.WithReference(eventStore).WithReference(tenants).WithReference(folders).WaitFor(eventStore).WaitFor(tenants).WaitFor(authority);
+diff --git a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+index edd9c5f6..e3913794 100644
+--- a/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
++++ b/tests/Hexalith.Projects.PackageFixtures.AppHost/PackageActualOwnerInfrastructure.cs
+@@ -92,6 +92,8 @@ internal static class PackageActualOwnerInfrastructure
+                 new(projects, "api/v1/commands", ["POST"]),
+                 new(folders, "api/v1/commands", ["POST"]),
+                 new(folders, "api/v1/streams/read/workload", ["POST"]),
++                new(folders, "api/v1/streams/scan/workload", ["POST"]),
++                new(foldersWorkers, "api/v1/streams/scan/workload", ["POST"]),
+             ]) { TechnicalHttp = true },
+             new(tenants, DomainCalls("process", "replay-state", "query", "project", "admin/operational-index-metadata")),
+             new(projects, DomainCalls("process", "query", "project", "project/v2", "project/rebuild/v1", "admin/operational-index-metadata")),
+diff --git a/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs b/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
+index 5a174f35..b12be769 100644
+--- a/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
++++ b/tests/Hexalith.Projects.PackageFixtures/FixtureInputs.cs
+@@ -146,11 +146,16 @@ internal sealed class FixtureInputs(FixtureScratch scratch, string root, bool ac
+         await scratch.WriteAsync("discovery.json", JsonSerializer.Serialize(new { apiVersion = "dapr.io/v1alpha1", kind = "Configuration",
+             metadata = new { name = scratch.Isolation }, spec = new { accessControl = new { defaultAction = "deny", trustDomain = "public" },
+                 nameResolution = new { component = "sqlite", version = "v1", configuration = new { connectionString = scratch.File("discovery.sqlite") } } } }), cancellationToken).ConfigureAwait(false);
+-        using RSA owner = RSA.Create(2048), tenantOwner = RSA.Create(2048), folderOwner = RSA.Create(2048);
++        using RSA owner = RSA.Create(2048), tenantOwner = RSA.Create(2048), folderOwner = RSA.Create(2048), folderScan = RSA.Create(2048), folderWorkersScan = RSA.Create(2048);
+         var fixture = new { Enabled = true, IsolationId = scratch.Isolation, Root = root, UserIssuer = Authority,
+             Mode = actualOwners ? "actual-owner" : "compatibility", Scenario = scenario == "browser" ? "main" : scenario, ChannelToken = Secret(),
+             FoldersSecret = Secret(), FolderOwnerPrivateKey = Convert.ToBase64String(folderOwner.ExportPkcs8PrivateKey()),
+             FolderOwnerPublicKey = Convert.ToBase64String(folderOwner.ExportSubjectPublicKeyInfo()),
++            FolderScanPrivateKey = Convert.ToBase64String(folderScan.ExportPkcs8PrivateKey()),
++            FolderScanPublicKey = Convert.ToBase64String(folderScan.ExportSubjectPublicKeyInfo()),
++            FolderWorkersSecret = Secret(),
++            FolderWorkersScanPrivateKey = Convert.ToBase64String(folderWorkersScan.ExportPkcs8PrivateKey()),
++            FolderWorkersScanPublicKey = Convert.ToBase64String(folderWorkersScan.ExportSubjectPublicKeyInfo()),
+             CertificatePath = scratch.File("certificate.pfx"), CertificatePassword = certificatePassword, TrustBundle = scratch.File("certificate.pem"),
+             BootstrapPassword = Password, DiscoveryConfiguration = scratch.File("discovery.json"), Tenant, ForeignTenant,
+             Browser = new { Enabled = true, PrimaryActor = Subjects["actor-1"], ForeignActor = Subjects["foreign-actor"], ClientSecret,
+diff --git a/tests/Hexalith.Projects.PackageFixtures/PackageFixtureRun.cs b/tests/Hexalith.Projects.PackageFixtures/PackageFixtureRun.cs
+index fafdae1e..03631357 100644
+--- a/tests/Hexalith.Projects.PackageFixtures/PackageFixtureRun.cs
++++ b/tests/Hexalith.Projects.PackageFixtures/PackageFixtureRun.cs
+@@ -25,121 +25,142 @@ internal static class PackageFixtureRun
+         Environment.SetEnvironmentVariable("DOTNET_WATCH", "false");
+         Type entryPoint = Assembly.LoadFrom(host).GetType("Program")
+             ?? throw new InvalidOperationException("The prebuilt AppHost entry point is missing.");
++        string workspace = Path.Combine(root, "tests/e2e");
++        using (CancellationTokenSource staticCheck = new(TimeSpan.FromMinutes(2)))
++            await FixtureProcess.RunAsync("node", [Path.Combine(workspace, "node_modules/typescript/bin/tsc"), "--noEmit"],
++                workspace, staticCheck.Token, printOutput: true).ConfigureAwait(false);
+         List<string> nativeCompleted = [];
+-        foreach ((bool actualOwners, string scenario) in new[] { (true, "main"), (true, "duplicate"), (true, "full-replay"),
+-            (true, "tenant-access-recovery"), (false, "compatibility"), (true, "browser") })
++        IReadOnlyList<string> failedPhases = await PackagePhaseSequence.RunAsync(new[]
+         {
+-            Console.WriteLine("[package-fixtures] phase=" + scenario);
+-            FixtureScratch scratch = new(actualOwners);
+-            await using var scratchCleanup = scratch.ConfigureAwait(false);
+-            using CancellationTokenSource timeout = new(TimeSpan.FromMinutes(45));
+-            FixtureInputs inputs = new(scratch, root, actualOwners, scenario);
+-            await using var inputCleanup = inputs.ConfigureAwait(false);
+-            await inputs.PrepareAsync(timeout.Token).ConfigureAwait(false);
+-            PackageApplicationFactory factory = new(entryPoint, ["--environment", "Development",
+-                "--Logging:LogLevel:Default=Warning", "--Projects:PackageFixtures:Enabled=true", "--Projects:PackageFixtures:ConfigurationFile=" + scratch.File("configuration.json")]);
+-            await using var factoryCleanup = factory.ConfigureAwait(false);
+-            DistributedApplication? application = null;
+-            try
++            (true, "main"), (true, "duplicate"), (true, "full-replay"),
++            (true, "tenant-access-recovery"), (false, "compatibility"), (true, "browser"),
++        }, selected => RunPhaseAsync(root, entryPoint, selected.Item1, selected.Item2, nativeCompleted)).ConfigureAwait(false);
++        Console.WriteLine("[package-native] scenarios=4 passed=" + nativeCompleted.Count + " failed=" + (4 - nativeCompleted.Count) + " skipped=0");
++        if (failedPhases.Count != 0)
++            throw new InvalidOperationException("Package fixture phases failed: " + string.Join(",", failedPhases));
++        if (!nativeCompleted.SequenceEqual(new[] { "main", "duplicate", "full-replay", "tenant-access-recovery" }))
++            throw new InvalidOperationException("The required native product matrix did not execute completely.");
++    }
++
++    // A returned assertion category proves that every await-using scope has disposed.
++    // Stop/disposal/removal exceptions escape this method and prohibit later allocation.
++    private static async Task<string?> RunPhaseAsync(string root, Type entryPoint, bool actualOwners, string scenario,
++        List<string> nativeCompleted)
++    {
++        string? failureCategory = null;
++        string workspace = Path.Combine(root, "tests/e2e");
++
++        Console.WriteLine("[package-fixtures] phase=" + scenario);
++        FixtureScratch scratch = new(actualOwners);
++        await using var scratchCleanup = scratch.ConfigureAwait(false);
++        using CancellationTokenSource timeout = new(TimeSpan.FromMinutes(45));
++        FixtureInputs inputs = new(scratch, root, actualOwners, scenario);
++        await using var inputCleanup = inputs.ConfigureAwait(false);
++        await inputs.PrepareAsync(timeout.Token).ConfigureAwait(false);
++        PackageApplicationFactory factory = new(entryPoint, ["--environment", "Development",
++            "--Logging:LogLevel:Default=Warning", "--Projects:PackageFixtures:Enabled=true", "--Projects:PackageFixtures:ConfigurationFile=" + scratch.File("configuration.json")]);
++        await using var factoryCleanup = factory.ConfigureAwait(false);
++        DistributedApplication? application = null;
++        try
++        {
++            using (CancellationTokenSource startup = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token))
+             {
+-                using (CancellationTokenSource startup = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token))
+-                {
+-                    startup.CancelAfter(TimeSpan.FromMinutes(5));
+-                    await factory.StartAsync(startup.Token).ConfigureAwait(false);
+-                    application = factory.Application ?? throw new InvalidOperationException("AppHost did not publish its built application.");
+-                    string[] resources = actualOwners
+-                        ? ["eventstore", "tenants", "projects", "projects-workers", "projects-ui", "folders", "folders-workers", "browser-read-observer"]
+-                        : ["eventstore", "tenants", "projects", "projects-workers", "projects-ui", "conversations", "folders", "memories", "live-fixtures"];
+-                    foreach (string resource in resources)
+-                        await application.ResourceNotifications.WaitForResourceHealthyAsync(resource, startup.Token).ConfigureAwait(false);
+-                }
+-                FixtureProductChecks checks = new(inputs, scratch, factory);
+-                await checks.VerifyBootstrapAsync(timeout.Token).ConfigureAwait(false);
+-                if (actualOwners && scenario != "browser")
+-                {
+-                    try
+-                    {
+-                        await PackageNativeRunner.InvokeAsync("RunAsync", root, inputs, scratch, factory, application, scenario, timeout.Token).ConfigureAwait(false);
+-                        nativeCompleted.Add(scenario);
+-                        Console.WriteLine("[package-native] scenario=" + scenario + " total=1 passed=1 failed=0 skipped=0");
+-                    }
+-                    catch
+-                    {
+-                        Console.WriteLine("[package-native] scenario=" + scenario + " total=1 passed=0 failed=1 skipped=0");
+-                        throw;
+-                    }
+-                    continue;
+-                }
+-                if (!actualOwners)
+-                {
+-                    await PackageNativeRunner.InvokeAsync("InitializeAsync", root, inputs, scratch, factory, application, "main", timeout.Token).ConfigureAwait(false);
+-                    await checks.SeedCompatibilityTenantAsync(timeout.Token).ConfigureAwait(false);
+-                    await VerifyReadRecoveryAsync(root, factory, inputs, scratch, timeout.Token).ConfigureAwait(false);
+-                }
+-                if (actualOwners)
++                startup.CancelAfter(TimeSpan.FromMinutes(5));
++                await factory.StartAsync(startup.Token).ConfigureAwait(false);
++                application = factory.Application ?? throw new InvalidOperationException("AppHost did not publish its built application.");
++                string[] resources = actualOwners
++                    ? ["eventstore", "tenants", "projects", "projects-workers", "projects-ui", "folders", "folders-workers", "browser-read-observer"]
++                    : ["eventstore", "tenants", "projects", "projects-workers", "projects-ui", "conversations", "folders", "memories", "live-fixtures"];
++                foreach (string resource in resources)
++                    await application.ResourceNotifications.WaitForResourceHealthyAsync(resource, startup.Token).ConfigureAwait(false);
++            }
++            FixtureProductChecks checks = new(inputs, scratch, factory);
++            await checks.VerifyBootstrapAsync(timeout.Token).ConfigureAwait(false);
++            if (actualOwners && scenario != "browser")
++            {
++                try
+                 {
+-                    await PackageNativeRunner.InvokeAsync("SeedAsync", root, inputs, scratch, factory, application, "main", timeout.Token).ConfigureAwait(false);
+-                    await checks.RegisterObservationsAsync(timeout.Token).ConfigureAwait(false);
++                    await PackageNativeRunner.InvokeAsync("RunAsync", root, inputs, scratch, factory, application, scenario, timeout.Token).ConfigureAwait(false);
++                    nativeCompleted.Add(scenario);
++                    Console.WriteLine("[package-native] scenario=" + scenario + " total=1 passed=1 failed=0 skipped=0");
+                 }
+-                FixtureTelemetry? telemetry = actualOwners ? new FixtureTelemetry(application,
+-                    ["eventstore", "tenants", "projects", "projects-workers", "projects-ui", "folders", "folders-workers"]) : null;
+-                if (telemetry is not null) await telemetry.BeginAsync(timeout.Token).ConfigureAwait(false);
+-                Dictionary<string, string> browser = new()
+-                {
+-                    ["CI"] = "true", ["E2E_LIVE_APPHOST"] = "1", ["E2E_PACKAGE_FIXTURES"] = "1",
+-                    ["E2E_SUPPORTED_READ_APPHOST"] = actualOwners ? "1" : "0",
+-                    ["E2E_RUN_ID"] = scratch.Isolation, ["BASE_URL"] = factory.GetEndpoint("projects-ui", "http").ToString(),
+-                    ["API_URL"] = factory.GetEndpoint("projects", "http").ToString(),
+-                    ["EVENTSTORE_API_URL"] = factory.GetEndpoint("eventstore", "http").ToString(),
+-                    ["FIXTURE_API_URL"] = factory.GetEndpoint(actualOwners ? "browser-read-observer" : "live-fixtures", "http").ToString(),
+-                    ["KEYCLOAK_URL"] = new Uri(inputs.Authority).GetLeftPart(UriPartial.Authority),
+-                    ["KEYCLOAK_CLIENT_ID"] = "supported-read-bootstrap", ["KEYCLOAK_REALM"] = "hexalith",
+-                    ["TEST_USER_USERNAME"] = "actor-1", ["TEST_USER_PASSWORD"] = inputs.Password,
+-                    ["E2E_FOREIGN_USERNAME"] = "foreign-actor", ["E2E_FOREIGN_PASSWORD"] = inputs.Password,
+-                    ["TEST_TENANT_ID"] = inputs.Tenant, ["TEST_PRINCIPAL_ID"] = inputs.Subjects["actor-1"],
+-                    ["E2E_BROWSER_SESSION_FILE"] = scratch.File("browser-session.json"),
+-                    ["E2E_PACKAGE_OUTPUT"] = scratch.File("browser-output"),
+-                    ["NODE_EXTRA_CA_CERTS"] = scratch.File("certificate.pem"),
+-                    ["E2E_PROTECTED_FIXTURE_MARKERS"] = "[\"Synthetic project\",\"Synthetic descriptive metadata\",\"Restricted legacy\"]",
+-                };
+-                string workspace = Path.Combine(root, "tests/e2e");
+-                await FixtureProcess.RunAsync("node", [Path.Combine(workspace, "node_modules/typescript/bin/tsc"), "--noEmit"],
+-                    workspace, timeout.Token, browser, inputs.ProtectedValues, printOutput: true).ConfigureAwait(false);
+-                if (actualOwners)
+-                    await BrowserAsync("actual-owner", ["specs/projects-supported-read-browser.spec.ts"], ["--workers", "1"],
+-                        workspace, browser, inputs, scratch, timeout.Token).ConfigureAwait(false);
+-                else
++                catch
+                 {
+-                    foreach ((string phase, string[] selectors, string[] extra) in new[]
+-                    {
+-                        ("smoke", new[] { "specs/live-apphost-startup.spec.ts", "specs/projects-authentication.spec.ts" }, Array.Empty<string>()),
+-                        ("full", Array.Empty<string>(), Array.Empty<string>()),
+-                        ("repeat", new[] { "specs/live-fixtures-lifecycle.spec.ts" }, new[] { "--repeat-each", "2" }),
+-                        ("retry", new[] { "specs/live-fixtures-retry.spec.ts" }, new[] { "--retries", "1", "--repeat-each", "2" }),
+-                    })
+-                        await BrowserAsync(phase, selectors, extra, workspace, browser, inputs, scratch, timeout.Token).ConfigureAwait(false);
++                    Console.WriteLine("[package-native] scenario=" + scenario + " total=1 passed=0 failed=1 skipped=0");
++                    throw;
+                 }
+-                if (telemetry is not null) await telemetry.VerifyAsync(inputs.ProtectedValues, timeout.Token).ConfigureAwait(false);
+-                await checks.VerifyDurableStateAsync(actualOwners, timeout.Token).ConfigureAwait(false);
++                return null;
++            }
++            if (!actualOwners)
++            {
++                await PackageNativeRunner.InvokeAsync("InitializeAsync", root, inputs, scratch, factory, application, "main", timeout.Token).ConfigureAwait(false);
++                await checks.SeedCompatibilityTenantAsync(timeout.Token).ConfigureAwait(false);
++                await VerifyReadRecoveryAsync(root, factory, inputs, scratch, timeout.Token).ConfigureAwait(false);
+             }
+-            catch
++            if (actualOwners)
+             {
+-                await FixtureDiagnostics.ResourcesAsync(application ?? factory.Application, inputs.ProtectedValues).ConfigureAwait(false);
+-                throw;
++                await PackageNativeRunner.InvokeAsync("SeedAsync", root, inputs, scratch, factory, application, "main", timeout.Token).ConfigureAwait(false);
++                await checks.RegisterObservationsAsync(timeout.Token).ConfigureAwait(false);
+             }
+-            finally
++            FixtureTelemetry? telemetry = actualOwners ? new FixtureTelemetry(application,
++                ["eventstore", "tenants", "projects", "projects-workers", "projects-ui", "folders", "folders-workers"]) : null;
++            if (telemetry is not null) await telemetry.BeginAsync(timeout.Token).ConfigureAwait(false);
++            Dictionary<string, string> browser = new()
+             {
+-                application ??= factory.Application;
+-                if (application is not null)
++                ["CI"] = "true", ["E2E_LIVE_APPHOST"] = "1", ["E2E_PACKAGE_FIXTURES"] = "1",
++                ["E2E_SUPPORTED_READ_APPHOST"] = actualOwners ? "1" : "0",
++                ["E2E_RUN_ID"] = scratch.Isolation, ["BASE_URL"] = factory.GetEndpoint("projects-ui", "http").ToString(),
++                ["API_URL"] = factory.GetEndpoint("projects", "http").ToString(),
++                ["EVENTSTORE_API_URL"] = factory.GetEndpoint("eventstore", "http").ToString(),
++                ["FIXTURE_API_URL"] = factory.GetEndpoint(actualOwners ? "browser-read-observer" : "live-fixtures", "http").ToString(),
++                ["KEYCLOAK_URL"] = new Uri(inputs.Authority).GetLeftPart(UriPartial.Authority),
++                ["KEYCLOAK_CLIENT_ID"] = "supported-read-bootstrap", ["KEYCLOAK_REALM"] = "hexalith",
++                ["TEST_USER_USERNAME"] = "actor-1", ["TEST_USER_PASSWORD"] = inputs.Password,
++                ["E2E_FOREIGN_USERNAME"] = "foreign-actor", ["E2E_FOREIGN_PASSWORD"] = inputs.Password,
++                ["TEST_TENANT_ID"] = inputs.Tenant, ["TEST_PRINCIPAL_ID"] = inputs.Subjects["actor-1"],
++                ["E2E_BROWSER_SESSION_FILE"] = scratch.File("browser-session.json"),
++                ["E2E_PACKAGE_OUTPUT"] = scratch.File("browser-output"),
++                ["NODE_EXTRA_CA_CERTS"] = scratch.File("certificate.pem"),
++                ["E2E_PROTECTED_FIXTURE_MARKERS"] = "[\"Synthetic project\",\"Synthetic descriptive metadata\",\"Restricted legacy\"]",
++            };
++            if (actualOwners)
++                await BrowserAsync("actual-owner", ["specs/projects-supported-read-browser.spec.ts"], ["--workers", "1"],
++                    workspace, browser, inputs, scratch, timeout.Token).ConfigureAwait(false);
++            else
++            {
++                foreach ((string phase, string[] selectors, string[] extra) in new[]
+                 {
+-                    using CancellationTokenSource stop = new(TimeSpan.FromMinutes(2));
+-                    await application.StopAsync(stop.Token).ConfigureAwait(false);
+-                }
++                    ("smoke", new[] { "specs/live-apphost-startup.spec.ts", "specs/projects-authentication.spec.ts" }, Array.Empty<string>()),
++                    ("full", Array.Empty<string>(), Array.Empty<string>()),
++                    ("repeat", new[] { "specs/live-fixtures-lifecycle.spec.ts" }, new[] { "--repeat-each", "2" }),
++                    ("retry", new[] { "specs/live-fixtures-retry.spec.ts" }, new[] { "--retries", "1", "--repeat-each", "2" }),
++                })
++                    await BrowserAsync(phase, selectors, extra, workspace, browser, inputs, scratch, timeout.Token).ConfigureAwait(false);
+             }
++            if (telemetry is not null) await telemetry.VerifyAsync(inputs.ProtectedValues, timeout.Token).ConfigureAwait(false);
++            await checks.VerifyDurableStateAsync(actualOwners, timeout.Token).ConfigureAwait(false);
+         }
+-        if (!nativeCompleted.SequenceEqual(new[] { "main", "duplicate", "full-replay", "tenant-access-recovery" }))
+-            throw new InvalidOperationException("The required native product matrix did not execute completely.");
+-        Console.WriteLine("[package-native] scenarios=4 passed=4 failed=0 skipped=0");
++        catch (Exception failure)
++        {
++            foreach (string stage in (new System.Diagnostics.StackTrace(failure, false).GetFrames() ?? [])
++                .Select(frame => frame.GetMethod()).Where(method => method?.DeclaringType?.FullName?.StartsWith(
++                    "Hexalith.Projects.Integration.Tests.PackageRead", StringComparison.Ordinal) == true)
++                .Select(method => method!.DeclaringType!.FullName + "." + method.Name).Distinct(StringComparer.Ordinal).Take(8))
++                Console.Error.WriteLine("[package-native] failure-stage=" + stage);
++            await FixtureDiagnostics.ResourcesAsync(application ?? factory.Application, inputs.ProtectedValues).ConfigureAwait(false);
++            failureCategory = scenario + ":" + failure.GetType().Name;
++            Console.Error.WriteLine("[package-fixtures] phase-failed=" + scenario + " failure-type=" + failure.GetType().Name);
++        }
++        finally
++        {
++            application ??= factory.Application;
++            if (application is not null)
++            {
++                using CancellationTokenSource stop = new(TimeSpan.FromMinutes(2));
++                await application.StopAsync(stop.Token).ConfigureAwait(false);
++            }
++        }
++        return failureCategory;
+     }
+ 
+     private static async Task BrowserAsync(string phase, string[] selectors, string[] extra, string workspace,
+diff --git a/tests/Hexalith.Projects.PackageFixtures/PackageHostingStartup.cs b/tests/Hexalith.Projects.PackageFixtures/PackageHostingStartup.cs
+index 81095873..132b68c9 100644
+--- a/tests/Hexalith.Projects.PackageFixtures/PackageHostingStartup.cs
++++ b/tests/Hexalith.Projects.PackageFixtures/PackageHostingStartup.cs
+@@ -62,6 +62,10 @@ public sealed class PackageHostingStartup : IHostingStartup
+                 services.Replace(ServiceDescriptor.Singleton<IOrganizationStreamSequenceReader, GatewayOrganizationStreamSequenceReader>());
+             }
+             else if (role != "projects") throw new InvalidOperationException("Unknown private package adapter role.");
++            // DCP's finite stop window must exceed the selected host's graceful drain.
++            // This private profile still requires the original process to exit before restart.
++            if (role is "projects" or "folders")
++                services.Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(5));
+             PackageProcessReceipt.Write(directory, role);
+         });
+     }
+diff --git a/tests/Hexalith.Projects.PackageFixtures/PackagePhaseSequence.cs b/tests/Hexalith.Projects.PackageFixtures/PackagePhaseSequence.cs
+new file mode 100644
+index 00000000..edb74487
+--- /dev/null
++++ b/tests/Hexalith.Projects.PackageFixtures/PackagePhaseSequence.cs
+@@ -0,0 +1,18 @@
++namespace Hexalith.Projects.PackageFixtures;
++
++/// <summary>Continues after fully disposed assertion failures; cleanup/infrastructure exceptions halt allocation.</summary>
++internal static class PackagePhaseSequence
++{
++    internal static async Task<IReadOnlyList<string>> RunAsync<T>(IEnumerable<T> selections, Func<T, Task<string?>> phase)
++    {
++        List<string> failures = [];
++        foreach (T selection in selections)
++        {
++            // A result returns only after the phase has completely released its owned lifetime.
++            // A fault has not established safe next allocation and must never be caught here.
++            string? failure = await phase(selection).ConfigureAwait(false);
++            if (failure is not null) failures.Add(failure);
++        }
++        return failures;
++    }
++}

@@ -2,8 +2,8 @@
 title: 'Fix package fixture owner assembly selection'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'in-progress'
-route: 'oneshot'
+status: 'draft'
+route: 'dispatch'
 review_loop_iteration: 0
 context: []
 ---
@@ -75,7 +75,7 @@ continues once exact-input qualification succeeds.
   modes, sizes and hashes; original receipts and audit rules are unchanged.
   Released audit lint passes both saved candidate trees. Results are in
   `fix-publication-20261116/{folders,projects}-archive-audit.json`.
-- Full Projects qualification is running on the corrected candidate. Folders'
+- Full Projects qualification ran on the corrected candidate. Folders'
   frozen FR58 hold still prevents claiming its complete hook gate. The human
   has been asked whether to exclude Folders publication or lift that hold;
   no answer or scope change is assumed.
@@ -112,3 +112,59 @@ continues once exact-input qualification succeeds.
   public failure, so an inner SDK diagnostic was not observable through it.
   The test now verifies the precise SDK refusal directly and separately requires
   the catalog's typed public refusal, preserving both identity and redaction.
+
+
+## Replanning Notes
+
+The loader correction is verified, but complete publication now depends on work
+outside the frozen correction: newer Projects annotations require an EventStore
+API missing from the pinned published package, the actual native lane still
+fails, and Folders' held FR58 prerequisites remain outside migration authority.
+Stop further dependent publication and return to scope planning; do not remove
+annotations, substitute source-mode Release output, relax deadlines or change
+held product gates.
+
+The later main diagnostic passed seven real native cases before the original
+folder-service recovery failure. Added actual process lifecycle/identity proof
+and bounded recovery observations. Independent recheck found one concrete race:
+`StartTime` can throw after a process exits between the prior `HasExited` check
+and its read. The associated-process exit exception is now treated as exit;
+permission failures still propagate. The final frozen diagnostic's snapshot
+predates this last one-line correction and does not qualify it.
+
+A coherent frozen-input follow-up builds in Release/package mode with zero
+warnings/errors and passes nine browser configuration cases. It exits 1 during
+native main on the unchanged 45-second HTTP timeout, with gateway catalog/Dapr
+failures and Folders transport cancellation; no native case or recovery is
+proven in that run. Scratch, process cwd and container mount cleanup is verified.
+Current complete source separately fails CS0234 on the newer missing SDK API.
+Full source hashes, diagnostic limits and failed outcomes remain in the result
+packet. Concurrent commits and pending edits are preserved; this session made
+no commit or push. No migration acceptance is claimed.
+
+## Code Map
+
+- Projects `PackageFixtures.AppHost/PackageOwnerLoadContext.cs` and
+  `PackageActualOwnerInfrastructure.cs`: exact-byte/MVID owner loading and SDK sharing.
+- Projects Integration `PackageOwnerLoadContextTests.cs`, `PackageOwnerMetadataTests.cs`:
+  generated closure controls and real selected-owner metadata verification.
+- Projects Integration `PackageReadFixture.cs`: actual process transition proof,
+  unchanged authorized-recovery condition and bounded observations.
+- Projects PackageFixtures workers/startup: bounded SDK catalog refusal diagnostics.
+- [Result packet](fix-publication-20261116/README.md): exact historical/current
+  verification boundaries, missing package API, failure and cleanup receipts.
+
+## Open Questions
+
+- Keep Folders' existing hold and exclude its dependent publication, or explicitly
+  expand scope to implement and qualify the held prerequisites? Earlier async
+  question remains unanswered; no scope change is assumed.
+- Prepare upstream EventStore release readiness in a separately approved scope,
+  or await the normal published SDK prerequisite before requalifying Projects?
+
+## Additional Review Triage
+
+- Medium, patched: successful owned process exit could race `StartTime` and
+  throw `InvalidOperationException`; handle that specific associated-process exit
+  while continuing to surface permission failures. No further privacy issue was
+  found in the bounded recovery diagnostics.

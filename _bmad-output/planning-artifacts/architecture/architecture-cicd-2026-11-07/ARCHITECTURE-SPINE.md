@@ -806,3 +806,36 @@ without executing module configuration. Unresolved execution and unsafe paths
 remain failures. Existing thresholds, limits, suppression rejection and
 cross-module-only semantics are unchanged; `docs/duplicate-scan.md` specifies the
 supported syntax and failure boundary.
+
+
+### Story 26 prerequisite: authenticated build preparation (AD-12, AD-16, AD-17)
+
+The shared preparation lifetime accepts optional `publishedBuilds: null`, mutually
+exclusive with `moduleManifest`, selecting a committed closed historical signed
+Builds handoff. Active accepted Builds/catalog authority remains independent of
+the historical producer tag, source and catalog. Shared code authenticates release
+metadata, manifest, archive/signature, extracted assemblies and executable before
+project evaluation, revalidates identities and bytes on reuse and owns cleanup.
+Only `HexalithBuildsPublishedToolRoot` and Release are producer exports.
+
+Optional `buildProjects: []` declares at most 32 committed non-test compatibility
+consumers, each with unique kebab-case `id`, safe `.csproj` `project` and finite
+EventStore/Tenants/Memories version selections. Preparation is required. Shared
+CI/local/release orchestration evaluates/restores/builds cases in order after the
+root solution with unchanged strict package-mode flags and private SDK artifacts
+paths. Cases never enter package discovery. Read-only product actions consume
+`HexalithBuildProjects`, a validated JSON mapping from case IDs to private output
+locations and selections, retained through the owning job. No hook builds or
+privileged module callbacks are introduced; unsupported platform jobs fail closed.
+
+Evaluated `HexalithVerifyPublishedPackage=true` enrolls a real packable project,
+consistently across TFMs. The authenticated original release manifest carries
+`verifyPublishedPackage: true` only when enabled. The existing publisher retains
+every original nonsignature member digest in private state and requires a verified
+public NuGet signature plus the identical nonsignature member body inventory.
+ZIP encoding and the root `.signature.p7s` may differ. Unsafe/duplicate members,
+changed bodies and unsigned packages fail before finalization. Verification uses
+credential-free private processes and never runs module code.
+
+These additions are source contracts pending central release and genuine Platform
+qualification. Production pins, registrations, adoption and CAP-16 do not change.

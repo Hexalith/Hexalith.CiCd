@@ -1,0 +1,101 @@
+[
+  {
+    "check": "diagnostic-build-Hexalith.Projects.PackageFixtures",
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.Projects.PackageFixtures/Hexalith.Projects.PackageFixtures.csproj",
+      "--no-restore",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:BuildProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "diagnostic-build-Hexalith.Projects.PackageFixtures.AppHost",
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj",
+      "--no-restore",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:BuildProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "diagnostic-build-Hexalith.Projects.Integration.Tests",
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj",
+      "--no-restore",
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:BuildProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.v4NGiU4v/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "focused-repair-tests",
+    "command": [
+      "dotnet",
+      "tests/Hexalith.Projects.Integration.Tests/bin/Release/net11.0/Hexalith.Projects.Integration.Tests.dll",
+      "-class",
+      "Hexalith.Projects.Integration.Tests.PackageOwnerLoadContextTests",
+      "-class",
+      "Hexalith.Projects.Integration.Tests.PackageOwnerMetadataTests",
+      "-class",
+      "Hexalith.Projects.Integration.Tests.PackageFixtureSafetyTests",
+      "-class",
+      "Hexalith.Projects.Integration.Tests.PackageCredentialMatrixTests",
+      "-noColor",
+      "-failSkips"
+    ],
+    "exitCode": 0
+  },
+  {
+    "check": "unchanged-complete-fixture-diagnostic",
+    "command": [
+      "npm",
+      "run",
+      "test:package"
+    ],
+    "exitCode": 1
+  }
+]

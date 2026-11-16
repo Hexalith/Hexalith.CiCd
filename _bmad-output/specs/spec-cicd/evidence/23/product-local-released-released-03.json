@@ -1,0 +1,155 @@
+{
+  "attempt": "released-03",
+  "phase": "released",
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-product",
+  "startedAt": 1794865956.5108519,
+  "commands": [
+    {
+      "arguments": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "Hexalith.Tenants.IntegrationTests.CatalogRedisBackendTests",
+        "--minimum-expected-tests",
+        "13",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.9076119850215036
+    },
+    {
+      "arguments": [
+        "python3",
+        "scripts/validate-coverage.py",
+        "--coverage-root",
+        "TestResults",
+        "--minimum-line-coverage",
+        "80",
+        "--required-branch-coverage",
+        "100",
+        "--line-scope",
+        "src/Hexalith.Tenants.Contracts/",
+        "--line-scope",
+        "src/Hexalith.Tenants.Client/",
+        "--line-scope",
+        "src/Hexalith.Tenants.Server/",
+        "--line-scope",
+        "src/Hexalith.Tenants.Testing/",
+        "--isolation-auth-target",
+        "src/Hexalith.Tenants.Server/Aggregates/TenantAggregate.cs",
+        "--isolation-auth-target",
+        "src/Hexalith.Tenants.Server/Aggregates/GlobalAdministratorsAggregate.cs",
+        "--isolation-auth-target",
+        "src/Hexalith.Tenants.Server/Validators/ChangeUserRoleValidator.cs",
+        "--isolation-auth-target",
+        "src/Hexalith.Tenants.Server/Projections/TenantAuditOwnership.cs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.45196171500720084
+    },
+    {
+      "arguments": [
+        "dotnet",
+        "package",
+        "list",
+        "--project",
+        "Hexalith.Tenants.slnx",
+        "--vulnerable",
+        "--include-transitive",
+        "--format",
+        "json",
+        "--no-restore"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 17.77667443701648,
+      "vulnerabilityCount": 0,
+      "semanticExitCode": 0
+    }
+  ],
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "baseline": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+  "candidateManifestSha256": "3d71c4dd66aaa8b0cf6e74999ae19451b78f7410079d3d3504d0d96b45bf1dd6",
+  "nestedSubmodulesInitialized": false,
+  "releasedContract": {
+    "tag": "v6.0.6",
+    "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "inMemoryTestRoutingOnly": {
+      "schema": "hexalith.ci.v1",
+      "buildsTag": "v6.0.6",
+      "solution": "Hexalith.Tenants.slnx",
+      "dapr": true,
+      "browsers": true,
+      "registry": false,
+      "codeql": [
+        "csharp"
+      ],
+      "hooks": [
+        "after-unit-tests",
+        "after-integration-tests",
+        "nightly"
+      ],
+      "jobs": {},
+      "submodules": [
+        "references/Hexalith.EventStore",
+        "references/Hexalith.Platform",
+        "references/Hexalith.Memories"
+      ],
+      "tests": {
+        "integration": [
+          "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+        ],
+        "exclude": {
+          "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj": "after-integration-tests"
+        }
+      }
+    },
+    "deliveredStateFabricated": false
+  },
+  "candidateTree": "f1bce9bccd1d06cd76efc75be9a4476d6bf190b7",
+  "customActionPolicy": "passed released guard_actions.lint on exact candidate tree",
+  "commitlint": {
+    "version": "21.2.4",
+    "message": "build: migrate Tenants product checks\n",
+    "releasedPolicy": "passed",
+    "owningModulePolicy": "passed"
+  },
+  "releasedBuild": "passed",
+  "releasedUnits": "passed",
+  "classification": {
+    "unit": [
+      "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj",
+      "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj",
+      "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj",
+      "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj",
+      "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj"
+    ],
+    "integration": [
+      "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj",
+      "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+    ],
+    "excluded": [
+      "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj"
+    ]
+  },
+  "releasedIntegrationProjects": "passed",
+  "databaseReaderChecks": "passed",
+  "coverage": "passed",
+  "auditFindings": [],
+  "auditErrors": [],
+  "auditResult": "passed",
+  "auditCommandExitCode": 0,
+  "finishedAt": 1794866898.7236874,
+  "exitCode": 0
+}

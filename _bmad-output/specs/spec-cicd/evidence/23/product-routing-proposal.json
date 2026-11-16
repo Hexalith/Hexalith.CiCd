@@ -1,0 +1,193 @@
+{
+  "status": "proposal-only; not registered, rendered, delivered or adopted",
+  "baseline": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+  "proposedSetup": {
+    "solution": "Hexalith.Tenants.slnx",
+    "dapr": true,
+    "browsers": true,
+    "registry": false,
+    "ciTimeoutMinutes": 360,
+    "nightlyTimeoutMinutes": 60,
+    "prerequisites": {
+      "nodeVersion": "24.22.3",
+      "npmVersion": "11.19.1",
+      "apt": true,
+      "tlsTrust": true,
+      "daprProfile": "catalog"
+    },
+    "npmWorkspaces": [
+      "tests/performance/tenant-audit"
+    ],
+    "tests": {
+      "integration": [
+        "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+      ],
+      "exclude": {
+        "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj": "after-integration-tests"
+      },
+      "failSkips": true
+    },
+    "hooks": [
+      "after-unit-tests",
+      "after-integration-tests",
+      "nightly"
+    ],
+    "submodules": [
+      "references/Hexalith.EventStore",
+      "references/Hexalith.Platform",
+      "references/Hexalith.Memories"
+    ]
+  },
+  "sharedContractEvidence": "shared-prerequisite-contract.json",
+  "sharedPrerequisiteGate": "No compatible published release yet; v6.0.6 does not admit all proposed fields. Parent must verify released schema/loader/actions before registration.",
+  "runtimeTuple": {
+    "sdk": "11.0.100",
+    "daprCli": "1.19.1",
+    "daprRuntime": "1.19.1",
+    "aspire": "13.6.5",
+    "status": "exact source candidate and direct product catalog; real retry/catalog execution still required"
+  },
+  "timeoutBasis": {
+    "ciTimeoutMinutes": "Provisional upper bound of preserved legacy build/test/profile budgets (one build, ordinary tier and five serial cold profiles), not a measured complete pass. Reduce or confirm from complete serialized execution before registration.",
+    "nightlyTimeoutMinutes": "Preserves legacy domain-ci performance timeout default60; only Category=Performance runs."
+  },
+  "sourceBoundary": {
+    "pinnedExecutables": "EventStore command host, Admin.Server.Host and Admin.UI, plus indispensable upstream project closure; build-only AppHost edges in Release",
+    "helpers": "Platform DaprSelfHostedMtls and subscriber; nonpackable Builds.Tooling removes HexalithEventStoreVersion global property",
+    "memories": "Direct pinned checkout supplies actual composition/model project path metadata. Existing live profiles explicitly disable Memories. No Memories full-solution entry or Release source library dependency.",
+    "packages": "All ordinary Tenants dependencies, including FrontComposer Contracts/Shell/Testing/SourceTools. Actual browser evidence binds restored package integrity and UI/Shell binary bytes.",
+    "registryFalse": "Selected live fixtures disable Keycloak and Memories; preserved topology launches pinned project executables and public Dapr images. No selected profile pulls a private registry image; required AD21 org grants remain preserved."
+  },
+  "projectRouting": {
+    "sharedUnit": [
+      "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj",
+      "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj",
+      "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj",
+      "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj",
+      "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj"
+    ],
+    "sharedIntegration": [
+      "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj",
+      "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+    ],
+    "hookOwnedProject": "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj"
+  },
+  "integrationCategoryRouting": {
+    "ordinary": {
+      "action": "after-integration-tests",
+      "script": "scripts/run-aspire-integration-tier.sh",
+      "minimumExpectedTests": 671,
+      "excludedClasses": [
+        "AuthenticatedTenantsRouteTests",
+        "AspireTopologyTests",
+        "TenantsUiRouteSmokeTests",
+        "AuthenticatedTenantsUiRouteTests",
+        "SourceCatalogOwnerProfileTests"
+      ],
+      "excludedTraits": [
+        "Category=Performance"
+      ],
+      "assertions": "Every non-live in-process/slim-Dapr integration class, including generated HTTP/catalog controls, bound bootstrap, command status/UI, protected project contracts, replay and audit persistence, executes once."
+    },
+    "coldProfiles": [
+      {
+        "profile": "rest",
+        "class": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests",
+        "redisDatabase": 1,
+        "minimumExpectedTests": 8,
+        "behavior": "request-path projections",
+        "failSkips": true
+      },
+      {
+        "profile": "persisted",
+        "class": "Hexalith.Tenants.IntegrationTests.AspireTopologyTests",
+        "redisDatabase": 2,
+        "minimumExpectedTests": 7,
+        "behavior": "background workers and Sample",
+        "failSkips": true
+      },
+      {
+        "profile": "anonymous-ui",
+        "class": "Hexalith.Tenants.IntegrationTests.TenantsUiRouteSmokeTests",
+        "redisDatabase": 3,
+        "minimumExpectedTests": 6,
+        "behavior": "anonymous denials",
+        "failSkips": true
+      },
+      {
+        "profile": "authenticated-ui",
+        "class": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsUiRouteTests",
+        "redisDatabase": 4,
+        "minimumExpectedTests": 3,
+        "behavior": "production OIDC and responsive authenticated browser",
+        "failSkips": true
+      },
+      {
+        "profile": "catalog-owner",
+        "class": "Hexalith.Tenants.IntegrationTests.SourceCatalogOwnerProfileTests",
+        "redisDatabase": 5,
+        "minimumExpectedTests": 1,
+        "behavior": "COHORT package capability, owned bootstrap, authority and persisted effects",
+        "failSkips": true
+      }
+    ],
+    "scheduled": {
+      "hook": "nightly",
+      "cadence": "daily",
+      "trait": "Category=Performance",
+      "minimumExpectedTests": 1,
+      "failSkips": true,
+      "requiredFlags": {
+        "HEXALITH_EVENTSTORE_RUN_PERFORMANCE_TESTS": "1",
+        "HEXALITH_TENANTS_RUN_PERFORMANCE_TESTS": "1"
+      },
+      "additionalAuditPerformanceScriptGate": false
+    }
+  },
+  "legacyFocusedMinimumsPreservedByCompleteProject": {
+    "TenantOwnerSourceTargetTests": 4,
+    "TenantBootstrapReadinessBudgetTests": 8,
+    "TenantOwnerSourceRuntimeTests": 7,
+    "PublishedTenantCatalogTests": 1,
+    "TenantCatalogTests": 2,
+    "TenantsApiGeneratedControllerTests": 67,
+    "CommandApiRuntimeIntegrationTests.BoundBootstrap*": 13,
+    "CommandApiRuntimeIntegrationTests.AuthenticatedBootstrapCannotAssignDifferentTarget": 2,
+    "CommandApiRuntimeIntegrationTests.Commands_endpoint_returns_problem_details_for_domain_rejection": 1,
+    "TenantOwnerSourceGatewayTests": 25,
+    "CommandApiRuntimeIntegrationTests.CommandStatusContract*": 18,
+    "CommandApiRuntimeIntegrationTests.ProjectContract*": 35,
+    "ProjectionReplayIntegrityTests": 31,
+    "AuditStreamPersistenceTests": 117,
+    "AppHostSecurityResourceGraphTests": 36,
+    "AspireTopologyTlsDiagnosticsTests": 5,
+    "AspireTopologyBootstrapTests": 72,
+    "AuthenticatedRouteEvidenceTests": 6
+  },
+  "coverage": {
+    "minimumLineCoverage": 80,
+    "lineComparator": "strictly greater, preserved unchanged by existing validator",
+    "requiredBranchCoverage": 100,
+    "lineScopes": [
+      "src/Hexalith.Tenants.Contracts/",
+      "src/Hexalith.Tenants.Client/",
+      "src/Hexalith.Tenants.Server/",
+      "src/Hexalith.Tenants.Testing/"
+    ],
+    "isolationAuthTargets": [
+      "src/Hexalith.Tenants.Server/Aggregates/TenantAggregate.cs",
+      "src/Hexalith.Tenants.Server/Aggregates/GlobalAdministratorsAggregate.cs",
+      "src/Hexalith.Tenants.Server/Validators/ChangeUserRoleValidator.cs",
+      "src/Hexalith.Tenants.Server/Projections/TenantAuditOwnership.cs"
+    ],
+    "collection": "Per-project MTP2.5 commandLineOptions collect coverage from shared stage3 units plus AppHost/Server stage4 projects; IntegrationTests and Performance remain outside coverage union."
+  },
+  "newBehavioralChecks": {
+    "receiptProtocol": "scripts/tests/test_source_catalog_profile.py",
+    "privateProcessCleanup": "scripts/tests/test_product_integration.py",
+    "readerAndAuthorityDb": "tests/Hexalith.Tenants.IntegrationTests/CatalogRedisBackendTests.cs",
+    "publishedBrowserClosure": "tests/Hexalith.Tenants.UI.Tests/Browser/published-frontcomposer-evidence.test.mjs"
+  },
+  "ownedContentEdits": false,
+  "nestedSubmoduleInitialization": false
+}

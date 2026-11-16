@@ -140,6 +140,27 @@ class RenderTests(unittest.TestCase):
         return {"jobs": jobs, "buildsTag": "v9.8.7", "solution": "Fixture.slnx", "registry": False,
                 "submodules": [], "tests": {}}
 
+    def test_tagged_platform_prerequisite_schema_reader_and_defaults_round_trip(self):
+        with workspace() as fixture:
+            changes = {path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in (
+                "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")}
+            fixture.change_tag(changes)
+            fixture.document({"solution": "Fixture.slnx"})
+            fixture.cli()
+            self.assertIsNone(fixture.json()["publishedBuilds"])
+            self.assertEqual([], fixture.json()["buildProjects"])
+            declaration = {"id": "sdk-420", "project": "compat/Consumer.csproj",
+                "versions": {"HexalithEventStoreVersion": "4.2.0"}}
+            fixture.document({"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json", "buildProjects": [declaration]})
+            fixture.cli()
+            self.assertEqual([declaration], fixture.json()["buildProjects"])
+            self.assertEqual("eng/tuple.json", fixture.json()["publishedBuilds"])
+            before = fixture.output(".github/hexalith-ci.json").read_bytes()
+            fixture.document({"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json", "buildProjects": [
+                dict(declaration, versions={"NuGetAudit": "false"})]})
+            self.assertNotEqual(0, fixture.cli(check=False).returncode)
+            self.assertEqual(before, fixture.output(".github/hexalith-ci.json").read_bytes())
+
     def test_linux_matrix_is_fresh_jobs_with_independent_setup_and_json_parameters(self):
         config = self.execution_config({"routes": {"runner": "ubuntu-latest", "timeoutMinutes": 90,
             "matrix": {"include": [{"id": "route-a"}, {"id": "route-b", "engine": "firefox"}]}, "maxParallel": 2}})

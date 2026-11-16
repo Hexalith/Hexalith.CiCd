@@ -1,0 +1,158 @@
+{
+  "schema": "hexalith.platform-prerequisite-source-verification.v1",
+  "originalBaselines": {
+    "cicd": "9c2a65cbf1d523609000fffb525fba5cf5e8b4b3",
+    "builds": "05bda4e01d70afacb5048d5c336f383a301c0974"
+  },
+  "observedHeads": {
+    "cicd": "4d5a41c69b1c57e049a3d3a5c084259d896c6e5b",
+    "builds": "d54075d6e9d9eb1c41827fe5ef39a9df3100b2ee"
+  },
+  "python": "3.14.4",
+  "sdks": [
+    "10.0.302 [/home/administrator/.dotnet/sdk]",
+    "10.0.400 [/home/administrator/.dotnet/sdk]",
+    "10.0.401 [/home/administrator/.dotnet/sdk]",
+    "10.0.402 [/home/administrator/.dotnet/sdk]",
+    "10.0.403 [/home/administrator/.dotnet/sdk]",
+    "10.0.404 [/home/administrator/.dotnet/sdk]",
+    "11.0.100 [/home/administrator/.dotnet/sdk]"
+  ],
+  "sourceSha256": {
+    "references/Hexalith.Builds/Github/lib/ci_config.py": "11c70c505f0a82157c65926fdd493fcfbaee276f3f9533052913310c2d48d85d",
+    "references/Hexalith.Builds/Github/lib/ci_pipeline.py": "9123809ee2422dd2eaf77234fde27f8f892c0de7b114400cfacfe1ab80cb5c22",
+    "references/Hexalith.Builds/Github/lib/local_check.py": "b516a7de9ab80369f11bcc11466e33d61bd86923e8d472a9c12f44c9ab022039",
+    "references/Hexalith.Builds/Github/lib/module_preparation.py": "8c97b42310a79ae3006e4e434d10122afdb33657724bd0d61960ad65f9dcbb82",
+    "references/Hexalith.Builds/Github/lib/build_projects.py": "ff3c79834d1e37cf2f0659758c8ca38d963f6ee83347ec18ca0bfab437fa80eb",
+    "references/Hexalith.Builds/Github/lib/package_archive.py": "0cdbf65fd6dbf4b1d11e396eaf6b81992a80ccdb42051a7085a7aabd4615c4d3",
+    "references/Hexalith.Builds/Github/lib/published_builds.py": "2524275f47364282be14f782efd99f7ed13a6a7ce96d5a482b005e0a8f25362b",
+    "references/Hexalith.Builds/Github/lib/release_build.py": "9a6c9030ac4325116848d3e5fdd6e194c50efacb79baa297ad369ca6dccb2640",
+    "references/Hexalith.Builds/Github/lib/release_draft.py": "9da280411c89b8ebd6a385ba416e26ea03b5eb3eac498f798ee9ae9a9590b980",
+    "references/Hexalith.Builds/Github/lib/release_publish.py": "d7d65b3cf6911e18eef7f66b523a8da84f8b2832bba0755b4f50e05fa5e3ee0a",
+    "references/Hexalith.Builds/Github/lib/tests/test_ci_config.py": "2c3bf68814d2c7a2a377044f18496cac7c7fe12d5aefcb71054efa82f829705b",
+    "references/Hexalith.Builds/Github/lib/tests/test_platform_support.py": "2b5f2a3596b60790642375e40a14499f53c019f210ad5368465bd004007db61f",
+    "references/Hexalith.Builds/schemas/hexalith.ci.v1.json": "aa3cb7f351748c34fe2495f473205d5522ac7dbde8bec92d8f3a8b30fdf57d4a",
+    "references/Hexalith.Builds/Github/prepare-module-build/README.md": "c915eab13f6b461652cbcd705130c3f3ca4c4b15079645b5885689b674af8c2e",
+    "references/Hexalith.Builds/Github/publish/README.md": "7690e232a2175a74370f83b68e042abcb6c09e669b4780259fdf9ecfcecb15b3",
+    "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md": "d5a5c340d291233caadc8d06649675209a4704e181decad39fc8d3120f00f74d",
+    "setup/README.md": "557a3002e22b6f46b835cf3a5bb931c4837a2685243d3ce8b6cd3f868e9d0870",
+    "tools/tests/test_render.py": "bb9b71ba7aef356963a4f824368e1225d15a7227fee46cc3fcc5dcaedc3f51f2",
+    "tools/tests/test_validate.py": "7a5544f4e16d547be58bc5af41e12d3352bca95aecadb3246b64e42059528358",
+    "_bmad-output/specs/spec-cicd/evidence/26/shared-support.md": "b722eb8ec027c2ba7f8c52290bc1b5451017b2ef68ba6994cbde5a5cd1426c68",
+    "_bmad-output/implementation-artifacts/spec-26-platform-shared-build-preparation.md": "9fdb87cee73b642627ddfdf29a57133553036a38b59662d9afd077fbc833bcd0"
+  },
+  "sourceBoundary": {
+    "productionBuildsVersion": "v6.0.6",
+    "platformHead": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+    "platformStatus": [],
+    "remoteRepositoryOperations": false,
+    "released": false,
+    "platformQualified": false,
+    "cap16Accepted": false
+  },
+  "tests": [
+    {
+      "name": "focused",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_platform_support.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 14,
+      "passed": true,
+      "log": "prerequisite-focused.txt",
+      "logSha256": "fe66737995effeaab2105c78cd5b24f1fc04b2515fd5f427d1845cd66c60c162"
+    },
+    {
+      "name": "schema",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_ci_config.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 23,
+      "passed": true,
+      "log": "prerequisite-schema.txt",
+      "logSha256": "7654d6ac763c1a7f297009cd7a0c11d51bfbb874274c1e5b2f7f1caf0e0b0277"
+    },
+    {
+      "name": "preparation",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_module_preparation.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 10,
+      "passed": true,
+      "log": "prerequisite-preparation.txt",
+      "logSha256": "4953417aab84c5f724fae90ef047a24094aedf99179fe4023c23d308d690d15d"
+    },
+    {
+      "name": "pipeline",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_ci_pipeline.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 40,
+      "passed": true,
+      "log": "prerequisite-pipeline.txt",
+      "logSha256": "26f09e65474e4a63d1010ab90b5e186c7d53257990cff084abb9b3dfd3ff1c93"
+    },
+    {
+      "name": "local",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_local_check.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 38,
+      "passed": true,
+      "log": "prerequisite-local.txt",
+      "logSha256": "c52c1bfcc5cb5fff541876a83aef15b666ba581e1f2cac9016133c1e50eba6fd"
+    },
+    {
+      "name": "release-build",
+      "command": "run-with-temp python3 -m unittest test_release_build.BuildTests.test_real_multitarget_import_discovery_and_pack_stamp test_release_build.BuildTests.test_none_payload_does_not_execute_sdk_or_submodules test_release_build.BuildTests.test_audit_failure_suppresses_payload_manifest",
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/Github/lib/tests",
+      "tests": 3,
+      "passed": true,
+      "log": "prerequisite-release-build.txt",
+      "logSha256": "a211b41444df728edc1d7ee72b61a87661dd4bac6909df3c59aaac07e89b1925"
+    },
+    {
+      "name": "draft",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_release_draft.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 27,
+      "passed": true,
+      "log": "prerequisite-draft.txt",
+      "logSha256": "e0435d11539124068fa357e060adec0c12b9edd839ccc4f11be7e8bfc4abc59d"
+    },
+    {
+      "name": "publication",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_release_publish.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 17,
+      "passed": true,
+      "log": "prerequisite-publication.txt",
+      "logSha256": "0097c02569c4cce3a3fff958e99e1a05002d90a8cc7781b4faac1f37270b1849"
+    },
+    {
+      "name": "renderer",
+      "command": "run-with-temp uv run --locked --script tools/tests/test_render.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 44,
+      "passed": true,
+      "log": "prerequisite-renderer.txt",
+      "logSha256": "bed054b0988830f7d2168acad1fa39c9a0439dd3459c442f5df0f26feab99632"
+    },
+    {
+      "name": "validator",
+      "command": "run-with-temp uv run --locked --script tools/tests/test_validate.py",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 53,
+      "passed": true,
+      "log": "prerequisite-validator.txt",
+      "logSha256": "8b9c2d60d664bca9e75bcaff811a0572db0c2cf8553f1b5476f94ff714b472f9"
+    },
+    {
+      "name": "zip-reencoding",
+      "command": "run-with-temp python3 -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_platform_support.py -k test_authenticated_manifest_round_trip_and_strict_public_payload",
+      "cwd": "/home/administrator/projects/hexalith/cicd",
+      "tests": 1,
+      "passed": true,
+      "log": "prerequisite-zip-reencoding.txt",
+      "logSha256": "41b75377520d95bcccfe974a4b3955a175932a06585fcc925375e5ae3a7d1c54"
+    }
+  ],
+  "notes": [
+    "The final ZIP-reencoding test-only change was run after the complete 14-test prerequisite suite; runtime source was unchanged.",
+    "No review, full global online validation, genuine Platform qualification or publication is represented by these source tests."
+  ]
+}
