@@ -92,3 +92,72 @@ The resume spec update and evidence are being committed for publication on
 current CiCd main. The local-only statements above describe the qualification
 phase. Publication does not establish passing product checks, adoption or story
 acceptance.
+
+## CiCd PowerShell discovery correction, 2026-11-16
+
+The isolated `fix/17-powershell-discovery` branch starts from freshly fetched
+CiCd main `2adf156b24e0a8053de42d7d4bf9b7c15a8b82e4`. The original shared
+workspace edits and prior story worktrees are preserved. The correction uses
+PowerShell's AST parser on inert stdin, with profiles disabled; module source
+is never evaluated. Parameter declarations, local variable assignments,
+arrays, hashtables, function bodies and control flow no longer become Bash
+compound-execution or computed-command diagnostics. Literal direct, call
+operator and dot-source invocations are followed inside nested expressions.
+
+[The verification record](powershell-discovery/verification.json) records exact
+source hashes, parser version and the unchanged published Folders candidate
+`d27487f405cb52dabdc6ce8dc16af543b2ddd625`. The saved minimal reproduction
+executes unchanged in a disposable CiCd copy and now has **zero diagnostics**
+(previously two). Its original saved result is preserved.
+
+The frozen main scanner reproduces the saved **940 diagnostics and 12 files**
+exactly. The corrected scanner selects the **same 12 files**, with **318
+remaining diagnostics**, saved in full in
+[the Folders result](powershell-discovery/folders.json):
+
+| Remaining diagnostic category | Count |
+| --- | ---: |
+| Computed operands of unknown commands | 193 |
+| Unsupported PowerShell method invocation | 63 |
+| Computed PowerShell command operand expressions | 39 |
+| Unsupported property/index assignment targets | 18 |
+| Computed commands | 2 |
+| Unresolved argument splatting | 2 |
+| Unsupported wrapper options | 1 |
+
+These are retained coverage failures, not exemptions. Even apparently ordinary
+method or unknown-cmdlet operands remain red where discovery cannot establish
+their execution behavior. Focused regressions cover computed execution text,
+attached parameters, splatting, pipeline evaluation, sensitive assignments and
+increment/decrement, process/reflection, cwd changes, alias mutation, parser
+failures and inert source handling. No diagnostics, exclusions, security gates
+or product checks were suppressed.
+
+All disposable verification used `run-with-temp`. Production render also
+passes in a disposable CiCd copy with its exact pinned direct Builds checkout;
+the fresh implementation worktree itself has no initialized submodules.
+Scanner suite results are saved alongside the verification record.
+
+**Story 17 remains in progress.** Full discovery still fails on the diagnostics
+above. The eight saved historical audit failures, genuine product/workload and
+provider prerequisites, predecessor/AD-21 adoption checks, delivered green CI,
+credential retirement and genuine scheduled-night acceptance remain separate
+requirements. This fix does not claim to rerun or satisfy them and changes no
+production registration, rendered delivery or module gitlink.
+
+## Authorized publication integration
+
+The human subsequently requested pushing all changes and merging the fix
+branch. Integration starts from freshly fetched main
+`2a1128e0106baed22999c4687d7d15e7639f22cf` and preserves its newer npm,
+JavaScript and TypeScript discovery. The sole merge conflict was the Python
+import list; both sets of imports are retained.
+
+[The merged-source reproduction](powershell-discovery/merge-reproduction.json)
+binds the integrated source hashes and confirms the same 12 Folders files,
+318 remaining diagnostics and zero minimal-reproduction diagnostics.
+[The merge regression log](powershell-discovery/merge-scan-tests.txt) covers
+PowerShell, npm recipes, JavaScript dynamic execution and actual pinned-detector
+qualification for all six current languages. Shared-workspace edits remain
+outside this isolated integration. Publication does not complete story 17 or
+its separate audit, product and adoption prerequisites.
