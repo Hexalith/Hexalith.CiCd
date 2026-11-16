@@ -2,7 +2,7 @@
 title: 'Deliver the reviewed Projects G-6 catalog acquisition correction'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'in-review'
+status: 'in-progress'
 route: 'dispatch'
 baseline_commit: 'eba7514e02904c741f6a0a80930d85eb358d385c'
 review_loop_iteration: 0
@@ -34,6 +34,10 @@ Use `run-with-temp` for disposable repositories/checks. Delivery is explicitly a
 | Push refused or main advances | Retain bounded failed operation; no force or automatic rebase/reapply |
 | Scoped App mint inaccessible | No write; retain GitHub failure |
 | Hosted G-6 subsequent failure | Retain logs/artifacts and diagnose separately from acquisition acceptance |
+
+## Owner decision — 2026-11-16
+
+The user replied “fix” to the explicit request to authorize the qualified CiCd reviewed-tree owner gate instead of the adoption-only pinned checker for this exact three-file correction. Record `reviewed-tree-owner-authorized` in the closed manifest and proceed through the existing owner workflow. This exception is limited to Projects base `981ceef13a1abc88219925e73c51a23eb9ac50c2`, unchanged proposal, and result tree `238d933a813d0453e950e1080175d74f12e82975`; all original scope constraints remain in force.
 
 </frozen-after-approval>
 
@@ -105,3 +109,11 @@ The production manifest remains `pending-owner-decision`; a source-bound choice 
 Final locked Python 3.12 controller qualification: 20 tests passed. Pinned actionlint 1.7.12 and online zizmor 1.32.0 passed the final owner workflow hash `118dde04b95074f04666c855172125284d8d035cca1ecafe10c9c8bc63b6dae0`. The full normal/narrow workflow regression is still being awaited by root; its result will be recorded separately.
 
 Final full locked Python 3.12 workflow regression: all 15 tests passed in 413.228 seconds, including the 17-slot existing path and five narrow-path cases. Root awaited the complete child; no regression run remains active. Local qualification is complete. Owner delivery and fresh Projects CI/G-6 remain pending the source-bound pre-push decision.
+
+### Authorized delivery continuation — 2026-11-16
+
+The user’s “fix” resolves the pending source-bound gate decision. Current remote CiCd is `b836159cea272e5211333296936106cf82833a27`; Projects remains at the reviewed base. Only the manifest decision and explanatory owner documentation/spec are being updated. The acquisition helper, mapper, proposal, workflow mechanism and all normal product gates are unchanged.
+
+The first authorized-manifest rerun failed only because the production-state assertion still required pending-owner-decision. The pending-gate CLI refusal test remains unchanged in behavior; the production-state assertion now belongs with the production manifest/payload check and requires the authorized state. No controller behavior or scope guard changed.
+
+Authorized continuation qualification: all 20 controller tests pass on locked Python 3.12, with the pending refusal behavior retained. The previously published owner source also completed hosted validation and delivery successfully in CiCd run `43920301403`. No workflow/controller runtime change is needed for activation.

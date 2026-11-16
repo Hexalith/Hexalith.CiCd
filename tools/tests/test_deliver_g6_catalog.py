@@ -350,8 +350,6 @@ class CatalogDeliveryTests(unittest.TestCase):
         receipt = json.loads(self.w.report_path.read_bytes())
         self.assert_refused(receipt, "pending owner decision")
         self.assertEqual(receipt["failed_operation"], "verify source-bound pre-push owner gate")
-        production = delivery.manifest((ROOT / delivery.MANIFEST).read_bytes())
-        self.assertEqual(production["pre_push_gate"], "pending-owner-decision")
 
     def test_isolated_qualification_cli_publishes_exact_receipt_plan(self):
         result, output = self.w.cli_qualify()
@@ -434,6 +432,7 @@ class CatalogDeliveryTests(unittest.TestCase):
 
     def test_production_manifest_is_closed_and_payload_matches_reviewed_blobs(self):
         value = delivery.manifest((ROOT / delivery.MANIFEST).read_bytes())
+        self.assertEqual(value["pre_push_gate"], "reviewed-tree-owner-authorized")
         self.assertEqual(value["patch_sha256"], hashlib.sha256((ROOT / delivery.PATCH).read_bytes()).hexdigest())
         for path in delivery.PATHS[1:]:
             data = (ROOT / path).read_bytes()

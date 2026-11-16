@@ -67,13 +67,13 @@ unchanged. Acquisition precedes Conversations prepare-build; the mapper stays
 offline and fail-closed. All pins, product gates and other tree entries survive
 byte for byte.
 
-The manifest also binds `pre_push_gate`. Its production value is currently
-`pending-owner-decision`: qualification fails at `verify source-bound pre-push
-owner gate`, emits no plan and prevents token minting. Only an explicit owner
-decision for this exact source/proposal/result may authorize
-`reviewed-tree-owner-authorized` as the pre-adoption gate. This does not alter
-the normal checker, adoption policy, or any module product gate. An unanswered
-question is not authorization.
+The manifest also binds `pre_push_gate`. On 2026-11-16 the owner responded
+“fix” to the explicit request to authorize the reviewed-tree gate for this exact
+three-file correction. Its production value is therefore
+`reviewed-tree-owner-authorized`. That decision applies only to the base,
+proposal and complete result tree above. It does not alter the normal checker,
+adoption policy, dependency pins, credentials or any module product gate.
+Any unexpected source or proposal still fails closed before delivery.
 
 The secret-free validation job runs the acquisition, narrow delivery and existing
 workflow behavioral suites, then constructs a plan from current exact CiCd main
@@ -97,7 +97,7 @@ or automatic reapplication. An exact delivered tree with the reviewed base as
 its sole direct parent is an idempotent no-op.
 
 The owner invocation, after publishing and qualifying the task-owned CiCd source
-and satisfying the module pre-push prerequisite, is:
+and recording the exact-source owner authorization, is:
 
 ```bash
 gh workflow run deliver.yml --repo Hexalith/Hexalith.CiCd --ref main \
@@ -121,12 +121,13 @@ run-with-temp uv run --locked --script --python 3.12 tools/tests/test_delivery_w
 
 These tests qualify the delivery mechanism; they do not establish actual delivery
 or hosted acquisition/G-6 acceptance. The normal exact pinned Builds checker
-remains a separate pre-push prerequisite. On the clean proposed pre-adoption
-Projects source, `python3 references/Hexalith.Builds/check.py` currently exits 1
-because `.github/hexalith-ci.json` is absent. Do not register/adopt Projects, add
-configuration, suppress the checker or weaken a gate to bypass that refusal.
-Retain the prerequisite failure for owner resolution before an actual module
-write. After any authorized successful delivery, inspect Projects' exact three-path
+is unchanged. On the clean proposed pre-adoption Projects source,
+`python3 references/Hexalith.Builds/check.py` exits 1 because
+`.github/hexalith-ci.json` is absent; the original failure remains retained.
+The owner's exact-source exception permits this pre-adoption CiCd operation to
+use its qualified reviewed-tree gate. It does not authorize adding adoption
+configuration, suppressing the normal checker, or weakening a product gate.
+After successful delivery, inspect Projects' exact three-path
 diff and collect fresh CI/G-6 logs and artifacts tied to its delivered SHA.
 Diagnose any subsequent hosted failure separately from catalog acquisition.
 Publishing, A8 audit, deployment and v2 activation remain outside this correction.
