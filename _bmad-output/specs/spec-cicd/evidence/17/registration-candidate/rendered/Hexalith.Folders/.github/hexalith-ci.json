@@ -1,0 +1,34 @@
+{
+  "browsers": true,
+  "buildsTag": "v6.0.6",
+  "codeql": [
+    "csharp"
+  ],
+  "dapr": true,
+  "hooks": [
+    "after-unit-tests",
+    "after-integration-tests",
+    "nightly"
+  ],
+  "jobs": {},
+  "registry": false,
+  "schema": "hexalith.ci.v1",
+  "solution": "Hexalith.Folders.CI.slnx",
+  "submodules": [
+    "references/Hexalith.McpCli",
+    "references/Hexalith.Memories",
+    "references/Hexalith.Platform",
+    "references/Hexalith.Tenants"
+  ],
+  "tests": {
+    "exclude": {
+      "tests/Hexalith.Folders.AppHost.Tests/Hexalith.Folders.AppHost.Tests.csproj": "after-integration-tests",
+      "tests/Hexalith.Folders.Client.Tests/Hexalith.Folders.Client.Tests.csproj": "after-unit-tests",
+      "tests/Hexalith.Folders.Contracts.Tests/Hexalith.Folders.Contracts.Tests.csproj": "after-unit-tests",
+      "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj": "after-unit-tests",
+      "tests/Hexalith.Folders.Tests/Hexalith.Folders.Tests.csproj": "after-unit-tests",
+      "tests/Hexalith.Folders.UI.E2E.Tests/Hexalith.Folders.UI.E2E.Tests.csproj": "after-integration-tests"
+    },
+    "integration": []
+  }
+}

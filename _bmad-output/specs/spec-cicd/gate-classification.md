@@ -32,13 +32,13 @@ The risk is small, because all product tests stay. A deleted gate may once have 
   - ChatBot: "story-evidence-integrity" and the "release evidence gate"
   - Builds: "Require every validation job to pass", the `build-and-test` aggregator. It leaves `builds-ci.yml` with the G-4/G-6 qualification jobs and tests, in the change that rewrites `builds-release.yml` (AD-20).
   - Works belongs to this group, but the source doesn't say which of its sampled gates are in it (see Not yet classified).
-- The repo tests that assert workflow YAML: Folders 27 files, EventStore 13, FrontComposer 13, Tenants 12, Parties 11, Memories 11.
+- The repo tests that assert workflow YAML: Folders' original 27-file estimate is superseded by the [story 17 per-method inventory](evidence/17/gate-classification.json); EventStore 13, FrontComposer 13, Tenants 12, Parties 11, Memories 11.
 
 ## Not yet classified
 
 These gates failed in the sample but have no explicit verdict in the source. Apply the rule during migration.
 - Agents: "Enforce package test floors"
-- Folders: the drift and policy lanes, apart from the provider smoke test (`nightly-drift`), which is kept
+- Folders: locally classified in [story 17](evidence/17/gate-classification.json). Keep actual provider smoke, pinned provider classification/redaction, source whitespace/analyzers, capacity operations, and complete product suites. Remove repeated scheduled test orchestration and CI/tooling/story-evidence assertions. The local candidate remains blocked on policy and genuine product prerequisites; this classification does not establish adoption.
 - Works:
   - "Lint release tooling"
   - "Preserve source identity checks"

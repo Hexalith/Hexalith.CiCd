@@ -1,0 +1,88 @@
+  Discovering: Hexalith.Folders.Contracts.Tests
+  Discovered:  Hexalith.Folders.Contracts.Tests
+  Starting:    Hexalith.Folders.Contracts.Tests
+    Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.CanonicalErrorDocOracleCategoryInventoryEqualsParityContract [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(585,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ReadText(String relativePath)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(427,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ExtractGeneratedEnumBody(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(421,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ParseGeneratedEnumValues(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(216,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.CanonicalErrorDocOracleCategoryInventoryEqualsParityContract()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.NegativeControlsRejectVacuousAndUnsafeProviderErrorDocsEvidence [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(585,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ReadText(String relativePath)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(427,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ExtractGeneratedEnumBody(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(421,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ParseGeneratedEnumValues(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(350,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.NegativeControlsRejectVacuousAndUnsafeProviderErrorDocsEvidence()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.CanonicalErrorDocGeneratedCategoryInventoryEqualsClient [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(585,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ReadText(String relativePath)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(427,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ExtractGeneratedEnumBody(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(421,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ParseGeneratedEnumValues(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(199,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.CanonicalErrorDocGeneratedCategoryInventoryEqualsClient()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.CanonicalErrorDocClientActionTokensEqualGeneratedEnum [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(585,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ReadText(String relativePath)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(427,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ExtractGeneratedEnumBody(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(421,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.ParseGeneratedEnumValues(String enumName)
+        /_/tests/Hexalith.Folders.Contracts.Tests/Deployment/ProviderErrorDocsConformanceTests.cs(226,0): at Hexalith.Folders.Contracts.Tests.Deployment.ProviderErrorDocsConformanceTests.CanonicalErrorDocClientActionTokensEqualGeneratedEnum()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Contracts.Tests.OpenApi.SafetyInvariantGateTests.SentinelCorpusDeclaresAuthoritativeSyntheticVocabulary [FAIL]
+      Shouldly.ShouldAssertException : []
+          should not be empty but was
+      
+      Additional Info:
+          diagnostic-echo-marker
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Contracts.Tests/OpenApi/SafetyInvariantGateTests.cs(96,0): at Hexalith.Folders.Contracts.Tests.OpenApi.SafetyInvariantGateTests.SentinelCorpusDeclaresAuthoritativeSyntheticVocabulary()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Contracts.Tests.OpenApi.Pd10V2CandidateContractTests.GeneratedClientAndParityOracleConsumeTheCandidate [FAIL]
+      System.IO.FileNotFoundException : Could not find file '/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/src/Hexalith.Folders.Client/Generated/HexalithFoldersClient.g.cs'.
+      Stack Trace:
+           at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+           at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+           at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)
+           at System.IO.File.ReadAllText(String path, Encoding encoding)
+        /_/tests/Hexalith.Folders.Contracts.Tests/OpenApi/Pd10V2CandidateContractTests.cs(137,0): at Hexalith.Folders.Contracts.Tests.OpenApi.Pd10V2CandidateContractTests.GeneratedClientAndParityOracleConsumeTheCandidate()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Finished:    Hexalith.Folders.Contracts.Tests (ID = '3cd1cb860012007a4cfda76f51029dd683c9107468fc241c6816085aed59cb95')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.Contracts.Tests  Total: 493, Errors: 0, Failed: 6, Skipped: 0, Not Run: 0, Time: 68.573s

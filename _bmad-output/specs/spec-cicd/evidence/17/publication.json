@@ -1,0 +1,86 @@
+{
+  "started_at": "2026-11-16T16:53:42.213516+00:00",
+  "user_request": "push all changes",
+  "scope": "Publish the current blocked work on story branches; no adoption or verification success is asserted.",
+  "module_repository": "Hexalith/Hexalith.Folders",
+  "module_branch": "story/17-migrate-folders",
+  "verification_status": "blocked: unchanged policy and genuine product prerequisites",
+  "operations": [
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Folders\n * branch              main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "exit": 0,
+      "stdout": "a448d20873dc9e809623f85da206e8d8a13bb9ab\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "d27487f405cb52dabdc6ce8dc16af543b2ddd625\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "--set-upstream",
+        "origin",
+        "HEAD:refs/heads/story/17-migrate-folders"
+      ],
+      "exit": 0,
+      "stdout": "branch 'story/17-migrate-folders' set up to track 'origin/story/17-migrate-folders'.\n",
+      "stderr": "remote: \nremote: Create a pull request for 'story/17-migrate-folders' on GitHub by visiting:        \nremote:      https://github.com/Hexalith/Hexalith.Folders/pull/new/story/17-migrate-folders        \nremote: \nTo https://github.com/Hexalith/Hexalith.Folders.git\n * [new branch]        HEAD -> story/17-migrate-folders\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "--heads",
+        "origin",
+        "refs/heads/story/17-migrate-folders"
+      ],
+      "exit": 0,
+      "stdout": "d27487f405cb52dabdc6ce8dc16af543b2ddd625\trefs/heads/story/17-migrate-folders\n",
+      "stderr": ""
+    }
+  ],
+  "module_published_commit": "d27487f405cb52dabdc6ce8dc16af543b2ddd625",
+  "module_remote_verified": true,
+  "module_main_unchanged": true,
+  "module_status": "published work in progress",
+  "completed_module_at": "2026-11-16T16:53:46.325542+00:00",
+  "central_repository": "Hexalith/Hexalith.CiCd",
+  "central_branch": "story/17-migrate-folders",
+  "central_base": "94b335c7483ba8fe76ad44de46ee3512017c9a11",
+  "central_status": "commit/push follows this recorded module publication; final Git branch ref is authoritative",
+  "production_folders_registration": false
+}

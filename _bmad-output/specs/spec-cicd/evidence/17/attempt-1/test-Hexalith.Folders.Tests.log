@@ -1,0 +1,25 @@
+  Discovering: Hexalith.Folders.Tests
+  Discovered:  Hexalith.Folders.Tests
+  Starting:    Hexalith.Folders.Tests
+    Hexalith.Folders.Tests.Providers.Forgejo.ForgejoLiveEvidenceTests.ProductionProviderEmitsMetadataOnlyEvidence [SKIP]
+      Forgejo live evidence is an operator lane.
+    Hexalith.Folders.Tests.Providers.GitHub.GitHubDriftConformanceTests.GitHubDriftLaneMakesNoNetworkCall [FAIL]
+      Shouldly.ShouldAssertException : "#Requires -Version 7
+      
+      param(
+          [Alias('NoRestore')]
+          [switch]$SkipRestoreBuild,
+      
+          [ValidateS..."
+          should contain
+      "github-failure-mode-coverage"
+          but did not
+      Stack Trace:
+        /_/tests/Hexalith.Folders.Tests/Providers/GitHub/GitHubDriftConformanceTests.cs(179,0): at Hexalith.Folders.Tests.Providers.GitHub.GitHubDriftConformanceTests.GitHubDriftLaneMakesNoNetworkCall()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Hexalith.Folders.Tests.Providers.Forgejo.ForgejoSmartHttpGitTransportIntegrationTests.AlpineTlsProfileReceivesExactPackAndRejectsPostAdvertisementStaleOld [SKIP]
+      The isolated Forgejo smart-HTTP fixture environment is not configured.
+  Finished:    Hexalith.Folders.Tests (ID = '712da481c72e2c70817789350e6c7b91c9e48e664a69589d487aacafc16e4973')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.Tests  Total: 2491, Errors: 0, Failed: 1, Skipped: 2, Not Run: 0, Time: 118.924s

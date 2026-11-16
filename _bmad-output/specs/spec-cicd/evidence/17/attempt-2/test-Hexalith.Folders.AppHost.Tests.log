@@ -1,0 +1,60 @@
+  Discovering: Hexalith.Folders.AppHost.Tests
+  Discovered:  Hexalith.Folders.AppHost.Tests
+  Starting:    Hexalith.Folders.AppHost.Tests
+    Hexalith.Folders.AppHost.Tests.Fr58PublicMutationSearchRoundTripTests.AuthenticatedPublicAddWorkspaceFileShouldConvergeOnPublicSearchAndStatus [SKIP]
+      Story 10.8 FR58 live path is blocked by Task 0: Stories 12.1–12.3 and 12.5 are backlog; FolderDomainProcessor still maps accepted mutations to PayloadNoOpDomainResult (12.6 admission is not event emission); AddFoldersLayeredAuthorization defaults to unpopulated InMemoryEffectivePermissionsReadModel (DW-292) and DenyAllEventStoreAuthorizationValidator; Story 11.15 DCP lane is backlog. A skipped governed run is not FR58 acceptance.
+    Hexalith.Folders.AppHost.Tests.FoldersTopologyCrossProcessTests.SeedRemoveAndArchiveRoundTripAgainstFoldersIndex [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true on a DCP-capable host (Docker running + 'dapr init') to run the Folders Aspire cross-process integration tests. They boot the full AppHost topology and are intentionally excluded from the hermetic lanes.
+    Hexalith.Folders.AppHost.Tests.FoldersTopologyCrossProcessTests.EventStorePublisherAndFolderWorkerSubscriberAreLive [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true on a DCP-capable host (Docker running + 'dapr init') to run the Folders Aspire cross-process integration tests. They boot the full AppHost topology and are intentionally excluded from the hermetic lanes.
+    Hexalith.Folders.AppHost.Tests.FoldersTopologyCrossProcessTests.EventStoreSidecarShouldPublishFolderEnvelopeToWorkerSubscriberTopic [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true on a DCP-capable host (Docker running + 'dapr init') to run the Folders Aspire cross-process integration tests. They boot the full AppHost topology and are intentionally excluded from the hermetic lanes.
+    Hexalith.Folders.AppHost.Tests.FoldersTopologyCrossProcessTests.FullFoldersTopologyBootsRunningAcrossProcesses [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true on a DCP-capable host (Docker running + 'dapr init') to run the Folders Aspire cross-process integration tests. They boot the full AppHost topology and are intentionally excluded from the hermetic lanes.
+Readiness workspace lock: source=9; acl=8; operational=8; stale=True.
+SDK shared Accumulate unresolved: Indeterminate/projection_handler_failure; resuming the same action.
+Readiness workspace lock: source=9; acl=8; operational=8; stale=False.
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+SDK shared Accumulate unresolved: Indeterminate/projection_handler_failure; resuming the same action.
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+Readiness workspace lock: source=9; acl=9; operational=8; stale=False.
+SDK shared Accumulate unresolved: Indeterminate/projection_handler_failure; resuming the same action.
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+Readiness workspace lock: source=9; acl=9; operational=9; stale=False.
+SDK shared Accumulate unresolved: Indeterminate/projection_handler_failure; resuming the same action.
+SDK shared Accumulate unresolved: Retryable/projection_partial_retry; resuming the same action.
+info: CommunityToolkit.Aspire.Hosting.Dapr.DaprDistributedApplicationLifecycleHook[0]
+      Starting Dapr-related resources...
+info: CommunityToolkit.Aspire.Hosting.Dapr.DaprDistributedApplicationLifecycleHook[0]
+      Unvalidated configuration state.redis for component 'folders-routing-authority'.
+SDK shared Accumulate unresolved: Retryable/projection_partial_retry; resuming the same action.
+WORKLOAD_ENROLLMENT_DISABLED missing=Folders:WorkloadEnrollment:ManifestPath,Folders:WorkloadEnrollment:ManifestSha256
+SDK shared Accumulate unresolved: Retryable/projection_partial_retry; resuming the same action.
+SDK shared Accumulate unresolved: Retryable/projection_partial_retry; resuming the same action.
+    Hexalith.Folders.AppHost.Tests.FolderDurabilityAcceptanceTests.AuthenticatedRepositoryShouldPersistRestartReplayAndFailSafely [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true to execute durability acceptance.
+    Hexalith.Folders.AppHost.Tests.OperationalStatusDurabilityAcceptanceTests.RetainedFolderProjectionShouldSurviveRestartRebuildAndSafeFailures [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true to execute operational durability acceptance.
+    Hexalith.Folders.AppHost.Tests.OperationalStatusBoundedHistoryAcceptanceTests.OriginalOwnersRebuildGrowAndRetainIdentityThroughAuthenticatedTransport(count: 10001) [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true to execute bounded-history acceptance.
+    Hexalith.Folders.AppHost.Tests.FolderDurabilityTenantMaintenanceAcceptanceTests.NaturallyAgedTenantShouldMaintainRealSourceAndWorkersAuthorityAndSkipFreshUpdate [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true to execute real tenant maintenance acceptance.
+    Hexalith.Folders.AppHost.Tests.WorkspaceContentDurabilityAcceptanceTests.ContentShouldSurviveProcessReplacementAndRemainSuppressedAfterRemoval [SKIP]
+      Set HEXALITH_FOLDERS_RUN_ASPIRE_INTEGRATION=true to execute content durability acceptance.
+  Finished:    Hexalith.Folders.AppHost.Tests (ID = '96f50746d16fd70e91d00df72349425f8ecf640e33dfaf7cffb8cd5282873f27')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Folders.AppHost.Tests  Total: 193, Errors: 0, Failed: 0, Skipped: 10, Not Run: 6, Time: 5.410s
