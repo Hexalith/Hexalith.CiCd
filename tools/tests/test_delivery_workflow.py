@@ -112,6 +112,9 @@ class Workflow:
         concurrency = self.document["concurrency"]
         self.concurrency_group = self.expression(concurrency["group"])
         self.cancel_in_progress = self.expression(concurrency["cancel-in-progress"])
+        writer = self.job.get("concurrency")
+        self.writer_concurrency_group = self.expand(writer["group"]) if writer else None
+        self.writer_cancel_in_progress = self.expand(writer["cancel-in-progress"]) if writer else None
         self.validation_entered = True
         if not self.condition(self.job.get("if", "success()")):
             return "skipped"
@@ -382,6 +385,7 @@ class NarrowWorkflowTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         w = Workspace(Path(temporary.name) / "workspace", (delivery.PROJECTS,))
         (w.candidate / "setup" / (delivery.PROJECTS + ".yml")).unlink()
+        (w.candidate / "setup/Hexalith.Unrelated.yml").write_text("{}\n")
         catalog = CatalogWorkspace(w.root / "catalog")
         for path in delivery.SOURCES:
             target = w.candidate / path
@@ -389,6 +393,7 @@ class NarrowWorkflowTests(unittest.TestCase):
             shutil.copyfile(catalog.owner / path, target)
         w.config["modules"][delivery.PROJECTS] = str(catalog.remote)
         w.commit()
+        w.ref("Hexalith.Unrelated", w.sha)
         report = w.root / "qualified.json"
         w.outputs.unlink(missing_ok=True)
         code = w.call(str(w.candidate / "tools/deliver_g6_catalog.py"), ["qualify", "--report", str(report)],
@@ -407,6 +412,8 @@ class NarrowWorkflowTests(unittest.TestCase):
         self.assertEqual(workflow.execute(), "success")
         self.assertEqual(workflow.concurrency_group, "deliver-projects-g6-catalog")
         self.assertFalse(workflow.cancel_in_progress)
+        self.assertEqual(workflow.writer_concurrency_group, "deliver-owned-writes")
+        self.assertFalse(workflow.writer_cancel_in_progress)
         self.assertEqual([inputs["repositories"] for _, inputs in workflow.mints], ["Hexalith.Projects"])
         self.assertEqual(set(workflow.mints[0][1]), {"client-id", "private-key", "owner", "repositories",
                                                    "permission-contents", "permission-workflows"})
@@ -418,8 +425,10 @@ class NarrowWorkflowTests(unittest.TestCase):
         self.assertEqual(result["status"], "delivered")
         self.assertEqual(result["owner_source"], w.sha)
         self.assertEqual(result["delivered_tree"], catalog.result_tree)
-        self.assertEqual(git(w.remote, "for-each-ref", "refs/heads/delivered/"), "")
-        self.assertEqual(git(w.remote, "ls-tree", "-r", "--name-only", w.sha, "--", "setup"), "")
+        self.assertEqual(git(w.remote, "for-each-ref", "--format=%(refname)", "refs/heads/delivered/"), "refs/heads/delivered/Hexalith.Unrelated")
+        self.assertEqual(git(w.remote, "ls-tree", "-r", "--name-only", w.sha, "--", "setup"), "setup/Hexalith.Unrelated.yml")
+        self.assertTrue(all(proof["registry_count"] == 1 and proof["accepted_ref_count"] == 1
+                            for proof in result["full_writer_exclusion"]))
 
     def test_concurrency_keeps_normal_default_and_pr_groups(self):
         w, _, binding = self.fixture()
@@ -441,6 +450,23 @@ class NarrowWorkflowTests(unittest.TestCase):
                 self.assertEqual(workflow.concurrency_group, group)
                 self.assertEqual(workflow.cancel_in_progress, cancel)
                 self.assertEqual(workflow.mints, [])
+                self.assertEqual(workflow.writer_concurrency_group, "deliver-owned-writes")
+                self.assertFalse(workflow.writer_cancel_in_progress)
+
+    def test_independent_validation_lanes_share_only_the_existing_write_job_mutex(self):
+        w, _, binding = self.fixture()
+        groups = []
+        for mode in ("full", "projects-g6-catalog"):
+            writer = Workflow(w, event="workflow_dispatch", delivery=mode, validation="cancelled", g6_plan=binding)
+            self.assertEqual(writer.execute(), "skipped")
+            self.assertEqual(writer.writer_concurrency_group, "deliver-owned-writes")
+            self.assertFalse(writer.writer_cancel_in_progress)
+            self.assertNotEqual(writer.writer_concurrency_group, writer.concurrency_group)
+            validation = Workflow(w, event="workflow_dispatch", delivery=mode, validation="cancelled", job="validate")
+            self.assertEqual(validation.execute(), "skipped")
+            self.assertIsNone(validation.writer_concurrency_group)
+            groups.append(validation.concurrency_group)
+        self.assertEqual(groups, ["deliver", "deliver-projects-g6-catalog"])
 
     def test_narrow_qualification_failure_missing_plan_or_wrong_ref_mints_nothing(self):
         for options in ({"validation": "failure"}, {"g6_plan": None}, {"ref": "refs/heads/feature"},

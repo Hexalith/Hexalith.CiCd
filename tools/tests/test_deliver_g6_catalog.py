@@ -18,10 +18,26 @@ import tempfile
 import unittest
 from unittest import mock
 
+if sys.argv[1:2] == ["advertisement-driver"]:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from delivery_support import ROOT, filtered_remote, git, load
 
 delivery = load(ROOT / "tools/deliver_g6_catalog.py", "_g6_delivery_tests")
 rt = delivery.rt
+
+
+def faulty_advertisement(kind, output, source, error_type):
+    """Change only the ls-remote I/O result in isolated qualification fixtures."""
+    main = (source + "\trefs/heads/main\n").encode()
+    unrelated = (source + "\trefs/heads/delivered/Hexalith.Unrelated\n").encode()
+    if kind in {"unavailable", "timeout"}:
+        raise error_type("Git ls-remote " + ("timed out" if kind == "timeout" else "unavailable"))
+    return {"malformed-row": output + b"malformed\n",
+            "invalid-main-oid": b"invalid\trefs/heads/main\n",
+            "invalid-ref-oid": output + b"invalid\trefs/heads/delivered/Hexalith.Unrelated\n",
+            "duplicate-main": output + main, "duplicate-ref": output + unrelated + unrelated,
+            "missing-main": unrelated, "changed-main": ("f" * 40 + "\trefs/heads/main\n").encode()}[kind]
 
 
 class CatalogWorkspace:
@@ -107,15 +123,7 @@ class CatalogWorkspace:
                                 "-p", head, data=b"test: final read race\n")
                     git(remote, "update-ref", "refs/heads/main", newer)
                 if workspace.final_registry and repository == rt.CICD and workspace.read_counts[repository] == 2:
-                    remote = rt.Git(workspace.owner_remote, index=workspace.root / "late-registry-index")
-                    head = remote.resolve("refs/heads/main")
-                    blob = remote.run("hash-object", "-w", "--stdin", data=b"{}\n").decode().strip()
-                    remote.run("read-tree", head)
-                    remote.run("update-index", "--add", "--cacheinfo", "100644", blob,
-                               "setup/" + workspace.final_registry + ".yml")
-                    tree = remote.run("write-tree", "--missing-ok").decode().strip()
-                    newer = remote.run("commit-tree", tree, "-p", head, data=b"test: register Projects concurrently\n").decode().strip()
-                    remote.run("update-ref", "refs/heads/main", newer)
+                    workspace.register_owner_remote(workspace.final_registry)
                 if workspace.final_accepted_ref and repository == delivery.PROJECTS and workspace.read_counts[repository] == 2:
                     git(workspace.owner_remote, "update-ref", "refs/heads/delivered/" + workspace.final_accepted_ref, workspace.sha)
                 if workspace.fail_reconciliation and workspace.pushes:
@@ -173,18 +181,31 @@ class CatalogWorkspace:
         qualified = qualified or self.run()
         return self.run("deliver", G6_QUALIFICATION="success", G6_PLAN=json.dumps(qualified["plan"]))
 
-    def cli_qualify(self, **extra):
+    def cli_qualify(self, *, advertisement_fault=None, **extra):
         configuration = self.root / "cli-config.json"
         configuration.write_text(json.dumps({"cicd": str(self.owner_remote), "modules": {delivery.PROJECTS: str(self.remote)},
-                                              "acquisitions": str(self.root / "cli-acquisitions.jsonl")}))
+                                              "acquisitions": str(self.root / "cli-acquisitions.jsonl"),
+                                              "g6_advertisement_fault": advertisement_fault, "g6_source": self.sha}))
         output = self.root / "outputs"
         output.unlink(missing_ok=True)
-        result = subprocess.run([sys.executable, "-I", str(ROOT / "tools/tests/delivery_support.py"), "driver",
+        driver = ROOT / ("tools/tests/test_deliver_g6_catalog.py" if advertisement_fault else "tools/tests/delivery_support.py")
+        result = subprocess.run([sys.executable, "-I", str(driver), "advertisement-driver" if advertisement_fault else "driver",
                                  str(self.owner / "tools/deliver_g6_catalog.py"), str(configuration), "qualify",
                                  "--report", str(self.report_path)], capture_output=True,
                                 env=os.environ | self.context() | {"GITHUB_OUTPUT": str(output), "TMPDIR": str(self.root),
                                                                  "MODULE_TOKEN": "", "CICD_TOKEN": ""} | extra)
         return result, output.read_text() if output.exists() else ""
+
+    def register_owner_remote(self, name):
+        remote = rt.Git(self.owner_remote, index=self.root / "late-registry-index")
+        head = remote.resolve("refs/heads/main")
+        blob = remote.run("hash-object", "-w", "--stdin", data=b"{}\n").decode().strip()
+        remote.run("read-tree", head)
+        remote.run("update-index", "--add", "--cacheinfo", "100644", blob, "setup/" + name + ".yml")
+        tree = remote.run("write-tree", "--missing-ok").decode().strip()
+        newer = remote.run("commit-tree", tree, "-p", head, data=b"test: register Projects concurrently\n").decode().strip()
+        remote.run("update-ref", "refs/heads/main", newer)
+        return newer
 
     def advance(self, *, tree=None, parent=None):
         head = git(self.remote, "rev-parse", "refs/heads/main")
@@ -219,6 +240,18 @@ class CatalogDeliveryTests(unittest.TestCase):
         self.assertEqual(self.w.pushes, [])
         self.assertEqual(git(self.w.remote, "rev-parse", "main"), self.w.base)
 
+    def advertisement_boundary(self, callback, *, at=2):
+        original = rt.Git.run
+        count = 0
+        def boundary(target, *args, **options):
+            nonlocal count
+            if args and args[0] == "ls-remote":
+                count += 1
+                if count == at:
+                    return callback(lambda: original(target, *args, **options))
+            return original(target, *args, **options)
+        return mock.patch.object(rt.Git, "run", new=boundary)
+
     def test_exact_result_preserves_foreign_objects_indices_worktrees_and_token_isolation(self):
         w = self.w
         snapshots = [(root, (root / ".git/index").read_bytes(), git(root, "status", "--porcelain"),
@@ -240,7 +273,7 @@ class CatalogDeliveryTests(unittest.TestCase):
             self.assertEqual(git(root, "show-ref"), refs)
         self.assertFalse((w.root / "executed").exists())
         self.assertNotIn(w.token.encode(), w.report_path.read_bytes())
-        self.assertEqual(w.fetches.count(delivery.PROJECTS), 4)
+        self.assertEqual(w.fetches.count(delivery.PROJECTS), 5)
         self.assertEqual([proof["phase"] for proof in result["full_writer_exclusion"]], ["delivery source verification", "push"])
         self.assertTrue(all(proof["registry_absent"] and proof["accepted_ref_absent"]
                             for proof in result["full_writer_exclusion"]))
@@ -328,7 +361,7 @@ class CatalogDeliveryTests(unittest.TestCase):
             self.assertEqual(result["status"], "failed")
             self.assertEqual(w.pushes, [])
             expected = "unchanged confirmation" if unchanged else "push"
-            self.assertEqual(result["failed_operation"], "verify live Projects accepted-ref absence during " + expected)
+            self.assertEqual(result["failed_operation"], "verify atomic owner-main/accepted-ref advertisement during " + expected)
             proof = result["full_writer_exclusion"][-1]
             self.assertEqual(proof["phase"], expected)
             self.assertTrue(proof["registry_absent"])
@@ -336,6 +369,97 @@ class CatalogDeliveryTests(unittest.TestCase):
             self.assertEqual(proof["matching_accepted_refs"], ["refs/heads/delivered/" + w.final_accepted_ref])
             git(w.owner_remote, "update-ref", "-d", "refs/heads/delivered/" + w.final_accepted_ref)
             w.final_accepted_ref = None
+
+    def test_nonempty_unrelated_full_writer_selectors_allow_qualification_delivery_and_noop(self):
+        w = self.w
+        path = w.owner / "setup/Hexalith.Unrelated.yml"
+        path.parent.mkdir(exist_ok=True)
+        path.write_text("{}\n")
+        w.write_manifest()
+        git(w.owner_remote, "update-ref", "refs/heads/delivered/Hexalith.Unrelated", w.sha)
+        result, output = w.cli_qualify()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        qualified = json.loads(w.report_path.read_bytes())
+        self.assertEqual(json.loads(dict(line.split("=", 1) for line in output.splitlines())["plan"]), qualified["plan"])
+        for receipt in (qualified, w.deliver(qualified), w.deliver()):
+            self.assertIn(receipt["status"], {"qualified", "delivered", "unchanged"})
+            for proof in receipt["full_writer_exclusion"]:
+                self.assertEqual(proof["registry_count"], 1)
+                self.assertEqual(proof["accepted_ref_count"], 1)
+                self.assertEqual(proof["advertised_main"], w.sha)
+                self.assertTrue(proof["owner_main_matches_source"])
+                self.assertTrue(proof["registry_absent"] and proof["accepted_ref_absent"])
+
+    def test_owner_registration_during_final_advertisement_refuses_push_and_noop(self):
+        w = self.w
+        for unchanged in (False, True):
+            if unchanged:
+                self.assertEqual(w.deliver()["status"], "delivered")
+                w.pushes.clear()
+            qualified = w.run()
+            previous = git(w.remote, "rev-parse", "main")
+            def register_and_read(read):
+                w.register_owner_remote(delivery.PROJECTS)
+                return read()
+            with self.advertisement_boundary(register_and_read):
+                receipt = w.deliver(qualified)
+            self.assertEqual(receipt["status"], "failed")
+            self.assertEqual(w.pushes, [])
+            self.assertIn("atomic owner-main/accepted-ref advertisement", receipt["failed_operation"])
+            proof = receipt["full_writer_exclusion"][-1]
+            self.assertFalse(proof["owner_main_matches_source"])
+            self.assertNotEqual(proof["advertised_main"], w.sha)
+            self.assertEqual(git(w.remote, "rev-parse", "main"), previous)
+            git(w.owner_remote, "update-ref", "refs/heads/main", w.sha)
+
+    def test_projects_advance_during_final_advertisement_refuses_push_and_noop(self):
+        w = self.w
+        for unchanged in (False, True):
+            if unchanged:
+                self.assertEqual(w.deliver()["status"], "delivered")
+                w.pushes.clear()
+            qualified = w.run()
+            previous = git(w.remote, "rev-parse", "main")
+            advanced = []
+            def advance_and_read(read):
+                advanced.append(w.advance())
+                return read()
+            with self.advertisement_boundary(advance_and_read):
+                receipt = w.deliver(qualified)
+            self.assertEqual(receipt["status"], "failed")
+            self.assertEqual(w.pushes, [])
+            expected = "unchanged" if unchanged else "push"
+            self.assertEqual(receipt["failed_operation"], "reread exact Projects main after " + expected + " exclusion")
+            self.assertEqual(git(w.remote, "rev-parse", "main"), advanced[0])
+            git(w.remote, "update-ref", "refs/heads/main", previous)
+
+    def test_unavailable_and_malformed_advertisements_never_publish_or_write(self):
+        w = self.w
+        faults = ("unavailable", "timeout", "malformed-row", "invalid-main-oid", "invalid-ref-oid",
+                  "duplicate-main", "duplicate-ref", "missing-main", "changed-main")
+        for phase in ("qualification", "push", "unchanged confirmation"):
+            if phase == "unchanged confirmation":
+                self.assertEqual(w.deliver()["status"], "delivered")
+                w.pushes.clear()
+            previous = git(w.remote, "rev-parse", "main")
+            for fault in faults:
+                with self.subTest(phase=phase, fault=fault):
+                    if phase == "qualification":
+                        result, output = w.cli_qualify(advertisement_fault=fault)
+                        self.assertEqual(result.returncode, 1)
+                        self.assertEqual(output, "")
+                        receipt = json.loads(w.report_path.read_bytes())
+                        self.assertIsNone(receipt["plan"])
+                    else:
+                        qualified = w.run()
+                        with self.advertisement_boundary(lambda read: faulty_advertisement(fault, read(), w.sha, rt.DeliveryError)):
+                            receipt = w.deliver(qualified)
+                    self.assertEqual(receipt["status"], "failed")
+                    self.assertEqual(receipt["failed_operation"], "verify atomic owner-main/accepted-ref advertisement during " + phase)
+                    self.assertIsNone(receipt["delivered_sha"])
+                    self.assertFalse(receipt["push_attempted"])
+                    self.assertEqual(w.pushes, [])
+                    self.assertEqual(git(w.remote, "rev-parse", "main"), previous)
 
     def test_different_live_source_refuses_without_push(self):
         self.w.advance()
@@ -540,5 +664,28 @@ class CatalogDeliveryTests(unittest.TestCase):
             self.assertEqual(oid, value["after"][path][2])
 
 
+def advertisement_driver():
+    """Reuse the real-Git driver, substituting only ls-remote response I/O."""
+    import delivery_support
+    configuration = json.loads(Path(sys.argv[3]).read_bytes())
+    original_load = delivery_support.load
+    def load_entry(path, name):
+        entry = original_load(path, name)
+        original_run = entry.rt.Git.run
+        def boundary(target, *args, **options):
+            output = original_run(target, *args, **options)
+            if args and args[0] == "ls-remote":
+                return faulty_advertisement(configuration["g6_advertisement_fault"], output,
+                                            configuration["g6_source"], entry.rt.DeliveryError)
+            return output
+        entry.rt.Git.run = boundary
+        return entry
+    delivery_support.load = load_entry
+    delivery_support.driver()
+
+
 if __name__ == "__main__":
-    unittest.main()
+    if sys.argv[1:2] == ["advertisement-driver"]:
+        advertisement_driver()
+    else:
+        unittest.main()
