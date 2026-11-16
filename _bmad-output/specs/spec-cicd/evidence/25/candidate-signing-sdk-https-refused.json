@@ -1,0 +1,100 @@
+{
+  "passed": false,
+  "error": "warn : NU3042: The following X.509 root certificate is untrusted because it is not present in the certificate bundle at /home/administrator/.dotnet/sdk/11.0.100/trustedroots/codesignctl.pem.  For more information, see documentation for NU3042.\nwarn :     Subject:  CN=Private candidate validation\nwarn :     Fingerprint (SHA-256):  318CD6AF45D4B33FC927CA0D88502BB49109FDCAE4B54D1CF0DE18281B6B83BC\nwarn :     Certificate (PEM):\nwarn : -----BEGIN CERTIFICATE-----\nwarn : MIIEUTCCArmgAwIBAgIUVNkzcMtYV/z01HXKTDclwyeoPJAwDQYJKoZIhvcNAQEL\nwarn : BQAwJzElMCMGA1UEAwwcUHJpdmF0ZSBjYW5kaWRhdGUgdmFsaWRhdGlvbjAeFw0y\nwarn : NjExMTYxOTMxMjZaFw0yNjExMTcxOTMxMjZaMCcxJTAjBgNVBAMMHFByaXZhdGUg\nwarn : Y2FuZGlkYXRlIHZhbGlkYXRpb24wggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGK\nwarn : AoIBgQCvsh/qGZY5NErii4iBKCyQMLsCgQAwx7Mcz9YTmDBJIvvyDiL4Ofq8nZDC\nwarn : oVvXWfkOgkFCEyGLtMZU1MqenY6WR36GTXMM0Iod9spdeJekBy59Q8EsBU3TdI91\nwarn : thguyiOWrG3L0eKBhZEF/1sgochX1sBO5diCOxgTj4WbGu1tWwsQfQfM301YaFqF\nwarn : uFSLAmQiQKT2L1af4uqJYrj3rvGVnTIUCZAyarhLagP2Pj/8r24Bq3vIukpmQ9S+\nwarn : YHLRZI2qojVvNmAoCc3O6TkCpbgRK+KOPpyEfZQkj9kXZjDX9nqbtz26ugdG5Rki\nwarn : B1t4tN50e5FwaCNmnBRkf9bPP36pcvwF3eEczlGsUb/Z3AL9y9O+pdAMjdzznTqE\nwarn : W84QRFoA1zJa6etbTaQfbtYmVE9/3MKbj/TtM8iDZ0wqWL2sJ8VBBf6vHgtUC8GR\nwarn : DKIneUI8cPNVG1p1D4MhAbe3wfI0fq0H5XwJbMHCozqcoINPppMG9rBgtK6M2EFa\nwarn : kFdsncsCAwEAAaN1MHMwHQYDVR0OBBYEFEAsoubItg7SDufic0bMKxR0hJipMB8G\nwarn : A1UdIwQYMBaAFEAsoubItg7SDufic0bMKxR0hJipMAwGA1UdEwEB/wQCMAAwDgYD\nwarn : VR0PAQH/BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA0GCSqGSIb3DQEBCwUA\nwarn : A4IBgQA3ttkd8/I+ZzX4G6uUf8IusNvIZUJuAtQQTZ0W+dwpPXTOMd/m+EHj27hV\nwarn : E+huJucBpm4hkPqsl2E0yJDjlj2kcfVk5MpthMlVYH4YZMHirVtaQnquVsu51Qch\nwarn : +F6eY6JWuzhr24bwGfnOyF7sitYiEPAlAnNjVB1qHBsWLGan8yyMGFhxVJUeAJ/M\nwarn : A1Yg7MHoqm94e/95ugaD8VEb3RC23rX4BsPYjKViC08fAEtpxcvHElcEjPkQhIxT\nwarn : hyj84zAJ9+yD+vQFXwimOfVcCtT3VC2KhxAQoY/4GGpJdWZzsTUtu5a997v9GW7U\nwarn : 3dgF/uRkvfpbjCAJO7eGv+scyNVZOb1epyeqkOVOFQZvRgGC40Jg4Tk/qjO187uh\nwarn : 6oPOKGkO6cjfg6Go8Ux00B4COIYXK8Q7RHOOkWTLC2CNS6BaMHdEsj4kg6U5gsR/\nwarn : ji7whLdhj4h5NrD8pJWFznnvHAKNo1YmaHc7PVoD32XlzN+hEHqgSByEwmZETNds\nwarn : csZ7W10=\nwarn : -----END CERTIFICATE-----\nwarn : NU3018: UntrustedRoot: self-signed certificate\nerror: Connection refused (timestamp.digicert.com:443)\nerror:   Connection refused\n",
+  "results": [
+    {
+      "command": [
+        "dotnet",
+        "pack",
+        "Fixture.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "/tmp/hexalith-job.A9MKsCsb/unsigned",
+        "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds/NuGet.ci.Config",
+        "-warnaserror",
+        "-m:1",
+        "/nr:false"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:3072",
+        "-noenc",
+        "-sha256",
+        "-keyout",
+        "/tmp/hexalith-job.A9MKsCsb/job/key.pem",
+        "-out",
+        "/tmp/hexalith-job.A9MKsCsb/job/cert.pem",
+        "-subj",
+        "/CN=Private candidate validation",
+        "-days",
+        "1",
+        "-addext",
+        "basicConstraints=critical,CA:FALSE",
+        "-addext",
+        "keyUsage=critical,digitalSignature",
+        "-addext",
+        "extendedKeyUsage=codeSigning"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "pkcs12",
+        "-export",
+        "-inkey",
+        "/tmp/hexalith-job.A9MKsCsb/job/key.pem",
+        "-in",
+        "/tmp/hexalith-job.A9MKsCsb/job/cert.pem",
+        "-out",
+        "/tmp/hexalith-job.A9MKsCsb/job/signer.pfx",
+        "-passout",
+        "pass:"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "openssl",
+        "x509",
+        "-in",
+        "/tmp/hexalith-job.A9MKsCsb/job/cert.pem",
+        "-outform",
+        "DER",
+        "-out",
+        "/tmp/hexalith-job.A9MKsCsb/job/cert.der"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "dotnet",
+        "nuget",
+        "sign",
+        "/tmp/hexalith-job.A9MKsCsb/job/Fixture.1.2.3.nupkg",
+        "--certificate-path",
+        "/tmp/hexalith-job.A9MKsCsb/job/signer.pfx",
+        "--allow-untrusted-root",
+        "--timestamper",
+        "https://timestamp.digicert.com",
+        "--timestamp-hash-algorithm",
+        "SHA256",
+        "--verbosity",
+        "minimal"
+      ],
+      "exit": 1,
+      "expected": 0
+    }
+  ]
+}

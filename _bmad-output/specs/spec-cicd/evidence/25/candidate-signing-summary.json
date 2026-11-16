@@ -1,0 +1,89 @@
+{
+  "completed_at": "2026-11-16T20:16:05.391169+00:00",
+  "scope": "isolated candidate signing acceptance only; no release/adoption/migration acceptance",
+  "revisions": {
+    "module": "b325a0b47d642f1711f49e589509ca89ac585bca",
+    "builds": "27ccaa36a87548fe2f7f66ed55cdadb1b55f332e",
+    "references/Hexalith.Builds": "27ccaa36a87548fe2f7f66ed55cdadb1b55f332e",
+    "references/Hexalith.EventStore": "2dcf708cbab0d4ad0cf72f947d0b0a1444e251a1",
+    "references/Hexalith.Works": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+  },
+  "file_sha256": {
+    "references/Hexalith.Builds/Github/lib/product_validation.py": "cff494f1486499f985e14a725c50987e6c893d9386aa719a3315b736a2278370",
+    "references/Hexalith.Builds/Github/lib/tests/test_product_validation.py": "ae9341b7a2724ed0da034974fe46745f7c2eeb8eabf5b77c4c80799d53f14f67",
+    "references/Hexalith.Builds/Github/product-validation/README.md": "1a80a9d2d617e443e6b6de7a3aa604b96cc20d148dd0a6aba7a535ed5bc26fb4",
+    "references/Hexalith.Builds/NuGet.ci.Config": "d90424cf33f8e77a224df872c88d0448e3b0a845f432fc268ba8596bba787a0f",
+    "references/Hexalith.Builds/Props/Directory.Packages.props": "7c76e92b8986c9470154e1502b3395df019d29f61853de934cf35db73a41a54b"
+  },
+  "receipts_sha256": {
+    "candidate-signing-sdk-probe.py": "405177f173102e6c80ee932c9c6c45eb16a076a32f43023ef150a710355ac6d5",
+    "candidate-signing-sdk-probe.json": "c2bb56e509eab50f0ec89fa92624e49e7c4145783e994055024210d5a87d7dd3",
+    "candidate-signing-sdk-probe.log": "b68685bcc275722ef2339b3a4a4f059edd7c193913aa8cec57c8a43fb362ee86",
+    "candidate-signing-timesheets-check.py": "58be94a57d86e47685cdf417e4aad0bf45c16dd830ad1cd219cadaf78f2cabfc",
+    "candidate-signing-timesheets-check.json": "859aa6469eaae0986b52472891b7f64401dff3c8be4dc5a5ad36549d2095906c",
+    "candidate-signing-timesheets-check.log": "ff80cb5921625e29bcbb6862572df6f593d0b09016099963858e494973812e18",
+    "candidate-signing-behavioral-tests.log": "1353c941b143c2925123b9af28609668cc2a92dafb6f927eb2a83eeef256046e",
+    "candidate-signing-timesheets-untimestamped.json": "d76e97e1ed6beeade8c49df6aeaa56e868a6b50a2154a9ee4c82ed3eec5dd763",
+    "candidate-signing-timesheets-untimestamped.log": "7f0366c6ff1072d6528e87f1e3940155f6b4ea4d95217a91c850f98de249938a",
+    "candidate-signing-sdk-untimestamped.json": "93e36677627cd47b7e0eba7f4eed4d2ba0c400d60c923c93b625281d90e8711a",
+    "candidate-signing-sdk-untimestamped.log": "bf8a0e8edd15157b555ab3d663f24d22b5978b4c0d4712c2d6a96186302ae609",
+    "candidate-signing-sdk-https-refused.json": "bd2e8987ec70b5b92a4bf5b6ab32ed7c62ec9c36b4b0c4082cb085e3accbec97",
+    "candidate-signing-sdk-https-refused.log": "3a746a6ff8bcf4cfc4f7d6b1338e2a3e8eb94603b4556dcc8d040dabae8b0376",
+    "candidate-signing-final-tests.log": "d0eb7de9f870c7650caf2675a064c6ba7cac59d56496a6375736b45a28ee5825"
+  },
+  "commands": [
+    "run-with-temp python3 -B -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_product_validation.py -v > _bmad-output/specs/spec-cicd/evidence/25/candidate-signing-behavioral-tests.log 2>&1",
+    "run-with-temp python3 -B _bmad-output/specs/spec-cicd/evidence/25/candidate-signing-sdk-probe.py",
+    "run-with-temp python3 -B _bmad-output/specs/spec-cicd/evidence/25/candidate-signing-timesheets-check.py",
+    "git -C references/Hexalith.Builds diff --check",
+    "DOTNET_GENERATE_ASPNET_CERTIFICATE=false run-with-temp uv run --no-cache --python 3.12 --with PyYAML==6.0.3 --with jsonschema==4.26.0 python -B -m unittest discover -s references/Hexalith.Builds/Github/lib/tests -p test_product_validation.py -v"
+  ],
+  "results": {
+    "behavioral_cases_passed": 38,
+    "sdk_probe_commands_passed": 20,
+    "fresh_release_build_passed": true,
+    "actual_consumers_passed": 6,
+    "version": "2.1.1-preview.0.3",
+    "sdk": "11.0.100",
+    "target_framework": "net10.0",
+    "release_outputs_unchanged": true,
+    "signer_workspaces_removed": true,
+    "timesheets_worktree_unchanged": true,
+    "python": "3.12.13",
+    "review": "Three independent lenses triaged; five corrections completed; lifetime correction re-reviewed without material finding."
+  },
+  "constraints_preserved": [
+    "required signatures",
+    "public repository signer root requirements",
+    "exact source mappings",
+    "NuGet vulnerability audits",
+    "original archive payload/dependency assertions",
+    "symbol archive bytes",
+    "exact signed-feed bytes/source/version including transitive candidates",
+    "compiled informational version",
+    "original Release DLL/PDB bytes",
+    "cleanup after success/failure/SIGTERM with child reaping"
+  ],
+  "remaining_implementation_acceptance": [],
+  "risks": [
+    "Existing public RFC3161 TSA availability is required; refusal fails validation.",
+    "Forced process kill or host loss relies on enclosing disposable job scratch cleanup."
+  ],
+  "excluded": [
+    "publication",
+    "adoption hooks",
+    "complete action discovery",
+    "migration completion",
+    "platform story 26"
+  ],
+  "implementation_handoff_remote_operations": false,
+  "published_builds_head_verified": "05bda4e01d70afacb5048d5c336f383a301c0974",
+  "deferred": [
+    "Unverified medium: independently bound timestamp-command timeout; SDK transport timeout/cancellation must be established before adding a speculative guard."
+  ],
+  "qualification_environment": {
+    "DOTNET_GENERATE_ASPNET_CERTIFICATE": "false",
+    "platform": "Linux",
+    "public_timestamp_trust": "unchanged"
+  }
+}
