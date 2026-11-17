@@ -14,6 +14,7 @@ SOURCE = Path(__file__).resolve().parents[1] / "repair_works_qualification_caden
 SPEC = importlib.util.spec_from_file_location("works_cadence_repair", SOURCE)
 REPAIR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(REPAIR)
+REAL_OWNER_IDENTITY = REPAIR.owner_identity
 
 
 def git(root, *args):
@@ -93,6 +94,31 @@ class OwnerCadenceTests(unittest.TestCase):
         git(self.module, "add", "--", *changes)
         self.assertEqual(manifest["result_tree"], git(self.module, "write-tree"))
         self.assertTrue((self.directory / (REPAIR.STEM + "-applied.json")).is_file())
+
+    def test_foreign_owner_origin_refuses_before_workflow_writes(self):
+        owner = self.root / "owner"
+        tools = owner / "tools"
+        tools.mkdir(parents=True)
+        materializer = tools / SOURCE.name
+        materializer.write_bytes(SOURCE.read_bytes())
+        helper = SOURCE.with_name("repair_works_package_metadata.py")
+        (tools / helper.name).write_bytes(helper.read_bytes())
+        git(owner, "init", "--quiet")
+        git(owner, "config", "user.name", "Synthetic fixture")
+        git(owner, "config", "user.email", "fixture@example.invalid")
+        git(owner, "add", ".")
+        git(owner, "commit", "--quiet", "-m", "test: synthetic CiCd owner")
+        git(owner, "remote", "add", "origin", "https://github.com/Hexalith/Hexalith.CiCd.git")
+        with patch.object(REPAIR, "owner_identity", REAL_OWNER_IDENTITY), \
+                patch.object(REPAIR, "OWNER", owner), patch.object(REPAIR, "__file__", str(materializer)):
+            self.prepare()
+            git(owner, "remote", "set-url", "origin", "https://example.invalid/Hexalith.CiCd.git")
+            before = self.contents()
+            with self.assertRaisesRegex(ValueError, "official CiCd owner checkout"):
+                REPAIR.apply(self.module, self.directory)
+            self.assertEqual(before, self.contents())
+            self.assertFalse((self.module / REPAIR.QUALIFICATION).exists())
+            self.assertFalse((self.directory / (REPAIR.STEM + "-applied.json")).exists())
 
     def test_dirty_or_staged_workflow_refuses_before_writes(self):
         self.prepare()
