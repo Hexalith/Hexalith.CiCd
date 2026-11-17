@@ -52,9 +52,10 @@ for name in ('environment', 'path', 'output', 'summary'):
 
 record = {'schema': 'tenants.local-workload.v1', 'source': os.environ['GITHUB_SHA'],
           'sharedSource': os.environ['S23_BUILDS_REVISION'], 'phases': [],
+          'productBase': os.environ['S23_PRODUCT_BASE'],
           'scope': os.environ.get('S23_MODE', 'full'),
           'localSyntheticIdentity': True, 'hostedCi': False, 'scheduledNightly': False,
-          'publishedContract': False, 'deliveredConfigurationCreated': False,
+          'deliveredBaselineVerified': False, 'deliveredConfigurationCreated': False,
           'startedAt': time.time()}
 
 
@@ -119,6 +120,135 @@ def node_runtime():
     record['node'] = {'versions': versions, 'archiveSha256': digest}
 
 
+def released_product_policy():
+    import shutil
+    import guard_actions
+    import guard_tools
+    import perimeter
+    directory = runtime / 'released-guard-tools'
+    directory.mkdir(mode=0o700)
+    tools = guard_tools.Tools(directory)
+    snapshot = perimeter.Git(root).snapshot(record['source'])
+    guard_actions.lint(snapshot, tools)
+    tools.lint_message('build: migrate Tenants product checks\n', 'prospective product commit')
+    module_config = directory / 'module-commitlint.config.mjs'
+    shutil.copyfile(root / 'commitlint.config.mjs', module_config)
+    revisions = subprocess.check_output(['git', 'rev-list',
+        record['productBase']+'..HEAD'], cwd=root, text=True).splitlines()
+    for revision in revisions:
+        commit = subprocess.check_output(['git', 'cat-file', 'commit', revision], cwd=root)
+        message = commit.split(b'\n\n', 1)[1].decode('utf-8')
+        tools.lint_message(message, 'actual product commit')
+        tools._run(['node', str(directory / 'node_modules/@commitlint/cli/cli.js'),
+            '--config', str(module_config), '--color=false'], 'owning module commitlint', message)
+    if not revisions:
+        raise ValueError('No actual product commit policy scope was verified')
+    version = json.loads((directory / 'node_modules/@commitlint/cli/package.json').read_text())['version']
+    record['releasedPolicy'] = {'customActions':'passed', 'actualCommitMessages':revisions,
+        'commitlintVersion':version, 'centralPolicy':'passed', 'modulePolicy':'passed',
+        'lockedInstallAndSignatures':'passed'}
+    save()
+
+
+def selected_rest_profile():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('local_product_integration', root / 'scripts/run-product-integration.py')
+    integration = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(integration)
+    temporary = Path(os.environ['RUNNER_TEMP']).resolve(strict=True)
+    output = temporary / 'tenants-product-profiles'
+    output.mkdir(mode=0o700)
+    source = integration.PROFILE.command('git', 'rev-parse', 'HEAD:references/Hexalith.EventStore')
+    producer = integration.PROFILE.command('dotnet', 'msbuild', 'src/Hexalith.Tenants/Hexalith.Tenants.csproj', '-nologo',
+        '-getProperty:HexalithEventStoreVersion', '-p:Configuration=Release', '-p:UseHexalithProjectReferences=false',
+        '-p:UseNuGetDeps=true', '-p:HexalithEventStoreFromSource=false')
+    if producer != '5.1.1' or integration.PROFILES[0][0] != 'rest':
+        raise ValueError('The selected actual product REST profile differs')
+    original_finish = integration.PROFILE.finish
+    def capture_refusal(path, temporary, error):
+        reasons = {
+            'Private topology consumers did not exit before the shutdown deadline.': 'native-exit-deadline',
+            'The active catalog profile identity changed.': 'active-profile-identity',
+            'The topology did not complete its awaited shutdown.': 'shutdown-proof',
+            'The private component set changed during qualification.': 'component-set-changed',
+            'The previous profile still has running component consumers.': 'private-process-survivors',
+            'The previous profile still has private-custody container resources.': 'private-container-survivors',
+            'Catalog receipts require private current-user custody.': 'receipt-custody',
+            'Catalog cleanup requires private current-user directory custody.': 'directory-custody',
+        }
+        diagnostic = {'exceptionType': type(error).__name__,
+            'refusal': reasons.get(str(error), 'unclassified-refusal')}
+        try:
+            from collections import Counter
+            receipt = integration.PROFILE.document(path, temporary)
+            private = integration.PROFILE.private_directory(receipt['privateDirectory'], temporary)
+            processes = integration.PROFILE.active_processes(private)
+            names = Counter()
+            known = {'dotnet','MSBuild','VBCSCompiler','dcp','dcpctrl','daprd','sentry','node','bash','sh','python3'}
+            facts = []
+            for pid in processes:
+                try:
+                    proc = Path('/proc/' + str(pid))
+                    name = (proc / 'comm').read_text().strip()
+                    names[name if name in known else 'other'] += 1
+                    status = dict(line.split(':', 1) for line in (proc / 'status').read_text().splitlines() if ':' in line)
+                    arguments = (proc / 'cmdline').read_bytes()
+                    environment = (proc / 'environ').read_bytes()
+                    executable = proc / 'exe'
+                    with executable.open('rb') as stream:
+                        executable_hash = hashlib.file_digest(stream, 'sha256').hexdigest()
+                    facts.append({'pid':pid,'parentPid':int(status['PPid'].strip()),
+                        'state':status['State'].strip().split()[0],
+                        'name':name if name in known else 'other',
+                        'nameSha256':hashlib.sha256(name.encode()).hexdigest(),
+                        'executableSha256':executable_hash,
+                        'privateCommandMatch':os.fsencode(private) in arguments,
+                        'privateTemporaryEnvironmentMatch':b'TMPDIR='+os.fsencode(private)+b'\0' in environment,
+                        'commandKind':next((value for value in ('version','--version','start','run')
+                            if value.encode() in arguments.split(b'\0')[1:]),'other')})
+                except OSError:
+                    names['already-exited'] += 1
+            diagnostic.update(privateProcessCount=len(processes), processKinds=dict(names),
+                privateContainerCount=len(integration.PROFILE.private_containers(private)),
+                shutdownFilePresent=(private / 'shutdown.json').is_file(),
+                changedComponentCount=sum(integration.PROFILE.digest(private / 'components' / name) != digest
+                    for name, digest in receipt['components'].items()))
+            diagnostic['processFacts'] = facts
+        except Exception as observation_error:
+            diagnostic['observationError'] = type(observation_error).__name__
+        record['cleanupRefusalDiagnostic'] = diagnostic
+        save()
+
+    def observed_finish(path, temporary, identity):
+        try:
+            return original_finish(path, temporary, identity)
+        except BaseException as error:
+            capture_refusal(path, temporary, error)
+            raise
+    original_wait = integration.wait_for_private_consumers
+    def observed_wait(private):
+        started = time.monotonic()
+        completed = False
+        try:
+            result = original_wait(private)
+            completed = True
+            return result
+        except BaseException as error:
+            capture_refusal(output / 'rest.json', temporary, error)
+            raise
+        finally:
+            record['naturalExitWait'] = {'elapsedSeconds':time.monotonic()-started,
+                'completed':completed, 'forcedTermination':False}
+            save()
+    integration.wait_for_private_consumers = observed_wait
+    integration.PROFILE.finish = observed_finish
+    try:
+        integration.run_profile(*integration.PROFILES[0], temporary=temporary, output=output, producer=producer, source=source)
+    finally:
+        integration.PROFILE.finish = original_finish
+        integration.wait_for_private_consumers = original_wait
+
+
 try:
     if subprocess.check_output(['dotnet', '--version'], cwd=root, text=True).strip() != '11.0.100':
         raise ValueError('Exact SDK refused')
@@ -140,11 +270,56 @@ try:
     owned = 'tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj'
     minima = dict(zip((*units, *integrations), (40, 103, 761, 198, 8085, 66, 1911)))
     phase('exact-node-runtime', node_runtime)
-    if record['scope'] == 'prerequisites':
+    if record['scope'] == 'full':
+        import ci_config
+        if record['sharedSource'] != 'a1e0c310b1f1a50d78e6132890fae6bcba769f6d':
+            raise ValueError('Exact verified published v6.1.0 contract is required')
+        document = {**proposal, 'schema':ci_config.schema_identity(), 'buildsTag':'v6.1.0',
+            'codeql':['csharp'], 'jobs':{}, 'dotnetTools':False,
+            'tests':{**proposal['tests'], 'minimumExpectedTests':minima, 'reports':{'trx':True}}}
+        ci_config.validate_config(document, repository='Hexalith/Hexalith.Tenants')
+        prepared = ci_pipeline.PreparedConfig(root, root, document, proposal['solution'], 'global.json', ())
+        record['releasedContract'] = {'tag':'v6.1.0', 'revision':record['sharedSource'],
+            'inMemoryTestRoutingOnly':document, 'deliveredStateFabricated':False,
+            'publicationReceipt':'shared-v610-publication-verification.json'}
+        phase('released-custom-actions-and-actual-commit-policy', released_product_policy)
+    if record['scope'] == 'tool-tests':
+        record['diagnosticOmittedStages'] = ['build', 'unit-projects', 'shared-environment',
+            'browser-and-package-consumer', 'shared-integration-projects', 'cold-profiles',
+            'coverage-gate', 'Dapr-retry-controls', 'nightly-workload', 'NuGet-audit']
+        phase('focused-product-script-tools', lambda: run([
+            'python3', '-B', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_*.py', '-v']))
+        record['status'] = 'passed'
+    elif record['scope'] == 'prerequisites':
         phase('exact-prerequisite-runtime-check', lambda: ci_environment.require_node_versions(
             root, proposal['prerequisites'], npm_required=True))
         phase('shared-apt-preparation', lambda: ci_environment.setup_apt(root))
         phase('shared-tls-trust', lambda: ci_environment.setup_tls_trust(root))
+        record['status'] = 'passed'
+    elif record['scope'] == 'unit-hook':
+        record['diagnosticOmittedStages'] = ['unit-projects', 'released-commit-policy',
+            'shared-integration-projects', 'cold-profiles', 'coverage-gate',
+            'Dapr-retry-controls', 'nightly-workload', 'NuGet-audit']
+        phase('one-release-package-build', lambda: ci_pipeline.restore_and_build(prepared))
+        phase('one-shared-environment', lambda: ci_environment.setup_environment(
+            root, solution=proposal['solution'], dapr=proposal['dapr'], browsers=proposal['browsers'],
+            registry=proposal['registry'], npm_workspaces=proposal['npmWorkspaces'],
+            prerequisites=proposal['prerequisites']))
+        phase('after-unit-tests-hook', lambda: run(['bash', 'scripts/run-product-unit-checks.sh']))
+        record['status'] = 'passed'
+    elif record['scope'] in ('cold-integration', 'cold-rest'):
+        record['diagnosticOmittedStages'] = ['shared-unit-projects', 'after-unit-tests-hook',
+            'shared-integration-projects', 'coverage-gate', 'Dapr-retry-controls', 'nightly-workload']
+        phase('one-release-package-build', lambda: ci_pipeline.restore_and_build(prepared))
+        phase('one-shared-environment', lambda: ci_environment.setup_environment(
+            root, solution=proposal['solution'], dapr=proposal['dapr'], browsers=proposal['browsers'],
+            registry=proposal['registry'], npm_workspaces=proposal['npmWorkspaces'],
+            prerequisites=proposal['prerequisites']))
+        if record['scope'] == 'cold-rest':
+            record['diagnosticOmittedStages'].extend(['ordinary-integration-tier', 'other-four-cold-profiles'])
+            phase('selected-cold-rest-profile', selected_rest_profile)
+        else:
+            phase('complete-hook-owned-integration-project', lambda: run(['python3', 'scripts/run-product-integration.py'], 14400))
         record['status'] = 'passed'
     else:
         phase('one-release-package-build', lambda: ci_pipeline.restore_and_build(prepared))
@@ -153,20 +328,29 @@ try:
             raise ValueError('Complete project inventory differs from the inspected test plan')
         record['testProjects'] = {'unit': units, 'integration': integrations, 'hookOwned': owned}
         runner = ci_pipeline.test_runner(root)
-        selected_units = (units[-1],) if record['scope'] == 'unit-ui' else units
-        phase('focused-ui-project' if record['scope'] == 'unit-ui' else 'complete-unit-projects',
-              lambda: ci_pipeline.execute_test_projects(
-                  root, selected_units, runner=runner, stage='Unit', minimum_expected_tests=minima,
-                  fail_skips=True, reports={'trx': True}))
+        if record['scope'] == 'full':
+            classified = phase('released-complete-unit-projects', lambda: ci_pipeline.run_unit_tests(
+                prepared, repository='Hexalith/Hexalith.Tenants'))
+            if (set(classified.unit) != set(units) or set(classified.integration) != set(integrations)
+                    or set(classified.excluded) != {owned}):
+                raise ValueError('Released test classification differs from the complete inspected inventory')
+            record['releasedClassification'] = {name:list(getattr(classified,name))
+                for name in ('unit','integration','excluded')}
+            unit_state = ci_pipeline.stage_state(prepared, classified)
+        else:
+            selected_units = (units[-1],) if record['scope'] == 'unit-ui' else units
+            phase('focused-ui-project' if record['scope'] == 'unit-ui' else 'complete-unit-projects',
+                  lambda: ci_pipeline.execute_test_projects(
+                      root, selected_units, runner=runner, stage='Unit', minimum_expected_tests=minima,
+                      fail_skips=True, reports={'trx': True}))
         if record['scope'] == 'full':
             phase('one-shared-environment', lambda: ci_environment.setup_environment(
                 root, solution=proposal['solution'], dapr=proposal['dapr'], browsers=proposal['browsers'],
                 registry=proposal['registry'], npm_workspaces=proposal['npmWorkspaces'],
                 prerequisites=proposal['prerequisites']))
             phase('after-unit-tests-hook', lambda: run(['bash', 'scripts/run-product-unit-checks.sh']))
-            phase('complete-integration-projects', lambda: ci_pipeline.execute_test_projects(
-                root, integrations, runner=runner, stage='Integration', minimum_expected_tests=minima,
-                fail_skips=True, reports={'trx': True}))
+            phase('released-complete-integration-projects', lambda: ci_pipeline.run_integration_tests(
+                prepared, repository='Hexalith/Hexalith.Tenants', expected_state=unit_state))
             # Match the composite literally, including exact coverage/mutation controls.
             action = root / '.github/actions/after-integration-tests/action.yml'
             import yaml
@@ -193,6 +377,7 @@ except BaseException as error:
     # Raw exceptions/topology output are private scratch. Support-safe product
     # JSON and failure phase are the retained diagnostics.
 finally:
+    record['releasedRoutineBootstrapQualified'] = (record['scope'] == 'full' and record['status'] == 'passed')
     record['finishedAt'] = time.time()
     record['elapsedSeconds'] = record['finishedAt'] - record['startedAt']
     save()

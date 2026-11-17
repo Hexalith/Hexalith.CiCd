@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-17T05:24:38.300146+00:00",
+  "source": "d25495a753fd02ce2ddac129809c6d3107ec6c6d",
+  "packet": "local-isolated-20261117T044852Z-a1d91ca6",
+  "status": "failed",
+  "failedPhase": "after-integration-step-2",
+  "testMethod": "AuthenticatedTenantsUiRouteTests.LiveBrowserMeasuresResponsiveForcedColorsAndRestoresContextualAuditBackFocus",
+  "failure": {
+    "phase": "final-source-capture",
+    "label": "stable-capture-frontComposerPackages"
+  },
+  "completedBrowserCases": 25,
+  "browserCasesWithPassedTrue": 25,
+  "frontComposerPackagesIsArray": true,
+  "frontComposerPackageRows": 4,
+  "sourceComparison": "validate-authenticated-live-routes.mjs:482 compares every captured field with ===; frontComposerPackages is newly allocated by each capture",
+  "fullAfterCaptureRetained": false,
+  "actualProvenanceContentStabilityQualified": false,
+  "preservedCoverage": {
+    "linePercent": 97.06,
+    "isolationAuthBranchPercent": 100
+  },
+  "completedColdProfiles": [
+    "rest",
+    "persisted",
+    "anonymous-ui"
+  ],
+  "authenticatedUi": {
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0
+  },
+  "laterStagesNotRun": [
+    "catalog-owner",
+    "Dapr no-retry and four-call control",
+    "local nightly performance",
+    "final semantic NuGet audit"
+  ],
+  "cleanupComplete": true,
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "releasedRoutineBootstrapQualified": false
+}

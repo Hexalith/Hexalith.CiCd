@@ -1,0 +1,59 @@
+{
+  "scope": "local implementation qualification; no protected enrollment or publication",
+  "repositories": {
+    "Hexalith.Folders": {
+      "head": "e5760ca105652f4d89c4f240e0ca455723c9a473",
+      "patchSha256": "43e451a94f3b864c3fa1ec0195fa05c1d9df932cda04093c42e9a0cd3bac994b"
+    },
+    "Hexalith.Platform": {
+      "head": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+      "patchSha256": "139129cab3402067e90b8021e09ae38eeee71486459a85ae022555c1e50f4039"
+    }
+  },
+  "commands": [
+    {
+      "label": "release-build",
+      "argv": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1",
+        "-p:UseSharedCompilation=false",
+        "-nr:false"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "provider-build",
+      "argv": [
+        "mvn",
+        "--batch-mode",
+        "--no-transfer-progress",
+        "package"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "complete-server",
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-complete-project-tests.ps1",
+        "-ProjectName",
+        "Hexalith.Folders.Server.Tests"
+      ],
+      "exitCode": 1
+    }
+  ],
+  "exitCode": 1
+}

@@ -1,0 +1,62 @@
+{
+  "policy": {
+    "id": 448199237,
+    "tag_name": "v6.2.0",
+    "target_commitish": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "immutable": true,
+    "published_at": "2026-11-17T05:58:54Z",
+    "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.2.0",
+    "resolvedGitTagCommit": "0ccd12af6576a3aac601340dec7dba53e86768c3"
+  },
+  "repositories": {
+    "Hexalith.Platform": {
+      "sourceHead": "1ead34c65619c064e8e5fd374d5e6a56be19e830",
+      "freshBase": "1ead34c65619c064e8e5fd374d5e6a56be19e830",
+      "capturedSourceTree": "15ceb00f33a77bac1ad06a867813162d6d0a54ca",
+      "applyExit": 0,
+      "candidateTree": "15ceb00f33a77bac1ad06a867813162d6d0a54ca",
+      "changedPaths": [
+        "docs/security/workload-binding-enrollment.md",
+        "infrastructure/keycloak-workload-binding/component_fixture.py",
+        "infrastructure/keycloak-workload-binding/test_component_fixture.py",
+        "infrastructure/keycloak-workload-binding/verify_component.py"
+      ],
+      "ownedTreePreserved": true,
+      "patchSha256": "de0d367a4f34a9a457cd22cdaa867409ca526b156f8c738ee31f037ba08441df",
+      "exactMessageCommitlint": "passed",
+      "releasedAudit": "guard: _bmad-output/implementation-artifacts/evidence/3-2/release-adoption-20261109/shared-restore-import-closure/graph-export-imports.xml: audit-lint: forbidden MSBuildWarningsAsMessages declaration\nguard: _bmad-output/implementation-artifacts/evidence/3-2/release-adoption-20261109/shared-restore-import-closure/graph-export-imports.xml: audit-lint: forbidden NuGetAuditSuppress declaration\nguard: _bmad-output/implementation-artifacts/evidence/3-2/release-adoption-20261109/shared-restore-import-closure/graph-export-imports.xml: audit-lint: forbidden VSTestTestCaseFilter declaration\nCI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline.",
+      "releasedActionLint": "passed",
+      "sourceHeadPreserved": true,
+      "sharedIndexPreserved": true
+    },
+    "Hexalith.Folders": {
+      "sourceHead": "3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245",
+      "freshBase": "3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245",
+      "capturedSourceTree": "f1ec0407a1c5c99a5dc1a9f8c420b8fc7d12fb15",
+      "applyExit": 0,
+      "candidateTree": "f1ec0407a1c5c99a5dc1a9f8c420b8fc7d12fb15",
+      "changedPaths": [
+        "docs/ci.md",
+        "scripts/prepare-ci-topology-projects.sh",
+        "tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs",
+        "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+        "tests/Hexalith.Folders.Server.Tests/PackageSdkRuntimeBinding.cs",
+        "tests/Hexalith.Folders.Server.Tests/PackageSdkRuntimeBindingTests.cs",
+        "tests/tools/run-complete-project-tests.ps1"
+      ],
+      "ownedTreePreserved": true,
+      "patchSha256": "ce1ec37ad738d689f5d779fdf26ac21074e0683696069310c0e6a4fdddae2488",
+      "exactMessageCommitlint": "passed",
+      "releasedAudit": "passed",
+      "releasedActionLint": "passed",
+      "sourceHeadPreserved": false,
+      "sharedIndexPreserved": false
+    }
+  },
+  "createdCommits": [],
+  "pushedCommits": [],
+  "toolLockSha256": "e1cee6ebc2ce6f5bb679d3739a7d957052c4fc1d19aebcbb834794f78d232835",
+  "nodeVersion": "v26.4.0",
+  "lockedTools": "npm ci --ignore-scripts and npm audit signatures passed",
+  "allPolicyPassed": false
+}

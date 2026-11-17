@@ -1,0 +1,21 @@
+diff --git a/tools/tests/test_validate.py b/tools/tests/test_validate.py
+index ae637e7..e7f462a 100644
+--- a/tools/tests/test_validate.py
++++ b/tools/tests/test_validate.py
+@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[2]
+ FIXTURES = Path(__file__).resolve().parent / "fixtures/validate"
+ sys.dont_write_bytecode = True
+ 
+-# Reuse the renderer's synthetic tagged Git workspace, not a second schema or
++# Reuse the renderer's tagged Git workspace, not a second schema or
+ # hand-written stand-in for the released readers.
+ import importlib.util
+ 
+@@ -152,7 +152,6 @@ class ValidateTests(unittest.TestCase):
+     def test_manual_qualification_requires_live_action_and_exact_isolation(self):
+         for present in (True, False):
+             with self.subTest(present=present), workspace() as fixture:
+-                fixture.qualification_contract()
+                 fixture.module(actions=("azure",) if present else (),
+                                setup={"solution": "Fixture.slnx", "jobs": {"azure": render_tests.MANUAL_JOB}})
+                 fixture.commit()

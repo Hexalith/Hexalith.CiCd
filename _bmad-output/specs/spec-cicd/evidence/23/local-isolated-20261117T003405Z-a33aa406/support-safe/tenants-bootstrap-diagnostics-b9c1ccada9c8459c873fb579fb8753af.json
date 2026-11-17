@@ -1,0 +1,110 @@
+{
+  "kind": "owned-bootstrap-failure-categories",
+  "source": "Aspire.GetAllAsync(IResource)",
+  "fixtureVersion": "3.128.4.0",
+  "resources": {
+    "eventstore": {
+      "ExceptionTypes": [
+        "Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogUnavailableException"
+      ],
+      "ApiSymbols": [
+        "Hexalith.EventStore",
+        "Hexalith.EventStore.Server",
+        "Hexalith.EventStore.Server.DomainServices.DomainServiceWorkloadAssertionHandler.SendAsync",
+        "Hexalith.EventStore.ServiceDefaults",
+        "Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogAuthority.AcquireAsync",
+        "Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogAuthority.AcquireCoreAsync",
+        "Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogAuthority.RequireLocalIdentity",
+        "Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogInvocationHandler.SendAsync",
+        "Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogUnavailableException",
+        "Hexalith.Tenants",
+        "Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.",
+        "Microsoft.Extensions.Http.Resilience.ResilienceHandler.",
+        "Microsoft.Extensions.ServiceDiscovery.Http.ResolvingHttpDelegatingHandler.SendAsync"
+      ],
+      "CatalogReasons": [],
+      "Truncated": false,
+      "CapturedLineCount": 131
+    },
+    "tenants": {
+      "ExceptionTypes": [],
+      "ApiSymbols": [],
+      "CatalogReasons": [],
+      "Truncated": false,
+      "CapturedLineCount": 101
+    },
+    "tenants-api": {
+      "ExceptionTypes": [],
+      "ApiSymbols": [],
+      "CatalogReasons": [],
+      "Truncated": false,
+      "CapturedLineCount": 55
+    }
+  },
+  "enrollmentSource": "Aspire.ResourceNotificationService.WatchAsync",
+  "enrollment": {
+    "eventstore": {
+      "SnapshotObserved": true,
+      "EnvironmentObserved": true,
+      "DevelopmentEnvironment": true,
+      "DirectoryConfigured": true,
+      "CatalogConfigured": true,
+      "ComponentConfigured": true,
+      "AccessControlConfigured": true,
+      "TechnicalBindingV2": true,
+      "HostIdentityMatches": true,
+      "PrivateDirectoryObserved": true,
+      "CatalogFilePresent": true,
+      "ComponentFilePresent": false,
+      "AccessControlFilePresent": true,
+      "OwnObservationPresent": true,
+      "ObservedHostCount": 4,
+      "ReadyHostCount": 3,
+      "CommittedHostCount": 0,
+      "ActivationPresent": true,
+      "BootstrapReceiptPresent": false
+    },
+    "tenants": {
+      "SnapshotObserved": true,
+      "EnvironmentObserved": true,
+      "DevelopmentEnvironment": true,
+      "DirectoryConfigured": true,
+      "CatalogConfigured": true,
+      "ComponentConfigured": true,
+      "AccessControlConfigured": true,
+      "TechnicalBindingV2": true,
+      "HostIdentityMatches": true,
+      "PrivateDirectoryObserved": true,
+      "CatalogFilePresent": true,
+      "ComponentFilePresent": false,
+      "AccessControlFilePresent": true,
+      "OwnObservationPresent": true,
+      "ObservedHostCount": 4,
+      "ReadyHostCount": 3,
+      "CommittedHostCount": 0,
+      "ActivationPresent": true,
+      "BootstrapReceiptPresent": false
+    },
+    "tenants-api": {
+      "SnapshotObserved": true,
+      "EnvironmentObserved": true,
+      "DevelopmentEnvironment": true,
+      "DirectoryConfigured": true,
+      "CatalogConfigured": true,
+      "ComponentConfigured": true,
+      "AccessControlConfigured": true,
+      "TechnicalBindingV2": true,
+      "HostIdentityMatches": true,
+      "PrivateDirectoryObserved": true,
+      "CatalogFilePresent": true,
+      "ComponentFilePresent": false,
+      "AccessControlFilePresent": true,
+      "OwnObservationPresent": true,
+      "ObservedHostCount": 4,
+      "ReadyHostCount": 3,
+      "CommittedHostCount": 0,
+      "ActivationPresent": true,
+      "BootstrapReceiptPresent": false
+    }
+  }
+}

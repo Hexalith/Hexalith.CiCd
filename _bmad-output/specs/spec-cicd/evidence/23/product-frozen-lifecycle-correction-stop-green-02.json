@@ -1,0 +1,283 @@
+{
+  "baseline": "8e3ce806a54c7e3a7bbc75b828461ec137471a91",
+  "candidateTree": "9a0a975d3f161457f77b84666b31088cb540d864",
+  "candidatePatch": {
+    "path": "product-candidate-stop-green-02.patch",
+    "sha256": "8d4094e64eabbb87b9f5fbd7e0f60aee37a456105d935f53c83b389aa1f77204"
+  },
+  "changedPaths": [
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs",
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireLifecycle.cs",
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireShutdownClient.cs",
+    "tests/Hexalith.Tenants.IntegrationTests/FrozenAspireLifecycleTests.cs"
+  ],
+  "workingFileCount": 7125,
+  "workingFileMismatches": [],
+  "normalizedChangedInputs": [
+    {
+      "path": "tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs",
+      "workingNormalizedBlob": "702fc4a1bf7b904c475619a81508eaa08b675643",
+      "testedBlob": "702fc4a1bf7b904c475619a81508eaa08b675643",
+      "matches": true,
+      "workingEol": "CRLF"
+    },
+    {
+      "path": "tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireLifecycle.cs",
+      "workingNormalizedBlob": "c0ed9ab42e67878355a48fdc7f018d200da88ee1",
+      "testedBlob": "c0ed9ab42e67878355a48fdc7f018d200da88ee1",
+      "matches": true,
+      "workingEol": "CRLF"
+    },
+    {
+      "path": "tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireShutdownClient.cs",
+      "workingNormalizedBlob": "8653f7d3c98f04a3f02da3a7b946ee2bb329e193",
+      "testedBlob": "8653f7d3c98f04a3f02da3a7b946ee2bb329e193",
+      "matches": true,
+      "workingEol": "CRLF"
+    },
+    {
+      "path": "tests/Hexalith.Tenants.IntegrationTests/FrozenAspireLifecycleTests.cs",
+      "workingNormalizedBlob": "c787df26361008aedff8610adb09468acd141c42",
+      "testedBlob": "c787df26361008aedff8610adb09468acd141c42",
+      "matches": true,
+      "workingEol": "CRLF"
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": ".claude/settings.json",
+      "baselineBlob": "46967a5aa152da8fa268bf969a04b71207334449",
+      "testedBlob": "46967a5aa152da8fa268bf969a04b71207334449",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "baselineBlob": "a8a3874fa889b9213b92d2f77d41d40ad9e0b42d",
+      "testedBlob": "a8a3874fa889b9213b92d2f77d41d40ad9e0b42d",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "baselineBlob": "67caebec2f39b687061e6c55c16bb70d9fd215df",
+      "testedBlob": "67caebec2f39b687061e6c55c16bb70d9fd215df",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "baselineBlob": "e53695ecccf2245d2beaa0a3a927240d23cd61e8",
+      "testedBlob": "e53695ecccf2245d2beaa0a3a927240d23cd61e8",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/codeql.yml",
+      "baselineBlob": "3161aa6a7f977d246345cf47484c0f7506562a4b",
+      "testedBlob": "3161aa6a7f977d246345cf47484c0f7506562a4b",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/commitlint.yml",
+      "baselineBlob": "5f4996de931c44ffb1255121b6a7b8a1c34de1cb",
+      "testedBlob": "5f4996de931c44ffb1255121b6a7b8a1c34de1cb",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/dependency-review.yml",
+      "baselineBlob": "ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb",
+      "testedBlob": "ef050ccf5605744e7ae0fcb42ac36f5ad75e4ebb",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/recover-partial-release.yml",
+      "baselineBlob": "e0d20f3bab309bb175d2b909895128b83aef5bcc",
+      "testedBlob": "e0d20f3bab309bb175d2b909895128b83aef5bcc",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "baselineBlob": "dbf97b1fe63f5ec9f3fb8d2b2b0abecc83fc657d",
+      "testedBlob": "dbf97b1fe63f5ec9f3fb8d2b2b0abecc83fc657d",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/runner-network-probe.yml",
+      "baselineBlob": "5a972f5f1b21940fc3a2293af00301a6da904adf",
+      "testedBlob": "5a972f5f1b21940fc3a2293af00301a6da904adf",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/source-reference.yml",
+      "baselineBlob": "f77c6f4ac7c71d236af098153ee7f44f77e16d7e",
+      "testedBlob": "f77c6f4ac7c71d236af098153ee7f44f77e16d7e",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".github/workflows/story-guards.yml",
+      "baselineBlob": "277e9dd006397fa1bc217da4b9de1d38ec3b2135",
+      "testedBlob": "277e9dd006397fa1bc217da4b9de1d38ec3b2135",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": ".gitmodules",
+      "baselineBlob": "612efc7ddd6ef9c910a63d3a77100a76b34bb0c1",
+      "testedBlob": "612efc7ddd6ef9c910a63d3a77100a76b34bb0c1",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": "AGENTS.md",
+      "baselineBlob": "a8a3874fa889b9213b92d2f77d41d40ad9e0b42d",
+      "testedBlob": "a8a3874fa889b9213b92d2f77d41d40ad9e0b42d",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "baselineBlob": "a8a3874fa889b9213b92d2f77d41d40ad9e0b42d",
+      "testedBlob": "a8a3874fa889b9213b92d2f77d41d40ad9e0b42d",
+      "normalizedBlobPreserved": true,
+      "bytesPreservedSincePriorVerifiedCandidate": true,
+      "modePreservedSincePriorVerifiedCandidate": true
+    }
+  ],
+  "gitlinks": [
+    {
+      "path": "references/Hexalith.AI.Tools",
+      "revision": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.Builds",
+      "revision": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.Commons",
+      "revision": "49187d47da882d5470deac982bb383486c90202c",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.EventStore",
+      "revision": "70bf20dceaafd37229236e11d279a5d6ea434759",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.FrontComposer",
+      "revision": "f8c15a483257d74686bd1feabc8dc627d7d6648b",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.McpCli",
+      "revision": "119a4b59e5e1391ff8ddb4587e1608ad1d1e5145",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.Memories",
+      "revision": "262232e498511b51b5d01e769725ecc299519238",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.Platform",
+      "revision": "ac272053bbc05bbdf2be236608c939787aec58c5",
+      "unchanged": true
+    },
+    {
+      "path": "references/Hexalith.PolymorphicSerializations",
+      "revision": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647",
+      "unchanged": true
+    }
+  ],
+  "passed": true,
+  "frozenHarness": {
+    "package": "Hexalith.EventStore.Testing.Integration",
+    "version": "3.128.4",
+    "producer": "717a06e16c3afd81b904eaf4de646b74b13262d2",
+    "assemblyVersion": "3.128.4.0",
+    "disposeMethodAttributes": "Public, Final, Virtual, HideBySig, NewSlot",
+    "inspection": [
+      "product-lifecycle-method-metadata-02.json",
+      "product-lifecycle-aspire-api-01.log",
+      "product-lifecycle-aspire-bodies-01.log",
+      "frozen-harness-lifecycle-sections.json"
+    ],
+    "runtimeCompatibilityGuard": [
+      "assemblyVersion",
+      "private _app field exact DistributedApplication type",
+      "private _clients field exact Dictionary<string,HttpClient> type"
+    ]
+  },
+  "adapter": {
+    "owner": "only this frozen fixture _app",
+    "attachment": "one reserved owned-client shutdown barrier attached in module fixture constructor",
+    "normalDisposal": "await same memoized StopAsync before frozen DisposeAsync",
+    "frozenStartupFailure": "actual final frozen DisposeAsync disposes barrier client before application, builder, fixture lock",
+    "stopBudgetSeconds": 60,
+    "stopFailure": "propagates; no application/builder/fixture-lock release or successful shutdown recording",
+    "genericStartupCopied": false,
+    "pinChanges": false,
+    "nativeGuardChanges": false
+  },
+  "focusedRegression": {
+    "red": {
+      "receipt": "product-local-lifecycle-stop-red-01.json",
+      "lifecycle": {
+        "total": 5,
+        "passed": 1,
+        "failed": 4,
+        "skipped": 0
+      },
+      "bootstrap": {
+        "passed": 73,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "green": {
+      "receipt": "product-local-lifecycle-stop-green-02.json",
+      "auditedGraphRestoreAndBuild": "passed, zero warnings/errors; analyzers enabled; warnaserror",
+      "lifecycle": {
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      },
+      "bootstrap": {
+        "passed": 73,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "actualFrozenFinalDisposerInvoked": true,
+    "realAppHostLaunched": false
+  },
+  "nativeCleanupRequalified": false,
+  "fullSequenceRequalified": false,
+  "releasedExactCandidateProofRepeated": false,
+  "committedByThisAgent": false,
+  "pushedByThisAgent": false,
+  "publicationAndAdoption": "pending parent gates; no registration or delivery"
+}

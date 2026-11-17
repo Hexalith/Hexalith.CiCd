@@ -1,0 +1,55 @@
+{
+  "patches": [
+    {
+      "id": "BH4",
+      "resolution": "Replacement decoding preserves native status; invalid-byte child case passed."
+    },
+    {
+      "id": "BH5",
+      "resolution": "Sanitizer documentation now promises credential/token redaction without a private-path claim."
+    },
+    {
+      "id": "BH6",
+      "resolution": "Missing required counters and XML errors refuse; contradiction tests passed."
+    },
+    {
+      "id": "BH7",
+      "resolution": "Java-21 environment selection and Java-17 refusal probes passed."
+    },
+    {
+      "id": "BH8",
+      "resolution": "Destination hashes are computed after patch application; changed-destination probe passed."
+    },
+    {
+      "id": "BH9",
+      "resolution": "Graceful SIGINT cleanup and PID-identity descendant reaping passed the escaped-child probe."
+    },
+    {
+      "id": "EC2",
+      "resolution": "Same decoding correction and native-status test as BH4."
+    },
+    {
+      "id": "EC3",
+      "resolution": "All structured emissions are redacted/bounded; XML attributes/text/tails are sanitized without truncating retained evidence."
+    },
+    {
+      "id": "VG1",
+      "resolution": "Matching eleven-case evidence now refuses complete mode and passes focused mode."
+    },
+    {
+      "id": "VG2",
+      "resolution": "Deadline-specific assertion and real blocking-child cleanup test passed."
+    }
+  ],
+  "fixtureTestsPassed": 13,
+  "driverAndJdkTestsPassed": 3,
+  "logs": [
+    "review-fixture-tests.log",
+    "review-driver-tests.log"
+  ],
+  "preExistingDeferredRootCauses": [
+    "SIGTERM fixture cancellation",
+    "Unbounded pre-truncation capture"
+  ],
+  "rejectedFinding": "BH1: qualified destination records prerequisite fixture API"
+}

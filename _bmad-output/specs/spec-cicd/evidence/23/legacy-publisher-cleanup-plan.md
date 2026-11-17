@@ -98,3 +98,14 @@ the subsequent packet starts from the metadata-verified numeric repository
 route and completes without changing the strict Tenants preflight reader.
 Use the central release process and verify/pin a compatible published tag before
 registration; unreleased Builds source is not a released prerequisite.
+
+On 2026-11-17 this shared release dependency was satisfied independently:
+`shared-v610-publication-verification.json` authenticates immutable published
+Builds `v6.1.0` at `a1e0c310b1f1a50d78e6132890fae6bcba769f6d` with the required
+receipt/timeout and TLS fixes. Complete unchanged CiCd validation03 passed all
+global and three registered-module verdicts on
+`f56dcbfb167b4701de5b1fc0a130971e6bca8e30`; ordinary fast-forward publication
+and authenticated main/pin readback are in `cicd-v610-publication.json`.
+The earlier v6.0.6 inventories remain historical evidence. This resolves the
+shared release/pin prerequisite, not the registry mapping/consumer boundary,
+Tenants product qualification or adoption/legacy cleanup.

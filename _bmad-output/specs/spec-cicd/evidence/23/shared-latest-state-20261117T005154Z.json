@@ -1,0 +1,91 @@
+{
+  "recorded_at": "2026-11-17T00:51:54.218834+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "reads": [
+    {
+      "name": "latest_release",
+      "exit": 0,
+      "data": {
+        "tag_name": "v6.0.6",
+        "target_commitish": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+        "published_at": "2026-11-16T09:34:49Z",
+        "immutable": true,
+        "draft": false
+      }
+    },
+    {
+      "name": "descendant_ci",
+      "exit": 0,
+      "data": {
+        "id": 43986706101,
+        "head_sha": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43986706101"
+      }
+    },
+    {
+      "name": "descendant_jobs",
+      "exit": 0,
+      "data": {
+        "total_count": 9,
+        "items": [
+          {
+            "id": 133716608318,
+            "name": "Workflow lint and public API",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 133716608681,
+            "name": "Package catalog contracts",
+            "status": "in_progress",
+            "conclusion": null
+          },
+          {
+            "id": 133716608740,
+            "name": "Python contract tests (runner)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 133716608749,
+            "name": "Python contract tests (3.12)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 133716608808,
+            "name": ".NET tests / Build and tests",
+            "status": "in_progress",
+            "conclusion": null
+          },
+          {
+            "id": 133716608892,
+            "name": "Sample module / Build and tests",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 133723398623,
+            "name": "Sample Windows tests",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 133723398649,
+            "name": "Sample macOS tests",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 133723400870,
+            "name": "Sample module / Restore owned CI/CD content",
+            "status": "completed",
+            "conclusion": "skipped"
+          }
+        ]
+      }
+    }
+  ]
+}

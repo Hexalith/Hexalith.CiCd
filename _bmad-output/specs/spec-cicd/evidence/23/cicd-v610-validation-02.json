@@ -1,0 +1,52 @@
+{
+  "at": "2026-11-17T03:29:25.936699+00:00",
+  "source": "cec4064b89a58c2c77555247c5e41bb3e3ccd6c9",
+  "workspace": "/home/administrator/projects/hexalith/cicd-story-23-v610",
+  "command": [
+    "uv",
+    "run",
+    "--locked",
+    "--script",
+    "--python",
+    "/usr/bin/python3.14",
+    "/home/administrator/projects/hexalith/cicd-story-23-v610/tools/validate.py",
+    "--project-root",
+    "/home/administrator/projects/hexalith/cicd-story-23-v610"
+  ],
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "account": {
+    "login": "jpiquot",
+    "id": 6775094
+  },
+  "node": {
+    "versions": [
+      "v24.22.3",
+      "11.19.1"
+    ],
+    "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+  },
+  "credentialHandling": "profile token in memory/child environment only; retained logs redact exact token",
+  "remoteMutations": false,
+  "status": "failed",
+  "elapsedSeconds": 945.1100248889998,
+  "passedGlobalChecks": [
+    "committed render inputs",
+    "committed render",
+    "immutable delivery bootstrap",
+    "render reproducibility",
+    "schemas and caller interfaces",
+    "acceptable Builds publication",
+    "workflow lints"
+  ],
+  "finishedToolSuites": 19,
+  "exit": 1,
+  "stdout": {
+    "path": "cicd-v610-validation-02.stdout.log",
+    "sha256": "7b30ae043249cb483bd7492c45f57a3d589c15509d5ce235ba7c2a679e84e9f5"
+  },
+  "stderr": {
+    "path": "cicd-v610-validation-02.stderr.log",
+    "sha256": "eda41e404f383b29037f3732b5fb23e211dc571336ffe010dd2b387bd8cd6d4d"
+  },
+  "candidatePreserved": true
+}

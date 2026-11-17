@@ -1,0 +1,44 @@
+{
+  "allRowsCoveredByExecutedPassingTests": true,
+  "rows": [
+    {
+      "state": "Prebuilt complete Server/package mode",
+      "evidence": "complete-server-results.xml",
+      "passed": true
+    },
+    {
+      "state": "Debug/source identity",
+      "evidence": "source-component-results.xml",
+      "passed": true
+    },
+    {
+      "state": "Missing/ambiguous/tampered package metadata",
+      "evidence": "PackageSdkRuntimeBindingTests",
+      "passed": true
+    },
+    {
+      "state": "Missing provider, startup/child failure and timeout",
+      "evidence": "test_missing_provider_refuses_without_allocating_fixture; test_cleanup_on_startup_or_preparation_failure; test_child_failure_and_timeout_are_awaited_and_sanitized",
+      "passed": true
+    },
+    {
+      "state": "Empty, filtered, skipped and not-run refusal",
+      "evidence": "test_strict_executed_inventory",
+      "passed": true
+    },
+    {
+      "state": "Observed cleanup and cleanup failure",
+      "evidence": "test_cleanup_failures_are_exposed; test_cleanup_command_oserror_still_removes_private_files; component cleanup logs",
+      "passed": true
+    }
+  ],
+  "completeTestsPassed": 1462,
+  "sourceCasesPassed": 11,
+  "packageControlsPassed": 23,
+  "fixtureTestsPassed": 13,
+  "qualifiedFileHashesMatchWorkingBytes": true,
+  "frozenIntentPreserved": true,
+  "protectedPathsEdited": [],
+  "driverAndJdkTestsPassed": 3,
+  "snapshot": "final post-review"
+}

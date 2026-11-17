@@ -1,0 +1,52 @@
+{
+  "schema": "tenants.catalog-profile.v1",
+  "identity": {
+    "repository": "Hexalith/Hexalith.Tenants",
+    "runId": "1794878239408296552",
+    "runAttempt": "1",
+    "job": "local_s23_qualification"
+  },
+  "profile": "rest",
+  "database": 1,
+  "endpoint": "127.0.0.1:6379",
+  "privateDirectory": "/work/s23/runner/tenants-source-catalog-00i9fwbr",
+  "initializationReceipt": "/work/s23/runner/hexalith-dapr-initialization.json",
+  "initializationSha256": "b8be74465495ae36d50f80354ab58e52c9841be9a7daaccff62b44807bffc191",
+  "sdkSource": "70bf20dceaafd37229236e11d279a5d6ea434759",
+  "sdkProducerVersion": "5.1.1",
+  "sdkPackageProducer": {
+    "id": "Hexalith.EventStore.Aspire",
+    "version": "5.1.1",
+    "sha512": "9EpHPxo70OD2MRyzyO3d09Iuu2xKB5h7HB4bS+5xoZ3PwdUgsOZdTb15okWCKu2npW3ZMYtO5XfCCGQTCjog/A==",
+    "revision": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331"
+  },
+  "buildsSource": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+  "components": {
+    "accesscontrol.eventstore-admin.yaml": "4c6ae9ea31d72ddbf03120abf3534a156aa4a0b6fe7c067a5e80659ddd8379cc",
+    "accesscontrol.tenants-api.yaml": "7155ae1c231779c9227b5df63fa65d6aa75b43d90a51258fee67f6123e3eee3a",
+    "accesscontrol.tenants-ui.yaml": "7fdd5a79d8ece61fdec80a6790d30c729da1e146d14a7696858bf7d305451fa2",
+    "accesscontrol.yaml": "99dce3eb3548221ee9ab57c3fd3615db512c1bbc6b335fc97f28e30aa6f22c37",
+    "configstore.yaml": "2e31183675a977ad9e14aac8333a4dc3c180bb5338b1a2e27b5ee12acbcb9e68",
+    "llm.memories.yaml": "8cd7058d96465f704b8f004bd323967421e09a6b6cf02375b17caff3597243b2",
+    "pubsub.yaml": "3aaa954b54bd47f15980e08ad85989d4087c77e148046f0e4ccfc1c5d8ebf7aa",
+    "resiliency.yaml": "9513a5b658544c9ae31ea96403510b744acdf1cf7a1462a828ff31ab3ae48d60",
+    "secrets.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "secretstore.memories.yaml": "5fd1c41ad3932bf7cde02ca689495ff8cd155099639eb605497d4d5cd76b6010",
+    "sentry.yaml": "fafb01f0421898bb0d3eea974467a8405f0b438513ccfb07e65c0dbdf92ccd27",
+    "statestore.yaml": "282c84c698ce84e63ebd6308231e6f8f6990c6fc4ea9d432a888d3b4a19720dd"
+  },
+  "backend": {
+    "containerId": "81bc4b643091f8c75072a2f44cd7b59cf4e2729421a9e5b1787e5361c02fc44b",
+    "imageId": "sha256:a2bb46cd4fe8648c5e675ebe8129325b7a6ef10208df6f218a4b483b5b82ec0b",
+    "created": "2026-11-17T01:19:43.267812298Z",
+    "volumes": [
+      {
+        "name": "87ded8061c39b823a7d5f7fc2d1de05237491f80122183df8c12cd7db6e36181",
+        "created": "2026-11-17T01:19:44Z"
+      }
+    ],
+    "initialDatabaseSize": 0,
+    "redisRunId": "e683f1d422b11abe154d97f6e0cd2d06ddbd4250"
+  },
+  "materialProvisionedWithFreshBackend": true
+}

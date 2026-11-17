@@ -1,0 +1,220 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "232fc8b7452b45ee86e274d494ed223e",
+  "source": "8e3ce806a54c7e3a7bbc75b828461ec137471a91",
+  "tree": "5a205af7c62ac6d214a7420c0c7de1fce8a174f8",
+  "sharedSource": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "9e6803c048a1bfd045c15bda4cb697b97a43d2bd93c2893b27f800fc580d5cc0"
+    },
+    {
+      "kind": "worker",
+      "id": "a63e8e94f489caa82a5fe23aa52574d2e7faa5a45579cb00c7cdd6061a1f4745"
+    }
+  ],
+  "startedAt": 1794878229.1641214,
+  "events": [
+    {
+      "at": 1794878236.7377174,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794878237.8420062,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794878239.40807,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794878251.410396,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794878253.4109325,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794878363.4383726,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794878527.4682894,
+      "message": "Worker phase: selected-cold-rest-profile/running"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "a63e8e94f489caa82a5fe23aa52574d2e7faa5a45579cb00c7cdd6061a1f4745"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "9e6803c048a1bfd045c15bda4cb697b97a43d2bd93c2893b27f800fc580d5cc0"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.0eN7RY8D",
+  "scope": "cold-rest",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "e6f79273c0de7be7eb27f03302c3b0b46f467326d5199f7b24d97ca94c289fad",
+  "orchestratorSha256": "ca23f5b93cffcb53abcf6d8571e116f95027dd733200e589d2a88b48e421f185",
+  "innerDaemonId": "\"bc93fe53-8fda-4f91-a6ee-71a408e50ff7\"",
+  "executedDcp": [
+    {
+      "processName": "dcp",
+      "pid": 6133,
+      "binarySha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+      "packagePath": "dcp",
+      "versions": [
+        "0.26.6"
+      ],
+      "versionCommandExits": [
+        0
+      ]
+    }
+  ],
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 2,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "8e3ce806a54c7e3a7bbc75b828461ec137471a91",
+    "sharedSource": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794878249.8210642,
+        "elapsedSeconds": 3.3185598850250244
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794878253.1400244,
+        "elapsedSeconds": 109.13486623764038
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794878362.275142,
+        "elapsedSeconds": 165.0195472240448
+      },
+      {
+        "name": "selected-cold-rest-profile",
+        "status": "failed",
+        "startedAt": 1794878527.2950413,
+        "exceptionType": "ValueError",
+        "exitCode": 1,
+        "elapsedSeconds": 199.0410361289978
+      }
+    ],
+    "scope": "cold-rest",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794878249.7683816,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "shared-unit-projects",
+      "after-unit-tests-hook",
+      "shared-integration-projects",
+      "coverage-gate",
+      "Dapr-retry-controls",
+      "nightly-workload",
+      "ordinary-integration-tier",
+      "other-four-cold-profiles"
+    ],
+    "cleanupRefusalDiagnostic": {
+      "exceptionType": "ValueError",
+      "refusal": "private-process-survivors",
+      "privateProcessCount": 7,
+      "processKinds": {
+        "dcp": 5,
+        "other": 2
+      },
+      "privateContainerCount": 0,
+      "shutdownFilePresent": true,
+      "changedComponentCount": 0
+    },
+    "status": "failed",
+    "exceptionType": "ValueError",
+    "finishedAt": 1794878726.3364303,
+    "elapsedSeconds": 476.56804871559143
+  },
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json",
+    "tenants-product-profiles-rest.json"
+  ],
+  "trxSummaries": [
+    {
+      "path": "Hexalith.Tenants/TestResults/authenticated-routes/rest/rest.trx",
+      "counters": {
+        "total": "9",
+        "executed": "9",
+        "passed": "9",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    }
+  ],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794878728.5974085,
+  "elapsedSeconds": 499.4332871437073,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

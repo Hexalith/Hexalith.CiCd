@@ -1,0 +1,309 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "a33aa406f63f48ec9f6ee5afb4d137a2",
+  "source": "20eb504a2c55eeb2cb0be5f4ccffdcf031f55b58",
+  "tree": "6b66e4fdbdbdabf656fe988ebc7b0b7cc19f400b",
+  "sharedSource": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "65ecb68e20f97346b9b6ccf963b5d59aa5cc286f355e351b36efaecd29fb1ff9"
+    },
+    {
+      "kind": "worker",
+      "id": "334319a87999fdad0fa79dc9743018a3d609a4829aa1533c18bd9ec51d03f14d"
+    }
+  ],
+  "startedAt": 1794875645.3868647,
+  "events": [
+    {
+      "at": 1794875667.6682315,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794875669.3476777,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794875672.4182527,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794875692.4515123,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794875696.4518936,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794875822.5893497,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794876048.7627726,
+      "message": "Worker phase: selected-cold-rest-profile/running"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "334319a87999fdad0fa79dc9743018a3d609a4829aa1533c18bd9ec51d03f14d"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "65ecb68e20f97346b9b6ccf963b5d59aa5cc286f355e351b36efaecd29fb1ff9"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.68IlL5oW",
+  "scope": "cold-rest",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "81ddf829cf0e4052e33d664b950b2d7155a732ab147e57a37265e37779361453",
+  "orchestratorSha256": "0900eb6b9fff6df945e06f87a2dba261dde8e2b94a796aaf613625099172534e",
+  "innerDaemonId": "\"9bdd9cd1-0e64-4081-95c4-cbb9769b0259\"",
+  "executedDcp": [
+    {
+      "processName": "dcp",
+      "pid": 6140,
+      "binarySha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+      "packagePath": "dcp",
+      "versions": [
+        "0.26.6"
+      ],
+      "versionCommandExits": [
+        0
+      ]
+    }
+  ],
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 2,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "20eb504a2c55eeb2cb0be5f4ccffdcf031f55b58",
+    "sharedSource": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794875690.7327304,
+        "elapsedSeconds": 4.256834506988525
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794875694.9899707,
+        "elapsedSeconds": 125.94562602043152
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794875820.9359102,
+        "elapsedSeconds": 226.82743382453918
+      },
+      {
+        "name": "selected-cold-rest-profile",
+        "status": "failed",
+        "startedAt": 1794876047.7671776,
+        "exceptionType": "ValueError",
+        "exitCode": 1,
+        "elapsedSeconds": 28.117685556411743
+      }
+    ],
+    "scope": "cold-rest",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794875690.632947,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "shared-unit-projects",
+      "after-unit-tests-hook",
+      "shared-integration-projects",
+      "coverage-gate",
+      "Dapr-retry-controls",
+      "nightly-workload",
+      "ordinary-integration-tier",
+      "other-four-cold-profiles"
+    ],
+    "status": "failed",
+    "exceptionType": "ValueError",
+    "finishedAt": 1794876075.8855643,
+    "elapsedSeconds": 385.2526173591614
+  },
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json",
+    "tenants-product-profiles-rest.json",
+    "tenants-bootstrap-diagnostics-b9c1ccada9c8459c873fb579fb8753af.json"
+  ],
+  "trxSummaries": [
+    {
+      "path": "Hexalith.Tenants/TestResults/authenticated-routes/rest/rest.trx",
+      "counters": {
+        "total": "9",
+        "executed": "9",
+        "passed": "0",
+        "failed": "9",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": [
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.CommittedNativeRemovalRefusesARetainedGrantingProjectionThroughProductionReaders",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.AuthenticatedOwnerRecoveryPersistsExactSnapshotsAndPermissionRefusalDoesNotAppendEvents",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.SixAuthenticatedDaprRestReadsMatchPersistedState",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.ConditionalDetailReadRecognizesPersistedAuthority",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.InvalidProtectedCursorHasRealSentinelAndRecoversPageOneThroughProductionGateway",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.AnonymousRestRequestCannotReadCommandSeededTenant",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.AuthenticatedWrongPeerCannotInvokeTheReadReceiver",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.AuthenticatedReadCallerCannotInvokeADisallowedVerb",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        },
+        {
+          "method": "Hexalith.Tenants.IntegrationTests.AuthenticatedTenantsRouteTests.PopulatedTwentyRowPageHydratesWithoutActorQuotaFailure",
+          "outcome": "Failed",
+          "errorType": null,
+          "messageSha256": "16312841a3613a2f0928133e7eb4b6428a36b6821df86da48fbd73ff21ed5a8d",
+          "testFrames": [
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.CompleteBootstrapAsync(HttpClient commandApi, String token, Func`3 read, Func`1 cleanup, Boolean requireColdBootstrap, CancellationToken cancellationToken, Func`2 probeFailure) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 170",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AspireTopologyFixture.InitializeAsync() in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs:line 65",
+            "at Hexalith.Tenants.IntegrationTests.Fixtures.AuthenticatedRouteTopologyFixture.WithRequestPathSettingsAsync(Func`1 initialize) in /work/s23/Hexalith.Tenants/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AuthenticatedRouteTopologyFixture.cs:line 18"
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794876078.303579,
+  "elapsedSeconds": 432.91671442985535,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

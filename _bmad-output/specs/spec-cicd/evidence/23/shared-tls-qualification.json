@@ -1,0 +1,58 @@
+{
+  "recorded_at": "2026-11-17T00:00:06.859918+00:00",
+  "source": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+  "source_base": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+  "source_tree": "3b6b46f501448b53a7a799801fd4242f6a10a78e",
+  "owning_worktree": "/home/administrator/projects/hexalith/builds-story-23-tls",
+  "changes": [
+    "Publish process SSL_CERT_DIR before the certificate CLI; export to later steps only after successful checks and restore prior process state on failure.",
+    "Reuse the CLI-exported PEM basename for NSS nickname, preserving both import/readback checks and final native trust validation."
+  ],
+  "regressions_reproduced": [
+    "shared-tls-red-python312.log",
+    "shared-tls-alias-red-python312.log"
+  ],
+  "python_tests": {
+    "3.12": {
+      "passed": 16,
+      "log": "shared-tls-alias-green-python312.log"
+    },
+    "3.14": {
+      "passed": 16,
+      "log": "shared-tls-alias-green-python314.log"
+    }
+  },
+  "native_probe": {
+    "evidence": "local-isolated-20261116T235446Z-7e15ef71/result.json",
+    "status": "passed",
+    "sdk": "11.0.100",
+    "os": "Ubuntu26.04",
+    "host_backend_unchanged": true,
+    "cleanup": "complete"
+  },
+  "commitlint": "shared-tls-commitlint.json",
+  "publication": {
+    "pushed_by_this_session": "story/23-fresh-tls",
+    "merged_by_concurrent_operation": "/pushall",
+    "remote_main": "717e5ab29569fc57b0f43415f1aee2fc93441859",
+    "main_tree_identical_to_tested_source": true,
+    "main_ci_run": 43983702695,
+    "main_ci_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43983702695",
+    "last_observed_ci_status": "queued"
+  },
+  "permission_refusal": {
+    "action": "create pull request",
+    "profile": "/home/administrator/.config/gh-cicd-agent",
+    "http": 403,
+    "required_permission": "pull_requests=write",
+    "evidence": "shared-tls-pr-rest-result.json",
+    "credentials_switched": false
+  },
+  "failed_ci_dispatch": {
+    "http": 422,
+    "reason": "Concurrent publication deleted the already-merged branch before dispatch.",
+    "evidence": "shared-tls-ci-dispatch.json"
+  },
+  "published_release_verified": false,
+  "tenants_adoption": false
+}

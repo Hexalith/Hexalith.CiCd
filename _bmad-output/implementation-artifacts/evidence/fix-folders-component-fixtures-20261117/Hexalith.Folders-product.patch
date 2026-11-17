@@ -1,0 +1,121 @@
+diff --git a/scripts/prepare-ci-topology-projects.sh b/scripts/prepare-ci-topology-projects.sh
+index abe9c670..d420b56c 100644
+--- a/scripts/prepare-ci-topology-projects.sh
++++ b/scripts/prepare-ci-topology-projects.sh
+@@ -129,3 +129,10 @@ selected_status="$(git -C "$module_path" status --porcelain --untracked-files=al
+ [[ -f "$module_path/DaprSelfHostedMtls.cs" && -f "$module_path/DaprSelfHostedMtlsSubscriber.cs" ]] ||
+     fail "Platform mTLS source files are unavailable."
+ echo "[ci-topology] Prepared $module_path at $recorded_sha."
++
++# Provisioning consumes only this prebuilt provider; complete-project hooks never build.
++provider_root="$module_path/infrastructure/keycloak-workload-binding"
++[[ -f "$provider_root/pom.xml" && -f "$provider_root/component_fixture.py" ]] || fail "Platform component fixture source is unavailable."
++mvn --batch-mode --no-transfer-progress -f "$provider_root/pom.xml" package
++[[ -f "$provider_root/target/keycloak-workload-binding-1.0.0-SNAPSHOT.jar" ]] || fail "The component provider build produced no archive."
++sha256sum "$provider_root/target/keycloak-workload-binding-1.0.0-SNAPSHOT.jar"
+diff --git a/tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs b/tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs
+index 83997601..8f53404c 100644
+--- a/tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs
++++ b/tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs
+@@ -1,7 +1,5 @@
+ using System.Net;
+ using System.Reflection;
+-using System.Reflection.Metadata;
+-using System.Reflection.PortableExecutable;
+ using System.Security.Cryptography;
+ using System.Text.Json;
+ 
+@@ -44,7 +42,7 @@ public sealed class EnrolledWorkloadSourceBoundaryTests
+     public async Task ActualIssuerAndIndependentSdkGuardEverySourceRequest(string fault)
+     {
+         string componentFile = Environment.GetEnvironmentVariable("HEXALITH_WORKLOAD_COMPONENT_FILE")
+-            ?? throw new InvalidOperationException("Run this explicit component suite through Platform infrastructure/keycloak-workload-binding/verify_component.py --sdk-assembly <Debug assembly>.");
++            ?? throw new InvalidOperationException("Run this explicit component suite through Platform infrastructure/keycloak-workload-binding/verify_component.py --complete-assembly <prebuilt assembly>.");
+         using JsonDocument component = JsonDocument.Parse(await File.ReadAllBytesAsync(componentFile, TestContext.Current.CancellationToken));
+         JsonElement settings = component.RootElement;
+         string authority = settings.GetProperty("issuer").GetString()!;
+@@ -94,18 +92,7 @@ public sealed class EnrolledWorkloadSourceBoundaryTests
+             foreach (Assembly assembly in new[] { typeof(JwtWorkloadAssertionIssuer).Assembly, typeof(EventStoreGatewayClient).Assembly,
+                 typeof(INativeSourceMetadataReader).Assembly, typeof(AggregateIdentity).Assembly }.Distinct())
+             {
+-                string name = assembly.GetName().Name!;
+-                string sourcePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../references/Hexalith.EventStore/src",
+-                    name, "bin/Debug/net11.0", name + ".dll"));
+-                byte[] loaded = await File.ReadAllBytesAsync(assembly.Location, TestContext.Current.CancellationToken);
+-                string hash = Convert.ToHexString(SHA256.HashData(loaded));
+-                hash.ShouldBe(Convert.ToHexString(SHA256.HashData(await File.ReadAllBytesAsync(sourcePath, TestContext.Current.CancellationToken))));
+-                using var pe = new PEReader(new MemoryStream(loaded));
+-                MetadataReader metadata = pe.GetMetadataReader();
+-                Guid mvid = metadata.GetGuid(metadata.GetModuleDefinition().Mvid);
+-                mvid.ShouldBe(assembly.ManifestModule.ModuleVersionId);
+-                Console.WriteLine("COMPONENT_RUNTIME_BINDING " + JsonSerializer.Serialize(new
+-                { name, version = assembly.GetName().Version!.ToString(), sha256 = hash, mvid }));
++                PackageSdkRuntimeBinding.Verify(assembly);
+             }
+         }
+         INativeSourceMetadataReader source = provider.GetRequiredService<INativeSourceMetadataReader>();
+diff --git a/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj b/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj
+index 4aa37eef..0186c936 100644
+--- a/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj
++++ b/tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj
+@@ -3,6 +3,30 @@
+     <IsPackable>false</IsPackable>
+     <DefineConstants Condition="'$(HexalithEventStoreFromSource)' == 'true'">$(DefineConstants);FOLDERS_OWNER_METADATA_SOURCE</DefineConstants>
+   </PropertyGroup>
++  <ItemGroup>
++    <AssemblyMetadata Include="FoldersSdkIdentityAuthority" Value="source" Condition="'$(HexalithEventStoreFromSource)' == 'true'" />
++    <AssemblyMetadata Include="FoldersSdkIdentityAuthority" Value="package" Condition="'$(HexalithEventStoreFromSource)' != 'true'" />
++    <AssemblyMetadata Include="FoldersSdkConfiguration" Value="$(Configuration)" />
++    <AssemblyMetadata Include="FoldersSdkSourceRoot" Value="$(HexalithEventStoreRoot)" Condition="'$(HexalithEventStoreFromSource)' == 'true'" />
++  </ItemGroup>
++  <Target Name="BindSdkRestoreIdentity" BeforeTargets="GetAssemblyAttributes">
++    <GetFileHash Files="$(ProjectAssetsFile)" Algorithm="SHA256">
++      <Output TaskParameter="Items" ItemName="_FoldersSdkAssetsIdentity" />
++    </GetFileHash>
++    <ItemGroup>
++      <AssemblyMetadata Include="FoldersSdkAssetsSha256" Value="%(_FoldersSdkAssetsIdentity.FileHash)" />
++    </ItemGroup>
++  </Target>
++  <Target Name="RecordSdkRestoreIdentity" AfterTargets="Build">
++    <Copy SourceFiles="$(ProjectAssetsFile)" DestinationFiles="$(TargetDir)sdk-binding.project.assets.json" />
++  </Target>
++  <!-- Restore provenance uses the same NuGet implementation as the pinned build SDK. -->
++  <ItemGroup>
++    <Reference Include="NuGet.Packaging" HintPath="$(MSBuildBinPath)/NuGet.Packaging.dll" Private="true" />
++    <Reference Include="NuGet.Common" HintPath="$(MSBuildBinPath)/NuGet.Common.dll" Private="true" />
++    <Reference Include="NuGet.Versioning" HintPath="$(MSBuildBinPath)/NuGet.Versioning.dll" Private="true" />
++    <Reference Include="NuGet.Frameworks" HintPath="$(MSBuildBinPath)/NuGet.Frameworks.dll" Private="true" />
++  </ItemGroup>
+   <ItemGroup Condition="'$(UseHexalithProjectReferences)' == 'true'">
+     <PackageReference Include="Hexalith.Commons.UniqueIds" ExcludeAssets="all" Condition="'$(HexalithCommonsFromSource)' != 'true'" />
+     <ProjectReference Include="$(HexalithCommonsRoot)/src/libraries/Hexalith.Commons.UniqueIds/Hexalith.Commons.UniqueIds.csproj" />
+diff --git a/tests/tools/run-complete-project-tests.ps1 b/tests/tools/run-complete-project-tests.ps1
+index 9a00f2b8..9fd87cb4 100644
+--- a/tests/tools/run-complete-project-tests.ps1
++++ b/tests/tools/run-complete-project-tests.ps1
+@@ -3,7 +3,8 @@
+ param(
+     [Parameter(Mandatory)]
+     [ValidateSet('Hexalith.Folders.Contracts.Tests', 'Hexalith.Folders.Client.Tests', 'Hexalith.Folders.Tests', 'Hexalith.Folders.Server.Tests', 'Hexalith.Folders.AppHost.Tests', 'Hexalith.Folders.UI.E2E.Tests')]
+-    [string]$ProjectName
++    [string]$ProjectName,
++    [string]$ComponentEvidenceFile
+ )
+ 
+ Set-StrictMode -Version Latest
+@@ -16,7 +17,14 @@ if (-not (Test-Path -LiteralPath $assembly -PathType Leaf)) {
+ }
+ 
+ # No class or method selector: ownership delegates the complete project once.
+-$output = & dotnet $assembly -noLogo -noColor -explicit on 2>&1
++if ($ProjectName -eq 'Hexalith.Folders.Server.Tests') {
++    $verifier = Join-Path $repositoryRoot 'references/Hexalith.Platform/infrastructure/keycloak-workload-binding/verify_component.py'
++    $fixtureArguments = @('-B', $verifier, '--complete-assembly', $assembly)
++    if ($ComponentEvidenceFile) { $fixtureArguments += @('--evidence-file', $ComponentEvidenceFile) }
++    $output = & python3 @fixtureArguments 2>&1
++} else {
++    $output = & dotnet $assembly -noLogo -noColor -explicit on 2>&1
++}
+ $exitCode = $LASTEXITCODE
+ $output | ForEach-Object { Write-Host $_ }
+ if ($exitCode -ne 0) {

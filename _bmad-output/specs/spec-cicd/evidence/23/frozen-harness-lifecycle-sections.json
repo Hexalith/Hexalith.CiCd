@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-11-17T01:32:16.877751+00:00",
+  "commands": [
+    {
+      "arguments": [
+        "dnx",
+        "dotnet-inspect",
+        "-y",
+        "--",
+        "member",
+        "AspireTopologyFixtureBase<TAppHost>",
+        "--package",
+        "Hexalith.EventStore.Testing.Integration@3.128.4",
+        "-m",
+        "DisposeAsync",
+        "-D",
+        "sections"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error: Select value 'sections' not found.\n\nDid you mean:\n  Methods\n  Source Locations\n"
+    },
+    {
+      "arguments": [
+        "dnx",
+        "dotnet-inspect",
+        "-y",
+        "--",
+        "member",
+        "AspireTopologyFixtureBase<TAppHost>",
+        "--package",
+        "Hexalith.EventStore.Testing.Integration@3.128.4",
+        "-m",
+        "DisposeAsync",
+        "-S",
+        "Annotated Source",
+        "--print",
+        "-n",
+        "140"
+      ],
+      "exit": 0,
+      "stdout": "public virtual async System.Threading.Tasks.ValueTask DisposeAsync()\n{\n    using (Dictionary<string, HttpClient>.ValueCollection.Enumerator enumerator = _clients.Values.GetEnumerator())\n        // IL_0000: ldloca.s     0                                                 // stack: [ref __DisposeAsync_d__34]\n        // IL_0002: call         AsyncValueTaskMethodBuilder::Create()             // stack: [ref __DisposeAsync_d__34, AsyncValueTaskMethodBuilder]\n        // IL_0007: stfld        AsyncValueTaskMethodBuilder __DisposeAsync_d__34::<>t__builder  // stack: []\n        // IL_000C: ldloca.s     0                                                 // stack: [ref __DisposeAsync_d__34]\n        // IL_000E: ldarg.0                                                        // arg: this; stack: [ref __DisposeAsync_d__34, AspireTopologyFixtureBase]\n        // IL_000F: stfld        AspireTopologyFixtureBase<TAppHost> __DisposeAsync_d__34::<>4__this  // stack: []\n        // IL_0014: ldloca.s     0                                                 // stack: [ref __DisposeAsync_d__34]\n        // IL_0016: ldc.i4.m1                                                      // stack: [ref __DisposeAsync_d__34, int]\n        // IL_0017: stfld        int __DisposeAsync_d__34::<>1__state              // stack: []\n        // IL_001C: ldloca.s     0                                                 // stack: [ref __DisposeAsync_d__34]\n        // IL_001E: ldflda       AsyncValueTaskMethodBuilder __DisposeAsync_d__34::<>t__builder  // stack: [ref AsyncValueTaskMethodBuilder]\n        // IL_0023: ldloca.s     0                                                 // stack: [ref AsyncValueTaskMethodBuilder, ref __DisposeAsync_d__34]\n        // IL_0025: call         AsyncValueTaskMethodBuilder::Start(ref __DisposeAsync_d__34)  // stack: []\n        // IL_002A: ldloca.s     0                                                 // stack: [ref __DisposeAsync_d__34]\n        // IL_002C: ldflda       AsyncValueTaskMethodBuilder __DisposeAsync_d__34::<>t__builder  // stack: [ref AsyncValueTaskMethodBuilder]\n        // IL_0031: call         AsyncValueTaskMethodBuilder::get_Task()           // stack: [ValueTask]\n        // IL_0036: ret                                                            // stack: []\n    {\n        while (enumerator.MoveNext())\n        {\n            enumerator.Current.Dispose();\n        }\n    }\n    _clients.Clear();\n    if (_app is not null)\n    {\n        await _app.DisposeAsync().ConfigureAwait(false);\n    }\n\n    if (_builder is not null)\n    {\n        await _builder.DisposeAsync().ConfigureAwait(false);\n    }\n    _daprFixtureLock?.Dispose();\n    GC.SuppressFinalize(this);\n}",
+      "stderr": ""
+    }
+  ]
+}

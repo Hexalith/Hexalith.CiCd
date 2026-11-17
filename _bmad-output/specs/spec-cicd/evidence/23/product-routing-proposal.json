@@ -25,7 +25,19 @@
       "exclude": {
         "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj": "after-integration-tests"
       },
-      "failSkips": true
+      "failSkips": true,
+      "minimumExpectedTests": {
+        "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj": 40,
+        "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj": 103,
+        "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj": 761,
+        "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj": 198,
+        "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj": 8085,
+        "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj": 66,
+        "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj": 1911
+      },
+      "reports": {
+        "trx": true
+      }
     },
     "hooks": [
       "after-unit-tests",
@@ -39,12 +51,12 @@
     ]
   },
   "sharedContractEvidence": "shared-prerequisite-contract.json",
-  "sharedPrerequisiteGate": "No compatible published release yet; v6.0.6 does not admit all proposed fields. Parent must verify released schema/loader/actions before registration.",
+  "sharedPrerequisiteGate": "Published immutable Builds v6.1.0 at a1e0c310b1f1a50d78e6132890fae6bcba769f6d includes receipt/timeout and TLS prerequisites. CiCd production pin f56dcbfb167b4701de5b1fc0a130971e6bca8e30 passed complete local and hosted validation and is published on main. Full exact-product qualification, old Zot mapping/consumer boundary and Tenants registration/adoption remain incomplete.",
   "runtimeTuple": {
     "sdk": "11.0.100",
     "daprCli": "1.19.1",
     "daprRuntime": "1.19.1",
-    "status": "SDK11.0.100 built; native Dapr1.19.1 real normal15 controls and expected four-call retry mutation passed. All cold catalog/AppHost profiles and executed DCP version still require the fresh isolated job.",
+    "status": "Current cca7ad07 fixes final provenance comparison with complete structural equality, required scalar/closure checks and retained sourceAfter. Focused 133 Node controls pass with zero skips. Full exact-current released sequence is starting; prior d25495a7 failed final array-identity comparison despite 25 passed live browser scenarios and is not a complete bootstrap pass.",
     "nativeAspireCli": {
       "invoked": false,
       "required": false,
@@ -54,7 +66,12 @@
       "projectDeclaration": "Aspire.AppHost.Sdk/13.6.5",
       "restoredHostingAndDcp": {
         "hostingAndTesting": "Aspire.Hosting, AppHost, Redis and Testing13.6.5; Keycloak13.6.5-preview.1.26559.7, from actual restored assets in product-local-focused-focused-06.json",
-        "dcp": "No AppHost launched; executed DCP version remains to be recorded in fresh isolated runtime qualification."
+        "dcp": {
+          "executedVersion": "0.26.6",
+          "binarySha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "evidence": "local-isolated-20261117T003405Z-a33aa406/result.json",
+          "versionCommandExit": 0
+        }
       }
     },
     "transportEvidence": "product-dapr-qualification-01.json"
@@ -218,8 +235,8 @@
   },
   "ownedContentEdits": false,
   "nestedSubmoduleInitialization": false,
-  "finalLocalCandidateTree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
-  "finalLocalProductRevision": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "finalLocalCandidateTree": "9472f47e23de188363699be3c5e3c074fb3de68e",
+  "finalLocalProductRevision": "cca7ad07211967e604b8f7f33aa21dbbb853ec10",
   "freshUiQualification": {
     "evidence": "local-isolated-20261116T232705Z-17d40dbd/result.json",
     "executed": 8085,
@@ -228,5 +245,55 @@
     "skips": 0,
     "syntheticLocalIdentity": true,
     "hostedCi": false
-  }
+  },
+  "sharedTlsPrerequisiteEvidence": "shared-tls-qualification.json",
+  "currentLocalSharedCandidate": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "latestDiagnosticEvidence": "product-diagnostic-local-commit.json",
+  "latestBackendFixEvidence": "product-backend-info-local-commit.json",
+  "latestReaderRoutingEvidence": "product-owner-recovery-reader-correction.json",
+  "latestLifecycleEvidence": "product-frozen-lifecycle-local-commit.json",
+  "publishedSharedCandidate": {
+    "tag": "v6.1.0",
+    "revision": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "evidence": "shared-v610-publication-verification.json"
+  },
+  "currentProductWorkspace": "/home/administrator/projects/hexalith/tenants-story-23-current",
+  "currentProductBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "latestNaturalExitEvidence": "product-natural-exit-correction.json",
+  "latestReapplicationEvidence": "product-current-main-reapplication.json",
+  "currentDirectPins": {
+    "references/Hexalith.AI.Tools": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+    "references/Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "references/Hexalith.Commons": "49187d47da882d5470deac982bb383486c90202c",
+    "references/Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "references/Hexalith.FrontComposer": "21c208f7045fdb4556cef23178f464207605c42a",
+    "references/Hexalith.McpCli": "c9ffbd5c9f6bc100ecbf6ac13acf4fbe50a498a9",
+    "references/Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826",
+    "references/Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "references/Hexalith.PolymorphicSerializations": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+  },
+  "proposedTestPolicyStatus": "Proposed complete-project minima and native TRX policy match the final released-API qualification plan; not registered or adopted.",
+  "freshRestQualification": {
+    "source": "3228045930709d57f6f1ddf0afff9c57ff60cd00",
+    "evidence": "local-isolated-20261117T022719Z-3d45ff1e/result.json",
+    "executed": 9,
+    "passed": 9,
+    "failed": 0,
+    "skips": 0,
+    "originalFinishGuard": "passed",
+    "naturalExitSeconds": 2.0150747270090505,
+    "normalForcedTermination": false,
+    "hostBackendAndSourceUnchanged": true
+  },
+  "latestUiFocusEvidence": "product-member-focus-local-commit.json",
+  "sharedPinEvidence": {
+    "localValidation": "cicd-v610-validation-03.json",
+    "publication": "cicd-v610-publication.json",
+    "hostedDelivery": "cicd-v610-delivery-artifact-readback.json",
+    "hostedDeliveryOverallSuccess": false,
+    "hostedDeliveryRefusal": "AI.Tools AD-21 main/v* rulesets precondition; Commons and PolymorphicSerializations accepted/applied the exact candidate."
+  },
+  "latestStatusFilterEvidence": "product-status-browser-local-commit.json",
+  "latestLiveCaptureFailureEvidence": "product-live-capture-failure-analysis.json",
+  "latestLiveCaptureEvidence": "product-live-capture-local-commit.json"
 }

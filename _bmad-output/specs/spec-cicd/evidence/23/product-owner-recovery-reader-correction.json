@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-11-17T01:04:23.232795+00:00",
+  "revision": "8e3ce806a54c7e3a7bbc75b828461ec137471a91",
+  "tree": "5a205af7c62ac6d214a7420c0c7de1fce8a174f8",
+  "parent": "a7232ad3d2be20d5364b7c404727970bb2df5182",
+  "changed_path": "tests/Hexalith.Tenants.IntegrationTests/AuthenticatedTenantsRouteTests.cs",
+  "reason": "The sole remaining owner-recovery failure constructed an inline Redis connection with default client options, then passed it to the protected backend reader. Route it through CatalogRedisBackend.ConnectAsync(timeout.Token), preserving all persisted-event and refusal assertions.",
+  "prior_native_evidence": "local-isolated-20261117T005407Z-c3ad3926/result.json",
+  "prior_rest_counters": {
+    "executed": 9,
+    "passed": 8,
+    "failed": 1,
+    "skips": 0
+  },
+  "connection_inventory": "All production-path integration Redis connections now use the validated helper; only the deliberate real-client option regression connects directly.",
+  "current_native_rest": "running; not yet accepted",
+  "remote_product_write": false
+}

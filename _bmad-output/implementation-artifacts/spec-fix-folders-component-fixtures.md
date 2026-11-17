@@ -2,7 +2,7 @@
 title: 'Fix Folders Server component fixtures for Release qualification'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '92e4e0b0acf0a256078c330419734eafa69b84ed'
@@ -46,11 +46,11 @@ context: []
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] Platform `infrastructure/keycloak-workload-binding/{verify_component,component_fixture}.py` — add a bounded fixture scope and complete assembly invocation; prepare the real descriptor, await the child, propagate failure and observe cleanup. Preserve focused modes.
-- [ ] Platform `infrastructure/keycloak-workload-binding/test_component_fixture.py` — verify startup/child/timeout/cleanup failures, private files, sanitized output and strict executed-test evidence.
-- [ ] Folders `tests/Hexalith.Folders.Server.Tests/{EnrolledWorkloadSourceBoundaryTests,PackageSdkRuntimeBinding,PackageSdkRuntimeBindingTests}.cs` — retain source assertions; derive package ID/version/runtime entry from restored assets/dependency metadata, verify archive SHA-512 against restore content identity, and compare every currently checked SDK DLL's SHA-256/MVID to its archive payload. Reject missing/ambiguous/tampered inputs.
-- [ ] Folders `tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj`, `scripts/prepare-ci-topology-projects.sh` and complete runner — prepare provider once before hooks; record identity inputs; run one complete prebuilt Server suite within the fixture. Preserve other project behavior and strict counters.
-- [ ] Platform `docs/security/workload-binding-enrollment.md`, Folders `docs/ci.md` and CiCd evidence — document authority/lifecycle boundaries and save revisions, complete results and cleanup proof.
+- [x] Platform `infrastructure/keycloak-workload-binding/{verify_component,component_fixture}.py` — add a bounded fixture scope and complete assembly invocation; prepare the real descriptor, await the child, propagate failure and observe cleanup. Preserve focused modes.
+- [x] Platform `infrastructure/keycloak-workload-binding/test_component_fixture.py` — verify startup/child/timeout/cleanup failures, private files, sanitized output and strict executed-test evidence.
+- [x] Folders `tests/Hexalith.Folders.Server.Tests/{EnrolledWorkloadSourceBoundaryTests,PackageSdkRuntimeBinding,PackageSdkRuntimeBindingTests}.cs` — retain source assertions; derive package ID/version/runtime entry from restored assets/dependency metadata, verify archive SHA-512 against restore content identity, and compare every currently checked SDK DLL's SHA-256/MVID to its archive payload. Reject missing/ambiguous/tampered inputs.
+- [x] Folders `tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj`, `scripts/prepare-ci-topology-projects.sh` and complete runner — prepare provider once before hooks; record identity inputs; run one complete prebuilt Server suite within the fixture. Preserve other project behavior and strict counters.
+- [x] Platform `docs/security/workload-binding-enrollment.md`, Folders `docs/ci.md` and CiCd evidence — document authority/lifecycle boundaries and save revisions, complete results and cleanup proof.
 
 **Acceptance Criteria:**
 - Given exact fresh-main inputs, when Server qualification runs, then the complete Release/package suite and all eleven cases pass once without skips or hook builds.
@@ -65,10 +65,46 @@ context: []
 
 ## Spec Change Log
 
+- 2026-11-17: Signed NuGet packages require the canonical signature-aware content SHA-512 from the pinned SDK NuGet API; raw archive SHA-512 is checked separately against its restored sidecar. Frozen identity and payload requirements are unchanged.
+
 ## Review Triage Log
+
+| Finding | Verdict | Route | Evidence |
+| --- | --- | --- | --- |
+| BH1 | false | reject | The qualified destination is Folders 3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245, whose recorded Platform 8ccb479e391564ce982309f106504cf8329c0a43 contains component_fixture.py and --complete-assembly. The old shared source checkout is not the qualified destination; dependency publication and final pointer verification remain explicitly pending. |
+| BH2 | medium | defer | SIGTERM bypasses Python context cleanup, but the baseline verifier also had no termination handler around TemporaryDirectory/subprocess.run. This pre-existing cancellation defect can leave private scratch/container resources and needs a separate signal-lifetime correction. |
+| BH3 | medium | defer | Capture is unbounded before diagnostic truncation; baseline subprocess.run(capture_output=True,text=True) already had unbounded memory capture. The refactor spools before reading but does not create this pre-existing resource-exhaustion root cause. |
+| BH4 | medium | patch | Strict UTF-8 decoding occurs before native child-status handling, so non-UTF-8 failure output can replace the child status. Replacement decoding is a direct internal correction. |
+| BH5 | low | patch | The private pathname probe does not disclose credential values or defeat 0700/0600 protection, but the sanitizer docstring overstates private-descriptor coverage. Delete that overstatement rather than add an unsupported pathname-confidentiality rule. |
+| BH6 | medium | patch | Parent reproduction accepted XML with an assembly error and a missing errors counter against a zero-error summary. Reject error elements and absent expected counters so contradictory evidence cannot qualify. |
+| BH7 | medium | patch | The provider compiles for Java 21, while the preparation command selects no JDK and Ubuntu 24.04 runner documentation identifies Java 17 as default and JAVA_HOME_21_X64 as available. Select/validate the required product compiler before Maven without editing owned workflows. |
+| BH8 | medium | patch | clone() applies a source delta to a different destination base but records source file hashes. Current fixed bases share those product bytes, yet the function can attest untested source bytes when destination context differs or concurrent source edits occur; hash the completed destination snapshot. |
+| BH9 | medium | patch | Parent invoked the actual job() function with a child that starts an escaped session: timeout killed only the original group and the escaped descendant survived. The probe cleaned/reaped it afterward. Reuse owned process supervision with graceful fixture shutdown and observed descendant cleanup. |
+| EC1 | medium | defer | Same verified pre-existing unbounded-capture root cause as BH3; disk spooling and the final full read have no capture cap. Keep this distinct from the new structured-diagnostic bypass fixed under EC3. |
+| EC2 | medium | patch | Same strict-decoding root cause as BH4; decoding failure precedes recorded native status. Replace invalid byte sequences and cover the native-status path. |
+| EC3 | high | patch | Parent reproduced a registered secret in runtime-binding output and 25,069 emitted characters: record_evidence prints structured data without sanitize(). Sanitize and bound every diagnostic emission, including structured observations. |
+| VG1 | medium | patch | Pre-verified broken-verification gap: filtered XML reports eleven cases but the test summary reports twelve, so the earlier consistency guard hides deletion of the complete-project guard. Use matching eleven-case evidence and verify focused acceptance versus complete rejection. |
+| VG2 | medium | patch | Pre-verified broken-verification gap: ChildFailure subclasses RuntimeError, so the broad timeout assertion passes when timeout is removed and fake exit code 7 is raised. Require the deadline-specific failure and demonstrate bounded real-child termination/cleanup. |
+
+### Review resolution
+
+All patch findings were fixed and covered by 13 fixture tests plus three driver/JDK probes. See [review resolutions](evidence/fix-folders-component-fixtures-20261117/review-resolutions.json). The two verified pre-existing resource-lifetime root causes were recorded in [deferred work](deferred-work.md); the stale old-base dependency claim was rejected against the actual qualified destination. No frozen intent changed.
 
 ## Verification
 
 - Use `run-with-temp`; retain logs outside scratch and await children.
 - Run fixture/provenance failure tests, audited Release build, complete Server suite and existing source component lane; record inventories and zero skipped/not-run counts.
 - Require real Keycloak 26.6.4, identity/cleanup proof, released audit/action checks, exact commitlint and owned-content preservation before pushes. Resume broader publication checks and report independent failures.
+
+### Implementation qualification, 2026-11-17
+
+- [Mainline qualification](evidence/fix-folders-component-fixtures-20261117/qualification.json) uses Folders destination `3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245`, source patch base `e5760ca105652f4d89c4f240e0ca455723c9a473`, and recorded Platform `8ccb479e391564ce982309f106504cf8329c0a43` with the exact final product overlay. The report records all dependency revisions and changed-file hashes; parent inspection confirmed those hashes match the working bytes.
+- Audited Release/package and Debug/source builds passed with zero warnings/errors. Complete prebuilt Server execution passed 1,462 tests, including all eleven real-issuer cases and 23 provenance controls; errors, failures, skips and not-run counts were zero. The source component lane passed all eleven cases with exact SHA-256/MVID bindings for three SDK assemblies.
+- Thirteen final fixture tests and three driver/JDK probes passed; the pre-review broader Python run passed 55 tests, covering every matrix row, including missing provider, malformed evidence, native child failure, timeout, private permissions, sanitization, cleanup refusal, and OS-level cleanup failure. Real Keycloak 26.6.4, independent RSA/TLS verification and natural expiry passed; both component runs observed zero remaining containers and private paths.
+- The frozen intent and protected CI/CD paths are preserved. Local verification performs no commits, pushes, or remote Git operations. Publication remains conditional on current remote reconciliation and the approved released-policy/complete-product procedure; independent AppHost, FR58 and migration acceptance remain open.
+
+### Final handoff
+
+- Post-review mainline qualification repeated the audited builds, complete 1,462-test Server run, 13 fixture controls and eleven-case Debug/source lane successfully. All unsuccessful counters and observed remaining-resource counts are zero; final destination-file hashes match the working product bytes.
+- [Publication preflight](evidence/fix-folders-component-fixtures-20261117/publication-preflight.json) authenticated immutable Builds `v6.0.6` at `fdda17c0a4538b0f7c99f813c20ca24b49006530` and refreshed both module mains. Folders remains `3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245`; Platform advanced independently to `3f14b712ab24ca6008e718979e944eef26b695e3` in qualification scripts outside this fixture. Both committed trees remain unadopted. Complete approved preparation qualification, dependency publication and consuming-pointer verification remain outstanding; no publication or migration acceptance is claimed.
+- No commit was created. The [shared Git instructions](../../references/Hexalith.AI.Tools/hexalith-git-instructions.md) require publishing all pending submodule commits before creating a superproject commit. Incomplete module preparation qualification prevents that publication, so the dependent superproject commit is stopped. Shared indexes, branches and pre-existing work are preserved.

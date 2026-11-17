@@ -1,0 +1,152 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "067b1a9dc6a1452fa5a3a9d7532bc6d2",
+  "source": "de67f6d42ded4709722f7e237cab81daf76ce14f",
+  "tree": "32429b6b35a09909fc77d1ccd37796169c7d794a",
+  "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "sharedPublicationReceipt": "shared-v610-publication-verification.json",
+  "deliveredBaselineVerified": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "04fb70ba011310b785e3f3aa62f83cda2198526dea272909b3301551fedea157"
+    },
+    {
+      "kind": "worker",
+      "id": "0cb3ac1ea86b863199ffc27edebecb1175c708a9fb65c79b99b0587ed4ecea6c"
+    }
+  ],
+  "startedAt": 1794889518.5468214,
+  "events": [
+    {
+      "at": 1794889525.3233385,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794889526.2424939,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794889527.4296684,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794889539.4330728,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794889541.4335787,
+      "message": "Worker phase: focused-product-script-tools/running"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "0cb3ac1ea86b863199ffc27edebecb1175c708a9fb65c79b99b0587ed4ecea6c"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "04fb70ba011310b785e3f3aa62f83cda2198526dea272909b3301551fedea157"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.lqAr3q36",
+  "scope": "tool-tests",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+  },
+  "workerSha256": "8a20114fd4e1f4ecacd685672529fb1d1915434a328b4bb888a2b2f606453e62",
+  "orchestratorSha256": "776c754ec7b9ca45f728b34bae0e29131355b027a79b28dcf80536eff06def51",
+  "innerDaemonId": "\"277aa210-c8e3-4814-9489-e117b8399983\"",
+  "workerContainerExit": 0,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "de67f6d42ded4709722f7e237cab81daf76ce14f",
+    "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794889538.1495163,
+        "elapsedSeconds": 3.2281484603881836
+      },
+      {
+        "name": "focused-product-script-tools",
+        "status": "passed",
+        "startedAt": 1794889541.3781264,
+        "elapsedSeconds": 8.58791971206665
+      }
+    ],
+    "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+    "scope": "tool-tests",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "deliveredBaselineVerified": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794889538.1039836,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "build",
+      "unit-projects",
+      "shared-environment",
+      "browser-and-package-consumer",
+      "shared-integration-projects",
+      "cold-profiles",
+      "coverage-gate",
+      "Dapr-retry-controls",
+      "nightly-workload",
+      "NuGet-audit"
+    ],
+    "status": "passed",
+    "releasedRoutineBootstrapQualified": false,
+    "finishedAt": 1794889549.9664292,
+    "elapsedSeconds": 11.862445592880249
+  },
+  "supportSafeArtifacts": [],
+  "trxSummaries": [],
+  "status": "passed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794889551.9108198,
+  "elapsedSeconds": 33.36399841308594,
+  "releasedRoutineBootstrapQualified": false,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

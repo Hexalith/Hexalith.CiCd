@@ -1,0 +1,34 @@
+diff --git a/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs b/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs
+index 360b51c7..27bdce1c 100644
+--- a/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs
++++ b/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs
+@@ -50,7 +50,8 @@ public sealed partial class TenantDetailSurfaceTests
+         }
+         await cut.InvokeAsync(() => close.InvokeAsync());
+         string expected = transition == "unchanged" ? launcherReference : CapturedElementReferenceId(cut.Instance, "_headingElement");
+-        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(expected));
++        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(expected,
++            $"action={action}; transition={transition}; {MemberFocusCallFacts(launcherReference, CapturedElementReferenceId(cut.Instance, "_headingElement"))}"));
+         cut.Find("#tenants-member-heading").GetAttribute("tabindex").ShouldBe("-1");
+         cut.FindAll("span.tenant-members__action-focus").ShouldBeEmpty();
+ 
+@@ -76,9 +77,18 @@ public sealed partial class TenantDetailSurfaceTests
+             invocation.Arguments[0] is ElementReference reference && reference.Id == launcher.Element.Id)
+             .SetException(new JSException("Detached element"));
+         await cut.InvokeAsync(() => close.InvokeAsync());
+-        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(CapturedElementReferenceId(cut.Instance, "_headingElement")));
++        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(CapturedElementReferenceId(cut.Instance, "_headingElement"),
++            MemberFocusCallFacts(launcher.Element.Id, CapturedElementReferenceId(cut.Instance, "_headingElement"))));
+     }
+ 
++    private string MemberFocusCallFacts(string launcher, string heading)
++        => string.Join("; ", JSInterop.Invocations
++            .Where(invocation => invocation.Identifier.Contains("focus", StringComparison.OrdinalIgnoreCase))
++            .Select(invocation => invocation.Identifier + ":" +
++                (invocation.Arguments.Count > 0 && invocation.Arguments[0] is ElementReference reference
++                    ? reference.Id == launcher ? "launcher" : reference.Id == heading ? "heading" : "other-element"
++                    : "non-element/" + (invocation.Arguments.Count == 0 ? "no-argument" : invocation.Arguments[0]?.GetType().Name ?? "null"))));
++
+     private IRenderedComponent<MemberAccessReview> RenderMemberFocusReview(
+         TenantDetail detail,
+         bool auditPending = false,

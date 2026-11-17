@@ -1,0 +1,96 @@
+{
+  "findings": [
+    {
+      "id": "BH1",
+      "verdict": "false",
+      "route": "reject",
+      "evidence": "The qualified destination is Folders 3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245, whose recorded Platform 8ccb479e391564ce982309f106504cf8329c0a43 contains component_fixture.py and --complete-assembly. The old shared source checkout is not the qualified destination; dependency publication and final pointer verification remain explicitly pending."
+    },
+    {
+      "id": "BH2",
+      "verdict": "medium",
+      "route": "defer",
+      "evidence": "SIGTERM bypasses Python context cleanup, but the baseline verifier also had no termination handler around TemporaryDirectory/subprocess.run. This pre-existing cancellation defect can leave private scratch/container resources and needs a separate signal-lifetime correction."
+    },
+    {
+      "id": "BH3",
+      "verdict": "medium",
+      "route": "defer",
+      "evidence": "Capture is unbounded before diagnostic truncation; baseline subprocess.run(capture_output=True,text=True) already had unbounded memory capture. The refactor spools before reading but does not create this pre-existing resource-exhaustion root cause."
+    },
+    {
+      "id": "BH4",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "Strict UTF-8 decoding occurs before native child-status handling, so non-UTF-8 failure output can replace the child status. Replacement decoding is a direct internal correction."
+    },
+    {
+      "id": "BH5",
+      "verdict": "low",
+      "route": "patch",
+      "evidence": "The private pathname probe does not disclose credential values or defeat 0700/0600 protection, but the sanitizer docstring overstates private-descriptor coverage. Delete that overstatement rather than add an unsupported pathname-confidentiality rule."
+    },
+    {
+      "id": "BH6",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "Parent reproduction accepted XML with an assembly error and a missing errors counter against a zero-error summary. Reject error elements and absent expected counters so contradictory evidence cannot qualify."
+    },
+    {
+      "id": "BH7",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "The provider compiles for Java 21, while the preparation command selects no JDK and Ubuntu 24.04 runner documentation identifies Java 17 as default and JAVA_HOME_21_X64 as available. Select/validate the required product compiler before Maven without editing owned workflows."
+    },
+    {
+      "id": "BH8",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "clone() applies a source delta to a different destination base but records source file hashes. Current fixed bases share those product bytes, yet the function can attest untested source bytes when destination context differs or concurrent source edits occur; hash the completed destination snapshot."
+    },
+    {
+      "id": "BH9",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "Parent invoked the actual job() function with a child that starts an escaped session: timeout killed only the original group and the escaped descendant survived. The probe cleaned/reaped it afterward. Reuse owned process supervision with graceful fixture shutdown and observed descendant cleanup."
+    },
+    {
+      "id": "EC1",
+      "verdict": "medium",
+      "route": "defer",
+      "evidence": "Same verified pre-existing unbounded-capture root cause as BH3; disk spooling and the final full read have no capture cap. Keep this distinct from the new structured-diagnostic bypass fixed under EC3."
+    },
+    {
+      "id": "EC2",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "Same strict-decoding root cause as BH4; decoding failure precedes recorded native status. Replace invalid byte sequences and cover the native-status path."
+    },
+    {
+      "id": "EC3",
+      "verdict": "high",
+      "route": "patch",
+      "evidence": "Parent reproduced a registered secret in runtime-binding output and 25,069 emitted characters: record_evidence prints structured data without sanitize(). Sanitize and bound every diagnostic emission, including structured observations."
+    },
+    {
+      "id": "VG1",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "Pre-verified broken-verification gap: filtered XML reports eleven cases but the test summary reports twelve, so the earlier consistency guard hides deletion of the complete-project guard. Use matching eleven-case evidence and verify focused acceptance versus complete rejection."
+    },
+    {
+      "id": "VG2",
+      "verdict": "medium",
+      "route": "patch",
+      "evidence": "Pre-verified broken-verification gap: ChildFailure subclasses RuntimeError, so the broad timeout assertion passes when timeout is removed and fake exit code 7 is raised. Require the deadline-specific failure and demonstrate bounded real-child termination/cleanup."
+    }
+  ],
+  "parentReproductions": {
+    "xmlWithErrorElementAccepted": true,
+    "runtimeBindingLeaksRegisteredSecret": true,
+    "diagnosticLength": 25069,
+    "escapedDescendantSurvivedOuterTimeout": true,
+    "probeChildCleaned": true
+  },
+  "primaryToolchainSource": "https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md"
+}

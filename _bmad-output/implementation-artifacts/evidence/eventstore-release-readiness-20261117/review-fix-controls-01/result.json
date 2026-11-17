@@ -1,0 +1,230 @@
+{
+  "completed_utc": "2026-11-17T01:08:19.682686+00:00",
+  "invocation": "run-with-temp python3 -O -B /home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify_review_fixes.py --output /home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/review-fix-controls-01",
+  "python_optimization": 1,
+  "scratch": "/tmp/hexalith-job.UJCo4Kyf",
+  "scope": "owned-job lifecycle and C# source layout only; no producer/package runs",
+  "source_sha256": {
+    "verification_core.py": "786b991d893a7bffd554c6b0deb37b6919ea9d5fd174dc822709f79376426592",
+    "query_package_probe.py": "ffbfe80bec5525c18ed07afa0b1e7603b438807fbcdf154e2155fbb783ace33e",
+    "verify_review_fixes.py": "68c2dd93ec1ac114d8f9eec2ba9f57bb54b4bb791e0aba389396c4405cd060f4"
+  },
+  "checks": {
+    "native-zero-preserved": true,
+    "native-seven-and-bound-preserved": true,
+    "fast-cleared-descendant-adopted": true,
+    "fast-cleared-descendant-reaped": true,
+    "timeout-and-bound-preserved": true,
+    "timeout-cleared-descendant-reaped": true,
+    "startup-2-before-child": true,
+    "startup-2-after-child": true,
+    "startup-15-before-child": true,
+    "startup-15-after-child": true,
+    "handler-setup-cancellation-starts-no-child": true,
+    "cancel-cleared-descendant-2": true,
+    "cancel-cleared-descendant-15": true,
+    "foreign-child-and-descendant-survive": true,
+    "query-layout-only-unchanged-binding": true,
+    "result-layout-only-unchanged-type": true,
+    "one-csharp-object-per-file": true,
+    "no-environment-inspection": true
+  },
+  "lifecycle_receipts": {
+    "native-success": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": 0,
+      "process_started": true,
+      "cancellation_signal": null,
+      "owned_pids": [
+        4191408
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "native-failure": {
+      "timeout_seconds": 5,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": 7,
+      "process_started": true,
+      "cancellation_signal": null,
+      "owned_pids": [
+        4191522
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "fast-double-fork-cleared-environment": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": 0,
+      "process_started": true,
+      "cancellation_signal": null,
+      "owned_pids": [
+        4191730,
+        4191754,
+        4191755
+      ],
+      "remaining_owned_before_cleanup": [
+        4191754,
+        4191755
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "timeout-cleared-environment": {
+      "timeout_seconds": 0.3,
+      "timed_out": true,
+      "cancelled": false,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": null,
+      "owned_pids": [
+        4192072,
+        4192088,
+        4192089
+      ],
+      "remaining_owned_before_cleanup": [
+        4192072,
+        4192088,
+        4192089
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "startup-2-before-child": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": 2,
+      "owned_pids": [
+        4192449
+      ],
+      "remaining_owned_before_cleanup": [
+        4192449
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "startup-2-after-child": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": 2,
+      "owned_pids": [
+        4192492
+      ],
+      "remaining_owned_before_cleanup": [
+        4192492
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "startup-15-before-child": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": 15,
+      "owned_pids": [
+        4192520
+      ],
+      "remaining_owned_before_cleanup": [
+        4192520
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "startup-15-after-child": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": 15,
+      "owned_pids": [
+        4192527
+      ],
+      "remaining_owned_before_cleanup": [
+        4192527
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "handler-setup-cancellation": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": null,
+      "process_started": false,
+      "cancellation_signal": 2,
+      "owned_pids": [],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "cancel-cleared-environment-2": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": 2,
+      "owned_pids": [
+        4192618,
+        4192622,
+        4192623
+      ],
+      "remaining_owned_before_cleanup": [
+        4192618,
+        4192622,
+        4192623
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "cancel-cleared-environment-15": {
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": true,
+      "custody": "subreaper, owned ancestry, newly adopted child identities and PID start ticks",
+      "native_exit": -15,
+      "process_started": true,
+      "cancellation_signal": 15,
+      "owned_pids": [
+        4192987,
+        4192988,
+        4192989
+      ],
+      "remaining_owned_before_cleanup": [
+        4192987,
+        4192988,
+        4192989
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    }
+  },
+  "passed": true,
+  "complete_release_acceptance": false
+}

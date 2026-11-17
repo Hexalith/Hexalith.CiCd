@@ -1,0 +1,25 @@
+{
+  "candidate": "cec4064b89a58c2c77555247c5e41bb3e3ccd6c9",
+  "verdict": {
+    "global": false,
+    "modules": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Commons",
+      "Hexalith.PolymorphicSerializations"
+    ]
+  },
+  "passedGlobalChecks": [
+    "committed render inputs",
+    "committed render",
+    "immutable delivery bootstrap",
+    "render reproducibility",
+    "schemas and caller interfaces",
+    "acceptable Builds publication",
+    "workflow lints"
+  ],
+  "errors": [
+    "test_manual_qualification_requires_live_action_and_exact_isolation (__main__.ValidateTests.test_manual_qualification_requires_live_action_and_exact_isolation) (present=True)",
+    "test_manual_qualification_requires_live_action_and_exact_isolation (__main__.ValidateTests.test_manual_qualification_requires_live_action_and_exact_isolation) (present=False)"
+  ],
+  "cause": "One obsolete shared test-fixture helper caller; two present/absent action subcases failed before assertions. Production checks and renderer47 passed."
+}

@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-11-16T23:56:47.238441+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "source": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+  "operations": [
+    {
+      "arguments": [
+        "git",
+        "push",
+        "--set-upstream",
+        "origin",
+        "story/23-fresh-tls"
+      ],
+      "exit": 0,
+      "stdout": "branch 'story/23-fresh-tls' set up to track 'origin/story/23-fresh-tls'.\n",
+      "stderr": "remote: \nremote: Create a pull request for 'story/23-fresh-tls' on GitHub by visiting:        \nremote:      https://github.com/Hexalith/Hexalith.Builds/pull/new/story/23-fresh-tls        \nremote: \nTo https://github.com/Hexalith/Hexalith.Builds.git\n * [new branch]        story/23-fresh-tls -> story/23-fresh-tls\n"
+    },
+    {
+      "arguments": [
+        "gh",
+        "pr",
+        "create",
+        "--repo",
+        "Hexalith/Hexalith.Builds",
+        "--base",
+        "main",
+        "--head",
+        "story/23-fresh-tls",
+        "--title",
+        "fix(ci): configure OpenSSL trust before certificate validation",
+        "--body-file",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/shared-tls-pr-body.md"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "pull request create failed: GraphQL: Resource not accessible by personal access token (createPullRequest)\n"
+    }
+  ]
+}

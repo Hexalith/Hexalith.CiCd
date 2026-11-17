@@ -1,0 +1,62 @@
+diff --git a/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs b/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs
+index 360b51c7..456d893b 100644
+--- a/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs
++++ b/tests/Hexalith.Tenants.UI.Tests/Components/TenantDetailSurfaceTests.MemberFocus.cs
+@@ -7,6 +7,7 @@ using Hexalith.Tenants.UI.Components.Tenants.Members;
+ using Hexalith.Tenants.UI.State.TenantDetail;
+ 
+ using Microsoft.AspNetCore.Components;
++using Microsoft.AspNetCore.Components.Web;
+ using Microsoft.FluentUI.AspNetCore.Components;
+ using Microsoft.JSInterop;
+ 
+@@ -36,9 +37,6 @@ public sealed partial class TenantDetailSurfaceTests
+             button.Instance.AdditionalAttributes?.GetValueOrDefault("data-testid")?.ToString() == selector).Instance;
+         string launcherReference = launcher.Element.Id;
+         cut.FindAll($"[data-testid='{selector}']")[1].Click();
+-        EventCallback close = action == "remove"
+-            ? cut.FindComponent<RemoveTenantMemberFlow>().Instance.OnCloseRequested
+-            : cut.FindComponent<ChangeTenantMemberRoleFlow>().Instance.OnCloseRequested;
+         if (transition == "removed")
+         {
+             TenantDetail updated = detail with { Members = detail.Members.Where(member => member.UserId != "reader-user").ToArray() };
+@@ -48,9 +46,11 @@ public sealed partial class TenantDetailSurfaceTests
+         {
+             cut.Render(p => p.Add(x => x.IsRemoveMemberAuthorized, false).Add(x => x.IsChangeRoleAuthorized, false));
+         }
+-        await cut.InvokeAsync(() => close.InvokeAsync());
++        string cancel = action == "remove" ? "tenants-remove-member-cancel" : "tenants-change-role-cancel";
++        await cut.Find($"[data-testid='{cancel}']").ClickAsync(new MouseEventArgs());
+         string expected = transition == "unchanged" ? launcherReference : CapturedElementReferenceId(cut.Instance, "_headingElement");
+-        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(expected));
++        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(expected,
++            $"action={action}; transition={transition}; {MemberFocusCallFacts(launcherReference, CapturedElementReferenceId(cut.Instance, "_headingElement"))}"));
+         cut.Find("#tenants-member-heading").GetAttribute("tabindex").ShouldBe("-1");
+         cut.FindAll("span.tenant-members__action-focus").ShouldBeEmpty();
+ 
+@@ -71,14 +71,22 @@ public sealed partial class TenantDetailSurfaceTests
+         FluentButton launcher = cut.FindComponents<FluentButton>().Last(button =>
+             button.Instance.AdditionalAttributes?.GetValueOrDefault("data-testid")?.ToString() == "tenants-remove-member-open").Instance;
+         cut.FindAll("[data-testid='tenants-remove-member-open']")[1].Click();
+-        EventCallback close = cut.FindComponent<RemoveTenantMemberFlow>().Instance.OnCloseRequested;
+         JSInterop.SetupVoid("Blazor._internal.domWrapper.focus", invocation =>
+             invocation.Arguments[0] is ElementReference reference && reference.Id == launcher.Element.Id)
+             .SetException(new JSException("Detached element"));
+-        await cut.InvokeAsync(() => close.InvokeAsync());
+-        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(CapturedElementReferenceId(cut.Instance, "_headingElement")));
++        await cut.Find("[data-testid='tenants-remove-member-cancel']").ClickAsync(new MouseEventArgs());
++        cut.WaitForAssertion(() => FocusedElementIds().Last().ShouldBe(CapturedElementReferenceId(cut.Instance, "_headingElement"),
++            MemberFocusCallFacts(launcher.Element.Id, CapturedElementReferenceId(cut.Instance, "_headingElement"))));
+     }
+ 
++    private string MemberFocusCallFacts(string launcher, string heading)
++        => string.Join("; ", JSInterop.Invocations
++            .Where(invocation => invocation.Identifier.Contains("focus", StringComparison.OrdinalIgnoreCase))
++            .Select(invocation => invocation.Identifier + ":" +
++                (invocation.Arguments.Count > 0 && invocation.Arguments[0] is ElementReference reference
++                    ? reference.Id == launcher ? "launcher" : reference.Id == heading ? "heading" : "other-element"
++                    : "non-element/" + (invocation.Arguments.Count == 0 ? "no-argument" : invocation.Arguments[0]?.GetType().Name ?? "null"))));
++
+     private IRenderedComponent<MemberAccessReview> RenderMemberFocusReview(
+         TenantDetail detail,
+         bool auditPending = false,

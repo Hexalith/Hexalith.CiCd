@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-17T03:00:50.775643+00:00",
+  "source": "d37a20a3318daba15066faa28f651730a7e9939e",
+  "workspace": "/home/administrator/projects/hexalith/cicd-story-23-v610",
+  "command": [
+    "uv",
+    "run",
+    "--locked",
+    "--script",
+    "--python",
+    "/usr/bin/python3.14",
+    "/home/administrator/projects/hexalith/cicd-story-23-v610/tools/validate.py",
+    "--project-root",
+    "/home/administrator/projects/hexalith/cicd-story-23-v610"
+  ],
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "account": {
+    "login": "jpiquot",
+    "id": 6775094
+  },
+  "node": {
+    "versions": [
+      "v24.22.3",
+      "11.19.1"
+    ],
+    "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+  },
+  "credentialHandling": "profile token in memory/child environment only; retained logs redact exact token",
+  "remoteMutations": false,
+  "status": "failed",
+  "elapsedSeconds": 995.1162473560253,
+  "passedGlobalChecks": [],
+  "finishedToolSuites": 0,
+  "exit": 1,
+  "stdout": {
+    "path": "cicd-v610-validation-01.stdout.log",
+    "sha256": "7b30ae043249cb483bd7492c45f57a3d589c15509d5ce235ba7c2a679e84e9f5"
+  },
+  "stderr": {
+    "path": "cicd-v610-validation-01.stderr.log",
+    "sha256": "3e9f2582179694da980fd2b9fdbd9f78c6d5ed77e9360b5818ae44029e2135e8"
+  },
+  "candidatePreserved": true
+}

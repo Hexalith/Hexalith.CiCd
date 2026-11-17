@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-17T04:25:50.696227+00:00",
+  "source": "f56dcbfb167b4701de5b1fc0a130971e6bca8e30",
+  "readOnly": true,
+  "reads": {
+    "run": {
+      "id": 44014830679,
+      "name": "Delivery",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "f56dcbfb167b4701de5b1fc0a130971e6bca8e30",
+      "created_at": "2026-11-17T04:06:27Z",
+      "updated_at": "2026-11-17T04:24:55Z",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44014830679"
+    },
+    "jobs": {
+      "total": 2,
+      "jobs": [
+        {
+          "id": 133810131417,
+          "name": "validate",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44014830679/job/133810131417",
+          "started_at": "2026-11-17T04:06:30Z",
+          "completed_at": "2026-11-17T04:24:00Z"
+        },
+        {
+          "id": 133816902300,
+          "name": "deliver",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44014830679/job/133816902300",
+          "started_at": "2026-11-17T04:24:05Z",
+          "completed_at": "2026-11-17T04:24:55Z"
+        }
+      ]
+    }
+  }
+}

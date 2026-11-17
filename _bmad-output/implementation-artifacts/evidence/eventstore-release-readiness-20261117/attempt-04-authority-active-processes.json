@@ -1,0 +1,83 @@
+{
+  "captured_utc": "2026-11-17T00:19:05.065149+00:00",
+  "scope": "Only active attempt-04-authority Python helper and its descendants; no environment read",
+  "processes": [
+    {
+      "pid": 1377579,
+      "ppid": 1377501,
+      "pgid": 1377579,
+      "argv": [
+        "python3",
+        "-B",
+        "_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py",
+        "--authority-probe",
+        "--output",
+        "_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/attempt-04-authority"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd"
+    },
+    {
+      "pid": 1391973,
+      "ppid": 1377579,
+      "pgid": 1391973,
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "scripts/validate-eventstore-package-authority.ps1",
+        "-RepositoryRoot",
+        "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore",
+        "-CatalogPath",
+        "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore/references/Hexalith.Builds/Props/Directory.Packages.props"
+      ],
+      "cwd": "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore"
+    },
+    {
+      "pid": 1392107,
+      "ppid": 1391973,
+      "pgid": 1391973,
+      "argv": [
+        "dotnet",
+        "/home/administrator/.dotnet/tools/.store/powershell/7.6.2/powershell/7.6.2/tools/net10.0/any/unix/pwsh.dll",
+        "-NoProfile",
+        "-File",
+        "scripts/validate-eventstore-package-authority.ps1",
+        "-RepositoryRoot",
+        "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore",
+        "-CatalogPath",
+        "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore/references/Hexalith.Builds/Props/Directory.Packages.props"
+      ],
+      "cwd": "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore"
+    },
+    {
+      "pid": 1395110,
+      "ppid": 1392107,
+      "pgid": 1391973,
+      "argv": [
+        "/home/administrator/.dotnet/tools/.store/powershell/7.6.2/powershell/7.6.2/tools/net10.0/any/unix/pwsh",
+        "-NoProfile",
+        "-EncodedCommand",
+        "JABwAGEAcgBhAG0AZQB0AGUAcgBzACAAPQAgAEcAZQB0AC0AQwBvAG4AdABlAG4AdAAgAC0ATABpAHQAZQByAGEAbABQAGEAdABoACAAJwAvAHQAbQBwAC8AaABlAHgAYQBsAGkAdABoAC0AagBvAGIALgBQAEMANwB5ADgAUQAxAG4ALwBlAHYAZQBuAHQAcwB0AG8AcgBlAC0AcABhAGMAawBhAGcAZQAtAGEAdQB0AGgAbwByAGkAdAB5AC0AZgBmADcAMAA1ADIAYwAxAGYAYgA0ADcANABlADcAMABhADEAMQA0ADEAMAA3ADQANAA4ADkAOQBlAGEANwBmAC8AYQByAGcAdQBtAGUAbgB0AHMALgBqAHMAbwBuACcAIAAtAFIAYQB3ACAAfAAgAEMAbwBuAHYAZQByAHQARgByAG8AbQAtAEoAcwBvAG4AIAAtAEEAcwBIAGEAcwBoAHQAYQBiAGwAZQAKACYAIAAnAC8AdABtAHAALwBoAGUAeABhAGwAaQB0AGgALQBqAG8AYgAuAFAAQwA3AHkAOABRADEAbgAvAGUAdgBlAG4AdABzAHQAbwByAGUALQByAGUAYQBkAGkAbgBlAHMAcwAtADkAbwB0AGUAegBwAGIAcgAvAEgAZQB4AGEAbABpAHQAaAAuAEUAdgBlAG4AdABTAHQAbwByAGUALwByAGUAZgBlAHIAZQBuAGMAZQBzAC8ASABlAHgAYQBsAGkAdABoAC4AQgB1AGkAbABkAHMALwBUAG8AbwBsAHMALwB2AGEAbABpAGQAYQB0AGUALQBjAG8AbgBzAHUAbQBlAHIALQBwAGEAYwBrAGEAZwBlAC0AYQB1AHQAaABvAHIAaQB0AHkALgBwAHMAMQAnACAAQABwAGEAcgBhAG0AZQB0AGUAcgBzAAoAZQB4AGkAdAAgACQATABBAFMAVABFAFgASQBUAEMATwBEAEUA"
+      ],
+      "cwd": "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore"
+    },
+    {
+      "pid": 1734290,
+      "ppid": 1395110,
+      "pgid": 1391973,
+      "argv": [
+        "/home/administrator/.dotnet/tools/.store/powershell/7.6.2/powershell/7.6.2/tools/net10.0/any/unix/pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore/references/Hexalith.Builds/Tools/validate-central-package-versions.ps1",
+        "-CatalogPath",
+        "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore/references/Hexalith.Builds/Props/Directory.Packages.props",
+        "-ConsumerProjectName",
+        "Hexalith.EventStore.Server.LiveSidecar.Tests",
+        "-EmitEvaluation"
+      ],
+      "cwd": "/tmp/hexalith-job.PC7y8Q1n/eventstore-readiness-9otezpbr/Hexalith.EventStore"
+    }
+  ]
+}

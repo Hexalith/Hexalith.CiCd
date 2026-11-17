@@ -1,0 +1,122 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "cb96fec38d264caabad60f2648b28a54",
+  "source": "cca7ad07211967e604b8f7f33aa21dbbb853ec10",
+  "tree": "9472f47e23de188363699be3c5e3c074fb3de68e",
+  "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "sharedPublicationReceipt": "shared-v610-publication-verification.json",
+  "deliveredBaselineVerified": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "bc5dad64733103f19b64e316f46abdb128f5f4718873d10eb2873a2e9a585529"
+    },
+    {
+      "kind": "worker",
+      "id": "decac3a5091f0722542f49905a99de814311780e5c7bee4361e71a1c7e53e8ad"
+    }
+  ],
+  "startedAt": 1794893756.4851305,
+  "events": [
+    {
+      "at": 1794893763.2004507,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794893764.0120087,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794893764.9898493,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794893772.9925869,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794893776.9935296,
+      "message": "Worker phase: released-custom-actions-and-actual-commit-policy/running"
+    },
+    {
+      "at": 1794893782.9949,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794893881.0102124,
+      "message": "Worker phase: one-release-package-build/passed"
+    },
+    {
+      "at": 1794893885.0112097,
+      "message": "Worker phase: released-complete-unit-projects/running"
+    },
+    {
+      "at": 1794894321.1160884,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794894469.1407852,
+      "message": "Worker phase: after-unit-tests-hook/running"
+    },
+    {
+      "at": 1794894707.1748028,
+      "message": "Worker phase: released-complete-integration-projects/running"
+    },
+    {
+      "at": 1794894733.1785438,
+      "message": "Worker phase: after-integration-step-2/running"
+    },
+    {
+      "at": 1794895769.2217424,
+      "message": "Worker phase: after-integration-step-3/running"
+    },
+    {
+      "at": 1794895867.2371452,
+      "message": "Worker phase: nightly-product-workload-local-only/running"
+    }
+  ],
+  "cleanup": [],
+  "privateScratchPath": "/tmp/hexalith-job.0jmxs5eq",
+  "scope": "full",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+  },
+  "workerSha256": "38e477ada288ef7125ee8019f4e53f1b0ae193f20c554638a5d89183df59c4dc",
+  "orchestratorSha256": "1c17fde1ce3635c91702b0dca1abb8f52577d6071922cc031e3cf7e8230bff7f",
+  "innerDaemonId": "\"932e27f4-9773-452b-8de9-0699fe2ee111\"",
+  "executedDcp": [
+    {
+      "processName": "dcp",
+      "pid": 120118,
+      "binarySha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+      "packagePath": "dcp",
+      "versions": [
+        "0.26.6"
+      ],
+      "versionCommandExecuted": false,
+      "versionSource": "prior-native-query-matching-binary-sha256",
+      "priorVersionReceipt": "local-isolated-20261117T003405Z-a33aa406/result.json"
+    }
+  ]
+}

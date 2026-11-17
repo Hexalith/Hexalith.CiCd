@@ -1,0 +1,352 @@
+diff --git a/docs/security/workload-binding-enrollment.md b/docs/security/workload-binding-enrollment.md
+index 508197cd..50660356 100644
+--- a/docs/security/workload-binding-enrollment.md
++++ b/docs/security/workload-binding-enrollment.md
+@@ -359,8 +359,9 @@ available. Complete Server mode cannot be combined with those modes.
+ Server identity authority comes from evaluated build metadata. Debug/source
+ qualification retains exact source SHA-256 and MVID checks. Release/package
+ qualification resolves package identity and runtime entries from restore and
+-`.deps.json` metadata, validates the actual archive SHA-512 against restore
+-content identity, and binds each checked DLL's SHA-256 and MVID to its archive
++`.deps.json` metadata, recomputes archive content SHA-512 with the pinned SDK's NuGet API (including
++signed-package record adjustments) against restore identity, verifies raw archive
++SHA-512 against the restored sidecar, and binds each checked DLL's SHA-256 and MVID to its archive
+ payload. Missing or ambiguous metadata and altered bytes refuse without fallback.
+ This component scope supplies no protected enrollment approval and leaves
+ AppHost cohort lifecycle, held FR58 work and migration acceptance separate.
+diff --git a/infrastructure/keycloak-workload-binding/component_fixture.py b/infrastructure/keycloak-workload-binding/component_fixture.py
+index fa1d9b76..d7147d1f 100644
+--- a/infrastructure/keycloak-workload-binding/component_fixture.py
++++ b/infrastructure/keycloak-workload-binding/component_fixture.py
+@@ -4,11 +4,13 @@ import os
+ from pathlib import Path
+ import re
+ import shutil
+-import signal
++import secrets
+ import subprocess
+ import tempfile
+ import xml.etree.ElementTree as ET
+ 
++import run_owned as owned_processes
++
+ 
+ class ChildFailure(RuntimeError):
+     """Preserve the test runner's native nonzero status."""
+@@ -22,7 +24,7 @@ def command(*args):
+     """Do not disclose command arguments or protected command output."""
+     try:
+         return subprocess.check_output(args, stderr=subprocess.STDOUT, text=True, timeout=45).strip()
+-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
++    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+         raise RuntimeError("Component command failed or exceeded its deadline; protected arguments and output withheld.") from None
+ 
+ 
+@@ -47,10 +49,14 @@ def verify_execution(output, result_file, project, complete):
+         tests = [test for assembly in assemblies for test in assembly.findall(".//test")]
+         if len(assemblies) != 1 or len(tests) != int(summaries[0][0]) or any(test.get("result") != "Pass" for test in tests):
+             raise ValueError()
++        assembly = assemblies[0]
++        if int(assembly.get("total", "-1")) != len(tests) or int(assembly.get("passed", "-1")) != len(tests) \
++                or any(int(assembly.get(counter, "0")) != 0 for counter in ("errors", "failed", "skipped", "not-run")):
++            raise ValueError()
+         security = [test for test in tests if test.get("type") == "Hexalith.Folders.Server.Tests.EnrolledWorkloadSourceBoundaryTests"
+                     and test.get("method") == "ActualIssuerAndIndependentSdkGuardEverySourceRequest"]
+         faults = ("none", "credential", "caller", "tenant", "audience", "signature", "scope", "expired", "malformed", "missing-proof", "cancelled")
+-        names = [test.get("name", "") for test in security]
++        names = [test.get("name", "").replace(chr(92) + '"', '"') for test in security]
+         if len(names) != 11 or len(set(names)) != 11 or any(sum(f'fault: "{fault}"' in name for name in names) != 1 for fault in faults):
+             raise ValueError()
+         if complete and len(tests) <= 11:
+@@ -65,6 +71,7 @@ class ComponentFixture:
+ 
+     def __init__(self, name, runner=command):
+         self.name = name
++        self.owner_token = secrets.token_hex(16)
+         self.runner = runner
+         self.directory = None
+         self.secrets = []
+@@ -78,13 +85,13 @@ class ComponentFixture:
+         failures = []
+         remaining = None
+         try:
+-            remaining = self.runner("docker", "ps", "--all", "--filter", "name=^/" + self.name + "$", "--format", "{{.Names}}")
++            remaining = self.runner("docker", "ps", "--all", "--no-trunc", "--filter", "name=^/" + self.name + "$", "--filter", "label=hexalith.component.fixture=" + self.owner_token, "--format", "{{.ID}}")
+             if remaining:
+-                self.runner("docker", "rm", "--force", "--volumes", self.name)
+-            remaining = self.runner("docker", "ps", "--all", "--filter", "name=^/" + self.name + "$", "--format", "{{.Names}}")
++                self.runner("docker", "rm", "--force", "--volumes", remaining)
++            remaining = self.runner("docker", "ps", "--all", "--no-trunc", "--filter", "name=^/" + self.name + "$", "--filter", "label=hexalith.component.fixture=" + self.owner_token, "--format", "{{.ID}}")
+             if remaining:
+                 failures.append("owned-container-cleanup-incomplete")
+-        except RuntimeError:
++        except (OSError, RuntimeError):
+             failures.append("owned-container-cleanup-unverified")
+         try:
+             shutil.rmtree(self.directory)
+@@ -99,7 +106,7 @@ class ComponentFixture:
+         if failures:
+             raise RuntimeError("; ".join(failures)) from None
+ 
+-    def run_tests(self, assembly, complete=False, timeout=600):
++    def run_tests(self, assembly, complete=False, timeout=600, evidence_file=None):
+         """Launch once, await the whole process group and validate native/semantic results."""
+         assembly = Path(assembly).resolve(strict=True)
+         result_file = self.directory / "sdk-results.xml"
+@@ -107,6 +114,8 @@ class ComponentFixture:
+         if not complete:
+             args += ["-class", "Hexalith.Folders.Server.Tests.EnrolledWorkloadSourceBoundaryTests"]
+         environment = dict(os.environ, HEXALITH_WORKLOAD_COMPONENT_FILE=str(self.directory / "sdk-component.json"))
++        owned_processes.enable_subreaper()
++        existing_children = owned_processes.existing_process_tree()
+         with tempfile.TemporaryFile(mode="w+", encoding="utf-8", dir=self.directory) as output:
+             child = subprocess.Popen(args, env=environment, stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
+             timed_out = False
+@@ -115,17 +124,54 @@ class ComponentFixture:
+             except subprocess.TimeoutExpired:
+                 timed_out = True
+             finally:
+-                # Reap descendants as well as the immediate child before fixture cleanup.
+-                try:
+-                    os.killpg(child.pid, signal.SIGKILL)
+-                except ProcessLookupError:
+-                    pass
++                # Reuse the owned launcher's subreaper and PID-identity checks so
++                # descendants that escape their group are also observed and reaped.
++                owned_processes.stop_child(child, existing_children)
+                 child.wait()
+             output.seek(0)
+             captured = output.read()
+         print(sanitize(captured, self.secrets), end="")
++        evidence_errors = self.record_evidence(captured, result_file, evidence_file)
+         if timed_out:
+             raise RuntimeError("Component test child deadline elapsed.")
+         if child.returncode != 0:
+             raise ChildFailure(child.returncode)
++        if evidence_errors:
++            raise RuntimeError("Component child produced malformed or unretainable evidence.")
+         return verify_execution(captured, result_file, assembly.stem, complete)
++
++    def record_evidence(self, captured, result_file, evidence_file):
++        """Retain sanitized observations best-effort without masking child status."""
++        errors = []
++        bindings = []
++        for match in re.finditer(r"(?m)^COMPONENT_RUNTIME_BINDING (\{[^\n]+\})$", captured):
++            try:
++                binding = json.loads(match.group(1))
++                allowed = {key: binding[key] for key in ("name", "authority", "version", "packageId", "packageVersion", "runtimeAsset", "packageSha512", "archiveSha512", "sha256", "mvid") if key in binding}
++                bindings.append(allowed)
++            except (ValueError, TypeError):
++                errors.append("malformed-runtime-binding")
++        if result_file.exists():
++            try:
++                result = ET.parse(result_file)
++                tests = result.getroot().findall(".//test")
++                security = [test for test in tests if test.get("type") == "Hexalith.Folders.Server.Tests.EnrolledWorkloadSourceBoundaryTests"]
++                print(json.dumps(dict(componentExecutionObservation=True, total=len(tests), securityCases=len(security),
++                    securityPassed=sum(test.get("result") == "Pass" for test in security),
++                    securityOutcomes=[dict(name=test.get("name"), result=test.get("result")) for test in security])))
++                failures = [test for test in tests if test.get("result") == "Fail"]
++                if failures:
++                    print(sanitize("\n".join(ET.tostring(test, encoding="unicode") for test in failures), self.secrets))
++                if evidence_file:
++                    for element in result.iter():
++                        element.attrib = {key: sanitize(value, self.secrets) for key, value in element.attrib.items()}
++                        if element.text:
++                            element.text = sanitize(element.text, self.secrets)
++                    result.write(Path(evidence_file).resolve(), encoding="utf-8", xml_declaration=True)
++            except (OSError, ET.ParseError, ValueError):
++                errors.append("malformed-or-unretainable-xunit-evidence")
++        if bindings:
++            print(json.dumps(dict(componentRuntimeBindings=bindings)))
++        if errors:
++            print(json.dumps(dict(componentEvidenceErrors=errors)))
++        return errors
+diff --git a/infrastructure/keycloak-workload-binding/test_component_fixture.py b/infrastructure/keycloak-workload-binding/test_component_fixture.py
+index 4a7fd6f7..65b17c92 100644
+--- a/infrastructure/keycloak-workload-binding/test_component_fixture.py
++++ b/infrastructure/keycloak-workload-binding/test_component_fixture.py
+@@ -11,10 +11,33 @@ import unittest
+ from unittest.mock import patch
+ import xml.etree.ElementTree as ET
+ 
+-from component_fixture import ChildFailure, ComponentFixture, sanitize, verify_execution
++from component_fixture import ChildFailure, ComponentFixture, command, sanitize, verify_execution
++import verify_component
+ 
+ 
+ class ComponentFixtureTests(unittest.TestCase):
++    def test_missing_provider_refuses_without_allocating_fixture(self):
++        with tempfile.TemporaryDirectory() as directory:
++            with patch.object(verify_component, "__file__", str(Path(directory) / "verify_component.py")), patch.object(verify_component, "ComponentFixture") as scope:
++                with self.assertRaisesRegex(RuntimeError, "Build the provider"):
++                    verify_component.run(complete_assembly="unneeded.dll")
++                scope.assert_not_called()
++
++    def test_missing_command_is_sanitized(self):
++        with patch("component_fixture.subprocess.check_output", side_effect=FileNotFoundError("protected-value")):
++            with self.assertRaisesRegex(RuntimeError, "protected arguments and output withheld") as caught:
++                command("nonexistent", "protected-value")
++            self.assertNotIn("protected-value", str(caught.exception))
++
++    def test_cleanup_command_oserror_still_removes_private_files(self):
++        def unavailable(*args):
++            raise OSError("protected-value")
++        with contextlib.redirect_stdout(io.StringIO()), self.assertRaisesRegex(RuntimeError, "owned-container-cleanup-unverified"):
++            with ComponentFixture("owned", unavailable) as fixture:
++                path = fixture.directory
++                (path / "secret").write_text("private")
++        self.assertFalse(path.exists())
++
+     def evidence(self, directory, fault=None):
+         root = ET.Element("assemblies")
+         assembly = ET.SubElement(root, "assembly")
+@@ -30,6 +53,7 @@ class ComponentFixtureTests(unittest.TestCase):
+             path.unlink(missing_ok=True)
+             return path
+         if fault == "duplicate": collection[0].set("name", collection[1].get("name"))
++        assembly.attrib.update(total=str(len(collection)), passed=str(len(collection)), errors="1" if fault == "errors" else "0")
+         ET.ElementTree(root).write(path)
+         return path
+ 
+@@ -38,10 +62,15 @@ class ComponentFixtureTests(unittest.TestCase):
+             path = self.evidence(directory)
+             output = "Hexalith.Folders.Server.Tests  Total: 12, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 1.0s\n"
+             self.assertEqual(verify_execution(output, path, "Hexalith.Folders.Server.Tests", True)["securityCases"], 11)
++            escaped = ET.parse(path)
++            for test in escaped.findall(".//test"):
++                test.set("name", test.get("name", "").replace('"', chr(92) + '"'))
++            escaped.write(path)
++            self.assertEqual(verify_execution(output, path, "Hexalith.Folders.Server.Tests", True)["securityCases"], 11)
+             for changed in ("", output + output, output.replace("Total: 12", "Total: 0"), output.replace("Not Run: 0", "Not Run: 1"), output.replace("Skipped: 0", "Skipped: 1")):
+                 with self.subTest(output=changed), self.assertRaises(RuntimeError):
+                     verify_execution(changed, path, "Hexalith.Folders.Server.Tests", True)
+-            for fault in ("missing", "filtered", "duplicate", "skipped"):
++            for fault in ("missing", "filtered", "duplicate", "skipped", "errors"):
+                 with self.subTest(fault=fault), self.assertRaises(RuntimeError):
+                     verify_execution(output, self.evidence(directory, fault), "Hexalith.Folders.Server.Tests", True)
+ 
+@@ -64,6 +93,17 @@ class ComponentFixtureTests(unittest.TestCase):
+             self.assertEqual(calls[1], ("docker", "rm", "--force", "--volumes", "owned"))
+             self.assertEqual(json.loads(output.getvalue())["observedRemainingContainers"], 0)
+ 
++    def test_cleanup_uses_owned_label_and_immutable_id(self):
++        calls = []
++        def runner(*args):
++            calls.append(args)
++            return "immutable-owned-id" if len(calls) == 1 else ""
++        with contextlib.redirect_stdout(io.StringIO()), ComponentFixture("shared-name", runner) as fixture:
++            token = fixture.owner_token
++        self.assertIn("label=hexalith.component.fixture=" + token, calls[0])
++        self.assertEqual(calls[1], ("docker", "rm", "--force", "--volumes", "immutable-owned-id"))
++        self.assertNotIn("shared-name", calls[1])
++
+     def test_cleanup_failures_are_exposed(self):
+         for fault in ("container", "private"):
+             output = io.StringIO()
+@@ -100,14 +140,15 @@ class ComponentFixtureTests(unittest.TestCase):
+                                 return self.returncode
+                         child = FakeChild()
+                         def launch(*args, **kwargs):
+-                            kwargs['stdout'].write('client_secret=private-value\n')
++                            kwargs['stdout'].write('client_secret=private-value\nCOMPONENT_RUNTIME_BINDING {broken}\n')
++                            (fixture.directory / "sdk-results.xml").write_text("<unfinished")
+                             return child
+-                        with patch("component_fixture.subprocess.Popen", side_effect=launch), patch("component_fixture.os.killpg") as kill:
++                        with patch("component_fixture.subprocess.Popen", side_effect=launch), patch("component_fixture.owned_processes.stop_child") as stop:
+                             with self.assertRaises(RuntimeError if timed_out else ChildFailure) as caught:
+                                 fixture.run_tests(assembly, complete=True, timeout=1)
+                             if not timed_out: self.assertEqual(caught.exception.code, 7)
+                             self.assertEqual(child.waits, 2)
+-                            kill.assert_called_once()
++                            stop.assert_called_once()
+             self.assertNotIn("private-value", output.getvalue())
+ 
+     def test_diagnostic_bound_and_redaction(self):
+diff --git a/infrastructure/keycloak-workload-binding/verify_component.py b/infrastructure/keycloak-workload-binding/verify_component.py
+index 2860688a..d2cd4f24 100644
+--- a/infrastructure/keycloak-workload-binding/verify_component.py
++++ b/infrastructure/keycloak-workload-binding/verify_component.py
+@@ -24,7 +24,7 @@ import urllib.request
+ from component_fixture import ChildFailure, ComponentFixture, command, sanitize
+ 
+ 
+-def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_timeout=600):
++def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_timeout=600, evidence_file=None):
+     root = Path(__file__).resolve().parent
+     jar = root / "target/keycloak-workload-binding-1.0.0-SNAPSHOT.jar"
+     if not jar.is_file():
+@@ -73,7 +73,7 @@ def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_
+         context = ssl.create_default_context(cafile=str(cert))
+         issuer = base + "/realms/component"
+         try:
+-            command("docker", "run", "--detach", "--rm", "--name", name, "--user", f"{os.getuid()}:{os.getgid()}", "--publish", f"127.0.0.1:{port}:8443",
++            command("docker", "run", "--detach", "--rm", "--name", name, "--label", "hexalith.component.fixture=" + fixture.owner_token, "--user", f"{os.getuid()}:{os.getgid()}", "--publish", f"127.0.0.1:{port}:8443",
+                     "--env", "KC_BOOTSTRAP_ADMIN_USERNAME=component-admin", "--env", "KC_BOOTSTRAP_ADMIN_PASSWORD=" + admin_secret,
+                     "--volume", f"{jar}:/opt/keycloak/providers/workload-binding.jar:ro",
+                     "--volume", f"{directory}:/component:ro", "--volume", f"{directory / 'realm.json'}:/opt/keycloak/data/import/component-realm.json:ro",
+@@ -111,6 +111,7 @@ def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_
+                     raise RuntimeError("Disposable Keycloak readiness deadline elapsed.")
+                 time.sleep(0.5)
+             assert metadata["issuer"] == issuer
++            print(json.dumps(dict(componentFixturePhase="issuer-ready")), flush=True)
+             try:
+                 request("/realms/component/.well-known/openid-configuration", trusted=False)
+                 raise AssertionError("Untrusted component TLS certificate was accepted.")
+@@ -144,6 +145,7 @@ def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_
+             status, server_info = request("/admin/serverinfo", bearer=bearer)
+             assert status == 200 and server_info["systemInfo"]["version"] == "26.6.4"
+             server_version = server_info["systemInfo"]["version"]
++            print(json.dumps(dict(componentFixturePhase="rsa-and-version-verified", serverVersion=server_version)), flush=True)
+             image_id = command("docker", "inspect", name, "--format", "{{.Image}}")
+             _, clients = request("/admin/realms/component/clients?clientId=folders-component", bearer=bearer)
+             client_path = "/admin/realms/component/clients/" + clients[0]["id"]
+@@ -158,14 +160,25 @@ def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_
+                 expiry = json.loads(decode(expired.split(".")[1]))["exp"]
+                 client["attributes"]["hexalith.workload-binding.grants"] = original_grants
+                 assert request(client_path, client, bearer, "PUT")[0] == 204
+-                time.sleep(max(0, expiry - time.time() + 0.1))
++                expiry_wait = max(0, expiry - time.time() + 0.1)
++                if expiry_wait > 130:
++                    raise RuntimeError("Natural token expiry exceeds the component preparation deadline.")
++                print(json.dumps(dict(componentFixturePhase="natural-expiry", waitSeconds=round(expiry_wait, 2))), flush=True)
++                time.sleep(expiry_wait)
+                 expired_file = directory / "expired-component.jwt"
+                 expired_file.write_text(expired)
+                 os.chmod(expired_file, 0o600)
+                 component_file = directory / "sdk-component.json"
+                 component_file.write_text(json.dumps(dict(issuer=issuer, secret=secret, certificatePath=str(cert), expiredTokenFile=str(expired_file))))
+                 os.chmod(component_file, 0o600)
+-                execution = fixture.run_tests(complete_assembly or sdk_assembly, complete=bool(complete_assembly), timeout=child_timeout)
++                print(json.dumps(dict(componentFixturePhase="test-child", completeProject=bool(complete_assembly))), flush=True)
++                execution = fixture.run_tests(complete_assembly or sdk_assembly, complete=bool(complete_assembly), timeout=child_timeout, evidence_file=evidence_file)
++                # The complete child can outlive the temporary administration token.
++                # Renew through the same owned credentials before retained mutation controls.
++                status, renewed_admin = request("/realms/master/protocol/openid-connect/token", [("grant_type", "password"), ("client_id", "admin-cli"),
++                    ("username", "component-admin"), ("password", admin_secret)])
++                assert status == 200, "Component administration renewal refused."
++                bearer = renewed_admin["access_token"]
+             controls = []
+             for scenario in ["credential", "tenant", "domain", "audience", "operation", "scan-without-grant", "missing", "extra", "duplicate", "oversized", "unbound"]:
+                 bad = list(form)
+@@ -288,6 +301,7 @@ def run(sdk_assembly=None, apphost_assembly=None, complete_assembly=None, child_
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--complete-assembly", help="Run the complete prebuilt Server assembly once in the real SDK fixture.")
++    parser.add_argument("--evidence-file", help="Retain sanitized SDK xUnit XML at this caller-selected path after cleanup.")
+     parser.add_argument("--child-timeout", type=int, default=600, help="Bound SDK test child execution in seconds (1..1800).")
+     parser.add_argument("--sdk-assembly", help="Run explicit source-boundary tests from this Debug assembly against the owned real issuer.")
+     parser.add_argument("--apphost-assembly", help="Run explicit consumer controls against the owned component issuer and TLS fixture.")
+@@ -307,10 +321,10 @@ if __name__ == "__main__":
+         if arguments.platform_assembly:
+             parser.error("--platform-assembly requires --run-owned.")
+         try:
+-            run(arguments.sdk_assembly, arguments.apphost_assembly, arguments.complete_assembly, arguments.child_timeout)
++            run(arguments.sdk_assembly, arguments.apphost_assembly, arguments.complete_assembly, arguments.child_timeout, arguments.evidence_file)
+         except ChildFailure as error:
+             print(str(error))
+             raise SystemExit(error.code) from None
+-        except (RuntimeError, AssertionError) as error:
++        except Exception as error:
+             print("Component qualification failed at line " + str(traceback.extract_tb(error.__traceback__)[-1].lineno) + ": " + sanitize(str(error)))
+             raise SystemExit(1) from None

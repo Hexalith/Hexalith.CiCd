@@ -1,0 +1,53 @@
+diff --git a/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs b/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs
+index 72098d4d..662cf34a 100644
+--- a/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs
++++ b/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs
+@@ -97,6 +97,7 @@ try {
+     await evaluate(`(async () => { const fluent = await import('/fluent-ui.js'); fluent.beforeStart(document, 'web'); await customElements.whenDefined('fluent-dropdown'); })()`);
+     await cdp('Accessibility.enable');
+     const results = [];
++    const staleNameControls = [];
+     for (const culture of ['en', 'fr']) {
+         for (const mode of ['ordinary', 'fallback', 'authoritative', 'partial', 'empty',
+             'transition-0', 'transition-1', 'transition-2', 'transition-3', 'transition-4', 'delayed-0', 'delayed-1',
+@@ -152,15 +153,37 @@ try {
+             results.push({ culture, mode, visible, accessibleName: controls[0].name.value });
+             if (mode === 'authoritative') {
+                 const stale = culture === 'fr' ? 'Statut sur la page actuelle' : 'Status on current page';
+-                await evaluate(`document.querySelector('fluent-dropdown [slot=control]').setAttribute('aria-label', ${JSON.stringify(stale)})`);
++                await evaluate(`(() => {
++                    const control = document.querySelector('fluent-dropdown button[slot=control]');
++                    if (!(control instanceof HTMLButtonElement) || control.getAttribute('role') !== 'combobox') {
++                        throw new Error('Stale-name control must target the native combobox');
++                    }
++                    // A Fluent field's label association takes precedence over aria-label.
++                    // Remove it only for this deliberately wrong accessible-name control.
++                    control.removeAttribute('aria-labelledby');
++                    control.setAttribute('aria-label', ${JSON.stringify(stale)});
++                })()`);
+                 const mutation = (await cdp('Accessibility.getFullAXTree')).nodes.find(node => !node.ignored && node.role?.value === 'combobox');
+-                assert.equal(mutation?.name?.value, stale, 'Control must set a stale name on the actual combobox');
++                assert.equal(mutation?.backendDOMNodeId, controls[0].backendDOMNodeId,
++                    'Stale-name control must preserve the actual native combobox');
++                const native = await cdp('DOM.describeNode', { backendNodeId: mutation.backendDOMNodeId });
++                const nameFacts = { culture, tag: native.node.nodeName, attributes: native.node.attributes,
++                    name: mutation.name };
++                assert.equal(mutation?.name?.value, stale,
++                    `Control must set a stale name on the actual combobox: ${JSON.stringify(nameFacts)}`);
+                 assert.notEqual(mutation.name.value, expected, 'Stale-name control must fail the naming contract');
++                const nameSource = mutation.name.sources.find(source => !source.superseded
++                    && source.value?.value === mutation.name.value);
++                assert.equal(nameSource?.attribute, 'aria-label', 'Stale-name control must supply the computed native name');
++                staleNameControls.push({ culture, accessibleName: mutation.name.value, rejectedExpectedName: expected,
++                    nativeTag: native.node.nodeName, sameNativeControl: true,
++                    nameSource: nameSource.attribute });
+             }
+         }
+     }
+     console.log(JSON.stringify({ browser: await cdp('Browser.getVersion'), modulePath, results,
+-        staleNameControl: 'rejected', scope: 'rendered Fluent fixtures; no authenticated topology or human AT claim' }));
++        staleNameControl: 'rejected', staleNameControls,
++        scope: 'rendered Fluent fixtures; no authenticated topology or human AT claim' }));
+ } finally {
+     clearTimeout(deadline);
+     socket?.close();

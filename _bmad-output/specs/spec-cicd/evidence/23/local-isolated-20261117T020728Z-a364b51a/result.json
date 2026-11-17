@@ -1,0 +1,344 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "a364b51a3a514072935871a4c5598047",
+  "source": "ba479995b8bece60e54692ddb3480831e54c7ab1",
+  "tree": "fca101ebc26da4483dfed74d66f75ab1e7ab8f07",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "a5866085d4ff38fe88f79dd74c3d14893d1b6d9785c4a195aee53c8a46bfb798"
+    },
+    {
+      "kind": "worker",
+      "id": "5bcdf2aed29b2531cd32a64933ea33ab41c5389d0c659b36917088f8e0e034fb"
+    }
+  ],
+  "startedAt": 1794881248.282471,
+  "events": [
+    {
+      "at": 1794881255.1290362,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794881255.9371557,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794881256.9502568,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794881264.9529817,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794881268.9538782,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794881368.968619,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794881514.9906163,
+      "message": "Worker phase: selected-cold-rest-profile/running"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "5bcdf2aed29b2531cd32a64933ea33ab41c5389d0c659b36917088f8e0e034fb"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "a5866085d4ff38fe88f79dd74c3d14893d1b6d9785c4a195aee53c8a46bfb798"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.VEb477gv",
+  "scope": "cold-rest",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "workerSha256": "57263c35fbeff89fe68d2392b62d45d1cce5ec7b1daf71243c0f78c4f670b6da",
+  "orchestratorSha256": "03cddfeb8067280e047981d6564aa624c6b7f5a07394f2246f6a9c1aa873e4bb",
+  "innerDaemonId": "\"bb9640cc-8f7b-4dff-abe2-1b7d751f6195\"",
+  "executedDcp": [
+    {
+      "processName": "dcp",
+      "pid": 6111,
+      "binarySha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+      "packagePath": "dcp",
+      "versions": [
+        "0.26.6"
+      ],
+      "versionCommandExecuted": false,
+      "versionSource": "prior-native-query-matching-binary-sha256",
+      "priorVersionReceipt": "local-isolated-20261117T003405Z-a33aa406/result.json"
+    }
+  ],
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 2,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "ba479995b8bece60e54692ddb3480831e54c7ab1",
+    "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794881264.2002532,
+        "elapsedSeconds": 3.5950565338134766
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794881267.7956579,
+        "elapsedSeconds": 100.9532527923584
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794881368.7493048,
+        "elapsedSeconds": 146.13904881477356
+      },
+      {
+        "name": "selected-cold-rest-profile",
+        "status": "failed",
+        "startedAt": 1794881514.8887315,
+        "exceptionType": "ValueError",
+        "exitCode": 1,
+        "elapsedSeconds": 175.4017632007599
+      }
+    ],
+    "scope": "cold-rest",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794881264.151366,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "shared-unit-projects",
+      "after-unit-tests-hook",
+      "shared-integration-projects",
+      "coverage-gate",
+      "Dapr-retry-controls",
+      "nightly-workload",
+      "ordinary-integration-tier",
+      "other-four-cold-profiles"
+    ],
+    "cleanupRefusalDiagnostic": {
+      "exceptionType": "ValueError",
+      "refusal": "private-process-survivors",
+      "privateProcessCount": 12,
+      "processKinds": {
+        "dcp": 9,
+        "other": 2,
+        "already-exited": 1
+      },
+      "privateContainerCount": 0,
+      "shutdownFilePresent": true,
+      "changedComponentCount": 0,
+      "processFacts": [
+        {
+          "pid": 6122,
+          "parentPid": 1,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": true,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6220,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "other",
+          "nameSha256": "d548c5b83fa61d8e3bd86ad42a7ffea9b7c86e3f9d8095c1577d3e1270bb9420",
+          "executableSha256": "6f7a95d27f98fc8c5f6b220898988bf8f61dd9b040936797917cbdc72c6cabe6",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6226,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6259,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "other",
+          "nameSha256": "d548c5b83fa61d8e3bd86ad42a7ffea9b7c86e3f9d8095c1577d3e1270bb9420",
+          "executableSha256": "6f7a95d27f98fc8c5f6b220898988bf8f61dd9b040936797917cbdc72c6cabe6",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6260,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6369,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6647,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 6648,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 7131,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 7140,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        },
+        {
+          "pid": 7199,
+          "parentPid": 6122,
+          "state": "S",
+          "name": "dcp",
+          "nameSha256": "c8c71759560b9af9eb0324b0c8bfb8d1da534ccda40b6b36d1aed5aebd3dc7f6",
+          "executableSha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+          "privateCommandMatch": false,
+          "privateTemporaryEnvironmentMatch": true,
+          "commandKind": "other"
+        }
+      ]
+    },
+    "status": "failed",
+    "exceptionType": "ValueError",
+    "finishedAt": 1794881690.290809,
+    "elapsedSeconds": 426.1394429206848
+  },
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json",
+    "tenants-product-profiles-rest.json"
+  ],
+  "trxSummaries": [
+    {
+      "path": "Hexalith.Tenants/TestResults/authenticated-routes/rest/rest.trx",
+      "counters": {
+        "total": "9",
+        "executed": "9",
+        "passed": "9",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    }
+  ],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794881691.7934601,
+  "elapsedSeconds": 443.51098918914795,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

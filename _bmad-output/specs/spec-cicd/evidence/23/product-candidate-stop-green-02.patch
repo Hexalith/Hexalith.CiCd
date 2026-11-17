@@ -1,0 +1,306 @@
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs
+index 62895f1e..702fc4a1 100644
+--- a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/AspireTopologyFixture.cs
+@@ -26,6 +26,7 @@ namespace Hexalith.Tenants.IntegrationTests.Fixtures;
+ /// </remarks>
+ public class AspireTopologyFixture : AspireTopologyFixtureBase<Projects.Hexalith_Tenants_AppHost>, IAsyncLifetime {
+     private readonly string _nativeOwnerPrivateKey = NativeOwnerReadServiceComposition.CreatePrivateKey();
++    private readonly FrozenAspireShutdownClient _shutdown;
+ 
+     internal static string DemoSigningKey => Environment.GetEnvironmentVariable("TENANTS_SOURCE_CATALOG_SIGNING_KEY")
+         ?? "DevOnlySigningKey-AtLeast32Chars!";
+@@ -42,6 +43,7 @@ public class AspireTopologyFixture : AspireTopologyFixtureBase<Projects.Hexalith
+     /// <summary>Uses the SDK's trusted development certificate directory without changing TLS validation.</summary>
+     public AspireTopologyFixture()
+     {
++        _shutdown = FrozenAspireLifecycle.Attach(this);
+         ConfigureCertificateTrust();
+     }
+ 
+@@ -68,7 +70,7 @@ public class AspireTopologyFixture : AspireTopologyFixtureBase<Projects.Hexalith
+             async () =>
+             {
+                 await BootstrapResourceFailureDiagnostics.CaptureAsync(this);
+-                await base.DisposeAsync();
++                await DisposeApplicationAsync();
+             },
+             string.Equals(Environment.GetEnvironmentVariable("TENANTS_LIVE_REQUIRE_COLD_BOOTSTRAP"), "true", StringComparison.OrdinalIgnoreCase),
+             timeout.Token,
+@@ -78,10 +80,16 @@ public class AspireTopologyFixture : AspireTopologyFixtureBase<Projects.Hexalith
+     /// <inheritdoc/>
+     public new async ValueTask DisposeAsync()
+     {
+-        await base.DisposeAsync();
++        await DisposeApplicationAsync();
+         CatalogRedisBackend.RecordShutdown();
+     }
+ 
++    private async ValueTask DisposeApplicationAsync()
++    {
++        await _shutdown.StopAsync();
++        await base.DisposeAsync();
++    }
++
+     internal static bool IsSourceCatalogProfile => string.Equals(Environment.GetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE"), "true", StringComparison.Ordinal);
+ 
+     internal static bool IncludeSample => !IsSourceCatalogProfile
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireLifecycle.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireLifecycle.cs
+new file mode 100644
+index 00000000..c0ed9ab4
+--- /dev/null
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireLifecycle.cs
+@@ -0,0 +1,41 @@
++using System.Reflection;
++
++using Aspire.Hosting;
++
++namespace Hexalith.Tenants.IntegrationTests.Fixtures;
++
++/// <summary>Supplies the missing stop phase at the frozen harness's existing client-disposal boundary.</summary>
++internal static class FrozenAspireLifecycle
++{
++    private const string ShutdownClientName = "__tenants_frozen_shutdown__";
++
++    internal static FrozenAspireShutdownClient Attach(AspireTopologyFixture fixture)
++    {
++        Type frozen = typeof(AspireTopologyFixtureBase<Projects.Hexalith_Tenants_AppHost>);
++        const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
++        FieldInfo? application = frozen.GetField("_app", fields);
++        FieldInfo? clients = frozen.GetField("_clients", fields);
++        if (frozen.Assembly.GetName().Version != new Version(3, 128, 4, 0)
++            || application?.FieldType != typeof(DistributedApplication)
++            || clients?.FieldType != typeof(Dictionary<string, HttpClient>)
++            || clients.GetValue(fixture) is not Dictionary<string, HttpClient> ownedClients)
++        {
++            throw new InvalidOperationException("frozen-aspire-lifecycle-contract-mismatch");
++        }
++
++        // The exact 3.128.4 disposer is final, including calls from its startup catch.
++        // It disposes owned clients before the application, builder and fixture lock.
++        // Attaching here covers that internal path without copying generic startup or
++        // finding any application outside this one fixture's private application field.
++        var shutdown = new FrozenAspireShutdownClient(cancellationToken =>
++            application.GetValue(fixture) is DistributedApplication owned
++                ? owned.StopAsync(cancellationToken)
++                : Task.CompletedTask);
++        if (!ownedClients.TryAdd(ShutdownClientName, shutdown))
++        {
++            throw new InvalidOperationException("frozen-aspire-lifecycle-already-attached");
++        }
++
++        return shutdown;
++    }
++}
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireShutdownClient.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireShutdownClient.cs
+new file mode 100644
+index 00000000..8653f7d3
+--- /dev/null
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/FrozenAspireShutdownClient.cs
+@@ -0,0 +1,41 @@
++namespace Hexalith.Tenants.IntegrationTests.Fixtures;
++
++/// <summary>A shutdown-only owned client that keeps the frozen disposer behind a completed application stop.</summary>
++internal sealed class FrozenAspireShutdownClient : HttpClient
++{
++    private readonly object _sync = new();
++    private readonly Func<CancellationToken, Task> _stopApplication;
++    private Task? _stop;
++
++    internal FrozenAspireShutdownClient(Func<CancellationToken, Task> stopApplication)
++    {
++        _stopApplication = stopApplication;
++    }
++
++    internal Task StopAsync()
++    {
++        lock (_sync)
++        {
++            // The legacy client-disposal phase is synchronous. Run the one stop task
++            // independently of the caller's synchronization context; normal module
++            // disposal awaits this same task asynchronously before entering that phase.
++            return _stop ??= Task.Run(async () =>
++            {
++                using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60));
++                await _stopApplication(timeout.Token).WaitAsync(timeout.Token).ConfigureAwait(false);
++            });
++        }
++    }
++
++    protected override void Dispose(bool disposing)
++    {
++        if (disposing)
++        {
++            // A failed stop must prevent the package from disposing the application,
++            // builder or fixture lock. In particular, do not put base.Dispose in finally.
++            StopAsync().GetAwaiter().GetResult();
++        }
++
++        base.Dispose(disposing);
++    }
++}
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/FrozenAspireLifecycleTests.cs b/tests/Hexalith.Tenants.IntegrationTests/FrozenAspireLifecycleTests.cs
+new file mode 100644
+index 00000000..c787df26
+--- /dev/null
++++ b/tests/Hexalith.Tenants.IntegrationTests/FrozenAspireLifecycleTests.cs
+@@ -0,0 +1,159 @@
++using System.Collections.Concurrent;
++using System.Reflection;
++
++using Aspire.Hosting;
++using Aspire.Hosting.ApplicationModel;
++using Aspire.Hosting.Testing;
++
++using Hexalith.Tenants.IntegrationTests.Fixtures;
++
++using Microsoft.Extensions.DependencyInjection;
++using Microsoft.Extensions.Hosting;
++
++using NSubstitute;
++using Shouldly;
++
++namespace Hexalith.Tenants.IntegrationTests;
++
++/// <summary>Exercises the frozen package's real disposal sequence without starting an AppHost or Dapr.</summary>
++[Collection("BootstrapReadiness")]
++public sealed class FrozenAspireLifecycleTests
++{
++    /// <summary>Both module disposal and the final frozen method used on startup failure await the owned application's stop.</summary>
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    public async Task ActualFrozenDisposalWaitsForStopBeforeApplicationBuilderAndFixtureLockRelease(bool startupFailure)
++    {
++        string root = Directory.CreateTempSubdirectory("tenants-frozen-lifetime-").FullName;
++        string? profile = Environment.GetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE");
++        string? trust = Environment.GetEnvironmentVariable("SSL_CERT_DIR");
++        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
++        var finish = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
++        ConcurrentQueue<string> events = new();
++        Task? disposing = null;
++        try
++        {
++            Environment.SetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE", "false");
++            IHost host = Substitute.For<IHost, IAsyncDisposable>();
++            using ServiceProvider services = CreateServices();
++            host.Services.Returns(services);
++            host.StopAsync(Arg.Any<CancellationToken>()).Returns(async call =>
++            {
++                call.Arg<CancellationToken>().CanBeCanceled.ShouldBeTrue();
++                events.Enqueue("stop-started");
++                started.TrySetResult();
++                await finish.Task.WaitAsync(call.Arg<CancellationToken>());
++                events.Enqueue("stop-finished");
++            });
++            ((IAsyncDisposable)host).DisposeAsync().Returns(_ => { events.Enqueue("application-disposed"); return ValueTask.CompletedTask; });
++            IDistributedApplicationTestingBuilder builder = Substitute.For<IDistributedApplicationTestingBuilder>();
++            builder.DisposeAsync().Returns(_ => { events.Enqueue("builder-disposed"); return ValueTask.CompletedTask; });
++            var application = new DistributedApplication(host);
++            var fixture = new AspireTopologyFixture();
++            SetField(fixture, "_app", application);
++            SetField(fixture, "_builder", builder);
++            string lockPath = Path.Combine(root, "fixture.lock");
++            using var fixtureLock = new FileStream(lockPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
++            SetField(fixture, "_daprFixtureLock", fixtureLock);
++
++            // Calling the actual frozen final method models its internal startup catch, which
++            // cannot dispatch a hidden derived DisposeAsync implementation.
++            disposing = Task.Run(async () =>
++            {
++                if (startupFailure) await ((AspireTopologyFixtureBase<Projects.Hexalith_Tenants_AppHost>)fixture).DisposeAsync();
++                else await fixture.DisposeAsync();
++            });
++            await started.Task.WaitAsync(TimeSpan.FromSeconds(3));
++            events.ToArray().ShouldBe(["stop-started"]);
++            disposing.IsCompleted.ShouldBeFalse();
++            Should.Throw<IOException>(() => { using var held = File.Open(lockPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None); });
++            finish.TrySetResult();
++            await disposing.WaitAsync(TimeSpan.FromSeconds(5));
++            events.ToArray().ShouldBe(["stop-started", "stop-finished", "application-disposed", "builder-disposed"]);
++            using var released = File.Open(lockPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
++            await host.Received(1).StopAsync(Arg.Any<CancellationToken>());
++        }
++        finally
++        {
++            finish.TrySetResult();
++            if (disposing is not null) await disposing.WaitAsync(TimeSpan.FromSeconds(5));
++            Environment.SetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE", profile);
++            Environment.SetEnvironmentVariable("SSL_CERT_DIR", trust);
++            Directory.Delete(root, recursive: true);
++        }
++    }
++
++    /// <summary>A stop refusal cannot advance application/builder disposal or release the private fixture lock.</summary>
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    public async Task FailedStopDoesNotReleaseFrozenApplicationBuilderOrFixtureLock(bool startupFailure)
++    {
++        string root = Directory.CreateTempSubdirectory("tenants-frozen-stop-refusal-").FullName;
++        string? profile = Environment.GetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE");
++        string? trust = Environment.GetEnvironmentVariable("SSL_CERT_DIR");
++        try
++        {
++            Environment.SetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE", "false");
++            IHost host = Substitute.For<IHost, IAsyncDisposable>();
++            using ServiceProvider services = CreateServices();
++            host.Services.Returns(services);
++            host.StopAsync(Arg.Any<CancellationToken>()).Returns(Task.FromException(new InvalidOperationException("stop-control")));
++            IDistributedApplicationTestingBuilder builder = Substitute.For<IDistributedApplicationTestingBuilder>();
++            var fixture = new AspireTopologyFixture();
++            SetField(fixture, "_app", new DistributedApplication(host));
++            SetField(fixture, "_builder", builder);
++            string lockPath = Path.Combine(root, "fixture.lock");
++            using var fixtureLock = new FileStream(lockPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
++            SetField(fixture, "_daprFixtureLock", fixtureLock);
++            Task disposing = Task.Run(async () =>
++            {
++                if (startupFailure) await ((AspireTopologyFixtureBase<Projects.Hexalith_Tenants_AppHost>)fixture).DisposeAsync();
++                else await fixture.DisposeAsync();
++            });
++            (await Should.ThrowAsync<InvalidOperationException>(() => disposing)).Message.ShouldBe("stop-control");
++            await ((IAsyncDisposable)host).DidNotReceive().DisposeAsync();
++            await builder.DidNotReceive().DisposeAsync();
++            Should.Throw<IOException>(() => { using var held = File.Open(lockPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None); });
++        }
++        finally
++        {
++            Environment.SetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE", profile);
++            Environment.SetEnvironmentVariable("SSL_CERT_DIR", trust);
++            Directory.Delete(root, recursive: true);
++        }
++    }
++
++    /// <summary>No owned application means no global application lookup or stop of another session.</summary>
++    [Fact]
++    public async Task EmptyFrozenFixtureDisposesItsBuilderWithoutInventingAnApplication()
++    {
++        string? profile = Environment.GetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE");
++        string? trust = Environment.GetEnvironmentVariable("SSL_CERT_DIR");
++        try
++        {
++            Environment.SetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE", "false");
++            var fixture = new AspireTopologyFixture();
++            IDistributedApplicationTestingBuilder builder = Substitute.For<IDistributedApplicationTestingBuilder>();
++            SetField(fixture, "_builder", builder);
++            await ((AspireTopologyFixtureBase<Projects.Hexalith_Tenants_AppHost>)fixture).DisposeAsync();
++            await builder.Received(1).DisposeAsync();
++        }
++        finally
++        {
++            Environment.SetEnvironmentVariable("TENANTS_SOURCE_CATALOG_PROFILE", profile);
++            Environment.SetEnvironmentVariable("SSL_CERT_DIR", trust);
++        }
++    }
++
++    private static ServiceProvider CreateServices()
++        => new ServiceCollection().AddLogging()
++            .AddSingleton<IHostApplicationLifetime>(Substitute.For<IHostApplicationLifetime>())
++            .AddSingleton(new DistributedApplicationModel(Array.Empty<IResource>()))
++            .AddSingleton<ResourceLoggerService>().AddSingleton<ResourceNotificationService>().BuildServiceProvider();
++
++    private static void SetField(AspireTopologyFixture fixture, string name, object value)
++        => typeof(AspireTopologyFixtureBase<Projects.Hexalith_Tenants_AppHost>)
++            .GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(fixture, value);
++}

@@ -1,0 +1,81 @@
+{
+  "at": "2026-11-17T06:19:59.142128+00:00",
+  "source": "cca7ad07211967e604b8f7f33aa21dbbb853ec10",
+  "packet": "local-isolated-20261117T053556Z-cb96fec3",
+  "readOnly": true,
+  "actualLiveContentStabilityQualified": true,
+  "browser": [
+    {
+      "file": "authenticated-ui-browser-0.json",
+      "canonicalSha256": "06b655f314b211e04c56aa2fa157448e8e67a32a1aa13c67e57ac19851e1becd",
+      "passed": true,
+      "browserCases": 25,
+      "passedBrowserCases": 25,
+      "capturedFieldMatches": {
+        "sourceRevision": true,
+        "sourceDiffSha256": true,
+        "untrackedSourceSha256": true,
+        "validatorSha256": true,
+        "uiBinarySha256": true,
+        "shellBinarySha256": true,
+        "frontComposerPackages": true,
+        "frontComposerRestoreSha256": true,
+        "dependencyGitlinksSha256": true,
+        "playwrightPackageSha256": true
+      },
+      "packageRows": 4
+    }
+  ],
+  "freshProfiles": [
+    {
+      "profile": "rest",
+      "database": 1,
+      "initializationSha256": "8f27029977b2c8a92c429a74da7e4f3812e2a23064ed5679f71e0850e277f369",
+      "freshMaterial": true,
+      "initialDatabaseSize": 0
+    },
+    {
+      "profile": "persisted",
+      "database": 2,
+      "initializationSha256": "8f27029977b2c8a92c429a74da7e4f3812e2a23064ed5679f71e0850e277f369",
+      "freshMaterial": true,
+      "initialDatabaseSize": 0
+    },
+    {
+      "profile": "anonymous-ui",
+      "database": 3,
+      "initializationSha256": "8f27029977b2c8a92c429a74da7e4f3812e2a23064ed5679f71e0850e277f369",
+      "freshMaterial": true,
+      "initialDatabaseSize": 0
+    },
+    {
+      "profile": "authenticated-ui",
+      "database": 4,
+      "initializationSha256": "8f27029977b2c8a92c429a74da7e4f3812e2a23064ed5679f71e0850e277f369",
+      "freshMaterial": true,
+      "initialDatabaseSize": 0
+    },
+    {
+      "profile": "catalog-owner",
+      "database": 5,
+      "initializationSha256": "8f27029977b2c8a92c429a74da7e4f3812e2a23064ed5679f71e0850e277f369",
+      "freshMaterial": true,
+      "initialDatabaseSize": 0
+    }
+  ],
+  "dapr": {
+    "baselineCases": 15,
+    "baselinePassed": 15,
+    "originalControls": 13,
+    "additionalDeadlineControls": 2,
+    "mutationCases": 13,
+    "expectedRejectedMutationBackendCalls": 4,
+    "otherMutationCasesPassed": 12
+  },
+  "fullBootstrapQualified": false,
+  "remainingLocalStages": [
+    "performance workload",
+    "final semantic NuGet audit",
+    "outer cleanup/preservation"
+  ]
+}
