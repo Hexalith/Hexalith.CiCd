@@ -222,6 +222,134 @@ class QualificationTests(unittest.TestCase):
                         self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "outside the approved central product inventory"):
                     QUALIFY.product_difference(snapshot(before), snapshot(after))
 
+    def direct_runtime_fixture(self, directory):
+        work = directory / "work"
+        private = work / "dapr-qualification-control"
+        runtime, shims, verified = private / "runtime", private / "bin", private / "verified-cli"
+        decoy = directory / "decoy"
+        for path in (runtime, shims, verified, decoy):
+            path.mkdir(parents=True)
+        private.chmod(0o700)
+        for path, marker in ((runtime / "daprd", "selected-runtime"), (verified / "dapr", "verified-cli"),
+                (shims / "dapr", "selected-cli-shim"), (shims / "docker", "selected-docker-shim"),
+                (decoy / "daprd", "decoy-runtime"), (decoy / "dapr", "decoy-cli"), (decoy / "docker", "decoy-docker")):
+            path.write_text("#!/bin/sh\nprintf '%s\\n' '" + marker + "'\n")
+            path.chmod(0o755)
+        return SimpleNamespace(work=work, private=private, runtime=runtime, shims=shims, decoy=decoy,
+            selected={"runtimePath": str(runtime), "cli": str(verified / "dapr")})
+
+    def test_direct_dapr_uses_actual_selected_executable_and_preserves_cli_docker_shims_and_home(self):
+        with tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-") as temporary:
+            fixture = self.direct_runtime_fixture(Path(temporary))
+            original = str(fixture.shims) + os.pathsep + str(fixture.decoy) + os.pathsep + os.environ["PATH"]
+            with mock.patch.dict(os.environ, PATH=original, HOME=str(fixture.decoy)):
+                self.assertEqual("decoy-runtime", subprocess.check_output(["daprd"], text=True).strip())
+                with QUALIFY.direct_dapr_runtime(fixture.work, fixture.selected):
+                    self.assertEqual(str(fixture.runtime / "daprd"), shutil.which("daprd"))
+                    self.assertEqual("selected-runtime", subprocess.check_output(["daprd", "--version"], text=True).strip())
+                    self.assertEqual("selected-cli-shim", subprocess.check_output(["dapr"], text=True).strip())
+                    self.assertEqual("selected-docker-shim", subprocess.check_output(["docker"], text=True).strip())
+                    self.assertEqual([str(fixture.shims), str(fixture.runtime)], os.environ["PATH"].split(os.pathsep)[:2])
+                    self.assertEqual(str(fixture.decoy), os.environ["HOME"])
+                self.assertEqual(original, os.environ["PATH"])
+                self.assertEqual(str(fixture.decoy), os.environ["HOME"])
+                self.assertEqual("decoy-runtime", subprocess.check_output(["daprd"], text=True).strip())
+
+    def test_direct_dapr_restores_exact_path_on_child_failure_or_environment_mutation(self):
+        with tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-restore-") as temporary:
+            fixture = self.direct_runtime_fixture(Path(temporary))
+            for original in (str(fixture.shims), str(fixture.shims) + os.pathsep,
+                             str(fixture.shims) + os.pathsep + str(fixture.decoy)):
+                with self.subTest(original=original), mock.patch.dict(os.environ, PATH=original):
+                    with self.assertRaisesRegex(RuntimeError, "child failed"):
+                        with QUALIFY.direct_dapr_runtime(fixture.work, fixture.selected):
+                            os.environ.pop("PATH")
+                            raise RuntimeError("child failed")
+                    self.assertEqual(original, os.environ["PATH"])
+
+    def test_direct_dapr_refuses_none_or_malformed_selection_before_exposing_any_runtime(self):
+        with tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-selection-") as temporary:
+            fixture = self.direct_runtime_fixture(Path(temporary))
+            original = str(fixture.shims) + os.pathsep + str(fixture.decoy)
+            selections = [None, [], "runtime", {}, {"runtimePath": str(fixture.runtime)},
+                {**fixture.selected, "runtimePath": None}, {**fixture.selected, "runtimePath": fixture.runtime},
+                {**fixture.selected, "runtimePath": "relative/runtime"}, {**fixture.selected, "runtimePath": "bad\0path"},
+                {**fixture.selected, "cli": str(fixture.decoy / "dapr")}]
+            for selected in selections:
+                with self.subTest(selectedType=type(selected).__name__), mock.patch.dict(os.environ, PATH=original):
+                    with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "invalid selected Dapr runtime"):
+                        with QUALIFY.direct_dapr_runtime(fixture.work, selected):
+                            self.fail("invalid selection entered its child scope")
+                    self.assertEqual(original, os.environ["PATH"])
+                    self.assertEqual(str(fixture.decoy / "daprd"), shutil.which("daprd"))
+
+    def test_direct_dapr_refuses_absent_empty_or_reordered_shim_path_without_mutation(self):
+        with tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-shims-") as temporary:
+            fixture = self.direct_runtime_fixture(Path(temporary))
+            for original in (None, "", str(fixture.decoy) + os.pathsep + str(fixture.shims)):
+                environment = dict(os.environ)
+                if original is None:
+                    environment.pop("PATH", None)
+                else:
+                    environment["PATH"] = original
+                with self.subTest(path=original), mock.patch.dict(os.environ, environment, clear=True):
+                    with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "invalid selected Dapr runtime"):
+                        with QUALIFY.direct_dapr_runtime(fixture.work, fixture.selected):
+                            self.fail("missing/reordered shim scope was accepted")
+                    self.assertEqual(original, os.environ.get("PATH"))
+
+    def test_direct_dapr_refuses_escape_links_missing_nonexecutable_and_foreign_owned_inputs(self):
+        faults = ("escape", "dotdot", "product-path", "missing", "directory", "nonexecutable", "binary-link",
+                  "runtime-link", "shim-link", "cli-link", "foreign-owner", "malformed-work")
+        for fault in faults:
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-path-") as temporary:
+                root = Path(temporary)
+                fixture = self.direct_runtime_fixture(root)
+                selected = dict(fixture.selected)
+                work = fixture.work
+                if fault == "escape":
+                    selected["runtimePath"] = str(root / "dapr-qualification-foreign/runtime")
+                elif fault == "dotdot":
+                    selected["runtimePath"] = str(fixture.private / ".." / fixture.private.name / "runtime")
+                elif fault == "product-path":
+                    selected["runtimePath"] = str(work / "module/runtime")
+                elif fault in ("missing", "directory", "nonexecutable", "binary-link"):
+                    executable = fixture.runtime / "daprd"
+                    if fault == "nonexecutable":
+                        executable.chmod(0o644)
+                    else:
+                        executable.unlink()
+                        if fault == "directory": executable.mkdir()
+                        elif fault == "binary-link": executable.symlink_to(fixture.decoy / "daprd")
+                elif fault in ("runtime-link", "shim-link"):
+                    directory = fixture.runtime if fault == "runtime-link" else fixture.shims
+                    directory.rename(root / "foreign-directory")
+                    directory.symlink_to(root / "foreign-directory", target_is_directory=True)
+                elif fault == "cli-link":
+                    cli = Path(selected["cli"])
+                    cli.unlink(); cli.symlink_to(fixture.decoy / "dapr")
+                elif fault == "malformed-work":
+                    work = None
+                original = str(fixture.shims) + os.pathsep + str(fixture.decoy)
+                with mock.patch.dict(os.environ, PATH=original), \
+                        mock.patch.object(QUALIFY.os, "getuid", return_value=os.getuid() + (1 if fault == "foreign-owner" else 0)):
+                    with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "invalid selected Dapr runtime"):
+                        with QUALIFY.direct_dapr_runtime(work, selected):
+                            self.fail("unsafe selected runtime entered child scope")
+                    self.assertEqual(original, os.environ["PATH"])
+
+    def test_direct_dapr_never_shadows_an_unexpected_first_shim_runtime(self):
+        with tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-precedence-") as temporary:
+            fixture = self.direct_runtime_fixture(Path(temporary))
+            collision = fixture.shims / "daprd"
+            collision.write_text("#!/bin/sh\nprintf 'unexpected-first-shim'\n"); collision.chmod(0o755)
+            original = str(fixture.shims) + os.pathsep + str(fixture.decoy)
+            with mock.patch.dict(os.environ, PATH=original):
+                with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "invalid selected Dapr runtime"):
+                    with QUALIFY.direct_dapr_runtime(fixture.work, fixture.selected):
+                        self.fail("a first-shim collision was silently shadowed")
+                self.assertEqual(original, os.environ["PATH"])
+
     def test_stale_candidate_records_failure_before_any_remote_sdk_or_source_command(self):
         with tempfile.TemporaryDirectory(prefix="qualification-controls-") as temporary:
             directory = Path(temporary)

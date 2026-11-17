@@ -237,6 +237,51 @@ def private_environment(root: Path):
                 os.environ[key] = value
 
 
+@contextmanager
+def direct_dapr_runtime(work: Path, selected: dict):
+    """Expose the verified scope's runtime after its CLI/docker shims only."""
+    previous = os.environ.get("PATH")
+    refusal = "invalid selected Dapr runtime for direct product consumers"
+    try:
+        if (not isinstance(selected, dict) or not isinstance(work, Path)
+                or not work.is_absolute() or work.resolve(strict=True) != work):
+            raise ValueError()
+        value = selected.get("runtimePath")
+        if not isinstance(value, str) or not value or "\0" in value or len(value) > 4096:
+            raise ValueError()
+        runtime = Path(value)
+        private = runtime.parent
+        shims = private / "bin"
+        executable = runtime / "daprd"
+        cli = private / "verified-cli/dapr"
+        if (str(runtime) != value or not runtime.is_absolute() or runtime.name != "runtime"
+                or private.parent != work or re.fullmatch(r"dapr-qualification-[-A-Za-z0-9_]+", private.name) is None
+                or selected.get("cli") != str(cli) or previous is None or previous.split(os.pathsep)[0] != str(shims)):
+            raise ValueError()
+        # The shared released scope supplies these paths. Product paths, links,
+        # foreign owners and an ambient executable search cannot select them.
+        for path, directory in ((work, True), (private, True), (runtime, True), (shims, True),
+                                (cli.parent, True), (executable, False), (cli, False),
+                                (shims / "dapr", False), (shims / "docker", False)):
+            info = path.lstat()
+            if (info.st_uid != os.getuid() or getattr(info, "st_file_attributes", 0) & 1024
+                    or not (stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode))
+                    or not directory and not os.access(path, os.X_OK)):
+                raise ValueError()
+    except (OSError, RuntimeError, ValueError, TypeError):
+        raise delivery.DeliveryError(refusal) from None
+    first, separator, rest = previous.partition(os.pathsep)
+    os.environ["PATH"] = first + os.pathsep + str(runtime) + (separator + rest if separator else "")
+    try:
+        if (shutil.which("daprd") != str(executable) or shutil.which("dapr") != str(shims / "dapr")
+                or shutil.which("docker") != str(shims / "docker")):
+            raise delivery.DeliveryError(refusal)
+        yield
+    finally:
+        # Restore exactly, even when a child raises or changes its environment.
+        os.environ["PATH"] = previous
+
+
 def action(root: Path, name: str, tools) -> None:
     """Execute the already policy-checked module composite without extra setup."""
     document = tools.parse_yaml((root / ".github/actions" / name / "action.yml").read_text())
@@ -510,14 +555,15 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
                         classified = ci_pipeline.run_unit_tests(prepared, repository=REPOSITORY)
                         browsers = config["browsers"] or any("E2E" in Path(path).stem for path in classified.integration)
                         with ci_dapr_scope.isolated_dapr(module, work) if config["dapr"] else nullcontext(None) as dapr_setup:
-                            ci_environment.setup_environment(module, solution=config["solution"], dapr=False, browsers=browsers, registry=config["registry"])
-                            for name in ("after-unit-tests",):
-                                if name in config["hooks"]:
-                                    action(module, name, tools)
-                            ci_pipeline.run_integration_tests(prepared, repository=REPOSITORY)
-                            if "after-integration-tests" in config["hooks"]:
-                                action(module, "after-integration-tests", tools)
-                            report["dapr"] = dapr_setup
+                            with direct_dapr_runtime(work, dapr_setup) if config["dapr"] else nullcontext():
+                                ci_environment.setup_environment(module, solution=config["solution"], dapr=False, browsers=browsers, registry=config["registry"])
+                                for name in ("after-unit-tests",):
+                                    if name in config["hooks"]:
+                                        action(module, name, tools)
+                                ci_pipeline.run_integration_tests(prepared, repository=REPOSITORY)
+                                if "after-integration-tests" in config["hooks"]:
+                                    action(module, "after-integration-tests", tools)
+                                report["dapr"] = dapr_setup
 
             if live_baseline(transport) != baseline or git(module_source, "rev-parse", "HEAD").decode().strip() != product_head:
                 raise delivery.DeliveryError("baseline or tested product head changed; qualification cannot be reused")
