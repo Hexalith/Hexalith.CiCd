@@ -1,0 +1,10 @@
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.DomainService/DomainServiceRequestRouter.cs:193:                            ? serviceProvider.GetService<FoldedSnapshotQualificationRegistry>()?
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.DomainService/EventStoreDomainServiceExtensions.cs:144:    public static IServiceCollection AddEventStoreFoldedSnapshotActorQualification(
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.DomainService/EventStoreDomainServiceExtensions.cs:155:        services.TryAddSingleton<FoldedSnapshotQualificationRegistry>();
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.DomainService/EventStoreDomainServiceExtensions.cs:171:        services.TryAddSingleton<FoldedSnapshotQualificationRegistry>();
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.DomainService/FoldedSnapshotQualificationRegistry.cs:4:public sealed class FoldedSnapshotQualificationRegistry
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.DomainService/FoldedSnapshotQualificationRegistry.cs:9:    public FoldedSnapshotQualificationRegistry(IEnumerable<FoldedSnapshotQualification> entries)
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Server/Actors/AggregateActor.cs:1460:                            snapshotQualification = serviceProvider?.GetService<FoldedSnapshotQualificationRegistry>()?
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Server/Actors/AggregateActor.cs:2691:            FoldedSnapshotQualificationRegistry? qualificationRegistry =
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Server/Actors/AggregateActor.cs:2692:                serviceProvider?.GetService<FoldedSnapshotQualificationRegistry>();
+3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotQualificationHostedService.cs:18:        if (!services.IsService(typeof(FoldedSnapshotQualificationRegistry)))

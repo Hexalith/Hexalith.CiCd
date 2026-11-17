@@ -1,0 +1,186 @@
+{
+  "recorded_at": "2026-11-17T08:13:32.774262+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4932",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 68"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/compare/3b2350e7c1fff640131f8101596c78a59e31a03f...96363934c6fd1da4d50c2078b13929c473ecab7f",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4931",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 69"
+      ],
+      "data": {
+        "status": "ahead",
+        "aheadBy": 12,
+        "commits": [
+          {
+            "sha": "9146021ff5ee6a4d17c153072c8b6b7a5450728d",
+            "message": "build(ci): prepare retained product qualification actions\n\nRetain product coverage and legacy publishing during CiCd preparation.\nAdd isolated fixture actions and separately authorized Azure qualification."
+          },
+          {
+            "sha": "933da6e762f6604b2ea91aa2fa457be522d12dda",
+            "message": "test(client): isolate bounded discovery admission coverage\n\nUse the existing nonparallel admission collection to avoid interference from unrelated fixtures.\nKeep the production deadline and corrupt-registry exception assertion unchanged."
+          },
+          {
+            "sha": "8a4b9e2847b19c4ea39d24db0bd5ebf37519537b",
+            "message": "test(domainservice): isolate reminder discovery admission coverage\n\nUse the existing process-read collection for tests with bounded admission workers.\nPreserve all deadlines, recovery pass counts and assertions."
+          },
+          {
+            "sha": "73d6b308daccd9938b3f6569eae1f3427cfa972e",
+            "message": "test(packaging): isolate OCI fixture build processes\n\nDisable persistent build servers for disposable OCI publish inputs.\nKeep multi-RID provenance checks and process timeouts unchanged."
+          },
+          {
+            "sha": "360c4aedc48d70a5efa0a02057f19f01aa34ea9a",
+            "message": "test(server): synchronize activation cancellation coverage\n\nWait for protocol cancellation before completing the held native call.\nPreserve hosted-slot, catalog-lease and recoverable-outbox assertions."
+          },
+          {
+            "sha": "69d9a3858d661671d3d3925e9633ed4510643fcf",
+            "message": "build(ci): align qualification fixtures with shared contracts\n\nUse the generic qualification environment for the private Azure action.\nProvision pinned commitlint for disposable paired checkout fixtures."
+          },
+          {
+            "sha": "febcc0b378a49563f2f417ac391fb7d2aa71fbce",
+            "message": "fix(qualification): bind reviewed Dapr fixture sources\n\nRefresh source digests for the migrated fixture and its direct helpers.\nPreserve runtime artifact identities and strict source drift checks."
+          },
+          {
+            "sha": "22e2e2470ed5d692b2bf4970251d02b5c1823f9f",
+            "message": "test(projections): prove keyed semaphore ownership deterministically\n\nObserve the queued acquisition while the first holder owns the key.\nPreserve serialization and final semaphore cleanup assertions."
+          },
+          {
+            "sha": "be79d5d91287d22cc777b33a510c3849f81d3866",
+            "message": "feat(deployment): prove profile bridge SDK import resolution"
+          },
+          {
+            "sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "message": "docs(governance): record story 9.2 verification blockers\n\nRetain failed guarded-write attempts and current-source evidence.\nKeep the slice in review and the parent story in progress."
+          },
+          {
+            "sha": "5751f645db82e29690c859b273be1102e11507fd",
+            "message": "build: merge current EventStore main before publishing SDK proof"
+          },
+          {
+            "sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "message": "build: merge latest EventStore verification notes before publication"
+          }
+        ],
+        "changedPaths": [
+          ".github/actions/after-integration-tests/action.yml",
+          ".github/actions/after-unit-tests/action.yml",
+          ".github/actions/nightly/action.yml",
+          ".github/actions/payload-azure/action.yml",
+          "Hexalith.EventStore.slnx",
+          "_bmad-output/implementation-artifacts/deferred-work.md",
+          "_bmad-output/implementation-artifacts/epic-9-context.md",
+          "_bmad-output/implementation-artifacts/spec-3-19-prove-profile-bridge-sdk-import-resolution.md",
+          "_bmad-output/implementation-artifacts/spec-9-2-story-5-3-guarded-concurrent-write-proof.md",
+          "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/archive.json",
+          "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs",
+          "deploy/dapr/qualification/runtime-lock-1.19.1-platform-config-v1.json",
+          "docs/architecture/publication-authority-v1.md",
+          "docs/ci.md",
+          "docs/concepts/dapr-infrastructure-boundary.md",
+          "scripts/ci-product-checks.py",
+          "scripts/legacy_sidecar_runtime.py",
+          "scripts/qualify-payload-azure.py",
+          "tests/Hexalith.EventStore.Admin.UI.E2E/Hexalith.EventStore.Admin.UI.E2E.csproj",
+          "tests/Hexalith.EventStore.Client.Tests/Projections/SharedProjectionControlIndexTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContainerPublishingGovernanceTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PackageOwnershipGovernanceTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PostgreSqlImageGovernanceTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ProcessPackageContractTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ReleasePackageManifestTests.cs",
+          "tests/Hexalith.EventStore.Contracts.Tests/Packaging/TrustedPublishingReleaseTests.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6BookkeepingAtddTests.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6CheckerReportAtddTests.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceCheckerInvokerFactory.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceDiagnostic.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceVocabularyAtddTests.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6LedgerSweepAtddTests.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6RuleVocabulary.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6TestPaths.cs",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj.lscache",
+          "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/IDw6GovernanceCheckerInvoker.cs",
+          "tests/Hexalith.EventStore.DomainService.Tests/ReminderDiscoveryOwnershipTests.cs",
+          "tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests/PayloadProtectionDaprFixture.cs",
+          "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Actors/AppendDurabilityRaceLiveSidecarTests.cs",
+          "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs",
+          "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainers.cs",
+          "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainersTests.cs",
+          "tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs",
+          "tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs",
+          "tests/Hexalith.EventStore.TestSubscriber/Hexalith.EventStore.TestSubscriber.csproj",
+          "tools/ProductionProfileBridge/BuildProof.targets",
+          "tools/ProductionProfileBridge/ProductionProfileBridge.csproj",
+          "tools/folded-snapshot-compatibility/run.sh",
+          "tools/pack-release-packages.py",
+          "tools/phase-4-transition.schema.json",
+          "tools/prepare-route-catalog-tools.py",
+          "tools/profile_bridge_build.py",
+          "tools/publication_authority.py",
+          "tools/tests/check_production_profile_bridge.py",
+          "tools/tests/test_check_committed_files.py",
+          "tools/tests/test_dapr_runtime_qualification.py",
+          "tools/tests/test_ext_protection_1_cross_language.py",
+          "tools/tests/test_ext_protection_1_loop7_installation.py",
+          "tools/tests/test_managed_product_fixtures.py",
+          "tools/tests/test_oq8_governing_design.py",
+          "tools/tests/test_phase_4_gate_decision.py",
+          "tools/tests/test_phase_4_gate_risk_matrix.py",
+          "tools/tests/test_phase_4_story_5_3.py",
+          "tools/tests/test_phase_4_story_completion.py",
+          "tools/tests/test_phase_4_transition.py",
+          "tools/tests/test_profile_bridge_build.py",
+          "tools/tests/test_publication_authority.py",
+          "tools/tests/test_published_compatibility_workflow.py",
+          "tools/tests/test_published_runner_exit.py",
+          "tools/tests/test_published_workflow_context.py",
+          "tools/tests/test_release_api_compatibility.py",
+          "tools/tests/test_release_candidate.py",
+          "tools/tests/test_release_publication_authority.py",
+          "tools/tests/test_release_source_branch.py",
+          "tools/tests/test_route_catalog_ci_tools.py",
+          "tools/tests/test_run_with_temp.py"
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+}

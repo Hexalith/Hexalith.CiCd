@@ -1,0 +1,273 @@
+{
+  "recorded_at": "2026-11-17T08:09:14.174638+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: ",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4950",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 50"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "repos/Hexalith/Hexalith.Tenants",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: repo",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4949",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 51"
+      ],
+      "data": {
+        "id": 1174267565,
+        "full_name": "Hexalith/Hexalith.Tenants",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4993",
+        "X-Ratelimit-Reset: 1794906514",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 7"
+      ],
+      "data": {
+        "name": "HEXALITH_ZOT_USERNAME",
+        "created_at": "2026-07-08T14:34:13Z",
+        "updated_at": "2026-11-08T21:44:48Z",
+        "visibility": "selected",
+        "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories"
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4992",
+        "X-Ratelimit-Reset: 1794906514",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 8"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 1188027961,
+            "full_name": "Hexalith/Hexalith.Memories"
+          },
+          {
+            "id": 1170072276,
+            "full_name": "Hexalith/Hexalith.Parties"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4991",
+        "X-Ratelimit-Reset: 1794906514",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 9"
+      ],
+      "data": {
+        "name": "HEXALITH_ZOT_API_KEY",
+        "created_at": "2026-07-09T07:47:49Z",
+        "updated_at": "2026-11-08T21:45:17Z",
+        "visibility": "selected",
+        "selected_repositories_url": "https://api.github.com/orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories"
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Oauth-Scopes: admin:org",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4990",
+        "X-Ratelimit-Reset: 1794906514",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 10"
+      ],
+      "data": {
+        "total_count": 4,
+        "repositories": [
+          {
+            "id": 1155154671,
+            "full_name": "Hexalith/Hexalith.EventStore"
+          },
+          {
+            "id": 1188027961,
+            "full_name": "Hexalith/Hexalith.Memories"
+          },
+          {
+            "id": 1170072276,
+            "full_name": "Hexalith/Hexalith.Parties"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 1155154671,
+          "full_name": "Hexalith/Hexalith.EventStore"
+        },
+        {
+          "id": 1188027961,
+          "full_name": "Hexalith/Hexalith.Memories"
+        },
+        {
+          "id": 1170072276,
+          "full_name": "Hexalith/Hexalith.Parties"
+        },
+        {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    },
+    {
+      "credential": "maintainer-read-only",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1",
+      "item_key": "repositories",
+      "pages": [
+        "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1"
+      ],
+      "successful_pages": 1,
+      "items": [
+        {
+          "id": 1155154671,
+          "full_name": "Hexalith/Hexalith.EventStore"
+        },
+        {
+          "id": 1188027961,
+          "full_name": "Hexalith/Hexalith.Memories"
+        },
+        {
+          "id": 1170072276,
+          "full_name": "Hexalith/Hexalith.Parties"
+        },
+        {
+          "id": 1174267565,
+          "full_name": "Hexalith/Hexalith.Tenants"
+        }
+      ],
+      "complete": true,
+      "state": "complete",
+      "total_count": 4,
+      "observed_count": 4
+    }
+  ],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+}

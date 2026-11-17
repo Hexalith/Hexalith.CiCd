@@ -57,7 +57,22 @@
       "message": "Worker phase: nightly-product-workload-local-only/running"
     }
   ],
-  "cleanup": [],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "2948c1f5e5440f66bc02f7d5312a7f984383f48f5b0f008a147a3c9fd03cab95"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "4c307bdc59068cbf92348073e9defa3aa1820174772a6f395e30f813dedb0313"
+      },
+      "state": "removed"
+    }
+  ],
   "privateScratchPath": "/tmp/hexalith-job.0x1AFplc",
   "scope": "performance-only",
   "containerScratchPath": "/work/s23",
@@ -80,5 +95,130 @@
   },
   "workerSha256": "6714d6d87e877efce5aaf48a211f561dbd9b3c6d58f6803a8a2529e3d241ef39",
   "orchestratorSha256": "80b7af79412bad942d2afa4a18bf16cf1a5fddb675417e51a0794a3b0aa6e06b",
-  "innerDaemonId": "\"cfbd0dcd-6286-4ba2-9ed0-84406433144c\""
+  "innerDaemonId": "\"cfbd0dcd-6286-4ba2-9ed0-84406433144c\"",
+  "status": "failed",
+  "exceptionType": "InterruptedError",
+  "maskValuesDiscarded": 0,
+  "toolSuiteCounters": {
+    "python": [],
+    "node": [],
+    "pythonFailures": []
+  },
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "a1ad5f5bb531516a49f91166a2d2306d20ef7570",
+    "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794901966.3686564,
+        "elapsedSeconds": 3.08628511428833
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794901969.455299,
+        "elapsedSeconds": 108.2855498790741
+      },
+      {
+        "name": "semantic-nuget-audit",
+        "status": "passed",
+        "startedAt": 1794902077.7411673,
+        "elapsedSeconds": 21.208011150360107
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794902098.9496112,
+        "elapsedSeconds": 156.21843242645264
+      },
+      {
+        "name": "nightly-product-workload-local-only",
+        "status": "running",
+        "startedAt": 1794902255.1684413
+      }
+    ],
+    "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+    "scope": "performance-only",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "deliveredBaselineVerified": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794901966.3187988,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "unit-projects",
+      "released-commit-policy",
+      "shared-integration-projects",
+      "coverage-gate",
+      "after-unit-tests-hook",
+      "ordinary-integration-tier",
+      "cold-profiles",
+      "Dapr-retry-controls"
+    ],
+    "performanceScope": "Fresh standalone local job backend; original daily workload/3600s bound, not scheduled acceptance",
+    "nugetAudit": {
+      "exit": 0,
+      "findings": 0,
+      "errors": false
+    }
+  },
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json",
+    "performance-progress.json"
+  ],
+  "performanceCheckpoint": {
+    "schemaVersion": 1,
+    "phase": "Seeding",
+    "status": "incomplete",
+    "failedPhase": null,
+    "benchmarkPassed": false,
+    "fixtureDisposed": false,
+    "commandsAccepted": 20000,
+    "configurationWritesAccepted": 6661,
+    "tenantsSeeded": 0,
+    "elapsedSeconds": 447.7429354,
+    "phaseElapsedSeconds": 444.01899180000004,
+    "completedPhaseSeconds": {
+      "FixtureCreated": 0.0241395,
+      "FixtureInitialization": 0.058841700000000004,
+      "DomainConfiguration": 0.31366079999999996,
+      "HostStartup": 3.2349385,
+      "FixtureReady": 0.0736604999999999,
+      "ExecutionGateWait": 0.011107800000000001,
+      "BenchmarkSetup": 0.007598100000000052
+    },
+    "rehydrationSeconds": null,
+    "optionsSnapshotInterval": 100,
+    "persistedPolicyResolverRegistered": false,
+    "effectiveSnapshotInterval": 100,
+    "snapshotIntervalSource": "Default",
+    "workload": {
+      "tenants": 1000,
+      "commandsPerTenant": 500,
+      "configurationKeys": 100,
+      "concurrency": 50,
+      "documentedSnapshotInterval": 50,
+      "rehydrationLimitSeconds": 30
+    }
+  },
+  "trxSummaries": [],
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794902823.1396103,
+  "elapsedSeconds": 890.373937368393,
+  "releasedRoutineBootstrapQualified": false,
+  "scratchCleanupOwnership": "restored to wrapper user"
 }

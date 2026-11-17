@@ -1,0 +1,426 @@
+{
+  "allNineActualPinsPreserved": [
+    {
+      "path": "references/Hexalith.AI.Tools",
+      "revision": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+    },
+    {
+      "path": "references/Hexalith.Builds",
+      "revision": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9"
+    },
+    {
+      "path": "references/Hexalith.Commons",
+      "revision": "49187d47da882d5470deac982bb383486c90202c"
+    },
+    {
+      "path": "references/Hexalith.EventStore",
+      "revision": "3b2350e7c1fff640131f8101596c78a59e31a03f"
+    },
+    {
+      "path": "references/Hexalith.FrontComposer",
+      "revision": "21c208f7045fdb4556cef23178f464207605c42a"
+    },
+    {
+      "path": "references/Hexalith.McpCli",
+      "revision": "c9ffbd5c9f6bc100ecbf6ac13acf4fbe50a498a9"
+    },
+    {
+      "path": "references/Hexalith.Memories",
+      "revision": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+    },
+    {
+      "path": "references/Hexalith.Platform",
+      "revision": "8ccb479e391564ce982309f106504cf8329c0a43"
+    },
+    {
+      "path": "references/Hexalith.PolymorphicSerializations",
+      "revision": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+    }
+  ],
+  "concreteGaps": [
+    {
+      "finding": "Both-host declaration is required, but actual unchanged upstream EventStore Program calls no actor qualification registration and offers no snapshot qualification configuration/discovery callback. Only code-level IServiceCollection registration exists; actor registration intentionally requires no Tenants state assembly.",
+      "id": "actor-host-enrollment",
+      "requiredDecision": "Authorize an upstream-owned supported deployment enrollment seam/release with the corresponding approved source-graph refresh, or explicitly renegotiate the immutable pinned-host/source-boundary constraint. No such authorization or implementation is inferred.",
+      "scopeConflict": "The approved composition launches that gitlink-pinned upstream executable unchanged. Adding registry only to the cohosted benchmark fixture does not enroll the actual production actor host. Startup-hook/code injection, linked test code or a new copied gateway host would invent an unapproved extension/topology."
+    },
+    {
+      "finding": "Actual keyed tenants processor is TenantAggregate : EventStoreAggregate<TenantState>; it retains normal async command and admitted/async replay interfaces but does not implement IAsyncFoldedSnapshotProcessor. DomainProcessorBase<TState> supplies capture, but lacks those aggregate replay interfaces and convention discovery scans EventStoreAggregate<TState>.",
+      "id": "domain-processor-contract",
+      "implication": "Adding a declaration cannot enable capture. A supported typed-processor adaptation or upstream aggregate capability must preserve existing discovery, all replay routes and real command behavior; a blind base-class replacement cannot be treated as equivalent."
+    },
+    {
+      "finding": "Actual domain-service SDK registration has no bounded V1 producer for tenants. Router requires the bounded producer, matching typed qualification and IsQualified before ProcessForSnapshotAsync.",
+      "id": "bounded-wire-producer",
+      "implication": "All supported canonical tenant events/rejections need finite actual serializers and admitted output/scratch/representation limits; a registry entry alone is insufficient."
+    }
+  ],
+  "head": "a1ad5f5bb531516a49f91166a2d2306d20ef7570",
+  "manifest": "product-manifest-foldedcontract02.json",
+  "nestedSubmodulesUninitialized": true,
+  "outcome": "contract-conflict; product integration remains incomplete",
+  "ownedFilesPreserved": {
+    ".claude/settings.json": {
+      "mode": "0o664",
+      "sha256": "5532988af14d8ae6b0b0ed160f8fa9827613162c3f0b00c86ded238f82b25150"
+    },
+    ".github/copilot-instructions.md": {
+      "mode": "0o664",
+      "sha256": "c34b9da10a18dddb93bb05aa12f992004c119572c4cf66243e2a9725baa12ede"
+    },
+    ".github/dependabot.yml": {
+      "mode": "0o664",
+      "sha256": "03c96e8927c30ac4d6fb275aec6f466d9d2202cc6d97760ac364f409e2788350"
+    },
+    ".github/workflows/ci.yml": {
+      "mode": "0o664",
+      "sha256": "dc4b7bfc4146baf094ff33aa994d621a6641a088f5111e023f9411e55a799ed3"
+    },
+    ".github/workflows/codeql.yml": {
+      "mode": "0o664",
+      "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1"
+    },
+    ".github/workflows/commitlint.yml": {
+      "mode": "0o664",
+      "sha256": "f3f0f1d2d00210d15cf21499fc00b2e6a2673576f39c319d206da7a2c802e27d"
+    },
+    ".github/workflows/dependency-review.yml": {
+      "mode": "0o664",
+      "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc"
+    },
+    ".github/workflows/recover-partial-release.yml": {
+      "mode": "0o664",
+      "sha256": "cf74be23f9c6a13576294df8f5a3522e5e062f6f85aac9fbf73d382c5e0ce2be"
+    },
+    ".github/workflows/release.yml": {
+      "mode": "0o664",
+      "sha256": "8e631fcfcc4d3ab7f7a6c27a4ab744a49d4bb5ba2f7d84ddf627266e44532f58"
+    },
+    ".github/workflows/runner-network-probe.yml": {
+      "mode": "0o664",
+      "sha256": "bed74243e611e25f96b4bd1b3f387adc4eee536e3945d660a3fd3efb9cc48288"
+    },
+    ".github/workflows/source-reference.yml": {
+      "mode": "0o664",
+      "sha256": "26e5f105250f23ee8d46460693518c5b4183028751558609edfd7d428c645939"
+    },
+    ".github/workflows/story-guards.yml": {
+      "mode": "0o664",
+      "sha256": "8898e6c987c451cfa9da159a253926e13e9d4b9bd2fa351e165cd519350bbead"
+    },
+    ".gitmodules": {
+      "mode": "0o664",
+      "sha256": "372ae4525c40a32e202a3b2bb507bd13e191b3464838c9ee715349a7356a3a22"
+    },
+    "AGENTS.md": {
+      "mode": "0o664",
+      "sha256": "c34b9da10a18dddb93bb05aa12f992004c119572c4cf66243e2a9725baa12ede"
+    },
+    "CLAUDE.md": {
+      "mode": "0o664",
+      "sha256": "c34b9da10a18dddb93bb05aa12f992004c119572c4cf66243e2a9725baa12ede"
+    }
+  },
+  "pending": "Authorized contract/source-boundary resolution, genuine finite module parity/capture integration, native500K/NFR13/full final-source bootstrap, external publication/adoption/legacy cleanup/hosted/next-scheduled acceptance",
+  "primaryBinding": {
+    "actorEnrollmentInventory": "product-folded-actor-enrollment-source-inventory.txt",
+    "actualEventStoreExecutablePin": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "apiLogs": [
+      "product-folded-api-01.log",
+      "product-folded-api-02.log"
+    ],
+    "files": {
+      "docs/guides/configuration-reference.md": {
+        "actualExecutablePinBlob": "7f969b007bbc476f732f791da07fac48cbb933ba",
+        "identical": true,
+        "publishedProducerBlob": "7f969b007bbc476f732f791da07fac48cbb933ba"
+      },
+      "docs/guides/upgrade-path.md": {
+        "actualExecutablePinBlob": "b6fa1c643b591fb017b4ad9e7066a2d108769738",
+        "identical": true,
+        "publishedProducerBlob": "b6fa1c643b591fb017b4ad9e7066a2d108769738"
+      },
+      "src/Hexalith.EventStore.Aspire/HexalithEventStorePlatformExtensions.cs": {
+        "actualExecutablePinBlob": "3632a09f3f5b59e02e35e6d0403361c1e27980ec",
+        "identical": true,
+        "publishedProducerBlob": "3632a09f3f5b59e02e35e6d0403361c1e27980ec"
+      },
+      "src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs": {
+        "actualExecutablePinBlob": "203d36dbe669aedb308a42ee25b42219eb63fbf8",
+        "identical": true,
+        "publishedProducerBlob": "203d36dbe669aedb308a42ee25b42219eb63fbf8"
+      },
+      "src/Hexalith.EventStore.Client/Discovery/AssemblyScanner.cs": {
+        "actualExecutablePinBlob": "087fc7d32af0a126cfacb5ef1aa65115d1bead80",
+        "identical": true,
+        "publishedProducerBlob": "087fc7d32af0a126cfacb5ef1aa65115d1bead80"
+      },
+      "src/Hexalith.EventStore.Client/Handlers/DetachedStateCapture.cs": {
+        "actualExecutablePinBlob": "bf61c9f67fb2881748177ee4cc297a2deb3d8d3c",
+        "identical": true,
+        "publishedProducerBlob": "bf61c9f67fb2881748177ee4cc297a2deb3d8d3c"
+      },
+      "src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs": {
+        "actualExecutablePinBlob": "7398dd2436a46fdc615bd45f36cb0615d86e2c1f",
+        "identical": true,
+        "publishedProducerBlob": "7398dd2436a46fdc615bd45f36cb0615d86e2c1f"
+      },
+      "src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotCaptureProfile.cs": {
+        "actualExecutablePinBlob": "94593b04aef7649fe27c03aa2dd340219a40eb27",
+        "identical": true,
+        "publishedProducerBlob": "94593b04aef7649fe27c03aa2dd340219a40eb27"
+      },
+      "src/Hexalith.EventStore.Client/Registration/EventStoreServiceCollectionExtensions.cs": {
+        "actualExecutablePinBlob": "bf676473ea92861b58b98ed3cc647d11a29e881f",
+        "identical": true,
+        "publishedProducerBlob": "bf676473ea92861b58b98ed3cc647d11a29e881f"
+      },
+      "src/Hexalith.EventStore.Contracts/Snapshots/FoldedSnapshotCaptureLimits.cs": {
+        "actualExecutablePinBlob": "0f1d4805d5d4c27376a1f8c9903e8a2ffe836586",
+        "identical": true,
+        "publishedProducerBlob": "0f1d4805d5d4c27376a1f8c9903e8a2ffe836586"
+      },
+      "src/Hexalith.EventStore.DomainService/BoundedV1DomainResultProducer.cs": {
+        "actualExecutablePinBlob": "dde67bc234e86720c84c056cbcb343a8315059b5",
+        "identical": true,
+        "publishedProducerBlob": "dde67bc234e86720c84c056cbcb343a8315059b5"
+      },
+      "src/Hexalith.EventStore.DomainService/BoundedV1DomainSerializerProfile.cs": {
+        "actualExecutablePinBlob": "1c98d9e5fdc308c6017b6a8a3b8bddd100071893",
+        "identical": true,
+        "publishedProducerBlob": "1c98d9e5fdc308c6017b6a8a3b8bddd100071893"
+      },
+      "src/Hexalith.EventStore.DomainService/DomainServiceRequestRouter.cs": {
+        "actualExecutablePinBlob": "a9d3c478eecf4a05fa6e2b1a093b05599f8233ca",
+        "identical": true,
+        "publishedProducerBlob": "a9d3c478eecf4a05fa6e2b1a093b05599f8233ca"
+      },
+      "src/Hexalith.EventStore.DomainService/EventStoreDomainServiceExtensions.cs": {
+        "actualExecutablePinBlob": "11e736b9a58e4966b9550a28257757e147e122f2",
+        "identical": true,
+        "publishedProducerBlob": "11e736b9a58e4966b9550a28257757e147e122f2"
+      },
+      "src/Hexalith.EventStore.DomainService/FoldedSnapshotQualification.cs": {
+        "actualExecutablePinBlob": "ac3b1ac5a78637db95a248370f4c032dcfb8d761",
+        "identical": true,
+        "publishedProducerBlob": "ac3b1ac5a78637db95a248370f4c032dcfb8d761"
+      },
+      "src/Hexalith.EventStore.DomainService/FoldedSnapshotQualificationRegistry.cs": {
+        "actualExecutablePinBlob": "9b21c378ac5e980d62be9c40bac99377481551eb",
+        "identical": true,
+        "publishedProducerBlob": "9b21c378ac5e980d62be9c40bac99377481551eb"
+      },
+      "src/Hexalith.EventStore.Server/Actors/AggregateActor.cs": {
+        "actualExecutablePinBlob": "b85ed483086644e2dc8e1601db63d5b48eae6e50",
+        "identical": true,
+        "publishedProducerBlob": "b85ed483086644e2dc8e1601db63d5b48eae6e50"
+      },
+      "src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotQualificationHostedService.cs": {
+        "actualExecutablePinBlob": "49133381cd1ba5084e8a6d7567e7938765f682cb",
+        "identical": true,
+        "publishedProducerBlob": "49133381cd1ba5084e8a6d7567e7938765f682cb"
+      },
+      "src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs": {
+        "actualExecutablePinBlob": "aafafb60778161c5329f69126740182988654d94",
+        "identical": true,
+        "publishedProducerBlob": "aafafb60778161c5329f69126740182988654d94"
+      },
+      "src/Hexalith.EventStore/Hexalith.EventStore.csproj": {
+        "actualExecutablePinBlob": "46928a56031ffc623cc0d642daf596103da649bb",
+        "identical": true,
+        "publishedProducerBlob": "46928a56031ffc623cc0d642daf596103da649bb"
+      },
+      "src/Hexalith.EventStore/Program.cs": {
+        "actualExecutablePinBlob": "d124b2b368c6aacd9b0aa56c5dc7f1e7898ed00b",
+        "identical": true,
+        "publishedProducerBlob": "d124b2b368c6aacd9b0aa56c5dc7f1e7898ed00b"
+      }
+    },
+    "publishedPackageProducer": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331"
+  },
+  "productFilesChanged": [],
+  "proof": {
+    "actualPackageMetadata": "product-local-foldedcontract02.json:selectedPackages",
+    "analyzersAndWarningsAsErrors": true,
+    "log": "product-folded-contract-02.log",
+    "nativeParityOrPerformanceQualified": false,
+    "nugetAuditEnabled": true,
+    "observation": {
+      "applyEventTypes": [
+        "Hexalith.Tenants.Contracts.Events.Rejections.ConfigurationKeyNotFoundRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.ConfigurationLimitExceededRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.InsufficientPermissionsRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.RoleEscalationRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.TenantAccessSnapshotLimitExceededRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.TenantAlreadyExistsRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.TenantDisabledRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.TenantLifecycleStateAlreadySetRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.TenantNotFoundRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.UserAlreadyInTenantRejection",
+        "Hexalith.Tenants.Contracts.Events.Rejections.UserNotInTenantRejection",
+        "Hexalith.Tenants.Contracts.Events.TenantAccessRefreshed",
+        "Hexalith.Tenants.Contracts.Events.TenantConfigurationRemoved",
+        "Hexalith.Tenants.Contracts.Events.TenantConfigurationSet",
+        "Hexalith.Tenants.Contracts.Events.TenantCreated",
+        "Hexalith.Tenants.Contracts.Events.TenantDisabled",
+        "Hexalith.Tenants.Contracts.Events.TenantEnabled",
+        "Hexalith.Tenants.Contracts.Events.TenantUpdated",
+        "Hexalith.Tenants.Contracts.Events.UserAddedToTenant",
+        "Hexalith.Tenants.Contracts.Events.UserRemovedFromTenant",
+        "Hexalith.Tenants.Contracts.Events.UserRoleChanged"
+      ],
+      "assemblies": [
+        {
+          "name": "Hexalith.Tenants.Server",
+          "version": "8.0.1+a1ad5f5bb531516a49f91166a2d2306d20ef7570"
+        },
+        {
+          "name": "Hexalith.EventStore.Client",
+          "version": "5.1.1+f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331"
+        },
+        {
+          "name": "Hexalith.EventStore.DomainService",
+          "version": "5.1.1+f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331"
+        },
+        {
+          "name": "Hexalith.EventStore.Server",
+          "version": "5.1.1+f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331"
+        }
+      ],
+      "facts": {
+        "actorRegistryAbsent": true,
+        "actualActorOptionsRemain100": true,
+        "actualTenantAggregateSelected": true,
+        "aggregateLacksFoldedSnapshotProcessor": true,
+        "aggregateSupportsExistingReplay": true,
+        "aggregateSupportsOrdinaryAsyncCommands": true,
+        "boundedDomainProducerDescriptorAbsent": true,
+        "domainAsyncReplayRegistered": true,
+        "domainRegistryAbsent": true,
+        "typedProcessorBaseHasFoldedContract": true,
+        "typedProcessorBaseLacksAggregateReplayContract": true
+      },
+      "failed": 0,
+      "matched": 11,
+      "nativeRuntimeStarted": false,
+      "observed": 11,
+      "productModified": false,
+      "purpose": "in-process compatibility-gap observation; not parity or performance qualification",
+      "qualified": false,
+      "skipped": 0,
+      "stateProperties": [
+        "Configuration",
+        "CreatedAt",
+        "Description",
+        "HasMembershipHistory",
+        "Name",
+        "Status",
+        "TenantId",
+        "Users"
+      ]
+    },
+    "packageRepositoryMetadata": {
+      "client": {
+        "commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+        "type": "git",
+        "url": "https://github.com/Hexalith/Hexalith.EventStore"
+      },
+      "contracts": {
+        "commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+        "type": "git",
+        "url": "https://github.com/Hexalith/Hexalith.EventStore"
+      },
+      "domainservice": {
+        "commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+        "type": "git",
+        "url": "https://github.com/Hexalith/Hexalith.EventStore"
+      },
+      "server": {
+        "commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+        "type": "git",
+        "url": "https://github.com/Hexalith/Hexalith.EventStore"
+      }
+    },
+    "packet": "product-local-foldedcontract02.json",
+    "probeSource": "FoldedSnapshotContractProbe.cs",
+    "probeSourceSha256": "3eea0f7f3ae90100f551d676e023933af6a0f4bc9c96f6bc2c79846844ec5955",
+    "releaseBuildErrors": 0,
+    "releaseBuildWarnings": 0,
+    "sdk": "11.0.100"
+  },
+  "qualificationStatus": {
+    "applyEventTypesInventoried": [
+      "Hexalith.Tenants.Contracts.Events.Rejections.ConfigurationKeyNotFoundRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.ConfigurationLimitExceededRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.InsufficientPermissionsRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.RoleEscalationRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.TenantAccessSnapshotLimitExceededRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.TenantAlreadyExistsRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.TenantDisabledRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.TenantLifecycleStateAlreadySetRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.TenantNotFoundRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.UserAlreadyInTenantRejection",
+      "Hexalith.Tenants.Contracts.Events.Rejections.UserNotInTenantRejection",
+      "Hexalith.Tenants.Contracts.Events.TenantAccessRefreshed",
+      "Hexalith.Tenants.Contracts.Events.TenantConfigurationRemoved",
+      "Hexalith.Tenants.Contracts.Events.TenantConfigurationSet",
+      "Hexalith.Tenants.Contracts.Events.TenantCreated",
+      "Hexalith.Tenants.Contracts.Events.TenantDisabled",
+      "Hexalith.Tenants.Contracts.Events.TenantEnabled",
+      "Hexalith.Tenants.Contracts.Events.TenantUpdated",
+      "Hexalith.Tenants.Contracts.Events.UserAddedToTenant",
+      "Hexalith.Tenants.Contracts.Events.UserRemovedFromTenant",
+      "Hexalith.Tenants.Contracts.Events.UserRoleChanged"
+    ],
+    "finiteLimitsReviewed": false,
+    "fullPrefixFoldedTailParityQualified": false,
+    "nativeObservedIntervalPreserved": 100,
+    "parityEvidenceIdInvented": false,
+    "profileDeclared": false,
+    "requiredLaterCoverage": [
+      "all8 tenant fields including HasMembershipHistory and both mutable dictionaries",
+      "all21 existing Apply event types, accepted mixed commands and100-key limit",
+      "actual canonical wire serialization, detached-state independence and finite simultaneous representations",
+      "full-prefix versus actual folded capture/restore/tail parity",
+      "cancellation and failed/oversized/unreadable/digest/identity/profile refusal with valid event batches preserved",
+      "real actor and domain-host enrollment plus native snapshot commit/rehydration evidence"
+    ],
+    "snapshotIntervalChanged": false,
+    "stateFieldsInventoried": [
+      "Configuration",
+      "CreatedAt",
+      "Description",
+      "HasMembershipHistory",
+      "Name",
+      "Status",
+      "TenantId",
+      "Users"
+    ]
+  },
+  "resources": {
+    "allInspectionAndProbeSessionsClosed": true,
+    "dockerOrHostRedisChanged": false,
+    "nativeRuntimeStarted": false,
+    "scratch": [
+      {
+        "attempt": "foldedcontract01",
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "foldedcontract02",
+        "scratchRemoved": true
+      }
+    ]
+  },
+  "retainedFailure": {
+    "attempt": "foldedcontract01",
+    "log": "product-folded-contract-01.log",
+    "packet": "product-local-foldedcontract01.json",
+    "result": "scratch probe compileCS0122 because BoundedV1DomainResultProducer is internal; no product code was changed. Corrected probe checks public service descriptors without constructing/bypassing the private producer.",
+    "source": "FoldedSnapshotContractProbe-attempt01.cs"
+  },
+  "scope": "primary API/source inspection and scratch-only in-process observations; no native or publication work",
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-current",
+  "tree": "e04a10e3f6249f9c6b8e5c1c6685a1f2af11c0c3",
+  "workingTreeClean": true
+}

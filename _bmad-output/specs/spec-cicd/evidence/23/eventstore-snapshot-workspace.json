@@ -1,0 +1,73 @@
+{
+  "recorded_at": "2026-11-17T08:24:35.583775+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4908",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 92"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.EventStore",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4907",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 93"
+      ],
+      "data": {
+        "id": 1155154671,
+        "full_name": "Hexalith/Hexalith.EventStore",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified.",
+  "fetch": {
+    "exit": 0
+  },
+  "workspace": {
+    "path": "/home/administrator/projects/hexalith/eventstore-story-23-snapshots",
+    "branch": "story/23-snapshot-prerequisite",
+    "base": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+    "nestedSubmodulesInitialized": false,
+    "canonicalCheckoutAndIndexPreserved": true
+  }
+}

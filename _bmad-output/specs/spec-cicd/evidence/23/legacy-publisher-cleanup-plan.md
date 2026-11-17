@@ -142,3 +142,29 @@ kubernetes-legacy-key-reference-inventory.json and
 kubernetes-registry-credential-assessment.json. The attempted fixed binary
 version read at /usr/local/bin/zot failed; the immutable image digest remains
 known but an exact version tag is still unverified.
+
+## Concrete key and consumer boundary confirmed by the human
+
+The human explicitly identifies099585e7-fd9e-4aac-9042-56426c1add7b as the
+HEXALITH_ZOT_API_KEY backing key and confirms EventStore, Memories, Parties and
+Tenants are its only consumers. `legacy-zot-human-mapping.json` retains the
+answer without a secret value. The earlier label-only ambiguity remains historical;
+the concrete mapping/complete-consumer prerequisite is now resolved. Preserve
+9eba6461-9d15-40d1-addf-2be14bc76ad8 (personal) and
+d122a9d6-90c8-4f5f-afa5-cf8866cb6391 (other key), both global admins, all existing
+read identities and the separate cluster-reader pull credential.
+
+Before adoption, prepare and qualify a nonadministrator replacement for the
+three remaining legacy consumers with read/create/update on the nine confirmed
+non-Tenants container repositories and their nested scopes, plus required shared
+read access. It must refuse Tenants and unrelated writes on the actual registry.
+Keep the old org-secret pair/value/selections operational until authenticated
+Tenants adoption. Immediately after adoption, remove only Tenants from the pair's
+selections, switch the remaining consumers to the qualified scoped replacement,
+verify selection/publisher preservation and revoke only the identified UUID.
+Avoid an in-flight publisher credential transition: inspect actual release runs
+and perform a coordinated switch with a reversible preserved old key until the
+new pair and consumer scope readbacks are verified. The exact API does not offer
+an atomic two-secret transaction; do not imply a two-call update is atomic.
+No replacement provisioning, secret rotation or revocation is executed by this
+plan update. Product/native qualification and actual adoption remain prerequisites.

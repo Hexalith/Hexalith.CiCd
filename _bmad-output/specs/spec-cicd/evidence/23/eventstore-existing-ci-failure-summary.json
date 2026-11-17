@@ -1,0 +1,29 @@
+{
+  "run": 44035997829,
+  "source": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+  "successfulJobs": [
+    "ci / folded-snapshot-compatibility",
+    "ci / checkpointed process packages",
+    "ci / tenants-source-mode",
+    "ci / build-and-test"
+  ],
+  "failedJobs": [
+    {
+      "id": 133879019689,
+      "name": "ci / contracts",
+      "steps": [
+        "Verify temporary job cleanup",
+        "Upload Contracts test results"
+      ]
+    },
+    {
+      "id": 133879019764,
+      "name": "ci / semantic-release-governance",
+      "steps": [
+        "Verify one-use publication authority and same-run source controls"
+      ]
+    }
+  ],
+  "notNewSnapshotCandidate": true,
+  "classification": "Existing failure triage pending exact diagnostics; no gate/settings changed"
+}
