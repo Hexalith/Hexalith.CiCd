@@ -1,0 +1,100 @@
+{
+  "at": "2026-11-17T10:05:26.219816+00:00",
+  "reason": "Explicit human STOP AND SAVE for a new session",
+  "workspace": "/home/administrator/projects/hexalith/cicd-story-23-discovery",
+  "branch": "story/23-discovery-prerequisite",
+  "baseline": "a2eb5fd22302ff4e37f6a1b2260a6f4e75a357c3",
+  "baselineTree": "b9473b4aa4d51dbf8edd8f297859cbde1cdf8872",
+  "sourceFiles": [
+    {
+      "path": "tools/scan_discovery.py",
+      "sha256": "df7bfe6c252a3c0b6678500e6e6e3910482ceefb49da4eaa8d7100193d816099",
+      "mode": "0o664"
+    },
+    {
+      "path": "tools/tests/test_scan.py",
+      "sha256": "dcaeb93da0a5040b03eee8493985411b5d788ce5ee1cab10060d9c50003450a3",
+      "mode": "0o664"
+    }
+  ],
+  "unexecutedUtility": {
+    "path": "/home/administrator/projects/hexalith/cicd-story-23-discovery/_bmad-output/specs/spec-cicd/evidence/23/qualify-discovery.py",
+    "sha256": "3f73071dfac7b7845122b482ccc82885b453c9be64adf8992d0c2d076f7393cc",
+    "executed": false
+  },
+  "patch": {
+    "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/cicd-discovery-stop.patch",
+    "sha256": "a2a2eecf0ad60e01a9c2661b176126aeba050e52429db672d570a808ad2f5359"
+  },
+  "artifacts": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/discovery-baseline01.json",
+      "sha256": "911a0d144c4819bcce6099c10017c3f98e1cdd2215a235d67e3ba87009d66e5e"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/discovery-focused01.log",
+      "sha256": "03ef6421ecd582b17789e8e0cbe50c7eee46657d83302230c59cb1b441a8aafd"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/discovery-focused314-02.log",
+      "sha256": "349647b5a076a5f11178afb4245e6b69c84fc2c580817f7fc9325abfc4010ce6"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/discovery-focused-baseline-red01.log",
+      "sha256": "443c7f73d10050c2be168451601b595b35e23787089da1fb43e2c53d55a9c1c0"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/discovery-suite314-01.log",
+      "sha256": "49f3b6ad42aba41196e97fed0da20c754517ca5d46ef264bd93581f2a6055724"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd/_bmad-output/specs/spec-cicd/evidence/23/discovery-suite314-final01.log",
+      "sha256": "79d897b1afdcad3ff0a1749ed34b7b50a59226da6a046c195b91e2e2b932d45a"
+    }
+  ],
+  "verification": {
+    "canonicalBaseline": "Real Detector/TypeScript6.0.3 against committed EventStore d5902b78863b6920762d64c17b1276d95f2f9977:23 files,58 diagnostics,complete:false",
+    "newControlsBaselineRed": "6 methods,9 failing positive subcases; expected failure retained",
+    "focusedPython314": "6 methods pass,0 failures/skips; immediately preceding final comment/parenthesis-only cleanup; not a full-suite result",
+    "python312": "not run",
+    "supersededFull314": "explicitly interrupted after source changed; exit130; no qualification claim",
+    "finalFull314": "interrupted on human STOP; exit130; no qualification claim",
+    "candidateCanonicalDiscovery": "not run",
+    "parentCommittedValidation": "not run"
+  },
+  "sessions": [
+    {
+      "id": 35214,
+      "exit": 0
+    },
+    {
+      "id": 85603,
+      "exit": 0
+    },
+    {
+      "id": 80240,
+      "exit": 130
+    },
+    {
+      "id": 2820,
+      "exit": 0
+    },
+    {
+      "id": 68788,
+      "exit": 1
+    },
+    {
+      "id": 72798,
+      "exit": 130
+    }
+  ],
+  "resources": {
+    "ownActiveSessions": [],
+    "ownRemainingScratchProcesses": [],
+    "finalScratchRemoved": true,
+    "priorScratch": "Run-with-temp wrappers exited; disposable workspaces were wrapper-owned and cleaned",
+    "nativeModuleJobsStarted": false,
+    "moduleCodeExecuted": false,
+    "commitOrRemoteOperation": false
+  }
+}

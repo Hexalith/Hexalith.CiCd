@@ -5,10 +5,14 @@ implementation and release of an additive EventStore prerequisite. This context
 narrows the current implementation slice; the parent retains the complete story.
 The original story baseline stays unchanged.
 
-Work only in `/home/administrator/projects/hexalith/eventstore-story-23-snapshots`,
-branch `story/23-snapshot-prerequisite`, fresh fetched base
-`96363934c6fd1da4d50c2078b13929c473ecab7f`. The original EventStore checkout has
-concurrent staged gitlink work and must remain untouched. Tenants remains clean
+Work only in `/home/administrator/projects/hexalith/eventstore-story-23-snapshot-recovered`,
+branch `story/23-snapshot-recovered`, fresh fetched base
+`392a7e4e9daade785ee9f1ae5f40e25931002735`. An external concurrent operation
+removed the preceding isolated worktree and branch after final01 completed.
+The parent recovered its authenticated exact patch onto freshly fetched main;
+see `eventstore-snapshot-recovery.json`. Main changed only `.gitmodules` and
+gitlinks, which must be preserved. The canonical checkout remains untouched.
+Tenants remains clean
 at `a1ad5f5bb531516a49f91166a2d2306d20ef7570`; do not edit it in this slice.
 
 Read the worktree's AGENTS.md, .editorconfig, .gitattributes and relevant build,
@@ -91,8 +95,16 @@ work. Preserve sanitized useful logs/results outside scratch and close all jobs
 before handoff. Bind final evidence to full base, normalized candidate tree,
 changed raw files and exact dependency revisions. Preserve failed attempts.
 
-All 29 protected files and nine pins in eventstore-snapshot-preservation-baseline.json
-must retain their actual bytes/modes and gitlink values. No workflows, Builds pin,
+All 29 protected files and ten pins in eventstore-snapshot-recovery.json
+must retain their actual bytes/modes and gitlink values. The historical original
+baseline and final01 receipts remain valid only for their original graph.
+Finish the production-helper formatting correction, verify token preservation,
+and rerun the 28 affected classes and three audited Release builds on this fresh
+graph. Adapt the local qualification utility's source path; it must materialize
+the new exact Builds pin `a327bc5cf0eb2bd715deed6f1ea278a8f6946a2f` from available
+Git objects, without nested initialization or changing any gitlink. Read the
+actual new-pin guidance (its applicable baseline text is unchanged).
+No workflows, Builds pin,
 .gitmodules, agent instructions or owned settings edits. No edits to either parent
 isolated workload utility. Parent owns final inspection, commitlint/commits,
 complete exact-source qualification, module-agent publication, released prerequisite

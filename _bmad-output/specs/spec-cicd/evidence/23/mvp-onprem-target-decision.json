@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-17T09:19:24.347746+00:00",
+  "source": "human explicit deployment-target clarification",
+  "exactUserInstruction": "azure is not MVP, we use on premise 192.168.1.30 K8S server",
+  "mvpTarget": {
+    "kind": "on-premises Kubernetes",
+    "server": "https://192.168.1.30:6443",
+    "context": "jpiquot@local",
+    "readOnlyVerifiedNode": {
+      "name": "node1",
+      "kubeletVersion": "v1.34.9",
+      "ready": true
+    }
+  },
+  "azureDisposition": "Azure provider live qualification, its private runner/environment and authority/custody provisioning are deferred outside MVP; not MVP adoption or prerequisite-release blockers",
+  "preserved": "Existing Azure feature source, offline schema/payload/invariant tests, security refusals and future explicit owner-authorized cloud execution contract",
+  "evidenceBoundary": "No Azure execution or pass claimed; no claim that on-premises Kubernetes proves Azure behavior",
+  "otherRequirements": "Applicable product/security/consumer/native/coverage/performance, complete scanner, released prerequisite, hosted/delivery/adoption/nightly checks remain required",
+  "clusterOperations": "Read-only context/API/node metadata; no application or cluster mutation",
+  "questionResolved": "Earlier Azure owner worker/receipt-path question no longer applies to MVP"
+}

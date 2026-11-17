@@ -26,7 +26,9 @@ $before=@{};foreach($t in $root.FindAll($scope,$tabCondition)){$before[(Identity
 $result=[ordered]@{target='TARGET';url='URL';remoteConfigurationChanges=$false;ownTabClosed=$false}
 $own=$null
 try{
- Start-Process 'URL'
+ $browser=Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'
+ if(-not(Test-Path -LiteralPath $browser)){throw 'Known attended browser executable unavailable'}
+ Start-Process $browser -ArgumentList @('--new-window','URL')
  $deadline=[DateTime]::UtcNow.AddSeconds(25)
  do{
   $unique=@{}
@@ -54,8 +56,20 @@ try{
  $result.originVerified=$verified
  if(-not $verified -or $null -eq $doc){throw 'Intended settings origin/document unverified'}
  if($result.target -eq 'policy'){
-  $manage=$doc.FindFirst($scope,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,'show-manage-container')))
-  if($null -ne $manage){$p=$manage.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern);if($p.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed){$p.Expand()}}
+  do{
+   $manage=$doc.FindFirst($scope,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,'show-manage-container')))
+   if($null -ne $manage){break}
+   Start-Sleep -Milliseconds 250
+  }while([DateTime]::UtcNow -lt $deadline)
+  if($null -eq $manage){throw 'Policy Manage control did not load'}
+  $p=$manage.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+  if($p.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed){$p.Expand()}
+  do{
+   $baseline=$doc.FindFirst($scope,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,'__start-edit-27252')))
+   if($null -ne $baseline){break}
+   Start-Sleep -Milliseconds 250
+  }while([DateTime]::UtcNow -lt $deadline)
+  if($null -eq $baseline){throw 'Known retained policy did not load; policy inventory remains unverified'}
  }
  Start-Sleep -Seconds 2
  $rows=@()

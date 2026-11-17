@@ -1,0 +1,216 @@
+{
+  "cicdBaseline": "a2eb5fd22302ff4e37f6a1b2260a6f4e75a357c3",
+  "cicdTree": "b9473b4aa4d51dbf8edd8f297859cbde1cdf8872",
+  "upstreamRevision": "d5902b78863b6920762d64c17b1276d95f2f9977",
+  "upstreamTree": "6cf4d5dcb5b30d1274c1b9696bce8b7c4ecb5187",
+  "python": "3.14.4",
+  "node": "v26.4.0",
+  "npm": "11.18.0",
+  "parser": "6.0.3",
+  "commands": [
+    "Detector(committed CiCd baseline, private scratch)",
+    "Discovery(exact committed EventStore main, javascript_parser=detector.javascript).discover()"
+  ],
+  "moduleCodeExecuted": false,
+  "complete": false,
+  "errors": [
+    "scripts/ci-product-checks.py:127: local-script discovery: unresolved computed subprocess env",
+    "scripts/ci-product-checks.py:136: local-script discovery: unresolved computed Python script invocation",
+    "scripts/ci-product-checks.py:152: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/ci-product-checks.py:24: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/ci-product-checks.py:37: local-script discovery: unsupported Python search-path mutation",
+    "scripts/legacy_sidecar_runtime.py:30: local-script discovery: unresolved computed subprocess env",
+    "scripts/legacy_sidecar_runtime.py:42: local-script discovery: unresolved computed subprocess env",
+    "scripts/pack-release-packages.py:31: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/qualify-payload-azure.py:55: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/qualify-payload-azure.py:71: local-script discovery: unresolved computed Python script invocation",
+    "scripts/qualify-payload-azure.py:73: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/qualify-payload-azure.py:77: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/run-with-temp.sh:22: local-script discovery: unsupported shell command substitution",
+    "scripts/run-with-temp.sh:24: local-script discovery: unsupported shell compound/subshell execution",
+    "scripts/run-with-temp.sh:27: local-script discovery: unresolved computed operand of unknown command: rm",
+    "scripts/run-with-temp.sh:30: local-script discovery: unresolved computed operand of unknown command: rm",
+    "scripts/run-with-temp.sh:36: local-script discovery: unresolved computed operand of unknown command: exit",
+    "scripts/run-with-temp.sh:40: local-script discovery: unsupported shell compound/subshell execution",
+    "scripts/run-with-temp.sh:43: local-script discovery: unresolved computed operand of unknown command: kill",
+    "scripts/run-with-temp.sh:44: local-script discovery: unresolved computed operand of unknown command: wait",
+    "scripts/run-with-temp.sh:46: local-script discovery: unresolved computed operand of unknown command: exit",
+    "scripts/run-with-temp.sh:55: local-script discovery: unresolved computed command: {job_lock}<$job_tmp",
+    "scripts/run-with-temp.sh:56: local-script discovery: unsupported shell wrapper options",
+    "scripts/run-with-temp.sh:62: local-script discovery: unsupported shell wrapper options",
+    "scripts/run-with-temp.sh:64: local-script discovery: unresolved computed operand of unknown command: wait",
+    "scripts/validate-consumer-package-references.py:18: local-script discovery: unsupported Python search-path mutation",
+    "scripts/validate-consumer-package-references.py:603: local-script discovery: unresolved computed subprocess cwd",
+    "scripts/validate-nuget-packages.py:12: local-script discovery: unsupported Python search-path mutation",
+    "tools/dapr_runtime_qualification.py:221: local-script discovery: unresolved computed subprocess env",
+    "tools/folded-snapshot-compatibility/run.sh:10: local-script discovery: unsupported shell compound/subshell execution",
+    "tools/folded-snapshot-compatibility/run.sh:12: local-script discovery: unsupported shell command substitution",
+    "tools/folded-snapshot-compatibility/run.sh:13: local-script discovery: unsupported shell command substitution",
+    "tools/folded-snapshot-compatibility/run.sh:14: local-script discovery: unresolved computed operand of unknown command: rm",
+    "tools/folded-snapshot-compatibility/run.sh:19: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:46: local-script discovery: unresolved computed operand of unknown command: cp",
+    "tools/folded-snapshot-compatibility/run.sh:47: local-script discovery: unresolved computed operand of unknown command: cp",
+    "tools/folded-snapshot-compatibility/run.sh:48: local-script discovery: unresolved computed operand of unknown command: cp",
+    "tools/folded-snapshot-compatibility/run.sh:4: local-script discovery: unsupported shell command substitution",
+    "tools/folded-snapshot-compatibility/run.sh:50: local-script discovery: unresolved computed operand of unknown command: cp",
+    "tools/folded-snapshot-compatibility/run.sh:52: local-script discovery: unresolved computed operand of unknown command: cp",
+    "tools/folded-snapshot-compatibility/run.sh:54: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:55: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:56: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:67: local-script discovery: unresolved computed operand of unknown command: cp",
+    "tools/folded-snapshot-compatibility/run.sh:68: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:69: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:70: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:74: local-script discovery: unresolved computed operand of unknown command: dotnet",
+    "tools/folded-snapshot-compatibility/run.sh:8: local-script discovery: unsupported shell compound/subshell execution",
+    "tools/install-dapr-qualification-tools.py:39: local-script discovery: unsupported Python access to GITHUB_PATH; coverage unsupported",
+    "tools/install-dapr-qualification-tools.py:40: local-script discovery: unsupported Python access to GITHUB_PATH; coverage unsupported",
+    "tools/install-dapr-qualification-tools.py:41: local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported",
+    "tools/install-dapr-qualification-tools.py:42: local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported",
+    "tools/prepare-route-catalog-tools.py:13: local-script discovery: unsupported Python search-path mutation",
+    "tools/prepare-route-catalog-tools.py:23: local-script discovery: unresolved computed subprocess env",
+    "tools/published_runtime_archives.py:198: local-script discovery: unresolved computed Python script invocation",
+    "tools/qualify-dapr-brokers.py:129: local-script discovery: unresolved computed subprocess env",
+    "tools/qualify-dapr-brokers.py:214: local-script discovery: unresolved computed subprocess env"
+  ],
+  "files": [
+    {
+      "path": ".github/actions/after-integration-tests/action.yml",
+      "mode": "100644",
+      "blob": "4282f94cad3116089b2d9836cc4cbfaf71d0117a",
+      "sha256": "443148e81f3b8038f7f71d79cebeb05eafc22a97e9445cee2469719d490dff02"
+    },
+    {
+      "path": ".github/actions/after-unit-tests/action.yml",
+      "mode": "100644",
+      "blob": "55db51468799a7c311456c263974cfcf92678b72",
+      "sha256": "82019e5ecf72aad611eb970eba8fea5ca69e6322652e7c61239763dc43faf9f7"
+    },
+    {
+      "path": ".github/actions/nightly/action.yml",
+      "mode": "100644",
+      "blob": "f6d9ff85bcdeb76e19ca6ca37961035a8a39980c",
+      "sha256": "bc8156058176b7523a05a71b48b5d33c368472582ae41d557c97dc1a0a198d75"
+    },
+    {
+      "path": ".github/actions/payload-azure/action.yml",
+      "mode": "100644",
+      "blob": "ec6f58dc3bb5673219fbb494d0340e95ff173636",
+      "sha256": "3f13c9cdb9256cce5d458cee37059ae33160cee365db5276798f360efea4028e"
+    },
+    {
+      "path": "commitlint.config.mjs",
+      "mode": "100644",
+      "blob": "25a598d368f8806ec905ca465550e52ee29d97d2",
+      "sha256": "796a04abdd8c35e645f654c9d8d571556f34ccf4ab3611c9327697a452add38d"
+    },
+    {
+      "path": "scripts/ci-product-checks.py",
+      "mode": "100644",
+      "blob": "6efdab2ab9aa0e1894a530164cdab93ee0630244",
+      "sha256": "7bec639e791db6b7b1bf0ab8fa3775d05bad6e2f94dacbebce2e9e49929e0b6d"
+    },
+    {
+      "path": "scripts/legacy_sidecar_runtime.py",
+      "mode": "100644",
+      "blob": "0806cd85492b5945eaaef2bb6b28c1e4e046e927",
+      "sha256": "bf9f6bd85bf8e01e37524657b45926658b768561c431ce34ff23fedc3cc86262"
+    },
+    {
+      "path": "scripts/pack-release-packages.py",
+      "mode": "100644",
+      "blob": "5013373ee56b9eb3639c074408fdfa8c026ae3cf",
+      "sha256": "8f6fd26e69e998da73c367872b4362494c021e30ae84d71f6af6871d798dc905"
+    },
+    {
+      "path": "scripts/qualify-payload-azure.py",
+      "mode": "100644",
+      "blob": "b34150651f616efbe81a291b818db80a27d2f1ab",
+      "sha256": "889c8bddf7806a2f15564bcbb5854c8232a85ff42760080ba470a5fd065777ee"
+    },
+    {
+      "path": "scripts/run-with-temp.sh",
+      "mode": "100755",
+      "blob": "4e7525c42a5abf4cba1e701a6cab157ab101b864",
+      "sha256": "94325c20127b82d304e4bfe6fa54b7ebfebbe795f98aac798df71a43ab362380"
+    },
+    {
+      "path": "scripts/validate-consumer-package-references.py",
+      "mode": "100644",
+      "blob": "20b71af30276fe66fc3c008e23a8bc26c107f2cc",
+      "sha256": "79bcab68cd6ad6a14d6c38df616b7209377b5c3a1c8c922d8af79586493ca49c"
+    },
+    {
+      "path": "scripts/validate-nuget-packages.py",
+      "mode": "100644",
+      "blob": "09b5355c4bcb29f3c1bf4cb248cdf933fb4e6306",
+      "sha256": "32926519135dd3f9203cb8cca7f6f4c9fc5b6c7cbf3c7b0b4b55027dc5d3959e"
+    },
+    {
+      "path": "tools/dapr_broker_probe.py",
+      "mode": "100644",
+      "blob": "461d997bddf6571aee28a464f6559c6ddd3e9a57",
+      "sha256": "6d39e455aae2f9d570a429d6abef3b3c78dbc21d4b5aa19f4e9243bad9002996"
+    },
+    {
+      "path": "tools/dapr_broker_qualification.py",
+      "mode": "100644",
+      "blob": "ab6b6be4323c9cd17ff748990c15ff3fe118fce7",
+      "sha256": "bff609ebf8671c9bafc1e63eb7dbc97cb25d95baf93ac5d91f3ddfa58d02311a"
+    },
+    {
+      "path": "tools/dapr_platform_broker_configuration.py",
+      "mode": "100644",
+      "blob": "ccdd9214695bc28e5902e477076b1068c1c8ac98",
+      "sha256": "a63df8c9c685b34d21581f8f94576cf3d97c5adc4ba3878cc7095a3bcbe6308b"
+    },
+    {
+      "path": "tools/dapr_qualification_tcp_proxy.py",
+      "mode": "100644",
+      "blob": "b6c551bb84d50814ce0d156fd48c5567f10a9547",
+      "sha256": "6a81efb39e2977cfecbb211d803274ef3ddc6c3b1ab6e5230700a41c1de9f6b4"
+    },
+    {
+      "path": "tools/dapr_runtime_qualification.py",
+      "mode": "100644",
+      "blob": "aba7f1635ba0b26fa952339a7f99865ad6d53109",
+      "sha256": "62885088cb647b5dbb650dc30c8e5b8ba6d77d3c658ebf0f4210aac33d21a84e"
+    },
+    {
+      "path": "tools/folded-snapshot-compatibility/run.sh",
+      "mode": "100644",
+      "blob": "ba154fe0a7aea9e3feb3c524c8e42cc190aa5abf",
+      "sha256": "b854317a278bcd97d94d3f8d6ba6643b5da22852f64ba718d64db34252a884eb"
+    },
+    {
+      "path": "tools/install-dapr-qualification-tools.py",
+      "mode": "100644",
+      "blob": "7f2d349b3f1c8f6b88071e3991e08a7c9981efe7",
+      "sha256": "d791cf868c1943f228f9ef5cc20c40895f9795daa1642b5aed65cb2c3ae18981"
+    },
+    {
+      "path": "tools/prepare-route-catalog-tools.py",
+      "mode": "100644",
+      "blob": "bd8d10e98002bfc5b87fc55b1ab3c25ee46917b7",
+      "sha256": "9f8c2318d4313affb9a2d9ccf29e26adfb411a684fde240b267b1400420a733c"
+    },
+    {
+      "path": "tools/published_runtime_archives.py",
+      "mode": "100644",
+      "blob": "4ef04fb84793c72caa65a00e585ee7841c07430f",
+      "sha256": "38d94e173ec789b5afc495332806fec1134bc21f4a45222fe220120b10ad4f17"
+    },
+    {
+      "path": "tools/qualify-dapr-brokers.py",
+      "mode": "100644",
+      "blob": "1105e351ab4ab166751189b7c42c80428616aba6",
+      "sha256": "0c1b7d6639884650e997289c6963a19fa1076b074f908e704b8546c2cffba4b6"
+    },
+    {
+      "path": "tools/validate-dapr-broker-qualification.py",
+      "mode": "100644",
+      "blob": "b12fc03151aaff16ae25011c21ea9477108de5fd",
+      "sha256": "8392700ddc765c201b2df431aeccad2277a674746b4482fa0dffa2ce581016d2"
+    }
+  ]
+}

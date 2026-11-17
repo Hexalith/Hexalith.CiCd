@@ -1,0 +1,363 @@
+{
+  "base": "392a7e4e9daade785ee9f1ae5f40e25931002735",
+  "candidateTree": "f3db94280035d32de6695f7de2eb900493395a36",
+  "changedPaths": [
+    "docs/guides/configuration-reference.md",
+    "docs/guides/upgrade-path.md",
+    "src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs",
+    "src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs",
+    "src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs",
+    "src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs",
+    "src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs",
+    "tests/Hexalith.EventStore.DomainService.Tests/FoldedAggregateCaptureTests.cs",
+    "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj",
+    "tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs"
+  ],
+  "formatting": {
+    "allOther15RecoveredProductBlobsEqualOriginalFinal01": true,
+    "binding": "upstream-snapshot-formatting-binding.json",
+    "configBlockExpansionAddsOnlyBracesBeyondWhitespace": true,
+    "log": "upstream-snapshot-format-recovered03.log",
+    "newCSharpAndScriptsLFAccordingToGitattributes": true,
+    "newHelperWhitespacePreservesNonWhitespaceContentAndAllLiterals": true,
+    "repositoryEditorconfigNotEdited": true
+  },
+  "normalizedChangedBlobs": {
+    "docs/guides/configuration-reference.md": "77fb7761d61c5174fe0e217278ce693f0c39f9cc",
+    "docs/guides/upgrade-path.md": "db184ad403e59f5bdd739a335676df123710c8f2",
+    "src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs": "36226abe6975555e8ef6d7a70273b69cf3a6658c",
+    "src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs": "bcdaf8dae09fb64754522fb9de5e76a73a238544",
+    "src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs": "65b6936029cfc7ee5a7a01809561a5eb684dd53a",
+    "src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs": "9d4b08c08e7c937e77ef5d0752f2f190483e6b0a",
+    "src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs": "a87ba26288b4ed4646d73f39296718c0e9cf4c28",
+    "tests/Hexalith.EventStore.DomainService.Tests/FoldedAggregateCaptureTests.cs": "120839a91440e5cdf9eeb9f408ea4b686aab0bd3",
+    "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj": "b2cf3915136d6d819adcb13544c16a1c1a67c3eb",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs": "49b80ccb21cbcf099fed3e9c424ef8d6f270cafa",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs": "f1ccb1716d483c24d5d5cce8314a23850d30d485",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs": "e8d2b78cdc4bb87de2aed0e0d8d442fd96cc1588",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs": "bfd4c452a1bade4ff6660f4ba37a88fd529db960",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs": "f2ad8b978b9e07cca9ab39c7aa247accab26dc29",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs": "67be4e8920db9d057d0bff8b309e51e87da36093",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj": "81cdbae1e17fc41b017ab33cff91699e640db4b6",
+    "tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs": "958ca6fed1499cd2e577d69cc6f55fc01073b576"
+  },
+  "normalizedPatch": "upstream-snapshot-recovered-final01.patch",
+  "normalizedPatchSha256": "54c9e18a641768c3c0a0b3ab193390f2d286b138634d5ab4051603c3b3accd68",
+  "preserved": {
+    "TenantsSourceNotEdited": true,
+    "allTenGitlinks": {
+      "references/Hexalith.AI.Tools": "180ca5692637a018c3f5547daf657e2a90bd5288",
+      "references/Hexalith.Builds": "a327bc5cf0eb2bd715deed6f1ea278a8f6946a2f",
+      "references/Hexalith.CiCd": "88fb9071e8b9cac526b51684bf92f891a0ef1bee",
+      "references/Hexalith.Commons": "cab344372536be4b5125bc144547fc78bca913f9",
+      "references/Hexalith.FrontComposer": "b23b4cb91d974b4266a9369a85e6dae32163a893",
+      "references/Hexalith.McpCli": "c9ffbd5c9f6bc100ecbf6ac13acf4fbe50a498a9",
+      "references/Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826",
+      "references/Hexalith.Platform": "f47142498badc7d1c80a45a77aa3aa607d6b9efd",
+      "references/Hexalith.PolymorphicSerializations": "1f451a1ac5174b340f56763160f810d4a8364bb6",
+      "references/Hexalith.Tenants": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a"
+    },
+    "allTenRefsUninitialized": true,
+    "noWarningsOrAuditSuppressionsAdded": true,
+    "ordinaryAggregateProcessAsyncBodyByteIdenticalToBase": true,
+    "ordinaryBaselineProjection": {
+      "files": {
+        "hexalith-git-instructions.md": "5b859ae4a5caf18ddb5d0313adfeb33f1ca6c1d375ad9fb57faa0f9d473733e7",
+        "hexalith-llm-instructions.md": "74088734490de144ebc58ea36b930fcd8c7faf79530b5011cbf432e18429f405",
+        "hexalith-mcpcli-migration-instructions.md": "8ffbe4485aa92d13fa6cc759f28744a0243b9bec02317769164deb22386392a4",
+        "hexalith-state-instructions.md": "1908bb8f46ba24b352aed0bdfe3042fe41ffa3bd0157a3276d8158c0d58fa753",
+        "hexalith-ux-instructions.md": "215c029a3a8dda1fc41fd6b5ea14c155545c89e8540392258443ad309eb64992"
+      },
+      "gitInitialized": false,
+      "pin": "180ca5692637a018c3f5547daf657e2a90bd5288"
+    },
+    "protectedFiles": {
+      ".claude/settings.json": {
+        "mode": "0o664",
+        "sha256": "efddf9deaa9751f62a0fdd88dae198a2ac7f150d61455ce6143cd4c6dc947701"
+      },
+      ".github/copilot-instructions.md": {
+        "mode": "0o664",
+        "sha256": "d46133d3b08b30a1b6b36ea4465c90e045a2a264be518a9e7fa1a73ba8afa92b"
+      },
+      ".github/dependabot.yml": {
+        "mode": "0o664",
+        "sha256": "0faf4e9e652b010c02783234883bbc09a7d5c06dad2556f6b6db2fc4d3ae4b8a"
+      },
+      ".github/workflows/advisory-tests.yml": {
+        "mode": "0o664",
+        "sha256": "8697743b58482f2bb3387eeb4ffb9463de08cf26c32c99d962936d3c7a335994"
+      },
+      ".github/workflows/ci.yml": {
+        "mode": "0o664",
+        "sha256": "5ac3b3bef0f22a2eb0d692e3c4ec174056e745a3affb26743c8805d0bde35667"
+      },
+      ".github/workflows/codeql.yml": {
+        "mode": "0o664",
+        "sha256": "8344d484402fcf2032df96e603e13d074bb53dd58f987b70cdb4bf488c52a035"
+      },
+      ".github/workflows/commitlint.yml": {
+        "mode": "0o664",
+        "sha256": "500943a9364cc834cb530db0a8cf1e4b51b3abb14a24b42621bd0958f77d144b"
+      },
+      ".github/workflows/dapr-broker-qualification.yml": {
+        "mode": "0o664",
+        "sha256": "0e6814c2fe62abbc8e030678020bb33908cac151429944d38199e20c2b37e289"
+      },
+      ".github/workflows/dapr-runtime-qualification.yml": {
+        "mode": "0o664",
+        "sha256": "671818c4336c6be3576c397e1000ded83d1b75607c70548d1c70eb535596782c"
+      },
+      ".github/workflows/dependency-review.yml": {
+        "mode": "0o664",
+        "sha256": "cac1cf54933224dac97682da9c5fbd7c305232f8b20cdd35fc1c73c4203d8bec"
+      },
+      ".github/workflows/integration.yml": {
+        "mode": "0o664",
+        "sha256": "87be964e30d4cb48f7fb60c1a0f865df47b3dab01df447d82c9cef4ddddedd4c"
+      },
+      ".github/workflows/oq8-governing-design.yml": {
+        "mode": "0o664",
+        "sha256": "8f7da70ec3ae1119828b6fdc99cc1120b14fef25e48b0302b463279bf52f040f"
+      },
+      ".github/workflows/payload-protection-azure.yml": {
+        "mode": "0o664",
+        "sha256": "f239571423de72abc5552c766e3a57159e3de6b299b55896369c78ca47d21b84"
+      },
+      ".github/workflows/payload-protection-kubernetes-crypto.yml": {
+        "mode": "0o664",
+        "sha256": "ff8bcc49a0c83caf226206cdb2f8df47b0cd5796792cb3a6ff09141b50de6aa9"
+      },
+      ".github/workflows/payload-protection-lifecycle.yml": {
+        "mode": "0o664",
+        "sha256": "744055caa46e58364fb3b3a92cb0777633bf93ea1842ac8bf550f04ead420225"
+      },
+      ".github/workflows/payload-protection.yml": {
+        "mode": "0o664",
+        "sha256": "cfe9b18b284720dc9af944fda36000762292e816fde083a08f0d7b6e873d5212"
+      },
+      ".github/workflows/phase-4-consumer-removal.yml": {
+        "mode": "0o664",
+        "sha256": "c74c193e0d412850d87a9b8d4fde62d7e28c18c4c2f188ed8b42d3b68d4dd4e5"
+      },
+      ".github/workflows/phase-4-gate-risk-matrix.yml": {
+        "mode": "0o664",
+        "sha256": "2df57bf30b651d75a5806cf0e2dda7c55066450973712583bc24a40013b6f6e3"
+      },
+      ".github/workflows/phase-4-high-risk-gate-pass.yml": {
+        "mode": "0o664",
+        "sha256": "934d375346b6a691bb11364e59277eeee337be67241e59f75f8c0a8d254d5334"
+      },
+      ".github/workflows/phase-4-high-risk-nfr-story-done.yml": {
+        "mode": "0o664",
+        "sha256": "b1200a8ef1dfde4f35c6d7e42db0a0b37ae4dbd439fb4b1ad142ed8163f84543"
+      },
+      ".github/workflows/phase-4-production-promoted.yml": {
+        "mode": "0o664",
+        "sha256": "7c5637bddbf18fce7cdc4d7a1cd00adc80340f43d1e77a637620fb9ac32b5526"
+      },
+      ".github/workflows/phase-4-readiness.yml": {
+        "mode": "0o664",
+        "sha256": "e78611823f6bcec7204f16a122d10c664a661755fc005ed79889c504e873f581"
+      },
+      ".github/workflows/phase-4-release-available.yml": {
+        "mode": "0o664",
+        "sha256": "5e9b9f3a0a2063214690a253d7430150cbd1165a09dce6299a903c3021e21a7e"
+      },
+      ".github/workflows/phase-4-transition-fixtures.yml": {
+        "mode": "0o664",
+        "sha256": "0b3f1367d39574fc00e496dd5a13c70bd6f9de9c52f57eebea04dd45157bd77a"
+      },
+      ".github/workflows/publication-authority.yml": {
+        "mode": "0o664",
+        "sha256": "9c4e3a4e8a71fcd7f0ba4906fc64ca5912b27e0f9f59d8df49a3a7abf70e133a"
+      },
+      ".github/workflows/release.yml": {
+        "mode": "0o664",
+        "sha256": "55e43d3f4be8f8dc92a25b80b19e172b6226d1e6344d77b349986f72d7fcd24b"
+      },
+      ".gitmodules": {
+        "mode": "0o664",
+        "sha256": "525f42108d15e83a41e6c52b3cdfef6c812642fa62fa314986818663db26f2ea"
+      },
+      "AGENTS.md": {
+        "mode": "0o664",
+        "sha256": "d46133d3b08b30a1b6b36ea4465c90e045a2a264be518a9e7fa1a73ba8afa92b"
+      },
+      "CLAUDE.md": {
+        "mode": "0o664",
+        "sha256": "d46133d3b08b30a1b6b36ea4465c90e045a2a264be518a9e7fa1a73ba8afa92b"
+      }
+    },
+    "runtimeSnapshotIntervalsNotChanged": true
+  },
+  "publicApi": {
+    "actorDeployment": "AddEventStoreServer consumes optional EventStore:Snapshots:ActorQualifications through public AddEventStoreConfiguredFoldedSnapshotActorQualifications; unchanged actual Program already invokes that shared startup contract",
+    "aggregate": "EventStoreAggregate<TState> retains its base, discovery, ordinary dispatch and sync/async/admitted replay; additionally implements IAsyncFoldedSnapshotProcessor with opt-in protected FoldedSnapshotCapture defaultnull, IsQualified and ProcessForSnapshotAsync",
+    "capture": "FoldedSnapshotProcessor<TState> is internal; extracted existing bounded engine is shared with DomainProcessorBase, including caller cancellation, detached canonical wire Apply and limits",
+    "configuration": "explicit nonempty canonical-index array,exact5 entry fields and all18 constructor limits, no domain assembly loading, complete validation/duplicate detection before registration; absent stays unenrolled",
+    "failureTag": "SnapshotActorQualificationConfigurationInvalid; fixed message and no inner private binder/constructor exception",
+    "moduleQualification": "no generic default profile, no inferred parity evidence, no Tenants enrollment; actual module copier/serializers/finite profile and both-host qualification remain future work"
+  },
+  "qualification": {
+    "allSeverityAuditAndWarningsAsErrorsPreserved": true,
+    "classes": 28,
+    "counters": {
+      "executed": 775,
+      "failed": 0,
+      "notExecuted": 0,
+      "passed": 775,
+      "total": 775
+    },
+    "coverage": "actual aggregate discovery/router,mutable100-entry state,3 prefix cut points,JSON restore+tail,ordinary commands,sync/async replay,success/rejection/noop,identity/profile/state/producer mismatch,finite byte/node/scratch limits,copy/Apply failure,event-batch preservation and cancellation; existing snapshot/digest/readability/manual safety suites pass",
+    "errors": 0,
+    "existingAffectedCases": 708,
+    "log": "upstream-snapshot-recovered-final01.log",
+    "materializedDirectDependencies": {
+      "Hexalith.Builds": "a327bc5cf0eb2bd715deed6f1ea278a8f6946a2f"
+    },
+    "minimumAndFailSkips": "47 config /20 new aggregate minima, fail-skips on for every class",
+    "nestedDependenciesInitialized": false,
+    "newAggregateCases": 20,
+    "newConfigurationCases": 47,
+    "nugetAuditedRestore": true,
+    "packet": "upstream-snapshot-recovered-final01.json",
+    "perGroup": {
+      "Client": 325,
+      "DomainService": 206,
+      "Server": 244
+    },
+    "projects": [
+      "Client",
+      "DomainService",
+      "Server"
+    ],
+    "releaseBuilds": 3,
+    "warnings": 0
+  },
+  "rawManifest": "upstream-snapshot-manifest-recovered-final01.json",
+  "rawManifestMatchesCurrentSource": true,
+  "recordedAt": "2026-11-17T09:09:11.016878+00:00",
+  "recovery": {
+    "freshGitmodulesAndTenPinsPreserved": true,
+    "old775ResultNotUsedAsNewGraphPass": true,
+    "oldWorktreeRemovedByExternalConcurrentOperation": true,
+    "patchRecoveredByParentOntoFreshMain": true,
+    "receipt": "eventstore-snapshot-recovery.json"
+  },
+  "redGreen": {
+    "configurationBaseline": {
+      "failed": 46,
+      "packet": "upstream-snapshot-config-red01.json",
+      "passed": 1,
+      "skipped": 0,
+      "total": 47
+    },
+    "configurationGreen": {
+      "failed": 0,
+      "packet": "upstream-snapshot-config-green02.json",
+      "passed": 47,
+      "skipped": 0
+    },
+    "freshGraphComplete": {
+      "failed": 0,
+      "packet": "upstream-snapshot-recovered-final01.json",
+      "passed": 775,
+      "skipped": 0
+    },
+    "newAggregateFirstExecutableAttempt": {
+      "cause": "new fixture scratch1MiB was correctly refused by unchanged serializer guard; required capacity+24xinput+depth is1994752bytes for declared64KiB input; fixture now reserves finite2MiB inside4MiB workspace/simultaneous bound; low-scratch refusal retained",
+      "failed": 7,
+      "packet": "upstream-snapshot-aggregate-green03.json",
+      "passed": 13,
+      "total": 20
+    },
+    "oldGraphComplete": {
+      "failed": 0,
+      "historicalOnly": true,
+      "packet": "upstream-snapshot-final01.json",
+      "passed": 775,
+      "skipped": 0,
+      "tree": "be8f294cee95fa0f60b18a775904670cacf3a3d1"
+    }
+  },
+  "remaining": [
+    "parent complete exact-source story20 prerequisite product/offline/commitlint qualification and ownership inspection",
+    "owning CiCd fixes for existing obsolete workflow gates and remaining publication prerequisites",
+    "normal verified upstream publication and acceptable released-contract readback",
+    "CiCd-owned accepted graph refresh",
+    "Tenants full state/serializer/finite limits parity and real both-host enrollment",
+    "unchanged500K/NFR13/full final-source bootstrap,hosted adoption/legacy cleanup and next scheduled acceptance"
+  ],
+  "resources": {
+    "allFocusedAndFormattingJobsClosed": true,
+    "externalRuntimeOrCredentialMutation": false,
+    "nativeAspireDapr500KStarted": false,
+    "noCommitPushOrParentUtilityEditByChild": true,
+    "scratch": [
+      {
+        "attempt": "config-red01",
+        "exitCode": 2,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "config-green01",
+        "exitCode": 1,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "config-green02",
+        "exitCode": 0,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "aggregate-green01",
+        "exitCode": 1,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "aggregate-green02",
+        "exitCode": 1,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "aggregate-green03",
+        "exitCode": 2,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "aggregate-green04",
+        "exitCode": 0,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "final01",
+        "exitCode": 0,
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "recovered-final01",
+        "exitCode": 0,
+        "scratchRemoved": true
+      }
+    ]
+  },
+  "retainedFailures": [
+    "config-green01 missing Client.Events using(CS0246)",
+    "aggregate-green01 fixture rejection Apply instance control(CA1822)",
+    "aggregate-green02 missing Contracts.Results using(CS0246)",
+    "aggregate-green03 actual finite scratch refusal7 failures",
+    "format-recovered01 incompatible --folder/--no-restore options; source untouched",
+    "format-recovered02 CLI whitespace success but severity suffix needed supported formatter spelling for Allman intent; corrected in03"
+  ],
+  "scope": "completed local upstream prerequisite implementation; no release/native/Tenants qualification inferred",
+  "sdk": "11.0.100",
+  "source": "/home/administrator/projects/hexalith/eventstore-story-23-snapshot-recovered"
+}

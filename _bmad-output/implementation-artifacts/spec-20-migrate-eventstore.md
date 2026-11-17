@@ -42,6 +42,16 @@ runner, approval environment, two explicitly named secrets and exact authority
 digest. Build once on that runner; retain fixture runtimes. Amend the job/runner
 constraints narrowly; keep Azure secret names out of ordinary shared CI inputs.
 
+**Human MVP clarification, 2026-11-17:** Azure is outside MVP; the deployment
+target is on-premises Kubernetes at 192.168.1.30. Defer Azure live-provider
+qualification and its dedicated private runner/environment/authority/custody
+provisioning. They are not MVP adoption or prerequisite-release blockers.
+Preserve Azure implementation, offline schema/payload/security controls and its
+future explicit owner-authorized execution contract; claim no Azure pass.
+Applicable on-premises product/native/scanner, delivery and hosted/nightly
+acceptance remain required. The human decision and separate MVP configuration
+proposal are recorded in story23 evidence; historical plans remain unchanged.
+
 Before actual adoption only, replace the unavailable normal checker for
 EventStore product-preparation pushes with shared Release package-mode build/unit
 routines, applicable product/package/consumer tests, commit/action/audit-policy
@@ -194,7 +204,9 @@ this does not mark the migration complete.
 
 Keep this spec in review. S1's saved 58-diagnostic scan is historical; adoption
 requires a fresh complete scanner qualification against the selected released
-API and current source. A compatible immutable release, owner worker/authority
-prerequisites, registration/delivery, normal checker, live qualification and
+API and current source. A compatible immutable release, applicable on-premises
+execution prerequisites, registration/delivery, normal checker, live qualification and
 actual hosted/nightly acceptance outcomes remain pending. No production pin,
 registration, adoption, authority run or release is claimed by preparation.
+Azure worker/authority/live qualification is deferred outside MVP by the explicit
+2026-11-17 human clarification above, not silently treated as executed.

@@ -16,7 +16,7 @@ parser.add_argument("--projects", nargs="+", default=["Server"])
 parser.add_argument("--classes", nargs="+", default=["Hexalith.EventStore.Server.Tests.Configuration.FoldedSnapshotActorConfigurationTests"])
 args = parser.parse_args()
 assert args.attempt.replace("-", "").isalnum()
-source = Path("/home/administrator/projects/hexalith/eventstore-story-23-snapshots")
+source = Path("/home/administrator/projects/hexalith/eventstore-story-23-snapshot-recovered")
 evidence = Path(__file__).resolve().parent
 scratch = Path(os.environ["TMPDIR"])
 root = scratch / "EventStore"

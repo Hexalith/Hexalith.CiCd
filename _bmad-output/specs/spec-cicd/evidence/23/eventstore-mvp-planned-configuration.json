@@ -1,0 +1,39 @@
+{
+  "solution": "Hexalith.EventStore.slnx",
+  "ciTimeoutMinutes": 180,
+  "dapr": true,
+  "browsers": true,
+  "registry": false,
+  "codeql": [
+    "csharp",
+    "python"
+  ],
+  "tests": {
+    "integration": [],
+    "exclude": {
+      "tests/Hexalith.EventStore.PayloadProtection.Tests/Hexalith.EventStore.PayloadProtection.Tests.csproj": "after-unit-tests",
+      "tests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.LiveTests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.LiveTests.csproj": "after-unit-tests",
+      "tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests.csproj": "after-integration-tests",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Hexalith.EventStore.Server.LiveSidecar.Tests.csproj": "after-integration-tests",
+      "tests/Hexalith.EventStore.PublishedCompatibility.Tests/Hexalith.EventStore.PublishedCompatibility.Tests.csproj": "after-integration-tests"
+    },
+    "minimumExpectedTests": {},
+    "failSkips": false
+  },
+  "hooks": [
+    "after-unit-tests",
+    "after-integration-tests",
+    "nightly"
+  ],
+  "jobs": {},
+  "submodules": [
+    "references/Hexalith.Tenants",
+    "references/Hexalith.Platform",
+    "references/Hexalith.FrontComposer"
+  ],
+  "additionalSdkVersion": "10.0.404",
+  "npmWorkspaces": [],
+  "dotnetTools": false,
+  "moduleManifest": null,
+  "windowsCheckout": null
+}
