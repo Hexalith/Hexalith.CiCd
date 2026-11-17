@@ -114,6 +114,31 @@ def clone_local(source: Path, destination: Path, revision: str, origin: str) -> 
     git(destination, "remote", "set-url", "origin", origin)
 
 
+def acquire_fixture_releases(candidate_root: Path, builds: Path) -> dict:
+    """Acquire authentic historic test inputs without changing active authority."""
+    path = candidate_root / "tools/tests/fixtures/builds-releases.json"
+    with path.open("rb") as stream:
+        payload = stream.read(4097)
+    if len(payload) > 4096:
+        raise delivery.DeliveryError("invalid owner fixture release manifest")
+    declarations = delivery.json_read(payload)
+    if not isinstance(declarations, dict) or set(declarations) != {"delivery", "renderer"}:
+        raise delivery.DeliveryError("invalid owner fixture release manifest")
+    for entry in declarations.values():
+        if (not isinstance(entry, dict) or set(entry) != {"tag", "commit"}
+                or not isinstance(entry["tag"], str) or renderer.STABLE_TAG.fullmatch(entry["tag"]) is None):
+            raise delivery.DeliveryError("invalid owner fixture release manifest")
+        delivery.sha(entry["commit"])
+    for entry in declarations.values():
+        reference = "refs/tags/" + entry["tag"]
+        # These refs support legacy owner tests only. The selected immutable
+        # release has already been verified and remains the checkout/catalog.
+        git(builds, "fetch", "--no-tags", "--no-recurse-submodules", "origin", reference + ":" + reference)
+        if git(builds, "rev-parse", reference + "^{commit}").decode().strip() != entry["commit"]:
+            raise delivery.DeliveryError("owner fixture release identity differs from its frozen commit")
+    return declarations
+
+
 def owned_inventory(snapshot, document: dict, perimeter) -> list[dict]:
     """Derive a conservative byte/mode/gitlink mask from canonical ownership.
 
@@ -395,6 +420,7 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
             git(builds, "checkout", "--detach", "refs/tags/" + tag)
             if git(builds, "rev-parse", "HEAD").decode().strip() != release:
                 raise delivery.DeliveryError("released checkout changed after authenticated acquisition")
+            report["fixtureReleases"] = acquire_fixture_releases(candidate_root, builds)
             if renderer.render(candidate_root, check=True):
                 raise delivery.DeliveryError("committed candidate render is not reproducible from its released contract")
             check_global(candidate_root, owner_read_token)

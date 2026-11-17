@@ -45,6 +45,69 @@ class QualificationTests(unittest.TestCase):
         patch.start()
         self.addCleanup(patch.stop)
 
+    def test_real_historical_fixture_acquisition_preserves_selected_release_and_missing_refs_fail(self):
+        declarations = json.loads((ROOT / "tools/tests/fixtures/builds-releases.json").read_bytes())
+        with tempfile.TemporaryDirectory(prefix="qualification-release-fixtures-") as temporary:
+            root = Path(temporary)
+            owner = root / "owner"
+            manifest = owner / "tools/tests/fixtures/builds-releases.json"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text(json.dumps(declarations))
+            remote = root / "remote.git"
+            remote.mkdir()
+            QUALIFY.git(remote, "init", "--bare", "--template=")
+            source = ROOT / "references/Hexalith.Builds"
+            selected = (ROOT / "builds-version").read_text().strip()
+            QUALIFY.git(remote, "fetch", "--no-tags", "--no-recurse-submodules", str(source),
+                        f"refs/tags/{selected}:refs/tags/{selected}")
+            builds = root / "builds"
+            builds.mkdir()
+            QUALIFY.git(builds, "init", "--template=")
+            QUALIFY.git(builds, "remote", "add", "origin", str(remote))
+            QUALIFY.git(builds, "fetch", "--no-tags", "--no-recurse-submodules", "origin",
+                        f"refs/tags/{selected}:refs/tags/{selected}")
+            QUALIFY.git(builds, "checkout", "--detach", f"refs/tags/{selected}")
+            head = QUALIFY.git(builds, "rev-parse", "HEAD")
+            with self.assertRaises(QUALIFY.delivery.DeliveryError):
+                QUALIFY.acquire_fixture_releases(owner, builds)
+            for entry in declarations.values():
+                tag = entry["tag"]
+                QUALIFY.git(remote, "fetch", "--no-tags", "--no-recurse-submodules", str(source),
+                            f"refs/tags/{tag}:refs/tags/{tag}")
+            self.assertEqual(declarations, QUALIFY.acquire_fixture_releases(owner, builds))
+            self.assertEqual(head, QUALIFY.git(builds, "rev-parse", "HEAD"))
+            self.assertEqual(b"", QUALIFY.git(builds, "status", "--porcelain"))
+            for entry in declarations.values():
+                self.assertEqual(entry["commit"], QUALIFY.git(builds, "rev-parse",
+                    "refs/tags/" + entry["tag"] + "^{commit}").decode().strip())
+            declarations["renderer"]["commit"] = "1" * 40
+            manifest.write_text(json.dumps(declarations))
+            with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "fixture release identity"):
+                QUALIFY.acquire_fixture_releases(owner, builds)
+            self.assertEqual(head, QUALIFY.git(builds, "rev-parse", "HEAD"))
+
+    def test_fixture_release_manifest_refuses_unbounded_or_nonliteral_inputs_before_git(self):
+        valid = json.loads((ROOT / "tools/tests/fixtures/builds-releases.json").read_bytes())
+        with tempfile.TemporaryDirectory(prefix="qualification-release-manifest-") as temporary:
+            root = Path(temporary)
+            manifest = root / "tools/tests/fixtures/builds-releases.json"
+            manifest.parent.mkdir(parents=True)
+            invalid = [[], {}, {"delivery": valid["delivery"]},
+                {**valid, "unknown": valid["renderer"]},
+                {**valid, "renderer": {**valid["renderer"], "tag": "main"}},
+                {**valid, "renderer": {**valid["renderer"], "commit": "not-a-sha"}},
+                {**valid, "renderer": {**valid["renderer"], "unexpected": True}}]
+            for document in invalid:
+                with self.subTest(document=document):
+                    manifest.write_text(json.dumps(document))
+                    with mock.patch.object(QUALIFY, "git") as command, self.assertRaises(QUALIFY.delivery.DeliveryError):
+                        QUALIFY.acquire_fixture_releases(root, root / "builds")
+                    command.assert_not_called()
+            manifest.write_bytes(b" " * 4097)
+            with mock.patch.object(QUALIFY, "git") as command, self.assertRaises(QUALIFY.delivery.DeliveryError):
+                QUALIFY.acquire_fixture_releases(root, root / "builds")
+            command.assert_not_called()
+
     def test_canonical_owned_mask_preserves_partial_npm_and_instruction_files(self):
         document = {"entries": [{"kind": "whole-dir", "path": ".github/workflows"},
             {"kind": "gitlink", "path": "references/Hexalith.Builds"},

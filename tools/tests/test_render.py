@@ -24,6 +24,7 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = Path(__file__).resolve().parent / "fixtures/render"
+LEGACY_RELEASE = json.loads((FIXTURES.parent / "builds-releases.json").read_bytes())["renderer"]
 MANUAL_JOB = {
     "trigger": "manual", "runner": {"group": "private-ephemeral", "labels": ["self-hosted", "linux", "x64"]},
     "environment": "owner-approval", "secrets": ["AUTHORITY_JSON", "CUSTODY_JSON"],
@@ -75,13 +76,20 @@ def file_bytes(root: Path) -> dict[str, bytes]:
 
 
 class Workspace:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, *, tag=None):
         self.root = root
         self.builds = root / "references/Hexalith.Builds"
-        self.tag = (ROOT / "builds-version").read_text().strip()
+        # Legacy refusals/defaults belong to this authentic released contract,
+        # independently of the production pin. Selected-release coverage below
+        # exercises the actual pin without rewriting historical expectations.
+        self.tag = tag or LEGACY_RELEASE["tag"]
         self.builds.parent.mkdir(parents=True)
         run(["git", "clone", "--quiet", "--shared", "--no-checkout",
              ROOT / "references/Hexalith.Builds", self.builds])
+        if self.tag == LEGACY_RELEASE["tag"]:
+            revision = git(self.builds, "rev-parse", f"refs/tags/{self.tag}^{{commit}}").decode().strip()
+            if revision != LEGACY_RELEASE["commit"]:
+                raise AssertionError("Legacy renderer fixture must use the authentic released commit")
         shutil.copytree(ROOT / "templates", root / "templates")
         (root / "setup").mkdir()
         (root / "setup/README.md").write_text("Fixture registry only.\n")
@@ -141,12 +149,81 @@ class Workspace:
 
 
 @contextmanager
-def workspace():
+def workspace(*, tag=None):
     with tempfile.TemporaryDirectory(prefix="hexalith-render-fixture-") as directory:
-        yield Workspace(Path(directory))
+        yield Workspace(Path(directory), tag=tag)
 
 
 class RenderTests(unittest.TestCase):
+    def selected_workspace(self):
+        return workspace(tag=(ROOT / "builds-version").read_text().strip())
+
+    def test_selected_release_complete_defaults_and_numeric_timeout_interface(self):
+        with self.selected_workspace() as fixture:
+            self.assertEqual(git(ROOT / "references/Hexalith.Builds", "rev-parse", f"refs/tags/{fixture.tag}^{{commit}}").decode().strip(),
+                             git(fixture.builds, "rev-parse", f"refs/tags/{fixture.tag}^{{commit}}").decode().strip())
+            fixture.setup()
+            fixture.cli()
+            self.assertEqual(fixture.json(), {
+                "schema": "hexalith.ci.v1", "buildsTag": fixture.tag, "solution": "none",
+                "dapr": False, "browsers": False, "registry": False, "codeql": [],
+                "tests": {"integration": [], "exclude": {}, "failSkips": False, "minimumExpectedTests": {}},
+                "hooks": [], "jobs": {}, "submodules": [], "buildProjects": [], "publishedBuilds": None,
+                "ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False,
+                "moduleManifest": None, "windowsCheckout": None,
+            })
+            self.assertEqual({"job-timeout-minutes": 30},
+                             fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
+            with renderer.pinned_contract(fixture.root) as contract:
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+            for invalid in (0, 361, True, "30", None):
+                with self.subTest(invalid=invalid):
+                    fixture.document({"ciTimeoutMinutes": invalid})
+                    self.assert_failure_unchanged(fixture, contains="ciTimeoutMinutes")
+
+    def test_selected_release_preserves_explicit_values_and_additive_windows_interface(self):
+        with self.selected_workspace() as fixture:
+            setup = fixture.setup("full")
+            fixture.cli()
+            supplied = renderer.yaml_document(setup.read_bytes(), str(setup))
+            self.assertEqual(fixture.json(), {
+                "schema": "hexalith.ci.v1", "buildsTag": fixture.tag, **supplied,
+                "tests": {**supplied["tests"], "failSkips": False, "minimumExpectedTests": {}},
+                "buildProjects": [], "publishedBuilds": None, "ciTimeoutMinutes": 30,
+                "npmWorkspaces": [], "dotnetTools": False, "moduleManifest": None, "windowsCheckout": None,
+            })
+            names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
+            windows = fixture.yaml(".github/workflows/ci.yml")["jobs"]["windows-windows-tests"]
+            self.assertEqual({name: "${{ needs.ci.outputs." + name + " }}" for name in names}, windows["steps"][0]["with"])
+            with renderer.pinned_contract(fixture.root) as contract:
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+            fixture.document({"solution": "Fixture.slnx", "tests": {"failSkips": True,
+                "minimumExpectedTests": {"test/Fixture.csproj": 7}}, "ciTimeoutMinutes": 120})
+            fixture.cli()
+            self.assertEqual({"integration": [], "exclude": {}, "failSkips": True,
+                              "minimumExpectedTests": {"test/Fixture.csproj": 7}}, fixture.json()["tests"])
+            self.assertEqual({"job-timeout-minutes": 120},
+                             fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
+            for invalid in ({"failSkips": "true"}, {"minimumExpectedTests": {"test/Fixture.csproj": 0}}):
+                fixture.document({"solution": "Fixture.slnx", "tests": invalid})
+                self.assert_failure_unchanged(fixture)
+
+    def test_selected_release_accepts_manual_runner_and_preserves_private_source_binding(self):
+        with self.selected_workspace() as fixture:
+            fixture.document({"solution": "Fixture.slnx", "jobs": {"azure": MANUAL_JOB}})
+            fixture.cli()
+            self.assertEqual(MANUAL_JOB, fixture.json()["jobs"]["azure"])
+            qualification = fixture.yaml(".github/workflows/qualification.yml")
+            job = qualification["jobs"]["custom-azure"]
+            self.assertEqual(MANUAL_JOB["runner"], job["runs-on"])
+            self.assertEqual("owner-approval", job["environment"])
+            self.assertEqual(45, job["timeout-minutes"])
+            self.assertNotIn("env", job)
+            self.assertNotIn("secrets", job)
+            with renderer.pinned_contract(fixture.root) as contract:
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+            fixture.cli("--check")
+
     def execution_config(self, jobs):
         return {"jobs": jobs, "buildsTag": "v9.8.7", "solution": "Fixture.slnx", "registry": False,
                 "submodules": [], "tests": {}}
@@ -1338,7 +1415,7 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(file_bytes(module), before)
 
 
-def lint_fixtures() -> None:
+def lint_fixtures(*, tag=None) -> None:
     """Use tagged pins/installer, but enumerate only our explicit fixture paths."""
     if platform.system() != "Linux" or platform.machine() not in ("x86_64", "AMD64"):
         raise ValueError("Pinned linter archives target Linux x86_64")
@@ -1346,7 +1423,7 @@ def lint_fixtures() -> None:
         raise ValueError("Online zizmor audits are required; remove offline overrides")
     if not any(os.environ.get(key) for key in ("GH_TOKEN", "GITHUB_TOKEN", "ZIZMOR_GITHUB_TOKEN")):
         raise ValueError("Online audits require a read-only GH_TOKEN, GITHUB_TOKEN or ZIZMOR_GITHUB_TOKEN")
-    with (workspace() as fixture, renderer.pinned_contract(fixture.root) as contract,
+    with (workspace(tag=tag) as fixture, renderer.pinned_contract(fixture.root) as contract,
           tempfile.TemporaryDirectory(prefix="hexalith-lint-tools-") as tools_directory):
         for name in ("minimal", "partial", "full", "quoted"):
             fixture.setup(name, f"Hexalith.Fixture-{name}")
@@ -1387,7 +1464,7 @@ def lint_fixtures() -> None:
         if result.returncode:
             raise ValueError(f"actionlint failed ({result.returncode}): "
                              f"{result.stdout.decode()}{result.stderr.decode()}")
-        print(f"actionlint {pins['actionlint']['version']}: {len(paths)} explicit fixture workflows passed", flush=True)
+        print(f"Builds {contract.tag}: actionlint {pins['actionlint']['version']}: {len(paths)} explicit fixture workflows passed", flush=True)
         result = run([binaries["zizmor"], "--strict-collection", "--no-progress", "--format=json",
                       "--config", ROOT / "tools/zizmor.yml", *paths], cwd=fixture.root, check=False)
         print(result.stderr.decode(), end="", file=sys.stderr)
@@ -1403,7 +1480,7 @@ def lint_fixtures() -> None:
             raise ValueError(f"zizmor reported {len(failures)} findings")
         if result.returncode:
             raise ValueError(f"zizmor nonzero exit {result.returncode}, even though no findings were returned")
-        print(f"zizmor {pins['zizmor']['version']}: {len(paths)} explicit fixture workflows passed online audits", flush=True)
+        print(f"Builds {contract.tag}: zizmor {pins['zizmor']['version']}: {len(paths)} explicit fixture workflows passed online audits", flush=True)
 
 
 def main() -> int:
@@ -1416,6 +1493,9 @@ def main() -> int:
     if args.lint:
         try:
             lint_fixtures()
+            selected = (ROOT / "builds-version").read_text().strip()
+            if selected != LEGACY_RELEASE["tag"]:
+                lint_fixtures(tag=selected)
         except (OSError, ValueError, RuntimeError, KeyError, AssertionError) as error:
             print(f"Fixture lint failed: {renderer.diagnostic(error)}", file=sys.stderr)
             return 1
