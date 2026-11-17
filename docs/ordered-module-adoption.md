@@ -31,7 +31,7 @@ artifact authentication.
 
 | Module | Preparation and qualification still required |
 | --- | --- |
-| EventStore | Extract retained product actions, include payload projects explicitly, classify live/Azure tests correctly, resolve browser failures, retain published compatibility and exact broker/runtime profiles, preserve the Platform deferral, and qualify opt-in kind and private Azure execution. |
+| EventStore | Extract retained product actions, include payload projects explicitly, classify live tests correctly, resolve browser failures, retain published compatibility and exact broker/runtime profiles, preserve the Platform deferral, and qualify applicable on-premises Kubernetes/kind behavior. Azure live execution is deferred outside MVP; retain its offline product and security controls. |
 | FrontComposer | Establish the package-only evaluated Release graph, split product checks from CI/story/evidence governance, retain CLI/ApiCompat/pacts/accessibility/browser checks, and qualify all three engines plus independent mutation segments and complete aggregate reports. |
 | Tenants | Enforce the intended standalone package graph, retain catalog consumers and authentication/persistence/removal behavior, keep `rest`, `persisted`, `anonymous-ui` and `authenticated-ui` in isolated workers, and preserve the exact existing line/branch coverage scopes and comparisons. |
 
@@ -57,7 +57,12 @@ fixture runtimes instead of installing or initializing replacements.
 1. Publish and qualify the Builds infrastructure release separately; verify its
    acceptable immutable release metadata before selecting it in CiCd.
 2. Verify live permissions, runner groups, environments, explicit secret custody,
-   private execution/network boundaries and publication-disabled settings.
+   private execution/network boundaries and publication-disabled settings for
+   enabled MVP routes. The human confirmed on 2026-11-17 that MVP uses on-premises
+   Kubernetes at 192.168.1.30. Azure live qualification and its dedicated worker,
+   environment and authority/custody provisioning are deferred; no Azure pass is
+   inferred. Preserve offline Azure product checks and its future protected
+   manual execution contract.
 3. Measure retained workloads and select budgets; fresh hosted execution must
    qualify browsers/APT/TLS, Dapr/Aspire/backend ownership, matrix isolation,
    mutation resources, report completeness, and live/private product scenarios.

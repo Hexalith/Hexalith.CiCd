@@ -1,0 +1,50 @@
+{
+  "at": "2026-11-17T09:08:35.548758+00:00",
+  "commands": [
+    {
+      "arguments": [
+        "/tmp/hexalith-job.PUXvBRs0/node-v24.22.3-linux-x64/bin/npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exit": 0,
+      "stdout": "\nadded 318 packages, and audited 319 packages in 5s\n\n90 packages are looking for funding\n  run `npm fund` for details\n\nfound 0 vulnerabilities\n",
+      "stderr": "npm notice\nnpm notice New major version of npm available! 11.19.1 -> 12.2.2\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2\nnpm notice To update run: npm install -g npm@12.2.2\nnpm notice\n"
+    },
+    {
+      "arguments": [
+        "/tmp/hexalith-job.PUXvBRs0/node-v24.22.3-linux-x64/bin/npm",
+        "audit",
+        "signatures"
+      ],
+      "exit": 0,
+      "stdout": "audited 318 packages in 3s\n\n318 packages have verified registry signatures\n\n59 packages have verified attestations\n(use --json --include-attestations to view attestation details)\n\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "/tmp/hexalith-job.PUXvBRs0/message-policy/node_modules/.bin/commitlint",
+        "--config",
+        "/tmp/hexalith-job.PUXvBRs0/message-policy/commitlint.config.mjs",
+        "--color=false"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "remoteWrites": false,
+  "policyInputs": {
+    "commitlint.config.mjs": "796a04abdd8c35e645f654c9d8d571556f34ccf4ab3611c9327697a452add38d",
+    "package.json": "02cdabb684e81564eda8dfa6ea6ab9b3b8011a3ce9ecf07d793c7a5209afb84b",
+    "package-lock.json": "9a76dac0423140e2e744f28f7008c23711845cba9e54547a35091ad36d5e6bec"
+  },
+  "nodeArchiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb",
+  "versions": {
+    "node": "v24.22.3",
+    "npm": "11.19.1"
+  },
+  "passed": true,
+  "exactMessage": "feat(snapshots): support qualified aggregate capture and actor configuration\n",
+  "messageSha256": "550e7dd5164cdb6abaec443369bb826e832a6cd0cf65926c18f8d6bd826b4666"
+}

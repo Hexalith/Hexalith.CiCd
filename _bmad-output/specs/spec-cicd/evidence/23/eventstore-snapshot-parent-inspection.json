@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-17T09:08:11.150337+00:00",
+  "base": "392a7e4e9daade785ee9f1ae5f40e25931002735",
+  "candidateTree": "f3db94280035d32de6695f7de2eb900493395a36",
+  "changedPaths": [
+    "docs/guides/configuration-reference.md",
+    "docs/guides/upgrade-path.md",
+    "src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs",
+    "src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs",
+    "src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs",
+    "src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs",
+    "src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs",
+    "tests/Hexalith.EventStore.DomainService.Tests/FoldedAggregateCaptureTests.cs",
+    "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj",
+    "tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs"
+  ],
+  "all17RawFilesAndModesMatchExecutedCandidate": true,
+  "all29ProtectedRawFilesAndModesPreserved": true,
+  "all10GitlinksPreserved": true,
+  "completeStagedTreeMatchesExecutedCandidate": true,
+  "sourceInspection": "Parent read production changes, new helpers, fixture/events/state/limits, both new test files, csproj and docs; final formatting token/literal binding independently checked against prior read",
+  "focusedVerification": {
+    "classes": 28,
+    "passed": 775,
+    "failed": 0,
+    "skipped": 0
+  },
+  "commitCreated": false,
+  "remoteWrites": false,
+  "completePrerequisiteVerification": "pending"
+}

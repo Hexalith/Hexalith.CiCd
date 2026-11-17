@@ -1,6 +1,7 @@
 # Snapshot compatibility prerequisite for Tenants migration
 
-Status: reviewable proposal; no upstream or topology change is implemented.
+Status: human-approved prerequisite, with upstream implementation under qualification.
+The retained topology is unchanged. The original diagnosis below precedes implementation.
 The exact-package SDK 11 DI probe matches all 11 factual capability observations
 with 0 failed/0 skipped, and its Release build has 0 warnings/errors. This diagnoses
 a capability gap; it does not qualify parity or performance. See

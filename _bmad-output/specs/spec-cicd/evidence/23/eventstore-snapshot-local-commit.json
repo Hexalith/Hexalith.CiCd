@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-17T09:09:01.725607+00:00",
+  "base": "392a7e4e9daade785ee9f1ae5f40e25931002735",
+  "head": "fb6704d173466e737fbe0f3892a6273f9c7f0a3e",
+  "tree": "f3db94280035d32de6695f7de2eb900493395a36",
+  "messagePreflight": "eventstore-snapshot-message-preflight02.json",
+  "paths": [
+    "docs/guides/configuration-reference.md",
+    "docs/guides/upgrade-path.md",
+    "src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs",
+    "src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs",
+    "src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs",
+    "src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs",
+    "src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs",
+    "tests/Hexalith.EventStore.DomainService.Tests/FoldedAggregateCaptureTests.cs",
+    "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs",
+    "tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj",
+    "tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs"
+  ],
+  "stdout": "[story/23-snapshot-recovered fb6704d1] feat(snapshots): support qualified aggregate capture and actor configuration\n 17 files changed, 1082 insertions(+), 137 deletions(-)\n create mode 100644 src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs\n create mode 100644 src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs\n create mode 100644 tests/Hexalith.EventStore.DomainService.Tests/FoldedAggregateCaptureTests.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs\n create mode 100644 tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj\n create mode 100644 tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs\n",
+  "stderr": "",
+  "localOnly": true,
+  "remoteWrites": false
+}
