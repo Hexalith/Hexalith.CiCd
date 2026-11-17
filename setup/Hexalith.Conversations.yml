@@ -1,5 +1,9 @@
 solution: Hexalith.Conversations.slnx
 moduleManifest: module/hexalith.module-manifest.v2.json
+buildProjects:
+- id: minimal-module-compatibility
+  project: tests/compatibility/MinimalModule/Hexalith.Conversations.MinimalModule.Compatibility.csproj
+  isolatedContract: tests/compatibility/MinimalModule/hexalith.isolated-build.v1.json
 dapr: true
 browsers: true
 registry: false

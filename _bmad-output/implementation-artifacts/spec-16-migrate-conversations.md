@@ -74,6 +74,19 @@ committed render and external released Builds; production rejects its authority.
 Windows uses validated outputs and protected cone sparse-index checkout with
 immutable excluded-tree IDs; ordinary index expansion is unsafe.
 
+The final fixture route uses the closed `buildProjects` alternative
+`{id, project, isolatedContract}` under managed preparation. Shared code builds
+the nonshipping adapter in separate SDK processes after the root solution, so
+the product's Aspire SDK 13.6.5 and frozen fixture's 13.6.1 remain distinct. The
+isolated SDK invocations disable node reuse, including preflight, to prevent
+.NET 11's default build server from sharing resolver state. The
+adapter and frozen projects stay outside the root solution; the hook runs the
+seven built assertions. Existing finite-version cases keep their restrictions.
+Managed catalog evaluation must preserve the exact producer inventory by
+evaluating unseeded consumers without rewriting its snapshot; legacy cache
+behavior remains unchanged. Both owner changes are published in v6.2.0;
+Conversations' released-input qualification remains mandatory.
+
 ## Tasks & Acceptance
 
 **Execution:**
@@ -145,10 +158,11 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   private locked restore. Arbitrary obj imports, SDK policy namespaces and
   additional properties remain refused. Setup/architecture notes document it.
 - Module source retires the inventoried nonproduct gates, extracts the retained
-  runtime/API assertions, adds both product actions, wires only the non-test
-  adapter into the root solution, and validates five built package/symbol pairs
-  plus isolated consumers. Historical fixture projects and original locks are
-  unchanged; external successor locks were deliberately qualified.
+  runtime/API assertions, adds both product actions, and validates five built
+  package/symbol pairs plus isolated consumers. The non-test adapter and frozen
+  fixture remain outside the root solution; the declared isolated build route
+  builds their graph separately. Historical fixture projects and original locks
+  are unchanged; external successor locks were deliberately qualified.
 - Root npm files are preserved byte-for-byte during preparation. App delivery
   removes owned semantic-release/commitlint selectors first; a post-adoption
   product cleanup may then remove remaining npm files after selector absence and
@@ -223,6 +237,26 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   Git object and released support sources with identity/SDK/file-hash binding.
   Retention grants no native Windows execution or adoption result; those checks
   remain pending and mandatory.
+
+- The owning runtime follow-up is published on Builds main as
+  `0ccd12af6576a3aac601340dec7dba53e86768c3`: managed catalog reads preserve
+  producer bytes, and closed isolated declarations use independent SDK processes
+  with node reuse disabled. Strict SDK integration passed all 49 selected cases;
+  the full Python suites passed 764 cases each on 3.12 and 3.14, without skips.
+  Owning commit policy, package signatures and API compatibility passed. Exact
+  hosted CI run `44021561686` passed all eight required jobs. Sonar analysis
+  retained the baseline's 21 existing findings and identical gate ratings; no
+  new issue or new reachability regression was identified. Its external failure
+  is recorded separately from workflow qualification. Standard central nightly
+  `44025970850` dispatched exact Builds release run `44026029259`, which passed
+  its processed CodeQL security gate and reported `published` for v6.2.0 from
+  `0ccd12af`. The public immutable bot release and matching public CLI Nuspec
+  provenance were verified. Full Conversations qualification remains pending.
+- Focused execution with the actual public 6.1.0 producer passed strict product
+  restore, independent adapter restore/build, all seven fixture assertions and
+  three overlay checks. Its exact producer inventory check correctly failed on
+  the catalog mutation. That focused evidence is not full qualification and does
+  not grant product publication, native Windows acceptance or adoption.
 
 ## Spec Change Log
 

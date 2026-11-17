@@ -548,6 +548,26 @@ in private scratch against the tracked successor lock. It admits no arbitrary
 obj files or unrestricted AdditionalProperties. See the [source qualification
 contract](../_bmad-output/specs/spec-cicd/evidence/16/implementation-and-verification.md).
 
+Builds v6.2.0 adds the closed `buildProjects` form
+`{id, project, isolatedContract}` for these adapters. It requires managed
+`moduleManifest` preparation and a committed descriptor whose owner, exact
+build-order references, framework and nonshipping flags match the evaluated
+adapter. Shared code restores and builds it in separate SDK processes after the
+root solution, under the same authenticated preparation lifetime. The adapter
+stays outside the root solution; frozen fixture projects remain unchanged.
+Every isolated SDK invocation, including preflight, disables node reuse so the
+.NET 11 build server cannot share SDK resolver state across these processes.
+Linux, Windows, local checking and release preparation use the same route.
+Product hooks execute the built tests and never build the fixture.
+
+This form preserves the fixture's SDK selection and canonical build outputs. It
+does not publish finite-version artifact mappings or relax the existing
+`{id, project, versions}` form's restrictions. Managed catalog snapshots remain
+immutable: an unseeded consumer is evaluated against the pinned catalog without
+rewriting the prepared snapshot. Legacy catalog caching retains its behavior.
+Select an acceptable release that implements and qualifies this support before
+using the new declaration in a production registration.
+
 Protected source checkout fetches the exact selected commit with complete ancestor
 history, without recursively initializing dependencies. This preserves retained
 product assertions that read genuine historical objects. Archive exclusions limit
