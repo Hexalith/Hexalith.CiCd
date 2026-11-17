@@ -1,0 +1,334 @@
+{
+  "allFiveWorkloadConstantsUnchanged": true,
+  "allNineCurrentMainPinsPreserved": [
+    {
+      "path": "references/Hexalith.AI.Tools",
+      "revision": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+    },
+    {
+      "path": "references/Hexalith.Builds",
+      "revision": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9"
+    },
+    {
+      "path": "references/Hexalith.Commons",
+      "revision": "49187d47da882d5470deac982bb383486c90202c"
+    },
+    {
+      "path": "references/Hexalith.EventStore",
+      "revision": "3b2350e7c1fff640131f8101596c78a59e31a03f"
+    },
+    {
+      "path": "references/Hexalith.FrontComposer",
+      "revision": "21c208f7045fdb4556cef23178f464207605c42a"
+    },
+    {
+      "path": "references/Hexalith.McpCli",
+      "revision": "c9ffbd5c9f6bc100ecbf6ac13acf4fbe50a498a9"
+    },
+    {
+      "path": "references/Hexalith.Memories",
+      "revision": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+    },
+    {
+      "path": "references/Hexalith.Platform",
+      "revision": "8ccb479e391564ce982309f106504cf8329c0a43"
+    },
+    {
+      "path": "references/Hexalith.PolymorphicSerializations",
+      "revision": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+    }
+  ],
+  "allNineNestedRefsUninitialized": true,
+  "baseline": "cca7ad07211967e604b8f7f33aa21dbbb853ec10",
+  "candidatePatch": {
+    "path": "product-candidate-performance03.patch",
+    "sha256": "688f7d38593eb732ac659ccfcfab878909783d5624640421563690d7e260b594"
+  },
+  "candidateTree": "3c71ad13602451efef696605aae4632f1886beac",
+  "changedPaths": [
+    ".github/actions/nightly/action.yml",
+    "scripts/run-product-nightly.sh",
+    "scripts/tests/test_performance_progress_hook.py",
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/SnapshotPerformanceProgress.cs",
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/TenantsDaprTestFixture.cs",
+    "tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceProgressTests.cs",
+    "tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceTests.cs"
+  ],
+  "dataflow": {
+    "counters": "accepted command count after Accepted check; config count only for successful SetTenantConfiguration; tenant count only after all500 commands return; no identities or payloads",
+    "enrollment": "early GITHUB_OUTPUT progress_directory and progress_path; env HEXALITH_TENANTS_PERFORMANCE_PROGRESS_DIRECTORY; both original opt-ins remain1",
+    "failure": "first failed authored phase persists across teardown; no exception text passed to progress helper; secondary reporting errors do not replace original failure; incomplete benchmark never becomes passed",
+    "launch": "nightly creates0700 canonical direct RUNNER_TEMP/tenants-performance-progress-XXXXXXXX,0600 owner and initial incomplete progress.json before dotnet",
+    "parentCollection": "read progress_path from synthetic GITHUB_OUTPUT before outer scratch removal, or exact controlled direct RUNNER_TEMP child; retain only progress.json,never owner/writer.lock/private bulk",
+    "pass": "benchmark assertions and exact successful500000/167000config/1000tenant counters plus successful frozen fixture disposal",
+    "scheduledArtifact": "same tenants-daily-performance artifact retains existingTRX plus exact progress_path; always cleanup after upload validates canonical direct child,0700 mode,0600 exact own marker and refuses foreign targets",
+    "sparsity": "first successful command and each5000 successes(max101),each10 fully seeded tenants(max100),plus authored phase boundaries; zero checkpoint I/O between Stopwatch.StartNew and Stop",
+    "writer": "one private writer lease, exact initial owner/bootstrap, exclusive0600 staging,flush and atomic replace of only previous own bytes; private canonical path/link/mode refusals"
+  },
+  "focusedChecks": {
+    "csharp": {
+      "executed": 28,
+      "failSkips": "on",
+      "failed": 0,
+      "minimumExpected": 28,
+      "packet": "product-local-performance03.json",
+      "passed": 28,
+      "report": "product-performance-performance03.trx",
+      "skipped": 0
+    },
+    "releaseRestoreBuild": {
+      "analyzers": true,
+      "commands": "product-local-performance03.json",
+      "errors": 0,
+      "exitCode": 0,
+      "nugetAuditEnabledByModule": true,
+      "warnings": 0,
+      "warningsAsErrors": true
+    },
+    "shell": {
+      "additionalCleanupRefusalSubcases": 7,
+      "executed": 5,
+      "failed": 0,
+      "log": "product-performance-hook-03.log",
+      "passed": 5,
+      "skipped": 0
+    },
+    "syntaxAndWhitespace": "bash -n scripts/run-product-nightly.sh; git -c core.safecrlf=false diff --check: passed"
+  },
+  "inventoryDelta": {
+    "newFastCsharpControls": 28,
+    "newPythonHookTests": 5,
+    "nightlyRealPerformanceCasesUnchanged": 1,
+    "ordinaryCsharpIntegrationExpectedAfter": 741,
+    "ordinaryCsharpIntegrationExpectedBefore": 713
+  },
+  "normalizedChangedBlobs": {
+    ".github/actions/nightly/action.yml": "2169f49a003f8cab14abe11aaf9c90104f1ee346",
+    "scripts/run-product-nightly.sh": "d8154e17db54c4f488dfa5d3e904e2cb3be461f1",
+    "scripts/tests/test_performance_progress_hook.py": "6e35cfd7b287cf2bc42732774a56ac251688d46e",
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/SnapshotPerformanceProgress.cs": "457c566aee58114f83c73c48c9259f15743d9576",
+    "tests/Hexalith.Tenants.IntegrationTests/Fixtures/TenantsDaprTestFixture.cs": "3dfb90ce0f26c5c6581d74e8faf41fa944177b52",
+    "tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceProgressTests.cs": "547b299cbe05a13b227bcc1c190ecdc948c1a87a",
+    "tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceTests.cs": "a2d01b7ff4174819bad5c411a9cbaedf36138fa3"
+  },
+  "observedPackageGraph": {
+    "Aspire.Hosting.AppHost/13.6.5": {
+      "sha512": "GP32tRjPx2VCincmWXrLYvwN9RQJD6KG44YY/5oaAO9wLj09bP9W4gwIkHQeR//7QOJAezMAlZNlmNuAP1JVDA==",
+      "type": "package"
+    },
+    "Aspire.Hosting.Keycloak/13.6.5-preview.1.26559.7": {
+      "sha512": "/PqBqNqlAU92LX2KwmaNAP5NNbIcKdNDptH+HJn9o0FBhAAFbuc8kavZ2dfgJaOgYWKgLwc9dPx6EVTXnbER6Q==",
+      "type": "package"
+    },
+    "Aspire.Hosting.Redis/13.6.5": {
+      "sha512": "uNaqKacIEelK+234wpurgIy2bL7xYZTeluGjFW41hURFfE0O49+Mq6HV+r4+ywc9JRN0Q3WeARJkgiXivhkdIw==",
+      "type": "package"
+    },
+    "Aspire.Hosting.Testing/13.6.5": {
+      "sha512": "b73ZNXUClMOLpwSHsesPy93mu58jD2Ca1lwyNOII8+sImH3jMkI5TtsPdY19kpNgawxnaqq3O1MO1Fw0LqDJUw==",
+      "type": "package"
+    },
+    "Aspire.Hosting/13.6.5": {
+      "sha512": "bhK3KRbXiKLLzwK+ikz4o5ZMahWQYZbV1d2jUh7pzilFlVIQ66bxJnVKsqb3Y1MPcjPOk9QTIf+F8gS6zjngNA==",
+      "type": "package"
+    },
+    "Dapr.Actors.AspNetCore/1.19.1": {
+      "sha512": "Aw3FmhhfducbxHY/j7Kc1UAWX/ASKHXhe1c1P1XON3fu4CR4PcVsZivoT1gjQQIkhrEbUrU4DicBG1A8S1taPw==",
+      "type": "package"
+    },
+    "Dapr.Actors/1.19.1": {
+      "sha512": "/0KNi2ZW2WpDMudvK/9UUenJwYfgRR5VqBBsdpjNpgT2P2hH8p80zCFEsM7vCltpaNJ9hKP4382CNmq40rPhAQ==",
+      "type": "package"
+    },
+    "Dapr.AspNetCore/1.19.1": {
+      "sha512": "csjXmpcHZAy7dxgualJF8gOyg7E0Jq93R6s/wYdgN7crLhiegW/ieqZD7oNeZLnAcrJGzKtMh5C2ZTXXg48exw==",
+      "type": "package"
+    },
+    "Dapr.Client/1.19.1": {
+      "sha512": "BKlO8CdoNm8AnlHV03V46a99kKEy2yPM+g4fG0yyZLJda0vrzJER+eiGpSwePTGiYksTQr8Q7KEsdnJ+TKbLpQ==",
+      "type": "package"
+    },
+    "Dapr.Common/1.19.1": {
+      "sha512": "WUwB4KQH6PGRLD4JMsWnyQSFbgLIxCAX2Q9schp6zMJVP0TnofsRUGRbySNq93xOSHOmOhAKSsghkULc/BQ4Eg==",
+      "type": "package"
+    },
+    "Dapr.Protos/1.19.1": {
+      "sha512": "9k/o+DcnPKRSmBam3karEUQGn5Wrf8GL5ikYyOyCdT+bftqwQJPHTmI6QsnK+6AEeghLKFETrorNPt2L/xSv5w==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Admin.Abstractions/5.1.1": {
+      "sha512": "k76sFb7+P+18wa6DnaWy/0MqNb9eANnWivbcNLAi1rAisB5Cctj2jwF34CRCYJa+kjEWTWAP508QSJQWicljRA==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Aspire/5.1.1": {
+      "sha512": "9EpHPxo70OD2MRyzyO3d09Iuu2xKB5h7HB4bS+5xoZ3PwdUgsOZdTb15okWCKu2npW3ZMYtO5XfCCGQTCjog/A==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Client/5.1.1": {
+      "sha512": "e2COhaCgdDxZULhTiYoQJpTN0Ffy7+0dE5GGZv67twdTCZS4uQWUGHrRR0m30uoDMwg4+cNPXZxwoBqPhrLUjA==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Contracts/5.1.1": {
+      "sha512": "6dLwJNhXHpCcTSaW+eBhqL0xMsgAns3ViIgwbPp8Kvi2tTfZN+rDqZGsmTaKqx35jresEOBlcpACJx1aXcz41A==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.DomainService/5.1.1": {
+      "sha512": "NbPk1GYvVLEJtaaIwFR9yA1CxgdcHJsK4LlAjwODtydOVMlNnHYcqRB26WyO1CTPdgvQWU26Ec8r5rdlnPXrlw==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Gateway/5.1.1": {
+      "sha512": "QUVdbKBMXftdZaI8sIBRRtx2dFPtetwO9kDndqyfjG/vAqfGRCmdAEcdBVrG4jYN//oZOdtYhJMWG8ApnIGJzg==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Server/5.1.1": {
+      "sha512": "rMjaL6j2lfFJDa6ISFmwQxxJqObEBu7UZwKqAetT7fl2na1CDvibBVgoJ/xBFfwJHfnOzB8SV59mPpMF8egniA==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.ServiceDefaults/5.1.1": {
+      "sha512": "xN1QuWDkrxY7OnQm+khWHS0gVA+Lr5oLwd5yMbf/BQA2ZJbjvsXBFTW4PEG+BmtqnKYjhH2TI/uhmDSfQlJThg==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Testing.Integration/3.128.4": {
+      "sha512": "LyUFVgy3W6U2GeS/cHxgOKs3bBjRomwZdnFJwLRQ23DVHFn+REoT7rkeoGnSnIIwYWhmNcqtLgFXkk159CAVpw==",
+      "type": "package"
+    },
+    "Hexalith.EventStore.Testing/5.1.1": {
+      "sha512": "Y9IkEI0LmdGo0xcxd+GTaepeiniq+KxWbo+ZD7bRWpYH48c5lB6JnDCrWiPy73KXVXgMRRUUvSeL5dj8/beF3Q==",
+      "type": "package"
+    },
+    "Hexalith.FrontComposer.Contracts.UI/6.0.0": {
+      "sha512": "4z3/Si0kOfgWpe6juTQJnKqVzud4/VKfx3dPi6BJTiO0uTi3Xv97PWutjTSfYimCkOtk3Zj7Bd1Lt0FrCDCHIw==",
+      "type": "package"
+    },
+    "Hexalith.FrontComposer.Contracts/6.0.0": {
+      "sha512": "M/pgc/mUqUsi/kEFZ8DCSh7wkz6FqrbTkanMr8ZG0VGF08IwOkpVKkWx1MUgnfRHHy/XuQk3Tah7I+peIlsEXw==",
+      "type": "package"
+    },
+    "Hexalith.FrontComposer.Shell/6.0.0": {
+      "sha512": "KJqYZPUMJ9VVwwACf2vb+mMHuZvLQhTIQDnLPh/MLx8AK7h8oTv3M0ciHTFNxjhq8xOO/j2cBONBOlteeZylyA==",
+      "type": "package"
+    }
+  },
+  "ownedFilesPreserved": {
+    ".claude/settings.json": {
+      "mode": "0o664",
+      "sha256": "5532988af14d8ae6b0b0ed160f8fa9827613162c3f0b00c86ded238f82b25150"
+    },
+    ".github/copilot-instructions.md": {
+      "mode": "0o664",
+      "sha256": "c34b9da10a18dddb93bb05aa12f992004c119572c4cf66243e2a9725baa12ede"
+    },
+    ".github/dependabot.yml": {
+      "mode": "0o664",
+      "sha256": "03c96e8927c30ac4d6fb275aec6f466d9d2202cc6d97760ac364f409e2788350"
+    },
+    ".github/workflows/ci.yml": {
+      "mode": "0o664",
+      "sha256": "dc4b7bfc4146baf094ff33aa994d621a6641a088f5111e023f9411e55a799ed3"
+    },
+    ".github/workflows/codeql.yml": {
+      "mode": "0o664",
+      "sha256": "f451cc47ba1cad3ee337056a72a3a6e38c73e697117d53bc29ad9a2e6f4b34c1"
+    },
+    ".github/workflows/commitlint.yml": {
+      "mode": "0o664",
+      "sha256": "f3f0f1d2d00210d15cf21499fc00b2e6a2673576f39c319d206da7a2c802e27d"
+    },
+    ".github/workflows/dependency-review.yml": {
+      "mode": "0o664",
+      "sha256": "1b6c55df46a3c23409a693dcb067ddcac3963e5221e712428fa9a3db0e8e00cc"
+    },
+    ".github/workflows/recover-partial-release.yml": {
+      "mode": "0o664",
+      "sha256": "cf74be23f9c6a13576294df8f5a3522e5e062f6f85aac9fbf73d382c5e0ce2be"
+    },
+    ".github/workflows/release.yml": {
+      "mode": "0o664",
+      "sha256": "8e631fcfcc4d3ab7f7a6c27a4ab744a49d4bb5ba2f7d84ddf627266e44532f58"
+    },
+    ".github/workflows/runner-network-probe.yml": {
+      "mode": "0o664",
+      "sha256": "bed74243e611e25f96b4bd1b3f387adc4eee536e3945d660a3fd3efb9cc48288"
+    },
+    ".github/workflows/source-reference.yml": {
+      "mode": "0o664",
+      "sha256": "26e5f105250f23ee8d46460693518c5b4183028751558609edfd7d428c645939"
+    },
+    ".github/workflows/story-guards.yml": {
+      "mode": "0o664",
+      "sha256": "8898e6c987c451cfa9da159a253926e13e9d4b9bd2fa351e165cd519350bbead"
+    },
+    ".gitmodules": {
+      "mode": "0o664",
+      "sha256": "372ae4525c40a32e202a3b2bb507bd13e191b3464838c9ee715349a7356a3a22"
+    },
+    "AGENTS.md": {
+      "mode": "0o664",
+      "sha256": "c34b9da10a18dddb93bb05aa12f992004c119572c4cf66243e2a9725baa12ede"
+    },
+    "CLAUDE.md": {
+      "mode": "0o664",
+      "sha256": "c34b9da10a18dddb93bb05aa12f992004c119572c4cf66243e2a9725baa12ede"
+    }
+  },
+  "pending": [
+    "Actual500K benchmark internal phase diagnosis and completed TRX within unchanged60minutes",
+    "Native effective interval evidence and intended50 versus default100 discrepancy resolution under frozen requirements",
+    "NFR13 actual30second rehydration assertion",
+    "Exact-final-source complete released v6.1.0 bootstrap/hook/profile/performance/semantic audit qualification",
+    "Product publication,registration,delivery,hosted acceptance,legacy Zot consumer/key mapping/revocation and next scheduled outcome"
+  ],
+  "purpose": "Observational performance continuation only; actual native benchmark/full bootstrap remains unqualified",
+  "rawManifest": "product-manifest-performance03.json",
+  "rawManifestMatchesFinalSource": true,
+  "resources": {
+    "allFocusedJobsClosed": true,
+    "dockerOrGlobalRuntimeChanged": false,
+    "nativeAppHostOrDaprLaunched": false,
+    "real500KWorkloadRun": false,
+    "scratch": [
+      {
+        "attempt": "performance01",
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "performance02",
+        "scratchRemoved": true
+      },
+      {
+        "attempt": "performance03",
+        "scratchRemoved": true
+      }
+    ]
+  },
+  "retainedAttempts": {
+    "dotnetInspectFailures": "overload/visibility/type-selection failures in api01/02/05/06/08 logs retained; corrected actual5.1.1 IL/body reads are api04/07",
+    "performance01": "failed compile5 CA1062/CA1416 errors; retained log/packet/patch/manifest,not accepted",
+    "performance02": "27/27 prior focused controls passed; superseded only by clarified comments/indent,nonvacuous interface assertion and actual frozen-disposer control",
+    "performance03": "exact final candidate28/28 plus final same-source shell5/5"
+  },
+  "sdk": "11.0.100",
+  "snapshotFacts": {
+    "actualConfigureDomainOptionsControl": {
+      "default": 100,
+      "domainOverride": 75,
+      "persistedPolicyResolverRegistered": false,
+      "tenantDomainOverride": 125
+    },
+    "documentedIntendedInterval": 50,
+    "frozenHarnessPackage": "Hexalith.EventStore.Testing.Integration/3.128.4",
+    "nativeNextRun": "Observe actual materialized options; if a persisted policy resolver is present, effectiveSnapshotInterval remains null because its result was not observed",
+    "previousNativeEffectiveIntervalObserved": false,
+    "primaryEvidence": [
+      "product-performance-snapshot-api-04.log",
+      "product-performance-snapshot-api-07.log",
+      "product-local-performance03.json"
+    ],
+    "published511DefaultVerifiedByIL": 100,
+    "runtimeOptionChangesMade": false,
+    "selectedPerformanceFixtureServerPackage": "Hexalith.EventStore.Server/5.1.1",
+    "upstreamCatalogDefault": "5.2.0; product explicit5.1.1 controls its package consumer; AppHost separately compiles current pinned source"
+  },
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-current",
+  "timedActorBlockUnchanged": "var stopwatch = Stopwatch.StartNew();\nCommandProcessingResult result = await proxy.ProcessCommandAsync(rehydrationCmd);\nstopwatch.Stop();"
+}

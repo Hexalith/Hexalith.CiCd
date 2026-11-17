@@ -1,0 +1,1054 @@
+diff --git a/.github/actions/nightly/action.yml b/.github/actions/nightly/action.yml
+index 7bce35af..2169f49a 100644
+--- a/.github/actions/nightly/action.yml
++++ b/.github/actions/nightly/action.yml
+@@ -4,6 +4,7 @@ runs:
+   using: composite
+   steps:
+     - name: Require actual execution of the daily performance tier
++      id: performance
+       shell: bash
+       run: bash scripts/run-product-nightly.sh daily
+     - name: Retain performance test results
+@@ -11,5 +12,13 @@ runs:
+       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+       with:
+         name: tenants-daily-performance
+-        path: TestResults/performance/*.trx
++        path: |
++          TestResults/performance/*.trx
++          ${{ steps.performance.outputs.progress_path }}
+         if-no-files-found: error
++    - name: Remove the private performance checkpoints
++      if: always() && steps.performance.outputs.progress_directory != ''
++      shell: bash
++      env:
++        PERFORMANCE_PROGRESS_DIRECTORY: ${{ steps.performance.outputs.progress_directory }}
++      run: bash scripts/run-product-nightly.sh cleanup "$PERFORMANCE_PROGRESS_DIRECTORY"
+diff --git a/scripts/run-product-nightly.sh b/scripts/run-product-nightly.sh
+index 746055f9..d8154e17 100644
+--- a/scripts/run-product-nightly.sh
++++ b/scripts/run-product-nightly.sh
+@@ -1,9 +1,34 @@
+ #!/usr/bin/env bash
+ set -euo pipefail
+ 
++if [[ "${1:-}" == cleanup ]]; then
++    progress_directory="${2:-}"
++    runner_temp="${RUNNER_TEMP:?A canonical RUNNER_TEMP is required.}"
++    [[ "$runner_temp" == "$(realpath -- "$runner_temp")" && "$runner_temp" != / &&
++       "$progress_directory" =~ ^"$runner_temp"/tenants-performance-progress-[[:alnum:]]{8}$ &&
++       -d "$progress_directory" && ! -L "$progress_directory" &&
++       "$progress_directory" == "$(realpath -- "$progress_directory")" &&
++       "$(stat -c %a -- "$progress_directory")" == 700 &&
++       -f "$progress_directory/owner" && ! -L "$progress_directory/owner" &&
++       "$(stat -c %a -- "$progress_directory/owner")" == 600 ]] || { echo 'performance-progress-cleanup-invalid' >&2; exit 1; }
++    cmp -s "$progress_directory/owner" <(printf 'tenants-performance-progress-v1\n') || { echo 'performance-progress-cleanup-invalid' >&2; exit 1; }
++    rm -rf -- "$progress_directory"
++    exit
++fi
++
+ # The retained tier has daily cadence. Central release scheduling invokes this
+ # hook; new cadences must name another real product tier instead of rerunning CI.
+ [[ "${1:-}" == daily ]] || { echo 'The scheduled product tier requires daily cadence.' >&2; exit 1; }
++runner_temp="${RUNNER_TEMP:?A canonical RUNNER_TEMP is required.}"
++[[ "$runner_temp" == "$(realpath -- "$runner_temp")" && "$runner_temp" != / ]] || { echo 'performance-progress-root-invalid' >&2; exit 1; }
++umask 077
++progress_directory="$(mktemp -d "$runner_temp/tenants-performance-progress-XXXXXXXX")"
++printf 'tenants-performance-progress-v1\n' > "$progress_directory/owner"
++printf '{"schemaVersion":1,"phase":"RunnerStarting","status":"incomplete"}\n' > "$progress_directory/progress.json"
++export HEXALITH_TENANTS_PERFORMANCE_PROGRESS_DIRECTORY="$progress_directory"
++if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
++    printf 'progress_directory=%s\nprogress_path=%s/progress.json\n' "$progress_directory" "$progress_directory" >> "$GITHUB_OUTPUT"
++fi
+ HEXALITH_EVENTSTORE_RUN_PERFORMANCE_TESTS=1 HEXALITH_TENANTS_RUN_PERFORMANCE_TESTS=1 \
+     dotnet test --project tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj \
+         --configuration Release --no-build --no-restore --stop-on-fail off \
+diff --git a/scripts/tests/test_performance_progress_hook.py b/scripts/tests/test_performance_progress_hook.py
+new file mode 100644
+index 00000000..6e35cfd7
+--- /dev/null
++++ b/scripts/tests/test_performance_progress_hook.py
+@@ -0,0 +1,107 @@
++"""Exercise the product benchmark launch/progress/cleanup boundary without .NET or Dapr."""
++import json
++import os
++from pathlib import Path
++import subprocess
++import tempfile
++import unittest
++
++
++SCRIPT = Path(__file__).resolve().parents[1] / "run-product-nightly.sh"
++
++
++class PerformanceProgressHookTests(unittest.TestCase):
++    def setUp(self):
++        self.scratch = tempfile.TemporaryDirectory(prefix="performance-hook-control-")
++        self.addCleanup(self.scratch.cleanup)
++        self.root = Path(self.scratch.name).resolve()
++        self.bin = self.root / "bin"
++        self.bin.mkdir()
++        dotnet = self.bin / "dotnet"
++        dotnet.write_text("""#!/usr/bin/env python3
++import json, os, pathlib, sys
++pathlib.Path(os.environ['CONTROL_CALL']).write_text(json.dumps({
++ 'arguments': sys.argv[1:],
++ 'eventstore': os.environ.get('HEXALITH_EVENTSTORE_RUN_PERFORMANCE_TESTS'),
++ 'tenants': os.environ.get('HEXALITH_TENANTS_RUN_PERFORMANCE_TESTS'),
++ 'directory': os.environ.get('HEXALITH_TENANTS_PERFORMANCE_PROGRESS_DIRECTORY')}))
++sys.exit(int(os.environ.get('CONTROL_EXIT', '0')))
++""")
++        dotnet.chmod(0o700)
++        self.output = self.root / "output"
++        self.call = self.root / "call.json"
++        self.environment = {**os.environ, "RUNNER_TEMP": str(self.root), "GITHUB_OUTPUT": str(self.output),
++                            "CONTROL_CALL": str(self.call), "PATH": str(self.bin) + os.pathsep + os.environ["PATH"]}
++
++    def run_script(self, *arguments):
++        return subprocess.run(["bash", str(SCRIPT), *arguments], cwd=self.root, env=self.environment,
++                              text=True, capture_output=True, timeout=10, check=False)
++
++    def launch(self, exit_code=0):
++        self.environment["CONTROL_EXIT"] = str(exit_code)
++        result = self.run_script("daily")
++        self.assertEqual(result.returncode, exit_code, result.stderr)
++        outputs = dict(line.split("=", 1) for line in self.output.read_text().splitlines())
++        return result, outputs, Path(outputs["progress_directory"])
++
++    def test_real_hook_preserves_exact_workload_invocation_and_both_opt_ins(self):
++        _, outputs, directory = self.launch()
++        call = json.loads(self.call.read_text())
++        self.assertEqual(call, {"arguments": ["test", "--project", "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj",
++                         "--configuration", "Release", "--no-build", "--no-restore", "--stop-on-fail", "off",
++                         "--filter-trait", "Category=Performance", "--minimum-expected-tests", "1", "--fail-skips", "on",
++                         "--results-directory", "TestResults/performance", "--report-xunit-trx", "--report-xunit-trx-filename", "perf-results.trx"],
++                         "eventstore": "1", "tenants": "1", "directory": str(directory)})
++        self.assertEqual(outputs["progress_path"], str(directory / "progress.json"))
++        self.assertEqual(directory.stat().st_mode & 0o777, 0o700)
++        self.assertEqual((directory / "progress.json").stat().st_mode & 0o777, 0o600)
++        self.assertEqual((directory / "owner").stat().st_mode & 0o777, 0o600)
++
++    def test_failed_process_retains_incomplete_launch_observation_and_original_exit(self):
++        _, _, directory = self.launch(23)
++        self.assertEqual(json.loads((directory / "progress.json").read_text()),
++                         {"schemaVersion": 1, "phase": "RunnerStarting", "status": "incomplete"})
++        self.assertEqual(self.run_script("cleanup", str(directory)).returncode, 0)
++        self.assertFalse(directory.exists())
++
++    def test_cleanup_removes_only_its_private_owned_directory(self):
++        foreign = self.root / "foreign"
++        foreign.mkdir()
++        sentinel = foreign / "credential-sentinel"
++        sentinel.write_text("preserve")
++        _, _, directory = self.launch()
++        self.assertEqual(self.run_script("cleanup", str(directory)).returncode, 0)
++        self.assertFalse(directory.exists())
++        self.assertEqual(sentinel.read_text(), "preserve")
++
++    def test_cleanup_refuses_root_ancestor_sibling_link_and_foreign_owner(self):
++        for mutation in ("root", "ancestor", "sibling", "link", "public", "owner", "missing-owner"):
++            with self.subTest(mutation=mutation):
++                self.output.unlink(missing_ok=True)
++                _, _, directory = self.launch()
++                target = directory
++                if mutation == "root": target = self.root
++                elif mutation == "ancestor": target = self.root.parent
++                elif mutation == "sibling": target = self.root / "foreign"
++                elif mutation == "link":
++                    target = self.root / "tenants-performance-progress-AbCd1234"
++                    target.symlink_to(directory, target_is_directory=True)
++                elif mutation == "public": directory.chmod(0o755)
++                elif mutation == "owner": (directory / "owner").write_text("credential-sentinel")
++                elif mutation == "missing-owner": (directory / "owner").unlink()
++                result = self.run_script("cleanup", str(target))
++                self.assertNotEqual(result.returncode, 0)
++                self.assertIn("performance-progress-cleanup-invalid", result.stderr)
++                self.assertNotIn("credential-sentinel", result.stdout + result.stderr)
++                self.assertTrue(directory.exists())
++
++    def test_invalid_cadence_and_noncanonical_root_do_not_launch_dotnet(self):
++        self.assertNotEqual(self.run_script("weekly").returncode, 0)
++        self.assertFalse(self.call.exists())
++        self.environment["RUNNER_TEMP"] += "/.."
++        self.assertNotEqual(self.run_script("daily").returncode, 0)
++        self.assertFalse(self.call.exists())
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/SnapshotPerformanceProgress.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/SnapshotPerformanceProgress.cs
+new file mode 100644
+index 00000000..457c566a
+--- /dev/null
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/SnapshotPerformanceProgress.cs
+@@ -0,0 +1,275 @@
++using System.Diagnostics;
++using System.Text;
++using System.Text.Json;
++
++namespace Hexalith.Tenants.IntegrationTests.Fixtures;
++
++/// <summary>Private, support-safe checkpoints for the opt-in real actor benchmark.</summary>
++internal sealed class SnapshotPerformanceProgress : IDisposable
++{
++    internal const string DirectoryVariable = "HEXALITH_TENANTS_PERFORMANCE_PROGRESS_DIRECTORY";
++    internal const string InitialDocument = "{\"schemaVersion\":1,\"phase\":\"RunnerStarting\",\"status\":\"incomplete\"}\n";
++    internal const string OwnerDocument = "tenants-performance-progress-v1\n";
++    private const UnixFileMode PrivateDirectoryMode = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute;
++    private const UnixFileMode PrivateFileMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
++    private readonly object _sync = new();
++    private readonly Stopwatch _clock = Stopwatch.StartNew();
++    private readonly Dictionary<string, double> _completedPhaseSeconds = [];
++    private readonly string? _root;
++    private readonly string? _directory;
++    private readonly FileStream? _lease;
++    private byte[]? _previousDocument;
++    private Phase _phase = Phase.FixtureCreated;
++    private Phase? _failedPhase;
++    private double _phaseStarted;
++    private int _commandsAccepted;
++    private int _configurationWritesAccepted;
++    private int _tenantsSeeded;
++    private bool _benchmarkPassed;
++    private bool _fixtureDisposed;
++    private int? _snapshotInterval;
++    private IntervalSource? _snapshotIntervalSource;
++    private bool? _persistedPolicyResolverRegistered;
++    private double? _rehydrationSeconds;
++
++    internal enum Phase
++    {
++        FixtureCreated, FixtureInitialization, DomainConfiguration, HostStartup, FixtureReady,
++        ExecutionGateWait, BenchmarkSetup, Seeding, SeedingComplete, TargetDeactivation,
++        TargetDeactivated, Rehydration, RehydrationComplete, AssertionsPassed, FixtureTeardown, FixtureDisposed,
++    }
++
++    internal enum IntervalSource { Default, Domain, TenantDomain }
++
++    private SnapshotPerformanceProgress() { }
++
++    private SnapshotPerformanceProgress(string root, string directory)
++    {
++        _root = root;
++        _directory = directory;
++        ValidateDirectory();
++        string path = Path.Combine(directory, "progress.json");
++        byte[] initial = Encoding.UTF8.GetBytes(InitialDocument);
++        string owner = Path.Combine(directory, "owner");
++        if (Directory.EnumerateFileSystemEntries(directory).Any(entry => entry != path && entry != owner)
++            || !IsPrivateFile(owner) || new FileInfo(owner).Length != Encoding.UTF8.GetByteCount(OwnerDocument)
++            || File.ReadAllText(owner) != OwnerDocument
++            || !IsPrivateFile(path) || new FileInfo(path).Length != initial.Length
++            || !File.ReadAllBytes(path).AsSpan().SequenceEqual(initial))
++        {
++            throw InvalidProgress();
++        }
++
++        _previousDocument = initial;
++        _lease = CreatePrivateFile(Path.Combine(directory, "writer.lock"));
++        try { Write(); }
++        catch { _lease.Dispose(); throw; }
++    }
++
++    internal static SnapshotPerformanceProgress FromEnvironment()
++    {
++        string? directory = Environment.GetEnvironmentVariable(DirectoryVariable);
++        if (string.IsNullOrEmpty(directory)) return new();
++        if (Environment.GetEnvironmentVariable("HEXALITH_EVENTSTORE_RUN_PERFORMANCE_TESTS") != "1"
++            || Environment.GetEnvironmentVariable("HEXALITH_TENANTS_RUN_PERFORMANCE_TESTS") != "1")
++        {
++            throw InvalidProgress();
++        }
++
++        return Open(Environment.GetEnvironmentVariable("RUNNER_TEMP") ?? string.Empty, directory);
++    }
++
++    internal static SnapshotPerformanceProgress Open(string root, string directory)
++    {
++        try { return new(root, directory); }
++        catch { throw InvalidProgress(); }
++    }
++
++    internal void SetPhase(Phase phase)
++    {
++        lock (_sync)
++        {
++            if (_directory is null) return;
++            if (!Enum.IsDefined(phase)) throw InvalidProgress();
++            double now = _clock.Elapsed.TotalSeconds;
++            string previous = _phase.ToString();
++            _completedPhaseSeconds[previous] = _completedPhaseSeconds.GetValueOrDefault(previous) + now - _phaseStarted;
++            _phase = phase;
++            _phaseStarted = now;
++            Write();
++        }
++    }
++
++    internal void RecordAcceptedCommand(bool configuration)
++    {
++        lock (_sync)
++        {
++            if (_directory is null) return;
++            if (_phase != Phase.Seeding || _commandsAccepted >= 500_000 || (configuration && _configurationWritesAccepted >= 167_000)) throw InvalidProgress();
++            _commandsAccepted++;
++            if (configuration) _configurationWritesAccepted++;
++            // At most 101 command checkpoints for the full workload, outside rehydration.
++            if (_commandsAccepted == 1 || _commandsAccepted % 5_000 == 0) Write();
++        }
++    }
++
++    internal void RecordSeededTenant()
++    {
++        lock (_sync)
++        {
++            if (_directory is null) return;
++            if (_phase != Phase.Seeding || _tenantsSeeded >= 1_000 || _commandsAccepted < (_tenantsSeeded + 1) * 500) throw InvalidProgress();
++            _tenantsSeeded++;
++            if (_tenantsSeeded % 10 == 0) Write();
++        }
++    }
++
++    internal void RecordSnapshotInterval(int interval, IntervalSource source, bool persistedPolicyResolverRegistered)
++    {
++        lock (_sync)
++        {
++            if (_directory is null) return;
++            if (interval < 10 || !Enum.IsDefined(source)) throw InvalidProgress();
++            _snapshotInterval = interval;
++            _snapshotIntervalSource = source;
++            _persistedPolicyResolverRegistered = persistedPolicyResolverRegistered;
++            // Options may be materialized lazily. Their observation performs no checkpoint I/O.
++        }
++    }
++
++    internal void RecordRehydration(TimeSpan elapsed)
++    {
++        lock (_sync)
++        {
++            if (_directory is null) return;
++            if (elapsed < TimeSpan.Zero || !double.IsFinite(elapsed.TotalSeconds)) throw InvalidProgress();
++            _rehydrationSeconds = elapsed.TotalSeconds;
++            Write();
++        }
++    }
++
++    internal void BenchmarkPassed()
++    {
++        lock (_sync)
++        {
++            if (_directory is null) return;
++            if (_phase != Phase.RehydrationComplete || _commandsAccepted != 500_000 || _configurationWritesAccepted != 167_000 || _tenantsSeeded != 1_000
++                || _rehydrationSeconds is null or >= 30 || _failedPhase is not null) throw InvalidProgress();
++            _benchmarkPassed = true;
++            SetPhase(Phase.AssertionsPassed);
++        }
++    }
++
++    internal void Failed()
++    {
++        // Failure reporting must never replace a real actor/assertion/lifecycle exception.
++        try
++        {
++            lock (_sync)
++            {
++                if (_directory is null) return;
++                _failedPhase ??= _phase;
++                Write();
++            }
++        }
++        catch { }
++    }
++
++    internal void FixtureDisposed()
++    {
++        lock (_sync)
++        {
++            _fixtureDisposed = true;
++            SetPhase(Phase.FixtureDisposed);
++        }
++    }
++
++    public void Dispose() => _lease?.Dispose();
++
++    private void Write()
++    {
++        try { WriteCore(); }
++        catch { throw InvalidProgress(); }
++    }
++
++    private void WriteCore()
++    {
++        ValidateDirectory();
++        string path = Path.Combine(_directory!, "progress.json");
++        if (!IsPrivateFile(path) || new FileInfo(path).Length != _previousDocument!.Length
++            || !File.ReadAllBytes(path).AsSpan().SequenceEqual(_previousDocument)) throw InvalidProgress();
++        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(new
++        {
++            schemaVersion = 1,
++            phase = _phase.ToString(),
++            status = _failedPhase is not null ? "failed" : _benchmarkPassed && _fixtureDisposed ? "passed" : "incomplete",
++            failedPhase = _failedPhase?.ToString(),
++            benchmarkPassed = _benchmarkPassed,
++            fixtureDisposed = _fixtureDisposed,
++            commandsAccepted = _commandsAccepted,
++            configurationWritesAccepted = _configurationWritesAccepted,
++            tenantsSeeded = _tenantsSeeded,
++            elapsedSeconds = _clock.Elapsed.TotalSeconds,
++            phaseElapsedSeconds = _clock.Elapsed.TotalSeconds - _phaseStarted,
++            completedPhaseSeconds = _completedPhaseSeconds,
++            rehydrationSeconds = _rehydrationSeconds,
++            optionsSnapshotInterval = _snapshotInterval,
++            persistedPolicyResolverRegistered = _persistedPolicyResolverRegistered,
++            effectiveSnapshotInterval = _persistedPolicyResolverRegistered == false ? _snapshotInterval : null,
++            snapshotIntervalSource = _snapshotIntervalSource?.ToString(),
++            workload = new { tenants = 1_000, commandsPerTenant = 500, configurationKeys = 100, concurrency = 50, documentedSnapshotInterval = 50, rehydrationLimitSeconds = 30 },
++        });
++        string staging = Path.Combine(_directory!, $"checkpoint-{Guid.NewGuid():N}.tmp");
++        try
++        {
++            using (FileStream stream = CreatePrivateFile(staging))
++            {
++                stream.Write(bytes);
++                stream.Flush(flushToDisk: true);
++            }
++
++            // Revalidate after staging, before replacing only our exact previous checkpoint.
++            ValidateDirectory();
++            if (!IsPrivateFile(path) || new FileInfo(path).Length != _previousDocument.Length
++                || !File.ReadAllBytes(path).AsSpan().SequenceEqual(_previousDocument)) throw InvalidProgress();
++            File.Move(staging, path, overwrite: true);
++            _previousDocument = bytes;
++        }
++        catch { throw InvalidProgress(); }
++        finally { if (IsPrivateFile(staging)) File.Delete(staging); }
++    }
++
++    private void ValidateDirectory()
++    {
++        if (OperatingSystem.IsWindows()) throw InvalidProgress();
++        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) throw InvalidProgress();
++        if (string.IsNullOrEmpty(_root) || string.IsNullOrEmpty(_directory)
++            || !Path.IsPathFullyQualified(_root) || !Path.IsPathFullyQualified(_directory)
++            || Path.GetFullPath(_root) != _root || Path.GetFullPath(_directory) != _directory
++            || Path.GetDirectoryName(_directory) != _root
++            || !System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(_directory), "^tenants-performance-progress-[A-Za-z0-9]{8}$", System.Text.RegularExpressions.RegexOptions.CultureInvariant)
++            || !Directory.Exists(_directory) || File.GetUnixFileMode(_directory) != PrivateDirectoryMode) throw InvalidProgress();
++        for (DirectoryInfo? entry = new(_directory); entry is not null; entry = entry.Parent)
++        {
++            if (entry.LinkTarget is not null || (entry.Attributes & FileAttributes.ReparsePoint) != 0) throw InvalidProgress();
++        }
++    }
++
++    private static bool IsPrivateFile(string path)
++        => (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()) && File.Exists(path)
++            && new FileInfo(path).LinkTarget is null && (File.GetAttributes(path) & FileAttributes.ReparsePoint) == 0
++            && File.GetUnixFileMode(path) == PrivateFileMode;
++
++    private static FileStream CreatePrivateFile(string path)
++    {
++        if (OperatingSystem.IsWindows()) throw InvalidProgress();
++        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) throw InvalidProgress();
++        return new(path, new FileStreamOptions
++        {
++            Mode = FileMode.CreateNew, Access = FileAccess.Write, Share = FileShare.None,
++            UnixCreateMode = PrivateFileMode,
++        });
++    }
++
++    private static InvalidOperationException InvalidProgress() => new("performance-progress-invalid");
++}
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/TenantsDaprTestFixture.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/TenantsDaprTestFixture.cs
+index 6e180d6a..3dfb90ce 100644
+--- a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/TenantsDaprTestFixture.cs
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/TenantsDaprTestFixture.cs
+@@ -33,7 +33,43 @@ namespace Hexalith.Tenants.IntegrationTests.Fixtures;
+ /// reusable platform base <see cref="DaprDomainServiceTestFixtureBase"/>. This fixture supplies only the
+ /// Tenants domain host registration and the publisher/store fakes the tests assert against.
+ /// </remarks>
+-public sealed class TenantsDaprTestFixture : DaprDomainServiceTestFixtureBase {
++public sealed class TenantsDaprTestFixture : DaprDomainServiceTestFixtureBase, IAsyncLifetime {
++    internal SnapshotPerformanceProgress PerformanceProgress { get; } = SnapshotPerformanceProgress.FromEnvironment();
++
++    /// <inheritdoc/>
++    public new async ValueTask InitializeAsync()
++    {
++        try
++        {
++            PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.FixtureInitialization);
++            await base.InitializeAsync();
++            if (PrerequisitesAvailable) PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.FixtureReady);
++            else PerformanceProgress.Failed();
++        }
++        catch { PerformanceProgress.Failed(); throw; }
++    }
++
++    /// <inheritdoc/>
++    public new async ValueTask DisposeAsync()
++    {
++        // Checkpoint refusal must not prevent the frozen fixture from cleaning its own resources.
++        try
++        {
++            try { PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.FixtureTeardown); }
++            catch { PerformanceProgress.Failed(); throw; }
++        }
++        finally
++        {
++            try
++            {
++                await base.DisposeAsync();
++                PerformanceProgress.FixtureDisposed();
++            }
++            catch { PerformanceProgress.Failed(); throw; }
++            finally { PerformanceProgress.Dispose(); }
++        }
++    }
++
+     /// <inheritdoc/>
+     protected override string AppId => "commandapi";
+ 
+@@ -79,6 +115,8 @@ public sealed class TenantsDaprTestFixture : DaprDomainServiceTestFixtureBase {
+     protected override void ConfigureDomain(WebApplicationBuilder builder) {
+         ArgumentNullException.ThrowIfNull(builder);
+ 
++        PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.DomainConfiguration);
++
+         _ = builder.Logging.AddProvider(new SupportSafeDiagnosticLogProvider(_supportDiagnostics));
+ 
+         // Configure domain service registration: system|tenants|v1 → self (commandapi)
+@@ -138,6 +176,17 @@ public sealed class TenantsDaprTestFixture : DaprDomainServiceTestFixtureBase {
+         _ = builder.Services.AddDataProtection()
+             .SetApplicationName("Hexalith.Tenants.IntegrationTests");
+         builder.Services.AddEventStoreQueryCursorCodec("Hexalith.Tenants.QueryCursor.v1");
++        bool policyResolverRegistered = builder.Services.Any(service => service.ServiceType == typeof(ISnapshotPolicyResolver));
++        builder.Services.PostConfigure<SnapshotOptions>(options =>
++        {
++            SnapshotPerformanceProgress.IntervalSource source;
++            int interval;
++            if (options.TenantDomainIntervals.TryGetValue("system:tenants", out interval)) source = SnapshotPerformanceProgress.IntervalSource.TenantDomain;
++            else if (options.DomainIntervals.TryGetValue("tenants", out interval)) source = SnapshotPerformanceProgress.IntervalSource.Domain;
++            else { interval = options.DefaultInterval; source = SnapshotPerformanceProgress.IntervalSource.Default; }
++            PerformanceProgress.RecordSnapshotInterval(interval, source, policyResolverRegistered);
++        });
++        PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.HostStartup);
+     }
+ 
+     private static InMemoryReadModelStore CreateGlobalAdministratorsReadModel() {
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceProgressTests.cs b/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceProgressTests.cs
+new file mode 100644
+index 00000000..9c88b565
+--- /dev/null
++++ b/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceProgressTests.cs
+@@ -0,0 +1,323 @@
++using System.Reflection;
++using System.Text.Json;
++
++using Hexalith.EventStore.Server.Configuration;
++using Hexalith.Tenants.IntegrationTests.Fixtures;
++
++using Microsoft.AspNetCore.Builder;
++using Microsoft.Extensions.Configuration;
++using Microsoft.Extensions.DependencyInjection;
++using Microsoft.Extensions.Options;
++
++using Shouldly;
++
++namespace Hexalith.Tenants.IntegrationTests;
++
++/// <summary>Fast filesystem and host-registration controls; no real sidecar or benchmark runs.</summary>
++public sealed class SnapshotPerformanceProgressTests
++{
++    [Fact]
++    public void PrivateCheckpointContainsOnlyAuthoredPhasesAndBoundedAggregates()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding);
++        progress.RecordAcceptedCommand(configuration: true);
++        using JsonDocument document = scope.Read();
++        document.RootElement.GetProperty("commandsAccepted").GetInt32().ShouldBe(1);
++        document.RootElement.GetProperty("configurationWritesAccepted").GetInt32().ShouldBe(1);
++        document.RootElement.GetProperty("tenantsSeeded").GetInt32().ShouldBe(0);
++        document.RootElement.GetProperty("phase").GetString().ShouldBe("Seeding");
++        document.RootElement.GetProperty("status").GetString().ShouldBe("incomplete");
++        document.RootElement.GetProperty("elapsedSeconds").GetDouble().ShouldBeGreaterThanOrEqualTo(0);
++        document.RootElement.GetProperty("completedPhaseSeconds").GetProperty("FixtureCreated").GetDouble().ShouldBeGreaterThanOrEqualTo(0);
++        File.ReadAllText(scope.Path).ShouldNotContain(scope.Sentinel);
++        if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
++            File.GetUnixFileMode(scope.Path).ShouldBe(UnixFileMode.UserRead | UnixFileMode.UserWrite);
++        System.IO.Directory.EnumerateFiles(scope.Directory, "*.tmp").ShouldBeEmpty();
++    }
++
++    [Fact]
++    public void SparseCheckpointsNeverCountUnacknowledgedOperations()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding);
++        progress.RecordAcceptedCommand(configuration: false);
++        byte[] first = File.ReadAllBytes(scope.Path);
++        for (int i = 1; i < 499; i++) progress.RecordAcceptedCommand(configuration: false);
++        File.ReadAllBytes(scope.Path).ShouldBe(first);
++        Should.Throw<InvalidOperationException>(progress.RecordSeededTenant).Message.ShouldBe("performance-progress-invalid");
++        progress.RecordAcceptedCommand(configuration: false);
++        progress.RecordSeededTenant();
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.SeedingComplete);
++        using JsonDocument document = scope.Read();
++        document.RootElement.GetProperty("commandsAccepted").GetInt32().ShouldBe(500);
++        document.RootElement.GetProperty("tenantsSeeded").GetInt32().ShouldBe(1);
++    }
++
++    [Fact]
++    public void FixtureDisposalAndRecordedDurationCannotTurnAnIncompleteBenchmarkIntoPass()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.RecordRehydration(TimeSpan.FromSeconds(1));
++        Should.Throw<InvalidOperationException>(progress.BenchmarkPassed).Message.ShouldBe("performance-progress-invalid");
++        progress.FixtureDisposed();
++        using JsonDocument document = scope.Read();
++        document.RootElement.GetProperty("status").GetString().ShouldBe("incomplete");
++        document.RootElement.GetProperty("benchmarkPassed").GetBoolean().ShouldBeFalse();
++    }
++
++    [Fact]
++    public void OnlyCompleteSuccessfulCountsAssertionsAndDisposalProducePassedStatus()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding);
++        // Counter-only controls, with the real workload's exact mix; no actor operations.
++        for (int tenant = 0; tenant < 1_000; tenant++)
++        {
++            for (int command = 0; command < 500; command++) progress.RecordAcceptedCommand(configuration: command % 3 == 1);
++            progress.RecordSeededTenant();
++        }
++        Should.Throw<InvalidOperationException>(() => progress.RecordAcceptedCommand(configuration: false));
++        Should.Throw<InvalidOperationException>(progress.RecordSeededTenant);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.RehydrationComplete);
++        progress.RecordRehydration(TimeSpan.FromSeconds(30));
++        Should.Throw<InvalidOperationException>(progress.BenchmarkPassed);
++        progress.RecordRehydration(TimeSpan.FromSeconds(1));
++        progress.BenchmarkPassed();
++        using (JsonDocument beforeDisposal = scope.Read()) beforeDisposal.RootElement.GetProperty("status").GetString().ShouldBe("incomplete");
++        progress.FixtureDisposed();
++        using JsonDocument document = scope.Read();
++        document.RootElement.GetProperty("commandsAccepted").GetInt32().ShouldBe(500_000);
++        document.RootElement.GetProperty("configurationWritesAccepted").GetInt32().ShouldBe(167_000);
++        document.RootElement.GetProperty("tenantsSeeded").GetInt32().ShouldBe(1_000);
++        document.RootElement.GetProperty("status").GetString().ShouldBe("passed");
++    }
++
++    [Fact]
++    public void FirstFailureSurvivesTeardownAndCheckpointRefusalWithoutRetainingExceptionText()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding);
++        progress.Failed();
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.FixtureTeardown);
++        progress.Failed();
++        progress.FixtureDisposed();
++        using (JsonDocument document = scope.Read())
++        {
++            document.RootElement.GetProperty("status").GetString().ShouldBe("failed");
++            document.RootElement.GetProperty("failedPhase").GetString().ShouldBe("Seeding");
++        }
++        File.WriteAllText(scope.Path, scope.Sentinel);
++        progress.Failed(); // Secondary reporting failure does not replace the original exception.
++        File.ReadAllText(scope.Path).ShouldBe(scope.Sentinel);
++        Exception refusal = Should.Throw<InvalidOperationException>(() => progress.SetPhase(SnapshotPerformanceProgress.Phase.FixtureTeardown));
++        refusal.Message.ShouldBe("performance-progress-invalid");
++        refusal.ToString().ShouldNotContain(scope.Sentinel);
++        refusal.InnerException.ShouldBeNull();
++    }
++
++    [Fact]
++    public async Task ConcurrentSuccessfulCountersPublishOnlyWholeAtomicDocuments()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding);
++        Task writer = Task.Run(() => Parallel.For(0, 10_000, _ => progress.RecordAcceptedCommand(configuration: false)));
++        int observations = 0;
++        do
++        {
++            using JsonDocument document = scope.Read();
++            int count = document.RootElement.GetProperty("commandsAccepted").GetInt32();
++            (count is >= 0 and <= 10_000).ShouldBeTrue();
++            observations++;
++        } while (!writer.IsCompleted);
++        await writer;
++        observations.ShouldBeGreaterThan(0);
++        using JsonDocument final = scope.Read();
++        final.RootElement.GetProperty("commandsAccepted").GetInt32().ShouldBe(10_000);
++    }
++
++    [Theory]
++    [InlineData("root")]
++    [InlineData("ancestor")]
++    [InlineData("sibling")]
++    [InlineData("noncanonical")]
++    [InlineData("directory-link")]
++    [InlineData("file-link")]
++    [InlineData("public-directory")]
++    [InlineData("public-file")]
++    [InlineData("foreign-document")]
++    [InlineData("foreign-file")]
++    [InlineData("foreign-owner")]
++    [InlineData("missing-owner")]
++    public void RefusesForeignOrNonprivatePathsWithoutModifyingThem(string mutation)
++    {
++        using var scope = new ProgressScope();
++        string directory = scope.Directory;
++        string original = File.ReadAllText(scope.Path);
++        switch (mutation)
++        {
++            case "root": directory = scope.Root; break;
++            case "ancestor": directory = System.IO.Directory.GetParent(scope.Root)!.FullName; break;
++            case "sibling": directory = scope.Root + "-foreign"; break;
++            case "noncanonical": directory += "/../" + System.IO.Path.GetFileName(directory); break;
++            case "directory-link":
++                directory = System.IO.Path.Combine(scope.Root, "tenants-performance-progress-12345678");
++                System.IO.Directory.CreateSymbolicLink(directory, scope.Directory); break;
++            case "file-link":
++                File.Move(scope.Path, scope.Path + ".foreign");
++                File.CreateSymbolicLink(scope.Path, scope.Path + ".foreign"); break;
++            case "public-directory":
++                if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()) File.SetUnixFileMode(directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.OtherExecute);
++                break;
++            case "public-file":
++                if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()) File.SetUnixFileMode(scope.Path, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.OtherRead);
++                break;
++            case "foreign-document": File.WriteAllText(scope.Path, scope.Sentinel); original = scope.Sentinel; break;
++            case "foreign-file": File.WriteAllText(System.IO.Path.Combine(directory, "foreign"), scope.Sentinel); break;
++            case "foreign-owner": File.WriteAllText(System.IO.Path.Combine(directory, "owner"), scope.Sentinel); break;
++            case "missing-owner": File.Delete(System.IO.Path.Combine(directory, "owner")); break;
++        }
++        Exception refusal = Should.Throw<InvalidOperationException>(() => SnapshotPerformanceProgress.Open(scope.Root, directory));
++        refusal.Message.ShouldBe("performance-progress-invalid");
++        refusal.ToString().ShouldNotContain(scope.Sentinel);
++        refusal.InnerException.ShouldBeNull();
++        File.ReadAllText(scope.Path).ShouldBe(original);
++    }
++
++    [Fact]
++    public void ConcurrentWriterAndSubstitutedCheckpointAreRefused()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        Should.Throw<InvalidOperationException>(() => SnapshotPerformanceProgress.Open(scope.Root, scope.Directory));
++        string foreign = System.IO.Path.Combine(scope.Root, "foreign");
++        File.WriteAllText(foreign, scope.Sentinel);
++        File.Delete(scope.Path);
++        File.CreateSymbolicLink(scope.Path, foreign);
++        Should.Throw<InvalidOperationException>(() => progress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding));
++        progress.Failed();
++        File.ReadAllText(foreign).ShouldBe(scope.Sentinel);
++    }
++
++    [Theory]
++    [InlineData(null, null, 100, "Default")]
++    [InlineData(75, null, 75, "Domain")]
++    [InlineData(75, 125, 125, "TenantDomain")]
++    public void ActualHostRegistrationObservesResolvedOptionsWithoutRetuningThem(int? domain, int? tenantDomain, int expected, string source)
++    {
++        using var scope = new ProgressScope();
++        using var environment = scope.EnableEnvironment();
++        var fixture = new TenantsDaprTestFixture();
++        try
++        {
++            WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions { Args = [] });
++            if (domain.HasValue) builder.Configuration["EventStore:Snapshots:DomainIntervals:tenants"] = domain.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
++            if (tenantDomain.HasValue) builder.Services.Configure<SnapshotOptions>(options => options.TenantDomainIntervals["system:tenants"] = tenantDomain.Value);
++            MethodInfo configure = typeof(TenantsDaprTestFixture).GetMethod("ConfigureDomain", BindingFlags.Instance | BindingFlags.NonPublic)!;
++            configure.Invoke(fixture, [builder]);
++            using ServiceProvider provider = builder.Services.BuildServiceProvider();
++            SnapshotOptions options = provider.GetRequiredService<IOptions<SnapshotOptions>>().Value;
++            options.DefaultInterval.ShouldBe(100);
++            fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.FixtureReady);
++            using JsonDocument document = scope.Read();
++            document.RootElement.GetProperty("optionsSnapshotInterval").GetInt32().ShouldBe(expected);
++            document.RootElement.GetProperty("snapshotIntervalSource").GetString().ShouldBe(source);
++            document.RootElement.GetProperty("persistedPolicyResolverRegistered").GetBoolean().ShouldBeFalse();
++            document.RootElement.GetProperty("effectiveSnapshotInterval").GetInt32().ShouldBe(expected);
++        }
++        finally { fixture.PerformanceProgress.Dispose(); }
++    }
++
++    [Fact]
++    public void PersistedPolicyPresenceKeepsEffectiveIntervalUnqualified()
++    {
++        using var scope = new ProgressScope();
++        using var progress = SnapshotPerformanceProgress.Open(scope.Root, scope.Directory);
++        progress.RecordSnapshotInterval(100, SnapshotPerformanceProgress.IntervalSource.Default, persistedPolicyResolverRegistered: true);
++        progress.SetPhase(SnapshotPerformanceProgress.Phase.HostStartup);
++        using JsonDocument document = scope.Read();
++        document.RootElement.GetProperty("optionsSnapshotInterval").GetInt32().ShouldBe(100);
++        document.RootElement.GetProperty("effectiveSnapshotInterval").ValueKind.ShouldBe(JsonValueKind.Null);
++    }
++
++    [Fact]
++    public void FixtureInterfaceKeepsTheObservableLifecycleWrappers()
++    {
++        foreach (Type contract in new[] { typeof(IAsyncLifetime), typeof(IAsyncDisposable) })
++        {
++            InterfaceMapping map = typeof(TenantsDaprTestFixture).GetInterfaceMap(contract);
++            map.TargetMethods.Where(method => method.Name is "InitializeAsync" or "DisposeAsync")
++                .ShouldAllBe(method => method.DeclaringType == typeof(TenantsDaprTestFixture));
++        }
++    }
++
++    [Theory]
++    [InlineData(false, false)]
++    [InlineData(false, true)]
++    [InlineData(true, false)]
++    public void ProgressEnrollmentRequiresBothOriginalPerformanceOptIns(bool eventStore, bool tenants)
++    {
++        using var scope = new ProgressScope();
++        using var environment = scope.EnableEnvironment();
++        Environment.SetEnvironmentVariable("HEXALITH_EVENTSTORE_RUN_PERFORMANCE_TESTS", eventStore ? "1" : "0");
++        Environment.SetEnvironmentVariable("HEXALITH_TENANTS_RUN_PERFORMANCE_TESTS", tenants ? "1" : "0");
++        Should.Throw<InvalidOperationException>(() => SnapshotPerformanceProgress.FromEnvironment()).Message.ShouldBe("performance-progress-invalid");
++        File.ReadAllText(scope.Path).ShouldBe(SnapshotPerformanceProgress.InitialDocument);
++    }
++
++    private sealed class ProgressScope : IDisposable
++    {
++        internal string Sentinel { get; } = "credential-sentinel-" + Guid.NewGuid().ToString("N");
++        internal string Root { get; }
++        internal string Directory { get; }
++        internal string Path => System.IO.Path.Combine(Directory, "progress.json");
++
++        internal ProgressScope()
++        {
++            Root = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "progress-control-" + Guid.NewGuid().ToString("N"));
++            Directory = System.IO.Path.Combine(Root, "tenants-performance-progress-Ab12Cd34");
++            if (OperatingSystem.IsWindows()) throw new InvalidOperationException("private-progress-platform-unavailable");
++            System.IO.Directory.CreateDirectory(Directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
++            WritePrivate(Path, SnapshotPerformanceProgress.InitialDocument);
++            WritePrivate(System.IO.Path.Combine(Directory, "owner"), SnapshotPerformanceProgress.OwnerDocument);
++        }
++
++        internal JsonDocument Read() => JsonDocument.Parse(File.ReadAllBytes(Path));
++        internal IDisposable EnableEnvironment() => new EnvironmentScope(new Dictionary<string, string>
++        {
++            ["RUNNER_TEMP"] = Root,
++            [SnapshotPerformanceProgress.DirectoryVariable] = Directory,
++            ["HEXALITH_EVENTSTORE_RUN_PERFORMANCE_TESTS"] = "1",
++            ["HEXALITH_TENANTS_RUN_PERFORMANCE_TESTS"] = "1",
++        });
++        public void Dispose() => System.IO.Directory.Delete(Root, recursive: true);
++
++        private static void WritePrivate(string path, string content)
++        {
++            if (OperatingSystem.IsWindows()) throw new InvalidOperationException("private-progress-platform-unavailable");
++            using var stream = new FileStream(path, new FileStreamOptions { Mode = FileMode.CreateNew, Access = FileAccess.Write, UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite });
++            using var writer = new StreamWriter(stream);
++            writer.Write(content);
++        }
++    }
++
++    private sealed class EnvironmentScope : IDisposable
++    {
++        private readonly Dictionary<string, string?> _previous;
++        internal EnvironmentScope(Dictionary<string, string> values)
++        {
++            _previous = values.ToDictionary(pair => pair.Key, pair => Environment.GetEnvironmentVariable(pair.Key));
++            foreach ((string key, string value) in values) Environment.SetEnvironmentVariable(key, value);
++        }
++        public void Dispose()
++        {
++            foreach ((string key, string? value) in _previous) Environment.SetEnvironmentVariable(key, value);
++        }
++    }
++}
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceTests.cs b/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceTests.cs
+index 207ccee3..b309a293 100644
+--- a/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceTests.cs
++++ b/tests/Hexalith.Tenants.IntegrationTests/SnapshotPerformanceTests.cs
+@@ -42,8 +42,11 @@ public class SnapshotPerformanceTests : IDisposable {
+     private readonly TenantsDaprTestFixture _fixture;
+ 
+     public SnapshotPerformanceTests(TenantsDaprTestFixture fixture) {
+-        _daprTestLease = DaprTestExecutionGate.Enter();
++        ArgumentNullException.ThrowIfNull(fixture);
+         _fixture = fixture;
++        fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.ExecutionGateWait);
++        try { _daprTestLease = DaprTestExecutionGate.Enter(); }
++        catch { fixture.PerformanceProgress.Failed(); throw; }
+     }
+ 
+     public void Dispose() {
+@@ -53,76 +56,92 @@ public class SnapshotPerformanceTests : IDisposable {
+ 
+     [DaprPerformanceFact]
+     public async Task ColdStartRehydration_CompletesWithin30Seconds_With500KEvents() {
+-        _fixture.SkipIfUnavailable();
+-
+-        // Arrange — seed 1,000 tenant aggregates with 500 events each
+-        var actorProxyFactory = new ActorProxyFactory(
+-            new ActorProxyOptions { HttpEndpoint = _fixture.DaprHttpEndpoint });
+-
+-        using var semaphore = new SemaphoreSlim(MaxConcurrency);
+-
+-        // Phase 1: Seed tenants with events (Create + 499 commands per tenant)
+-        string[] tenantIds = Enumerable.Range(0, TenantCount)
+-            .Select(i => $"t-perf-{i:D4}-{Guid.NewGuid():N}")
+-            .ToArray();
+-
+-        var seedTasks = new List<Task>();
+-        foreach (string tenantId in tenantIds) {
+-            await semaphore.WaitAsync();
+-
+-            seedTasks.Add(Task.Run(async () => {
+-                try {
+-                    await SeedTenantEventsAsync(actorProxyFactory, _fixture.AggregateActorTypeName, tenantId, EventsPerTenant);
+-                }
+-                finally {
+-                    _ = semaphore.Release();
+-                }
+-            }));
+-        }
+-
+-        await Task.WhenAll(seedTasks);
+-
+-        // Phase 2: Pick a random tenant for cold-start rehydration measurement
+-        string targetTenantId = tenantIds[Random.Shared.Next(tenantIds.Length)];
+-
+-        // Phase 2.5: Deactivate the target actor to force a cold-start rehydration.
+-        // Calling DELETE on the app's actor endpoint mimics what the DAPR runtime does during
+-        // idle timeout, evicting the actor from the in-process actor manager so the next
+-        // invocation triggers OnActivateAsync() and replays state from the event store + snapshots.
+-        string targetActorId = BuildActorId(targetTenantId);
+-        await DeactivateActorAsync(targetActorId);
+-
+-        // Phase 3: Measure cold-start rehydration time.
+-        // Create a new actor proxy and send a command to trigger full rehydration.
+-        // With 50-event snapshot interval, each tenant has ~10 snapshots, and rehydration
+-        // replays at most 50 events from the last snapshot.
+-        CommandEnvelope rehydrationCmd = CreateTenantCommand(
+-            new UpdateTenant(targetTenantId, "Rehydration Test", "Cold-start rehydration measurement"));
++        try
++        {
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.BenchmarkSetup);
++            _fixture.SkipIfUnavailable();
++
++            // Arrange — seed 1,000 tenant aggregates with 500 events each
++            var actorProxyFactory = new ActorProxyFactory(
++                new ActorProxyOptions { HttpEndpoint = _fixture.DaprHttpEndpoint });
++
++            using var semaphore = new SemaphoreSlim(MaxConcurrency);
++
++            // Phase 1: Seed tenants with events (Create + 499 commands per tenant)
++            string[] tenantIds = Enumerable.Range(0, TenantCount)
++                .Select(i => $"t-perf-{i:D4}-{Guid.NewGuid():N}")
++                .ToArray();
++
++            var seedTasks = new List<Task>();
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.Seeding);
++            foreach (string tenantId in tenantIds) {
++                await semaphore.WaitAsync();
++
++                seedTasks.Add(Task.Run(async () => {
++                    try {
++                        await SeedTenantEventsAsync(actorProxyFactory, _fixture.AggregateActorTypeName, tenantId, EventsPerTenant, _fixture.PerformanceProgress);
++                        _fixture.PerformanceProgress.RecordSeededTenant();
++                    }
++                catch { _fixture.PerformanceProgress.Failed(); throw; }
++                    finally {
++                        _ = semaphore.Release();
++                    }
++                }));
++            }
+ 
+-        IAggregateActor proxy = actorProxyFactory.CreateActorProxy<IAggregateActor>(
+-            new ActorId(rehydrationCmd.AggregateIdentity.ActorId),
+-            _fixture.AggregateActorTypeName);
+-
+-        var stopwatch = Stopwatch.StartNew();
+-        CommandProcessingResult result = await proxy.ProcessCommandAsync(rehydrationCmd);
+-        stopwatch.Stop();
+-
+-        // Assert — rehydration completes within 30 seconds (NFR13)
+-        _ = result.ShouldNotBeNull();
+-        result.Accepted.ShouldBeTrue(
+-            $"UpdateTenant should succeed after rehydration but got: {result.ErrorMessage}");
+-
+-        stopwatch.Elapsed.TotalSeconds.ShouldBeLessThan(
+-            RehydrationTimeoutSeconds,
+-            $"Cold-start rehydration took {stopwatch.Elapsed.TotalSeconds:F2}s, " +
+-            $"exceeding the {RehydrationTimeoutSeconds}s NFR13 threshold");
++            await Task.WhenAll(seedTasks);
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.SeedingComplete);
++
++            // Phase 2: Pick a random tenant for cold-start rehydration measurement
++            string targetTenantId = tenantIds[Random.Shared.Next(tenantIds.Length)];
++
++            // Phase 2.5: Deactivate the target actor to force a cold-start rehydration.
++            // Calling DELETE on the app's actor endpoint mimics what the DAPR runtime does during
++            // idle timeout, evicting the actor from the in-process actor manager so the next
++            // invocation triggers OnActivateAsync() and replays state from the event store + snapshots.
++            string targetActorId = BuildActorId(targetTenantId);
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.TargetDeactivation);
++            await DeactivateActorAsync(targetActorId);
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.TargetDeactivated);
++
++            // Phase 3: Measure cold-start rehydration time.
++            // Create a new actor proxy and send a command to trigger full rehydration.
++            // With 50-event snapshot interval, each tenant has ~10 snapshots, and rehydration
++            // replays at most 50 events from the last snapshot.
++            CommandEnvelope rehydrationCmd = CreateTenantCommand(
++                new UpdateTenant(targetTenantId, "Rehydration Test", "Cold-start rehydration measurement"));
++
++            IAggregateActor proxy = actorProxyFactory.CreateActorProxy<IAggregateActor>(
++                new ActorId(rehydrationCmd.AggregateIdentity.ActorId),
++                _fixture.AggregateActorTypeName);
++
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.Rehydration);
++            var stopwatch = Stopwatch.StartNew();
++            CommandProcessingResult result = await proxy.ProcessCommandAsync(rehydrationCmd);
++            stopwatch.Stop();
++            _fixture.PerformanceProgress.RecordRehydration(stopwatch.Elapsed);
++            _fixture.PerformanceProgress.SetPhase(SnapshotPerformanceProgress.Phase.RehydrationComplete);
++
++            // Assert — rehydration completes within 30 seconds (NFR13)
++            _ = result.ShouldNotBeNull();
++            result.Accepted.ShouldBeTrue(
++                $"UpdateTenant should succeed after rehydration but got: {result.ErrorMessage}");
++
++            stopwatch.Elapsed.TotalSeconds.ShouldBeLessThan(
++                RehydrationTimeoutSeconds,
++                $"Cold-start rehydration took {stopwatch.Elapsed.TotalSeconds:F2}s, " +
++                $"exceeding the {RehydrationTimeoutSeconds}s NFR13 threshold");
++            _fixture.PerformanceProgress.BenchmarkPassed();
++        }
++        catch { _fixture.PerformanceProgress.Failed(); throw; }
+     }
+ 
+     private static async Task SeedTenantEventsAsync(
+         ActorProxyFactory actorProxyFactory,
+         string actorTypeName,
+         string tenantId,
+-        int eventCount) {
++        int eventCount,
++        SnapshotPerformanceProgress progress) {
+         // Event 1: CreateTenant
+         CommandEnvelope createCmd = CreateTenantCommand(
+             new CreateTenant(tenantId, $"Perf Tenant {tenantId}", "Performance test seed"));
+@@ -136,6 +155,7 @@ public class SnapshotPerformanceTests : IDisposable {
+             throw new InvalidOperationException(
+                 $"Failed to create tenant {tenantId}: {createResult.ErrorMessage}");
+         }
++        progress.RecordAcceptedCommand(configuration: false);
+ 
+         // Events 2 through eventCount: mix of AddUser, SetConfig, and Update commands
+         for (int i = 1; i < eventCount; i++) {
+@@ -153,6 +173,7 @@ public class SnapshotPerformanceTests : IDisposable {
+                 throw new InvalidOperationException(
+                     $"Failed to seed event {i} for tenant {tenantId}: {result.ErrorMessage}");
+             }
++            progress.RecordAcceptedCommand(configuration: i % 3 == 1);
+         }
+     }
+ 

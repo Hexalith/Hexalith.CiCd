@@ -1,0 +1,61 @@
+{
+  "at": "2026-11-17T07:14:02.877677+00:00",
+  "source": "cca7ad07211967e604b8f7f33aa21dbbb853ec10",
+  "tree": "9472f47e23de188363699be3c5e3c074fb3de68e",
+  "packet": "local-isolated-20261117T053556Z-cb96fec3",
+  "status": "failed",
+  "elapsedSeconds": 5727.0551879405975,
+  "performanceFailure": {
+    "name": "nightly-product-workload-local-only",
+    "status": "failed",
+    "startedAt": 1794895865.2388484,
+    "exceptionType": "TimeoutExpired",
+    "exitCode": 1,
+    "elapsedSeconds": 3599.853132009506
+  },
+  "performanceReports": [],
+  "failurePhaseWithinBenchmark": "unverified; no authored internal phase/counter artifact or completed TRX was retained",
+  "nfr30SecondAssertionResult": "unverified; overall timeout does not establish which internal phase exhausted the budget",
+  "completedTrxCounts": {
+    "total": 11903,
+    "executed": 11903,
+    "passed": 11903,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "completedStages": [
+    "exact-node-runtime",
+    "released-custom-actions-and-actual-commit-policy",
+    "one-release-package-build",
+    "released-complete-unit-projects",
+    "one-shared-environment",
+    "after-unit-tests-hook",
+    "released-complete-integration-projects",
+    "after-integration-step-1",
+    "after-integration-step-2",
+    "after-integration-step-3"
+  ],
+  "actualLiveContentStabilityEvidence": "product-live-stability-observation-cca7ad07.json",
+  "resourceObservation": "performance-resource-observation-01.json",
+  "finalNugetAudit": null,
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "decac3a5091f0722542f49905a99de814311780e5c7bee4361e71a1c7e53e8ad"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "bc5dad64733103f19b64e316f46abdb128f5f4718873d10eb2873a2e9a585529"
+      },
+      "state": "removed"
+    }
+  ],
+  "scratchRemoved": true,
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "fullReleasedRoutineBootstrapQualified": false
+}
