@@ -1,0 +1,38 @@
+{
+  "observed_at": "2026-11-17T12:48:00+00:00",
+  "tool": "tools/scan_discovery.py Discovery.discover",
+  "night_commons_main": "aa694ae3d43f1645f741ae0844987ca2e7e0d347",
+  "local_fix_commit": "f96f7c6f3728c433770fadd04870a72c2fedf729",
+  "local_fix_pushed": false,
+  "check_py_run": false,
+  "night_main": {
+    "errors": [
+      ".github/actions/after-unit-tests/action.yml:10: local-script discovery: unresolved computed operand of unknown command: rm",
+      ".github/actions/after-unit-tests/action.yml:9: local-script discovery: unsupported shell command substitution",
+      "scripts/pack-release-packages.py:47: local-script discovery: unresolved computed subprocess env",
+      "scripts/validate-consumer-package-references.py:159: local-script discovery: unresolved computed subprocess cwd"
+    ],
+    "files": [
+      ".github/actions/after-unit-tests/action.yml",
+      "scripts/pack-release-packages.py",
+      "scripts/validate-consumer-package-references.py",
+      "scripts/validate-nuget-packages.py"
+    ]
+  },
+  "scan_fix": {
+    "errors": [],
+    "files": [
+      ".github/actions/after-unit-tests/action.yml",
+      "scripts/pack-release-packages.py",
+      "scripts/validate-consumer-package-references.py",
+      "scripts/validate-nuget-packages.py"
+    ]
+  },
+  "behavior_preserved": [
+    "exact 12-package pack of existing Release outputs",
+    "payload/symbol validator unchanged",
+    "isolated consumer still uses a private temp directory, copied global.json, package-only Consumer.csproj and private NuGet caches"
+  ],
+  "not_pushed_reason": "post-adoption python3 references/Hexalith.Builds/check.py has not been run on this head; Conversations sibling discovery failures would still fail the shared nightly scan job",
+  "diff": "scheduled-20261117-commons-scan-fix.diff"
+}

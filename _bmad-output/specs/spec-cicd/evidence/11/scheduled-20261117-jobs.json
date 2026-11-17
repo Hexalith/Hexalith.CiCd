@@ -1,0 +1,1827 @@
+{
+  "total_count": 8,
+  "jobs": [
+    {
+      "id": 133985074212,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfMiH8JA",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/133985074212",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/133985074212",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-17T10:44:09Z",
+      "started_at": "2026-11-17T10:49:09Z",
+      "completed_at": "2026-11-17T11:19:04Z",
+      "name": "dispatch",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T10:49:10Z",
+          "completed_at": "2026-11-17T10:49:11Z"
+        },
+        {
+          "name": "Seed conservative state before checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T10:49:11Z",
+          "completed_at": "2026-11-17T10:49:11Z"
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T10:49:11Z",
+          "completed_at": "2026-11-17T10:49:17Z"
+        },
+        {
+          "name": "Initialize conservative dispatch state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T10:49:17Z",
+          "completed_at": "2026-11-17T10:49:20Z"
+        },
+        {
+          "name": "Record delivery barrier mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-17T10:49:20Z",
+          "completed_at": "2026-11-17T10:49:20Z"
+        },
+        {
+          "name": "Mint barrier_token App token",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-17T10:49:20Z",
+          "completed_at": "2026-11-17T10:49:20Z"
+        },
+        {
+          "name": "Wait for hourly delivery barrier",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-17T10:49:20Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Select adopted undrifted targets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 01 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_01_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 01",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 02 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_02_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 02",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 03 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_03_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 03",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 04 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_04_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 04",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 05 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_05_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 05",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 06 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_06_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 06",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 07 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_07_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 07",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 08 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 30,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_08_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 08",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 32,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 09 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 33,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_09_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 34,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 09",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 35,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 10 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 36,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_10_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 37,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 10",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 38,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 11 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 39,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_11_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 40,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 11",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 41,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 12 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 42,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_12_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 12",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 44,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 13 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 45,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_13_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 46,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 13",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 47,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 14 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 48,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_14_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 49,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 14",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 50,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 15 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 51,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_15_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 52,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 15",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 53,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 16 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 54,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_16_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 55,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 16",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 56,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 17 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 57,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_17_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 58,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 17",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 59,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Record target 18 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 60,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Mint target_18_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 61,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Dispatch target slot 18",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 62,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Finalize dispatch state and verdicts",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 63,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Report unavailable checkout",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 64,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:01Z"
+        },
+        {
+          "name": "Upload token-free dispatch state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 65,
+          "started_at": "2026-11-17T11:19:01Z",
+          "completed_at": "2026-11-17T11:19:02Z"
+        },
+        {
+          "name": "Post Mint barrier_token App token",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 129,
+          "started_at": "2026-11-17T11:19:02Z",
+          "completed_at": "2026-11-17T11:19:02Z"
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 130,
+          "started_at": "2026-11-17T11:19:02Z",
+          "completed_at": "2026-11-17T11:19:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 131,
+          "started_at": "2026-11-17T11:19:03Z",
+          "completed_at": "2026-11-17T11:19:03Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/133985074212",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000089403,
+      "runner_name": "GitHub Actions 1000089403",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 134003388577,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfMzlwoQ",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134003388577",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134003388577",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-17T11:19:04Z",
+      "started_at": "2026-11-17T11:19:09Z",
+      "completed_at": "2026-11-17T11:19:24Z",
+      "name": "wait",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T11:19:10Z",
+          "completed_at": "2026-11-17T11:19:11Z"
+        },
+        {
+          "name": "Seed conservative state before checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T11:19:11Z",
+          "completed_at": "2026-11-17T11:19:11Z"
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T11:19:11Z",
+          "completed_at": "2026-11-17T11:19:16Z"
+        },
+        {
+          "name": "Initialize conservative wait state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T11:19:16Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Record poll slice 01 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Mint poll_01_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Poll release slice 01",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Record poll slice 02 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Mint poll_02_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Poll release slice 02",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Record poll slice 03 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Mint poll_03_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Poll release slice 03",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Record poll slice 04 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Mint poll_04_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Poll release slice 04",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:19Z"
+        },
+        {
+          "name": "Record poll slice 05 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-17T11:19:19Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Mint poll_05_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Poll release slice 05",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Record poll slice 06 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Mint poll_06_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Poll release slice 06",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Record poll slice 07 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Mint poll_07_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Poll release slice 07",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Record poll slice 08 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Mint poll_08_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Poll release slice 08",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Record poll slice 09 mint boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Mint poll_09_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 30,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Poll release slice 09",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Finalize wait state and verdicts",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 32,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Report unavailable checkout",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 33,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:20Z"
+        },
+        {
+          "name": "Upload token-free wait state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 34,
+          "started_at": "2026-11-17T11:19:20Z",
+          "completed_at": "2026-11-17T11:19:21Z"
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 68,
+          "started_at": "2026-11-17T11:19:21Z",
+          "completed_at": "2026-11-17T11:19:21Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 69,
+          "started_at": "2026-11-17T11:19:21Z",
+          "completed_at": "2026-11-17T11:19:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134003388577",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000089463,
+      "runner_name": "GitHub Actions 1000089463",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 134003564134,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfMzweZg",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134003564134",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134003564134",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-17T11:19:24Z",
+      "started_at": "2026-11-17T11:19:29Z",
+      "completed_at": "2026-11-17T11:19:45Z",
+      "name": "publish-ready",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T11:19:30Z",
+          "completed_at": "2026-11-17T11:19:31Z"
+        },
+        {
+          "name": "Seed conservative state before checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T11:19:31Z",
+          "completed_at": "2026-11-17T11:19:31Z"
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T11:19:31Z",
+          "completed_at": "2026-11-17T11:19:38Z"
+        },
+        {
+          "name": "Initialize conservative publish-ready state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T11:19:38Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 01 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_01_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 01",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 02 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_02_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 02",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 03 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_03_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 03",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 04 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_04_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 04",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 05 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_05_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 05",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 06 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_06_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 06",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 07 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_07_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 07",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 08 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_08_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 08",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 09 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_09_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 30,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 09",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 10 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 32,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_10_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 33,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 10",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 34,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 11 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 35,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_11_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 36,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 11",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 37,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 12 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 38,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_12_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 39,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 12",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 40,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 13 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 41,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_13_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 42,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 13",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 14 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 44,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_14_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 45,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 14",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 46,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 15 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 47,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_15_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 48,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 15",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 49,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 16 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 50,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_16_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 51,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 16",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 52,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 17 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 53,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_17_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 54,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 17",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 55,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Record target 18 mint boundary",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 56,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Mint target_18_token App token",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 57,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Publish target slot 18",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 58,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Finalize publish-ready state and verdicts",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 59,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Report unavailable checkout",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 60,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:42Z"
+        },
+        {
+          "name": "Upload token-free publish-ready state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 61,
+          "started_at": "2026-11-17T11:19:42Z",
+          "completed_at": "2026-11-17T11:19:43Z"
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 122,
+          "started_at": "2026-11-17T11:19:43Z",
+          "completed_at": "2026-11-17T11:19:43Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 123,
+          "started_at": "2026-11-17T11:19:43Z",
+          "completed_at": "2026-11-17T11:19:43Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134003564134",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000089464,
+      "runner_name": "GitHub Actions 1000089464",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 134003759633,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfMz8aEQ",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134003759633",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134003759633",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-17T11:19:46Z",
+      "started_at": "2026-11-17T11:19:48Z",
+      "completed_at": "2026-11-17T11:20:18Z",
+      "name": "scan",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T11:19:49Z",
+          "completed_at": "2026-11-17T11:19:51Z"
+        },
+        {
+          "name": "Seed conservative scan report and summary before checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T11:19:51Z",
+          "completed_at": "2026-11-17T11:19:51Z"
+        },
+        {
+          "name": "Checkout CiCd scan controller and policy",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T11:19:51Z",
+          "completed_at": "2026-11-17T11:20:00Z"
+        },
+        {
+          "name": "Setup detector Node runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T11:20:00Z",
+          "completed_at": "2026-11-17T11:20:03Z"
+        },
+        {
+          "name": "Setup locked scan environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-17T11:20:03Z",
+          "completed_at": "2026-11-17T11:20:04Z"
+        },
+        {
+          "name": "Scan registered modules at anonymous live main",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-11-17T11:20:04Z",
+          "completed_at": "2026-11-17T11:20:16Z"
+        },
+        {
+          "name": "Preserve scan summary and reject incomplete coverage",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-11-17T11:20:16Z",
+          "completed_at": "2026-11-17T11:20:16Z"
+        },
+        {
+          "name": "Upload token-free duplicate scan report and summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-17T11:20:16Z",
+          "completed_at": "2026-11-17T11:20:17Z"
+        },
+        {
+          "name": "Post Setup locked scan environment",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-17T11:20:17Z",
+          "completed_at": "2026-11-17T11:20:17Z"
+        },
+        {
+          "name": "Post Setup detector Node runtime",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-11-17T11:20:17Z",
+          "completed_at": "2026-11-17T11:20:17Z"
+        },
+        {
+          "name": "Post Checkout CiCd scan controller and policy",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-17T11:20:17Z",
+          "completed_at": "2026-11-17T11:20:17Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-17T11:20:17Z",
+          "completed_at": "2026-11-17T11:20:17Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134003759633",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000089465,
+      "runner_name": "GitHub Actions 1000089465",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 134004050464,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfM0OKIA",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134004050464",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134004050464",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-17T11:20:19Z",
+      "started_at": "2026-11-17T11:20:21Z",
+      "completed_at": "2026-11-17T11:20:45Z",
+      "name": "bump",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T11:20:22Z",
+          "completed_at": "2026-11-17T11:20:23Z"
+        },
+        {
+          "name": "Seed conservative bump report before checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T11:20:23Z",
+          "completed_at": "2026-11-17T11:20:23Z"
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T11:20:23Z",
+          "completed_at": "2026-11-17T11:20:28Z"
+        },
+        {
+          "name": "Setup locked producer environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T11:20:28Z",
+          "completed_at": "2026-11-17T11:20:29Z"
+        },
+        {
+          "name": "Setup detector Node runtime for the shared global gate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-17T11:20:29Z",
+          "completed_at": "2026-11-17T11:20:30Z"
+        },
+        {
+          "name": "Produce and globally validate the live-main bump",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-17T11:20:30Z",
+          "completed_at": "2026-11-17T11:20:42Z"
+        },
+        {
+          "name": "Reject missing or invalid producer outcome",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-17T11:20:42Z",
+          "completed_at": "2026-11-17T11:20:42Z"
+        },
+        {
+          "name": "Upload the exact validated candidate",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-17T11:20:42Z",
+          "completed_at": "2026-11-17T11:20:42Z"
+        },
+        {
+          "name": "Report unavailable bump producer",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-17T11:20:42Z",
+          "completed_at": "2026-11-17T11:20:42Z"
+        },
+        {
+          "name": "Upload token-free bump report",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-17T11:20:42Z",
+          "completed_at": "2026-11-17T11:20:42Z"
+        },
+        {
+          "name": "Post Setup detector Node runtime for the shared global gate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-11-17T11:20:42Z",
+          "completed_at": "2026-11-17T11:20:43Z"
+        },
+        {
+          "name": "Post Setup locked producer environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-17T11:20:43Z",
+          "completed_at": "2026-11-17T11:20:43Z"
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-17T11:20:43Z",
+          "completed_at": "2026-11-17T11:20:43Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-17T11:20:43Z",
+          "completed_at": "2026-11-17T11:20:43Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134004050464",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000089466,
+      "runner_name": "GitHub Actions 1000089466",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 134004285130,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfM0ceyg",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134004285130",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134004285130",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-17T11:20:45Z",
+      "started_at": "2026-11-17T11:20:48Z",
+      "completed_at": "2026-11-17T11:21:02Z",
+      "name": "keepalive",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T11:20:49Z",
+          "completed_at": "2026-11-17T11:20:49Z"
+        },
+        {
+          "name": "Seed conservative keepalive report before checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T11:20:49Z",
+          "completed_at": "2026-11-17T11:20:49Z"
+        },
+        {
+          "name": "Checkout CiCd keepalive controller",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T11:20:49Z",
+          "completed_at": "2026-11-17T11:20:55Z"
+        },
+        {
+          "name": "Enable both schedules and maintain an idle main",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T11:20:55Z",
+          "completed_at": "2026-11-17T11:20:58Z"
+        },
+        {
+          "name": "Upload token-free keepalive observations",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-17T11:20:58Z",
+          "completed_at": "2026-11-17T11:20:59Z"
+        },
+        {
+          "name": "Post Checkout CiCd keepalive controller",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-17T11:20:59Z",
+          "completed_at": "2026-11-17T11:20:59Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-17T11:20:59Z",
+          "completed_at": "2026-11-17T11:20:59Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134004285130",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000089467,
+      "runner_name": "GitHub Actions 1000089467",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 134004286336,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfM0cjgA",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134004286336",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134004286336",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-17T11:20:45Z",
+      "started_at": "2026-11-17T11:20:45Z",
+      "completed_at": "2026-11-17T11:20:45Z",
+      "name": "delivery-wait",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134004286336",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 134004286900,
+      "run_id": 44067556763,
+      "workflow_name": "Nightly releases",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUjhxY88AAAAfM0cltA",
+      "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/jobs/134004286900",
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763/job/134004286900",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-17T11:20:45Z",
+      "started_at": "2026-11-17T11:20:45Z",
+      "completed_at": "2026-11-17T11:20:45Z",
+      "name": "bump-push",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/check-runs/134004286900",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}

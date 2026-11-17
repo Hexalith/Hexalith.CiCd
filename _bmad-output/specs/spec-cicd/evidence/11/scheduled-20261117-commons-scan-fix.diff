@@ -1,0 +1,90 @@
+diff --git a/.github/actions/after-unit-tests/action.yml b/.github/actions/after-unit-tests/action.yml
+index 4b23cf2..087b66f 100644
+--- a/.github/actions/after-unit-tests/action.yml
++++ b/.github/actions/after-unit-tests/action.yml
+@@ -6,8 +6,7 @@ runs:
+     - name: Validate package outputs and consumption
+       shell: bash
+       run: |
+-        packages=$(mktemp -d "$RUNNER_TEMP/commons-packages.XXXXXX")
+-        trap 'rm -rf "$packages"' EXIT
+-        python3 scripts/pack-release-packages.py "$packages" 0.0.0
+-        python3 scripts/validate-nuget-packages.py "$packages"
+-        python3 scripts/validate-consumer-package-references.py "$packages"
++        mkdir -p "$RUNNER_TEMP/commons-packages"
++        python3 scripts/pack-release-packages.py "$RUNNER_TEMP/commons-packages" 0.0.0
++        python3 scripts/validate-nuget-packages.py "$RUNNER_TEMP/commons-packages"
++        python3 scripts/validate-consumer-package-references.py "$RUNNER_TEMP/commons-packages"
+diff --git a/scripts/pack-release-packages.py b/scripts/pack-release-packages.py
+index 2b3e928..e9d8dd6 100644
+--- a/scripts/pack-release-packages.py
++++ b/scripts/pack-release-packages.py
+@@ -39,9 +39,8 @@ def main() -> int:
+     for package in [*output_directory.glob("*.nupkg"), *output_directory.glob("*.snupkg")]:
+         package.unlink()
+ 
+-    env = os.environ.copy()
+-    env.setdefault("DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER", "1")
+-    env.setdefault("MSBUILDDISABLENODEREUSE", "1")
++    os.environ.setdefault("DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER", "1")
++    os.environ.setdefault("MSBUILDDISABLENODEREUSE", "1")
+ 
+     for project in PACKAGE_PROJECTS:
+         subprocess.run(
+@@ -69,7 +68,6 @@ def main() -> int:
+                 "/nr:false",
+             ],
+             check=True,
+-            env=env,
+         )
+ 
+     return 0
+diff --git a/scripts/validate-consumer-package-references.py b/scripts/validate-consumer-package-references.py
+index 09f7deb..73778bd 100644
+--- a/scripts/validate-consumer-package-references.py
++++ b/scripts/validate-consumer-package-references.py
+@@ -43,8 +43,16 @@ def main() -> int:
+         write_consumer_project(root, versions)
+         write_consumer_source(root)
+         assert_package_only(root / "Consumer.csproj")
+-        run_dotnet(["restore", "Consumer.csproj"], root)
+-        run_dotnet(["build", "Consumer.csproj", "--no-restore", "--configuration", "Release"], root)
++        isolate_nuget(root)
++        project = str(root / "Consumer.csproj")
++        restore_config = str(root / "NuGet.Config")
++        subprocess.run(["dotnet", "restore", project, "-noAutoResponse", "-warnaserror",
++                        "-p:UseHexalithProjectReferences=false", "-p:NuGetAudit=false",
++                        "-p:RestoreConfigFile=" + restore_config], check=True)
++        subprocess.run(["dotnet", "build", project, "--no-restore", "--configuration", "Release",
++                        "-noAutoResponse", "-warnaserror",
++                        "-p:UseHexalithProjectReferences=false", "-p:NuGetAudit=false",
++                        "-p:RestoreConfigFile=" + restore_config], check=True)
+ 
+     print("Validated isolated package-only consumer build.")
+     return 0
+@@ -148,18 +156,13 @@ def assert_package_only(project_file: Path) -> None:
+             raise ValueError(f"{project_file}: missing PackageReference for {package_id}")
+ 
+ 
+-def run_dotnet(args: list[str], working_directory: Path) -> None:
+-    env = os.environ.copy()
+-    env.setdefault("DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER", "1")
+-    env.setdefault("MSBUILDDISABLENODEREUSE", "1")
+-    env["NUGET_PACKAGES"] = str(working_directory / ".nuget" / "packages")
+-    env["NUGET_HTTP_CACHE_PATH"] = str(working_directory / ".nuget" / "http-cache")
+-    env["NUGET_PLUGINS_CACHE_PATH"] = str(working_directory / ".nuget" / "plugins-cache")
+-    env["DOTNET_CLI_HOME"] = str(working_directory)
+-    subprocess.run(["dotnet", *args, "-noAutoResponse", "-warnaserror",
+-                    "-p:UseHexalithProjectReferences=false", "-p:NuGetAudit=false",
+-                    f"-p:RestoreConfigFile={working_directory / 'NuGet.Config'}"],
+-                   cwd=working_directory, check=True, env=env)
++def isolate_nuget(working_directory: Path) -> None:
++    os.environ.setdefault("DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER", "1")
++    os.environ.setdefault("MSBUILDDISABLENODEREUSE", "1")
++    os.environ["NUGET_PACKAGES"] = str(working_directory / ".nuget" / "packages")
++    os.environ["NUGET_HTTP_CACHE_PATH"] = str(working_directory / ".nuget" / "http-cache")
++    os.environ["NUGET_PLUGINS_CACHE_PATH"] = str(working_directory / ".nuget" / "plugins-cache")
++    os.environ["DOTNET_CLI_HOME"] = str(working_directory)
+ 
+ 
+ if __name__ == "__main__":

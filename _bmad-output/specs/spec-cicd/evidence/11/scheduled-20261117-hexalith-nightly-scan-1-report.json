@@ -1,0 +1,146 @@
+{
+  "controllerRevision": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+  "detector": {
+    "name": "jscpd",
+    "policySha256": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "signatures": "verified",
+    "version": "5.4.3"
+  },
+  "errors": [],
+  "findings": [],
+  "modules": [
+    {
+      "errors": [],
+      "files": [],
+      "module": "Hexalith.AI.Tools",
+      "result": "pass",
+      "revision": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba"
+    },
+    {
+      "errors": [
+        ".github/actions/after-unit-tests/action.yml:10: local-script discovery: unresolved computed operand of unknown command: rm",
+        ".github/actions/after-unit-tests/action.yml:9: local-script discovery: unsupported shell command substitution",
+        "scripts/pack-release-packages.py:47: local-script discovery: unresolved computed subprocess env",
+        "scripts/validate-consumer-package-references.py:159: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "a41e4f2249789fd4758dcda881d77b08fec0606a4a684d25b2576f382aaaf7c4"
+        },
+        {
+          "format": "python",
+          "path": "scripts/pack-release-packages.py",
+          "sha256": "a49c7000e870c3587a927d6bb981e1f0a31effdd00c7927ef31cc273179389b8"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-consumer-package-references.py",
+          "sha256": "a966afe51e75f3c807e13e84fb9543981bcd874eb74f345ad0f393980f9a712d"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-nuget-packages.py",
+          "sha256": "4efd5dbce2a1f71c59c01992904d8c7118600e2e0958092cdc4806ec9ed9adc8"
+        }
+      ],
+      "module": "Hexalith.Commons",
+      "result": "fail",
+      "revision": "aa694ae3d43f1645f741ae0844987ca2e7e0d347"
+    },
+    {
+      "errors": [
+        ".github/actions/after-unit-tests/action.yml:11: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        ".github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        "scripts/validate-built-packages.py:16: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-built-packages.py:27: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:198: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:56: local-script discovery: unresolved computed subprocess cwd",
+        "tests/compatibility/MinimalModule/run_compatibility.py:75: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "0c6c61554715957db5fefaf19e3946e68fe5bec1bc58e75e42caab311622a9bf"
+        },
+        {
+          "format": "yaml",
+          "path": ".github/actions/testsupport-windows/action.yml",
+          "sha256": "f404aee8d190d034c8433f6e69168f20f4ce62db60f6f5c56555c266d652eb64"
+        },
+        {
+          "format": "python",
+          "path": "scripts/pack-release-packages.py",
+          "sha256": "b34b9d5933ba5cc346d66c5a5e47b043c3dbf9e81ad4afc20c80a13b3c8af2e7"
+        },
+        {
+          "format": "python",
+          "path": "scripts/release_contract.py",
+          "sha256": "f873d957ddd35449bcbdba54b50659ec90d1a57deaef80e92680ad9cd4373ecf"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-built-packages.py",
+          "sha256": "963104596d0c1735a36aa95b592145a8ce0ba716ed77e454c9d62f96533349e8"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-consumer-package-references.py",
+          "sha256": "55a6585a2ede23cbb61e2c1986327fb66c8b6fb3b7dbf702121d7ccbfe847c36"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-nuget-packages.py",
+          "sha256": "77d628b8d7842f62b955530f8daa9aa4b73d1bf870f9eb6c46a5192b4febab03"
+        },
+        {
+          "format": "python",
+          "path": "tests/compatibility/MinimalModule/run_compatibility.py",
+          "sha256": "987cd47a0402cab9640af01919e045ca7dfbf525e18a1191d0f15f915eb68937"
+        },
+        {
+          "format": "python",
+          "path": "tests/compatibility/MinimalModule/verify_results.py",
+          "sha256": "dd7ee1b5cfeb7f185dba1a0abbef353eb8a3d4ad58bc8b1004dfdd01a64e0c1b"
+        }
+      ],
+      "module": "Hexalith.Conversations",
+      "result": "fail",
+      "revision": "6f1f2ea05466982e013a782b5c79cfab0ecb0e26"
+    },
+    {
+      "errors": [],
+      "files": [],
+      "module": "Hexalith.PolymorphicSerializations",
+      "result": "pass",
+      "revision": "1f451a1ac5174b340f56763160f810d4a8364bb6"
+    }
+  ],
+  "policy": {
+    "absolute": true,
+    "format": [
+      "yaml",
+      "bash",
+      "powershell",
+      "python",
+      "javascript",
+      "typescript"
+    ],
+    "maxLines": 2097152,
+    "maxSize": "2mb",
+    "minLines": 10,
+    "minTokens": 50,
+    "mode": "weak",
+    "noGitignore": true,
+    "reporters": [
+      "json"
+    ],
+    "silent": true,
+    "skipLocal": true,
+    "workers": 1
+  },
+  "result": "fail",
+  "schema": "hexalith.duplicate-scan.v1"
+}

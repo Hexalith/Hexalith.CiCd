@@ -1,0 +1,170 @@
+{
+  "observed_at": "2026-11-17T12:45:00+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "manual_dispatch_or_rerun": false,
+  "credential_switch": false,
+  "selected_run": {
+    "id": 44067556763,
+    "event": "schedule",
+    "path": ".github/workflows/nightly.yml",
+    "head_branch": "main",
+    "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+    "run_attempt": 1,
+    "created_at": "2026-11-17T10:44:09Z",
+    "updated_at": "2026-11-17T11:21:02Z",
+    "conclusion": "failure",
+    "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763",
+    "cron_expected_utc": "2026-11-17T02:17:00Z",
+    "github_schedule_delay_hours": 8.45,
+    "source_descends_from": {
+      "diagnostic_fix": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+      "final_pilot_policy": "3427f041c5f686c460c1fa027cf6f835791209c1"
+    },
+    "later_same_day_schedule_runs": []
+  },
+  "primary_failure": {
+    "phase": "dispatch",
+    "authenticated_errors": [
+      "barrier failed: delivery barrier did not clear within 30 minutes",
+      "select failed: delivery barrier or initialization failed; no release dispatched"
+    ],
+    "effect": "no module or Builds release was dispatched; CodeQL, publication outcomes and eligibility were never produced for this night"
+  },
+  "delivery_barrier_window": {
+    "dispatch_job_started_at": "2026-11-17T10:49:09Z",
+    "dispatch_job_completed_at": "2026-11-17T11:19:04Z",
+    "contract": "wait up to 30 minutes for every main deliver.yml run to become terminal",
+    "overlapping_main_deliver_runs": [
+      {
+        "id": 44064902576,
+        "event": "push",
+        "head_sha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+        "created_at": "2026-11-17T10:26:49Z",
+        "updated_at": "2026-11-17T10:51:58Z",
+        "conclusion": "failure",
+        "role": "already running at barrier start"
+      },
+      {
+        "id": 44068630104,
+        "event": "push",
+        "head_sha": "2a5fd369b26d",
+        "created_at": "2026-11-17T10:51:12Z",
+        "updated_at": "2026-11-17T11:09:04Z",
+        "conclusion": "failure",
+        "role": "started during barrier wait"
+      },
+      {
+        "id": 44069505311,
+        "event": "push",
+        "created_at": "2026-11-17T10:57:00Z",
+        "updated_at": "2026-11-17T11:00:30Z",
+        "conclusion": "cancelled",
+        "role": "started during barrier wait"
+      },
+      {
+        "id": 44070023696,
+        "event": "push",
+        "created_at": "2026-11-17T11:00:29Z",
+        "updated_at": "2026-11-17T11:06:07Z",
+        "conclusion": "cancelled",
+        "role": "started during barrier wait"
+      },
+      {
+        "id": 44070907422,
+        "event": "push",
+        "head_sha": "f17a4f3cb647e92a58b61d030d53a9f34913d3f0",
+        "created_at": "2026-11-17T11:06:05Z",
+        "updated_at": "2026-11-17T11:30:08Z",
+        "conclusion": "success",
+        "role": "still running at 30-minute deadline"
+      },
+      {
+        "id": 44072144087,
+        "event": "schedule",
+        "head_sha": "f17a4f3cb647e92a58b61d030d53a9f34913d3f0",
+        "created_at": "2026-11-17T11:14:01Z",
+        "updated_at": "2026-11-17T11:46:24Z",
+        "conclusion": "success",
+        "role": "hourly delivery still running at 30-minute deadline"
+      }
+    ],
+    "classification": "designed fail-closed barrier; concurrent main pushes and the 11:14 UTC hourly delivery kept deliver.yml busy for the whole 30-minute window. Not a credential refusal and not a reason to extend or skip the barrier."
+  },
+  "scan": {
+    "artifact": "hexalith-nightly-scan-1",
+    "digest": "see scheduled-20261117-artifact-metadata.json",
+    "schema": "hexalith.duplicate-scan.v1",
+    "detector": "jscpd 5.4.3",
+    "result": "fail",
+    "cross_module_copy_findings": [],
+    "pilots": {
+      "Hexalith.PolymorphicSerializations": {
+        "revision": "1f451a1ac5174b340f56763160f810d4a8364bb6",
+        "result": "pass",
+        "files": 0,
+        "errors": []
+      },
+      "Hexalith.Commons": {
+        "revision": "aa694ae3d43f1645f741ae0844987ca2e7e0d347",
+        "result": "fail",
+        "files": 4,
+        "errors": [
+          ".github/actions/after-unit-tests/action.yml:10: local-script discovery: unresolved computed operand of unknown command: rm",
+          ".github/actions/after-unit-tests/action.yml:9: local-script discovery: unsupported shell command substitution",
+          "scripts/pack-release-packages.py:47: local-script discovery: unresolved computed subprocess env",
+          "scripts/validate-consumer-package-references.py:159: local-script discovery: unresolved computed subprocess cwd"
+        ],
+        "classification": "this story's product hook and package scripts are not statically discoverable; discovery failures fail the scan even with zero cross-module copies"
+      }
+    },
+    "siblings_not_owned_by_story_11": {
+      "Hexalith.AI.Tools": {"revision": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba", "result": "pass"},
+      "Hexalith.Conversations": {
+        "revision": "6f1f2ea05466982e013a782b5c79cfab0ecb0e26",
+        "result": "fail",
+        "note": "out of story 11 scope; a later night remains red while this module's hook/scripts fail discovery"
+      }
+    }
+  },
+  "bump": {
+    "schema": "hexalith.nightly-bump-report.v1",
+    "result": "no-change",
+    "reason": "no newer acceptable unskipped Builds tag",
+    "tag": "v6.2.0",
+    "night": "2026-11-17",
+    "base": "f17a4f3cb647e92a58b61d030d53a9f34913d3f0",
+    "accepted": true
+  },
+  "keepalive": {
+    "result": "pass",
+    "enabled": {"deliver.yml": "enabled", "nightly.yml": "enabled"}
+  },
+  "publication_and_codeql": {
+    "pilot_and_builds_release_runs": "none dispatched",
+    "codeql_processed_findings_gate": "unproved for this night; no release CodeQL jobs exist",
+    "direct_analysis_inventory": "HTTP 403 under CiCd-agent; security_events=read required; absence not inferred"
+  },
+  "diagnostic_delivery_43889937298": {
+    "conclusion": "success",
+    "head_sha": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+    "artifact_id": 14238835494,
+    "digest": "sha256:fbbff7a4e74876e9d4b359d0968566c9a3cca59a935789dfd136b4abbe5bbfb2",
+    "pilots": "both accepted that source with application unchanged"
+  },
+  "hourly_delivery_after_failed_night": {
+    "id": 44072144087,
+    "event": "schedule",
+    "conclusion": "success",
+    "created_at": "2026-11-17T11:14:01Z",
+    "head_sha": "f17a4f3cb647e92a58b61d030d53a9f34913d3f0"
+  },
+  "immutable_releases_this_session": {
+    "result": "unverified under CiCd-agent",
+    "status": "HTTP 403",
+    "required": "administration=read",
+    "prior_authenticated_enablement": "post-adoption-github-cleanup.json recorded enabled:true after 204 on both pilots; not repeated"
+  },
+  "acceptance": "not accepted",
+  "next_genuine_schedule": "2026-11-18T02:17:00Z",
+  "cannot_substitute": ["manual dispatch", "rerun", "later successful run"]
+}

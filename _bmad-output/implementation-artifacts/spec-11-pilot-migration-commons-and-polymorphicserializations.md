@@ -73,7 +73,29 @@ context:
 
 ## Implementation Notes
 
-- Current resume checkpoint, 2026-11-16 14:50 UTC: diagnostic fix
+- Current resume checkpoint, 2026-11-17 12:50 UTC: the genuine scheduled
+  parent is authenticated as run `44067556763`, event `schedule`, attempt 1,
+  source `639d8a7032108bbc7eb1f0e054c4ee55b6f87f90` (descendant of diagnostic
+  fix `d04c9ab7` and final pilot policy `3427f041`). GitHub started it at
+  10:44 UTC rather than 02:17 UTC. No later same-day schedule run exists and
+  none was substituted. Digest-matched artifacts show the night failed in
+  dispatch because the 30-minute delivery barrier never cleared: concurrent
+  main `deliver.yml` pushes and the 11:14 UTC hourly run stayed busy through
+  11:19 UTC, so no Commons, Poly or Builds release was dispatched and this
+  night produced no CodeQL or publication outcomes. Keepalive passed and
+  Builds bump reported authenticated no-change for `v6.2.0`. Scan covered
+  both live pilot heads with jscpd 5.4.3; Poly passed with zero files, while
+  Commons failed local-script discovery on this story's package hook
+  (`mktemp`/`rm` and computed subprocess env/cwd). Conversations also failed
+  discovery and is out of this story's product scope. Direct CodeQL
+  inventories still return HTTP 403 (`security_events=read`). Diagnostic
+  delivery `43889937298` completed success with both pilots application
+  unchanged. A local Commons discovery-only fix
+  (`scheduled-20261117-commons-scan-fix.diff`) clears those four errors
+  without changing the selected file set; it is not pushed because
+  `python3 references/Hexalith.Builds/check.py` has not been run on that
+  head. Manual dispatch/rerun remains forbidden. Story 11 stays open.
+- Prior resume checkpoint, 2026-11-16 14:50 UTC: diagnostic fix
   `d04c9ab7a8fa43dc6dac1f15d34135aba8e79551` passed all 14 suites/399 tests,
   the complete unchanged committed/global/live-module gate and released shared
   commitlint, then was pushed using CiCd-agent. Actual push-created delivery
@@ -526,11 +548,20 @@ Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
   `qualified-policy-delivery-report.json`, `final-main-ci-proof.json` plus full
   CI logs, and `original-module-workspace-sync.json` record successful actual
   rollout, unchanged foreign/SDK/C# content, final green CI and intentional
-  guarded workspace sync. `nightly-checkpoint-pending.json` names the sole
-  remaining acceptance event without inferring a future result.
+  guarded workspace sync. `nightly-checkpoint-pending.json` names the then-pending
+  acceptance event without inferring a future result.
+- `scheduled-20261117-{run,jobs,artifact-metadata,authentication,diagnosis}.json`,
+  digest-matched `hexalith-nightly-*-1-*.json` members, scan summary,
+  `scheduled-20261117-codeql-inventory.json`, diagnostic delivery
+  `43889937298` report, hourly delivery `44072144087`, and
+  `scheduled-20261117-commons-scan-{discovery.json,fix.diff}`: genuine
+  delayed schedule parent, barrier-blocked dispatch, authenticated bump
+  no-change and keepalive pass, Commons discovery reproduction, and an
+  unpushed local hook/script fix that clears those four discovery errors.
 
 Remaining verification for checkpoint acceptance:
 
 - Delivery compatibility, shared publication regressions, both full pre-adoption proof sets and both exact post-adoption normal checkers pass with saved logs. No module workflow-text assertions were added.
 - The initial committed/global/live-module gate, real adoption artifacts, immediate settings/credential cleanup, green adopted-main CI and all restricted-token outcomes/cleanup are complete. Candidate `3427f041` passed its full locked gate and actual redelivery, with authenticated tree/foreign-content and final green-main CI proof. Original module workspaces are intentionally synced and clean; CiCd's staged entries remain preserved.
-- Observe one real scheduled nightly after the final policy state: CodeQL, releases or valid no-release outcomes, duplicate scan, Builds bump/no-bump and delivery. Manual dispatches or fixtures cannot replace that checkpoint.
+- Genuine 2026-11-17 scheduled parent `44067556763` is authenticated and failed: delivery barrier timeout, no pilot/Builds dispatch, Commons scan discovery errors, Conversations sibling scan errors. Builds bump no-change and keepalive passed. See `scheduled-20261117-{run,authentication,diagnosis,commons-scan-discovery}.json`. Manual dispatch cannot replace it.
+- Remaining before acceptance: land a check.py-qualified Commons hook/script discovery fix; leave Conversations to its owning story; wait for the next genuine scheduled night (2026-11-18 02:17 UTC) that actually dispatches both pilots and Builds; prove CodeQL upload, SARIF processing and the processed-findings gate from those release jobs. Direct analysis inventories remain 403 under CiCd-agent.
