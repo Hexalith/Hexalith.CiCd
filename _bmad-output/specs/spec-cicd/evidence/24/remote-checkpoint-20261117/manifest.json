@@ -1,0 +1,380 @@
+{
+  "captured_at": "2026-11-17T10:20:26.090329+00:00",
+  "purpose": "User-requested remote checkpoint of all saved story-24 working changes.",
+  "publication": "CiCd archival branch only; module refs/pins are not published or advanced.",
+  "implementation_complete": false,
+  "current_candidate_fully_verified": false,
+  "normal_git_ignored_outputs_included": false,
+  "records": [
+    {
+      "name": "cicd",
+      "repository": "/home/administrator/projects/hexalith/cicd-story-24",
+      "baseline_commit": "66e3a5a3a0e9bb01dd161c19349953594e01a22f",
+      "snapshot_tree": "170f8ac8cd32e38641e8d2e703ce29faba6c5bda",
+      "restored_tree": "170f8ac8cd32e38641e8d2e703ce29faba6c5bda",
+      "archive": "cicd.patch.gz",
+      "archive_bytes": 1042373,
+      "archive_sha256": "74904ccd29e543b3104178f1b05c664b610f3be6df184b54eaba02b57766e317",
+      "patch_bytes": 5669955,
+      "patch_sha256": "e79aa73fa44c396cd2791d13d69e6bdbe67d474b3f72d195e17157a0d29cc177",
+      "changed_paths": [
+        ".github/workflows/nightly-target.yml",
+        ".github/workflows/nightly.yml",
+        "_bmad-output/implementation-artifacts/prerequisite-24-frontcomposer-shared-compatibility.md",
+        "_bmad-output/implementation-artifacts/spec-24-migrate-frontcomposer.md",
+        "_bmad-output/implementation-artifacts/spec-24-shared-runtime-compatibility.md",
+        "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-account-verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-dedicated-window.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-prepare-1.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-readback-1.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-readback-2.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-readback-3.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-reload-1.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-submit-1.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-policy-ui.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-policy-verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/provision-registry.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/provision-registry.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/auth-checks.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/code-investigation.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/implementation.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/local-preparation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/local-preservation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/local-verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/pre-adoption-check.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/preflight.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/preflight.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/README.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/check-container-layout.sh",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/corrected-candidate.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/corrected-hygiene.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/corrected-preservation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-candidate.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-check-results.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-final-audit.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-hygiene.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-package.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-preservation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-source-manifest.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-superseded-checks.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-verify.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-worker-caller.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-worker-caller.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-carried-builds-coverage.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-carried-controller-coverage.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded-2.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded-3.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded-4.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-expected-jobs.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-hygiene.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-hygiene.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-implementation-report.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-preservation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-sdk-input-inventory.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-source-manifest.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-superseded-controller-checks.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-verify.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-worker-caller.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-worker-caller.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-check-results.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-expected-jobs.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-frontcomposer-patch-preservation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-hygiene.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-hygiene.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-implementation-report.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-failed-check-results.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-failed-source-manifest.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-targets-corrected-probe.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-targets-probe.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-targets-probe.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-package-initial-inventory-failed.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-package-inventory-diagnostic.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-package.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-bootstrap-fix-check-results.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-bootstrap-fix-source-manifest.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-evaluation-fix/iteration-4-check-results.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-evaluation-fix/iteration-4-source-manifest.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-preservation.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-source-manifest.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-verify.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-worker-caller.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-worker-caller.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-hygiene.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-rewrite-preflight.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-stopped-handoff.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-test-additions.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-verify.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-worker-caller.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-corrected-audit.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-2-audit.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-2-verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-3-audit.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-3-verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-4-audit.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-4-matrix-plan.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-4-verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-matrix-audit.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review3-probes.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review4-probes.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-code-reset.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-code-reset.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-probes.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-probes.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-1.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-2.md",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-3-reset.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-4-reset.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/session-stop-2026-11-17-checkpoint.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/session-stop-2026-11-17-checkpoint.py",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/session-stop-2026-11-17-resume-state.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-corrected.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-iteration-2.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-iteration-3.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-iteration-4.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-review-iteration-2.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification.json",
+        "_bmad-output/specs/spec-cicd/evidence/24/source-composition-inventory.json",
+        "_bmad-output/specs/spec-cicd/gate-classification.md",
+        "docs/nightly.md",
+        "setup/README.md",
+        "templates/.github/workflows/release.yml.j2",
+        "tools/nightly.py",
+        "tools/nightly_publish.py",
+        "tools/nightly_runtime.py",
+        "tools/tests/delivery_support.py",
+        "tools/tests/nightly_publish_cases.py",
+        "tools/tests/nightly_support.py",
+        "tools/tests/test_delivery_bootstrap.py",
+        "tools/tests/test_nightly_horizon.py",
+        "tools/tests/test_nightly_horizon.py.lock",
+        "tools/tests/test_nightly_workflow.py",
+        "tools/tests/test_render.py",
+        "tools/tests/test_validate.py",
+        "tools/validate.py"
+      ],
+      "gitlinks": [
+        {
+          "path": "references/Hexalith.AI.Tools",
+          "commit": "736687b79c1e4fa8beabdab75c4675bb76c466b9"
+        },
+        {
+          "path": "references/Hexalith.Agents",
+          "commit": "895039d8513363424882b3b7d64bca574fddc43b"
+        },
+        {
+          "path": "references/Hexalith.Builds",
+          "commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+        },
+        {
+          "path": "references/Hexalith.ChatBot",
+          "commit": "6a4ca07b18e9b58500dc79dfede1f308da36c828"
+        },
+        {
+          "path": "references/Hexalith.Commons",
+          "commit": "49187d47da882d5470deac982bb383486c90202c"
+        },
+        {
+          "path": "references/Hexalith.Conversations",
+          "commit": "9e24c280efd5e9c13826eab9bc8b8b687a7bee09"
+        },
+        {
+          "path": "references/Hexalith.EventStore",
+          "commit": "f85419d501f279e9a813435aa73538185ad26ada"
+        },
+        {
+          "path": "references/Hexalith.Folders",
+          "commit": "a448d20873dc9e809623f85da206e8d8a13bb9ab"
+        },
+        {
+          "path": "references/Hexalith.FrontComposer",
+          "commit": "bc9dbedc6141b750ca92f01b40ac840dc2066704"
+        },
+        {
+          "path": "references/Hexalith.McpCli",
+          "commit": "e2e3db7ba2d45d61feacc39c41b3051310fbc57f"
+        },
+        {
+          "path": "references/Hexalith.Memories",
+          "commit": "898f451111740ccf489d56f7c20cd47edc2fcdf6"
+        },
+        {
+          "path": "references/Hexalith.Parties",
+          "commit": "a575021fc97a8eda664711089270b60f5e570ded"
+        },
+        {
+          "path": "references/Hexalith.Platform",
+          "commit": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2"
+        },
+        {
+          "path": "references/Hexalith.PolymorphicSerializations",
+          "commit": "2cbec6a66e2174adc7c5d431c1b1f0d28abd5647"
+        },
+        {
+          "path": "references/Hexalith.Projects",
+          "commit": "981ceef13a1abc88219925e73c51a23eb9ac50c2"
+        },
+        {
+          "path": "references/Hexalith.Tenants",
+          "commit": "292dbf164f26bcf376ef86d749b149b075f8b502"
+        },
+        {
+          "path": "references/Hexalith.Timesheets",
+          "commit": "bbb91319ee209333d29f07e53bd9b5e4adc40267"
+        },
+        {
+          "path": "references/Hexalith.Works",
+          "commit": "b2985d22b3bfbc6d86bcde28a5da722ae7f930c3"
+        }
+      ],
+      "real_index_unchanged_during_capture": true
+    },
+    {
+      "name": "builds",
+      "repository": "/home/administrator/projects/hexalith/cicd-story-24/references/Hexalith.Builds",
+      "baseline_commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "snapshot_tree": "657c269efcc2e1b839f10b5b7937ba84f299530b",
+      "restored_tree": "657c269efcc2e1b839f10b5b7937ba84f299530b",
+      "archive": "builds.patch.gz",
+      "archive_bytes": 107217,
+      "archive_sha256": "bcc33789debda21eaadfe7d7a1bd8944bcc1529098715619a4b6298b5625712d",
+      "patch_bytes": 477220,
+      "patch_sha256": "19ad3b0f62793dfa36e79115c988036d14bb90343ba9f1f68e841fd127bcdb7e",
+      "changed_paths": [
+        ".github/workflows/builds-ci.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
+        "Github/ci-environment/action.yml",
+        "Github/ci-prepare/action.yml",
+        "Github/ci-profile-tests/action.yml",
+        "Github/ci-profiles/action.yml",
+        "Github/ci-unit-tests/action.yml",
+        "Github/lib/ci_browsers.py",
+        "Github/lib/ci_config.py",
+        "Github/lib/ci_environment.py",
+        "Github/lib/ci_pipeline.py",
+        "Github/lib/ci_profiles.py",
+        "Github/lib/ci_tool_sources.py",
+        "Github/lib/nightly_workers.py",
+        "Github/lib/release_outcome.py",
+        "Github/lib/release_publish.py",
+        "Github/lib/release_state.py",
+        "Github/lib/tests/actions_expressions.py",
+        "Github/lib/tests/test_ci_environment.py",
+        "Github/lib/tests/test_ci_pipeline.py",
+        "Github/lib/tests/test_ci_prepare.py",
+        "Github/lib/tests/test_nightly_workers.py",
+        "Github/lib/tests/test_release_outcome.py",
+        "Github/lib/tests/test_release_publish.py",
+        "Github/lib/tests/test_release_state.py",
+        "Github/lib/tests/test_shared_preparation.py",
+        "Github/lib/tests/worker_fixture.py",
+        "Github/nightly-aggregate/action.yml",
+        "Github/nightly-bundle/action.yml",
+        "Github/nightly-download/action.yml",
+        "Github/nightly-execute/action.yml",
+        "Github/nightly-prepare/action.yml",
+        "Github/nightly-report/action.yml",
+        "Github/nightly-start/action.yml",
+        "Github/nightly-worker/action.yml",
+        "Github/prepare/action.yml",
+        "Github/publish/action.yml",
+        "Github/release-resolve/action.yml",
+        "docs/shared-runtime.md",
+        "schemas/hexalith.ci.v1.json"
+      ],
+      "gitlinks": [
+        {
+          "path": "references/Hexalith.AI.Tools",
+          "commit": "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+        }
+      ],
+      "real_index_unchanged_during_capture": true
+    },
+    {
+      "name": "frontcomposer",
+      "repository": "/home/administrator/projects/hexalith/cicd-story-24/references/Hexalith.FrontComposer",
+      "baseline_commit": "bc9dbedc6141b750ca92f01b40ac840dc2066704",
+      "snapshot_tree": "4fae737467f49ca56e98fd1104aa4d63a031dc91",
+      "restored_tree": "4fae737467f49ca56e98fd1104aa4d63a031dc91",
+      "archive": "frontcomposer.patch.gz",
+      "archive_bytes": 194921,
+      "archive_sha256": "0ee2afbfa30f2edf7786007dccac74a2e7da698272cd5df12cf7bbeffe7e8dcf",
+      "patch_bytes": 1024231,
+      "patch_sha256": "2ee738e9d918db91d568372df942f72955daefa1a0849baba80d4b06d424ba76",
+      "changed_paths": [
+        ".husky/commit-msg",
+        ".husky/pre-commit",
+        ".husky/pre-merge-commit",
+        ".releaserc.json",
+        "eng/tests/test_validate_story_artifacts.py",
+        "package-lock.json",
+        "package.json",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Architecture/AuthBoundaryTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Generated/CounterStoryVerificationTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Governance/AnalyzerPolicyGovernanceTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Governance/CiGovernanceTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Governance/ProcessResult.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Governance/ProductBuildContractTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Governance/ReleaseModelGovernanceTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/Governance/Story12_4_RedPhaseDefTests.cs",
+        "tests/Hexalith.FrontComposer.Shell.Tests/TestRepository.cs",
+        "tests/eng/test_adopter_proof.py",
+        "tests/eng/test_check_committed_files.py",
+        "tests/eng/test_ci_governance.py",
+        "tests/eng/test_dependency_graph.py",
+        "tests/eng/test_dependency_handoff.py",
+        "tests/eng/test_mutation_artifact_publication.py",
+        "tests/eng/test_mutation_triage.py",
+        "tests/eng/test_publication_candidate.py",
+        "tests/eng/test_release_contract.py",
+        "tests/eng/test_release_disposition.py",
+        "tests/eng/test_release_evidence_v2.py",
+        "tests/eng/test_workflow_source_closure.py"
+      ],
+      "gitlinks": [
+        {
+          "path": "references/Hexalith.AI.Tools",
+          "commit": "7ef8166ef87e1365f86d1a1b3aaf0235545177d4"
+        },
+        {
+          "path": "references/Hexalith.Builds",
+          "commit": "65fd22f37b9fad64b595841923cdbe050563ab99"
+        },
+        {
+          "path": "references/Hexalith.Commons",
+          "commit": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2"
+        },
+        {
+          "path": "references/Hexalith.EventStore",
+          "commit": "97c02f7bf99a694528a2b15f0b3b0a6e5fb10e9d"
+        },
+        {
+          "path": "references/Hexalith.Memories",
+          "commit": "9d87500eaf4c39ce0cec0cb3a03e5dd62c167106"
+        },
+        {
+          "path": "references/Hexalith.Parties",
+          "commit": "d4a71068bc1366ba67699aa9ec68cf24c0645c71"
+        },
+        {
+          "path": "references/Hexalith.Platform",
+          "commit": "ead9ff0d4268efaa7054b3a14b45956b647f6171"
+        },
+        {
+          "path": "references/Hexalith.PolymorphicSerializations",
+          "commit": "476cfccac3c5ba694a8e0ef11b1157728b9ec093"
+        },
+        {
+          "path": "references/Hexalith.Tenants",
+          "commit": "8aa6f169b3e27f0a831ad6425c4bc1278ca2c445"
+        }
+      ],
+      "real_index_unchanged_during_capture": true
+    }
+  ],
+  "existing_main_checkpoint": "a46a061c02f3865296cc3e98231f92abb8e36987"
+}
