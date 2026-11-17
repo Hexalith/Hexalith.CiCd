@@ -532,6 +532,136 @@ class ScanTests(unittest.TestCase):
                 self.assert_coverage(self.coverage_case([("bash", "python3 entry.py", "")],
                                                        {"entry.py": source, "leaf.py": COPY}), "leaf.py", None)
 
+    def test_source_relative_pathlib_cwd_discovers_actual_child(self):
+        for declaration, root in (
+                ("from pathlib import Path", "Path(__file__).resolve().parents[1]"),
+                ("from pathlib import Path as FilePath", "FilePath(__file__).resolve().parent.parent"),
+                ("import pathlib as paths", "paths.Path(__file__).resolve().parents[1]")):
+            with self.subTest(declaration=declaration):
+                source = (declaration + "\nimport subprocess\nROOT = " + root + "\n"
+                          "CHILD = ROOT / 'nested'\n"
+                          "def invoke():\n    subprocess.run(['python', 'leaf.py'], cwd=str(CHILD))\ninvoke()\n")
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "nested/leaf.py": COPY,
+                    "leaf.py": "print('root decoy')\n"})
+                self.assert_coverage(report, "nested/leaf.py", None)
+
+        source = ("from pathlib import Path\nimport subprocess\nROOT = Path(__file__).resolve().parents[1]\n"
+                  "subprocess.run(['python', 'leaf.py'], cwd=ROOT / 'support')\n")
+        report = self.coverage_case([("bash", "python $GITHUB_WORKSPACE/scripts/start.py",
+                                      "      working-directory: nested\n")], {
+            "scripts/start.py": source, "support/leaf.py": COPY, "nested/marker.txt": "directory\n",
+            "nested/support/leaf.py": "print('cwd decoy')\n"})
+        self.assert_coverage(report, "support/leaf.py", None)
+
+    def test_source_relative_search_path_discovers_imports_in_all_scopes(self):
+        source = ("from pathlib import Path\nimport sys\nROOT = Path(__file__).resolve().parents[1]\n"
+                  "import helper\nif enabled:\n    sys.path.insert(0, str(ROOT / 'support'))\n"
+                  "def invoke():\n    import helper\n    import package.child\n")
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+            "scripts/start.py": source, "support/helper.py": COPY,
+            "support/package/__init__.py": COPY, "support/package/child.py": COPY})
+        for target in ("support/helper.py", "support/package/__init__.py", "support/package/child.py"):
+            self.assert_coverage(report, target, None)
+
+    def test_composed_source_script_paths_include_unknown_consumers_and_processes(self):
+        prefix = "from pathlib import Path\nROOT = Path(__file__).resolve().parents[1]\n"
+        for invocation in (
+                "record(ROOT / 'support' / 'leaf.py')",
+                "import subprocess, sys\nsubprocess.run([sys.executable, str(ROOT / 'support' / 'leaf.py')])",
+                "import subprocess, sys\nsubprocess.run([sys.executable, '-B', ROOT / 'support' / 'leaf.py'], cwd=ROOT / 'nested')",
+                "import runpy\nrunpy.run_path(str(ROOT / 'support' / 'leaf.py'))"):
+            with self.subTest(invocation=invocation):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": prefix + invocation + "\n", "support/leaf.py": COPY,
+                    "nested/marker.txt": "directory\n"})
+                self.assert_coverage(report, "support/leaf.py", None)
+
+    def test_source_relative_path_proofs_refuse_shadowing_mutation_and_escape(self):
+        source = ("from pathlib import Path\nimport subprocess\nROOT = Path(__file__).resolve().parents[1]\n"
+                  "def invoke():\n    subprocess.run(['python', 'leaf.py'], cwd=ROOT / 'support')\ninvoke()\n")
+        cases = {
+            "rebound_root": source.replace("def invoke():", "ROOT = replacement\ndef invoke():"),
+            "shadowed_root": source.replace("def invoke():", "def invoke(ROOT):"),
+            "alternate_scope": source.replace("def invoke():", "def other():\n    ROOT = replacement\ndef invoke():"),
+            "shadowed_path": source.replace("def invoke():", "def other(Path):\n    pass\ndef invoke():"),
+            "path_class_escape": source.replace("def invoke():", "mutate(Path)\ndef invoke():"),
+            "path_class_alias": source.replace("def invoke():", "Alias = Path\ndef invoke():"),
+            "path_class_mutation": source.replace("def invoke():", "Path.__truediv__ = replacement\ndef invoke():"),
+            "path_instance_class": source.replace("def invoke():", "ROOT.__class__.__truediv__ = replacement\ndef invoke():"),
+            "path_type_escape": source.replace("def invoke():", "Class = type(ROOT)\nmutate(Class)\ndef invoke():"),
+            "pathlib_replaced": source.replace("from pathlib import Path", "from untrusted import Path"),
+            "file_rebound": source.replace("def invoke():", "__file__ = '/elsewhere/start.py'\ndef invoke():"),
+            "reflection": source.replace("def invoke():", "globals()['ROOT'] = replacement\ndef invoke():"),
+            "cwd_factory": source.replace("Path(__file__).resolve().parents[1]", "Path.cwd()"),
+            "untrusted_str": source.replace("def invoke():", "def str(value):\n    return '.'\ndef invoke():").replace("cwd=ROOT / 'support'", "cwd=str(ROOT / 'support')"),
+            "root_escape": source.replace("ROOT / 'support'", "ROOT / '../outside'"),
+            "absolute_escape": source.replace("ROOT / 'support'", "ROOT / '/outside'"),
+            "shell_anchor": source.replace("ROOT / 'support'", "ROOT / '$GITHUB_WORKSPACE/support'"),
+            "backslash": source.replace("ROOT / 'support'", "ROOT / '..\\\\support'"),
+            "over_parent": source.replace("parents[1]", "parents[2]"),
+            "computed_component": source.replace("ROOT / 'support'", "ROOT / component"),
+            "non_directory": source.replace("ROOT / 'support'", "ROOT / 'support/leaf.py'"),
+            "path_alias_write": source.replace("def invoke():", "ROOT.name = replacement\ndef invoke():"),
+            "path_alias_class": source.replace("def invoke():", "Alias = ROOT\nAlias.__class__.__truediv__ = replacement\ndef invoke():"),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": unsafe, "support/leaf.py": COPY})
+                self.assertTrue(all(any("subprocess cwd" in error or "working directory" in error for error in row["errors"])
+                                    for row in report["modules"]), report)
+
+    def test_source_relative_paths_refuse_linked_prefixes_and_shadowed_stdlib(self):
+        for kind in ("symlink", "gitlink", "stdlib"):
+            with self.subTest(kind=kind):
+                w = self.workspace()
+                for module in w.paths:
+                    w.action(module, "python scripts/start.py")
+                    w.write(module, "scripts/start.py", "from pathlib import Path\nimport subprocess\n"
+                            "ROOT = Path(__file__).resolve().parents[1]\n"
+                            "subprocess.run(['python', 'leaf.py'], cwd=(ROOT / 'linked').resolve().parent / 'support')\n")
+                    w.write(module, "support/leaf.py", block("python"))
+                    if kind == "symlink":
+                        (w.paths[module] / "linked").symlink_to("../outside")
+                    elif kind == "gitlink":
+                        w.commit(w.paths[module])
+                        revision = git(w.paths[module], "rev-parse", "HEAD")
+                        git(w.paths[module], "update-index", "--add", "--cacheinfo", "160000," + revision + ",linked")
+                    else:
+                        w.write(module, "scripts/pathlib.py", "def Path(value):\n    return value\n")
+                        w.write(module, "linked/marker.txt", "directory\n")
+                    if kind == "gitlink":
+                        git(w.paths[module], "commit", "--quiet", "-m", "unsafe source path")
+                    else:
+                        w.commit(w.paths[module])
+                report = w.scan(self.factory)
+                self.assertTrue(all(any("subprocess cwd" in error for error in row["errors"])
+                                    for row in report["modules"]), report)
+
+    def test_source_relative_search_path_refuses_unknown_or_aliased_roots(self):
+        source = ("from pathlib import Path\nimport sys\nROOT = Path(__file__).resolve().parents[1]\n"
+                  "sys.path.insert(0, str(ROOT / 'support'))\nimport helper\n")
+        cases = {
+            "dynamic_root": source.replace("ROOT / 'support'", "ROOT / supplied"),
+            "external_root": source.replace("ROOT / 'support'", "ROOT / '../outside'"),
+            "file_root": source.replace("ROOT / 'support'", "ROOT / 'support/helper.py'"),
+            "missing_root": source.replace("ROOT / 'support'", "ROOT / 'missing'"),
+            "aliased_path": source.replace("sys.path.insert", "alias = sys.path\nalias.insert"),
+            "mutated_sys": source.replace("sys.path.insert", "sys.path = replacement\nsys.path.insert"),
+            "path_escape": source.replace("import helper", "mutate(sys.path)\nimport helper"),
+            "bound_method_escape": source.replace("import helper", "mutate(sys.path.append)\nimport helper"),
+            "path_alias_escape": source.replace("import helper", "alias = sys.path\nmutate(alias)\nimport helper"),
+            "computed_index": source.replace("insert(0,", "insert(index,"),
+            "remove": source.replace("insert(0,", "remove("),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": unsafe, "support/helper.py": COPY})
+                self.assertTrue(all(any("search-path mutation" in error for error in row["errors"])
+                                    for row in report["modules"]), report)
+
     def test_forwarded_indirection_and_process_options_fail_closed(self):
         base = "import os, subprocess\ndef launch(*parts):\n    return subprocess.run(['python3', *parts])\nlaunch('leaf.py')\n"
         cases = {

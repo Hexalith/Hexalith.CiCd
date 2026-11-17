@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-17T10:21:42.355756+00:00",
+  "purpose": "User-requested preservation of paused scanner work on its feature branch",
+  "sourceHashes": {
+    "tools/scan_discovery.py": "df7bfe6c252a3c0b6678500e6e6e3910482ceefb49da4eaa8d7100193d816099",
+    "tools/tests/test_scan.py": "dcaeb93da0a5040b03eee8493985411b5d788ce5ee1cab10060d9c50003450a3"
+  },
+  "focused": {
+    "methods": [
+      "test_source_relative_pathlib_cwd_discovers_actual_child",
+      "test_source_relative_search_path_discovers_imports_in_all_scopes",
+      "test_composed_source_script_paths_include_unknown_consumers_and_processes",
+      "test_source_relative_path_proofs_refuse_shadowing_mutation_and_escape",
+      "test_source_relative_paths_refuse_linked_prefixes_and_shadowed_stdlib",
+      "test_source_relative_search_path_refuses_unknown_or_aliased_roots"
+    ],
+    "run": 6,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0
+  },
+  "toolVersions": {
+    "node": "v24.22.3",
+    "npm": "11.19.1"
+  },
+  "releasedCommitPolicy": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "policyLockSha256": "e1cee6ebc2ce6f5bb679d3739a7d957052c4fc1d19aebcbb834794f78d232835",
+  "lockedInstallAndSignaturesVerified": true,
+  "fullQualification": "Incomplete: full adversarial suite, Python3.12 and candidate canonical scan remain pending",
+  "implementationResumed": false,
+  "releaseOrAdoptionClaim": false
+}

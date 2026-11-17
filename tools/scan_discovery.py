@@ -2003,6 +2003,51 @@ class Discovery:
             return any(expression == root or expression.startswith(root + "[")
                        for root in ("sys.path", "sys.meta_path", "sys.path_hooks"))
 
+        # Establish finite source-relative additions before visiting any import.
+        # All imports are traversed in all proven roots, including imports that
+        # precede the insertion or live in a different branch. This deliberately
+        # overapproximates order rather than allowing a path change to hide code.
+        path_value = lambda expression: self.python_source_path(expression, path, cwd, action, nodes, parents, roots=roots)
+        proven_paths = set()
+        for node in nodes:
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                    and names(ast.unparse(node.func.value)) == {"sys.path"}
+                    and node.func.attr in {"insert", "append"} and not node.keywords):
+                arguments = node.args
+                if node.func.attr == "insert":
+                    if len(arguments) != 2 or not isinstance(arguments[0], ast.Constant) or type(arguments[0].value) is not int:
+                        continue
+                    arguments = arguments[1:]
+                if len(arguments) != 1:
+                    continue
+                try:
+                    directory = path_value(arguments[0])
+                    self.import_path(directory)
+                    if directory != "." and directory not in self.directories:
+                        continue
+                    if not isinstance(node.func.value, ast.Attribute):
+                        continue
+                    root = node.func.value.value
+                    if not isinstance(root, ast.Name) or not self.proof_import(root.id, "sys", nodes, parents):
+                        continue
+                except (ValueError, TypeError):
+                    continue
+                proven_paths.add(node)
+                roots = tuple(dict.fromkeys((*roots, directory)))
+
+        # A finite composed source path is also useful when it is data to an
+        # unknown consumer. Include it without using that consumer to limit
+        # reachability, just as we do for ordinary script string literals.
+        for node in nodes:
+            if not isinstance(node, ast.BinOp) or not isinstance(node.op, ast.Div):
+                continue
+            try:
+                value = path_value(node)
+            except (ValueError, TypeError):
+                continue
+            self.include([(node.lineno + offset, "$GITHUB_WORKSPACE/" + value)], path, cwd, action,
+                         self.bases(path, action, [cwd, *roots]))
+
         literals, modules, bases, cwds = [], [], [cwd, *roots], [cwd]
         for node in nodes:
             for sequence in sequences(node):
@@ -2014,6 +2059,11 @@ class Discovery:
                     if node.value in {"GITHUB_ENV", "GITHUB_PATH"}:
                         raise DeliveryError("unsupported Python access to " + node.value + "; coverage unsupported")
                 elif isinstance(node, (ast.Name, ast.Attribute)) and isinstance(node.ctx, ast.Load):
+                    if proven_paths and any(search_path(candidate) for candidate in names(ast.unparse(node))):
+                        consumer = parents.get(node)
+                        if not (isinstance(consumer, ast.Attribute) and consumer.value is node
+                                and parents.get(consumer) in proven_paths):
+                            raise DeliveryError("unsupported Python search-path mutation or escape")
                     self.reflective(node, parents, names)
                 elif isinstance(node, ast.Import):
                     for item in node.names:
@@ -2078,8 +2128,8 @@ class Discovery:
                                 pass
                     mutators = {"append", "insert", "extend", "remove", "pop", "clear", "reverse", "sort",
                                 "__setitem__", "__delitem__", "__iadd__", "__imul__"}
-                    if any(candidate.rsplit(".", 1)[-1] in mutators and search_path(candidate.rsplit(".", 1)[0])
-                           for candidate in calls) or "site.addsitedir" in calls:
+                    if (any(candidate.rsplit(".", 1)[-1] in mutators and search_path(candidate.rsplit(".", 1)[0])
+                            for candidate in calls) and node not in proven_paths or "site.addsitedir" in calls):
                         raise DeliveryError("unsupported Python search-path mutation")
                     if calls & {"os.chdir", "os.fchdir", "contextlib.chdir"}:
                         raise DeliveryError("unsupported Python working-directory mutation")
@@ -2116,6 +2166,128 @@ class Discovery:
         return ((isinstance(parent, ast.arg) and parent.annotation is child)
                 or (isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef)) and parent.returns is child)
                 or (isinstance(parent, ast.AnnAssign) and parent.annotation is child))
+
+    def python_source_path(self, expression, path, cwd, action, nodes, parents, *, roots=None):
+        """Resolve immutable pathlib paths anchored to this committed source.
+
+        No cwd(), ambient environment, arbitrary factory, function return or
+        mutable/ambiguous binding is a source anchor. The proof examines every
+        scope for shadowing and reflection and never imports the module's code.
+        """
+        if not self.proof_namespace_safe(nodes):
+            raise ValueError("unsupported source-path namespace or proof limit")
+        if any(isinstance(entry, ast.Attribute) and entry.attr in {"__class__", "__mro__", "__subclasses__"}
+               or isinstance(entry, ast.Call) and isinstance(entry.func, ast.Name) and entry.func.id == "type"
+               for entry in nodes):
+            raise ValueError("unsupported source-path class reflection")
+        if self.script_format(path) != "python" or self.proof_bindings("__file__", nodes):
+            raise ValueError("untrusted Python source anchor")
+
+        def factory(node):
+            if isinstance(node, ast.Name):
+                bindings = self.proof_bindings(node.id, nodes)
+                if len(bindings) != 1 or not isinstance(bindings[0], ast.alias):
+                    return False
+                declaration = parents.get(bindings[0])
+                if (not isinstance(declaration, ast.ImportFrom) or declaration.module != "pathlib"
+                        or declaration.level or bindings[0].name != "Path"
+                        or not isinstance(parents.get(declaration), ast.Module)):
+                    return False
+                # A class object that escapes can have its methods replaced.
+                for entry in nodes:
+                    if isinstance(entry, ast.Name) and isinstance(entry.ctx, ast.Load) and entry.id == node.id:
+                        consumer = parents.get(entry)
+                        if not (isinstance(consumer, ast.Call) and consumer.func is entry or self.annotation(entry, parents)):
+                            return False
+                return not self.import_module("pathlib", path, cwd, action, roots=roots)
+            if (isinstance(node, ast.Attribute) and node.attr == "Path" and isinstance(node.value, ast.Name)
+                    and self.proof_import(node.value.id, "pathlib", nodes, parents)):
+                # Reject aliases or escapes of the class, including method writes.
+                for entry in nodes:
+                    if (isinstance(entry, ast.Attribute) and entry.attr == "Path"
+                            and isinstance(entry.value, ast.Name) and entry.value.id == node.value.id):
+                        consumer = parents.get(entry)
+                        if not (isinstance(consumer, ast.Call) and consumer.func is entry or self.annotation(entry, parents)):
+                            return False
+                return not self.import_module("pathlib", path, cwd, action, roots=roots)
+            return False
+
+        def native_str(node):
+            return isinstance(node, ast.Name) and node.id == "str" and not self.proof_bindings("str", nodes)
+
+        def literal_path(value, base):
+            # pathlib does not expand shell or Actions anchors, nor does POSIX
+            # pathlib interpret backslashes as separators. Do not reuse those
+            # conveniences from shell resolution for Python path components.
+            if "\\" in value or any(character in value for character in "$`*?{}~"):
+                raise ValueError("unsupported source-path component")
+            return self.resolve(value, path=path, cwd=base, action=None, allow_root=True)
+
+        def resolve(node, stack=()):
+            if len(stack) > 8:
+                raise ValueError("source-path expansion limit exceeded")
+            if isinstance(node, ast.Constant) and isinstance(node.value, str) and len(node.value) <= MAX_LITERAL:
+                return literal_path(node.value, cwd), False
+            if isinstance(node, ast.Name):
+                if node.id == "__file__":
+                    return path, True
+                if node.id in stack:
+                    raise ValueError("recursive source-path binding")
+                bindings = self.proof_bindings(node.id, nodes)
+                if len(bindings) != 1 or not isinstance(bindings[0], ast.Name):
+                    raise ValueError("ambiguous source-path binding")
+                definition = parents.get(bindings[0])
+                if (not isinstance(definition, (ast.Assign, ast.AnnAssign)) or definition.value is None
+                        or not isinstance(parents.get(definition), ast.Module)
+                        or isinstance(definition, ast.Assign) and len(definition.targets) != 1
+                        or definition.lineno >= getattr(expression, "lineno", 0)):
+                    raise ValueError("unsupported source-path binding")
+                # The immutable path may be consumed, but not rebound via an
+                # attribute/subscript write through the selected name.
+                for entry in nodes:
+                    if isinstance(entry, (ast.Attribute, ast.Subscript)) and isinstance(entry.ctx, (ast.Store, ast.Del)):
+                        base = entry.value
+                        while isinstance(base, (ast.Attribute, ast.Subscript)):
+                            base = base.value
+                        if isinstance(base, ast.Name) and base.id == node.id:
+                            raise ValueError("mutated source-path binding")
+                return resolve(definition.value, (*stack, node.id))
+            if isinstance(node, ast.Call) and not node.keywords:
+                if len(node.args) == 1 and (factory(node.func) or native_str(node.func)):
+                    return resolve(node.args[0], stack)
+                if (not node.args and isinstance(node.func, ast.Attribute) and node.func.attr == "resolve"):
+                    value, anchored = resolve(node.func.value, stack)
+                    if anchored:
+                        if value in self.items and not self.regular(value):
+                            raise ValueError("unsafe resolved source-path component")
+                        return value, True
+            if isinstance(node, ast.Attribute) and node.attr == "parent":
+                value, anchored = resolve(node.value, stack)
+                if anchored and value != ".":
+                    return str(PurePosixPath(value).parent), True
+            if (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute) and node.value.attr == "parents"
+                    and isinstance(node.slice, ast.Constant) and type(node.slice.value) is int and 0 <= node.slice.value <= 8):
+                value, anchored = resolve(node.value.value, stack)
+                if anchored:
+                    for _ in range(node.slice.value + 1):
+                        if value == ".":
+                            raise ValueError("source path escapes module")
+                        value = str(PurePosixPath(value).parent)
+                    return value, True
+            if (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)
+                    and isinstance(node.right, ast.Constant) and isinstance(node.right.value, str)
+                    and len(node.right.value) <= MAX_LITERAL):
+                value, anchored = resolve(node.left, stack)
+                if anchored:
+                    return literal_path(node.right.value, value), True
+            raise ValueError("unresolved source-relative Python path")
+
+        value, anchored = resolve(expression)
+        if not anchored:
+            raise ValueError("Python path lacks a committed source anchor")
+        # Callers distinguish scripts from working/import directories and check
+        # the final component; literal_path already checked traversed prefixes.
+        return value
 
     def reflective(self, node, parents, names):
         """A process/import API reached other than by a direct call is unmodeled."""
@@ -2494,7 +2666,13 @@ class Discovery:
                     try:
                         option = ast.literal_eval(keyword.value)
                     except (ValueError, TypeError):
-                        raise DeliveryError("unresolved computed subprocess " + keyword.arg) from None
+                        try:
+                            if keyword.arg != "cwd":
+                                raise ValueError("not a source-relative directory")
+                            option = "$GITHUB_WORKSPACE/" + self.python_source_path(
+                                keyword.value, path, cwd, action, nodes, parents, roots=roots)
+                        except (ValueError, TypeError):
+                            raise DeliveryError("unresolved computed subprocess " + keyword.arg) from None
                     if keyword.arg == "cwd" and option is not None:
                         if not isinstance(option, str):
                             raise DeliveryError("unresolved subprocess cwd")
@@ -2572,7 +2750,35 @@ class Discovery:
                 else:
                     value = ast.literal_eval(first)
             except (ValueError, TypeError, SyntaxError):
-                raise DeliveryError("unresolved computed Python script invocation") from None
+                # A native immutable pathlib operand can name a tracked script
+                # without being a single Python string literal. Preserve its
+                # workspace anchor when the subprocess has a different cwd.
+                try:
+                    def operand(element):
+                        try:
+                            return ast.literal_eval(element)
+                        except (ValueError, TypeError):
+                            target = self.python_source_path(element, path, cwd, action, nodes, parents, roots=roots)
+                            if not self.regular(target) or self.script_format(target) not in SCRIPTS:
+                                raise ValueError("computed operand is not a committed script")
+                            return "$GITHUB_WORKSPACE/" + target
+
+                    if isinstance(first, (ast.List, ast.Tuple)):
+                        value = []
+                        for index, element in enumerate(first.elts):
+                            if index == 0 and "sys.executable" in names(ast.unparse(element)):
+                                if (not isinstance(element, ast.Attribute) or not isinstance(element.value, ast.Name)
+                                        or not self.proof_import(element.value.id, "sys", nodes, parents)):
+                                    raise ValueError("untrusted Python interpreter binding")
+                                value.append("python")
+                            else:
+                                value.append(operand(element))
+                    elif call == "runpy.run_path":
+                        value = operand(first)
+                    else:
+                        raise ValueError("unsupported computed invocation")
+                except (ValueError, TypeError, SyntaxError):
+                    raise DeliveryError("unresolved computed Python script invocation") from None
             if call == "runpy.run_module":
                 self.import_module(value, path, cwd, action, roots=roots, required=True, execute=True)
             elif call == "runpy.run_path":
