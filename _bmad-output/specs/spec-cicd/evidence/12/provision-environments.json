@@ -1,0 +1,384 @@
+{
+  "started_at": "2026-11-17T14:11:13.216319+00:00",
+  "phase": "environments",
+  "module": "Hexalith.AI.Tools",
+  "repository_id": 1221438803,
+  "administration_profile": "/home/administrator/.config/gh",
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "package_free": true,
+  "requests": [
+    {
+      "recorded_at": "2026-11-17T14:11:13.603458+00:00",
+      "method": "GET",
+      "endpoint": "user",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094,
+        "node_id": "MDQ6VXNlcjY3NzUwOTQ=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/6775094?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/jpiquot",
+        "html_url": "https://github.com/jpiquot",
+        "followers_url": "https://api.github.com/users/jpiquot/followers",
+        "following_url": "https://api.github.com/users/jpiquot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/jpiquot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/jpiquot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/jpiquot/subscriptions",
+        "organizations_url": "https://api.github.com/users/jpiquot/orgs",
+        "repos_url": "https://api.github.com/users/jpiquot/repos",
+        "events_url": "https://api.github.com/users/jpiquot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/jpiquot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false,
+        "name": "J\u00e9r\u00f4me Piquot",
+        "company": "Itaneo",
+        "blog": "https://www.itaneo.com",
+        "location": "France",
+        "email": "jpiquot@itaneo.com",
+        "hireable": null,
+        "bio": null,
+        "twitter_username": null,
+        "notification_email": "jpiquot@itaneo.com",
+        "public_repos": 11,
+        "public_gists": 5,
+        "followers": 7,
+        "following": 2,
+        "created_at": "2014-02-24T19:45:31Z",
+        "updated_at": "2026-09-20T20:39:25Z"
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:14.102219+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "id": 1221438803,
+        "node_id": "R_kgDOSM2tUw",
+        "name": "Hexalith.AI.Tools",
+        "full_name": "Hexalith/Hexalith.AI.Tools",
+        "private": false,
+        "owner": {
+          "login": "Hexalith",
+          "id": 80614290,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+          "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/Hexalith",
+          "html_url": "https://github.com/Hexalith",
+          "followers_url": "https://api.github.com/users/Hexalith/followers",
+          "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+          "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+          "repos_url": "https://api.github.com/users/Hexalith/repos",
+          "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "html_url": "https://github.com/Hexalith/Hexalith.AI.Tools",
+        "description": "Hexalith AI Tools (Plugin, skills, workflows, commands, job automation)",
+        "fork": false,
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools",
+        "forks_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/forks",
+        "keys_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/teams",
+        "hooks_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/hooks",
+        "issue_events_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/events",
+        "assignees_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/tags",
+        "blobs_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/languages",
+        "stargazers_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/stargazers",
+        "contributors_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/contributors",
+        "subscribers_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/subscribers",
+        "subscription_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/subscription",
+        "commits_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/issues/comments{/number}",
+        "contents_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/merges",
+        "archive_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/downloads",
+        "issues_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/labels{/name}",
+        "releases_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/releases{/id}",
+        "deployments_url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/deployments",
+        "created_at": "2026-04-26T07:52:08Z",
+        "updated_at": "2026-11-17T09:09:06Z",
+        "pushed_at": "2026-11-17T11:08:30Z",
+        "git_url": "git://github.com/Hexalith/Hexalith.AI.Tools.git",
+        "ssh_url": "git@github.com:Hexalith/Hexalith.AI.Tools.git",
+        "clone_url": "https://github.com/Hexalith/Hexalith.AI.Tools.git",
+        "svn_url": "https://github.com/Hexalith/Hexalith.AI.Tools",
+        "homepage": null,
+        "size": 175,
+        "stargazers_count": 0,
+        "watchers_count": 0,
+        "language": null,
+        "has_issues": true,
+        "has_projects": true,
+        "has_downloads": false,
+        "has_wiki": true,
+        "has_pages": false,
+        "has_discussions": false,
+        "forks_count": 0,
+        "mirror_url": null,
+        "archived": false,
+        "disabled": false,
+        "open_issues_count": 0,
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        },
+        "allow_forking": true,
+        "is_template": false,
+        "web_commit_signoff_required": false,
+        "has_pull_requests": true,
+        "pull_request_creation_policy": "all",
+        "topics": [],
+        "visibility": "public",
+        "forks": 0,
+        "open_issues": 0,
+        "watchers": 0,
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "temp_clone_token": "",
+        "allow_squash_merge": true,
+        "allow_merge_commit": true,
+        "allow_rebase_merge": true,
+        "allow_auto_merge": false,
+        "delete_branch_on_merge": false,
+        "allow_update_branch": false,
+        "use_squash_pr_title_as_default": false,
+        "squash_merge_commit_message": "COMMIT_MESSAGES",
+        "squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+        "merge_commit_message": "PR_TITLE",
+        "merge_commit_title": "MERGE_MESSAGE",
+        "custom_properties": {},
+        "organization": {
+          "login": "Hexalith",
+          "id": 80614290,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwNjE0Mjkw",
+          "avatar_url": "https://avatars.githubusercontent.com/u/80614290?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/Hexalith",
+          "html_url": "https://github.com/Hexalith",
+          "followers_url": "https://api.github.com/users/Hexalith/followers",
+          "following_url": "https://api.github.com/users/Hexalith/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Hexalith/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/Hexalith/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Hexalith/subscriptions",
+          "organizations_url": "https://api.github.com/users/Hexalith/orgs",
+          "repos_url": "https://api.github.com/users/Hexalith/repos",
+          "events_url": "https://api.github.com/users/Hexalith/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/Hexalith/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        },
+        "network_count": 0,
+        "subscribers_count": 0
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:14.498107+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "total_count": 0,
+        "environments": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:15.215577+00:00",
+      "method": "PUT",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release",
+      "input": {
+        "wait_timer": 0,
+        "reviewers": [],
+        "prevent_self_review": false,
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "id": 27599772904,
+        "node_id": "EN_kwDOSM2tU88AAAAGbRMc6A",
+        "name": "hexalith-release",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release",
+        "html_url": "https://github.com/Hexalith/Hexalith.AI.Tools/deployments/activity_log?environments_filter=hexalith-release",
+        "created_at": "2026-11-17T14:11:15Z",
+        "updated_at": "2026-11-17T14:11:15Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 72863961,
+            "node_id": "GA_kwDOSM2tU84EV9DZ",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:15.760685+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "id": 27599772904,
+        "node_id": "EN_kwDOSM2tU88AAAAGbRMc6A",
+        "name": "hexalith-release",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release",
+        "html_url": "https://github.com/Hexalith/Hexalith.AI.Tools/deployments/activity_log?environments_filter=hexalith-release",
+        "created_at": "2026-11-17T14:11:15Z",
+        "updated_at": "2026-11-17T14:11:15Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 72863961,
+            "node_id": "GA_kwDOSM2tU84EV9DZ",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        }
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:16.064670+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/deployment-branch-policies",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "total_count": 0,
+        "branch_policies": []
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:16.590444+00:00",
+      "method": "POST",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/deployment-branch-policies",
+      "input": {
+        "name": "main",
+        "type": "branch"
+      },
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "id": 67125905,
+        "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzEyNTkwNQ==",
+        "name": "main",
+        "type": "branch"
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:16.903666+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/deployment-branch-policies",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "total_count": 1,
+        "branch_policies": [
+          {
+            "id": 67125905,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzEyNTkwNQ==",
+            "name": "main",
+            "type": "branch"
+          }
+        ]
+      },
+      "error": ""
+    },
+    {
+      "recorded_at": "2026-11-17T14:11:17.212730+00:00",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/secrets",
+      "input": null,
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK",
+      "data": {
+        "total_count": 0,
+        "secrets": []
+      },
+      "error": ""
+    }
+  ],
+  "main_only_release_environment_verified": true,
+  "foreign_environments": [],
+  "zot_publishing_credentials": "omitted",
+  "completed_at": "2026-11-17T14:11:17.213162+00:00",
+  "result": "pass"
+}

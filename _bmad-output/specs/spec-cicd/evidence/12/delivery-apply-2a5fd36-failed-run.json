@@ -1,0 +1,61 @@
+{
+  "candidate_sha": "2a5fd369b26d7648fac26be81c4129d4ba33ef0a",
+  "event": "push",
+  "failed": true,
+  "failures": [],
+  "freshness": {
+    "status": "not-scheduled"
+  },
+  "global": true,
+  "modules": [
+    {
+      "accepted_sha": "2a5fd369b26d7648fac26be81c4129d4ba33ef0a",
+      "advancement": "advanced",
+      "application": "pushed",
+      "processed": true,
+      "pushed_sha": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+      "reasons": [],
+      "repository": "Hexalith.AI.Tools",
+      "retries": 0
+    },
+    {
+      "accepted_sha": "2a5fd369b26d7648fac26be81c4129d4ba33ef0a",
+      "advancement": "advanced",
+      "application": "pushed",
+      "processed": true,
+      "pushed_sha": "aa694ae3d43f1645f741ae0844987ca2e7e0d347",
+      "reasons": [],
+      "repository": "Hexalith.Commons",
+      "retries": 0
+    },
+    {
+      "accepted_sha": null,
+      "advancement": "failed",
+      "application": "no-ref",
+      "processed": true,
+      "pushed_sha": null,
+      "reasons": [
+        "Builds v6.2.0: GitHub API /repos/Hexalith/Hexalith.Builds/compare/0ccd12af6576a3aac601340dec7dba53e86768c3...e8b86ba3ae6e27c2d6cba536d6002ac8f3c5a921: HTTP 403"
+      ],
+      "repository": "Hexalith.Conversations",
+      "retries": 0
+    },
+    {
+      "accepted_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+      "advancement": "failed",
+      "application": "failed",
+      "processed": true,
+      "pushed_sha": null,
+      "reasons": [
+        "Builds v6.2.0: GitHub API /repos/Hexalith/Hexalith.Builds/releases/tags/v6.2.0: HTTP 403",
+        "application failed: Builds v6.1.0: GitHub API /repos/Hexalith/Hexalith.Builds/releases/tags/v6.1.0: HTTP 403"
+      ],
+      "repository": "Hexalith.PolymorphicSerializations",
+      "retries": 0
+    }
+  ],
+  "run_attempt": "1",
+  "run_id": "44068630104",
+  "schema": "hexalith.delivery.v1",
+  "tools_source_sha": "2a5fd369b26d7648fac26be81c4129d4ba33ef0a"
+}

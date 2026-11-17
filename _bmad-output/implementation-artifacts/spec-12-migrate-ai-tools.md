@@ -51,8 +51,8 @@ context:
 
 - [ ] `evidence/12/` — refresh revisions and pilot acceptance; verify/provision AD-21 in order: App selection, stale state, exact rulesets, main-only release environment, resolved publishing prerequisites, disabled default scans, exact publish switch, retention and grants. Record zero-history baseline.
 - [x] `ARCHITECTURE-SPINE.md` under the architecture planning folder — record the approved AI.Tools package-free applicability and preparation-check decisions beside AD-21 without extending either exception to other modules.
-- [ ] AI.Tools `package.json`, `package-lock.json` and guidance above — retire tool-only npm package metadata, use shared validation and align stale Update branch wording with canonical policy; preserve foreign content and the exact owned `commitlint.config.mjs` blob/mode for delivery-owned deletion. Qualify every edge case through existing checks and actual readbacks; apply the approved preparation proof before any push.
-- [ ] `setup/Hexalith.AI.Tools.yml`, `rendered/`, `references/Hexalith.AI.Tools` gitlink — register explicit `solution: none`, current prepared main and unchanged acceptable Builds pin; commit cause and render together, fully validate before pushing. Preserve other registrations.
+- [x] AI.Tools `package.json`, `package-lock.json` and guidance above — retire tool-only npm package metadata, use shared validation and align stale Update branch wording with canonical policy; preserve foreign content and the exact owned `commitlint.config.mjs` blob/mode for delivery-owned deletion. Qualify every edge case through existing checks and actual readbacks; apply the approved preparation proof before any push.
+- [x] `setup/Hexalith.AI.Tools.yml`, `rendered/`, `references/Hexalith.AI.Tools` gitlink — register explicit `solution: none`, current prepared main and unchanged acceptable Builds pin; commit cause and render together, fully validate before pushing. Preserve other registrations.
 - [ ] `evidence/12/` — authenticate accepted ref, App adoption commit, artifact and complete owned/foreign trees; immediately enable immutable releases and remove only applicable legacy policy/secret/key/Zot access. Record green CI, normal checker and next scheduled release/scan/delivery outcomes.
 
 **Acceptance Criteria:**
@@ -93,6 +93,35 @@ context:
   intact. Central policy/evidence, the published gitlink and the root snapshot
   are being qualified for main. Adoption registration remains excluded pending
   clarification of the approved pilot gate. See `evidence/12/publication.md`.
+- Current-main local resume, 2026-11-17: registration is already on shared
+  `main` `522d011e69f1cca91fe118808f9849c5fa076568` with explicit
+  `solution: none` and current `v6.2.0` render. Delivery later applied and
+  then bumped the module to `3a4a78d91b36849c4700e8bc9aae74a1b91f2fba`. The
+  committed gitlink still names `180ca5692637a018c3f5547daf657e2a90bd5288`
+  (`v6.1.0`); that snapshot fails the normal checker with authentic pin drift.
+  A standalone clone of the sibling-local `3a4a78d` object passes
+  `python3 references/Hexalith.Builds/check.py`. The gitlink was not updated
+  without an authenticated fetch. Story 11 acceptance and ordered AD-21 live
+  work remain incomplete. See
+  [`../specs/spec-cicd/evidence/12/resume-20261117.md`](../specs/spec-cicd/evidence/12/resume-20261117.md).
+- Authorized live resume, 2026-11-17: story 11 remains unaccepted (next genuine
+  night `2026-11-18T02:17:00Z`). Authenticated AI.Tools main is
+  `3a4a78d91b36849c4700e8bc9aae74a1b91f2fba`. App installation already includes
+  Hexalith.AI.Tools with selected-only scope. AD-21 package-free preconditions
+  were verified or created: exact rulesets, empty stale inventory, main-only
+  `hexalith-release` without Zot secrets, `HEXALITH_RELEASE_PUBLISH_ENABLED=true`,
+  disabled default scans, 90-day retention, and normal pull-secret/`HEXALITH_NUGET_USER`
+  grants. Digest-matched delivery `44040325762` pushed initial adoption
+  `180ca56`; run `44068630104` pushed `3a4a78d`. Owned/foreign trees match
+  accepted perimeter `2a5fd36`. Immutable releases are enabled; legacy org-secret
+  membership, repo secrets and deploy keys are no-ops. Local CiCd
+  `709a9b6ca40cf200271396a47522f710f612a4c1` records the gitlink on published
+  `main` (current tip `93eb23114d4ca41b92c3dccf21c8e1baa9c5870e`). Render
+  `--check` and authenticated `tools/validate.py` passed
+  (`global: true`, AI.Tools/Commons/Conversations/PolymorphicSerializations).
+  Hosted CI `44071290863` succeeded on adopted main. Authenticated standalone
+  `check.py` exits 0. The next genuine AI.Tools night is still pending. See
+  [`../specs/spec-cicd/evidence/12/live-refresh-20261117.json`](../specs/spec-cicd/evidence/12/live-refresh-20261117.json).
 
 ## Spec Change Log
 
@@ -115,6 +144,22 @@ context:
   satisfy the future pilot-night gate or claim adoption. Exact results and the
   remaining live sequence are in `evidence/12/resume-local.md` and
   `resume-local-check.json`; status and acceptance tasks remain unchanged.
+- Current-main resume, 2026-11-17: committed registration/render pass offline
+  committed-input/render, reproducibility, schema, caller and direct-submodule
+  checks on local `main` `522d011e69f1cca91fe118808f9849c5fa076568` at
+  `v6.2.0`. Existing renderer and validator suites pass 49 and 54 tests; four
+  released Builds tests cover empty inventory, first-release analysis,
+  nothing-to-release and `solution: none` guard enforcement. The committed
+  gitlink `180ca56` fails the standalone checker (v6.1.0 versus expected
+  v6.2.0); sibling-local `3a4a78d` passes. No remote operations, gitlink
+  update, adoption claim or checkbox change. Exact results are in
+  [`../specs/spec-cicd/evidence/12/resume-20261117.md`](../specs/spec-cicd/evidence/12/resume-20261117.md)
+  and `resume-20261117-check.json`.
+- Authorized live resume, 2026-11-17: AD-21 package-free provisioning, App
+  selection UI readback, delivery artifacts, tree comparison, immutable-release
+  enablement, legacy no-ops, hosted CI, and the authenticated standalone checker
+  are recorded under `evidence/12/`. Product-preparation and registration/gitlink
+  tasks are complete. Story 11 acceptance and the next genuine night remain open.
 
 ## Review Triage Log
 
@@ -144,6 +189,23 @@ context:
   CiCd's existing direct released Builds dependency; AI.Tools is not adopted.
 - Full `tools/validate.py`, online audits, fresh live release/settings readbacks
   and acceptance checks below are deferred by the no-remote-operations phase.
+- 2026-11-17 current-main results: `resume-20261117-check.json` records passing
+  committed registration checks on `522d011e69f1cca91fe118808f9849c5fa076568`
+  with released `v6.2.0` (`0ccd12af6576a3aac601340dec7dba53e86768c3`). Renderer
+  49, validator 54, and four Builds empty-inventory/no-release/guard tests
+  passed. The committed gitlink checker exits 1 on `180ca56`/`v6.1.0`; the
+  sibling-local `3a4a78d`/`v6.2.0` checker exits 0. Concurrent story 11 files
+  were excluded. Matrix machinery coverage from those passing suites: no-solution
+  empty inventory (`test_minimal_complete_defaults_and_exact_output_tree`,
+  `test_dependabot_exact_solution_policy`,
+  `test_solution_none_has_the_same_guard_enforcement`); refused/missing API
+  (`test_http_reader_bounds_get_and_rejects_auth_errors_malformed_and_oversized_json`,
+  `test_unavailable_missing_and_malformed_api_never_certify_release`);
+  empty-package first release (`test_none_payload_does_not_execute_sdk_or_submodules`,
+  `test_first_release_analyzes_full_history_and_is_exactly_one`); authentic
+  nothing-to-release (`test_no_version_tagless_or_at_base_has_explicit_noop`).
+  Live AD-21, full validate, authenticated adoption trees, hosted CI and the
+  next genuine AI.Tools night remain pending.
 
 - `run-with-temp uv run --locked --script tools/render.py --check` — reproducible output after generation.
 - `run-with-temp uv run --locked --script tools/validate.py` — complete committed/global/live-module verdict; supply intended read-only authentication privately.

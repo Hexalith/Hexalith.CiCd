@@ -1,0 +1,215 @@
+{
+  "started_at": "2026-11-17T13:05:41.467424+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "module_token_override_present": false,
+  "manual_dispatch_or_rerun": false,
+  "nested_submodule_initialization": false,
+  "builds_tag": "v6.2.0",
+  "builds_sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+  "branch": "fix/commons-package-hook-discovery",
+  "allowed_paths": [
+    ".github/actions/after-unit-tests/action.yml",
+    "scripts/pack-release-packages.py",
+    "scripts/validate-consumer-package-references.py"
+  ],
+  "operations": [
+    {
+      "command": [
+        "git",
+        "fetch",
+        "--no-recurse-submodules",
+        "origin",
+        "main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "From https://github.com/Hexalith/Hexalith.Commons\n * branch            main       -> FETCH_HEAD\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "aa694ae3d43f1645f741ae0844987ca2e7e0d347\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "v6.2.0^{commit}"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "0ccd12af6576a3aac601340dec7dba53e86768c3\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "ls-tree",
+        "aa694ae3d43f1645f741ae0844987ca2e7e0d347",
+        "references/Hexalith.Builds"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "160000 commit 0ccd12af6576a3aac601340dec7dba53e86768c3\treferences/Hexalith.Builds\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "-b",
+        "fix/commons-package-hook-discovery",
+        "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/product",
+        "aa694ae3d43f1645f741ae0844987ca2e7e0d347"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "exit": 0,
+      "stdout": "HEAD is now at aa694ae build(cicd): apply 2a5fd369b26d7648fac26be81c4129d4ba33ef0a from Hexalith.CiCd\n",
+      "stderr": "Preparing worktree (new branch 'fix/commons-package-hook-discovery')\n"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "scheduled-20261117-commons-scan-fix.diff"
+      ],
+      "cwd": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/product",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only",
+        "-z"
+      ],
+      "cwd": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/product",
+      "exit": 0,
+      "stdout": ".github/actions/after-unit-tests/action.yml\u0000scripts/pack-release-packages.py\u0000scripts/validate-consumer-package-references.py\u0000",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        ".github/actions/after-unit-tests/action.yml",
+        "scripts/pack-release-packages.py",
+        "scripts/validate-consumer-package-references.py"
+      ],
+      "cwd": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/product",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "cwd": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/product",
+      "exit": 0,
+      "stdout": ".github/actions/after-unit-tests/action.yml\nscripts/pack-release-packages.py\nscripts/validate-consumer-package-references.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/builds-tools",
+        "0ccd12af6576a3aac601340dec7dba53e86768c3"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "exit": 0,
+      "stdout": "HEAD is now at 0ccd12af feat(workspace): support isolated managed build declarations\n",
+      "stderr": "Preparing worktree (detached HEAD 0ccd12af)\n"
+    }
+  ],
+  "push_attempted": false,
+  "result": "pending",
+  "original_nested_paths_before": {
+    "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons/references/Hexalith.Builds",
+    "exists": true,
+    "contents": []
+  },
+  "base": "aa694ae3d43f1645f741ae0844987ca2e7e0d347",
+  "base_hexalith_ci": {
+    "buildsTag": "v6.2.0",
+    "hooks": [
+      "after-unit-tests"
+    ]
+  },
+  "base_file_digests": {
+    ".github/actions/after-unit-tests/action.yml": {
+      "sha256": "a41e4f2249789fd4758dcda881d77b08fec0606a4a684d25b2576f382aaaf7c4",
+      "bytes": 598
+    },
+    "scripts/pack-release-packages.py": {
+      "sha256": "a49c7000e870c3587a927d6bb981e1f0a31effdd00c7927ef31cc273179389b8",
+      "bytes": 3297
+    },
+    "scripts/validate-consumer-package-references.py": {
+      "sha256": "a966afe51e75f3c807e13e84fb9543981bcd874eb74f345ad0f393980f9a712d",
+      "bytes": 6367
+    },
+    "scripts/validate-nuget-packages.py": {
+      "sha256": "4efd5dbce2a1f71c59c01992904d8c7118600e2e0958092cdc4806ec9ed9adc8",
+      "bytes": 5159
+    }
+  },
+  "base_discovery": {
+    "errors": [
+      ".github/actions/after-unit-tests/action.yml:10: local-script discovery: unresolved computed operand of unknown command: rm",
+      ".github/actions/after-unit-tests/action.yml:9: local-script discovery: unsupported shell command substitution",
+      "scripts/pack-release-packages.py:47: local-script discovery: unresolved computed subprocess env",
+      "scripts/validate-consumer-package-references.py:159: local-script discovery: unresolved computed subprocess cwd"
+    ],
+    "files": [
+      ".github/actions/after-unit-tests/action.yml",
+      "scripts/pack-release-packages.py",
+      "scripts/validate-consumer-package-references.py",
+      "scripts/validate-nuget-packages.py"
+    ]
+  },
+  "commitlint": {
+    "exit": 1,
+    "log": "land-commons-scan-fix-commitlint.log",
+    "config": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/builds-tools/Github/guard/commitlint.config.mjs",
+    "cli": "@commitlint/cli from released v6.2.0 guard tools"
+  },
+  "worktree_cleanup": [
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "path": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/builds-tools",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "repository": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "path": "/tmp/hexalith-job.KsoZxO4v/commons-scan-fix/product",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "original_nested_paths_after": {
+    "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons/references/Hexalith.Builds",
+    "exists": true,
+    "contents": []
+  },
+  "completed_at": "2026-11-17T13:05:48.133648+00:00",
+  "all_temporary_worktree_metadata_removed": true
+}

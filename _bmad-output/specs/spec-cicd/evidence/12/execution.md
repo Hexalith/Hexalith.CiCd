@@ -1,3 +1,23 @@
+# Current-main local resume — 2026-11-17
+
+Historical isolated worktrees `cicd-story-12` and `cicd-story-12-resume` are
+no longer present. This resume uses the shared CiCd checkout
+`/home/administrator/projects/hexalith/cicd` on committed `main`
+`522d011e69f1cca91fe118808f9849c5fa076568`. Preserve its untracked story 11
+files, the existing story 11 observer, and every unrelated submodule. Do not
+stage, reset or edit those files.
+
+Continue step 03 locally with its existing no-remote-operations restriction.
+Use current committed sources and the exact released Builds tag named by
+`builds-version` for verification; never copy a dirty shared Builds working
+tree. A local clone of its Git object store is permitted, as is reading
+already-present sibling AI.Tools objects. Tool downloads required for
+verification remain permitted. Retain the original `baseline_commit` and
+frozen intent. Do not fetch, push, provision, dispatch, or update the module
+gitlink without an authenticated remote-main readback.
+
+The historical isolated-resume and original execution handoff follow.
+
 # Isolated resume — 2026-11-16
 
 The human explicitly approved resuming story 12 in an isolated worktree while

@@ -1,0 +1,47 @@
+guard: ".github/hexalith-ci.json" [whole]: content
+guard: --- actual/.github/hexalith-ci.json
+guard: +++ expected/.github/hexalith-ci.json
+guard: @@ -1,7 +1,7 @@
+guard:  {
+guard:    "browsers": false,
+guard:    "buildProjects": [],
+guard: -  "buildsTag": "v6.1.0",
+guard: +  "buildsTag": "v6.2.0",
+guard:    "ciTimeoutMinutes": 30,
+guard:    "codeql": [],
+guard:    "dapr": false,
+guard: ".github/workflows/ci.yml" [whole-dir]: content
+guard: --- actual/.github/workflows/ci.yml
+guard: +++ expected/.github/workflows/ci.yml
+guard: @@ -11,7 +11,7 @@
+guard:    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+guard:  jobs:
+guard:    ci:
+guard: -    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.1.0"
+guard: +    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.2.0"
+guard:      permissions: {"actions": "write", "contents": "write"}
+guard:      with:
+guard:        job-timeout-minutes: 30
+guard: ".github/workflows/release.yml" [whole-dir]: content
+guard: --- actual/.github/workflows/release.yml
+guard: +++ expected/.github/workflows/release.yml
+guard: @@ -14,7 +14,7 @@
+guard:    cancel-in-progress: false
+guard:  jobs:
+guard:    release:
+guard: -    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.1.0"
+guard: +    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.2.0"
+guard:      permissions:
+guard:        contents: write
+guard:        actions: read
+guard: @@ -34,7 +34,7 @@
+guard:        actions: read
+guard:        id-token: write
+guard:      steps:
+guard: -      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.1.0"
+guard: +      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.2.0"
+guard:          with:
+guard:            publish: ${{ needs.release.outputs.publish }}
+guard:            version: ${{ needs.release.outputs.version }}
+guard: "references/Hexalith.Builds" [gitlink]: gitlink (actual 160000 a1e0c310b1f1a50d78e6132890fae6bcba769f6d, expected 160000 0ccd12af6576a3aac601340dec7dba53e86768c3 from v6.2.0)
+CI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline.

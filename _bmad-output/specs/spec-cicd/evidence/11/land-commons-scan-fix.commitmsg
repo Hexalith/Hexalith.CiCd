@@ -1,0 +1,6 @@
+fix: make package-hook scripts statically discoverable
+
+Replace mktemp/rm command substitution and computed subprocess env/cwd
+so the nightly local-script scan can certify the package hook without
+changing the twelve-package pack, payload/symbol checks, or isolated
+consumer caches.

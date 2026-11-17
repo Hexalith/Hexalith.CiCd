@@ -73,7 +73,31 @@ context:
 
 ## Implementation Notes
 
-- Current resume checkpoint, 2026-11-17 12:50 UTC: the genuine scheduled
+- Current resume checkpoint, 2026-11-17 13:18 UTC: a read-only CiCd-agent
+  observer is sleeping until `2026-11-18T02:16:00Z`, then will bind the
+  earliest genuine `nightly.yml` schedule event on main at/after
+  `2026-11-18T02:17:00Z` attempt 1. Manual dispatch/rerun remains forbidden.
+  A systemd backup is armed at 02:20/11:00/16:00 UTC and cannot take the
+  flock while this observer holds it. Authentication uses
+  `authenticate-scheduled-20261118.py` after the parent is terminal. The last
+  execution task stays unchecked and story 11 stays open.
+- Prior resume checkpoint, 2026-11-17 13:10 UTC: the Commons package-hook
+  discovery fix is on live main as `d551e5f3b67653b8793f86afedab355c8a3821da`,
+  sole parent `aa694ae3d43f1645f741ae0844987ca2e7e0d347` (the 17 Nov scan
+  head). The exact spec diff was applied from freshly fetched origin/main;
+  owned workflows/config/gitlink/instruction bytes were unchanged. Released
+  `v6.2.0` commitlint accepted the message. `python3 references/Hexalith.Builds/check.py`
+  exited 0 in a standalone job root with the committed gitlink worktree
+  (`0ccd12af6576a3aac601340dec7dba53e86768c3`). All eight C# suites passed
+  (9+16+16+9+21+14+70+202=357, zero skipped). The rewritten pack/validate/
+  consumer scripts produced twelve payload/symbol pairs and a successful
+  isolated consumer. Local-script discovery on that head reports zero errors
+  and the same four selected files. Protected-token fast-forward push to
+  `main` was confirmed; GitHub CI `44089607938` attempt 1 succeeded on that
+  exact source, including the live hook lines. Poly needed no product change.
+  Conversations discovery remains out of scope. Manual dispatch/rerun remains
+  forbidden. Story 11 stays open for the genuine 2026-11-18 02:17 UTC night.
+- Prior resume checkpoint, 2026-11-17 12:50 UTC: the genuine scheduled
   parent is authenticated as run `44067556763`, event `schedule`, attempt 1,
   source `639d8a7032108bbc7eb1f0e054c4ee55b6f87f90` (descendant of diagnostic
   fix `d04c9ab7` and final pilot policy `3427f041`). GitHub started it at
@@ -556,12 +580,24 @@ Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
   `43889937298` report, hourly delivery `44072144087`, and
   `scheduled-20261117-commons-scan-{discovery.json,fix.diff}`: genuine
   delayed schedule parent, barrier-blocked dispatch, authenticated bump
-  no-change and keepalive pass, Commons discovery reproduction, and an
-  unpushed local hook/script fix that clears those four discovery errors.
+  no-change and keepalive pass, Commons discovery reproduction, and the
+  then-unpushed local hook/script fix that cleared those four discovery errors.
+- `nightly-continuation-20261118-schedule.json` and
+  `run-nightly-continuation-20261118.py`: armed read-only observer/authenticator
+  for the genuine 2026-11-18 02:17 UTC night. No dispatch is configured.
+- `land-commons-scan-fix.{py,json,log,commitmsg}`, `land-commons-scan-fix-commitlint.log`,
+  `land-commons-scan-fix-attempt-1.json`, `land-commons-scan-fix-ci.json` and
+  `land-commons-scan-fix-ci-proof.json`: check.py-qualified land of Commons
+  `d551e5f3` from night main `aa694ae3`, zero remaining Commons discovery
+  errors with an unchanged selected file set, 357 C# tests, twelve
+  payload/symbol pairs, isolated consumer, confirmed protected-token main
+  push, and GitHub CI `44089607938` success. Attempt 1 stopped before commit
+  when `--edit` commitlint was run outside the module worktree; no push
+  occurred. Nested Builds paths stayed empty; temporary worktrees were removed.
 
 Remaining verification for checkpoint acceptance:
 
 - Delivery compatibility, shared publication regressions, both full pre-adoption proof sets and both exact post-adoption normal checkers pass with saved logs. No module workflow-text assertions were added.
 - The initial committed/global/live-module gate, real adoption artifacts, immediate settings/credential cleanup, green adopted-main CI and all restricted-token outcomes/cleanup are complete. Candidate `3427f041` passed its full locked gate and actual redelivery, with authenticated tree/foreign-content and final green-main CI proof. Original module workspaces are intentionally synced and clean; CiCd's staged entries remain preserved.
 - Genuine 2026-11-17 scheduled parent `44067556763` is authenticated and failed: delivery barrier timeout, no pilot/Builds dispatch, Commons scan discovery errors, Conversations sibling scan errors. Builds bump no-change and keepalive passed. See `scheduled-20261117-{run,authentication,diagnosis,commons-scan-discovery}.json`. Manual dispatch cannot replace it.
-- Remaining before acceptance: land a check.py-qualified Commons hook/script discovery fix; leave Conversations to its owning story; wait for the next genuine scheduled night (2026-11-18 02:17 UTC) that actually dispatches both pilots and Builds; prove CodeQL upload, SARIF processing and the processed-findings gate from those release jobs. Direct analysis inventories remain 403 under CiCd-agent.
+- The Commons hook/script discovery fix is landed and check.py-qualified on live main `d551e5f3`; GitHub CI `44089607938` passed. Leave Conversations to its owning story. Wait for the next genuine scheduled night (2026-11-18 02:17 UTC) that actually dispatches both pilots and Builds; prove CodeQL upload, SARIF processing and the processed-findings gate from those release jobs. Direct analysis inventories remain 403 under CiCd-agent. A sibling Conversations discovery failure would still fail the shared scan job. The 30-minute delivery barrier remains fail-closed if hourly `deliver.yml` overlaps that night.

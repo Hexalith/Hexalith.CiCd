@@ -1,0 +1,144 @@
+{
+  "started_at": "2026-11-17T13:58:52.910212+00:00",
+  "scope": "offline committed-current-main registration and local adopted-snapshot checker",
+  "repository_remote_operations": false,
+  "tool_downloads": "released integrity-locked tools; permitted by execution.md",
+  "push_performed": false,
+  "adoption_claimed": false,
+  "story_accepted": false,
+  "checks": {
+    "concurrent_untracked_story11_files_excluded": "pass",
+    "committed_render_inputs": "pass",
+    "committed_render": "pass",
+    "render_reproducibility": "pass",
+    "schemas_and_caller_interfaces": "pass",
+    "sibling_registrations_preserved": "pass",
+    "direct_submodule_declaration": "pass",
+    "explicit_no_solution_empty_inventory_configuration": "pass",
+    "published_preparation_and_delivery_owned_deletion": "pass",
+    "sibling_local_scan_head_matches_current_render_pin": "pass",
+    "standalone_checker_committed_gitlink_snapshot": {
+      "exit": 1,
+      "log": "resume-20261117-checker-stale-gitlink.txt",
+      "job_head": "180ca5692637a018c3f5547daf657e2a90bd5288",
+      "builds_tag": "v6.1.0",
+      "builds_sha": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+      "origin_main": "CiCd gitlink snapshot HEAD; not a fresh remote readback"
+    },
+    "standalone_normal_checker": {
+      "exit": 0,
+      "log": "resume-20261117-checker.txt",
+      "job_head": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+      "builds_tag": "v6.2.0",
+      "builds_sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+      "origin_main": "sibling local origin/main object; not a fresh authenticated fetch"
+    },
+    "committed_gitlink_lags_sibling_local_scan_head": "recorded; gitlink not updated without authenticated fetch",
+    "existing_render_suite": {
+      "exit": 0,
+      "tests": 49,
+      "log": "resume-20261117-render.txt"
+    },
+    "existing_validate_suite": {
+      "exit": 0,
+      "tests": 54,
+      "log": "resume-20261117-validate.txt"
+    },
+    "released_builds_empty_inventory_and_no_release_tests": {
+      "exit": 0,
+      "tests": [
+        "test_release_build.BuildTests.test_none_payload_does_not_execute_sdk_or_submodules",
+        "test_release_version.ReleaseVersionTests.test_no_version_tagless_or_at_base_has_explicit_noop",
+        "test_release_version.ReleaseVersionTests.test_first_release_analyzes_full_history_and_is_exactly_one",
+        "test_guard.GuardTests.test_solution_none_has_the_same_guard_enforcement"
+      ],
+      "log": "resume-20261117-builds-matrix.txt"
+    }
+  },
+  "source_worktree": "/home/administrator/projects/hexalith/cicd",
+  "source_worktree_head": "522d011e69f1cca91fe118808f9849c5fa076568",
+  "observed_local_main": "522d011e69f1cca91fe118808f9849c5fa076568",
+  "observed_local_origin_main": "522d011e69f1cca91fe118808f9849c5fa076568",
+  "original_nested_builds_before": {
+    "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.AI.Tools/references/Hexalith.Builds",
+    "exists": true,
+    "contents": []
+  },
+  "sibling_nested_builds_before": {
+    "path": "/home/administrator/projects/hexalith/conversations/references/Hexalith.AI.Tools/references/Hexalith.Builds",
+    "exists": true,
+    "contents": []
+  },
+  "builds_tag": "v6.2.0",
+  "builds_source": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+  "builds_tagged": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+  "registration_names": [
+    "Hexalith.AI.Tools",
+    "Hexalith.Commons",
+    "Hexalith.Conversations",
+    "Hexalith.PolymorphicSerializations"
+  ],
+  "recorded_module_gitlink": "160000 commit 180ca5692637a018c3f5547daf657e2a90bd5288\treferences/Hexalith.AI.Tools",
+  "local_module_head": "180ca5692637a018c3f5547daf657e2a90bd5288",
+  "local_module_origin_main": "180ca5692637a018c3f5547daf657e2a90bd5288",
+  "local_origin_main_is_authenticated_remote": false,
+  "local_module_builds_tag": "v6.1.0",
+  "local_module_builds_gitlink": "160000 commit a1e0c310b1f1a50d78e6132890fae6bcba769f6d\treferences/Hexalith.Builds",
+  "rendered_versus_local_module_pin": {
+    "rendered_builds_tag": "v6.2.0",
+    "local_module_builds_tag": "v6.1.0",
+    "classification": "local snapshot observation; not a fresh remote delivery readback"
+  },
+  "cicd_gitlink_head": "180ca5692637a018c3f5547daf657e2a90bd5288",
+  "sibling_module_source": "/home/administrator/projects/hexalith/conversations/references/Hexalith.AI.Tools",
+  "sibling_scan_head": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+  "sibling_scan_builds_tag": "v6.2.0",
+  "sibling_scan_builds_gitlink": "160000 commit 0ccd12af6576a3aac601340dec7dba53e86768c3\treferences/Hexalith.Builds",
+  "result": "pass",
+  "candidate_head": "522d011e69f1cca91fe118808f9849c5fa076568",
+  "registration_paths": {
+    "setup/Hexalith.AI.Tools.yml": {
+      "sha256": "7b79bc161cf9807b717a8cedc999acfd0eb2f4224d1c860943f4e67a6daa4f43",
+      "git_mode": "100644"
+    },
+    "rendered/Hexalith.AI.Tools.perimeter.json": {
+      "sha256": "e1b961e9f4a6fdee1ec58e92bbdea7053aa7445f91e2e9802267baf00f216c67",
+      "git_mode": "100644"
+    },
+    "rendered/Hexalith.AI.Tools/.github/dependabot.yml": {
+      "sha256": "543cd33f42ef0dabaab9d6c700376a31636e9600e39e8d47f20b30b54357cd5b",
+      "git_mode": "100644"
+    },
+    "rendered/Hexalith.AI.Tools/.github/hexalith-ci.json": {
+      "sha256": "c2839dd5bebb84fbab60fab019175955f8564cc539168f7e0249bd8594965ee8",
+      "git_mode": "100644"
+    },
+    "rendered/Hexalith.AI.Tools/.github/workflows/ci.yml": {
+      "sha256": "f947846f952a624c6ce613cfb2fa434d052fc7a765c50e35efedc32448fd26be",
+      "git_mode": "100644"
+    },
+    "rendered/Hexalith.AI.Tools/.github/workflows/release.yml": {
+      "sha256": "18f3c5a5a011bea725e19f9a43d1b5985f7077af5aab10204ad51336caf43aa8",
+      "git_mode": "100644"
+    }
+  },
+  "pending": [
+    "fresh authenticated remote-main and immutable-release readbacks",
+    "story 11 genuine scheduled-night checkpoint and acceptance",
+    "ordered AD-21 live preconditions including main/v* rulesets",
+    "full committed/global/live-module tools/validate.py verdict",
+    "authenticated App adoption commit, owned/foreign tree and green hosted CI",
+    "next genuine adopted-module scheduled release/scan/delivery outcomes"
+  ],
+  "original_nested_builds_after": {
+    "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.AI.Tools/references/Hexalith.Builds",
+    "exists": true,
+    "contents": []
+  },
+  "sibling_nested_builds_after": {
+    "path": "/home/administrator/projects/hexalith/conversations/references/Hexalith.AI.Tools/references/Hexalith.Builds",
+    "exists": true,
+    "contents": []
+  },
+  "completed_at": "2026-11-17T14:00:26.443422+00:00"
+}

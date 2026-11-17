@@ -1,0 +1,792 @@
+{
+  "observed_at": "2026-11-17T14:07:47.762935+00:00",
+  "phase": "authorized live refresh; no mutations",
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "administration_profile": "/home/administrator/.config/gh",
+  "module_profile": "/home/administrator/.config/gh-module-agent",
+  "token_overrides": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "local": {
+    "cicd_head": "522d011e69f1cca91fe118808f9849c5fa076568",
+    "cicd_origin_main": "522d011e69f1cca91fe118808f9849c5fa076568",
+    "ai_tools_gitlink": "160000 commit 180ca5692637a018c3f5547daf657e2a90bd5288\treferences/Hexalith.AI.Tools",
+    "story11_observer": {
+      "result": "waiting; not accepted",
+      "night_start": "2026-11-18T02:17:00Z",
+      "sleeping_until": "2026-11-18T02:16:00Z",
+      "heartbeat_at": "2026-11-17T13:48:48.504459+00:00",
+      "manual_dispatch_or_rerun": false
+    }
+  },
+  "repository_id": 1221438803,
+  "requests": [
+    {
+      "observed_at": "2026-11-17T14:07:36.391350+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "user",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:36.927714+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "repo",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "id": 1221438803,
+        "full_name": "Hexalith/Hexalith.AI.Tools",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:37.411720+00:00",
+      "profile": "/home/administrator/.config/gh-module-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/git/ref/heads/main",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-github-permissions": "contents=read"
+      },
+      "data": {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDOSM2tU69yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/refs/heads/main",
+        "object": {
+          "sha": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/git/commits/3a4a78d91b36849c4700e8bc9aae74a1b91f2fba"
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:37.821757+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/rulesets?includes_parents=true",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "repo",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": [
+        {
+          "id": 27440691,
+          "name": "Protect main",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.AI.Tools",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5Iza1TzgGitjM",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/rulesets/27440691"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.AI.Tools/rules/27440691"
+            }
+          },
+          "created_at": "2026-11-17T08:51:47.898+01:00",
+          "updated_at": "2026-11-17T08:51:47.925+01:00"
+        },
+        {
+          "id": 27440693,
+          "name": "v tags",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.AI.Tools",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5Iza1TzgGitjU",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.AI.Tools/rulesets/27440693"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.AI.Tools/rules/27440693"
+            }
+          },
+          "created_at": "2026-11-17T08:51:48.784+01:00",
+          "updated_at": "2026-11-17T08:51:48.802+01:00"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:38.287312+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 0,
+        "environments": []
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:38.785657+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/variables",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 0,
+        "variables": []
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:39.173433+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "exit_code": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/actions/variables#get-a-repository-variable",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "observed_at": "2026-11-17T14:07:39.610933+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/permissions/artifact-and-log-retention",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:40.271473+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/code-scanning/default-setup",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:40.586161+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/automated-security-fixes",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "repo",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "enabled": false,
+        "paused": false
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:40.921741+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/immutable-releases",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "repo",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:41.342642+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/releases?per_page=100",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "repo",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": [],
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:41.822876+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/tags?per_page=100",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": [],
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:42.193531+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/workflows",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 2,
+        "workflows": [
+          {
+            "id": 421071521,
+            "name": "CI",
+            "path": ".github/workflows/ci.yml",
+            "state": "active"
+          },
+          {
+            "id": 421071524,
+            "name": "Release",
+            "path": ".github/workflows/release.yml",
+            "state": "active"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:42.750912+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/runs?per_page=100",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 2,
+        "runs": [
+          {
+            "id": 44071290863,
+            "head_sha": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "path": ".github/workflows/ci.yml",
+            "html_url": "https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/44071290863",
+            "created_at": "2026-11-17T11:08:33Z"
+          },
+          {
+            "id": 44044285612,
+            "head_sha": "180ca5692637a018c3f5547daf657e2a90bd5288",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "path": ".github/workflows/ci.yml",
+            "html_url": "https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/44044285612",
+            "created_at": "2026-11-17T08:09:08Z"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:43.230085+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/code-scanning/analyses?tool_name=CodeQL&per_page=100",
+      "exit_code": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "message": "no analysis found",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+        "status": "404"
+      },
+      "stderr": "gh: no analysis found (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook"
+    },
+    {
+      "observed_at": "2026-11-17T14:07:43.590812+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit_code": 1,
+      "status": "HTTP/2.0 403 Forbidden",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "read:user, user",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "stderr": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "observed_at": "2026-11-17T14:07:43.948603+00:00",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/main",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-github-permissions": "contents=read"
+      },
+      "data": {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDOUjhxY69yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/refs/heads/main",
+        "object": {
+          "sha": "522d011e69f1cca91fe118808f9849c5fa076568",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/commits/522d011e69f1cca91fe118808f9849c5fa076568"
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:44.326964+00:00",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.AI.Tools",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-github-permissions": "contents=read"
+      },
+      "data": {
+        "ref": "refs/heads/delivered/Hexalith.AI.Tools",
+        "node_id": "REF_kwDOUjhxY9oAJnJlZnMvaGVhZHMvZGVsaXZlcmVkL0hleGFsaXRoLkFJLlRvb2xz",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/refs/heads/delivered/Hexalith.AI.Tools",
+        "object": {
+          "sha": "522d011e69f1cca91fe118808f9849c5fa076568",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/git/commits/522d011e69f1cca91fe118808f9849c5fa076568"
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:44.753905+00:00",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v6.2.0",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-github-permissions": "contents=read"
+      },
+      "data": {
+        "id": 448199237,
+        "tag_name": "v6.2.0",
+        "draft": false,
+        "prerelease": false,
+        "immutable": true,
+        "author": {
+          "login": "github-actions[bot]",
+          "id": 41898282,
+          "node_id": "MDM6Qm90NDE4OTgyODI=",
+          "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github-actions%5Bbot%5D",
+          "html_url": "https://github.com/apps/github-actions",
+          "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
+          "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
+          "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
+          "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
+          "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
+          "type": "Bot",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "published_at": "2026-11-17T05:58:54Z",
+        "target_commitish": "0ccd12af6576a3aac601340dec7dba53e86768c3"
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:45.167555+00:00",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/tags/v6.2.0",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-github-permissions": "contents=read"
+      },
+      "data": {
+        "ref": "refs/tags/v6.2.0",
+        "node_id": "REF_kwDOOMzNRbByZWZzL3RhZ3MvdjYuMi4w",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/refs/tags/v6.2.0",
+        "object": {
+          "sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/0ccd12af6576a3aac601340dec7dba53e86768c3"
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:45.551283+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:org",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:45.891238+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:org",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:46.206860+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:org",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:46.535127+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:org",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:46.834555+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "exit_code": 0,
+      "status": "HTTP/2.0 200 OK",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "admin:org",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "total_count": 6,
+        "repositories": [
+          {
+            "id": 952945989,
+            "full_name": "Hexalith/Hexalith.Builds"
+          },
+          {
+            "id": 952960148,
+            "full_name": "Hexalith/Hexalith.Commons"
+          },
+          {
+            "id": 1231551514,
+            "full_name": "Hexalith/Hexalith.Conversations"
+          },
+          {
+            "id": 1379417482,
+            "full_name": "Hexalith/Hexalith.McpCli"
+          },
+          {
+            "id": 957156862,
+            "full_name": "Hexalith/Hexalith.PolymorphicSerializations"
+          },
+          {
+            "id": 1174267565,
+            "full_name": "Hexalith/Hexalith.Tenants"
+          }
+        ]
+      },
+      "stderr": ""
+    },
+    {
+      "observed_at": "2026-11-17T14:07:47.198035+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release",
+      "exit_code": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/deployments/environments#get-an-environment",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "observed_at": "2026-11-17T14:07:47.535260+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/deployment-branch-policies",
+      "exit_code": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/deployments/branch-policies#list-deployment-branch-policies",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "observed_at": "2026-11-17T14:07:47.762909+00:00",
+      "profile": "/home/administrator/.config/gh",
+      "method": "GET",
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/secrets",
+      "exit_code": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": {
+        "x-accepted-oauth-scopes": "repo",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow"
+      },
+      "data": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/reference/actions#list-environment-secrets",
+        "status": "404"
+      },
+      "stderr": "gh: Not Found (HTTP 404)"
+    }
+  ]
+}
