@@ -782,6 +782,29 @@ class PrerequisiteDeliveryTests(unittest.TestCase):
         with self.assertRaises(rt.DeliveryError):
             delivery.fetch_public("https://arbitrary.invalid/package.nupkg")
 
+    def test_projects_policy_round_trip_uses_only_two_fixed_paths_without_public_prerequisites(self):
+        w = self.workspace("projects-prerequisite-policy")
+        self.assertEqual(w.config["paths"], ("tests/tools/run-ci-workflow-gates.ps1", "tests/tools/test_run_ci_workflow_gates.py"))
+        w.public_bodies = {}
+        q = w.run()
+        self.assertEqual(q["status"], "qualified", q)
+        result = w.deliver(q)
+        self.assertEqual(result["status"], "delivered", result)
+        self.assertEqual(w.public_reads, [])
+        changed = {path for path in w.before.keys() | w.after.keys() if w.before.get(path) != w.after.get(path)}
+        self.assertEqual(changed, set(w.config["paths"]))
+
+    def test_projects_policy_refuses_extra_path_even_with_bound_patch_and_result_tree(self):
+        w = self.workspace("projects-prerequisite-policy")
+        (w.product / "foreign.txt").write_bytes(b"forbidden policy extension\n")
+        git(w.product, "add", "foreign.txt")
+        w.patch = git(w.product, "diff", "--cached", "--binary", "--full-index", w.base, raw=True)
+        w.value["patch_sha256"] = delivery.digest(w.patch)
+        w.value["result_tree"] = git(w.product, "write-tree")
+        w.write_proof()
+        w.commit_owner()
+        self.refused(w.run(), "exact prerequisite perimeter", w)
+
 
 if __name__ == "__main__":
     if sys.argv[1:2] == ["transport-driver"]:

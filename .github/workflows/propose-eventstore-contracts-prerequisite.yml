@@ -1,0 +1,158 @@
+name: Propose reviewed EventStore Contracts prerequisite
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: propose-eventstore-contracts-prerequisite
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: ${{ github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && github.workflow_ref == 'Hexalith/Hexalith.CiCd/.github/workflows/propose-eventstore-contracts-prerequisite.yml@refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    outputs:
+      plan: ${{ steps.qualify.outputs.plan }}
+      behavioral-result: ${{ steps.tests.outcome }}
+    steps:
+      - name: Initialize qualification failure receipt
+        run: >-
+          printf '%s\n' '{"status":"failed","failed_operation":"workflow initialization","reason":"proposal qualification has not completed","push_attempted":false,"post_attempted":false,"candidate_sha":null,"target_ref":"refs/heads/cicd/contracts-prerequisite-eventstore"}' > eventstore-proposal-qualification.json
+
+      - name: Checkout exact trusted owner without dependencies or persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .eventstore-validation
+          submodules: false
+          persist-credentials: false
+
+      - name: Run delivery and proposal behavioral suites without secrets
+        id: tests
+        run: |
+          python3 -I .eventstore-validation/tools/tests/test_deliver_contracts_prerequisites.py
+          python3 -I .eventstore-validation/tools/tests/test_propose_eventstore_contracts_prerequisite.py
+
+      - name: Qualify exact reviewed branch proposal without secrets
+        id: qualify
+        if: ${{ !cancelled() }}
+        env:
+          PREREQUISITE_OWNER_SOURCE: ${{ github.sha }}
+          PREREQUISITE_BEHAVIORAL_RESULT: ${{ steps.tests.outcome }}
+        run: python3 -I .eventstore-validation/tools/propose_eventstore_contracts_prerequisite.py qualify
+
+      - name: Upload required qualification receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: eventstore-proposal-qualification
+          path: eventstore-proposal-qualification.json
+          if-no-files-found: error
+          retention-days: 90
+
+  propose:
+    needs: validate
+    if: ${{ !cancelled() && github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && github.workflow_ref == 'Hexalith/Hexalith.CiCd/.github/workflows/propose-eventstore-contracts-prerequisite.yml@refs/heads/main' && needs.validate.result == 'success' && needs.validate.outputs.behavioral-result == 'success' && needs.validate.outputs.plan != '' }}
+    concurrency:
+      group: deliver-owned-writes
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: cicd-app
+    permissions:
+      contents: read
+    steps:
+      - name: Initialize branch and optional PR failure receipts before mint
+        run: |
+          printf '%s\n' '{"status":"failed","failed_operation":"workflow initialization","reason":"branch controller has not completed","push_attempted":false,"post_attempted":false,"candidate_sha":null,"target_ref":"refs/heads/cicd/contracts-prerequisite-eventstore","branch_success":false}' > eventstore-proposal-branch.json
+          printf '%s\n' '{"status":"pr-blocked","failed_operation":"workflow initialization","reason":"optional PR controller has not completed","push_attempted":false,"post_attempted":false,"candidate_sha":null,"target_ref":"refs/heads/cicd/contracts-prerequisite-eventstore","comparison_url":"https://github.com/Hexalith/Hexalith.EventStore/compare/main...cicd/contracts-prerequisite-eventstore?expand=1"}' > eventstore-proposal-pr.json
+
+      - name: Checkout only exact trusted proposal sources and fixed reviewed packet
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .eventstore-owner
+          sparse-checkout: |
+            tools/propose_eventstore_contracts_prerequisite.py
+            tools/deliver_contracts_prerequisites.py
+            tools/delivery_runtime.py
+            tools/tests/test_propose_eventstore_contracts_prerequisite.py
+            tools/tests/test_deliver_contracts_prerequisites.py
+            .github/workflows/propose-eventstore-contracts-prerequisite.yml
+            .github/workflows/deliver-contracts-prerequisites.yml
+            docs/proposals/contracts-prerequisites/
+          sparse-checkout-cone-mode: false
+          submodules: false
+          persist-credentials: false
+
+      - name: Mint only EventStore branch Contents and Workflows write token
+        id: branch-token
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.EventStore
+          permission-contents: write
+          permission-workflows: write
+
+      - name: Propose only the fixed branch and retain exact branch proof
+        id: branch
+        if: ${{ !cancelled() }}
+        env:
+          PREREQUISITE_OWNER_SOURCE: ${{ github.sha }}
+          PREREQUISITE_BEHAVIORAL_RESULT: ${{ needs.validate.outputs.behavioral-result }}
+          PREREQUISITE_QUALIFICATION: ${{ needs.validate.result }}
+          PREREQUISITE_PLAN: ${{ needs.validate.outputs.plan }}
+          MODULE_TOKEN: ${{ steps.branch-token.outputs.token }}
+        run: python3 -I .eventstore-owner/tools/propose_eventstore_contracts_prerequisite.py propose
+
+      - name: Attempt separate existing-App PR metadata token without new grants
+        if: ${{ !cancelled() && steps.branch.outputs.branch-success == 'true' }}
+        id: pr-token
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.EventStore
+          permission-contents: read
+          permission-pull-requests: write
+
+      - name: Create or retain the fixed draft PR, or retain its precise blocker
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          PREREQUISITE_OWNER_SOURCE: ${{ github.sha }}
+          PREREQUISITE_BEHAVIORAL_RESULT: ${{ needs.validate.outputs.behavioral-result }}
+          PREREQUISITE_QUALIFICATION: ${{ needs.validate.result }}
+          PREREQUISITE_PLAN: ${{ needs.validate.outputs.plan }}
+          MODULE_TOKEN: ${{ steps.pr-token.outputs.token }}
+        run: python3 -I .eventstore-owner/tools/propose_eventstore_contracts_prerequisite.py pull-request
+
+      - name: Upload required branch receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: eventstore-proposal-branch
+          path: eventstore-proposal-branch.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload required PR receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: eventstore-proposal-pr
+          path: eventstore-proposal-pr.json
+          if-no-files-found: error
+          retention-days: 90

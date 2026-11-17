@@ -25,7 +25,7 @@ rt = importlib.util.module_from_spec(_SPEC)
 sys.modules[_SPEC.name] = rt
 _SPEC.loader.exec_module(rt)
 
-PROFILES = ("eventstore-publisher", "projects-publisher", "projects-pins")
+PROFILES = ("eventstore-publisher", "projects-publisher", "projects-pins", "projects-prerequisite-policy")
 WORKFLOW = ".github/workflows/deliver-contracts-prerequisites.yml"
 CHECKS = frozenset({"scope-preservation", "behavioral-controls", "actionlint", "package-qualification"})
 SCHEMA = "hexalith.contracts-prerequisites.v1"
@@ -82,7 +82,8 @@ def configuration(profile):
     logs = {check: prefix + "-" + check + ".log" for check in sorted(CHECKS)}
     return {"repository": "Hexalith.EventStore" if profile == "eventstore-publisher" else "Hexalith.Projects",
             "paths": ("Directory.Packages.props", "tools/release-packages.json") if profile == "projects-pins"
-                     else (".github/workflows/release.yml",),
+                     else ("tests/tools/run-ci-workflow-gates.ps1", "tests/tools/test_run_ci_workflow_gates.py")
+                     if profile == "projects-prerequisite-policy" else (".github/workflows/release.yml",),
             "manifest": manifest_path, "patch": patch_path, "validation": validation_path, "logs": logs,
             "sources": ("tools/deliver_contracts_prerequisites.py", "tools/delivery_runtime.py", WORKFLOW,
                         "tools/tests/test_deliver_contracts_prerequisites.py", manifest_path, patch_path, validation_path,

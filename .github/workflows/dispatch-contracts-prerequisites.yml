@@ -1,0 +1,131 @@
+name: Dispatch fixed contracts prerequisite publishers
+
+on:
+  workflow_dispatch:
+    inputs:
+      owner:
+        description: Approved fixed package owner
+        type: choice
+        required: true
+        options: [eventstore, projects]
+      operation:
+        description: Publish approved package or verify existing publication
+        type: choice
+        required: true
+        options: [publish, verify]
+
+permissions: {}
+
+jobs:
+  behavioral:
+    if: ${{ github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact owner source without module dependencies or credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          submodules: false
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/dispatch_contracts_prerequisite.py
+            /tools/delivery_runtime.py
+            /tools/tests/test_dispatch_contracts_prerequisite.py
+            /.github/workflows/dispatch-contracts-prerequisites.yml
+            /docs/proposals/contracts-prerequisites/eventstore-publisher.json
+            /docs/proposals/contracts-prerequisites/projects-publisher.json
+            /docs/proposals/contracts-prerequisites/projects-prerequisite-policy.json
+
+      - name: Exercise fixed dispatch and refusal behavior without secrets or network
+        run: python3 -I -B tools/tests/test_dispatch_contracts_prerequisite.py
+
+  dispatch:
+    needs: behavioral
+    if: ${{ !cancelled() && needs.behavioral.result == 'success' && github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && (inputs.owner == 'eventstore' || inputs.owner == 'projects') && (inputs.operation == 'publish' || inputs.operation == 'verify') }}
+    concurrency:
+      group: deliver-owned-writes
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: cicd-app
+    permissions:
+      contents: read
+    steps:
+      - name: Initialize failure receipt before checkout or token minting
+        env:
+          PREREQUISITE_OWNER: ${{ inputs.owner }}
+          PREREQUISITE_OPERATION: ${{ inputs.operation }}
+        run: |
+          python3 -I - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          receipt = {'schema': 'hexalith.contracts-prerequisites-dispatch.v1',
+                     'owner': os.environ['PREREQUISITE_OWNER'],
+                     'operation': os.environ['PREREQUISITE_OPERATION'],
+                     'owner_source': os.environ['GITHUB_SHA'],
+                     'status': 'failed', 'dispatch_attempted': False,
+                     'reason': 'Checkout, token minting or controller execution has not completed',
+                     'owner_run_id': os.environ['GITHUB_RUN_ID'],
+                     'owner_run_attempt': os.environ['GITHUB_RUN_ATTEMPT']}
+          with Path('contracts-prerequisite-dispatch.json').open('x') as stream:
+              stream.write(json.dumps(receipt) + '\n')
+          PY
+
+      - name: Checkout exact behaviorally qualified owner source
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .prerequisite-dispatch-owner
+          submodules: false
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/dispatch_contracts_prerequisite.py
+            /tools/delivery_runtime.py
+            /tools/tests/test_dispatch_contracts_prerequisite.py
+            /.github/workflows/dispatch-contracts-prerequisites.yml
+            /docs/proposals/contracts-prerequisites/eventstore-publisher.json
+            /docs/proposals/contracts-prerequisites/projects-publisher.json
+            /docs/proposals/contracts-prerequisites/projects-prerequisite-policy.json
+
+      - name: Mint only Actions write and Contents read for the chosen fixed owner
+        id: token
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ inputs.owner == 'eventstore' && 'Hexalith.EventStore' || 'Hexalith.Projects' }}
+          permission-actions: write
+          permission-contents: read
+
+      - name: Dispatch once or retain the exact token failure diagnosis
+        if: ${{ always() && steps.checkout.outcome == 'success' }}
+        env:
+          PREREQUISITE_OWNER: ${{ inputs.owner }}
+          PREREQUISITE_OPERATION: ${{ inputs.operation }}
+          PREREQUISITE_OWNER_SOURCE: ${{ github.sha }}
+          PREREQUISITE_BEHAVIORAL_RESULT: ${{ needs.behavioral.result }}
+          PREREQUISITE_WRITER_STATUS: ${{ job.status }}
+          PREREQUISITE_TOKEN_RESULT: ${{ steps.token.outcome }}
+          PREREQUISITE_INSTALLATION_ID: ${{ steps.token.outputs.installation-id }}
+          PREREQUISITE_APP_SLUG: ${{ steps.token.outputs.app-slug }}
+          MODULE_TOKEN: ${{ steps.token.outputs.token }}
+        run: python3 -I -B .prerequisite-dispatch-owner/tools/dispatch_contracts_prerequisite.py "$PREREQUISITE_OPERATION" --owner "$PREREQUISITE_OWNER" --report contracts-prerequisite-dispatch.json
+
+      - name: Retain success, ambiguity and token failure receipts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: contracts-prerequisite-dispatch-${{ inputs.owner }}-${{ inputs.operation }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: contracts-prerequisite-dispatch.json
+          if-no-files-found: error
+          retention-days: 90
