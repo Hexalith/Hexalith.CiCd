@@ -109,3 +109,36 @@ and authenticated main/pin readback are in `cicd-v610-publication.json`.
 The earlier v6.0.6 inventories remain historical evidence. This resolves the
 shared release/pin prerequisite, not the registry mapping/consumer boundary,
 Tenants product qualification or adoption/legacy cleanup.
+
+## Fresh attended and Kubernetes reads, 2026-11-17
+
+The human confirmed the App form was saved and NuGet signed in. A separate
+new App settings tab reads20 saved selected repositories, including Tenants,
+with Save disabled; foreign selections (now including Docs) were preserved.
+`app-selection-fresh-verification.json` binds the fresh server read.
+
+`nuget-legacy-key-fresh-verification.json` binds the fresh authenticated API Keys
+page with Manage expanded and actual loaded key row954800, label Github Hexalith,
+Expired, ownerHexalith/globHexalith.*. No active key rows were observed; no key
+was deleted/regenerated and this is not a mapping to an encrypted GitHub secret.
+The first signed-in read without expanding Manage returned no visible key rows;
+that read was incomplete and is retained without treating it as absence.
+A separate fresh Trusted Publishing read retains Active27252 with exact
+Hexalith.Tenants* push-new-packages/versions scope and old18796. Recovery policy
+18797 also remains and must be assessed against its actual workflow/environment
+before cleanup; preserve foreign policies. See attended-policy-refresh-01.json.
+
+The human directed investigation through192.168.1.30 Kubernetes access. Intended
+context jpiquot@local resolves https://192.168.1.30:6443 and reads registry
+configuration/pod metadata and credential references without configuration changes.
+The195-secret reference inventory finds no direct HEXALITH_ZOT key-name match.
+Memories' actual pull secret registry-credentials is distinct from the existing
+personal API key and is not in zak_ format; preserve it. Registry authenticated
+public key metadata still lists the same three UUIDs/labels. Neither Kubernetes
+metadata nor these public key records establish which UUID backs GitHub's
+encrypted organization secret or every external consumer. No credential values
+were printed or persisted, and no key was revoked. Exact reads are retained in
+kubernetes-legacy-key-reference-inventory.json and
+kubernetes-registry-credential-assessment.json. The attempted fixed binary
+version read at /usr/local/bin/zot failed; the immutable image digest remains
+known but an exact version tag is still unverified.
