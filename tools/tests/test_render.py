@@ -24,7 +24,13 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = Path(__file__).resolve().parent / "fixtures/render"
-LEGACY_RELEASE = json.loads((FIXTURES.parent / "builds-releases.json").read_bytes())["renderer"]
+LEGACY_TAG = "v6.0.6"
+CURRENT_TAG = (ROOT / "builds-version").read_text().strip()
+CURRENT_DEFAULTS = {
+    "ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False,
+    "moduleManifest": None, "windowsCheckout": None, "publishedBuilds": None, "buildProjects": [],
+}
+CURRENT_TEST_DEFAULTS = {"minimumExpectedTests": {}, "failSkips": False}
 MANUAL_JOB = {
     "trigger": "manual", "runner": {"group": "private-ephemeral", "labels": ["self-hosted", "linux", "x64"]},
     "environment": "owner-approval", "secrets": ["AUTHORITY_JSON", "CUSTODY_JSON"],
@@ -76,20 +82,13 @@ def file_bytes(root: Path) -> dict[str, bytes]:
 
 
 class Workspace:
-    def __init__(self, root: Path, *, tag=None):
+    def __init__(self, root: Path, *, tag: str = CURRENT_TAG):
         self.root = root
         self.builds = root / "references/Hexalith.Builds"
-        # Legacy refusals/defaults belong to this authentic released contract,
-        # independently of the production pin. Selected-release coverage below
-        # exercises the actual pin without rewriting historical expectations.
-        self.tag = tag or LEGACY_RELEASE["tag"]
+        self.tag = tag
         self.builds.parent.mkdir(parents=True)
         run(["git", "clone", "--quiet", "--shared", "--no-checkout",
              ROOT / "references/Hexalith.Builds", self.builds])
-        if self.tag == LEGACY_RELEASE["tag"]:
-            revision = git(self.builds, "rev-parse", f"refs/tags/{self.tag}^{{commit}}").decode().strip()
-            if revision != LEGACY_RELEASE["commit"]:
-                raise AssertionError("Legacy renderer fixture must use the authentic released commit")
         shutil.copytree(ROOT / "templates", root / "templates")
         (root / "setup").mkdir()
         (root / "setup/README.md").write_text("Fixture registry only.\n")
@@ -120,6 +119,11 @@ class Workspace:
     def yaml(self, relative, name="Hexalith.Fixture"):
         return renderer.yaml_document(self.output(relative, name).read_bytes(), relative)
 
+    def select_tag(self, tag):
+        """Select a real local release object without synthesizing its reader."""
+        self.tag = tag
+        (self.root / "builds-version").write_text(tag + "\n")
+
     def change_tag(self, changes: dict[str, bytes | None], *, move_tag=True):
         """Create local Git-object fixtures without reading or changing a checkout."""
         with tempfile.TemporaryDirectory(prefix="render-index-") as directory:
@@ -141,98 +145,20 @@ class Workspace:
                 git(self.builds, "update-ref", f"refs/tags/{self.tag}", commit)
             return commit
 
-    def qualification_contract(self):
-        """Synthetic tagged candidate: production's release selector stays untouched."""
-        paths = ("schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py", ".github/workflows/ci.yml",
-                 "Github/prepare/action.yml")
-        self.change_tag({path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in paths})
-
 
 @contextmanager
-def workspace(*, tag=None):
+def workspace(*, tag: str = CURRENT_TAG):
     with tempfile.TemporaryDirectory(prefix="hexalith-render-fixture-") as directory:
         yield Workspace(Path(directory), tag=tag)
 
 
 class RenderTests(unittest.TestCase):
-    def selected_workspace(self):
-        return workspace(tag=(ROOT / "builds-version").read_text().strip())
-
-    def test_selected_release_complete_defaults_and_numeric_timeout_interface(self):
-        with self.selected_workspace() as fixture:
-            self.assertEqual(git(ROOT / "references/Hexalith.Builds", "rev-parse", f"refs/tags/{fixture.tag}^{{commit}}").decode().strip(),
-                             git(fixture.builds, "rev-parse", f"refs/tags/{fixture.tag}^{{commit}}").decode().strip())
-            fixture.setup()
-            fixture.cli()
-            self.assertEqual(fixture.json(), {
-                "schema": "hexalith.ci.v1", "buildsTag": fixture.tag, "solution": "none",
-                "dapr": False, "browsers": False, "registry": False, "codeql": [],
-                "tests": {"integration": [], "exclude": {}, "failSkips": False, "minimumExpectedTests": {}},
-                "hooks": [], "jobs": {}, "submodules": [], "buildProjects": [], "publishedBuilds": None,
-                "ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False,
-                "moduleManifest": None, "windowsCheckout": None,
-            })
-            self.assertEqual({"job-timeout-minutes": 30},
-                             fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
-            with renderer.pinned_contract(fixture.root) as contract:
-                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
-            for invalid in (0, 361, True, "30", None):
-                with self.subTest(invalid=invalid):
-                    fixture.document({"ciTimeoutMinutes": invalid})
-                    self.assert_failure_unchanged(fixture, contains="ciTimeoutMinutes")
-
-    def test_selected_release_preserves_explicit_values_and_additive_windows_interface(self):
-        with self.selected_workspace() as fixture:
-            setup = fixture.setup("full")
-            fixture.cli()
-            supplied = renderer.yaml_document(setup.read_bytes(), str(setup))
-            self.assertEqual(fixture.json(), {
-                "schema": "hexalith.ci.v1", "buildsTag": fixture.tag, **supplied,
-                "tests": {**supplied["tests"], "failSkips": False, "minimumExpectedTests": {}},
-                "buildProjects": [], "publishedBuilds": None, "ciTimeoutMinutes": 30,
-                "npmWorkspaces": [], "dotnetTools": False, "moduleManifest": None, "windowsCheckout": None,
-            })
-            names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
-            windows = fixture.yaml(".github/workflows/ci.yml")["jobs"]["windows-windows-tests"]
-            self.assertEqual({name: "${{ needs.ci.outputs." + name + " }}" for name in names}, windows["steps"][0]["with"])
-            with renderer.pinned_contract(fixture.root) as contract:
-                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
-            fixture.document({"solution": "Fixture.slnx", "tests": {"failSkips": True,
-                "minimumExpectedTests": {"test/Fixture.csproj": 7}}, "ciTimeoutMinutes": 120})
-            fixture.cli()
-            self.assertEqual({"integration": [], "exclude": {}, "failSkips": True,
-                              "minimumExpectedTests": {"test/Fixture.csproj": 7}}, fixture.json()["tests"])
-            self.assertEqual({"job-timeout-minutes": 120},
-                             fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
-            for invalid in ({"failSkips": "true"}, {"minimumExpectedTests": {"test/Fixture.csproj": 0}}):
-                fixture.document({"solution": "Fixture.slnx", "tests": invalid})
-                self.assert_failure_unchanged(fixture)
-
-    def test_selected_release_accepts_manual_runner_and_preserves_private_source_binding(self):
-        with self.selected_workspace() as fixture:
-            fixture.document({"solution": "Fixture.slnx", "jobs": {"azure": MANUAL_JOB}})
-            fixture.cli()
-            self.assertEqual(MANUAL_JOB, fixture.json()["jobs"]["azure"])
-            qualification = fixture.yaml(".github/workflows/qualification.yml")
-            job = qualification["jobs"]["custom-azure"]
-            self.assertEqual(MANUAL_JOB["runner"], job["runs-on"])
-            self.assertEqual("owner-approval", job["environment"])
-            self.assertEqual(45, job["timeout-minutes"])
-            self.assertNotIn("env", job)
-            self.assertNotIn("secrets", job)
-            with renderer.pinned_contract(fixture.root) as contract:
-                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
-            fixture.cli("--check")
-
     def execution_config(self, jobs):
         return {"jobs": jobs, "buildsTag": "v9.8.7", "solution": "Fixture.slnx", "registry": False,
                 "submodules": [], "tests": {}}
 
     def test_tagged_platform_prerequisite_schema_reader_and_defaults_round_trip(self):
         with workspace() as fixture:
-            changes = {path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in (
-                "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")}
-            fixture.change_tag(changes)
             fixture.document({"solution": "Fixture.slnx"})
             fixture.cli()
             self.assertIsNone(fixture.json()["publishedBuilds"])
@@ -366,7 +292,6 @@ class RenderTests(unittest.TestCase):
                          workflow["jobs"]["custom-worker"]["steps"][1]["env"]["HEXALITH_QUALIFICATION_PARAMETERS"])
     def test_manual_qualification_preserves_secrets_runner_and_green_source(self):
         with workspace() as fixture:
-            fixture.qualification_contract()
             fixture.document({"solution": "Fixture.slnx", "additionalSdkVersion": "10.0.404", "ciTimeoutMinutes": 180,
                               "jobs": {"azure": MANUAL_JOB,
                                        "windows-tests": {"runner": "windows-latest"}}})
@@ -411,11 +336,13 @@ class RenderTests(unittest.TestCase):
             fixture.cli("--check")
 
     def test_old_release_rejects_manual_shape_without_replacing_accepted_render(self):
-        with workspace() as fixture:
+        with workspace(tag=LEGACY_TAG) as fixture:
             fixture.setup()
             fixture.cli()
             fixture.document({"solution": "Fixture.slnx", "jobs": {"azure": MANUAL_JOB}})
             self.assert_failure_unchanged(fixture)
+            fixture.document({"solution": "Fixture.slnx", "jobs": {"linux": {"runner": "ubuntu-latest"}}})
+            self.assert_failure_unchanged(fixture, contains="runner")
 
     def assert_arguments_supplied(self, supplied, declarations):
         self.assertLessEqual(set(supplied), set(declarations))
@@ -447,7 +374,8 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(fixture.json(), {
                 "schema": "hexalith.ci.v1", "buildsTag": fixture.tag, "solution": "none",
                 "dapr": False, "browsers": False, "registry": False, "codeql": [],
-                "tests": {"integration": [], "exclude": {}}, "hooks": [], "jobs": {}, "submodules": [],
+                "tests": {"integration": [], "exclude": {}, **CURRENT_TEST_DEFAULTS},
+                "hooks": [], "jobs": {}, "submodules": [], **CURRENT_DEFAULTS,
             })
             expected = {f"Hexalith.Fixture/{path}" for path in renderer.TEMPLATES}
             expected |= {".gitkeep", "Hexalith.Fixture.perimeter.json"}
@@ -461,6 +389,23 @@ class RenderTests(unittest.TestCase):
                 self.assertTrue(data.endswith(b"\n"))
                 self.assertFalse(data.endswith(b"\n\n"))
 
+    def test_legacy_complete_defaults_and_caller_remain_unchanged(self):
+        with workspace(tag=LEGACY_TAG) as fixture:
+            fixture.setup()
+            fixture.cli()
+            self.assertEqual(fixture.json(), {
+                "schema": "hexalith.ci.v1", "buildsTag": LEGACY_TAG, "solution": "none",
+                "dapr": False, "browsers": False, "registry": False, "codeql": [],
+                "tests": {"integration": [], "exclude": {}}, "hooks": [], "jobs": {}, "submodules": [],
+            })
+            self.assertEqual(fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"], {
+                "uses": f"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{LEGACY_TAG}",
+                "permissions": {"contents": "write", "actions": "write"},
+                "secrets": {"registry-pull-username": "${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}",
+                            "registry-pull-password": "${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}"},
+            })
+            fixture.cli("--check")
+
     def test_nested_defaults_and_explicit_values_survive(self):
         with workspace() as fixture:
             fixture.setup("partial")
@@ -469,46 +414,25 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(document["codeql"], ["csharp"])
             self.assertEqual(document["tests"], {
                 "integration": ["test/Fixture.IntegrationTests.csproj"], "exclude": {},
+                **CURRENT_TEST_DEFAULTS,
             })
             fixture.document({"solution": "Fixture.slnx", "tests": {"exclude": {}},
                               "dapr": False, "registry": False, "codeql": [], "hooks": [], "jobs": {},
                               "submodules": []})
             fixture.cli()
-            self.assertEqual(fixture.json()["tests"], {"integration": [], "exclude": {}})
+            self.assertEqual(fixture.json()["tests"], {"integration": [], "exclude": {}, **CURRENT_TEST_DEFAULTS})
             self.assertEqual(fixture.json()["codeql"], [])
             self.assertFalse(fixture.json()["dapr"])
 
-    def timeout_contract(self, fixture):
-        """Model the additive, complete contract at a future selected release."""
-        schema_path, loader_path = "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py"
-        schema = json.loads(git(fixture.builds, "show", f"{fixture.tag}:{schema_path}"))
-        schema["required"].append("ciTimeoutMinutes")
-        schema["properties"]["ciTimeoutMinutes"] = {
-            "type": "integer", "minimum": 1, "maximum": 360, "default": 30,
-        }
-        schema["properties"]["job-timeout-minutes"] = {
-            "type": "integer", "minimum": 1, "maximum": 360,
-        }
-        loader = git(fixture.builds, "show", f"{fixture.tag}:{loader_path}").decode()
-        original = '"tests", "hooks", "jobs", "submodules"))'
-        self.assertIn(original, loader)
-        loader = loader.replace(original, '"tests", "hooks", "jobs", "submodules", "ciTimeoutMinutes"))')
-        loader = loader.replace('frozenset(("buildsTag",))', 'frozenset(("buildsTag", "job-timeout-minutes"))')
-        loader = loader.replace("    return document\n", """    if type(document["ciTimeoutMinutes"]) is not int or not 1 <= document["ciTimeoutMinutes"] <= 360:
-        fail("$/ciTimeoutMinutes", "expected an integer from 1 to 360")
-    return document
-""", 1)
-        fixture.change_tag({schema_path: json.dumps(schema).encode(), loader_path: loader.encode()})
-
     def test_timeout_materializes_and_forwards_only_from_the_selected_complete_contract(self):
-        with workspace() as fixture:
+        with workspace(tag=LEGACY_TAG) as fixture:
             fixture.setup()
             fixture.cli()
             self.assertNotIn("ciTimeoutMinutes", fixture.json())
             self.assertNotIn("with", fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"])
             fixture.document({"ciTimeoutMinutes": 120})
             self.assert_failure_unchanged(fixture, contains="ciTimeoutMinutes")
-            self.timeout_contract(fixture)
+            fixture.select_tag(CURRENT_TAG)
             fixture.document({})
             fixture.cli()
             self.assertEqual(30, fixture.json()["ciTimeoutMinutes"])
@@ -529,7 +453,6 @@ class RenderTests(unittest.TestCase):
     def test_timeout_requires_the_pinned_numeric_workflow_input(self):
         with workspace() as fixture:
             fixture.setup()
-            self.timeout_contract(fixture)
             workflow_path = ".github/workflows/ci.yml"
             workflow = git(fixture.builds, "show", f"{fixture.tag}:{workflow_path}")
             declaration = renderer.yaml_document(workflow, workflow_path)
@@ -540,7 +463,6 @@ class RenderTests(unittest.TestCase):
     def test_explicit_native_timeout_override_keeps_precedence(self):
         with workspace() as fixture:
             fixture.setup()
-            self.timeout_contract(fixture)
             fixture.document({"ciTimeoutMinutes": 120, "job-timeout-minutes": 90})
             fixture.cli()
             self.assertEqual(120, fixture.json()["ciTimeoutMinutes"])
@@ -554,6 +476,7 @@ class RenderTests(unittest.TestCase):
         with workspace() as fixture:
             setup = fixture.setup("quoted")
             expected = renderer.yaml_document(setup.read_bytes(), str(setup))
+            expected["tests"] = {**CURRENT_TEST_DEFAULTS, **expected["tests"]}
             fixture.cli()
             for field in ("solution", "submodules", "codeql", "hooks", "tests"):
                 self.assertEqual(fixture.json()[field], expected[field])
@@ -574,7 +497,7 @@ class RenderTests(unittest.TestCase):
             ("reserved-job", {"solution": "Fixture.slnx", "jobs": {"ci": {"runner": "windows-latest"}}}),
             ("reserved-hook-job", {"solution": "Fixture.slnx", "jobs": {"nightly": {"runner": "windows-latest"}}}),
             ("unsafe-job", {"solution": "Fixture.slnx", "jobs": {"x\njob": {"runner": "windows-latest"}}}),
-            ("runner", {"solution": "Fixture.slnx", "jobs": {"windows": {"runner": "ubuntu-latest"}}}),
+            ("runner", {"solution": "Fixture.slnx", "jobs": {"windows": {"runner": "unsupported"}}}),
             ("runner-missing", {"solution": "Fixture.slnx", "jobs": {"windows": {}}}),
             ("job-extra", {"solution": "Fixture.slnx", "jobs": {"windows": {"runner": "windows-latest", "steps": []}}}),
             ("target", {"solution": "Fixture.slnx", "tests": {"exclude": {"test/A.csproj": "missing"}}}),
@@ -1057,10 +980,13 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(fixture.yaml(".github/dependabot.yml"), {"version": 2, "updates": []})
             setup = fixture.setup("full")
             fixture.cli()
-            # The full fixture supplies every knob: nothing is dropped, coerced or added.
+            # The legacy full fixture predates the additive release defaults;
+            # assert the entire current document, including every new field.
+            supplied = renderer.yaml_document(setup.read_bytes(), str(setup))
             self.assertEqual(fixture.json(), {
                 "schema": "hexalith.ci.v1", "buildsTag": fixture.tag,
-                **renderer.yaml_document(setup.read_bytes(), str(setup)),
+                **CURRENT_DEFAULTS, **supplied,
+                "tests": {**CURRENT_TEST_DEFAULTS, **supplied["tests"]},
             })
             self.assertEqual(fixture.yaml(".github/dependabot.yml"), {
                 "version": 2, "updates": [{
@@ -1122,7 +1048,7 @@ class RenderTests(unittest.TestCase):
 
     def test_additive_windows_outputs_require_a_contract_that_defines_the_fields(self):
         names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
-        with workspace() as fixture:
+        with workspace(tag=LEGACY_TAG) as fixture:
             fixture.document({"solution": "Fixture.slnx", "jobs": {"product-tests": {"runner": "windows-latest"}}})
             fixture.cli()
             legacy = fixture.yaml(".github/workflows/ci.yml")
@@ -1181,6 +1107,7 @@ class RenderTests(unittest.TestCase):
                 expected_ci_permissions = {"contents": "write", "actions": "write"}
             self.assertEqual(ci["jobs"]["ci"], {
                 "uses": f"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{fixture.tag}",
+                "with": {"job-timeout-minutes": 30},
                 "permissions": expected_ci_permissions, "secrets": pull_secrets,
             })
             self.assertEqual(ci["jobs"]["ci"]["permissions"], global_checks.permission_union(ci_declaration))
@@ -1189,12 +1116,17 @@ class RenderTests(unittest.TestCase):
             for name in names:
                 job = ci["jobs"]["windows-" + name]
                 self.assertEqual(job, {
-                    "needs": "ci", "runs-on": "windows-latest", "permissions": {"contents": "read"},
+                    "needs": ["ci"], "runs-on": "windows-latest", "permissions": {"contents": "read"},
+                    "timeout-minutes": 30,
                     "steps": [{
                         "uses": f"Hexalith/Hexalith.Builds/Github/prepare@{fixture.tag}",
                         "with": {key: "${{ needs.ci.outputs." + key + " }}"
-                                 for key in ("solution", "submodules", "global-json")},
-                    }, {"uses": f"./.github/actions/{name}"}],
+                                 for key in ("solution", "submodules", "global-json", "module-manifest",
+                                             "windows-checkout", "source-revision", "module-authority")},
+                    }, {"uses": f"./.github/actions/{name}", "env": {
+                        "HEXALITH_JOB_NAME": name, "HEXALITH_JOB_PARAMETERS": "{}",
+                        "HEXALITH_JOB_NEEDS": "${{ toJSON(needs) }}", "HEXALITH_QUALIFICATION_PARAMETERS": "{}",
+                    }}],
                 })
                 self.assert_arguments_supplied(job["steps"][0]["with"], prepare_api)
                 self.assertTrue(set(job["steps"][0]["with"]) <= ci_api["outputs"].keys())
@@ -1415,7 +1347,7 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(file_bytes(module), before)
 
 
-def lint_fixtures(*, tag=None) -> None:
+def lint_fixtures() -> None:
     """Use tagged pins/installer, but enumerate only our explicit fixture paths."""
     if platform.system() != "Linux" or platform.machine() not in ("x86_64", "AMD64"):
         raise ValueError("Pinned linter archives target Linux x86_64")
@@ -1423,7 +1355,7 @@ def lint_fixtures(*, tag=None) -> None:
         raise ValueError("Online zizmor audits are required; remove offline overrides")
     if not any(os.environ.get(key) for key in ("GH_TOKEN", "GITHUB_TOKEN", "ZIZMOR_GITHUB_TOKEN")):
         raise ValueError("Online audits require a read-only GH_TOKEN, GITHUB_TOKEN or ZIZMOR_GITHUB_TOKEN")
-    with (workspace(tag=tag) as fixture, renderer.pinned_contract(fixture.root) as contract,
+    with (workspace() as fixture, renderer.pinned_contract(fixture.root) as contract,
           tempfile.TemporaryDirectory(prefix="hexalith-lint-tools-") as tools_directory):
         for name in ("minimal", "partial", "full", "quoted"):
             fixture.setup(name, f"Hexalith.Fixture-{name}")
@@ -1464,7 +1396,7 @@ def lint_fixtures(*, tag=None) -> None:
         if result.returncode:
             raise ValueError(f"actionlint failed ({result.returncode}): "
                              f"{result.stdout.decode()}{result.stderr.decode()}")
-        print(f"Builds {contract.tag}: actionlint {pins['actionlint']['version']}: {len(paths)} explicit fixture workflows passed", flush=True)
+        print(f"actionlint {pins['actionlint']['version']}: {len(paths)} explicit fixture workflows passed", flush=True)
         result = run([binaries["zizmor"], "--strict-collection", "--no-progress", "--format=json",
                       "--config", ROOT / "tools/zizmor.yml", *paths], cwd=fixture.root, check=False)
         print(result.stderr.decode(), end="", file=sys.stderr)
@@ -1480,7 +1412,7 @@ def lint_fixtures(*, tag=None) -> None:
             raise ValueError(f"zizmor reported {len(failures)} findings")
         if result.returncode:
             raise ValueError(f"zizmor nonzero exit {result.returncode}, even though no findings were returned")
-        print(f"Builds {contract.tag}: zizmor {pins['zizmor']['version']}: {len(paths)} explicit fixture workflows passed online audits", flush=True)
+        print(f"zizmor {pins['zizmor']['version']}: {len(paths)} explicit fixture workflows passed online audits", flush=True)
 
 
 def main() -> int:
@@ -1493,9 +1425,6 @@ def main() -> int:
     if args.lint:
         try:
             lint_fixtures()
-            selected = (ROOT / "builds-version").read_text().strip()
-            if selected != LEGACY_RELEASE["tag"]:
-                lint_fixtures(tag=selected)
         except (OSError, ValueError, RuntimeError, KeyError, AssertionError) as error:
             print(f"Fixture lint failed: {renderer.diagnostic(error)}", file=sys.stderr)
             return 1
