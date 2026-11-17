@@ -15,12 +15,16 @@ const syntaxModules = new Set([...processModules, '@playwright/test']);
 const line = node => file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1;
 const text = node => node && ts.isStringLiteralLike(node) ? node.text : null;
 const error = (node, message) => result.errors.push([line(node), message]);
+const reflectiveProcess = target => /^process\.(?:chdir|dlopen|getBuiltinModule|binding|_linkedBinding|execve|loadEnvFile|mainModule)(?:\.|$)/.test(target);
 const name = node => {
   const value = !node ? '' : ts.isIdentifier(node) ? (aliases.get(node.text) || node.text)
+    : ts.isCallExpression(node) && name(node.expression) === 'require' && node.arguments.length === 1
+      && ['process', 'node:process'].includes(text(node.arguments[0])) ? 'process'
     : ts.isPropertyAccessExpression(node) ? name(node.expression) + '.' + node.name.text
     : ts.isElementAccessExpression(node) && text(node.argumentExpression) !== null
       ? name(node.expression) + '.' + text(node.argumentExpression) : '';
-  return value.replace(/^(?:globalThis|global)\.(?=(?:process|require)(?:\.|$))/, '');
+  return value.replace(/^(?:globalThis|global)\.(?=(?:process|require)(?:\.|$))/, '')
+    .replace(/^process\.default(?=\.|$)/, 'process');
 };
 const literal = node => {
   if (ts.isStringLiteralLike(node)) return node.text;
@@ -139,10 +143,13 @@ function visit(node) {
         if (node.expression.kind === ts.SyntaxKind.ImportKeyword && processModules.has(text(args[0])))
           error(node, 'unsupported dynamic JavaScript process-module import');
         if (target === 'require' && processModules.has(text(args[0]))
-            && !(ts.isVariableDeclaration(node.parent) && node.parent.initializer === node))
+            && !(ts.isVariableDeclaration(node.parent) && node.parent.initializer === node)
+            && !(['process', 'node:process'].includes(text(args[0]))
+              && (ts.isPropertyAccessExpression(node.parent) || ts.isElementAccessExpression(node.parent))
+              && ['process.env', 'process.argv', 'process.exit'].includes(name(node.parent))))
           error(node, 'unsupported inline JavaScript process-module require');
       }
-    } else if (['eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'module.createRequire', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+    } else if (reflectiveProcess(target) || ['eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'module.createRequire'].includes(target)) {
       error(node, 'unsupported reflective JavaScript execution: ' + target);
     } else if (target.startsWith('vm.')) {
       error(node, 'unresolved JavaScript VM/config execution');
@@ -168,25 +175,28 @@ function visit(node) {
       error(node, 'unresolved reflective JavaScript process/import API');
     }
   }
-  if (ts.isElementAccessExpression(node) && /^(?:child_process|module|worker_threads|vm|process)$/.test(name(node.expression))
+  if (ts.isElementAccessExpression(node)
+      && (/^(?:child_process|module|worker_threads|vm|process)$/.test(name(node.expression)) || reflectiveProcess(name(node.expression)))
       && text(node.argumentExpression) === null) error(node, 'unresolved reflective JavaScript process/import API');
   if (ts.isIdentifier(node) || ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
     const target = name(node);
-    if (['process', 'globalThis', 'global'].includes(target) || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
+    if (['process', 'globalThis', 'global'].includes(target) || reflectiveProcess(target) || /^(?:child_process|worker_threads|module|vm)(?:\.|$)/.test(target) || ['require', 'eval', 'Function', 'globalThis.eval', 'global.eval', 'globalThis.Function', 'global.Function', 'process.chdir', 'process.dlopen', 'process.getBuiltinModule'].includes(target)) {
       const parent = node.parent;
       const declaration = (ts.isVariableDeclaration(parent) && (parent.name === node || parent.initializer === node))
-        || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)
+        || ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent) || ts.isImportEqualsDeclaration(parent)
         || ts.isBindingElement(parent) || ts.isPropertyAccessExpression(parent) || ts.isElementAccessExpression(parent)
         || ts.isPropertyAssignment(parent) && parent.name === node;
       const invocation = (ts.isCallExpression(parent) || ts.isNewExpression(parent)) && parent.expression === node;
       if (!declaration && !invocation) error(node, 'unsupported JavaScript process/import API escape');
     }
   }
-  if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment
-      && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment) {
-    const target = name(node.left);
+  const mutation = ts.isDeleteExpression(node) ? node.expression
+    : ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment
+      && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment ? node.left : null;
+  if (mutation) {
+    const target = name(mutation);
     if (target === 'process.env' || /^process\.env\.(?:PATH|NODE_PATH|NODE_OPTIONS)$/.test(target)
-        || (/^process\.env$/.test(name(node.left.expression)) && !target))
+        || (/^process\.env$/.test(name(mutation.expression)) && !target))
       error(node, 'unsupported JavaScript environment change affecting resolution');
   }
   ts.forEachChild(node, visit);

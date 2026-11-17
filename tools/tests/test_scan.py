@@ -459,10 +459,12 @@ class ScanTests(unittest.TestCase):
             "const root = global; const mode = root.process.env.CI; const args = root.process.argv.slice(2);\n",
         ):
             with self.subTest(source=source):
-                report = self.coverage_case([("bash", "node script.js", "")], {"script.js": source})
-                self.assertEqual(report["result"], "pass", report)
+                report = self.coverage_case([("bash", "node script.js", "")], {
+                    "script.js": source + block("javascript", "process reads"),
+                })
                 self.assertTrue(all(not row["errors"] for row in report["modules"]), report)
                 self.assertTrue(all("script.js" in {item["path"] for item in row["files"]} for row in report["modules"]), report)
+                self.assert_coverage(report, "script.js", None)
 
     def test_data_only_mkdir_accepts_parameters_but_not_execution(self):
         report = self.coverage_case([("bash", 'mkdir -p "$REPORT_DIRECTORY"\npython3 leaf.py', "")], {"leaf.py": COPY})
@@ -648,6 +650,84 @@ class ScanTests(unittest.TestCase):
                 self.assertTrue(all(row["errors"] for row in report["modules"]), report)
                 self.assertTrue(all(not any("invalid Python source" in message for message in row["errors"])
                                     for row in report["modules"]), report)
+
+    def test_builtin_process_additional_aliases_preserve_ordinary_reads(self):
+        for path, source in (
+            ("script.js", "import runtime from 'node:process'; runtime.exit(0);"),
+            ("script.js", "import {default as runtime} from 'process'; import * as namespace from 'node:process'; const mode = runtime.env.CI; const args = namespace.default.argv.slice(2);"),
+            ("script.js", "import {env as environment, argv as arguments_} from 'node:process'; const mode = environment.CI; const args = arguments_.slice(2);"),
+            ("script.js", "const original = require('process'); const runtime = original; const mode = runtime.env.CI; const args = runtime.argv.slice(2);"),
+            ("script.js", "const {env, argv} = require('node:process'); const mode = env.CI; const args = argv.slice(2);"),
+            ("script.ts", "import runtime = require('node:process'); const mode = runtime.env.CI; const args = runtime.argv.slice(2);"),
+            ("script.ts", "import runtime = require('process'); const mode = runtime.env.CI; const args = runtime.argv.slice(2);"),
+            ("script.js", "const mode = require('process').env.CI; const args = require('node:process')['argv'].slice(2); require('process').exit(0);"),
+            ("script.js", "const environment = require('process').env; const mode = environment[process.argv[2]]; delete environment.MODE;"),
+        ):
+            with self.subTest(path=path, source=source):
+                report = self.coverage_case([("bash", "node " + path, "")], {
+                    path: source + "\n" + block(FORMATS[Path(path).suffix], "process reads"),
+                })
+                self.assert_coverage(report, path, None)
+
+    def test_builtin_process_import_reflection_and_escapes_fail_closed(self):
+        for source, diagnostic in (
+            ("import runtime from 'node:process'; runtime.getBuiltinModule('child_process');", "reflective JavaScript execution"),
+            ("import {default as runtime} from 'process'; runtime.getBuiltinModule('child_process');", "reflective JavaScript execution"),
+            ("import * as runtime from 'node:process'; runtime.default.getBuiltinModule('child_process');", "reflective JavaScript execution"),
+            ("import * as runtime from 'process'; runtime.chdir(process.env.DIRECTORY);", "reflective JavaScript execution"),
+            ("import {getBuiltinModule as load} from 'node:process'; load('child_process');", "reflective JavaScript execution"),
+            ("const runtime = require('node:process'); runtime.dlopen(module, process.env.LIBRARY);", "reflective JavaScript execution"),
+            ("import runtime from 'process'; runtime.binding('spawn_sync');", "reflective JavaScript execution"),
+            ("import {binding as load} from 'node:process'; load('spawn_sync');", "reflective JavaScript execution"),
+            ("const {_linkedBinding: load} = require('process'); load(process.env.MODULE);", "reflective JavaScript execution"),
+            ("import runtime from 'node:process'; runtime.getBuiltinModule.call(runtime, 'child_process');", "reflective JavaScript execution"),
+            ("import runtime from 'node:process'; runtime.execve('/usr/bin/node', ['node', 'payload.js']);", "reflective JavaScript execution"),
+            ("const runtime = require('process'); runtime.loadEnvFile('settings.env');", "reflective JavaScript execution"),
+            ("import * as runtime from 'node:process'; runtime.mainModule.require(process.env.MODULE);", "reflective JavaScript execution"),
+            ("import {execve as replace} from 'process'; replace(process.env.COMMAND, []);", "reflective JavaScript execution"),
+            ("const runtime = require('process'); const load = runtime.mainModule.require; load(process.env.MODULE);", "reflective JavaScript execution"),
+            ("process.getBuiltinModule[process.env.METHOD](null, 'child_process');", "reflective JavaScript process/import API"),
+            ("import {getBuiltinModule as load} from 'process'; load[process.env.METHOD](null, 'child_process');", "reflective JavaScript process/import API"),
+            ("const {getBuiltinModule: load} = require('node:process'); const alias = load; alias[process.env.METHOD](null, 'child_process');", "reflective JavaScript process/import API"),
+            ("import runtime = require('node:process'); runtime.getBuiltinModule('child_process');", "reflective JavaScript execution"),
+            ("import runtime from 'process'; const load = runtime.getBuiltinModule; load('child_process');", "reflective JavaScript execution"),
+            ("import runtime from 'node:process'; runtime[process.env.API]('child_process');", "reflective JavaScript process/import API"),
+            ("process[process.env.API]('child_process');", "reflective JavaScript process/import API"),
+            ("import runtime from 'node:process'; consume(runtime);", "API escape"),
+            ("import runtime = require('node:process'); const stored = [runtime];", "API escape"),
+            ("consume(process);", "API escape"),
+            ("consume(globalThis.process);", "API escape"),
+            ("import runtime from 'process'; consume(runtime['getBuiltinModule']);", "API escape"),
+            ("require('process').getBuiltinModule('child_process');", "reflective JavaScript execution"),
+            ("import('process').then(runtime => consume(runtime));", "dynamic JavaScript process-module import"),
+            ("export {getBuiltinModule} from 'node:process';", "process API re-export"),
+        ):
+            with self.subTest(source=source):
+                self.assert_coverage(self.coverage_case([("bash", "node script.ts", "")], {
+                    "script.ts": source + "\n",
+                }), None, diagnostic)
+
+    def test_builtin_process_environment_reexport_fails_closed_across_files(self):
+        report = self.coverage_case([("bash", "node script.js", "")], {
+            "script.js": "import {environment} from './process-data.js'; delete environment.NODE_PATH;\n",
+            "process-data.js": "export {env as environment, argv} from 'process';\n" + block("javascript", "process re-export"),
+        })
+        self.assert_coverage(report, "process-data.js", "process API re-export")
+
+    def test_builtin_process_environment_deletion_fails_closed(self):
+        for source in (
+            "const environment = require('process').env; delete environment.NODE_PATH;",
+            "import {env as environment} from 'node:process'; delete environment.PATH;",
+            "import runtime from 'node:process'; delete runtime.env;",
+            "const runtime = globalThis.process; delete runtime['env'];",
+            "const environment = require('node:process')['env']; delete environment[process.env.KEY];",
+            "const runtime = require('process'); const environment = runtime.env; const alias = environment; delete alias['NODE_OPTIONS'];",
+            "const {env: environment} = require('process'); delete environment[process.argv[2]];",
+        ):
+            with self.subTest(source=source):
+                self.assert_coverage(self.coverage_case([("bash", "node script.js", "")], {
+                    "script.js": source + "\n",
+                }), None, "environment change affecting resolution")
 
     def test_npm_later_flags_cannot_enable_unscanned_lifecycle_scripts(self):
         for command in ("npm ci --ignore-scripts --ignore-scripts=false",

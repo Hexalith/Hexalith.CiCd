@@ -218,19 +218,71 @@ class Git:
         return self.run("cat-file", "blob", item[2])
 
     def export(self, revision, prefix, destination):
-        total = 0
-        for path, (mode, kind, oid) in self.items(revision, prefix).items():
+        entries = self.items(revision, prefix)
+        for path, (mode, kind, oid) in entries.items():
             relative = PurePosixPath(path)
             if (mode not in ("100644", "100755") or kind != "blob"
-                    or any(p in (".", "..", ".git") for p in relative.parts)):
+                    or relative.is_absolute() or relative.as_posix() != path
+                    or any(p in (".", "..", ".git") for p in path.split("/"))):
                 raise DeliveryError("trusted source is not a regular blob")
-            data = self.blob(revision, path)
-            total += len(data)
+        if not entries:
+            return
+        code, promisor = self.run("config", "--bool", "--get", "remote.origin.promisor", check=False)
+        if code not in (0, 1) or (code == 0 and promisor not in (b"true\n", b"false\n")):
+            raise DeliveryError("invalid trusted source promisor configuration")
+        total = 0
+        paths = list(entries)
+        # Fetch only selected object identities from the already configured,
+        # secretless origin. Bound each request, including for promisor stores:
+        # cat-file alone otherwise launches a separate lazy fetch per blob.
+        for start in range(0, len(paths), 128):
+            group = paths[start:start + 128]
+            oids = list(dict.fromkeys(entries[path][2] for path in group))
+            request = "".join(oid + "\n" for oid in oids).encode("ascii")
+            if promisor == b"true\n":
+                # Match Git's lazy-fetch negotiation: walking common commits
+                # would require unrelated promised blobs in a shallow store.
+                self.run("-c", "fetch.negotiationAlgorithm=noop", "fetch", "--filter=blob:none",
+                         "--no-tags", "--no-recurse-submodules", "--no-write-fetch-head",
+                         "origin", "--stdin", data=request)
+            rows = self.run("cat-file", "--batch-check", data=request).splitlines()
+            sizes = {}
+            if len(rows) != len(oids):
+                raise DeliveryError("malformed trusted source object inventory")
+            for oid, row in zip(oids, rows):
+                match = re.fullmatch(rb"([0-9a-f]{40}) blob (0|[1-9][0-9]*)", row)
+                if match is None or match[1].decode("ascii") != oid:
+                    raise DeliveryError("missing or malformed trusted source blob")
+                size = int(match[2])
+                if size > MAX_JSON:
+                    raise DeliveryError("source blob exceeds 2 MiB limit")
+                sizes[oid] = size
+            total += sum(sizes[entries[path][2]] for path in group)
             if total > 32 * MAX_JSON:
                 raise DeliveryError("trusted source export limit exceeded")
-            target = Path(destination).joinpath(*relative.parts)
-            target.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-            target.write_bytes(data)
+            # At most seven 2 MiB blobs plus headers fit below Git.run's
+            # unchanged 16 MiB output cap. Size preflight precedes body reads.
+            for offset in range(0, len(group), 7):
+                batch = group[offset:offset + 7]
+                request = "".join(entries[path][2] + "\n" for path in batch).encode("ascii")
+                output = self.run("cat-file", "--batch", data=request)
+                position = 0
+                for path in batch:
+                    oid = entries[path][2]
+                    header = f"{oid} blob {sizes[oid]}\n".encode("ascii")
+                    if output[position:position + len(header)] != header:
+                        raise DeliveryError("malformed trusted source blob header")
+                    position += len(header)
+                    data = output[position:position + sizes[oid]]
+                    position += sizes[oid]
+                    if output[position:position + 1] != b"\n":
+                        raise DeliveryError("truncated trusted source blob")
+                    position += 1
+                    target = Path(destination).joinpath(*PurePosixPath(path).parts)
+                    target.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                    target.write_bytes(data)
+                if position != len(output):
+                    raise DeliveryError("unexpected trusted source blob output")
 
 
 class NoRedirect(HTTPRedirectHandler):
