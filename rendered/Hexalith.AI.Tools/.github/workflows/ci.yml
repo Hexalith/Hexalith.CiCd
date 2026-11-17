@@ -11,8 +11,10 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   ci:
-    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.0.6"
+    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.1.0"
     permissions: {"actions": "write", "contents": "write"}
+    with:
+      job-timeout-minutes: 30
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
