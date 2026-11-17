@@ -1,0 +1,131 @@
+name: Qualify approved package owner access
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: qualify-approved-package-owner-access
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    if: ${{ github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: cicd-app
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        repository: [Hexalith.EventStore, Hexalith.Projects]
+    steps:
+      - name: Initialize source-bound failure receipt
+        env:
+          PACKAGE_OWNER_REPOSITORY: ${{ matrix.repository }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+          repository = os.environ['PACKAGE_OWNER_REPOSITORY']
+          receipt = {'repository': 'Hexalith/' + repository, 'status': 'failed',
+                     'reason': 'Scoped verification has not completed',
+                     'owner_source': os.environ['GITHUB_SHA'],
+                     'workflow_ref': os.environ['GITHUB_WORKFLOW_REF'],
+                     'run_url': os.environ['GITHUB_SERVER_URL'] + '/' + os.environ['GITHUB_REPOSITORY'] + '/actions/runs/' + os.environ['GITHUB_RUN_ID'],
+                     'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+                     'observed_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                     'requested_permissions': {'contents': 'read'}, 'write_operations': 0}
+          Path('package-owner-' + repository + '.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          PY
+
+      - name: Mint a read-only token for one approved package owner
+        id: token
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ matrix.repository }}
+          permission-contents: read
+
+      - name: Verify fixed repository visibility without writes
+        if: ${{ !cancelled() }}
+        env:
+          PACKAGE_OWNER_REPOSITORY: ${{ matrix.repository }}
+          PACKAGE_OWNER_TOKEN: ${{ steps.token.outputs.token }}
+          PACKAGE_OWNER_TOKEN_RESULT: ${{ steps.token.outcome }}
+          PACKAGE_OWNER_INSTALLATION_ID: ${{ steps.token.outputs.installation-id }}
+          PACKAGE_OWNER_APP_SLUG: ${{ steps.token.outputs.app-slug }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import urllib.error
+          import urllib.request
+          repository = os.environ['PACKAGE_OWNER_REPOSITORY']
+          allowed = {'Hexalith.EventStore', 'Hexalith.Projects'}
+          if repository not in allowed:
+              raise SystemExit('Unexpected package owner')
+          token = os.environ.get('PACKAGE_OWNER_TOKEN', '')
+          output = Path('package-owner-' + repository + '.json')
+          receipt = json.loads(output.read_text())
+          receipt.update(token_result=os.environ.get('PACKAGE_OWNER_TOKEN_RESULT'),
+                         installation_id=os.environ.get('PACKAGE_OWNER_INSTALLATION_ID'),
+                         app_slug=os.environ.get('PACKAGE_OWNER_APP_SLUG'))
+          try:
+              if not token or receipt['token_result'] != 'success':
+                  raise RuntimeError('Existing App installation did not provide the scoped read token')
+              if receipt['installation_id'] != '179966090' or receipt['app_slug'] != 'hexalith-cicd':
+                  raise RuntimeError('Existing approved CiCd App identity did not match')
+              def get(path):
+                  request = urllib.request.Request('https://api.github.com/' + path,
+                      headers={'Authorization': 'Bearer ' + token,
+                               'Accept': 'application/vnd.github+json',
+                               'X-GitHub-Api-Version': '2022-11-28',
+                               'User-Agent': 'Hexalith-CiCd-package-owner-access'})
+                  try:
+                      with urllib.request.urlopen(request, timeout=30) as response:
+                          return json.load(response)
+                  except urllib.error.HTTPError as error:
+                      body = error.read(65536)
+                      try:
+                          message = json.loads(body).get('message', 'GitHub API error')
+                      except (ValueError, AttributeError):
+                          message = 'GitHub API response was not a JSON object'
+                      receipt['http_error'] = {'endpoint': path, 'status': error.code,
+                          'message': str(message).replace(token, '[masked]'),
+                          'request_id': error.headers.get('X-GitHub-Request-Id'),
+                          'rate_remaining': error.headers.get('X-RateLimit-Remaining'),
+                          'rate_reset': error.headers.get('X-RateLimit-Reset')}
+                      raise RuntimeError('Read-only GitHub API request failed') from None
+              names = sorted(item['full_name'] for item in get('installation/repositories')['repositories'])
+              if names != ['Hexalith/' + repository]:
+                  raise RuntimeError('Read token repository selection is not the one fixed target')
+              ref = get('repos/Hexalith/' + repository + '/git/ref/heads/main')
+              receipt.update(status='qualified', repositories=names, main=ref['object']['sha'])
+              receipt.pop('reason', None)
+          except Exception as error:
+              receipt['reason'] = str(error).replace(token, '[masked]') if token else str(error)
+          output.write_text(json.dumps(receipt, indent=2) + '\n')
+          print(json.dumps(receipt))
+          raise SystemExit(0 if receipt['status'] == 'qualified' else 1)
+          PY
+
+      - name: Retain read-only owner access result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: package-owner-access-${{ matrix.repository }}
+          path: package-owner-${{ matrix.repository }}.json
+          if-no-files-found: error
+          retention-days: 30
