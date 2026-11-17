@@ -1,0 +1,46 @@
+{
+  "aspire": true,
+  "browsers": false,
+  "buildProjects": [],
+  "buildsTag": "v6.2.0",
+  "ciTimeoutMinutes": 360,
+  "codeql": [
+    "csharp"
+  ],
+  "dapr": true,
+  "dotnetTools": false,
+  "hooks": [
+    "after-unit-tests"
+  ],
+  "jobs": {
+    "macos-product": {
+      "runner": "macos-latest",
+      "timeoutMinutes": 60
+    },
+    "windows-product": {
+      "runner": "windows-latest",
+      "timeoutMinutes": 60
+    }
+  },
+  "moduleManifest": null,
+  "npmWorkspaces": [],
+  "publishedBuilds": null,
+  "registry": false,
+  "schema": "hexalith.ci.v1",
+  "solution": "Hexalith.McpCli.slnx",
+  "submodules": [
+    "references/Hexalith.EventStore",
+    "references/Hexalith.Tenants",
+    "references/Hexalith.Parties",
+    "references/Hexalith.Platform"
+  ],
+  "tests": {
+    "exclude": {
+      "tests/Hexalith.McpCli.Integration.Tests/Hexalith.McpCli.Integration.Tests.csproj": "after-unit-tests"
+    },
+    "failSkips": false,
+    "integration": [],
+    "minimumExpectedTests": {}
+  },
+  "windowsCheckout": null
+}

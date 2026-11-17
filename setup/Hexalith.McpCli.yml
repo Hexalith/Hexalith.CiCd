@@ -1,0 +1,21 @@
+solution: Hexalith.McpCli.slnx
+dapr: true
+aspire: true
+ciTimeoutMinutes: 360
+hooks:
+- after-unit-tests
+jobs:
+  windows-product:
+    runner: windows-latest
+    timeoutMinutes: 60
+  macos-product:
+    runner: macos-latest
+    timeoutMinutes: 60
+tests:
+  exclude:
+    tests/Hexalith.McpCli.Integration.Tests/Hexalith.McpCli.Integration.Tests.csproj: after-unit-tests
+submodules:
+- references/Hexalith.EventStore
+- references/Hexalith.Tenants
+- references/Hexalith.Parties
+- references/Hexalith.Platform
