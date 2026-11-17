@@ -23,7 +23,7 @@ import xml.etree.ElementTree as ET
 
 from verification_core import (clean_environment, owned_run, trx_inventory, suite_passed,
                                suite_complete, capture_graphs, repository_unchanged,
-                               JobInterrupted, JobCleanupError)
+                               JobInterrupted, JobCleanupError, unexpected_inputs, file_manifest, capture_restore_policy, verify_restore_policy)
 
 SOURCE = "3b2350e7c1fff640131f8101596c78a59e31a03f"
 BUILDS = "16cf0db6f843eb4defdc87105804d42eded634d6"
@@ -44,6 +44,7 @@ INPUTS = [
     "src/Hexalith.EventStore.Contracts/Queries/QueryResultContractAttribute.cs",
     "tests/Hexalith.EventStore.RestApi.Generators.Tests/TypedGatewayQueryGenerationTests.cs",
     *PROJECTS.values(),
+    *[f"src/Hexalith.EventStore.{name}/Hexalith.EventStore.{name}.csproj" for name in ("Contracts", "Client", "RestApi.Generators")],
 ]
 
 
@@ -60,7 +61,24 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def validate_properties(properties):
+# Committed Builds policy at the frozen producer pin, not a new exception.
+FROZEN_SECURITY_EXCEPTIONS = {"NoWarn": set(), "WarningsNotAsErrors": {"NU1901", "NU1902"}}
+POLICY_PROPERTIES = ("Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,"
+    "NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,"
+    "_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors,ProjectAssetsFile,"
+    "MSBuildProjectFullPath,BaseIntermediateOutputPath,OutputPath,TargetFramework,AnalysisMode,AnalysisLevel,"
+    "EffectiveAnalysisLevel,_GlobalAnalyzerConfigAnalysisMode_MicrosoftCodeAnalysisNetAnalyzers")
+
+
+FROZEN_ANALYZER_POLICY = {
+    "net11.0": {"AnalysisMode": "", "AnalysisLevel": "latest", "EffectiveAnalysisLevel": "11.0",
+                "_GlobalAnalyzerConfigAnalysisMode_MicrosoftCodeAnalysisNetAnalyzers": "Default"},
+    "netstandard2.0": {"AnalysisMode": "", "AnalysisLevel": "", "EffectiveAnalysisLevel": "",
+                       "_GlobalAnalyzerConfigAnalysisMode_MicrosoftCodeAnalysisNetAnalyzers": "Default"},
+}
+
+
+def validate_properties(properties, security_exceptions=None):
     expected = {
         "Configuration": "Release", "UseHexalithProjectReferences": "false",
         "UseNuGetDeps": "true", "NuGetAudit": "true", "NuGetAuditMode": "all",
@@ -76,6 +94,18 @@ def validate_properties(properties):
     for name in ("RunAnalyzers", "RunAnalyzersDuringBuild"):
         if properties.get(name) not in ("", "true"):
             errors.append(f"{name} disables or invalidates analyzers: {properties.get(name)!r}")
+    permitted = FROZEN_SECURITY_EXCEPTIONS if security_exceptions is None else security_exceptions
+    for name in ("NoWarn", "WarningsNotAsErrors"):
+        actual = {code.strip().upper() for code in properties.get(name, "").replace(",", ";").split(";")
+                  if code.strip().upper().startswith("NU19")}
+        if actual != set(permitted.get(name, ())):
+            errors.append(f"{name} vulnerability exceptions differ from frozen policy: {sorted(actual)}")
+    normal = FROZEN_ANALYZER_POLICY.get(properties.get("TargetFramework"))
+    if normal is None:
+        errors.append("No frozen normal analyzer policy for evaluated TargetFramework")
+    else:
+        errors.extend(f"{name}: expected frozen normal {value!r}, evaluated {properties.get(name)!r}"
+                      for name,value in normal.items() if properties.get(name) != value)
     return errors
 
 
@@ -186,6 +216,60 @@ def main():
             "nested_submodules_initialized": False}
         save()
 
+    active_assets = []
+    designated_outputs = {}
+
+    def evaluate(name, project, cwd, flags=(), synthetic=False):
+        command_name = name + "-properties"
+        code, text = run(command_name, ["dotnet", "msbuild", str(project),
+            "-p:Configuration=Release", *flags, "-target:_ComputeSkipAnalyzers;AddGlobalAnalyzerConfigForPackage_MicrosoftCodeAnalysisNetAnalyzers",
+            "-getProperty:" + POLICY_PROPERTIES], cwd=cwd, required=True)
+        properties = json.loads(text)["Properties"]
+        exceptions = {"NoWarn": set(), "WarningsNotAsErrors": set()} if synthetic else FROZEN_SECURITY_EXCEPTIONS
+        errors = validate_properties(properties, exceptions)
+        result.setdefault("evaluated_properties", {})[name] = {"values": properties,
+            "validation_errors": errors, "command": command_name,
+            "permitted_security_exceptions": {key: sorted(value) for key, value in exceptions.items()}}
+        save()
+        require(not errors, f"{name}: {errors}")
+        project_path = Path(properties["MSBuildProjectFullPath"]).resolve()
+        require(project_path == (Path(cwd) / project).resolve(), "Evaluated another project")
+        asset_path = Path(properties["ProjectAssetsFile"].replace("\\", "/"))
+        if not asset_path.is_absolute():
+            asset_path = project_path.parent / asset_path
+        if synthetic:
+            config_paths = [Path(cwd) / "NuGet.Config"]  # actual --configfile selected by the probe
+            discovery = "explicit --configfile"
+        else:
+            discovery = name + "-restore-config-paths"
+            _,config_text = run(discovery, ["dotnet", "nuget", "config", "paths", "--working-directory",
+                str(project_path.parent), "--force-english-output"], cwd=cwd, required=True)
+            config_paths = [Path(line.strip()) for line in config_text.splitlines() if line.strip()]
+        policies = capture_restore_policy(config_paths, output, name)
+        result["evaluated_properties"][name]["restore_policy"] = policies
+        result["evaluated_properties"][name]["restore_config_discovery"] = discovery
+        active_assets.append({"restore_policy": policies, "assets_path": str(asset_path.resolve()),
+                              "project_path": str(project_path), "evaluation_command": command_name})
+        for key in ("BaseIntermediateOutputPath", "OutputPath"):
+            path = (project_path.parent / properties[key].replace("\\", "/")).resolve()
+            require(path.is_relative_to(work), "Build output escaped private scratch")
+            designated_outputs[str(path)] = command_name
+        result["active_assets"] = active_assets
+        result["designated_build_outputs"] = designated_outputs
+        save()
+        return properties
+
+    def validate_input_tree(name, directory, initial=False):
+        recorded = result["dependencies"][name]["commit"]
+        tracked = git(directory, "ls-tree", "-r", "--name-only", recorded).splitlines()
+        dependencies = ("references/Hexalith.Builds", "references/Hexalith.AI.Tools", "references/Hexalith.Tenants") if name == "Hexalith.EventStore" else ()
+        outputs = [str(Path(path).relative_to(directory)) for path in designated_outputs
+                   if Path(path).is_relative_to(directory)]
+        extra = unexpected_inputs(directory, tracked, outputs, dependencies)
+        result["dependencies"][name]["unexpected_inputs_initial" if initial else "unexpected_inputs_final"] = extra
+        save()
+        require(not extra, f"Unexpected source/build inputs in {name}: {extra}")
+
     try:
         clone("Hexalith.EventStore", SOURCE, owner)
         # Whole Contracts tests read these repositories. Each comes from the
@@ -197,14 +281,30 @@ def main():
             if name == "Hexalith.Builds":
                 require(commit == BUILDS, "Producer Builds gitlink differs from the frozen pin")
             clone(name, commit, owner / relative)
+        for name in result["dependencies"]:
+            validate_input_tree(name, owner if name == "Hexalith.EventStore" else owner / "references" / name, initial=True)
+        # Preserve the original broad CLI modes without treating ordinary SDK
+        # outputs from referenced frozen projects as injected inputs. Query mode
+        # uses only its narrower explicitly evaluated output directories.
+        if not args.query_api_package_probe:
+            for name in result["dependencies"]:
+                directory = owner if name == "Hexalith.EventStore" else owner / "references" / name
+                tracked = git(directory, "ls-tree", "-r", "--name-only", result["dependencies"][name]["commit"]).splitlines()
+                for relative in tracked:
+                    if relative.endswith(".csproj"):
+                        for leaf in ("bin", "obj"):
+                            path = (directory / relative).parent / leaf
+                            designated_outputs[str(path)] = "SDK output for frozen tracked project " + relative
+            result["designated_build_outputs"] = designated_outputs
+            save()
         for relative in INPUTS:
             _, _ = run("input-" + str(len(result["inputs"])),
                        ["git", "--no-replace-objects", "-C", str(owner), "show", SOURCE + ":" + relative], required=True)
             raw = (output / result["commands"][-1]["log"]).read_bytes()
-            target = output / "committed-inputs" / relative
+            target = output / "committed-inputs" / (".gitattributes.evidence" if relative == ".gitattributes" else relative)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(raw)
-            result["inputs"][relative] = {"blob": git(owner, "rev-parse", SOURCE + ":" + relative),
+            result["inputs"][relative] = {"retained_path": str(target.relative_to(output)), "blob": git(owner, "rev-parse", SOURCE + ":" + relative),
                                           "sha256": sha256(target)}
         result["builds_catalog_sha256"] = sha256(owner / "references/Hexalith.Builds/Props/Directory.Packages.props")
         result["release_package_inventory"] = json.loads((owner / "tools/release-packages.json").read_text())
@@ -214,14 +314,8 @@ def main():
         ready = {}
         selected_projects = {} if args.local_package_probes or args.authority_probe or args.query_api_package_probe else PROJECTS
         for name, project in selected_projects.items():
-            evaluation, text = run(name + "-properties", ["dotnet", "msbuild", project,
-                "-p:Configuration=Release", *flags,
-                "-target:_ComputeSkipAnalyzers",
-                "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors"], cwd=owner)
-            properties = json.loads(text)["Properties"] if evaluation == 0 else {}
-            errors = validate_properties(properties)
-            result.setdefault("evaluated_properties", {})[name] = {"values": properties, "validation_errors": errors}
-            result["checks"][name + "-properties"] = evaluation or int(bool(errors))
+            evaluate(name, project, owner, flags)
+            result["checks"][name + "-properties"] = 0
             restore, _ = run(name + "-restore", ["dotnet", "restore", project,
                 "-p:Configuration=Release", *flags], cwd=owner)
             result["checks"][name + "-restore"] = restore
@@ -291,17 +385,18 @@ def main():
             result["checks"]["package-authority-direct"] = 124 if result["commands"][-1].get("timed_out") else code
         if args.query_api_package_probe:
             from query_package_probe import probe
-            result["query_api_package_probe"] = probe(owner, work, output, env, run, SOURCE)
+            result["query_api_package_probe"] = probe(owner, work, output, env, run, SOURCE, evaluate, save, result)
             result["checks"]["query-api-package-probe"] = 0 if result["query_api_package_probe"]["passed"] else 1
-        result["resolved_package_graphs"] = capture_graphs(work, output)
+        result["resolved_package_graphs"] = capture_graphs(work, output, active_assets)
         for name in result["dependencies"]:
             directory = owner if name == "Hexalith.EventStore" else owner / "references" / name
+            validate_input_tree(name, directory)
             recorded = result["dependencies"][name]["commit"]
             final_head = git(directory, "rev-parse", "HEAD")
             result["dependencies"][name]["final_head"] = final_head
             result["dependencies"][name]["final_head_matches_recorded_commit"] = final_head == recorded
             code, text = run("final-source-" + name,
-                             ["git", "diff", "--exit-code", recorded, "--"], cwd=directory)
+                             ["git", "diff", "--no-ext-diff", "--no-textconv", "--exit-code", recorded, "--"], cwd=directory)
             result["dependencies"][name]["tracked_source_unchanged"] = code == 0
             nested = []
             for line in git(directory, "ls-tree", "-r", recorded).splitlines():
@@ -334,9 +429,14 @@ def main():
                      result["authority_probe_passed"] or result.get("query_api_package_probe", {}).get("passed")) else 1
     except BaseException as error:
         result["fatal_error"] = str(error)
-        result["resolved_package_graphs"] = capture_graphs(work, output)
+        result["primary_error_type"] = type(error).__name__
         result["completed_utc"] = utc()
         (output / "helper-error.log").write_text(traceback.format_exc())
+        save()  # Preserve primary error before any best-effort capture.
+        try:
+            result["resolved_package_graphs"] = capture_graphs(work, output, active_assets)
+        except BaseException as capture_error:
+            result["graph_capture_error"] = repr(capture_error)
         save()
         raise
 

@@ -2,13 +2,13 @@
 title: 'Verify EventStore producer readiness for Projects query contracts'
 type: 'bugfix'
 created: '2026-11-17'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_commit: '92e4e0b0acf0a256078c330419734eafa69b84ed'
 context:
-  - '/home/administrator/projects/hexalith/cicd/AGENTS.md'
-  - '/home/administrator/projects/hexalith/cicd/docs/pre-adoption-publication.md'
-  - '/home/administrator/projects/hexalith/cicd/docs/ordered-module-adoption.md'
+  - '/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/AGENTS.md'
+  - '/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/docs/pre-adoption-publication.md'
+  - '/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/docs/ordered-module-adoption.md'
 review_loop_iteration: 2
 ---
 
@@ -76,6 +76,19 @@ Prepare EventStore release readiness for the query-contract API required by Proj
 - E2.1 — high, bad_spec, grouped with B2.1: a foreign parent double-forked after the baseline; cleanup killed/reaped its unrelated descendant while reporting custody success.
 - E2.2 — medium, patch, grouped with B2.8: an actual JobInterrupted control left the inspection's commands list empty.
 - G2.1 — high, bad_spec, grouped with B2.1: the verification-gap review independently reproduced the foreign-orphan kill; current foreign controls keep their parents alive and miss the race.
+- B3.1 — medium, patch: verify.run catches two functions as exception types, replacing lifecycle errors with TypeError. Catch only exception classes and exercise the actual main caller for interruption/cleanup receipts.
+- B3.2 — medium, patch: inherited external-diff selectors can make a changed tracked file return clean. Quarantine both selectors and force internal, non-textconv source comparisons.
+- B3.3 — medium, patch: AnalysisMode=None disables diagnostics while existing policy checks pass. Quarantine analyzer-level/mode overrides and validate effective source/consumer analyzer configuration.
+- B3.4 — medium, patch: candidate identities are bound but archive SHA-512 is not compared to restored package content hashes. Bind the synthetic package entries to the exact retained archive bytes.
+- B3.5 — medium, patch: TRX replay omits its already recorded byte hash. Check each original TRX SHA-256 before interpreting rows/counters.
+- B3.6 — medium, patch: API replay trusts summary booleans without exact type/package command, native exit and diagnostic-log derivation. Cross-check all four assertions against their receipts.
+- B3.7 — medium, patch: all([]) permits an empty focused-control report. Require the declared control-name and corresponding receipt inventories.
+- B3.8 — medium, patch: the live assets summary discards dependency edges/framework/asset selections. Retain the relevant sanitized active sections and distinguish historical inventories from complete new captures.
+- B3.9 — medium, patch: configuration filenames do not bind effective restore policy. Capture sanitized policy manifests/hashes before execution, verify afterward, and omit credential contents.
+- B3.10 — low, patch: the retained third-party RID archive needlessly adds 67 MB to Git history. Keep its pinned retrieval metadata and durable local artifact copy; allow hash-verified scratch retrieval for replay and exclude the download from source publication.
+- E3.1 — medium, patch, grouped with B3.1: the actual interrupted main invocation loses its native/cleanup fields due to the invalid exception tuple.
+- G3.1 — medium, patch, grouped with B3.1: caller-level exception coverage was absent despite lower-level cancellation controls; add interruption and cleanup-error controls through verify.main.
+- Publication check — medium, patch: captured `.gitattributes` files act on neighboring evidence during checkout, converting recorded LF `global.json` bytes to CRLF. Preserve captured attributes under an inert artifact name and resolve that alias in receipt replay so normal committed checkouts retain exact evidence bytes.
 
 ## Spec Change Log
 
@@ -84,6 +97,12 @@ Prepare EventStore release readiness for the query-contract API required by Proj
 
 ## Iteration 2 Working Root and Implementation Constraints
 
+This section is the current implementation plan; the earlier code map is preserved as history.
+
+- [x] Re-derive active code with isolated job custodians and complete failure receipts, then prove foreign-orphan safety.
+- [x] Correct graph/policy/input/audit provenance and validate one narrow actual query-package boundary.
+- [x] Bind public inspector execution to the downloaded archive and refresh truthful, replayable evidence.
+
 - All further edits and outputs belong to `/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z`, on the already prepared isolated CiCd branch. Do not edit the shared original `/home/administrator/projects/hexalith/cicd` checkout. The packet and this spec are copied into that worktree; its top-level EventStore, Tenants, Builds and AI.Tools dependency objects supply the frozen source. No nested submodule initialization.
 - Implement per-job custodian process isolation. The main helper must never adopt/classify unrelated child trees; a dedicated child supervisor becomes subreaper for only one job and owns its descendants across forks/sessions/cleared environments. Preserve parent foreign jobs, native exits and cancellation receipts; private IPC is internal and must contain no credential values in saved evidence. Test the exact foreign-orphan race, early/active cancellation and escaped descendants. Keep original limits, especially authority 480 seconds; fail explicitly on incomplete custody.
 - Capture only explicitly evaluated active ProjectAssetsFile paths, never arbitrary rglob results. Distinguish current graphs from tracked history and correct the old eleven-project claim with a superseding record. Preserve original captures. Validate actual producer/consumer Release, package, audit and analyzer settings, including the exact frozen permitted vulnerability-warning exceptions. Quarantine ambient policy and Git overrides without switching credential profiles.
@@ -91,7 +110,7 @@ Prepare EventStore release readiness for the query-contract API required by Proj
 - Bind retained query inputs, project files, nuspecs, graphs and generated output through manifests; replay aggregation against original receipts. A new narrow query-package run may establish fresh complete provenance; prior missing data cannot be invented. No whole producer suite or unrelated consumer rerun.
 - Install pinned public inspector from the exact downloaded local archive and verify its actual executed payload. Retain known-present and missing-type controls, tool/version/commands, and interrupted-command receipts. Run only this narrow inspection and relevant utility controls.
 
-## Re-derivation Code Map
+## Iteration 1 Code Map (historical; superseded by iteration 2)
 
 - [x] Restore and harden the active helper's input, lifecycle, identity, inventory and graph boundaries with executable controls.
 - [x] Prove the requested API through a real synthetic package consumer and preserve runnable public-package API/evidence inspection.
@@ -106,3 +125,9 @@ Prepare EventStore release readiness for the query-contract API required by Proj
 - Persist runnable evidence/control validation and exact command/version/known-present control for public package API inspection. Keep credential/profile metadata minimal. These are internal verification artifacts; add no public SDK API or production workflow.
 - Parent/original adoption and publication gates remain blocked. Re-derivation validates the helper and new package boundary only; supplemental success never makes the original Contracts run green.
 - Re-derivation verification: the real three-package query consumer compiles the new attribute and generated typed binding; pinned inspector 0.28.0 reproduces public absence with known-present controls. Executable evidence controls pass, followed by 18 focused cancellation/adoption/foreign-child/layout controls after removal of process-environment scanning. Historical graph/custody limitations remain explicit; no producer or broad package rerun was used to mask old results.
+
+- Execution preservation: `pre-review-2/` contains the five active helper scaffolds and their hashes. Restore them promptly before refactoring. Re-derive those owned code files only; retain every historical execution snapshot and original receipt.
+
+- Iteration 2 implementation evidence: `iteration2-controls-05` passes 41 optimized controls; `iteration2-query-api-02` passes the real narrow query-package boundary with five explicitly evaluated active Linux graphs; `iteration2-public-api-02` passes captured-archive/payload-bound public API controls; `iteration2-audit-04` passes 706 receipt/input/aggregation checks. All wrapper scratch paths are removed. Earlier helper/control mistakes, original producer failures, snapshots and historical provenance/custody limits remain preserved. No whole producer suite or unrelated consumer was rerun.
+
+- Review patch verification: all third-review findings and the publication line-ending check were corrected with focused patches. Current controls pass 71 checks, the narrow query/public API refreshes pass, and the audit passes 773 checks. Independent parent controls/audit reproduce 71/773; their hashed receipts are recorded in `publication-verification.json`. Original whole Contracts failures/skips remain preserved, the producer source remains frozen, and no broad producer suite was rerun.

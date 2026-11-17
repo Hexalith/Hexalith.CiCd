@@ -1,0 +1,42 @@
+Running tests from /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll (net11.0|x64)
+failed Hexalith.EventStore.Contracts.Tests.Packaging.CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions (391ms)
+  from /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll (net11.0|x64)
+  Shouldly.ShouldAssertException : sharedGitInstructions
+      should contain (case insensitive comparison)
+  "validate it with commitlint"
+      but was actually
+  "# Hexalith Git Instructions
+  
+  These rules apply before creating Git commits in a Hexalith repositor..."
+    at Hexalith.EventStore.Contracts.Tests.Packaging.CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions() in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs:80
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+skipped Hexalith.EventStore.Contracts.Tests.Packaging.PackagedReminderApiTests.PackagedReminderApiRunsWithoutWorksTypes
+  EVENTSTORE_PACKAGE_CONTRACT_DIR is not set; no release package inventory was supplied.
+  from /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll (net11.0|x64)
+skipped Hexalith.EventStore.Contracts.Tests.Packaging.TrustedEffectPackageContractTests.NamedPackagesExposeTrustedEffectContracts
+  EVENTSTORE_PACKAGE_CONTRACT_DIR is not set; no release package inventory was supplied.
+  from /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll (net11.0|x64)
+failed Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.SharedConsumerAuthorityValidatorPassesForEveryTrackedMsBuildSurfaceAsync (8m 01s 079ms)
+  from /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.TimeoutException : Consumer package authority validation timed out after 00:08:00.
+  ---- System.Threading.Tasks.TaskCanceledException : A task was canceled.
+    at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.RunConsumerAuthorityValidatorAsync(String repositoryRoot, String root, String catalogPath, Boolean useApprovedException) in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:291
+    at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.SharedConsumerAuthorityValidatorPassesForEveryTrackedMsBuildSurfaceAsync() in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:147
+    --- End of stack trace from previous location ---
+    ----- Inner Stack Trace -----
+    at System.Diagnostics.Process.WaitForExitAsync(CancellationToken cancellationToken)
+    at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.RunConsumerAuthorityValidatorAsync(String repositoryRoot, String root, String catalogPath, Boolean useApprovedException) in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:286
+/tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll (net11.0|x64) failed with 2 error(s) [+1805/x2/?2] (9m 52s 549ms)
+Exit code: 2
+
+  In process file artifacts produced:
+    - /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/reports/contracts/contracts.trx
+
+Test run summary: Failed!
+  total: 1809
+  failed: 2
+  succeeded: 1805
+  skipped: 2
+  duration: 9m 53s 418ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes

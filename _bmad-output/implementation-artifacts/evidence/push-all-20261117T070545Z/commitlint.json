@@ -1,0 +1,49 @@
+{
+  "release": {
+    "draft": false,
+    "id": 447854872,
+    "immutable": true,
+    "published_at": "2026-11-17T01:14:39Z",
+    "tag_name": "v6.1.0",
+    "target_commitish": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "commit": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d"
+  },
+  "tool_lock_sha256": "e1cee6ebc2ce6f5bb679d3739a7d957052c4fc1d19aebcbb834794f78d232835",
+  "message_sha256": "40969b74d4a6299fa8ce666a1512b3cfe47f3eb09cf66a526d195a5581948d85",
+  "checks": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "native_exit": 0,
+      "log": "commitlint-1.log",
+      "sha256": "8cfd358d1c6d98f4d66ae6b22ec338e93009d18f4a4b8374c335ec1dcb5f6f24"
+    },
+    {
+      "command": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "native_exit": 0,
+      "log": "commitlint-2.log",
+      "sha256": "5a546fd1c3f67990131fbcc109576701eea9458c82a576443b639c0237ee5973"
+    },
+    {
+      "command": [
+        "node",
+        "/tmp/hexalith-job.UW9oGnvI/tools/node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "/tmp/hexalith-job.UW9oGnvI/released/Github/guard/commitlint.config.mjs",
+        "--color=false"
+      ],
+      "native_exit": 0,
+      "log": "commitlint-3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "passed": true,
+  "scratch": "/tmp/hexalith-job.UW9oGnvI"
+}

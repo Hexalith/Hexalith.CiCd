@@ -1,0 +1,264 @@
+{
+  "passed": true,
+  "checks": {
+    "native-0-preserved": true,
+    "native-7-preserved": true,
+    "escape-normal": true,
+    "escape-normal-bound": true,
+    "escape-timeout": true,
+    "escape-timeout-bound": true,
+    "foreign-orphan-survives-0": true,
+    "foreign-orphan-not-reaped-0": true,
+    "foreign-orphan-survives-1": true,
+    "foreign-orphan-not-reaped-1": true,
+    "foreign-orphan-survives-2": true,
+    "foreign-orphan-not-reaped-2": true,
+    "active-cancel-2": true,
+    "active-cancel-15": true,
+    "early-cancel-no-job": true,
+    "fork-startup-cancel-custody": true,
+    "caller-never-scanned": true,
+    "git-policy-selector-quarantine": true,
+    "credential-selection-preserved": true,
+    "exact-frozen-security-exceptions": true,
+    "reject-added-NoWarn-NU1903": true,
+    "reject-added-NoWarn-NU1904": true,
+    "reject-added-WarningsNotAsErrors-NU1903": true,
+    "reject-added-WarningsNotAsErrors-NU1904": true,
+    "reject-analyzer-disable": true,
+    "synthetic-has-no-security-exceptions": true,
+    "only-evaluated-active-graph": true,
+    "effective-source-sanitized": true,
+    "graph-error-is-explicit": true,
+    "designated-output-accepted": true,
+    "unexpected-build-input-rejected": true,
+    "input-manifest-replayed": true,
+    "input-manifest-mutation-rejected": true,
+    "interrupted-inspection-records-command": true,
+    "interrupted-inspection-records-cleanup": true,
+    "authority-bound-unchanged": true
+  },
+  "lifecycle_receipts": {
+    "native-0": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2167042
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2167041,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true
+    },
+    "native-7": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 7,
+      "process_started": true,
+      "owned_pids": [
+        2167083
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2167082,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true
+    },
+    "escape-normal": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2167088,
+        2167089,
+        2167090
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2167087,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2167089,
+        2167090
+      ],
+      "custodian_waited": true
+    },
+    "escape-timeout": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -9,
+      "process_started": true,
+      "owned_pids": [
+        2168131,
+        2168134,
+        2168135
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2168130,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2168131,
+        2168134,
+        2168135
+      ],
+      "custodian_waited": true
+    },
+    "foreign-orphan-race-0": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -9,
+      "process_started": true,
+      "owned_pids": [
+        2169183
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2169182,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2169183
+      ],
+      "custodian_waited": true
+    },
+    "foreign-orphan-race-1": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -9,
+      "process_started": true,
+      "owned_pids": [
+        2169984
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2169983,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2169984
+      ],
+      "custodian_waited": true
+    },
+    "foreign-orphan-race-2": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -9,
+      "process_started": true,
+      "owned_pids": [
+        2171211
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2171209,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2171211
+      ],
+      "custodian_waited": true
+    },
+    "active-cancel-2": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": -9,
+      "process_started": true,
+      "owned_pids": [
+        2172730,
+        2172732,
+        2172733
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2172729,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "remaining_owned_before_cleanup": [
+        2172730,
+        2172732,
+        2172733
+      ],
+      "custodian_waited": true
+    },
+    "active-cancel-15": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": -9,
+      "process_started": true,
+      "owned_pids": [
+        2173963,
+        2173965,
+        2173966
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2173962,
+      "cancelled": true,
+      "cancellation_signal": 15,
+      "remaining_owned_before_cleanup": [
+        2173963,
+        2173965,
+        2173966
+      ],
+      "custodian_waited": true
+    },
+    "early-cancel": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": null,
+      "process_started": false,
+      "owned_pids": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "custodian_waited": true
+    },
+    "fork-startup-cancel": {
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": null,
+      "process_started": false,
+      "owned_pids": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2175031,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true
+    }
+  },
+  "source_sha256": {
+    "iteration2_controls.py": "286190105b1f7ed6fcbb65970af6504cb47d8ab0f17040015d3b34da182a2264",
+    "verification_core.py": "27efbe4654aee67055841234c23eb6d948fdab2dccc54592cada66dced2120db",
+    "verify.py": "d1f2992fe0baa1dfbbdebfc62836252fbcd86b94dd3b8f995605ee6116dce2db",
+    "query_package_probe.py": "b8a8f7c2043ce353e30edb887abd7e2dbb8fbde887a507ca967af1de5ee0ffac",
+    "inspect_public_api.py": "8815508c47e59c79593d2f0034d8cca94e5bd318925a717b8f74e7bd617f1e37"
+  },
+  "python_optimization": 1,
+  "scratch": "/tmp/hexalith-job.ngAlNQCq",
+  "complete_release_acceptance": false,
+  "invocation": "run-with-temp python3 -O -B /home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/iteration2_controls.py --output /home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/iteration2-controls-02"
+}
