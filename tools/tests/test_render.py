@@ -495,7 +495,7 @@ class RenderTests(unittest.TestCase):
             self.assertEqual({"job-timeout-minutes": 360}, rendered["ci"]["with"])
             self.assertEqual("macos-latest", rendered["windows-platform"]["runs-on"])
             self.assertEqual("windows-latest", rendered["windows-windows"]["runs-on"])
-            self.assertEqual("ci", rendered["windows-platform"]["needs"])
+            self.assertEqual(["ci"], rendered["windows-platform"]["needs"])
             self.assertEqual("./.github/actions/platform", rendered["windows-platform"]["steps"][1]["uses"])
             fixture.cli("--check")
 
