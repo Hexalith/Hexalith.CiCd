@@ -211,19 +211,25 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
             # Observe queued work before running work: a queued→in_progress
             # transition must remain visible during this bounded scan.
             runs = []
-            for status in ("requested", "waiting", "pending", "queued", "in_progress"):
-                if clock() >= deadline:
-                    raise rt.NightlyError("delivery barrier exceeded 30 minutes")
-                runs.extend(transport.api.pages(
-                    f"/repos/Hexalith/{rt.CICD}/actions/workflows/deliver.yml/runs?branch=main&status={status}",
-                    token, field="workflow_runs", deadline=deadline))
-            busy = False
-            for run in runs:
-                if (not isinstance(run, dict) or run.get("head_branch") != "main"
-                        or run.get("path", "").split("@", 1)[0] != ".github/workflows/deliver.yml"
-                        or run.get("status") not in STATUSES):
-                    raise rt.NightlyError("delivery run status is unreadable")
-                busy |= run["status"] != "completed"
+            try:
+                for status in ("requested", "waiting", "pending", "queued", "in_progress"):
+                    if clock() >= deadline:
+                        raise rt.NightlyError("delivery barrier exceeded 30 minutes")
+                    runs.extend(transport.api.pages(
+                        f"/repos/Hexalith/{rt.CICD}/actions/workflows/deliver.yml/runs?branch=main&status={status}",
+                        token, field="workflow_runs", deadline=deadline))
+            except rt.InventoryChanged:
+                # Discard the whole scan. A fresh pass must observe queued work
+                # again; no partial inventory can establish an idle barrier.
+                busy = True
+            else:
+                busy = False
+                for run in runs:
+                    if (not isinstance(run, dict) or run.get("head_branch") != "main"
+                            or run.get("path", "").split("@", 1)[0] != ".github/workflows/deliver.yml"
+                            or run.get("status") not in STATUSES):
+                        raise rt.NightlyError("delivery run status is unreadable")
+                    busy |= run["status"] != "completed"
             if clock() >= deadline:
                 raise rt.NightlyError("delivery barrier exceeded 30 minutes")
             if not busy:

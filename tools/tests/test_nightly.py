@@ -102,6 +102,67 @@ class NightlyControllerTests(unittest.TestCase):
                 if not clears:
                     self.assertFalse(Path(workspace.config["dispatches"]).exists())
 
+    def test_barrier_restarts_whole_scan_after_short_page_or_total_drift(self):
+        for change in ("short-page", "changed-total"):
+            with self.subTest(change=change):
+                workspace = self.fixture(())
+                base = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status="
+                endpoint = lambda status, page=1: base + status + f"&per_page=100&page={page}"
+                empty = {"total_count": 0, "workflow_runs": []}
+                pending = {"id": 123, "head_branch": "main", "path": ".github/workflows/deliver.yml", "status": "pending"}
+                queued = pending | {"id": 124, "status": "queued"}
+                workspace.config["responses"][endpoint("pending")] = [{"total_count": 1, "workflow_runs": [pending]}, empty]
+                workspace.config["responses"][endpoint("queued")] = [empty, {"total_count": 1, "workflow_runs": [queued]}, empty]
+                if change == "short-page":
+                    changed = {"total_count": 1, "workflow_runs": []}
+                else:
+                    changed = {"total_count": 101, "workflow_runs": [pending | {"id": index, "status": "in_progress"} for index in range(100)]}
+                    workspace.config["responses"][endpoint("in_progress", 2)] = {"total_count": 102, "workflow_runs": [queued]}
+                workspace.config["responses"][endpoint("in_progress")] = [changed, empty]
+                started = workspace.clock()
+                self.assertEqual(workspace.call("barrier"), 0)
+                self.assertEqual(workspace.clock() - started, 120)
+                self.assertTrue((workspace.directory / "barrier-cleared").is_file())
+                requests = [json.loads(line) for line in Path(workspace.config["requests"]).read_text().splitlines()]
+                for moment in (started, started + 60, started + 120):
+                    scan = [item["path"] for item in requests if item["at"] == moment and item["path"].startswith(base) and item["path"].endswith("page=1")]
+                    self.assertEqual(scan, [endpoint(status) for status in ("requested", "waiting", "pending", "queued", "in_progress")])
+                self.assertFalse(Path(workspace.config["dispatches"]).exists())
+                self.assertTrue(all(item["runId"] == 0 for item in workspace.state()["targets"]))
+
+    def test_barrier_persistent_inventory_changes_expire_without_dispatch(self):
+        for change in ("short-page", "changed-total"):
+            with self.subTest(change=change):
+                workspace = self.fixture(())
+                endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page="
+                if change == "short-page":
+                    workspace.config["responses"][endpoint + "1"] = {"total_count": 1, "workflow_runs": []}
+                else:
+                    busy = {"id": 123, "head_branch": "main", "path": ".github/workflows/deliver.yml", "status": "in_progress"}
+                    workspace.config["responses"][endpoint + "1"] = {"total_count": 101, "workflow_runs": [busy] * 100}
+                    workspace.config["responses"][endpoint + "2"] = {"total_count": 102, "workflow_runs": [busy]}
+                started = workspace.clock()
+                self.assertEqual(workspace.call("barrier"), 1)
+                self.assertGreaterEqual(workspace.clock() - started, 60)
+                self.assertLessEqual(workspace.clock() - started, 1800)
+                self.assertFalse((workspace.directory / "barrier-cleared").exists())
+                self.assertEqual(workspace.call("select"), 1)
+                self.assertFalse(Path(workspace.config["dispatches"]).exists())
+                self.assertTrue(all(item["runId"] == 0 for item in workspace.state()["targets"]))
+
+    def test_barrier_malformed_inventory_and_authentication_errors_do_not_rescan(self):
+        for response in ({"total_count": True, "workflow_runs": []}, {"total_count": 0, "workflow_runs": {}}, {"status": 403, "body": {}}):
+            with self.subTest(response=response):
+                workspace = self.fixture(())
+                endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=requested&per_page=100&page=1"
+                workspace.config["responses"][endpoint] = response
+                started = workspace.clock()
+                self.assertEqual(workspace.call("barrier"), 1)
+                self.assertLess(workspace.clock() - started, 60)
+                self.assertFalse((workspace.directory / "barrier-cleared").exists())
+                self.assertEqual(workspace.call("select"), 1)
+                self.assertFalse(Path(workspace.config["dispatches"]).exists())
+
     def test_target_mint_failure_and_uncertain_dispatch_preserve_siblings(self):
         workspace = self.fixture()
         workspace.config["dispatch_fail"] = ["Hexalith.Beta"]

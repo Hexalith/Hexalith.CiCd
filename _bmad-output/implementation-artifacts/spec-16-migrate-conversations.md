@@ -198,6 +198,22 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   and named owned paths. This candidate is unpushed and has no released-input
   execution claim. See the [resumed receipts](../specs/spec-cicd/evidence/16/resume-20261116/README.md).
 
+
+- Operational prerequisite follow-up on 2026-11-17 preserves the frozen intent
+  and baseline: Builds `66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9` corrects
+  ordered default-property evaluation while preserving current `8.0.1`, retained
+  `7.0.7`, incoming literal/scope guards and all original closure/provenance
+  assertions. Actual SDK ordering cases, both complete affected classes (77
+  cases), strict Release builds and owning commit policy passed. New incoming
+  workflow-lint findings still hold the acceptable supporting release.
+- Standard nightly `43969951043` dispatched no target after a changing paginated
+  delivery inventory refused completeness. The scoped controller repair keeps
+  the general reader fail-closed, retries only typed count inconsistency by
+  discarding the whole five-status scan, and retains the existing poll interval,
+  30-minute deadline and dispatch reserve. Malformed/authentication/other errors
+  stay fatal. This owning-source prerequisite repair grants no product adoption
+  or nightly acceptance and does not change the frozen migration requirements.
+
 ## Spec Change Log
 
 - 2026-11-16 follow-up: the user requested "fix" after the publication report.

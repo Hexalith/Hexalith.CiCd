@@ -42,6 +42,10 @@ DIGEST = re.compile(r"sha256:[0-9a-f]{64}\Z")
 TOKEN_NAMES = ("CICD_TOKEN", "TARGET_TOKEN", "POLL_TOKEN", "HANDOFF_TOKEN", "MODULE_TOKEN")
 
 
+class InventoryChanged(NightlyError):
+    """A well-formed paginated inventory changed while it was being read."""
+
+
 @contextmanager
 def whole_operation(seconds, *, write=False):
     """Bound DNS, connection acquisition and dribbling reads on Ubuntu runners.
@@ -439,19 +443,22 @@ class API:
         for page in range(1, MAX_PAGES + 1):
             value = self.get(path + ("&" if "?" in path else "?") + f"per_page=100&page={page}", token,
                              deadline=deadline)
+            observed_total = None
             if field is not None:
                 if not isinstance(value, dict) or type(value.get("total_count")) is not int or value["total_count"] < 0:
                     raise NightlyError("malformed paginated GitHub object")
-                if total is not None and value["total_count"] != total:
-                    raise NightlyError("GitHub paginated inventory changed")
-                total = value["total_count"]
+                observed_total = value["total_count"]
                 value = value.get(field)
             if not isinstance(value, list) or len(value) > 100:
                 raise NightlyError("malformed paginated GitHub list")
+            if observed_total is not None:
+                if total is not None and observed_total != total:
+                    raise InventoryChanged("GitHub paginated inventory changed")
+                total = observed_total
             result.extend(value)
             if len(value) < 100:
                 if total is not None and total != len(result):
-                    raise NightlyError("incomplete paginated GitHub inventory")
+                    raise InventoryChanged("incomplete paginated GitHub inventory")
                 return result
         raise NightlyError("GitHub API pagination limit exceeded")
 

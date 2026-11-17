@@ -655,6 +655,21 @@ class RuntimeTests(unittest.TestCase):
             api.get("/repos/Hexalith/Hexalith.Alpha/immutable-releases", "inert")
         self.assertFalse(opener.requests)
 
+    def test_pagination_changes_are_typed_refusals_and_malformed_pages_remain_fatal(self):
+        for replies in ([{"total_count": 1, "artifacts": []}],
+                        [{"total_count": 101, "artifacts": [{}] * 100}, {"total_count": 102, "artifacts": [{}]}]):
+            with self.subTest(replies=replies):
+                api, _, _ = self.api(replies)
+                with self.assertRaises(rt.InventoryChanged):
+                    api.pages("/repos/Hexalith/Hexalith.Alpha/actions/runs/9/artifacts", "inert", field="artifacts")
+        for replies in ([{"total_count": True, "artifacts": []}], [{"total_count": 0, "artifacts": {}}],
+                        [{"total_count": 101, "artifacts": [{}] * 100}, {"total_count": 102, "artifacts": None}]):
+            with self.subTest(replies=replies):
+                api, _, _ = self.api(replies)
+                with self.assertRaises(rt.NightlyError) as failure:
+                    api.pages("/repos/Hexalith/Hexalith.Alpha/actions/runs/9/artifacts", "inert", field="artifacts")
+                self.assertNotIsInstance(failure.exception, rt.InventoryChanged)
+
     def test_artifact_digest_exact_member_and_json(self):
         payload = zip_document("outcome.json", {"ok": True})
         info = metadata(8, "hexalith-release-outcome", payload, 9, "a" * 40)
