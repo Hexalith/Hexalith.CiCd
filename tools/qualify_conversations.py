@@ -252,7 +252,10 @@ def direct_dapr_runtime(work: Path, selected: dict):
         runtime = Path(value)
         private = runtime.parent
         shims = private / "bin"
-        executable = runtime / "daprd"
+        # Dapr CLI appends .dapr/bin to the public --runtime-path root.
+        runtime_home = runtime / ".dapr"
+        runtime_bin = runtime_home / "bin"
+        executable = runtime_bin / "daprd"
         cli = private / "verified-cli/dapr"
         if (str(runtime) != value or not runtime.is_absolute() or runtime.name != "runtime"
                 or private.parent != work or re.fullmatch(r"dapr-qualification-[-A-Za-z0-9_]+", private.name) is None
@@ -260,7 +263,8 @@ def direct_dapr_runtime(work: Path, selected: dict):
             raise ValueError()
         # The shared released scope supplies these paths. Product paths, links,
         # foreign owners and an ambient executable search cannot select them.
-        for path, directory in ((work, True), (private, True), (runtime, True), (shims, True),
+        for path, directory in ((work, True), (private, True), (runtime, True),
+                                (runtime_home, True), (runtime_bin, True), (shims, True),
                                 (cli.parent, True), (executable, False), (cli, False),
                                 (shims / "dapr", False), (shims / "docker", False)):
             info = path.lstat()
@@ -271,7 +275,7 @@ def direct_dapr_runtime(work: Path, selected: dict):
     except (OSError, RuntimeError, ValueError, TypeError):
         raise delivery.DeliveryError(refusal) from None
     first, separator, rest = previous.partition(os.pathsep)
-    os.environ["PATH"] = first + os.pathsep + str(runtime) + (separator + rest if separator else "")
+    os.environ["PATH"] = first + os.pathsep + str(runtime_bin) + (separator + rest if separator else "")
     try:
         if (shutil.which("daprd") != str(executable) or shutil.which("dapr") != str(shims / "dapr")
                 or shutil.which("docker") != str(shims / "docker")):

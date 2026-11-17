@@ -226,30 +226,38 @@ class QualificationTests(unittest.TestCase):
         work = directory / "work"
         private = work / "dapr-qualification-control"
         runtime, shims, verified = private / "runtime", private / "bin", private / "verified-cli"
+        runtime_bin = runtime / ".dapr/bin"
         decoy = directory / "decoy"
-        for path in (runtime, shims, verified, decoy):
+        for path in (runtime_bin, shims, verified, decoy):
             path.mkdir(parents=True)
         private.chmod(0o700)
-        for path, marker in ((runtime / "daprd", "selected-runtime"), (verified / "dapr", "verified-cli"),
+        for path, marker in ((runtime_bin / "daprd", "selected-runtime"), (verified / "dapr", "verified-cli"),
                 (shims / "dapr", "selected-cli-shim"), (shims / "docker", "selected-docker-shim"),
                 (decoy / "daprd", "decoy-runtime"), (decoy / "dapr", "decoy-cli"), (decoy / "docker", "decoy-docker")):
             path.write_text("#!/bin/sh\nprintf '%s\\n' '" + marker + "'\n")
             path.chmod(0o755)
-        return SimpleNamespace(work=work, private=private, runtime=runtime, shims=shims, decoy=decoy,
+        return SimpleNamespace(work=work, private=private, runtime=runtime, runtime_bin=runtime_bin,
+            shims=shims, decoy=decoy,
             selected={"runtimePath": str(runtime), "cli": str(verified / "dapr")})
 
     def test_direct_dapr_uses_actual_selected_executable_and_preserves_cli_docker_shims_and_home(self):
         with tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-") as temporary:
             fixture = self.direct_runtime_fixture(Path(temporary))
+            # Neither a flat binary nor a guessed runtime/bin is the CLI layout.
+            for directory in (fixture.runtime, fixture.runtime / "bin"):
+                directory.mkdir(exist_ok=True)
+                alternate = directory / "daprd"
+                alternate.write_text("#!/bin/sh\nprintf 'wrong-runtime-layout'\n")
+                alternate.chmod(0o755)
             original = str(fixture.shims) + os.pathsep + str(fixture.decoy) + os.pathsep + os.environ["PATH"]
             with mock.patch.dict(os.environ, PATH=original, HOME=str(fixture.decoy)):
                 self.assertEqual("decoy-runtime", subprocess.check_output(["daprd"], text=True).strip())
                 with QUALIFY.direct_dapr_runtime(fixture.work, fixture.selected):
-                    self.assertEqual(str(fixture.runtime / "daprd"), shutil.which("daprd"))
+                    self.assertEqual(str(fixture.runtime_bin / "daprd"), shutil.which("daprd"))
                     self.assertEqual("selected-runtime", subprocess.check_output(["daprd", "--version"], text=True).strip())
                     self.assertEqual("selected-cli-shim", subprocess.check_output(["dapr"], text=True).strip())
                     self.assertEqual("selected-docker-shim", subprocess.check_output(["docker"], text=True).strip())
-                    self.assertEqual([str(fixture.shims), str(fixture.runtime)], os.environ["PATH"].split(os.pathsep)[:2])
+                    self.assertEqual([str(fixture.shims), str(fixture.runtime_bin)], os.environ["PATH"].split(os.pathsep)[:2])
                     self.assertEqual(str(fixture.decoy), os.environ["HOME"])
                 self.assertEqual(original, os.environ["PATH"])
                 self.assertEqual(str(fixture.decoy), os.environ["HOME"])
@@ -300,7 +308,8 @@ class QualificationTests(unittest.TestCase):
 
     def test_direct_dapr_refuses_escape_links_missing_nonexecutable_and_foreign_owned_inputs(self):
         faults = ("escape", "dotdot", "product-path", "missing", "directory", "nonexecutable", "binary-link",
-                  "runtime-link", "shim-link", "cli-link", "foreign-owner", "malformed-work")
+                  "runtime-link", "runtime-home-link", "runtime-bin-link", "shim-link", "cli-link",
+                  "flat-runtime", "foreign-owner", "malformed-work")
         for fault in faults:
             with self.subTest(fault=fault), tempfile.TemporaryDirectory(prefix="qualification-direct-dapr-path-") as temporary:
                 root = Path(temporary)
@@ -314,17 +323,20 @@ class QualificationTests(unittest.TestCase):
                 elif fault == "product-path":
                     selected["runtimePath"] = str(work / "module/runtime")
                 elif fault in ("missing", "directory", "nonexecutable", "binary-link"):
-                    executable = fixture.runtime / "daprd"
+                    executable = fixture.runtime_bin / "daprd"
                     if fault == "nonexecutable":
                         executable.chmod(0o644)
                     else:
                         executable.unlink()
                         if fault == "directory": executable.mkdir()
                         elif fault == "binary-link": executable.symlink_to(fixture.decoy / "daprd")
-                elif fault in ("runtime-link", "shim-link"):
-                    directory = fixture.runtime if fault == "runtime-link" else fixture.shims
+                elif fault in ("runtime-link", "runtime-home-link", "runtime-bin-link", "shim-link"):
+                    directory = {"runtime-link": fixture.runtime, "runtime-home-link": fixture.runtime_bin.parent,
+                                 "runtime-bin-link": fixture.runtime_bin, "shim-link": fixture.shims}[fault]
                     directory.rename(root / "foreign-directory")
                     directory.symlink_to(root / "foreign-directory", target_is_directory=True)
+                elif fault == "flat-runtime":
+                    (fixture.runtime_bin / "daprd").rename(fixture.runtime / "daprd")
                 elif fault == "cli-link":
                     cli = Path(selected["cli"])
                     cli.unlink(); cli.symlink_to(fixture.decoy / "dapr")
