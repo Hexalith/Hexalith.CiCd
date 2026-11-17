@@ -1,0 +1,179 @@
+{
+  "controllerRevision": "ca908a91281b79bca75986960abebc4a51be2508",
+  "detector": {
+    "name": "jscpd",
+    "policySha256": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "signatures": "verified",
+    "version": "5.4.3"
+  },
+  "errors": [],
+  "findings": [],
+  "modules": [
+    {
+      "errors": [],
+      "files": [],
+      "module": "Hexalith.AI.Tools",
+      "result": "pass",
+      "revision": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba"
+    },
+    {
+      "errors": [],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "be00b42b104d63bdef762edb6d59781568a3a0e8bc9adaa874028fc35ea6e3c4"
+        },
+        {
+          "format": "python",
+          "path": "scripts/check-built-packages.py",
+          "sha256": "bf64def0895a0b34b0b445a0195a1c806dcb90efe0323af59321dd31f99a6693"
+        },
+        {
+          "format": "python",
+          "path": "scripts/consumer_package_validation.py",
+          "sha256": "3e0016f9f33e50b67ab72d7a4a500de5f3617373fa8a0b65971f99a485bbc8c8"
+        },
+        {
+          "format": "python",
+          "path": "scripts/nuget_package_validation.py",
+          "sha256": "5072370944a6fd6d49c1cdd190563a6df5418051a1df1dbcb4737f5f1b80963f"
+        },
+        {
+          "format": "python",
+          "path": "scripts/release_package_integrity.py",
+          "sha256": "9317b8f31b5481b195aec3ee881e3030f2af10ac68ed9dac28eeb9d9974609a8"
+        },
+        {
+          "format": "python",
+          "path": "scripts/release_package_inventory.py",
+          "sha256": "0d66efae03b428de2b2088458b7f5914c055a2b1f3c2db53be498d86ae71b71c"
+        }
+      ],
+      "module": "Hexalith.Agents",
+      "result": "pass",
+      "revision": "e98dab8c243286ceb8d0db8998caf3aad7f7b089"
+    },
+    {
+      "errors": [],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "44a3bf56e3253edeb2a995ee604e9f0917fc59f6e9ffca3c19b72c65e25220bd"
+        },
+        {
+          "format": "python",
+          "path": "scripts/pack-release-packages.py",
+          "sha256": "f1983c2390b7fe7e3bbfa39daf39fcf2d1eefb82de7a5eda4b3d325ad660108e"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-consumer-package-references.py",
+          "sha256": "5ae690e1f3195fffce5220a799507a96066287c57b55ef741ef2e321b40209c7"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-nuget-packages.py",
+          "sha256": "4efd5dbce2a1f71c59c01992904d8c7118600e2e0958092cdc4806ec9ed9adc8"
+        }
+      ],
+      "module": "Hexalith.Commons",
+      "result": "pass",
+      "revision": "d551e5f3b67653b8793f86afedab355c8a3821da"
+    },
+    {
+      "errors": [
+        ".github/actions/after-unit-tests/action.yml:11: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        ".github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        "scripts/validate-built-packages.py:16: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-built-packages.py:27: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:198: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:56: local-script discovery: unresolved computed subprocess cwd",
+        "tests/compatibility/MinimalModule/run_compatibility.py:75: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "0c6c61554715957db5fefaf19e3946e68fe5bec1bc58e75e42caab311622a9bf"
+        },
+        {
+          "format": "yaml",
+          "path": ".github/actions/testsupport-windows/action.yml",
+          "sha256": "f404aee8d190d034c8433f6e69168f20f4ce62db60f6f5c56555c266d652eb64"
+        },
+        {
+          "format": "python",
+          "path": "scripts/pack-release-packages.py",
+          "sha256": "b34b9d5933ba5cc346d66c5a5e47b043c3dbf9e81ad4afc20c80a13b3c8af2e7"
+        },
+        {
+          "format": "python",
+          "path": "scripts/release_contract.py",
+          "sha256": "f873d957ddd35449bcbdba54b50659ec90d1a57deaef80e92680ad9cd4373ecf"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-built-packages.py",
+          "sha256": "963104596d0c1735a36aa95b592145a8ce0ba716ed77e454c9d62f96533349e8"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-consumer-package-references.py",
+          "sha256": "55a6585a2ede23cbb61e2c1986327fb66c8b6fb3b7dbf702121d7ccbfe847c36"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-nuget-packages.py",
+          "sha256": "77d628b8d7842f62b955530f8daa9aa4b73d1bf870f9eb6c46a5192b4febab03"
+        },
+        {
+          "format": "python",
+          "path": "tests/compatibility/MinimalModule/run_compatibility.py",
+          "sha256": "987cd47a0402cab9640af01919e045ca7dfbf525e18a1191d0f15f915eb68937"
+        },
+        {
+          "format": "python",
+          "path": "tests/compatibility/MinimalModule/verify_results.py",
+          "sha256": "dd7ee1b5cfeb7f185dba1a0abbef353eb8a3d4ad58bc8b1004dfdd01a64e0c1b"
+        }
+      ],
+      "module": "Hexalith.Conversations",
+      "result": "fail",
+      "revision": "aa70df16fe70dc7ad907ec27bd693d59f9a96311"
+    },
+    {
+      "errors": [],
+      "files": [],
+      "module": "Hexalith.PolymorphicSerializations",
+      "result": "pass",
+      "revision": "1f451a1ac5174b340f56763160f810d4a8364bb6"
+    }
+  ],
+  "policy": {
+    "absolute": true,
+    "format": [
+      "yaml",
+      "bash",
+      "powershell",
+      "python",
+      "javascript",
+      "typescript"
+    ],
+    "maxLines": 2097152,
+    "maxSize": "2mb",
+    "minLines": 10,
+    "minTokens": 50,
+    "mode": "weak",
+    "noGitignore": true,
+    "reporters": [
+      "json"
+    ],
+    "silent": true,
+    "skipLocal": true,
+    "workers": 1
+  },
+  "result": "fail",
+  "schema": "hexalith.duplicate-scan.v1"
+}

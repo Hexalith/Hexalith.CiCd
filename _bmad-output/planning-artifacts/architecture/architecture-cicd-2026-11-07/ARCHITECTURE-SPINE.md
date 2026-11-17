@@ -565,10 +565,13 @@ and commit checks, and exact fresh-main base/head preservation before each push.
 After delivery, the normal standalone module checker is mandatory. A failed hook
 source scan blocks registration; no release, provisioned state or nightly result
 is inferred from local preparation.
-The [local snapshot qualification](../../../specs/spec-cicd/evidence/14/local-readiness-20261116/README.md)
-discovers every Agents hook source but remains incomplete on the local Commons
-snapshot. Keep registration blocked until complete fresh live-main discovery and
-duplication qualification pass; no scanner exception is approved.
+The [2026-11-17 local snapshot qualification](../../../specs/spec-cicd/evidence/14/local-resume-20261117/README.md)
+discovers every Agents hook source (six files, no errors). The local Commons
+snapshot is complete; Conversations has seven unresolved discovery expressions.
+Keep registration blocked until complete fresh live-main discovery and
+duplication qualification pass; no scanner exception is approved. The current
+`builds-version` pin `v6.2.0` contains the shared count/skip fields and central
+NU1901/NU1902 treatment; that pin is not an adoption or hook-enablement decision.
 
 - **Binds:** CAP-4, CAP-7, CAP-10, CAP-12, CAP-16; every module onboarding
 - **Prevents:** migrations that need the App key in an agent session; deliveries rejected by rulesets; modules adopted with settings that bypass the ADs; legacy state misleading the new release; legacy credentials outliving their users; a first release failing on a waiver its tag lacks

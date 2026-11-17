@@ -1,0 +1,412 @@
+{
+  "observedAt": "2026-11-17T17:51:09.584570+00:00",
+  "scope": "local snapshots plus uncommitted Agents audit-policy restoration; no GitHub operations",
+  "commands": [
+    {
+      "label": "builds-ci_config-python312",
+      "command": [
+        "uv",
+        "run",
+        "--offline",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_ci_config.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-ci_config-python312.log",
+      "logSha256": "2ee3d005355ae9f6993429ee4f7df6c52da4907aa484f8b0917ce92d654a5d97"
+    },
+    {
+      "label": "builds-ci_pipeline-python312",
+      "command": [
+        "uv",
+        "run",
+        "--offline",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_ci_pipeline.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-ci_pipeline-python312.log",
+      "logSha256": "0cb91c2be237b3d6297c3d23eecc12d66bf0c3d43c9c23989e42bec3b7718b51"
+    },
+    {
+      "label": "builds-local_check-python312",
+      "command": [
+        "uv",
+        "run",
+        "--offline",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_local_check.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-local_check-python312.log",
+      "logSha256": "2d709cd571f4a12d475111d79c64762fbee1cd2e70654e1c0e581251cfc56bb4"
+    },
+    {
+      "label": "builds-ci_config-python314",
+      "command": [
+        "uv",
+        "run",
+        "--offline",
+        "--python",
+        "3.14",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_ci_config.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-ci_config-python314.log",
+      "logSha256": "a83474e30992b473998f1f26dce21e073d3b4c9f1639a6b7eb5bece691d408cb"
+    },
+    {
+      "label": "builds-ci_pipeline-python314",
+      "command": [
+        "uv",
+        "run",
+        "--offline",
+        "--python",
+        "3.14",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_ci_pipeline.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-ci_pipeline-python314.log",
+      "logSha256": "5eebf5b9d0f52b096c428b89514d0d05624938305b56c3042d85a289e912bd6e"
+    },
+    {
+      "label": "builds-local_check-python314",
+      "command": [
+        "uv",
+        "run",
+        "--offline",
+        "--python",
+        "3.14",
+        "--with",
+        "jsonschema==4.26.0",
+        "--with",
+        "PyYAML==6.0.3",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "Github/lib/tests",
+        "-p",
+        "test_local_check.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "builds-local_check-python314.log",
+      "logSha256": "380616ac72056871c1c44ff4d18849f71284c7e56848e995ba8ecc9bd25dd7d5"
+    },
+    {
+      "label": "agents-built-package-hook",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "built_package_hook_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-built-package-hook.log",
+      "logSha256": "26e81473a5922f1eaac4ad71cdb8cc3fe60c6021bf5de4da60981ce095df9185"
+    },
+    {
+      "label": "agents-ui-consumer-assets",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "ui_consumer_assets_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-ui-consumer-assets.log",
+      "logSha256": "61765502786fe2cbd79617cb06e72cf9d937b34a0c4272b245e7f3df02849712"
+    },
+    {
+      "label": "agents-nuget-package-validation",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "nuget_package_validation_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-nuget-package-validation.log",
+      "logSha256": "743059b9e0b58219ce1c5cc2b20c75b986d3e3604234a4b8e2b27a8f8bf148b0"
+    },
+    {
+      "label": "agents-ui-static-package",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "ui_static_package_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-ui-static-package.log",
+      "logSha256": "7b6f0d3a940a0e47f3fe7e2b18bd591f615e98a0d1b3ab06b2bfdc120f992dbe"
+    },
+    {
+      "label": "agents-publish-release-packages",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "publish_release_packages_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-publish-release-packages.log",
+      "logSha256": "cca8e5e68bb53b5fb60ab6d171a8fc944c06122cc037919b1158b5c8e23e9a18"
+    },
+    {
+      "label": "agents-release-package-integrity",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "release_package_integrity_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-release-package-integrity.log",
+      "logSha256": "872c249dd9282214da484b5371c0ea0defaff424ee12860963f5037820c968f6"
+    },
+    {
+      "label": "agents-package-pack",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "package_pack_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-package-pack.log",
+      "logSha256": "f4eac7e2f49201dfb99443aee95de76a13e5048f14c6b59b18ecbf2bb8f59ef9"
+    },
+    {
+      "label": "agents-recover-release-packages",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "recover_release_packages_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-recover-release-packages.log",
+      "logSha256": "cdc17727ebbef76c3a822e44fd12798b33a58660e41a064a92bf2a96abbc2605"
+    },
+    {
+      "label": "agents-package-authority-exclusions",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "package_authority_exclusions_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-package-authority-exclusions.log",
+      "logSha256": "211daad2787c9aee8bf809d86f62fb22cb21dd1dfdd6476924f32698626ab270"
+    },
+    {
+      "label": "agents-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "Hexalith.Agents.slnx",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-restore.log",
+      "logSha256": "6335286f69a263621804616090aff243ca6fdc0c8dfbc1d32b335a8cef4a8df7"
+    },
+    {
+      "label": "agents-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Agents.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-build.log",
+      "logSha256": "ef496924b77e765519f9940eb7f05a8ab3c5cded9428697bec2884f7a5046dd1"
+    },
+    {
+      "label": "agents-audit-policy",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Server.Tests/Hexalith.Agents.Server.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--filter",
+        "FullyQualifiedName~OrdinaryReleaseShouldEvaluateTheHighAndCriticalAuditPolicy|FullyQualifiedName~RootBuildPropsShouldEnforceLanguageAndBuildContract",
+        "--stop-on-fail",
+        "off",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-audit-policy.log",
+      "logSha256": "4ae3ebe4f400d725b9d909c3d92b2d7db3a865b7a03d73cb2ff634a6506a5986"
+    },
+    {
+      "label": "agents-check-built-packages",
+      "command": [
+        "python3",
+        "scripts/check-built-packages.py"
+      ],
+      "exitCode": 0,
+      "log": "agents-check-built-packages.log",
+      "logSha256": "d53fa3f659c83a2d8103feb523993d0b8541172c030c93606ea79332fffd8e2a"
+    }
+  ],
+  "agents": {
+    "revision": "e98dab8c243286ceb8d0db8998caf3aad7f7b089",
+    "candidateTree": "dba636d5dc68d7d19f19b76cf9bcbb7c0b79b85a",
+    "sourceWorktreeChanges": [
+      " M eng/consumer-executable-assets.json",
+      " M test/Hexalith.Agents.Server.Tests/BuildContractConformanceTests.cs"
+    ]
+  },
+  "builds": {
+    "revision": "e8b86ba3ae6e27c2d6cba536d6002ac8f3c5a921",
+    "candidateTree": "7a2b08a4e49b5b2e0a0838dc7b69321951ff1a40",
+    "sourceWorktreeChanges": []
+  },
+  "buildsVersion": "v6.2.0",
+  "v620": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+  "result": "pass"
+}

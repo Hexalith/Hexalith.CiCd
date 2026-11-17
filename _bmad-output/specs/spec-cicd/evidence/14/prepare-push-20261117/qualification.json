@@ -1,0 +1,266 @@
+{
+  "observedAt": "2026-11-17T18:15:41.543439+00:00",
+  "scope": "Agents preparation push; approved pre-adoption proof; no adoption",
+  "releasedPolicy": {
+    "id": 448199237,
+    "tag_name": "v6.2.0",
+    "target_commitish": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "immutable": true,
+    "draft": false,
+    "published_at": "2026-11-17T05:58:54Z",
+    "html_url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.2.0",
+    "resolvedGitTagCommit": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "authenticatedAt": "2026-11-17T18:10:00Z",
+    "profile": "/home/administrator/.config/gh-cicd-agent"
+  },
+  "commands": [
+    {
+      "label": "agents-normal-checker",
+      "command": [
+        "python3",
+        "references/Hexalith.Builds/check.py"
+      ],
+      "exitCode": 1,
+      "log": "agents-normal-checker.log",
+      "logSha256": "a980f9192c9f386d8829cf4a0fd400086409f7af651edda5b3432012cb480ef7"
+    },
+    {
+      "label": "agents-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "Hexalith.Agents.slnx",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-restore.log",
+      "logSha256": "ffa51188dd610e7571142fba9003f33c15e73286ab45094b30b65d64517cade3"
+    },
+    {
+      "label": "agents-build",
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.Agents.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "/m:1",
+        "/nr:false"
+      ],
+      "exitCode": 0,
+      "log": "agents-build.log",
+      "logSha256": "9e044a9f03901c5c4802d9741261e247deffe9431977ba27cfe2874827bf8f13"
+    },
+    {
+      "label": "agents-tests-Contracts",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Contracts.Tests/Hexalith.Agents.Contracts.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "529",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Contracts.log",
+      "logSha256": "ef053c74da37010bed583e80167bfbbfb1fc723344d6646a43628f0302ca4af0"
+    },
+    {
+      "label": "agents-tests-Client",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Client.Tests/Hexalith.Agents.Client.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "6",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Client.log",
+      "logSha256": "1579eeab7bce127ed19eb1ecc325bbba4f3b1786a3908cb230c7c258a2468334"
+    },
+    {
+      "label": "agents-tests-Domain",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Tests/Hexalith.Agents.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "787",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Domain.log",
+      "logSha256": "30febfaa0d5be7597cebd4b96aedc3f7eef933e469f5b2e9cd4dc4f2e6a10220"
+    },
+    {
+      "label": "agents-tests-Server",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.Server.Tests/Hexalith.Agents.Server.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "549",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-Server.log",
+      "logSha256": "8a04429bf80a134e8fda030070c16bf55d3b1b6c405548db29f43c423a561546"
+    },
+    {
+      "label": "agents-tests-UI",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "test/Hexalith.Agents.UI.Tests/Hexalith.Agents.UI.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-p:UseHexalithProjectReferences=false",
+        "--stop-on-fail",
+        "off",
+        "--minimum-expected-tests",
+        "1073",
+        "--fail-skips",
+        "on"
+      ],
+      "exitCode": 0,
+      "log": "agents-tests-UI.log",
+      "logSha256": "a1b49a43d36ce056e7438b25ea4d1f6578570425a9838b94b8870a078514a399"
+    },
+    {
+      "label": "agents-package-hook",
+      "command": [
+        "python3",
+        "scripts/check-built-packages.py"
+      ],
+      "exitCode": 0,
+      "log": "agents-package-hook.log",
+      "logSha256": "a449dae00fa74020d48d1d91888d1b954804a93e95dd798df1fdf9e86a2c2ae4"
+    },
+    {
+      "label": "agents-exact-exclusions",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/tooling",
+        "-p",
+        "package_authority_exclusions_test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "agents-exact-exclusions.log",
+      "logSha256": "211daad2787c9aee8bf809d86f62fb22cb21dd1dfdd6476924f32698626ab270"
+    }
+  ],
+  "agents": {
+    "revision": "2d7a4cf96d67ba27458c49fdbaca9ff23d1c0c9a",
+    "candidateTree": "6669973600d89c4cb0359ed1e7ddb5b6eaa7684f",
+    "sourceWorktreeChanges": [],
+    "changedPaths": []
+  },
+  "recordedBuildsGitlink": "a327bc5cf0eb2bd715deed6f1ea278a8f6946a2f",
+  "attachedBuilds": "a327bc5cf0eb2bd715deed6f1ea278a8f6946a2f",
+  "origin": "https://github.com/Hexalith/Hexalith.Agents.git",
+  "freshMainBase": "9ba1c5c1b3e17676c70be058d1a7cd8b7539dea1",
+  "pushRangePaths": [
+    "eng/consumer-executable-assets.json",
+    "test/Hexalith.Agents.Server.Tests/BuildContractConformanceTests.cs"
+  ],
+  "ownedPerimeterUnchanged": true,
+  "adoptedConfigPresent": false,
+  "head": "2d7a4cf96d67ba27458c49fdbaca9ff23d1c0c9a",
+  "guardLockSha256": "e1cee6ebc2ce6f5bb679d3739a7d957052c4fc1d19aebcbb834794f78d232835",
+  "commitlint": {
+    "sharedReleasedPolicy": "passed",
+    "owningPolicy": "passed",
+    "releasedValidatorCommit": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "configSha256": "48423231806bf99edc6ade3f5c0b69918c69d224b865a1b6941d591b73c4efca",
+    "messageSha256": "2709171f31d4a8e8e4aa45729a78a21b6d5fef5a1d5da7bad7608c5e37ddfa7f"
+  },
+  "releasedAuditLint": "passed",
+  "normalChecker": "Refused missing pre-adoption config; approved preparation proof follows.",
+  "moduleProductTreeUnchangedDuringProof": true,
+  "result": "pass",
+  "suites": {
+    "Contracts": {
+      "total": 2005,
+      "failed": 0,
+      "skipped": 0,
+      "floor": 529
+    },
+    "Client": {
+      "total": 7,
+      "failed": 0,
+      "skipped": 0,
+      "floor": 6
+    },
+    "Domain": {
+      "total": 1084,
+      "failed": 0,
+      "skipped": 0,
+      "floor": 787
+    },
+    "Server": {
+      "total": 2063,
+      "failed": 0,
+      "skipped": 0,
+      "floor": 549
+    },
+    "UI": {
+      "total": 1362,
+      "failed": 0,
+      "skipped": 0,
+      "floor": 1073
+    }
+  },
+  "suiteTotal": 6521
+}

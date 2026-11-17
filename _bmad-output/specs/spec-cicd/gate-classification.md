@@ -155,9 +155,12 @@ If adopted stage 4 still selects them, add a test-project trait/filter, not a CI
   consumers. The prepared hook uses existing Release output and cleaned scratch,
   without rebuilding Agents or retaining receipts. Hook enablement is pending
   complete cross-module duplication qualification. Agents source discovery passes
-  the unchanged scanner. The [local three-module qualification](evidence/14/local-readiness-20261116/README.md)
-  remains incomplete because the local Commons snapshot has four unresolved
-  discovery expressions; zero reported copies does not establish clean coverage.
+  the unchanged scanner (six files, no errors). The current `builds-version` pin
+  `v6.2.0` contains the shared floors/fail-skips fields and central NU1901/NU1902
+  treatment. The [2026-11-17 prospective scan](evidence/14/local-resume-20261117/README.md)
+  remains incomplete because the local Conversations snapshot has seven
+  unresolved discovery expressions; zero reported copies does not establish
+  clean coverage. Resolve those in Conversations' owning migration.
 - Delete pinned-workflow-source, npm tooling, workflow-text and story-evidence
   assertions, traceability-manifest checks and redundant full/focused runners.
   Remove the registered nested-submodule automation scan from

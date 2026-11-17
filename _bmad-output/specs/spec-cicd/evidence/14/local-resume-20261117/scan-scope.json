@@ -1,0 +1,43 @@
+{
+  "observedAt": "2026-11-17T17:57:26.664940+00:00",
+  "scope": "prospective committed registry and local committed module snapshots; no network",
+  "controllerBase": "07776f535c037430bb4b53d9098b9ec90aca72fb",
+  "prospectiveController": "ca908a91281b79bca75986960abebc4a51be2508",
+  "prospectiveTree": "bebf1171f85ca9f1f0182fe83b0a7e46cd551a77",
+  "candidateSetupSha256": "3646fa5fc2e9f9a26622a77da164efd5bf4b4fc64bbebc3928163676a02dfd4b",
+  "modules": {
+    "Hexalith.AI.Tools": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.AI.Tools",
+      "revision": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba"
+    },
+    "Hexalith.Agents": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Agents",
+      "revision": "e98dab8c243286ceb8d0db8998caf3aad7f7b089"
+    },
+    "Hexalith.Commons": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Commons",
+      "revision": "d551e5f3b67653b8793f86afedab355c8a3821da"
+    },
+    "Hexalith.Conversations": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Conversations",
+      "revision": "aa70df16fe70dc7ad907ec27bd693d59f9a96311"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "path": "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+      "revision": "1f451a1ac5174b340f56763160f810d4a8364bb6"
+    }
+  },
+  "scannerSourcesUnchanged": true,
+  "scannerSourceSha256": {
+    "tools/scan.py": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+    "tools/scan_discovery.py": "df7bfe6c252a3c0b6678500e6e6e3910482ceefb49da4eaa8d7100193d816099",
+    "tools/delivery_runtime.py": "2e76ad8a0d89ce2fb351f5c726ca8d73e9177171425f0dc4217f3dacf1bc828b",
+    ".jscpd.json": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "tools/jscpd/package.json": "7e949a00e382d4903c174022b0879fdb40694ef331070093f72d0e3c2d30b4ff",
+    "tools/jscpd/package-lock.json": "fad24cc759c2d4b6fac056172ac2e9977858f9dd0a162fb10c18de4c8d0bfce2",
+    "tools/jscpd/discover.cjs": "99ea8e1a180b75fb9adc03163b13883b58a9b463ef6e7756ed46a2f4e8404760"
+  },
+  "npmTransport": "forced offline; existing public cache copied into disposable scratch",
+  "result": "fail",
+  "limitation": "Does not replace fresh live-main scan, accepted release or adoption prerequisites."
+}
