@@ -18,6 +18,8 @@ The risk is small, because all product tests stay. A deleted gate may once have 
 - Folders' contract-spine gates, which check API contracts and generated artifacts. Today they fail 74% of the time.
 - Folders' provider smoke test (`nightly-drift`), moved into the `nightly` hook.
 - EventStore's payload-protection tests and Dapr broker tests.
+- Works' source-identity check (`scripts/verify-source-debug.py`) and Platform R1–R11
+  parity/rollback job. See [Works classification](#works-classification-story-13).
 
 **Delete:**
 - FrontComposer's flaky-test governance (901 lines of Python), its quarantine nightly run, and its IDE parity check ("Story 9-3").
@@ -31,17 +33,12 @@ The risk is small, because all product tests stay. A deleted gate may once have 
   - Projects: "Validate workflow policy / production-authority scheduling guard"
   - ChatBot: "story-evidence-integrity" and the "release evidence gate"
   - Builds: "Require every validation job to pass", the `build-and-test` aggregator. It leaves `builds-ci.yml` with the G-4/G-6 qualification jobs and tests, in the change that rewrites `builds-release.yml` (AD-20).
-  - Works belongs to this group, but the source doesn't say which of its sampled gates are in it (see Not yet classified).
 - The repo tests that assert workflow YAML: Folders' original 27-file estimate is superseded by the [story 17 per-method inventory](evidence/17/gate-classification.json); EventStore 13, FrontComposer 13, Tenants 12, Parties 11, Memories 11.
 
 ## Not yet classified
 
 These gates failed in the sample but have no explicit verdict in the source. Apply the rule during migration.
 - Folders: locally classified in [story 17](evidence/17/gate-classification.json). Keep actual provider smoke, pinned provider classification/redaction, source whitespace/analyzers, capacity operations, and complete product suites. Remove repeated scheduled test orchestration and CI/tooling/story-evidence assertions. The local candidate remains blocked on policy and genuine product prerequisites; this classification does not establish adoption.
-- Works:
-  - "Lint release tooling"
-  - "Preserve source identity checks"
-  - "Platform R1–R11 parity and rollback"
 - Parties: "Finalize exact CI owner", "Require the owning integration job to pass"
 - FrontComposer: "Gate 2b: Infrastructure governance", "Coverage Summary", "Quarantine Summary"
 - Builds: the `Props/` catalog validators in `Tools/`, about 13 PowerShell scripts (about 4,000 lines) that Builds' `ci.yml` runs today. They check the package catalog, so they are product checks (AD-11). Each is classified in the change that rewrites `builds-release.yml`. Kept ones go on running in `builds-ci.yml`, in their current language.
@@ -113,6 +110,29 @@ implementation exists. It is independent of removable story evidence, workflow-t
 and artifact bookkeeping. The private catalog fixture must use a genuinely new owned business
 backend and the pinned SDK's explicit owner-custody contract; model-only keys or invented
 observations are not acceptable runtime evidence.
+
+## Works classification (story 13)
+
+Apply the gate rule; do not invent a fourth category. Recorded during story 13 from
+Works `ci.yml` jobs `platform-parity`, `scripts-lint`, and `ci`, plus the three unnamed
+sampled names. This classification does not adopt the module or enable registration.
+
+- **Lint release tooling:** delete actionlint and tests that parse workflow YAML or
+  story evidence, including `scripts/tests/test_release_{builds_compatibility,hook_permissions}.py`,
+  `tests/Hexalith.Works.ArchitectureTests/FitnessTests/CiCdConfigurationTests.cs`, and
+  `PlanningEvidenceDocumentationTests`. Keep `scripts/verify-source-debug.py` (reviewed
+  EventStore/PolymorphicSerializations source↔package identity) as a product action.
+- **Preserve source identity checks:** keep. Same product action as `verify-source-debug.py`.
+- **Platform R1–R11 parity and rollback:** keep as a parallel extra Linux `jobs` action
+  (`timeoutMinutes: 180`, own Dapr). Shared CI submodule list stays Platform + Parties;
+  the action keeps initializing the gitlinks it needs. Do not put R1–R11 on the shared
+  CI job or the nightly hook.
+
+Shared stage 3 replaces late "Fail on blocking test failures". Shared package-mode
+build replaces the two failing setup steps except published Builds artifacts still
+needed inside the R1–R11 action. Leave the nine allowlisted `[Fact(Explicit = true)]`
+Platform-lane tests in `IntegrationTests`; do not port `allowed-not-runnable-tests`.
+If adopted stage 4 still selects them, add a test-project trait/filter, not a CI skip.
 
 ## Why gates can't come back
 

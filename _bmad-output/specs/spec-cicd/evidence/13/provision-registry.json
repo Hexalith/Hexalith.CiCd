@@ -1,0 +1,151 @@
+{
+  "started_at": "2026-11-17T16:22:25.133265+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "administration_profile": "/home/administrator/.config/gh",
+  "operations": [
+    {
+      "recorded_at": "2026-11-17T16:22:25.512951+00:00",
+      "operation": "verify maintainer account",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:25.570528+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:25.618401+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:25.668272+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:26.156666+00:00",
+      "operation": "read Works release secret metadata before provisioning",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:26.750852+00:00",
+      "operation": "set Hexalith.Works hexalith-release HEXALITH_REGISTRY_USERNAME",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:27.457840+00:00",
+      "operation": "set Hexalith.Works hexalith-release HEXALITH_REGISTRY_PASSWORD",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:27.517355+00:00",
+      "operation": "patch secret distribution-registry-htpasswd",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:27.583652+00:00",
+      "operation": "patch configmap distribution-registry-config",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:27.647314+00:00",
+      "operation": "patch deployment distribution-registry",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:39.323701+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution rollout status deployment/distribution-registry --timeout=150s",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:39.371723+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:39.419993+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:39.471380+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-17T16:22:50.644619+00:00",
+      "operation": "read Hexalith.Works environment secret metadata",
+      "exit": 0
+    }
+  ],
+  "identities": {
+    "Hexalith.Works": {
+      "username": "hexalith-works-publish",
+      "repository_patterns": [
+        "works",
+        "works/**"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update"
+      ],
+      "admin_actions": [],
+      "bcrypt_cost": 12,
+      "secret_values_persisted_locally": false,
+      "environment_secret_names": [
+        "HEXALITH_REGISTRY_PASSWORD",
+        "HEXALITH_REGISTRY_USERNAME"
+      ]
+    }
+  },
+  "preservation": {
+    "old_htpasswd_rows_byte_identical": true,
+    "existing_configuration_and_grants_unchanged": true,
+    "legacy_access_removed": false,
+    "configuration_sha256": "8dbf8978a44f2546315fbee3254f177f86f426e752f6cda74bc7a87bba054ad1"
+  },
+  "resourceVersions": {
+    "secret_before": "47019842",
+    "secret_after": "47199665",
+    "configmap_before": "47019843",
+    "configmap_after": "47199666",
+    "deployment_before": "47019959",
+    "deployment_after": "47199773"
+  },
+  "authentication": [
+    {
+      "repository": "Hexalith.Works",
+      "username": "hexalith-works-publish",
+      "method": "GET",
+      "endpoint": "/v2/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "repository": "Hexalith.Works",
+      "username": "hexalith-works-publish",
+      "method": "POST",
+      "endpoint": "/v2/commons/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "repository": "Hexalith.Works",
+      "username": "hexalith-works-publish",
+      "method": "POST",
+      "endpoint": "/v2/story-13-unrelated/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    }
+  ],
+  "verification_limits": [
+    "Authenticated registry access and foreign-write refusals are real server results.",
+    "Own namespace read/create/update grants are verified from preserved live ACL and restarted workload; no package/image or upload was created.",
+    "No legacy registry identity or credential was revoked before adoption."
+  ],
+  "completed_at": "2026-11-17T16:22:50.644999+00:00",
+  "result": "pass"
+}

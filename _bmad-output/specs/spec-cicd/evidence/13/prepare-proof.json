@@ -1,0 +1,52 @@
+{
+  "result": "pass",
+  "harness_sha256": "74aeb8976ed5581bfc85b274819a8a005253c8efcf36d6dfc38690d16cdbf06c",
+  "source": "/home/administrator/projects/hexalith/works-story-13",
+  "r1_r11": "not-run",
+  "source_head": "e63d857f0b75023b3b8ca9d786e5d5254e23b4b2",
+  "origin_main": "e63d857f0b75023b3b8ca9d786e5d5254e23b4b2",
+  "candidate_tree": "494745dee30899da656987ebf5f1534280653931",
+  "owned_paths_unchanged": true,
+  "product_paths": [
+    ".github/actions/after-unit-tests/action.yml",
+    ".github/actions/platform-parity/action.yml",
+    ".releaserc.json",
+    "docs/boundary-decision-record.md",
+    "docs/eventstore-api-surface-constraints.md",
+    "package-lock.json",
+    "package.json",
+    "scripts/tests/test_release_builds_compatibility.py",
+    "scripts/tests/test_release_hook_permissions.py",
+    "tests/Hexalith.Works.ArchitectureTests/FitnessTests/CiCdConfigurationTests.cs",
+    "tests/Hexalith.Works.ArchitectureTests/FitnessTests/PlanningEvidenceDocumentationTests.cs",
+    "tools/source-debug-dependencies.json"
+  ],
+  "builds_gitlink": "e8b86ba3ae6e27c2d6cba536d6002ac8f3c5a921",
+  "initialized_gitlinks": {
+    "references/Hexalith.Builds": "e8b86ba3ae6e27c2d6cba536d6002ac8f3c5a921",
+    "references/Hexalith.Platform": "24f8ebeba25a36e043942e7f1a76583724b27fef",
+    "references/Hexalith.Parties": "3d12ff27fb71de8681ccbb4cb010cdba5ca4e9d4",
+    "references/Hexalith.EventStore": "05e4f6d40d4731f7acf435f3c678959efc672269",
+    "references/Hexalith.Commons": "aa694ae3d43f1645f741ae0844987ca2e7e0d347",
+    "references/Hexalith.PolymorphicSerializations": "f1e2b45b161627bc2d204e128ffeda086eb413b8"
+  },
+  "released_audit_lint": "pass",
+  "released_action_lint": "pass",
+  "builds_lib_revision": "e8b86ba3ae6e27c2d6cba536d6002ac8f3c5a921",
+  "guard_lock_sha256": "e1cee6ebc2ce6f5bb679d3739a7d957052c4fc1d19aebcbb834794f78d232835",
+  "commitlint": "pass",
+  "commit_message": "ci: host source identity and platform parity as product actions\n\nKeep EventStore and PolymorphicSerializations identity checks and the Platform\nR1-R11 proof as module actions. Bind the reviewed source pair to the current\ngitlinks. Remove workflow-YAML tests and tool-only semantic-release files.",
+  "package_mode_build": "pass",
+  "unit_projects": [
+    "tests/Hexalith.Works.ArchitectureTests/Hexalith.Works.ArchitectureTests.csproj",
+    "tests/Hexalith.Works.PropertyTests/Hexalith.Works.PropertyTests.csproj",
+    "tests/Hexalith.Works.UnitTests/Hexalith.Works.UnitTests.csproj"
+  ],
+  "integration_projects": [
+    "tests/Hexalith.Works.IntegrationTests/Hexalith.Works.IntegrationTests.csproj"
+  ],
+  "stage3": "pass",
+  "stage4": "pass",
+  "consumer_validation": "pass",
+  "source_identity": "passed"
+}

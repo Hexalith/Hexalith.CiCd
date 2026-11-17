@@ -1,0 +1,102 @@
+{
+  "recorded_at": "2026-11-17T16:13:41.173703+00:00",
+  "remote_mutations": false,
+  "packages": [
+    {
+      "package": "Hexalith.Works.Contracts",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.works.contracts/index.json",
+      "status": 200,
+      "versions": [
+        "1.0.1",
+        "1.0.2"
+      ]
+    },
+    {
+      "package": "Hexalith.Works.Server",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.works.server/index.json",
+      "status": 200,
+      "versions": [
+        "1.0.1",
+        "1.0.2"
+      ]
+    },
+    {
+      "package": "Hexalith.Works.Projections",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.works.projections/index.json",
+      "status": 200,
+      "versions": [
+        "1.0.1",
+        "1.0.2"
+      ]
+    },
+    {
+      "package": "Hexalith.Works.Reactor",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.works.reactor/index.json",
+      "status": 200,
+      "versions": [
+        "1.0.1",
+        "1.0.2"
+      ]
+    },
+    {
+      "package": "Hexalith.Works.Testing",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.works.testing/index.json",
+      "status": 200,
+      "versions": [
+        "1.0.1",
+        "1.0.2"
+      ]
+    }
+  ],
+  "github_packages": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Works/packages?package_type=nuget",
+      "status": "HTTP/2.0 404 Not Found",
+      "exit": 1,
+      "error": "gh: Not Found (HTTP 404)",
+      "data": null
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Works/packages?package_type=container",
+      "status": "HTTP/2.0 404 Not Found",
+      "exit": 1,
+      "error": "gh: Not Found (HTTP 404)",
+      "data": null
+    }
+  ],
+  "assessment": [
+    {
+      "tag": "v1.0.2",
+      "sha": "1ab960c76c12c726862a6a25616c2ce88a0f55a0",
+      "github_release": true,
+      "published_packages": [
+        "Hexalith.Works.Contracts",
+        "Hexalith.Works.Server",
+        "Hexalith.Works.Projections",
+        "Hexalith.Works.Reactor",
+        "Hexalith.Works.Testing"
+      ],
+      "disposition": "preserve: GitHub release"
+    },
+    {
+      "tag": "v1.0.1",
+      "sha": "640c8b5618efb3e4452e8e0cd5839c743598e361",
+      "github_release": true,
+      "published_packages": [
+        "Hexalith.Works.Contracts",
+        "Hexalith.Works.Server",
+        "Hexalith.Works.Projections",
+        "Hexalith.Works.Reactor",
+        "Hexalith.Works.Testing"
+      ],
+      "disposition": "preserve: GitHub release"
+    },
+    {
+      "tag": "v1.0.0",
+      "sha": "525279ac279636d4141e419e643f741dc2a00519",
+      "github_release": false,
+      "published_packages": [],
+      "disposition": "assessed incomplete legacy tag: no package/current registry artifact"
+    }
+  ]
+}
