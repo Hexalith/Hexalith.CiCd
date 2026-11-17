@@ -1,0 +1,12 @@
+  Determining projects to restore...
+  Restored /tmp/hexalith-job.MoML45Iy/transitive-clean/original.csproj (in 160 ms).
+Running (300s): dotnet restore /tmp/hexalith-job.MoML45Iy/transitive-clean/private-audit/audit.csproj --configfile /tmp/hexalith-job.MoML45Iy/transitive-clean/private-audit/NuGet.Config --force -warnaserror -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -p:TreatWarningsAsErrors=true -p:WarningsNotAsErrors= -p:NoWarn=
+Running (130s): curl --fail --silent --show-error --location --connect-timeout 15 --max-time 120 --header Cache-Control: no-cache --dump-header /tmp/hexalith-job.MoML45Iy/transitive-clean/private-audit/advisories/index.headers https://api.nuget.org/v3/vulnerabilities/index.json -o /tmp/hexalith-job.MoML45Iy/transitive-clean/private-audit/advisories/index.json
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/_bmad-output/specs/spec-cicd/evidence/15/qualify-native-audit.py", line 19, in <module>
+    receipt=native_audit.audit_project(project,folder/'private-audit',folder/'audit-command',policy,ci.bounded)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/native_audit.py", line 144, in audit_project
+    online = online_advisories(private / 'http', private / 'advisories', bounded)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/native_audit.py", line 89, in online_advisories
+    raise ValueError('The native audit used stale, incomplete or cache-only advisory bytes: ' + name)
+ValueError: The native audit used stale, incomplete or cache-only advisory bytes: index

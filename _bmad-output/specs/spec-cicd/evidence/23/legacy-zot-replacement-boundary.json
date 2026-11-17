@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-17T08:13:55.351745+00:00",
+  "status": "concrete preparation; not provisioned or rotated",
+  "humanBoundary": "legacy-zot-human-mapping.json",
+  "legacyKeyToRevokeAfterAdoption": "099585e7-fd9e-4aac-9042-56426c1add7b",
+  "remainingConsumers": [
+    "Hexalith/Hexalith.EventStore",
+    "Hexalith/Hexalith.Memories",
+    "Hexalith/Hexalith.Parties"
+  ],
+  "sourceEvidence": "legacy-other-publisher-source-fresh.json",
+  "proposedIdentity": "hexalith-legacy-publish",
+  "globalAdministrator": false,
+  "writeActions": [
+    "read",
+    "create",
+    "update"
+  ],
+  "writeScopes": [
+    "eventstore",
+    "eventstore/**",
+    "memories",
+    "memories/**",
+    "memories-access-telemetry",
+    "memories-access-telemetry/**",
+    "memories-access-telemetry-clock",
+    "memories-access-telemetry-clock/**",
+    "memories-domain-service",
+    "memories-domain-service/**",
+    "memories-mcp",
+    "memories-mcp/**",
+    "parties",
+    "parties/**",
+    "parties-mcp",
+    "parties-mcp/**",
+    "parties-ui",
+    "parties-ui/**"
+  ],
+  "sharedReadScope": "**",
+  "mustRefuseWrites": [
+    "tenants",
+    "tenants/**",
+    "tenants-api",
+    "tenants-api/**",
+    "unrelated namespaces"
+  ],
+  "preserve": [
+    "other two API keys",
+    "global administrators",
+    "all unrelated configuration/htpasswd rows",
+    "cluster-reader",
+    "ci-reader",
+    "hexalith-registry-pull",
+    "hexalith-tenants-publish",
+    "all other org-secret memberships"
+  ],
+  "preAdoption": [
+    "qualify additive backend identity and protected server-side credential custody",
+    "real own read plus Tenants/unrelated upload refusals, ACL/nonadmin/source/consumer readbacks",
+    "keep current active org pair and key operating"
+  ],
+  "afterAdoption": [
+    "remove only Tenants from legacy pair selections",
+    "verify no active publisher can race coordinated two-secret update",
+    "switch only the remaining three consumers to qualified pair, preserving exact selection",
+    "verify pair metadata/consumer preservation before revoking old key",
+    "delete only confirmed exact UUID; verify metadata absence and scoped publisher preservation"
+  ],
+  "apiLimitation": "two secret updates are not an atomic transaction; old key remains until verified switch",
+  "secretValuesPersistedLocally": false,
+  "remoteMutations": false
+}

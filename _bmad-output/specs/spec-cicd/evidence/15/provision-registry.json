@@ -1,0 +1,146 @@
+{
+  "started_at": "2026-11-16T16:02:24.911946+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "administration_profile": "/home/administrator/.config/gh",
+  "operations": [
+    {
+      "recorded_at": "2026-11-16T16:02:25.262671+00:00",
+      "operation": "verify maintainer account",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:25.377018+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:25.486420+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:25.559016+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:26.538429+00:00",
+      "operation": "set Hexalith.McpCli hexalith-release HEXALITH_REGISTRY_USERNAME",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:27.303632+00:00",
+      "operation": "set Hexalith.McpCli hexalith-release HEXALITH_REGISTRY_PASSWORD",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:27.400773+00:00",
+      "operation": "patch secret distribution-registry-htpasswd",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:27.511735+00:00",
+      "operation": "patch configmap distribution-registry-config",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:27.640385+00:00",
+      "operation": "patch deployment distribution-registry",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:39.203193+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution rollout status deployment/distribution-registry --timeout=150s",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:39.370047+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:39.513312+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:39.612680+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-16T16:02:50.873733+00:00",
+      "operation": "read Hexalith.McpCli environment secret metadata",
+      "exit": 0
+    }
+  ],
+  "identities": {
+    "Hexalith.McpCli": {
+      "username": "hexalith-mcpcli-publish",
+      "repository_patterns": [
+        "mcpcli",
+        "mcpcli/**"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update"
+      ],
+      "admin_actions": [],
+      "bcrypt_cost": 12,
+      "secret_values_persisted_locally": false,
+      "environment_secret_names": [
+        "HEXALITH_REGISTRY_PASSWORD",
+        "HEXALITH_REGISTRY_USERNAME"
+      ]
+    }
+  },
+  "preservation": {
+    "old_htpasswd_rows_byte_identical": true,
+    "existing_configuration_and_grants_unchanged": true,
+    "legacy_access_removed": false,
+    "configuration_sha256": "2913b4da78532ef3837610e0ffd4cb83035a7b5a7ff1c201d9af0bbe12ea69c6"
+  },
+  "resourceVersions": {
+    "secret_before": "46533285",
+    "secret_after": "46700578",
+    "configmap_before": "46533286",
+    "configmap_after": "46700579",
+    "deployment_before": "46533403",
+    "deployment_after": "46700695"
+  },
+  "authentication": [
+    {
+      "repository": "Hexalith.McpCli",
+      "username": "hexalith-mcpcli-publish",
+      "method": "GET",
+      "endpoint": "/v2/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "repository": "Hexalith.McpCli",
+      "username": "hexalith-mcpcli-publish",
+      "method": "POST",
+      "endpoint": "/v2/commons/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "repository": "Hexalith.McpCli",
+      "username": "hexalith-mcpcli-publish",
+      "method": "POST",
+      "endpoint": "/v2/story-15-unrelated/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    }
+  ],
+  "verification_limits": [
+    "Authenticated registry access and foreign-write refusals are real server results.",
+    "Own namespace read/create/update grants are verified from preserved live ACL and restarted workload; no package/image or upload was created.",
+    "No legacy registry identity or credential was revoked before adoption."
+  ],
+  "completed_at": "2026-11-16T16:02:50.874445+00:00",
+  "result": "pass"
+}

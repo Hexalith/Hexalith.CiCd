@@ -1,0 +1,5 @@
+fix(ci): enable long paths before hosted Windows checkout
+
+Configure and verify Git long-path support before the module checkout on
+disposable hosted Windows runners. Exercise the real composite boundary and
+prove a tracked path beyond MAX_PATH reaches the Windows sample tests.

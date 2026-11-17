@@ -1,0 +1,1398 @@
+Collecting attrs==26.1.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 1))
+  Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+Collecting jsonschema==4.26.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 7))
+  Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Collecting jsonschema-specifications==2025.9.1 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 11))
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Collecting referencing==0.37.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 15))
+  Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Collecting rpds-py==2026.9.1 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 21))
+  Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+Collecting typing-extensions==4.16.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 153))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /tmp/hexalith-job.3744TPsa/python/bin/python -m pip install --upgrade pip
+test_abbreviated_candidate_commit_refuses_capture (test_capture_heads.CaptureHeadsTests.test_abbreviated_candidate_commit_refuses_capture) ... ok
+test_binary_drift_during_discovery_refuses_capture (test_capture_heads.CaptureHeadsTests.test_binary_drift_during_discovery_refuses_capture) ... ok
+test_different_head_documents_and_error_exits_refuse_capture (test_capture_heads.CaptureHeadsTests.test_different_head_documents_and_error_exits_refuse_capture) ... ok
+test_duplicate_modules_refuse_capture (test_capture_heads.CaptureHeadsTests.test_duplicate_modules_refuse_capture) ... ok
+test_empty_catalog_refuses_capture (test_capture_heads.CaptureHeadsTests.test_empty_catalog_refuses_capture) ... ok
+test_exact_structured_catalog_and_binary_hashes_are_retained (test_capture_heads.CaptureHeadsTests.test_exact_structured_catalog_and_binary_hashes_are_retained) ... ok
+test_missing_host_refuses_capture (test_capture_heads.CaptureHeadsTests.test_missing_host_refuses_capture) ... ok
+test_current_vectors_only_change_package_versions_and_exact_deprecated_party_hints (test_current_cohort.CurrentCohortTests.test_current_vectors_only_change_package_versions_and_exact_deprecated_party_hints) ... ok
+test_historical_native_selection_and_all_vectors_and_plans_are_preserved (test_current_cohort.CurrentCohortTests.test_historical_native_selection_and_all_vectors_and_plans_are_preserved) ... ok
+test_manifest_accepts_each_closed_cohort_and_refuses_crossed_or_unknown_versions (test_current_cohort.CurrentCohortTests.test_manifest_accepts_each_closed_cohort_and_refuses_crossed_or_unknown_versions) ... ok
+test_manifest_accepts_retained_sdk42_tenants707_tuple (test_current_cohort.CurrentCohortTests.test_manifest_accepts_retained_sdk42_tenants707_tuple) ... ok
+test_current_resource_runtime_inventory_is_closed_to_measured_runtime (test_current_runtime_profile.CurrentRuntimeProfileTests.test_current_resource_runtime_inventory_is_closed_to_measured_runtime) ... ok
+test_exact_current_tuple_and_binary_manifest_are_required (test_current_runtime_profile.CurrentRuntimeProfileTests.test_exact_current_tuple_and_binary_manifest_are_required) ... ok
+test_forged_version_string_cannot_admit_altered_tool_bytes (test_current_runtime_profile.CurrentRuntimeProfileTests.test_forged_version_string_cannot_admit_altered_tool_bytes) ... ok
+test_original_runtime_binary_profile_remains_immutable (test_current_runtime_profile.CurrentRuntimeProfileTests.test_original_runtime_binary_profile_remains_immutable) ... ok
+test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) ... 
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.create-party') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.deactivate-party') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.get-party') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.list-parties') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.reactivate-party') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.search-parties') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.update-party') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='projects.list') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.add-user-to-tenant') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.change-user-role') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.create-tenant') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.disable-tenant') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.enable-tenant') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant-audit') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant-users') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-user-tenants') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.list-tenants') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.remove-tenant-configuration') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.remove-user-from-tenant') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.set-tenant-configuration') ... ERROR
+  test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.update-tenant') ... ERROR
+test_exactly_one_passing_selected_case_is_required (test_lane.LaneTests.test_exactly_one_passing_selected_case_is_required) ... ok
+test_expected_live_set_is_every_approved_vector_with_a_companion_plan (test_lane.LaneTests.test_expected_live_set_is_every_approved_vector_with_a_companion_plan) ... ok
+test_explicit_host_selection_is_forwarded_privately_to_child (test_lane.LaneTests.test_explicit_host_selection_is_forwarded_privately_to_child) ... ok
+test_extra_or_empty_results_are_rejected (test_lane.LaneTests.test_extra_or_empty_results_are_rejected) ... ok
+test_failed_children_keep_all_operation_outcomes_and_exact_selectors (test_lane.LaneTests.test_failed_children_keep_all_operation_outcomes_and_exact_selectors) ... ok
+test_full_coverage_cannot_be_inferred_from_returned_preflight_subset (test_lane.LaneTests.test_full_coverage_cannot_be_inferred_from_returned_preflight_subset) ... ok
+test_hard_kill_during_preflight_cannot_leave_previous_success (test_lane.LaneTests.test_hard_kill_during_preflight_cannot_leave_previous_success) ... ok
+test_missing_runtime_fails_before_preflight_or_child (test_lane.LaneTests.test_missing_runtime_fails_before_preflight_or_child) ... ok
+test_out_of_range_child_timeout_starts_no_topology (test_lane.LaneTests.test_out_of_range_child_timeout_starts_no_topology) ... ok
+test_outer_termination_stops_the_running_session_child_and_never_accepts (test_lane.LaneTests.test_outer_termination_stops_the_running_session_child_and_never_accepts) ... ok
+test_preflight_failure_invalidates_prior_lane_success (test_lane.LaneTests.test_preflight_failure_invalidates_prior_lane_success) ... ok
+test_preflight_only_prints_summary_and_never_starts_children (test_lane.LaneTests.test_preflight_only_prints_summary_and_never_starts_children) ... ok
+test_preflight_reports_reach_live_lane_json_and_stderr_without_changing_the_exit_code (test_lane.LaneTests.test_preflight_reports_reach_live_lane_json_and_stderr_without_changing_the_exit_code) ... ok
+test_real_child_deadline_stops_only_its_owned_process_group (test_lane.LaneTests.test_real_child_deadline_stops_only_its_owned_process_group) ... ok
+test_success_requires_fresh_binding_case_and_owned_cleanup (test_lane.LaneTests.test_success_requires_fresh_binding_case_and_owned_cleanup) ... ok
+test_unknown_or_empty_selector_starts_no_topology (test_lane.LaneTests.test_unknown_or_empty_selector_starts_no_topology) ... ok
+test_actual_built_adapter_matches_restored_production_closure (test_live_plans.AdapterDependencyTests.test_actual_built_adapter_matches_restored_production_closure) ... ERROR
+test_adapter_closure_rejects_stale_private_bytes_and_dependency_metadata (test_live_plans.AdapterDependencyTests.test_adapter_closure_rejects_stale_private_bytes_and_dependency_metadata) ... ok
+test_genuine_stale_compiled_gateway_client_is_rejected_with_current_deps (test_live_plans.AdapterDependencyTests.test_genuine_stale_compiled_gateway_client_is_rejected_with_current_deps) ... ok
+test_rid_runtime_assets_verify_present_bytes_and_restored_inventory (test_live_plans.AdapterDependencyTests.test_rid_runtime_assets_verify_present_bytes_and_restored_inventory) ... ok
+test_findings_stay_on_stdout_with_a_failing_exit_code (test_live_plans.InventoryAdapterReportTests.test_findings_stay_on_stdout_with_a_failing_exit_code) ... ERROR
+test_unmentioned_operation_is_reported_on_stderr_without_a_finding (test_live_plans.InventoryAdapterReportTests.test_unmentioned_operation_is_reported_on_stderr_without_a_finding) ... FAIL
+test_discovery_must_equal_the_flagged_package_manifests (test_live_plans.LiveKindCoverageTests.test_discovery_must_equal_the_flagged_package_manifests) ... ERROR
+test_each_declared_kind_needs_a_plan_backed_vector (test_live_plans.LiveKindCoverageTests.test_each_declared_kind_needs_a_plan_backed_vector) ... ok
+test_every_plan_needs_an_approved_vector (test_live_plans.LiveKindCoverageTests.test_every_plan_needs_an_approved_vector) ... ok
+test_inventory_reports_are_forwarded_without_failing (test_live_plans.LiveKindCoverageTests.test_inventory_reports_are_forwarded_without_failing) ... ERROR
+test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes (test_live_plans.LiveKindCoverageTests.test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes) ... ERROR
+test_missing_live_kind_fails_naming_the_module_and_kind (test_live_plans.LiveKindCoverageTests.test_missing_live_kind_fails_naming_the_module_and_kind) ... ERROR
+test_orphan_plan_fails_preflight (test_live_plans.LiveKindCoverageTests.test_orphan_plan_fails_preflight) ... ERROR
+test_vector_version_differences_reach_the_preflight_reports (test_live_plans.LiveKindCoverageTests.test_vector_version_differences_reach_the_preflight_reports) ... ERROR
+test_vector_without_a_plan_stays_loopback_only (test_live_plans.LiveKindCoverageTests.test_vector_without_a_plan_stays_loopback_only) ... ERROR
+test_version_difference_is_reported_and_the_binding_uses_the_restored_package (test_live_plans.LiveKindCoverageTests.test_version_difference_is_reported_and_the_binding_uses_the_restored_package) ... ERROR
+test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight (test_live_plans.PlanTests.test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight) ... FAIL
+test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) ... 
+  test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='check_adapter_dependencies') ... FAIL
+  test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='artifact_for') ... FAIL
+  test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='_verify_artifact_in_host') ... FAIL
+  test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='approved_inventory') ... FAIL
+  test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='_preflight_vectors') ... FAIL
+  test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='validate_call') ... FAIL
+test_all_21_v1_companion_plans_and_every_plan_are_valid_for_approved_vectors (test_live_plans.PlanTests.test_all_21_v1_companion_plans_and_every_plan_are_valid_for_approved_vectors) ... ok
+test_assertion_binding_requires_matching_capture_type_phase_and_path (test_live_plans.PlanTests.test_assertion_binding_requires_matching_capture_type_phase_and_path) ... ok
+test_capture_types_are_checked_without_coercion (test_live_plans.PlanTests.test_capture_types_are_checked_without_coercion) ... ok
+test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) ... 
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.create-party', label='persisted-invocation') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='persisted-prerequisites-0') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-type') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-active') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-createdafter') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='offset-after-only-match') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='persisted-prerequisites-0') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-query') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-type') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-active') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='offset-after-only-match') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.update-party', label='persisted-prerequisites-0') ... ERROR
+  test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.update-party', label='persisted-invocation') ... ERROR
+test_command_without_persisted_barrier_fails (test_live_plans.PlanTests.test_command_without_persisted_barrier_fails) ... ok
+test_create_party_observation_retains_complete_submitted_content (test_live_plans.PlanTests.test_create_party_observation_retains_complete_submitted_content) ... ok
+test_cursor_assertion_cannot_be_dropped (test_live_plans.PlanTests.test_cursor_assertion_cannot_be_dropped) ... ok
+test_cursor_binding_requires_a_capture_of_the_returned_cursor (test_live_plans.PlanTests.test_cursor_binding_requires_a_capture_of_the_returned_cursor) ... ok
+test_duplicate_assertion_binding_index_is_rejected (test_live_plans.PlanTests.test_duplicate_assertion_binding_index_is_rejected) ... ok
+test_duplicate_binding_target_is_rejected (test_live_plans.PlanTests.test_duplicate_binding_target_is_rejected) ... ok
+test_duplicate_capture_name_is_rejected (test_live_plans.PlanTests.test_duplicate_capture_name_is_rejected) ... ok
+test_duplicate_or_missing_steps_fail (test_live_plans.PlanTests.test_duplicate_or_missing_steps_fail) ... ok
+test_envelope_only_assertions_cannot_qualify_as_persisted_barriers (test_live_plans.PlanTests.test_envelope_only_assertions_cannot_qualify_as_persisted_barriers) ... ok
+test_execution_uses_frozen_bytes_and_rejects_approval_races (test_live_plans.PlanTests.test_execution_uses_frozen_bytes_and_rejects_approval_races) ... ok
+test_failed_core_responses_retain_sanitized_process_diagnostics (test_live_plans.PlanTests.test_failed_core_responses_retain_sanitized_process_diagnostics) ... ok
+test_float_assertion_selector_reports_located_integer_failure (test_live_plans.PlanTests.test_float_assertion_selector_reports_located_integer_failure) ... ok
+test_full_preflight_checks_all_calls_and_child_checks_only_selected_calls (test_live_plans.PlanTests.test_full_preflight_checks_all_calls_and_child_checks_only_selected_calls) ... ok
+test_input_binding_cannot_change_static_fields (test_live_plans.PlanTests.test_input_binding_cannot_change_static_fields) ... ok
+test_malformed_core_output_retains_sanitized_process_diagnostics (test_live_plans.PlanTests.test_malformed_core_output_retains_sanitized_process_diagnostics) ... ok
+test_negative_party_predicates_and_complete_update_observation_are_retained (test_live_plans.PlanTests.test_negative_party_predicates_and_complete_update_observation_are_retained) ... ok
+test_observation_assertion_operands_keep_strict_json_types (test_live_plans.PlanTests.test_observation_assertion_operands_keep_strict_json_types) ... ok
+test_policy_package_ids_cannot_collide_case_insensitively (test_live_plans.PlanTests.test_policy_package_ids_cannot_collide_case_insensitively) ... ok
+test_real_typed_values_bind_existing_targets (test_live_plans.PlanTests.test_real_typed_values_bind_existing_targets) ... ok
+test_scripted_input_requires_explicit_binding (test_live_plans.PlanTests.test_scripted_input_requires_explicit_binding) ... ok
+test_semantic_receipt_requires_each_query_head_and_only_one_command_head (test_live_plans.PlanTests.test_semantic_receipt_requires_each_query_head_and_only_one_command_head) ... ok
+test_stale_vector_hash_rejects_plan (test_live_plans.PlanTests.test_stale_vector_hash_rejects_plan) ... ok
+test_static_assertion_cannot_be_replaced (test_live_plans.PlanTests.test_static_assertion_cannot_be_replaced) ... ok
+test_step_binding_cannot_replace_static_cursor_input (test_live_plans.PlanTests.test_step_binding_cannot_replace_static_cursor_input) ... ok
+test_time_binding_requires_a_timestamp_capture (test_live_plans.PlanTests.test_time_binding_requires_a_timestamp_capture) ... ok
+test_unknown_fields_fail_closed (test_live_plans.PlanTests.test_unknown_fields_fail_closed) ... ok
+test_unresolved_cursor_is_rejected_before_execution (test_live_plans.PlanTests.test_unresolved_cursor_is_rejected_before_execution) ... ok
+test_unreviewed_or_stale_restored_package_fails_preflight (test_live_plans.PlanTests.test_unreviewed_or_stale_restored_package_fails_preflight) ... ok
+test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) ... 
+  test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) (operation='tenants.get-tenant-users') ... ERROR
+  test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) (operation='tenants.get-tenant-audit') ... ERROR
+test_every_vector_submits_each_declared_command_once_at_executor_boundary (test_live_runner.ExecutionTests.test_every_vector_submits_each_declared_command_once_at_executor_boundary) ... ok
+test_failed_mcp_read_retains_the_successful_cli_phase (test_live_runner.ExecutionTests.test_failed_mcp_read_retains_the_successful_cli_phase) ... ok
+test_hard_termination_retains_prior_phases_and_sanitized_inflight_attempt (test_live_runner.ExecutionTests.test_hard_termination_retains_prior_phases_and_sanitized_inflight_attempt) ... ok
+test_intentional_repeated_noop_is_submitted_and_only_delayed_reads_repeat (test_live_runner.ExecutionTests.test_intentional_repeated_noop_is_submitted_and_only_delayed_reads_repeat) ... ok
+test_ordinary_failed_observation_marks_its_phase_failed (test_live_runner.ExecutionTests.test_ordinary_failed_observation_marks_its_phase_failed) ... ok
+test_parent_binding_mismatch_never_reaches_execute (test_live_runner.ExecutionTests.test_parent_binding_mismatch_never_reaches_execute) ... ok
+test_parties_offset_probes_reject_a_server_that_repeats_the_first_page (test_live_runner.ExecutionTests.test_parties_offset_probes_reject_a_server_that_repeats_the_first_page) ... ok
+test_resolved_core_refusal_prevents_that_phase_from_reaching_cli (test_live_runner.ExecutionTests.test_resolved_core_refusal_prevents_that_phase_from_reaching_cli) ... FAIL
+test_reused_message_identity_fails_repeated_noop_phase (test_live_runner.ExecutionTests.test_reused_message_identity_fails_repeated_noop_phase) ... ok
+test_actual_returned_cursor_is_captured_and_asserted (test_live_runner.RunnerTests.test_actual_returned_cursor_is_captured_and_asserted) ... ok
+test_broken_business_effect_fails_with_phase_operation_and_path (test_live_runner.RunnerTests.test_broken_business_effect_fails_with_phase_operation_and_path) ... ok
+test_cli_receives_private_endpoint_and_envelope_identity (test_live_runner.RunnerTests.test_cli_receives_private_endpoint_and_envelope_identity) ... ok
+test_command_requires_approved_aggregate_identity (test_live_runner.RunnerTests.test_command_requires_approved_aggregate_identity) ... ok
+test_failed_capture_does_not_commit_partial_values (test_live_runner.RunnerTests.test_failed_capture_does_not_commit_partial_values) ... ok
+test_failing_preflight_invalidates_receipt_and_redacts_identity (test_live_runner.RunnerTests.test_failing_preflight_invalidates_receipt_and_redacts_identity) ... ok
+test_final_process_timeout_retains_the_semantic_assertion_path (test_live_runner.RunnerTests.test_final_process_timeout_retains_the_semantic_assertion_path) ... ok
+test_invalid_output_contract_cannot_converge_to_a_later_valid_response (test_live_runner.RunnerTests.test_invalid_output_contract_cannot_converge_to_a_later_valid_response) ... ok
+test_late_valid_cli_or_mcp_observation_cannot_pass_or_commit_captures (test_live_runner.RunnerTests.test_late_valid_cli_or_mcp_observation_cannot_pass_or_commit_captures) ... ok
+test_live_entry_guards_fail_before_preflight_or_execution (test_live_runner.RunnerTests.test_live_entry_guards_fail_before_preflight_or_execution) ... ok
+test_malformed_cli_output_fails_immediately_even_after_a_converging_poll (test_live_runner.RunnerTests.test_malformed_cli_output_fails_immediately_even_after_a_converging_poll) ... ok
+test_mcp_query_uses_tool_arguments_and_cannot_submit_commands (test_live_runner.RunnerTests.test_mcp_query_uses_tool_arguments_and_cannot_submit_commands) ... ok
+test_missing_persisted_document_deadline_retains_declared_assertion_paths (test_live_runner.RunnerTests.test_missing_persisted_document_deadline_retains_declared_assertion_paths) ... ok
+test_nonretryable_query_error_does_not_poll (test_live_runner.RunnerTests.test_nonretryable_query_error_does_not_poll) ... ok
+test_only_queries_poll_for_persisted_convergence (test_live_runner.RunnerTests.test_only_queries_poll_for_persisted_convergence) ... ok
+test_successful_main_retains_bound_inputs_and_passing_phases (test_live_runner.RunnerTests.test_successful_main_retains_bound_inputs_and_passing_phases) ... ok
+test_write_acceptance_is_submitted_once (test_live_runner.RunnerTests.test_write_acceptance_is_submitted_once) ... ok
+test_write_failure_is_never_retried (test_live_runner.RunnerTests.test_write_failure_is_never_retried) ... ok
+test_audit_policy_refuses_feed_failure_suppressions_and_weakened_severity (test_native_audit.NativeAuditTests.test_audit_policy_refuses_feed_failure_suppressions_and_weakened_severity) ... ok
+test_complete_transitive_graph_and_actual_archive_bytes_are_bound (test_native_audit.NativeAuditTests.test_complete_transitive_graph_and_actual_archive_bytes_are_bound) ... ok
+test_every_advisory_page_must_match_independent_online_200_response (test_native_audit.NativeAuditTests.test_every_advisory_page_must_match_independent_online_200_response) ... ok
+test_missing_hash_or_archive_is_not_accepted (test_native_audit.NativeAuditTests.test_missing_hash_or_archive_is_not_accepted) ... ok
+test_output_snapshot_includes_existing_build_and_assets (test_native_audit.NativeAuditTests.test_output_snapshot_includes_existing_build_and_assets) ... ok
+test_reuse_rechecks_module_outputs_fixture_graph_and_advisory_bytes (test_native_audit.NativeAuditTests.test_reuse_rechecks_module_outputs_fixture_graph_and_advisory_bytes) ... ok
+test_any_dirty_source_refuses_before_any_selection (test_native_cohort.NativeCohortTests.test_any_dirty_source_refuses_before_any_selection) ... ok
+test_archive_bytes_and_embedded_repository_must_both_match (test_native_cohort.NativeCohortTests.test_archive_bytes_and_embedded_repository_must_both_match) ... ok
+test_competing_nested_catalog_refuses_before_selection_without_touching_it (test_native_cohort.NativeCohortTests.test_competing_nested_catalog_refuses_before_selection_without_touching_it) ... ok
+test_disposable_ci_selects_only_exact_qualified_revision_without_recursion (test_native_cohort.NativeCohortTests.test_disposable_ci_selects_only_exact_qualified_revision_without_recursion) ... ok
+test_exact_clean_sources_preserve_local_checkouts (test_native_cohort.NativeCohortTests.test_exact_clean_sources_preserve_local_checkouts) ... ok
+test_local_revision_mismatch_never_fetches_or_updates_nested_inputs (test_native_cohort.NativeCohortTests.test_local_revision_mismatch_never_fetches_or_updates_nested_inputs) ... ok
+test_manifest_rejects_missing_wrong_repository_and_unpublished_candidate_inputs (test_native_cohort.NativeCohortTests.test_manifest_rejects_missing_wrong_repository_and_unpublished_candidate_inputs) ... ok
+test_missing_and_linked_sources_refuse (test_native_cohort.NativeCohortTests.test_missing_and_linked_sources_refuse) ... ok
+test_missing_qualified_commit_refuses_before_any_checkout (test_native_cohort.NativeCohortTests.test_missing_qualified_commit_refuses_before_any_checkout) ... ok
+test_wrong_repository_refuses_before_mutation (test_native_cohort.NativeCohortTests.test_wrong_repository_refuses_before_mutation) ... ok
+test_dirty_source_is_rejected_before_it_can_become_a_new_seal (test_native_sources.NativeSourceTests.test_dirty_source_is_rejected_before_it_can_become_a_new_seal) ... ok
+test_nested_builds_and_in_place_source_fixtures_are_rejected (test_native_sources.NativeSourceTests.test_nested_builds_and_in_place_source_fixtures_are_rejected) ... ok
+test_private_fixtures_preserve_source_identity_and_seal_source_assets_and_outputs (test_native_sources.NativeSourceTests.test_private_fixtures_preserve_source_identity_and_seal_source_assets_and_outputs) ... ok
+test_bootstrap_refuses_an_existing_runtime_before_using_docker (test_runtime.RuntimeTests.test_bootstrap_refuses_an_existing_runtime_before_using_docker) ... ok
+test_bootstrap_removes_rejected_bytes_and_its_container_on_hash_mismatch (test_runtime.RuntimeTests.test_bootstrap_removes_rejected_bytes_and_its_container_on_hash_mismatch) ... ok
+test_bootstrap_termination_during_extraction_removes_its_owned_container (test_runtime.RuntimeTests.test_bootstrap_termination_during_extraction_removes_its_owned_container) ... ok
+test_bootstrap_verifies_bytes_and_removes_only_its_extraction_container (test_runtime.RuntimeTests.test_bootstrap_verifies_bytes_and_removes_only_its_extraction_container) ... ok
+test_inner_wrapper_refuses_an_empty_command_without_recording_success (test_runtime.RuntimeTests.test_inner_wrapper_refuses_an_empty_command_without_recording_success) ... ok
+test_optimized_wrapper_preserves_safety_guards (test_runtime.RuntimeTests.test_optimized_wrapper_preserves_safety_guards) ... ok
+test_public_wrapper_forwards_the_supplied_child_and_its_failure_through_namespace_launch (test_runtime.RuntimeTests.test_public_wrapper_forwards_the_supplied_child_and_its_failure_through_namespace_launch) ... ok
+test_public_wrapper_requires_a_command_before_creating_files_or_launching_namespaces (test_runtime.RuntimeTests.test_public_wrapper_requires_a_command_before_creating_files_or_launching_namespaces) ... ok
+test_redis_genesis_backup_reads_fragmented_resp_without_resubmitting (test_runtime.RuntimeTests.test_redis_genesis_backup_reads_fragmented_resp_without_resubmitting) ... ok
+test_wrapper_forces_a_sigterm_ignoring_child_to_exit_at_its_deadline (test_runtime.RuntimeTests.test_wrapper_forces_a_sigterm_ignoring_child_to_exit_at_its_deadline) ... ok
+test_wrapper_pins_the_effective_child_environment_to_private_services (test_runtime.RuntimeTests.test_wrapper_pins_the_effective_child_environment_to_private_services) ... ok
+test_wrapper_propagates_a_real_failing_child_exit_and_records_it (test_runtime.RuntimeTests.test_wrapper_propagates_a_real_failing_child_exit_and_records_it) ... ok
+test_wrapper_records_bounded_stderr_before_parsing_a_failed_dapr_probe (test_runtime.RuntimeTests.test_wrapper_records_bounded_stderr_before_parsing_a_failed_dapr_probe) ... ok
+test_wrapper_refuses_nonempty_store_or_failed_backup_before_application_launch (test_runtime.RuntimeTests.test_wrapper_refuses_nonempty_store_or_failed_backup_before_application_launch) ... ok
+test_wrapper_refuses_readiness_failures_before_starting_the_child (test_runtime.RuntimeTests.test_wrapper_refuses_readiness_failures_before_starting_the_child) ... ok
+test_wrapper_rejects_a_daemon_that_exits_during_a_successful_child (test_runtime.RuntimeTests.test_wrapper_rejects_a_daemon_that_exits_during_a_successful_child) ... ok
+test_wrapper_removes_private_keys_before_an_interrupted_daemon_shutdown (test_runtime.RuntimeTests.test_wrapper_removes_private_keys_before_an_interrupted_daemon_shutdown) ... ok
+test_wrapper_requires_a_nonempty_explicit_runtime_before_creating_files (test_runtime.RuntimeTests.test_wrapper_requires_a_nonempty_explicit_runtime_before_creating_files) ... ok
+test_wrapper_requires_each_namespace_to_differ_before_running_commands (test_runtime.RuntimeTests.test_wrapper_requires_each_namespace_to_differ_before_running_commands) ... ok
+test_wrapper_stops_a_real_hung_child_and_records_its_deadline (test_runtime.RuntimeTests.test_wrapper_stops_a_real_hung_child_and_records_its_deadline) ... ok
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.create-party')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.create-party', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.deactivate-party')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.deactivate-party', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.get-party')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.get-party', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.list-parties')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.list-parties', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.reactivate-party')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.reactivate-party', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.search-parties')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.search-parties', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='parties.update-party')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=parties.update-party', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='projects.list')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=projects.list', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.add-user-to-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.add-user-to-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.change-user-role')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.change-user-role', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.create-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.create-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.disable-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.disable-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.enable-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.enable-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.get-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant-audit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.get-tenant-audit', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-tenant-users')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.get-tenant-users', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.get-user-tenants')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.get-user-tenants', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.list-tenants')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.list-tenants', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.remove-tenant-configuration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.remove-tenant-configuration', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.remove-user-from-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.remove-user-from-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.set-tenant-configuration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.set-tenant-configuration', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_child_selector_lists_exactly_its_operation_case_from_built_tests (test_lane.LaneTests.test_child_selector_lists_exactly_its_operation_case_from_built_tests) (operation='tenants.update-tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_lane.py", line 385, in test_child_selector_lists_exactly_its_operation_case_from_built_tests
+    listed = subprocess.run(selector, cwd=lane.ROOT, capture_output=True, text=True, timeout=60, check=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['dotnet', '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll', '-class', 'Hexalith.McpCli.Integration.Tests.LiveVectorTests', '-trait', 'Operation=tenants.update-tenant', '-preEnumerateTheories', '-failSkips', '-list', 'tests']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_actual_built_adapter_matches_restored_production_closure (test_live_plans.AdapterDependencyTests.test_actual_built_adapter_matches_restored_production_closure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 628, in test_actual_built_adapter_matches_restored_production_closure
+    assets = json.loads((ROOT / 'src/Hexalith.McpCli/obj/project.assets.json').read_text())
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+======================================================================
+ERROR: test_findings_stay_on_stdout_with_a_failing_exit_code (test_live_plans.InventoryAdapterReportTests.test_findings_stay_on_stdout_with_a_failing_exit_code)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 620, in test_findings_stay_on_stdout_with_a_failing_exit_code
+    self.assertEqual([f"{path}:row L01: approval.status must be 'approved'; actual 'pending'."], json.loads(result.stdout))
+                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_discovery_must_equal_the_flagged_package_manifests (test_live_plans.LiveKindCoverageTests.test_discovery_must_equal_the_flagged_package_manifests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 557, in test_discovery_must_equal_the_flagged_package_manifests
+    self.preflight(HeadProcess=type('Head', (live_plans.HeadProcess,), {'cli': cli}))
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_inventory_reports_are_forwarded_without_failing (test_live_plans.LiveKindCoverageTests.test_inventory_reports_are_forwarded_without_failing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 571, in test_inventory_reports_are_forwarded_without_failing
+    expected_inventory = self.inventory_reports()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes (test_live_plans.LiveKindCoverageTests.test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 493, in test_live_preflight_rechecks_operation_shape_coverage_with_the_host_shapes
+    self.preflight(_manifest_shapes=with_uncovered_shape)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_missing_live_kind_fails_naming_the_module_and_kind (test_live_plans.LiveKindCoverageTests.test_missing_live_kind_fails_naming_the_module_and_kind)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 482, in test_missing_live_kind_fails_naming_the_module_and_kind
+    self.preflight(lambda real: real - queries)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_orphan_plan_fails_preflight (test_live_plans.LiveKindCoverageTests.test_orphan_plan_fails_preflight)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 522, in test_orphan_plan_fails_preflight
+    self.preflight(lambda real: real | {'parties.retired-operation'})
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_vector_version_differences_reach_the_preflight_reports (test_live_plans.LiveKindCoverageTests.test_vector_version_differences_reach_the_preflight_reports)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 511, in test_vector_version_differences_reach_the_preflight_reports
+    selections, bindings, reports = self.preflight(expected_vector_version='0.0.1')
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_vector_without_a_plan_stays_loopback_only (test_live_plans.LiveKindCoverageTests.test_vector_without_a_plan_stays_loopback_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 464, in test_vector_without_a_plan_stays_loopback_only
+    selections, bindings, reports = self.preflight(lambda real: real - {'parties.get-party'})
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_version_difference_is_reported_and_the_binding_uses_the_restored_package (test_live_plans.LiveKindCoverageTests.test_version_difference_is_reported_and_the_binding_uses_the_restored_package)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 531, in test_version_difference_is_reported_and_the_binding_uses_the_restored_package
+    selections, bindings, reports = self.preflight(expected_approval_version='0.0.1', _load_json=older_receipt)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 451, in preflight
+    inventory_reports = self.inventory_reports() if expected_inventory_reports is None else expected_inventory_reports
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 404, in inventory_reports
+    self.assertEqual((0, []), (result.returncode, json.loads(result.stdout)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.create-party', label='persisted-invocation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.get-party: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-fg62z32d/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='persisted-prerequisites-0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.get-party: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-lox2r1jj/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-type')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.list-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-9xm1ez14/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-active')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.list-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-xkt_uzfm/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='nonmatching-createdafter')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.list-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-s829_0e7/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.list-parties', label='offset-after-only-match')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.list-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-162f5hux/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='persisted-prerequisites-0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.get-party: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-c4jgh6zk/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-query')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.search-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-b_61zp6a/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-type')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.search-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-ncpp650o/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='nonmatching-active')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.search-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-1kan2c5b/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.search-parties', label='offset-after-only-match')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.search-parties: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-7xm0ywmk/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.update-party', label='persisted-prerequisites-0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.get-party: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-dl0z82m4/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_changed_companion_observations_pass_actual_core_validation (test_live_plans.PlanTests.test_changed_companion_observations_pass_actual_core_validation) (operation='parties.update-party', label='persisted-invocation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 361, in test_changed_companion_observations_pass_actual_core_validation
+    validate_call(head, action['query'])
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: parties.get-party: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-0nwt5jgd/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) (operation='tenants.get-tenant-users')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 426, in test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation
+    head, report = self.execute(selection, documents, validation=validate)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 392, in execute
+    run_live.execute(selection, Path('/selected/host.dll'), 'http://127.0.0.1/', 'private-token', report)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/run_live.py", line 140, in execute
+    validate_call(head, call)
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 425, in validate
+    validate_call(core, call)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: tenants.create-tenant: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-fv88rjup/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+ERROR: test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation (test_live_runner.ExecutionTests.test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation) (operation='tenants.get-tenant-audit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 426, in test_dynamic_cursor_and_audit_windows_reach_cli_and_actual_core_validation
+    head, report = self.execute(selection, documents, validation=validate)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 392, in execute
+    run_live.execute(selection, Path('/selected/host.dll'), 'http://127.0.0.1/', 'private-token', report)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/run_live.py", line 140, in execute
+    validate_call(head, call)
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 425, in validate
+    validate_call(core, call)
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 199, in validate_call
+    raise VectorError(f"{call['operation']}: Core live-call validation returned no valid document. {diagnostic}") from error
+validate.VectorError: tenants.create-tenant: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-qmz1sj0g/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+======================================================================
+FAIL: test_unmentioned_operation_is_reported_on_stderr_without_a_finding (test_live_plans.InventoryAdapterReportTests.test_unmentioned_operation_is_reported_on_stderr_without_a_finding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 606, in test_unmentioned_operation_is_reported_on_stderr_without_a_finding
+    self.assertEqual(0, result.returncode, result.stderr)
+AssertionError: 0 != 1 : Could not execute because the specified command or file was not found.
+
+
+======================================================================
+FAIL: test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight (test_live_plans.PlanTests.test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 339, in test_actual_inventory_coverage_and_vector_validator_rejections_stop_preflight
+    with self.assertRaisesRegex(VectorError, 'inventory coverage failed') as failure:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "inventory coverage failed" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='check_adapter_dependencies')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 319, in test_actual_preflight_delegates_artifact_inventory_and_core_rejections
+    with self.assertRaisesRegex(VectorError, 'delegated-rejection-' + boundary):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "delegated-rejection-check_adapter_dependencies" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='artifact_for')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 319, in test_actual_preflight_delegates_artifact_inventory_and_core_rejections
+    with self.assertRaisesRegex(VectorError, 'delegated-rejection-' + boundary):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "delegated-rejection-artifact_for" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='_verify_artifact_in_host')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 319, in test_actual_preflight_delegates_artifact_inventory_and_core_rejections
+    with self.assertRaisesRegex(VectorError, 'delegated-rejection-' + boundary):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "delegated-rejection-_verify_artifact_in_host" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='approved_inventory')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 319, in test_actual_preflight_delegates_artifact_inventory_and_core_rejections
+    with self.assertRaisesRegex(VectorError, 'delegated-rejection-' + boundary):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "delegated-rejection-approved_inventory" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='_preflight_vectors')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 319, in test_actual_preflight_delegates_artifact_inventory_and_core_rejections
+    with self.assertRaisesRegex(VectorError, 'delegated-rejection-' + boundary):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "delegated-rejection-_preflight_vectors" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_actual_preflight_delegates_artifact_inventory_and_core_rejections (test_live_plans.PlanTests.test_actual_preflight_delegates_artifact_inventory_and_core_rejections) (boundary='validate_call')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/conformance-vectors/v1/validate.py", line 75, in _load_json
+    document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_plans.py", line 319, in test_actual_preflight_delegates_artifact_inventory_and_core_rejections
+    with self.assertRaisesRegex(VectorError, 'delegated-rejection-' + boundary):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "delegated-rejection-validate_call" does not match "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json:/: [Errno 2] No such file or directory: '/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/src/Hexalith.McpCli/obj/project.assets.json'"
+
+======================================================================
+FAIL: test_resolved_core_refusal_prevents_that_phase_from_reaching_cli (test_live_runner.ExecutionTests.test_resolved_core_refusal_prevents_that_phase_from_reaching_cli)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/live_plans.py", line 197, in validate_call
+    result = json.loads(process.stdout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+validate.VectorError: tenants.create-tenant: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-omb_26ti/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_live_runner.py", line 452, in test_resolved_core_refusal_prevents_that_phase_from_reaching_cli
+    with self.assertRaisesRegex(VectorError, 'resolved Core compatibility failed'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "resolved Core compatibility failed" does not match "tenants.create-tenant: Core live-call validation returned no valid document. {"command": ["dotnet", "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll", "--validate-vectors", "/tmp/hexalith-job.3744TPsa/mcpcli-live-core-omb_26ti/call.json"], "exitCode": 1, "stdout": "Possible reasons for this include:\n  * You misspelled a built-in dotnet command.\n  * You intended to execute a .NET program, but dotnet-/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll does not exist.\n  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.\n", "stderr": "Could not execute because the specified command or file was not found.\n"}"
+
+----------------------------------------------------------------------
+Ran 149 tests in 63.125s
+
+FAILED (failures=9, errors=47)
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpz6gexefj/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpnooe28uw/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpacwnz4dd/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmp84a10g3s/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmp8rtqsuae/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpm0xey44p/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpgf2tdo08/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpihb2wm21/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpycsrqun5/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmptk61owsg/live-lane.json
+PASSED: full live acceptance=True; receipt: /tmp/hexalith-job.3744TPsa/tmp4borzpiw/live-lane.json
+PARTIAL: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpube1tcdo/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpzjiuwwh7/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmphcr74yqy/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpeav3wruk/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpifee41kh/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpt3tflxrk/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmphwg88ckw/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpuowzqyg0/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpvjtvsssj/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpx31dxkmf/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpjoeh2ll1/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpth0e9qvh/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpyqr95kpb/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpx3zphqha/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpy37a8c61/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpo512k2u6/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpav2wavmm/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmp84gftx3s/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpstevkbbj/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpmuchyzow/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpbmyimyqg/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmp4uu_ob14/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmprqu0bztj/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmp2h2p0g19/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpg0e_sq3a/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpha_4h_gh/live-lane.json
+FAILED: full live acceptance=False; receipt: /tmp/hexalith-job.3744TPsa/tmpwxpnqo4i/live-lane.json
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpb5hbx2wc/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpkeuel3up/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp442ziopz/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpjr16pely/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp9_dzbkp7/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp4cfksgsu/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmph5ebcvc4/live-result.json
+VectorError: Selected live inputs differ from the parent preflight binding.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp57w91m_q/live-result.json
+VectorError: Live execution requires the isolated topology wrapper.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpfqaks1m_/live-result.json
+VectorError: Live execution requires the isolated topology wrapper.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpss9hafqw/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp0jticm60/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp7rfyozh_/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpbqns9qh3/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp4jbgai3e/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpph9z5ej0/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpyjc5j2av/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpjdg8lhoq/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpc8sx9v79/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpbftlz03l/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmps95muh5x/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmp1gnkbto6/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+FAILED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmpym83oknz/live-result.json
+VectorError: Private discovered loopback endpoint and short-lived identity are required.
+PASSED fixture.operation; receipt: /tmp/hexalith-job.3744TPsa/tmplzqe5yn5/live-result.json
+Verified four private runtime binaries in /tmp/hexalith-job.3744TPsa/tmpzijxi9rs/runtime

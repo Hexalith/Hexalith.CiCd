@@ -1,0 +1,31 @@
+{
+  "recorded_at": "2026-11-16T19:07:28.573321+00:00",
+  "status": "incomplete",
+  "adopted": false,
+  "builds_release": null,
+  "product_preparation_sha": null,
+  "delivery_run": null,
+  "adopted_sha": null,
+  "adopted_ci_run": null,
+  "next_genuine_nightly": null,
+  "platform_live_acceptance": {
+    "linux": false,
+    "windows": false,
+    "macos": false
+  },
+  "note": "Draft committed locally and backed up through the CiCd checkpoint bundle/patch; module push remains held by required pre-push checks. No adoption or full product acceptance.",
+  "shared_builds_source_sha": "6db97d4e9da392ef691ed3f367e73f1b7d2ef318",
+  "shared_builds_ci_run": 43935156026,
+  "ordered_provisioning": "complete authenticated readbacks and immediate cleanup inventory; actual post-adoption cleanup not executed",
+  "blockers": [
+    "Required public Hexalith.Projects.Contracts2.0.0-story66.3 remains absent in the authenticated/public18:57 readback; preserve enrollment pending publication coordination",
+    "Current exact-source shared CI and an acceptable immutable bot-authored Builds release through genuine central nightly are still prerequisites",
+    "Final committed package-mode product build/ordinary tests/consumer/platform/live checks and pre-push owned-content comparison, product push, setup/registration/render/pins, committed-candidate validation, App adoption, immediate cleanup and next genuine nightly remain incomplete"
+  ],
+  "shared_builds_installer": "Real hosted native installer and Windows/macOS samples passed on earlier exact sources, including86f184 with actual pre-checkout Windows long-path proof. Current6db97 includes preserved independent main, canonical equivalent catalog declarations and authoritative affected-family refresh; exact CI43935156026 remains in progress.",
+  "shared_builds_ci_status": "completed",
+  "shared_builds_ci_conclusion": "failure",
+  "local_product_draft_commit": "d4341dba735a4347793235b60dfa7a89c269b334",
+  "local_product_draft_base": "119a4b59e5e1391ff8ddb4587e1608ad1d1e5145",
+  "shared_builds_ci_limitation": "macOS job133539010560 was cancelled before obtaining a runner; all source checks and other jobs passed. Exact source is not overall green."
+}

@@ -472,6 +472,43 @@ class RenderTests(unittest.TestCase):
                     fixture.document({"job-timeout-minutes": invalid})
                     self.assert_failure_unchanged(fixture, contains="job-timeout-minutes")
 
+    def test_current_contract_renders_macos_jobs_and_aspire_budget(self):
+        config = self.execution_config({
+            "platform": {"runner": "macos-latest"},
+            "windows": {"runner": "windows-latest"},
+        })
+        legacy, jobs, qualification = renderer.execution_jobs(config, {})
+        self.assertEqual({}, jobs)
+        self.assertEqual({}, qualification)
+        self.assertEqual("macos-latest", legacy["platform"]["runner"])
+        self.assertEqual("windows-latest", legacy["windows"]["runner"])
+        with workspace() as fixture:
+            fixture.document({"solution": "Fixture.slnx", "dapr": True, "aspire": True,
+                              "job-timeout-minutes": 360,
+                              "jobs": {"platform": {"runner": "macos-latest"},
+                                       "windows": {"runner": "windows-latest"}}})
+            fixture.cli()
+            document = fixture.json()
+            self.assertTrue(document["aspire"])
+            self.assertEqual(360, document["job-timeout-minutes"])
+            rendered = fixture.yaml(".github/workflows/ci.yml")["jobs"]
+            self.assertEqual({"job-timeout-minutes": 360}, rendered["ci"]["with"])
+            self.assertEqual("macos-latest", rendered["windows-platform"]["runs-on"])
+            self.assertEqual("windows-latest", rendered["windows-windows"]["runs-on"])
+            self.assertEqual("ci", rendered["windows-platform"]["needs"])
+            self.assertEqual("./.github/actions/platform", rendered["windows-platform"]["steps"][1]["uses"])
+            fixture.cli("--check")
+
+    def test_current_contract_rejects_invalid_budget_and_aspire_without_dapr(self):
+        with workspace() as fixture:
+            fixture.setup()
+            fixture.cli()
+            for changes in ({"job-timeout-minutes": 361}, {"job-timeout-minutes": True},
+                            {"aspire": True}):
+                with self.subTest(changes=changes):
+                    fixture.document({"solution": "Fixture.slnx", **changes})
+                    self.assert_failure_unchanged(fixture)
+
     def test_valid_quotes_spaces_unicode_are_data(self):
         with workspace() as fixture:
             setup = fixture.setup("quoted")

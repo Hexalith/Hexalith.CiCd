@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-17T08:10:49.202120+00:00",
+  "source": "human explicit asynchronous answer",
+  "organizationSecret": "HEXALITH_ZOT_API_KEY",
+  "backingUuid": "099585e7-fd9e-4aac-9042-56426c1add7b",
+  "registryLabel": "Github Actions Hexalith",
+  "completeConsumers": [
+    "Hexalith/Hexalith.EventStore",
+    "Hexalith/Hexalith.Memories",
+    "Hexalith/Hexalith.Parties",
+    "Hexalith/Hexalith.Tenants"
+  ],
+  "additionalConsumers": false,
+  "credentialValueRequestedOrReadFromUser": false,
+  "preserveOtherKeys": [
+    "9eba6461-9d15-40d1-addf-2be14bc76ad8",
+    "d122a9d6-90c8-4f5f-afa5-cf8866cb6391"
+  ],
+  "revokeBeforeAdoption": false,
+  "postAdoptionRequirement": "Preserve the three remaining consumers using qualified credentials that cannot push Tenants, then revoke this exact UUID"
+}

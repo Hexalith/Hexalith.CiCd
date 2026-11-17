@@ -11,6 +11,7 @@ on:
           - eventstore-publisher
           - projects-publisher
           - projects-pins
+          - projects-prerequisite-policy
 
 permissions: {}
 
@@ -110,8 +111,8 @@ jobs:
           permission-contents: write
           permission-workflows: write
 
-      - name: Mint only Projects contents token for fixed pins
-        if: ${{ inputs.profile == 'projects-pins' }}
+      - name: Mint only Projects contents token for fixed pins or policy
+        if: ${{ inputs.profile == 'projects-pins' || inputs.profile == 'projects-prerequisite-policy' }}
         id: pins-token
         timeout-minutes: 1
         continue-on-error: true
@@ -131,7 +132,7 @@ jobs:
           PREREQUISITE_BEHAVIORAL_RESULT: ${{ needs.validate.outputs.behavioral-result }}
           PREREQUISITE_QUALIFICATION: ${{ needs.validate.result }}
           PREREQUISITE_PLAN: ${{ needs.validate.outputs.plan }}
-          MODULE_TOKEN: ${{ inputs.profile == 'projects-pins' && steps.pins-token.outputs.token || steps.publisher-token.outputs.token }}
+          MODULE_TOKEN: ${{ (inputs.profile == 'projects-pins' || inputs.profile == 'projects-prerequisite-policy') && steps.pins-token.outputs.token || steps.publisher-token.outputs.token }}
         run: >-
           python3 -I .contracts-owner/tools/deliver_contracts_prerequisites.py deliver
           --profile "$PREREQUISITE_PROFILE" --report contracts-prerequisites-delivery.json

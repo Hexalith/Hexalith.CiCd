@@ -1,0 +1,69 @@
+{
+  "schema": "hexalith.works-builds-gitlink-proposal.v1",
+  "repository": "Hexalith.Works",
+  "root_base_commit": "275896654181276eda49b9c927de876ca5a659ae",
+  "root_base_tree": "2cce61220b9b65adc8711a37e399487c74b3edaf",
+  "owned_paths": [
+    "references/Hexalith.Builds"
+  ],
+  "before": {
+    "references/Hexalith.Builds": [
+      "160000",
+      "commit",
+      "cbd13a1e93015182439112918cae4216b953f9bf"
+    ]
+  },
+  "after": {
+    "references/Hexalith.Builds": [
+      "160000",
+      "commit",
+      "07fdb22578ba55e092b2db1b4ff43f253b53fbbf"
+    ]
+  },
+  "result_tree_for_single_path_delta": "69e7c012cd6aa9b1482db385f3d1f53229038ade",
+  "gitmodules": {
+    "blob": "604585f3224aad434267d0a6f8d44963d52fd9c8",
+    "sha256": "be9366c89c1fb81ada8de0522826c61cab3983f3e668ebc2e99d9cea4b6d81a0",
+    "section": "submodule.Hexalith.Builds",
+    "path": "references/Hexalith.Builds",
+    "url": "https://github.com/Hexalith/Hexalith.Builds.git",
+    "unchanged": true
+  },
+  "target_publication": {
+    "remote": "https://github.com/Hexalith/Hexalith.Builds.git",
+    "branch": "main",
+    "observed_branch_head": "2ee32885ae96805c7745c519275e351ebb229720",
+    "target_reachable_from_observed_head": true,
+    "exact_source_ci": {
+      "conclusion": "",
+      "databaseId": 43973769780,
+      "headSha": "07fdb22578ba55e092b2db1b4ff43f253b53fbbf",
+      "status": "in_progress",
+      "url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43973769780"
+    },
+    "observed_at": "2026-11-16T23:12:32.028006+00:00",
+    "green_claimed": false
+  },
+  "unchanged_catalog_inputs": {
+    "Props/Directory.Packages.props": {
+      "before_blob": "7ff7b4ed1f9729c46825805be071e70398123faf",
+      "after_blob": "7ff7b4ed1f9729c46825805be071e70398123faf",
+      "sha256": "9ba3a73743716b5351840e333ea455db588c075182450369b1f32b0a2e96f267",
+      "unchanged": true
+    },
+    "Tools/package-version-audit.json": {
+      "before_blob": "e02cc9e9de7a86279a277c19e8098bdd94807d2b",
+      "after_blob": "e02cc9e9de7a86279a277c19e8098bdd94807d2b",
+      "sha256": "2d5bda2aba2e16a556350d65ba4ddd3ee7fc2c0f6bb9a2b046d81a0416a47540",
+      "unchanged": true
+    }
+  },
+  "existing_workflow_proposal": {
+    "path": "docs/proposals/works-package-metadata-auth-20261116/works-package-metadata-auth.json",
+    "sha256": "7a3e5a7023f3ec771163fd5f09622501a4afefcd49df98bdbdc907023b558ce4",
+    "current_results_match": true,
+    "additional_workflow_changes": false
+  },
+  "authority": "User-authorized repository/submodule synchronization and necessary CI blocker fixes; bounded CiCd owner proposal.",
+  "application": "Parent stages this exact gitlink delta with its separately authorized combined root changes; this proposal does not write the root checkout or broaden the owned path."
+}

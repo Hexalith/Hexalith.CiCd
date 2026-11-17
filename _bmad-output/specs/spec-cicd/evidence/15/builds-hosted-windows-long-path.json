@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-11-16T18:02:46.918455+00:00",
+  "kind": "real hosted Windows sample checkout/product qualification",
+  "source": "86f184164caf0733cee86c3b63ad904c96bc0934",
+  "run": 43923585572,
+  "job": 133497977246,
+  "url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43923585572/job/133497977246",
+  "log": "builds-hosted-windows-long-path.log",
+  "log_sha256": "a57a87ce4ce99ded70adf80fd0d93801436b52e321603e72a6f1c87b4628c35a",
+  "observed": {
+    "long_path_setting_verified_before_checkout": true,
+    "test_summary": "passed; total2, failed0, skipped0"
+  },
+  "source_assertion": {
+    "file": "Samples/Hexalith.Sample/test/Hexalith.Sample.WindowsTests/CalculatorTests.cs",
+    "git_blob_sha256": "5f80e3cb48e81d82c29eecac732b7a2ce4ec17d1d4d8853e913e299aecea4a92",
+    "fact": "ChecksOutTrackedLongPathsOnWindows",
+    "assertions": [
+      "actual Windows",
+      "absolute path length>260",
+      "read exact tracked proof bytes"
+    ],
+    "tracked_fixture": "Samples/Hexalith.Sample/fixtures/windows-checkout/segment-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/segment-1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/segment-2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/segment-3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/segment-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/checkout-proof.txt",
+    "relative_path_length": 313
+  },
+  "scope_limit": "Two committed Fact bodies and no skipped/failed cases establish this exact Windows sample proof. This does not claim complete McpCli product/platform acceptance or overall shared run success."
+}

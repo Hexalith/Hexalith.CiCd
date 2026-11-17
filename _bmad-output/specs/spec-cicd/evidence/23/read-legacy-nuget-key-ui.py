@@ -50,6 +50,19 @@ try{
  }while([DateTime]::UtcNow -lt $deadline)
  $result.originVerified=$verified;$result.path=$path
  if(-not $verified -or $null -eq $doc){throw 'Authenticated NuGet API Keys document unavailable; inventory remains unverified'}
+ $manage=$doc.FindFirst($scope,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty,'show-manage-container')))
+ if($null -ne $manage){
+  $pattern=$manage.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+  if($pattern.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Collapsed){$pattern.Expand()}
+  $result.manageExpanded=($pattern.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Expanded)
+ }
+ $loadDeadline=[DateTime]::UtcNow.AddSeconds(10)
+ do{
+  $keys=@($doc.FindAll($scope,[System.Windows.Automation.Condition]::TrueCondition)|Where-Object{$_.Current.AutomationId -match '^start-edit-[0-9]+$'})
+  if($keys.Count -gt 0){break}
+  Start-Sleep -Milliseconds 250
+ }while([DateTime]::UtcNow -lt $loadDeadline)
+ $result.inventoryHasLoadedKeyRows=($keys.Count -gt 0)
  $rows=@();$editIds=@();$regenerateCount=0;$deleteCount=0
  foreach($node in $doc.FindAll($scope,[System.Windows.Automation.Condition]::TrueCondition)){
   $type=$node.Current.ControlType

@@ -1,0 +1,3060 @@
+diff --git a/tests/tools/run-ci-workflow-gates.ps1 b/tests/tools/run-ci-workflow-gates.ps1
+index 9aba921c3acc352904b52fc834b39403fad7160e..7e9ab5a93d376cbcd7cfceac044491ab9d83725f 100644
+--- a/tests/tools/run-ci-workflow-gates.ps1
++++ b/tests/tools/run-ci-workflow-gates.ps1
+@@ -1,1150 +1,1188 @@
+-#!/usr/bin/env pwsh
+-
+-$ErrorActionPreference = 'Stop'
+-
+-$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+-$repositoryRoot = (Resolve-Path (Join-Path $scriptRoot '..' '..')).Path
+-$workflowRoot = Join-Path $repositoryRoot '.github/workflows'
+-$ciPath = Join-Path $workflowRoot 'ci.yml'
+-$releasePath = Join-Path $workflowRoot 'release.yml'
+-$solutionPath = Join-Path $repositoryRoot 'Hexalith.Projects.CI.slnx'
+-$releaseConfigPath = Join-Path $repositoryRoot 'release.config.cjs'
+-$trustedPublishingRunbookPath = Join-Path $repositoryRoot 'docs/runbooks/nuget-trusted-publishing.md'
+-$directoryBuildPropsPath = Join-Path $repositoryRoot 'Directory.Build.props'
+-$directoryPackagesPath = Join-Path $repositoryRoot 'Directory.Packages.props'
+-$frontComposerGatePath = Join-Path $scriptRoot 'run-frontcomposer-inspect-gate.ps1'
+-$openApiGatePath = Join-Path $scriptRoot 'run-openapi-fingerprint-gate.ps1'
+-$managedE2EPath = Join-Path $repositoryRoot 'tests/e2e/run-live-apphost.sh'
+-$failures = [System.Collections.Generic.List[string]]::new()
+-$buildsExecutionSha = '6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b'
+-$releaseBuildsExecutionSha = '6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b'
+-$g6PostgresqlImage = 'postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636'
+-$nugetLoginSha = '8d196754b4036150537f80ac539e15c2f1028841'
+-$expectedReleasePackageIds = @(
+-    'Hexalith.Projects.Contracts',
+-    'Hexalith.Projects',
+-    'Hexalith.Projects.Client',
+-    'Hexalith.Projects.Testing',
+-    'Hexalith.Projects.ServiceDefaults'
+-)
+-
+-function Require-Match {
+-    param(
+-        [string] $Text,
+-        [string] $Pattern,
+-        [string] $Message
+-    )
+-
+-    if (-not [regex]::IsMatch($Text, $Pattern, [System.Text.RegularExpressions.RegexOptions]::Multiline)) {
+-        $failures.Add($Message)
+-    }
+-}
+-
+-function Forbid-Match {
+-    param(
+-        [string] $Text,
+-        [string] $Pattern,
+-        [string] $Message
+-    )
+-
+-    if ([regex]::IsMatch($Text, $Pattern, [System.Text.RegularExpressions.RegexOptions]::Multiline)) {
+-        $failures.Add($Message)
+-    }
+-}
+-
+-function Get-WorkflowJobBlocks {
+-    param([string] $Text)
+-
+-    $jobsMarker = [regex]::Match($Text, '(?m)^jobs:\r?$')
+-    if (-not $jobsMarker.Success) {
+-        return @()
+-    }
+-
+-    $jobsText = $Text.Substring($jobsMarker.Index + $jobsMarker.Length).TrimStart("`r", "`n")
+-    return @(
+-        [regex]::Matches($jobsText, '(?ms)^  (?<name>[A-Za-z0-9_-]+):\r?\n.*?(?=^  [A-Za-z0-9_-]+:\r?$|\z)') |
+-            ForEach-Object {
+-                [pscustomobject]@{
+-                    Name = $_.Groups['name'].Value
+-                    Text = $_.Value
+-                    Index = $_.Index
+-                }
+-            }
+-    )
+-}
+-
+-function Get-NamedStepBlocks {
+-    param([string] $JobText)
+-
+-    return @(
+-        [regex]::Matches($JobText, '(?ms)^      - name:\s*(?<name>[^\r\n#]+?)\s*\r?\n.*?(?=^      - |\z)') |
+-            ForEach-Object {
+-                [pscustomobject]@{
+-                    Name = $_.Groups['name'].Value.Trim()
+-                    Text = $_.Value
+-                    Index = $_.Index
+-                }
+-            }
+-    )
+-}
+-
+-function Get-RequiredNamedStep {
+-    param(
+-        [object[]] $Steps,
+-        [string] $Name,
+-        [string] $Owner
+-    )
+-
+-    $matches = @($Steps | Where-Object { $_.Name -ceq $Name })
+-    if ($matches.Count -ne 1) {
+-        $failures.Add("$Owner must contain exactly one '$Name' step; found $($matches.Count).")
+-        return $null
+-    }
+-
+-    return $matches[0]
+-}
+-
+-function Require-G6PostgresqlPull {
+-    param(
+-        [object[]] $Steps,
+-        [string] $BeforeStep,
+-        [string] $Owner
+-    )
+-
+-    $pull = Get-RequiredNamedStep -Steps $Steps -Name 'Pull pinned G-6 PostgreSQL fixture image' -Owner $Owner
+-    $proof = Get-RequiredNamedStep -Steps $Steps -Name $BeforeStep -Owner $Owner
+-    $expected = "      - name: Pull pinned G-6 PostgreSQL fixture image`n        run: docker pull $g6PostgresqlImage"
+-    if ($null -ne $pull -and (Get-TrimmedBlockText -Text $pull.Text) -cne $expected) {
+-        $failures.Add("$Owner must unconditionally pull the exact PostgreSQL fixture digest and stop on pull failure.")
+-    }
+-    if ($null -ne $pull -and $null -ne $proof -and $pull.Index -ge $proof.Index) {
+-        $failures.Add("$Owner must pull the pinned PostgreSQL image before its live G-6 proof.")
+-    }
+-}
+-
+-function Get-UsesReferences {
+-    param([string] $Text)
+-
+-    $results = [System.Collections.Generic.List[object]]::new()
+-    $lineNumber = 0
+-    foreach ($line in $Text -split "`r?`n") {
+-        $lineNumber++
+-        if ($line -notmatch '^(?<indent>\s*)(?<dash>-\s+)?uses:\s*(?<reference>[^\s#]+)\s*(?:#.*)?$') {
+-            continue
+-        }
+-
+-        $results.Add([pscustomobject]@{
+-            Reference = $Matches['reference']
+-            Indent = $Matches['indent'].Length
+-            HasDash = -not [string]::IsNullOrEmpty($Matches['dash'])
+-            LineNumber = $lineNumber
+-        })
+-    }
+-
+-    return @($results)
+-}
+-
+-function Get-ActiveWorkflowText {
+-    param([string] $Text)
+-
+-    return (($Text -split "`r?`n" | Where-Object { $_ -notmatch '^\s*#' }) -join "`n")
+-}
+-
+-# Normalizes a job or step block for exact comparison: LF line endings, with the trailing
+-# blank and comment-only lines that belong to the next block's leading comment removed.
+-# Every other line, including any added key, command, `|| true`, `if:` or
+-# `continue-on-error`, stays in the text and breaks exact equality.
+-function Get-TrimmedBlockText {
+-    param([string] $Text)
+-
+-    $lines = [System.Collections.Generic.List[string]]::new()
+-    foreach ($line in (($Text -replace "`r`n", "`n") -split "`n")) {
+-        $lines.Add($line)
+-    }
+-
+-    while ($lines.Count -gt 0 -and $lines[$lines.Count - 1] -match '^\s*(#.*)?$') {
+-        $lines.RemoveAt($lines.Count - 1)
+-    }
+-
+-    return ($lines -join "`n")
+-}
+-
+-function Require-ExactJob {
+-    param(
+-        [object[]] $JobBlocks,
+-        [string] $Name,
+-        [string] $Expected,
+-        [string] $Message
+-    )
+-
+-    $candidates = @($JobBlocks | Where-Object { $_.Name -ceq $Name })
+-    if ($candidates.Count -ne 1) {
+-        $failures.Add("CI must define exactly one $Name job; found $($candidates.Count).")
+-    }
+-    elseif ((Get-TrimmedBlockText -Text $candidates[0].Text) -cne $Expected) {
+-        $failures.Add($Message)
+-    }
+-}
+-
+-if (-not (Test-Path $ciPath)) {
+-    throw "CI workflow not found at $ciPath."
+-}
+-
+-$ci = Get-Content -Path $ciPath -Raw
+-$solution = Get-Content -Path $solutionPath -Raw
+-$packageManifestPath = Join-Path $repositoryRoot 'tools/release-packages.json'
+-$releaseConfig = Get-Content -Path $releaseConfigPath -Raw
+-if (-not (Test-Path $trustedPublishingRunbookPath)) {
+-    $failures.Add('The NuGet Trusted Publishing migration runbook must exist.')
+-    $trustedPublishingRunbook = ''
+-}
+-else {
+-    $trustedPublishingRunbook = Get-Content -Path $trustedPublishingRunbookPath -Raw
+-}
+-$directoryBuildProps = Get-Content -Path $directoryBuildPropsPath -Raw
+-$directoryPackages = Get-Content -Path $directoryPackagesPath -Raw
+-[xml] $directoryBuildPropsXml = $directoryBuildProps
+-$frontComposerGate = Get-Content -Path $frontComposerGatePath -Raw
+-$openApiGate = Get-Content -Path $openApiGatePath -Raw
+-if (-not (Test-Path $managedE2EPath)) {
+-    $failures.Add('The managed AppHost E2E runner must exist.')
+-    $managedE2E = ''
+-}
+-else {
+-    $managedE2E = Get-Content -Path $managedE2EPath -Raw
+-}
+-$workflowFiles = @(
+-    Get-ChildItem -Path $workflowRoot -File |
+-        Where-Object { $_.Extension -in @('.yml', '.yaml') }
+-)
+-$allWorkflows = ($workflowFiles | ForEach-Object { Get-Content -Path $_.FullName -Raw }) -join "`n"
+-$workflowGatesMatch = [regex]::Match(
+-    $ci,
+-    '(?ms)^  workflow-gates:\r?\n.*?(?=^  [A-Za-z0-9_-]+:\r?$|\z)'
+-)
+-
+-if (-not $workflowGatesMatch.Success) {
+-    $failures.Add('CI must define the workflow-gates job.')
+-}
+-else {
+-    $workflowGates = $workflowGatesMatch.Value
+-    $workflowGateSteps = @(Get-NamedStepBlocks -JobText $workflowGates)
+-    $workflowFixtureStep = Get-RequiredNamedStep -Steps $workflowGateSteps -Name 'Validate workflow policy regression fixtures' -Owner 'workflow-gates'
+-    if ($null -ne $workflowFixtureStep) {
+-        $expectedWorkflowFixtureStep = @(
+-            '      - name: Validate workflow policy regression fixtures'
+-            '        env:'
+-            '          PYTHONDONTWRITEBYTECODE: ''1'''
+-            '        run: python3 -m unittest tests/tools/test_run_ci_workflow_gates.py -v'
+-        ) -join "`n"
+-        if ((Get-TrimmedBlockText -Text $workflowFixtureStep.Text) -cne $expectedWorkflowFixtureStep) {
+-            $failures.Add('The workflow policy regression fixtures must be an exact blocking name/env/run step with bytecode disabled.')
+-        }
+-        $ciInvariantStep = Get-RequiredNamedStep -Steps $workflowGateSteps -Name 'Validate CI/CD invariants' -Owner 'workflow-gates'
+-        if ($null -ne $ciInvariantStep -and $workflowFixtureStep.Index -ge $ciInvariantStep.Index) {
+-            $failures.Add('The workflow policy regression fixtures must run before CI/CD invariant validation.')
+-        }
+-    }
+-    $rendererStepMatches = [regex]::Matches(
+-        $workflowGates,
+-        '(?ms)^      - name: Validate shared skill renderer\r?\n.*?(?=^      - |\z)'
+-    )
+-    if ($rendererStepMatches.Count -ne 1) {
+-        $failures.Add('workflow-gates must contain exactly one shared skill renderer step.')
+-    }
+-    else {
+-        $rendererStep = ($rendererStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
+-        $expectedRendererStep = @(
+-            '      - name: Validate shared skill renderer'
+-            '        env:'
+-            '          PYTHONDONTWRITEBYTECODE: ''1'''
+-            '        run: python3 -m unittest tests/tools/test_render_skill.py -v'
+-        ) -join "`n"
+-        if ($rendererStep -cne $expectedRendererStep) {
+-            $failures.Add('The shared skill renderer must be an exact blocking name/env/run step with bytecode disabled.')
+-        }
+-    }
+-
+-    $ownershipStepMatches = [regex]::Matches(
+-        $workflowGates,
+-        '(?ms)^      - name: Validate Build Auto workspace ownership\r?\n.*?(?=^      - |\z)'
+-    )
+-    if ($ownershipStepMatches.Count -ne 1) {
+-        $failures.Add('workflow-gates must contain exactly one Build Auto workspace ownership step.')
+-    }
+-    else {
+-        $ownershipStep = ($ownershipStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
+-        $expectedOwnershipStep = @(
+-            '      - name: Validate Build Auto workspace ownership'
+-            '        env:'
+-            '          PYTHONDONTWRITEBYTECODE: ''1'''
+-            '        run: python3 .agents/skills/bmad-build-auto/scripts/tests/test_workspace_ownership.py'
+-        ) -join "`n"
+-        if ($ownershipStep -cne $expectedOwnershipStep) {
+-            $failures.Add('The Build Auto workspace ownership fixture must be an exact blocking name/env/run step with bytecode disabled.')
+-        }
+-    }
+-
+-    $packageFixtureStepMatches = [regex]::Matches(
+-        $workflowGates,
+-        '(?ms)^      - name: Validate release package tool fixtures\r?\n.*?(?=^      - |\z)'
+-    )
+-    if ($packageFixtureStepMatches.Count -ne 1) {
+-        $failures.Add('workflow-gates must run exactly one release package tool fixture step before restore-capable jobs.')
+-    }
+-    else {
+-        $packageFixtureStep = ($packageFixtureStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
+-        $expectedPackageFixtureStep = @(
+-            '      - name: Validate release package tool fixtures'
+-            '        env:'
+-            '          PYTHONDONTWRITEBYTECODE: ''1'''
+-            '        run: python3 -m unittest tests/tools/test_release_package_tools.py -v'
+-        ) -join "`n"
+-        if ($packageFixtureStep -cne $expectedPackageFixtureStep) {
+-            $failures.Add('The release package fixture must be an exact blocking name/env/run step with bytecode disabled.')
+-        }
+-
+-        $ciInvariantIndex = $workflowGates.IndexOf('      - name: Validate CI/CD invariants', [System.StringComparison]::Ordinal)
+-        if ($packageFixtureStepMatches[0].Index -ge $ciInvariantIndex -or $ciInvariantIndex -lt 0) {
+-            $failures.Add('The hermetic package fixtures must run before CI/CD invariant validation.')
+-        }
+-    }
+-
+-    $releaseWorkflowStepMatches = [regex]::Matches(
+-        $workflowGates,
+-        '(?ms)^      - name: Validate release workflow shell behavior\r?\n.*?(?=^      - |\z)'
+-    )
+-    if ($releaseWorkflowStepMatches.Count -ne 1) {
+-        $failures.Add('workflow-gates must run exactly one release workflow shell behavior step.')
+-    }
+-    else {
+-        $releaseWorkflowStep = ($releaseWorkflowStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
+-        $expectedReleaseWorkflowStep = @(
+-            '      - name: Validate release workflow shell behavior'
+-            '        env:'
+-            '          PYTHONDONTWRITEBYTECODE: ''1'''
+-            '        run: python3 -m unittest tests/tools/test_release_workflow.py -v'
+-        ) -join "`n"
+-        if ($releaseWorkflowStep -cne $expectedReleaseWorkflowStep) {
+-            $failures.Add('The release workflow shell behavior fixture must be an exact blocking name/env/run step with bytecode disabled.')
+-        }
+-
+-        $ciInvariantIndex = $workflowGates.IndexOf('      - name: Validate CI/CD invariants', [System.StringComparison]::Ordinal)
+-        if ($releaseWorkflowStepMatches[0].Index -ge $ciInvariantIndex -or $ciInvariantIndex -lt 0) {
+-            $failures.Add('The release workflow shell behavior fixture must run before CI/CD invariant validation.')
+-        }
+-    }
+-}
+-
+-# Release is an operator-dispatched caller-owned workflow behind exact-source CI.
+-# A successful exact-source CI run is required; no G-6 failure exception exists.
+-# The protected job reruns G-6 before requesting a NuGet credential.
+-if (-not (Test-Path $releasePath)) {
+-    $failures.Add('release.yml must exist; release is an operator-dispatched workflow in every Hexalith module.')
+-    $release = ''
+-}
+-else {
+-    $release = Get-Content -Path $releasePath -Raw
+-}
+-
+-$releaseJobBlocks = @(Get-WorkflowJobBlocks -Text $release)
+-$expectedReleaseJobNames = @('verify-source', 'release')
+-$releaseJobNames = @($releaseJobBlocks | ForEach-Object { $_.Name })
+-if ($releaseJobNames.Count -ne $expectedReleaseJobNames.Count -or
+-    @(Compare-Object -ReferenceObject $expectedReleaseJobNames -DifferenceObject $releaseJobNames).Count -ne 0) {
+-    $failures.Add('Release must define exactly the verify-source and caller-owned release jobs; additional jobs are forbidden.')
+-}
+-
+-$releaseJobCandidates = @($releaseJobBlocks | Where-Object { $_.Name -ceq 'release' })
+-$verifySourceJobCandidates = @($releaseJobBlocks | Where-Object { $_.Name -ceq 'verify-source' })
+-$releaseJob = if ($releaseJobCandidates.Count -eq 1) { $releaseJobCandidates[0].Text } else { '' }
+-$verifySourceJob = if ($verifySourceJobCandidates.Count -eq 1) { $verifySourceJobCandidates[0].Text } else { '' }
+-$releaseSteps = @(Get-NamedStepBlocks -JobText $releaseJob)
+-$verifySourceSteps = @(Get-NamedStepBlocks -JobText $verifySourceJob)
+-$verifySourceStep = Get-RequiredNamedStep -Steps $verifySourceSteps -Name 'Require current main with successful exact-source CI' -Owner 'verify-source'
+-
+-foreach ($jobBlock in $releaseJobBlocks) {
+-    foreach ($usesReference in @(Get-UsesReferences -Text $jobBlock.Text)) {
+-        if ($usesReference.Indent -eq 4 -and -not $usesReference.HasDash) {
+-            $failures.Add("Release job '$($jobBlock.Name)' must be caller-owned; job-level reusable call '$($usesReference.Reference)' is forbidden.")
+-        }
+-    }
+-}
+-
+-foreach ($sharedWorkflow in @('codeql.yml', 'commitlint.yml', 'dependency-review.yml')) {
+-    $sharedWorkflowPath = Join-Path $workflowRoot $sharedWorkflow
+-    if (-not (Test-Path $sharedWorkflowPath)) {
+-        $failures.Add("$sharedWorkflow must exist; every Hexalith module runs the shared $($sharedWorkflow -replace '\.yml$', '') lane.")
+-    }
+-    else {
+-        $sharedWorkflowText = Get-Content -Path $sharedWorkflowPath -Raw
+-        $expectedMutableReference = "Hexalith/Hexalith.Builds/.github/workflows/$sharedWorkflow@main"
+-        $actualSharedReferences = @(
+-            Get-UsesReferences -Text $sharedWorkflowText |
+-                Where-Object { $_.Indent -eq 4 -and -not $_.HasDash -and $_.Reference -ceq $expectedMutableReference }
+-        )
+-        if ($actualSharedReferences.Count -ne 1) {
+-            $failures.Add("$sharedWorkflow must contain exactly one actual job-level uses line for $expectedMutableReference.")
+-        }
+-    }
+-}
+-
+-Require-Match $release '(?m)^on:\r?\n  workflow_dispatch:\r?$' 'Release must be dispatch-only.'
+-Forbid-Match $release 'allow_stale_g6|ALLOW_STALE_G6' 'Release must not include a stale G-6 bypass.'
+-Forbid-Match $release '^\s*(push|pull_request|schedule):\s*$' 'Release must never be triggered by push, pull_request, or schedule.'
+-if ($null -eq $verifySourceStep) {
+-    $verifySourceStepText = ''
+-}
+-else {
+-    $verifySourceStepText = $verifySourceStep.Text
+-}
+-Require-Match $verifySourceStepText 'No successful push CI run exists for the exact current main SHA' 'The named exact-source preflight must prove a successful push CI run for the dispatched SHA.'
+-Require-Match $verifySourceStepText 'The dispatched source is no longer the live main tip' 'The named exact-source preflight must prove the dispatch selected the live main tip.'
+-Require-Match $releaseJob '^\s{4}needs:\s*verify-source\s*$' 'The release job must depend on the exact-source preflight.'
+-Require-Match $releaseJob '^\s{4}runs-on:\s*ubuntu-latest\s*$' 'The release job must run as a caller-owned job.'
+-Require-Match $releaseJob '^\s{4}environment:\s*production\s*$' 'Release must enter the protected production environment.'
+-Require-Match $releaseJob '^\s{4}timeout-minutes:\s*120\s*$' 'The protected release job must allow the fresh isolated G-6 run.'
+-Require-Match $release '^\s*cancel-in-progress:\s*false\s*$' 'An in-flight release must never be cancelled by a newer dispatch.'
+-
+-# The caller job needs OIDC only for the official NuGet login action and retains
+-# the scopes used by the existing semantic-release lifecycle.
+-foreach ($scope in @('actions: read', 'contents: write', 'id-token: write', 'issues: write', 'pull-requests: write')) {
+-    Require-Match $releaseJob ("^\s{6}" + [regex]::Escape($scope) + "\s*$") "The caller-owned release job must grant '$scope'."
+-}
+-Forbid-Match $releaseJob '^\s{6}attestations:\s*write\s*$' 'The non-governed Projects release must not retain the reusable workflow attestation scope.'
+-
+-$checkoutBuildsStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Checkout approved Builds actions' -Owner 'release'
+-$validateBuildsStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Validate approved Builds actions identity' -Owner 'release'
+-$initializeBuildStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Initialize root-declared submodules' -Owner 'release'
+-$installNpmStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Install npm dependencies' -Owner 'release'
+-$verifyNpmStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Verify npm dependency provenance and signatures' -Owner 'release'
+-$restoreStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Restore release solution' -Owner 'release'
+-$buildStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Build release solution' -Owner 'release'
+-Require-G6PostgresqlPull -Steps $releaseSteps -BeforeStep 'Run fresh exact-source G-6 qualifier' -Owner 'release'
+-$g6RunStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Run fresh exact-source G-6 qualifier' -Owner 'release'
+-$g6ValidateStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Validate fresh exact-source G-6 evidence' -Owner 'release'
+-$g6UploadStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Upload exact-source G-6 evidence' -Owner 'release'
+-$manifestStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Validate five-package manifest' -Owner 'release'
+-$freezeStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Resolve release publication freeze' -Owner 'release'
+-$sourceStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Revalidate current source before NuGet login' -Owner 'release'
+-$loginStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Exchange GitHub OIDC token for temporary NuGet API key' -Owner 'release'
+-$semanticReleaseStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Semantic Release' -Owner 'release'
+-
+-# Caller-owned setup still consumes the approved root-submodule initializer from
+-# one immutable Hexalith.Builds revision. Every assertion is bound to its named step.
+-Require-Match $checkoutBuildsStep.Text '^\s{8}uses:\s*actions/checkout@[0-9a-f]{40}\s*(?:#.*)?$' 'The Builds checkout step must use an immutable checkout action.'
+-Require-Match $checkoutBuildsStep.Text '^\s{10}repository:\s*Hexalith/Hexalith\.Builds\s*$' 'The Builds checkout step must target Hexalith.Builds.'
+-Require-Match $checkoutBuildsStep.Text ('^\s{10}ref:\s*' + $releaseBuildsExecutionSha + '\s*$') 'The Builds checkout step must use the approved immutable execution SHA.'
+-Require-Match $validateBuildsStep.Text ('^\s{10}BUILDS_EXECUTION_SHA:\s*' + $releaseBuildsExecutionSha + '\s*$') 'The Builds identity step must validate the approved execution SHA.'
+-Require-Match $initializeBuildStep.Text '^\s{8}uses:\s*\./\.hexalith/builds-execution/Github/initialize-build\s*$' 'The initialization step must use the approved checked-out Builds action.'
+-Require-Match $installNpmStep.Text '^\s{8}run:\s*npm ci --ignore-scripts\s*$' 'The npm install step must use the lockfile with lifecycle scripts disabled.'
+-Require-Match $verifyNpmStep.Text '^\s{8}run:\s*npm audit signatures\s*$' 'The npm provenance step must verify registry signatures.'
+-Require-Match $restoreStep.Text '^\s{8}run:\s*dotnet restore Hexalith\.Projects\.CI\.slnx\s*$' 'The restore step must use the package-only CI solution.'
+-Require-Match $buildStep.Text '^\s{8}run:\s*dotnet build Hexalith\.Projects\.CI\.slnx --no-restore --configuration Release -warnaserror\s*$' 'The build step must use the package-only CI solution in Release with warnings as errors.'
+-Require-Match $g6RunStep.Text 'run_g6_current\.py' 'Release must run the focused G-6 qualifier.'
+-Require-Match $g6RunStep.Text '--execution-scope release' 'Release G-6 must record the release Builds execution pin.'
+-Require-Match $g6ValidateStep.Text 'g6_current\.py validate' 'Release must validate the current G-6 result.'
+-Require-Match $g6ValidateStep.Text '--release' 'Release G-6 validation must require exact source and gitlinks.'
+-Require-Match $g6UploadStep.Text 'if-no-files-found: error' 'Release must fail if current G-6 evidence is absent.'
+-foreach ($step in @($g6RunStep, $g6ValidateStep)) {
+-    if ($null -ne $step) {
+-        Forbid-Match $step.Text '(?m)^\s{8}(if|continue-on-error):' 'Fresh release G-6 execution and validation must not be conditional or tolerated.'
+-    }
+-}
+-
+-# The declared package count is the fail-closed gate: it must agree with both the
+-# manifest it is checked against and the count semantic-release publishes.
+-if (-not (Test-Path $packageManifestPath)) {
+-    $failures.Add('tools/release-packages.json must exist; the release publication identity is frozen from it.')
+-}
+-else {
+-    $manifest = Get-Content -Path $packageManifestPath -Raw | ConvertFrom-Json
+-    $manifestPackageIds = @($manifest.packages | ForEach-Object { $_.id })
+-    $manifestCount = $manifestPackageIds.Count
+-    if ($manifestCount -ne $expectedReleasePackageIds.Count -or
+-        @(Compare-Object -ReferenceObject $expectedReleasePackageIds -DifferenceObject $manifestPackageIds).Count -ne 0) {
+-        $failures.Add('tools/release-packages.json must contain exactly the five approved Projects package IDs.')
+-    }
+-    Require-Match $manifestStep.Text ("^\s{10}EXPECTED_PACKAGE_COUNT:\s*'" + $manifestCount + "'\s*$") "The named manifest step count gate must equal the $manifestCount package(s) declared in tools/release-packages.json."
+-    Require-Match $manifestStep.Text '\.packages \| length == \$expected' 'The named manifest step must compare the package count with its independent expected count.'
+-    Require-Match $releaseConfig ('-eq ' + $manifestCount + "'") "release.config.cjs must publish exactly $manifestCount package(s)."
+-}
+-
+-# Matrix row: frozen publication builds successfully but reaches neither the OIDC
+-# exchange nor Semantic Release. The runbook requires a repository-level override
+-# so the effective vars context cannot fall through to an organization value.
+-Require-Match $freezeStep.Text '^\s{10}HEXALITH_RELEASE_PUBLISH_ENABLED:\s*\$\{\{ vars\.HEXALITH_RELEASE_PUBLISH_ENABLED \}\}\s*$' 'The freeze step must bind the effective Actions variable for an exact shell comparison.'
+-Require-Match $freezeStep.Text ([regex]::Escape('if [ "${HEXALITH_RELEASE_PUBLISH_ENABLED-}" = "true" ]; then')) 'The freeze step must require the exact case-sensitive, untrimmed true value.'
+-Require-Match $freezeStep.Text 'publish-enabled=false' 'The named freeze step must produce an explicit false verdict.'
+-Require-Match $freezeStep.Text 'NuGet login and Semantic Release are skipped' 'The named freeze step must report that credential exchange and publication were skipped.'
+-
+-# Matrix rows: stale source fails before login, while a valid source reaches the
+-# pinned official login action. A missing username or claim mismatch is therefore
+-# a login failure before Semantic Release receives any credential.
+-Require-Match $sourceStep.Text 'The release source became stale during setup' 'The named source-revalidation step must fail when main advances.'
+-Require-Match $sourceStep.Text '^\s{10}SOURCE_BRANCH:\s*main\s*$' 'The named source-revalidation step must be bound to main.'
+-Require-Match $sourceStep.Text '^\s{10}PUBLISH_ENABLED:\s*\$\{\{ steps\.publish-gate\.outputs\.publish-enabled \}\}\s*$' 'The source-revalidation step must consume the freeze-gate verdict.'
+-Require-Match $sourceStep.Text ([regex]::Escape('publish_enabled="${PUBLISH_ENABLED-true}"')) 'An absent source-gate verdict must fail toward revalidation, not skip it.'
+-Require-Match $loginStep.Text ('^\s{8}uses:\s*NuGet/login@' + $nugetLoginSha + '\s*#\s*v1\.2\.0\s*$') 'The named login step must use the reviewed NuGet/login v1.2.0 commit.'
+-Require-Match $loginStep.Text '^\s{8}id:\s*nuget-login\s*$' 'The named login step must expose its temporary output through the reviewed step id.'
+-Require-Match $loginStep.Text '^\s{10}user:\s*\$\{\{ vars\.NUGET_USER \}\}\s*$' 'The named login step must receive the configured NUGET_USER profile name.'
+-$publishStepGuardPattern = '^\s{8}if:\s*\$\{\{ steps\.publish-gate\.outputs\.publish-enabled == ''true'' \}\}\s*$'
+-Require-Match $loginStep.Text $publishStepGuardPattern 'The named login step must require the exact enabled verdict.'
+-Require-Match $semanticReleaseStep.Text $publishStepGuardPattern 'The named Semantic Release step must require the exact enabled verdict.'
+-Require-Match $semanticReleaseStep.Text '^\s{10}NUGET_API_KEY:\s*\$\{\{ steps\.nuget-login\.outputs\.NUGET_API_KEY \}\}\s*$' 'The named Semantic Release step must receive only the short-lived login output.'
+-Require-Match $semanticReleaseStep.Text '^\s{8}run:\s*npm exec --no -- semantic-release\s*$' 'The named Semantic Release step must run the locked lifecycle.'
+-$activeWorkflowText = (($workflowFiles | ForEach-Object { Get-ActiveWorkflowText -Text (Get-Content -Path $_.FullName -Raw) }) -join "`n")
+-$legacyNuGetSecretPattern = 'secrets\s*(?:\.\s*NUGET_API_KEY|\[\s*(?:''NUGET_API_KEY''|"NUGET_API_KEY")\s*\])'
+-Forbid-Match $activeWorkflowText $legacyNuGetSecretPattern 'No active workflow line may read the legacy NUGET_API_KEY secret through dot or bracket syntax.'
+-if ([regex]::Matches((Get-ActiveWorkflowText -Text $releaseJob), '(?m)^.*NUGET_API_KEY.*$').Count -ne 1) {
+-    $failures.Add('The temporary NUGET_API_KEY output must be bound only to the Semantic Release process environment.')
+-}
+-
+-$orderedReleaseSteps = @(
+-    'Install npm dependencies',
+-    'Verify npm dependency provenance and signatures',
+-    'Restore release solution',
+-    'Build release solution',
+-    'Pull pinned G-6 PostgreSQL fixture image',
+-    'Run fresh exact-source G-6 qualifier',
+-    'Validate fresh exact-source G-6 evidence',
+-    'Upload exact-source G-6 evidence',
+-    'Validate five-package manifest',
+-    'Resolve release publication freeze',
+-    'Revalidate current source before NuGet login',
+-    'Exchange GitHub OIDC token for temporary NuGet API key',
+-    'Semantic Release'
+-)
+-$previousStepIndex = -1
+-foreach ($stepName in $orderedReleaseSteps) {
+-    $matches = @($releaseSteps | Where-Object { $_.Name -ceq $stepName })
+-    if ($matches.Count -ne 1) {
+-        $failures.Add("Release ordering requires exactly one '$stepName' step.")
+-        continue
+-    }
+-
+-    $stepIndex = $matches[0].Index
+-    if ($stepIndex -le $previousStepIndex) {
+-        $failures.Add("Release step '$stepName' is out of the required guarded order.")
+-    }
+-    $previousStepIndex = $stepIndex
+-}
+-$allReleaseStepStarts = @([regex]::Matches($releaseJob, '(?m)^      - '))
+-if ($null -ne $loginStep -and $null -ne $semanticReleaseStep) {
+-    $nextStep = @($allReleaseStepStarts | Where-Object { $_.Index -gt $loginStep.Index } | Select-Object -First 1)
+-    if ($nextStep.Count -ne 1 -or $nextStep[0].Index -ne $semanticReleaseStep.Index) {
+-        $failures.Add('NuGet/login must be immediately before Semantic Release so the one-hour credential is acquired as late as possible.')
+-    }
+-}
+-
+-# The operator runbook freezes exact policy rows and package bullets. HTML
+-# comments are removed first so comment-only decoys cannot satisfy the gate.
+-$runbookPolicyText = [regex]::Replace($trustedPublishingRunbook, '(?s)<!--.*?-->', '')
+-$expectedPolicyRows = @(
+-    '| Policy owner | Organization `Hexalith` |',
+-    '| Repository owner | `Hexalith` |',
+-    '| Repository | `Hexalith.Projects` |',
+-    '| Workflow file | `release.yml` (file name only) |',
+-    '| Environment | `production` |'
+-)
+-foreach ($policyRow in $expectedPolicyRows) {
+-    if ([regex]::Matches($runbookPolicyText, ('(?m)^' + [regex]::Escape($policyRow) + '\r?$')).Count -ne 1) {
+-        $failures.Add("The Trusted Publishing runbook must contain exactly the policy table row: $policyRow")
+-    }
+-}
+-
+-$scopeStart = $runbookPolicyText.IndexOf('Grant publication of new versions only for these five exact package ID', [System.StringComparison]::Ordinal)
+-$scopeEnd = if ($scopeStart -ge 0) { $runbookPolicyText.IndexOf('Do not grant a new-package scope.', $scopeStart, [System.StringComparison]::Ordinal) } else { -1 }
+-if ($scopeStart -lt 0 -or $scopeEnd -le $scopeStart) {
+-    $failures.Add('The Trusted Publishing runbook must contain the exact five-package policy-scope section.')
+-}
+-else {
+-    $scopeSection = $runbookPolicyText.Substring($scopeStart, $scopeEnd - $scopeStart)
+-    $runbookPackageIds = @(
+-        [regex]::Matches($scopeSection, '(?m)^- `(?<id>[^`]+)`\r?$') |
+-            ForEach-Object { $_.Groups['id'].Value }
+-    )
+-    if ($runbookPackageIds.Count -ne $expectedReleasePackageIds.Count -or
+-        @(Compare-Object -ReferenceObject $expectedReleasePackageIds -DifferenceObject $runbookPackageIds).Count -ne 0) {
+-        $failures.Add('The Trusted Publishing runbook policy scope must contain exactly the five manifest package-ID bullets, with no prefixes or extras.')
+-    }
+-}
+-
+-foreach ($runbookContract in @(
+-    'gh variable set HEXALITH_RELEASE_PUBLISH_ENABLED --repo Hexalith/Hexalith.Projects --body false',
+-    'npm exec --no -- semantic-release --dry-run',
+-    'gh run list --repo Hexalith/Hexalith.Projects --workflow release.yml',
+-    '_bmad-output/implementation-artifacts/release-evidence/nuget-trusted-publishing-',
+-    'run-package-dependency-gate.ps1 -Version "$RELEASE_VERSION" -PackageDirectory "$PACKAGE_DIRECTORY" -SkipPack',
+-    'dotnet nuget verify --all'
+-)) {
+-    Require-Match $runbookPolicyText ([regex]::Escape($runbookContract)) "The Trusted Publishing runbook must include the executable contract '$runbookContract'."
+-}
+-Require-Match $runbookPolicyText '(?im)^## Rollback\r?$' 'The Trusted Publishing runbook must include an explicit rollback section.'
+-Require-Match $runbookPolicyText '(?im)^## Retire the legacy credential\r?$' 'The Trusted Publishing runbook must include an explicit legacy-secret retirement section.'
+-Require-Match $runbookPolicyText 'permanently active' 'The Trusted Publishing runbook must require permanent policy activation before secret retirement.'
+-
+-Require-Match $ci '^\s*push:\s*$' 'CI must run on pushes.'
+-Require-Match $ci '^\s*pull_request:\s*$' 'CI must run on pull requests.'
+-Require-Match $ci '^\s*schedule:\s*$' 'CI must include a scheduled lane.'
+-Require-Match $ci "dapr-version:\s*'1\.19\.1'" 'CI must use the exact Dapr CLI 1.19.1.'
+-Require-Match $ci "dapr-runtime-version:\s*'1\.19\.1'" 'CI must use the exact Dapr runtime 1.19.1.'
+-Require-Match $ci '^\s*integration-test-projects:\s*\|' 'The reusable CI workflow must run Integration.Tests separately.'
+-# G-6 current proof is source-bound. Historical packet checks are retained as
+-# archived test fixtures and are no longer required jobs in CI.
+-$checkoutActionLine = '        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0'
+-$initializeBuildLine = "        uses: Hexalith/Hexalith.Builds/Github/initialize-build@$buildsExecutionSha"
+-$expectedWorkflowGatesJob = (@'
+-  workflow-gates:
+-    name: Validate workflow policy
+-    runs-on: ubuntu-latest
+-    steps:
+-      - name: Checkout repository
+-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+-        with:
+-          fetch-depth: 1
+-          submodules: false
+-
+-      - name: Validate production-authority scheduling guard
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: |
+-          python3 -m venv "${RUNNER_TEMP}/production-authority-tests"
+-          "${RUNNER_TEMP}/production-authority-tests/bin/python" -m pip install --disable-pip-version-check pyyaml==6.0.3
+-          "${RUNNER_TEMP}/production-authority-tests/bin/python" -m unittest tests/tools/test_production_authority_guard.py -v
+-
+-      - name: Validate BMAD Loop hook relay
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_bmad_loop_hook.py -v
+-
+-      - name: Validate shared skill renderer
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_render_skill.py -v
+-
+-      - name: Validate Git whitespace policy
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_git_whitespace_policy.py -v
+-
+-      - name: Validate Build Auto workspace ownership
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 .agents/skills/bmad-build-auto/scripts/tests/test_workspace_ownership.py
+-
+-      - name: Validate BMAD legacy cleanup atomicity
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 .agents/skills/bmad-module-builder/scripts/tests/test-cleanup-legacy.py
+-
+-      - name: Validate BMAD merge atomicity
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: |
+-          python3 -m venv "${RUNNER_TEMP}/bmad-merge-tests"
+-          "${RUNNER_TEMP}/bmad-merge-tests/bin/python" -m pip install --disable-pip-version-check pyyaml==6.0.3
+-          "${RUNNER_TEMP}/bmad-merge-tests/bin/python" .agents/skills/bmad-module-builder/scripts/tests/test-merge-atomicity.py
+-
+-      - name: Validate release package tool fixtures
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_release_package_tools.py -v
+-
+-      - name: Validate release workflow shell behavior
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_release_workflow.py -v
+-
+-      - name: Validate G-6 packet gitlink check fixtures
+-        # Historical packet fixtures remain regression coverage; current G-6 runs in g6-current.
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_check_g6_packet_gitlinks.py tests/tools/test_g6_packet_references.py -v
+-
+-      - name: Validate status-aware G-6 gate fixtures
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_run_g6_candidate_gate.py -v
+-
+-      - name: Initialize Builds for current G-6 policy fixtures
+-        shell: bash
+-        run: git -c submodule.recurse=false submodule update --init -- references/Hexalith.Builds
+-
+-      - name: Validate current G-6 change selection
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_run_g6_ci_gate.py tests/tools/test_current_g6_policy.py -v
+-
+-      - name: Validate workflow policy regression fixtures
+-        env:
+-          PYTHONDONTWRITEBYTECODE: '1'
+-        run: python3 -m unittest tests/tools/test_run_ci_workflow_gates.py -v
+-
+-      - name: Validate CI/CD invariants
+-        shell: pwsh
+-        run: ./tests/tools/run-ci-workflow-gates.ps1
+-'@ -replace "`r`n", "`n").TrimEnd("`n")
+-$expectedP1rEvidenceJob = @(
+-    '  p1r-candidate-evidence:'
+-    '    name: P1R candidate evidence replay'
+-    '    runs-on: ubuntu-latest'
+-    '    needs: workflow-gates'
+-    '    steps:'
+-    '      - name: Checkout repository'
+-    $checkoutActionLine
+-    '        with:'
+-    '          fetch-depth: 1'
+-    '          submodules: false'
+-    ''
+-    '      - name: Initialize root-declared submodules'
+-    $initializeBuildLine
+-    ''
+-    '      - name: Fetch EventStore history and tags read by the P1R evidence replay'
+-    '        shell: bash'
+-    '        run: |'
+-    '          set -euo pipefail'
+-    '          history=()'
+-    '          if [ "$(git -C references/Hexalith.EventStore rev-parse --is-shallow-repository)" = true ]; then'
+-    '            history+=(--unshallow)'
+-    '          fi'
+-    '          git -C references/Hexalith.EventStore -c submodule.recurse=false fetch \'
+-    '            --no-recurse-submodules --no-tags "${history[@]}" origin \'
+-    '            +refs/heads/main:refs/remotes/origin/main \'
+-    '            +refs/tags/v3.110.0:refs/tags/v3.110.0'
+-    ''
+-    '      - name: Replay P1R candidate evidence'
+-    '        env:'
+-    '          GITHUB_TOKEN: ${{ github.token }}'
+-    '          PYTHONDONTWRITEBYTECODE: ''1'''
+-    '        run: >-'
+-    '          python3 -m unittest'
+-    '          tests.tools.test_p1r_candidate_evidence.SelectedPublishedEvidenceTests'
+-    '          tests.tools.test_p1r_candidate_evidence.SelectedEvidenceMutationTests -v'
+-) -join "`n"
+-$expectedProjectGatesStepNames = @(
+-    'Checkout repository',
+-    'Initialize root-declared submodules',
+-    'Initialize .NET',
+-    'FrontComposer inspect gate',
+-    'OpenAPI fingerprint / compatibility gate'
+-)
+-
+-$ciJobBlocks = @(Get-WorkflowJobBlocks -Text $ci)
+-Require-ExactJob -JobBlocks $ciJobBlocks -Name 'workflow-gates' -Expected $expectedWorkflowGatesJob -Message 'workflow-gates must be the exact job: every hermetic fixture step, including both G-6 fixture steps, is an exact blocking name/env/run block in its fixed order before the CI/CD invariants; extra steps or lines, || true, if: and continue-on-error are forbidden.'
+-Require-ExactJob -JobBlocks $ciJobBlocks -Name 'p1r-candidate-evidence' -Expected $expectedP1rEvidenceJob -Message 'p1r-candidate-evidence must initialize root submodules, fetch the selected EventStore tags, and run only SelectedPublishedEvidenceTests and SelectedEvidenceMutationTests as an exact blocking step.'
+-
+-$projectGatesJobCandidates = @($ciJobBlocks | Where-Object { $_.Name -ceq 'project-gates' })
+-if ($projectGatesJobCandidates.Count -ne 1) {
+-    $failures.Add("CI must define exactly one project-gates job; found $($projectGatesJobCandidates.Count).")
+-}
+-$projectGatesJob = if ($projectGatesJobCandidates.Count -eq 1) { $projectGatesJobCandidates[0].Text } else { '' }
+-$projectGatesStepNames = @(Get-NamedStepBlocks -JobText $projectGatesJob | ForEach-Object { $_.Name })
+-if (($projectGatesStepNames -join "`n") -cne ($expectedProjectGatesStepNames -join "`n")) {
+-    $failures.Add("project-gates must run exactly these steps in order: $($expectedProjectGatesStepNames -join '; '). Current G-6 runs in g6-current.")
+-}
+-Forbid-Match (Get-ActiveWorkflowText -Text $projectGatesJob) '(validate-runtime-toolchain-evidence|check_g6_packet_gitlinks|run_g6_candidate_gate|run_g6_ci_gate|run_g6_current|test_g6_packet_references)' 'project-gates must not run any G-6 check, so G-6 drift never skips the FrontComposer and OpenAPI gates.'
+-Forbid-Match $projectGatesJob '^\s*continue-on-error:' 'project-gates must not tolerate failures with continue-on-error.'
+-Forbid-Match $projectGatesJob '^    if:' 'project-gates must not be conditional.'
+-Require-Match $projectGatesJob '(?m)^    needs: ci\r?$' 'Project gates must depend only on CI, independently of G-6 qualification.'
+-$projectSteps = @(Get-NamedStepBlocks -JobText $projectGatesJob)
+-foreach ($gate in @(
+-    @{ Name = 'FrontComposer inspect gate'; Script = 'run-frontcomposer-inspect-gate.ps1' },
+-    @{ Name = 'OpenAPI fingerprint / compatibility gate'; Script = 'run-openapi-fingerprint-gate.ps1' }
+-)) {
+-    $step = Get-RequiredNamedStep -Steps $projectSteps -Name $gate.Name -Owner 'project-gates'
+-    $expected = "      - name: $($gate.Name)`n        shell: pwsh`n        timeout-minutes: 15`n        run: ./tests/tools/$($gate.Script)"
+-    if ($null -ne $step -and (Get-TrimmedBlockText -Text $step.Text) -cne $expected) {
+-        $failures.Add("$($gate.Name) must be an unconditional exact blocking command, independent of G-6.")
+-    }
+-}
+-
+-$e2eJobCandidates = @($ciJobBlocks | Where-Object { $_.Name -ceq 'e2e' })
+-if ($e2eJobCandidates.Count -ne 1) {
+-    $failures.Add("CI must define exactly one e2e job; found $($e2eJobCandidates.Count).")
+-}
+-else {
+-    Require-Match $e2eJobCandidates[0].Text '(?m)^    needs:\r?\n      - ci\r?\n      - workflow-gates\r?\n      - project-gates\r?\n    steps:' 'Scheduled E2E must depend only on CI, workflow and project gates, independently of G-6 qualification.'
+-}
+-
+-# The current result may fail without suppressing ordinary build and project gates.
+-$g6CurrentJobCandidates = @($ciJobBlocks | Where-Object { $_.Name -ceq 'g6-current' })
+-if ($g6CurrentJobCandidates.Count -ne 1) {
+-    $failures.Add("CI must define exactly one g6-current job; found $($g6CurrentJobCandidates.Count).")
+-}
+-else {
+-    $g6CurrentJob = $g6CurrentJobCandidates[0].Text
+-    Require-Match $g6CurrentJob '(?m)^    needs: workflow-gates$' 'G-6 current must run independently of package and project gates.'
+-    Require-Match $g6CurrentJob 'Restore effective G-6 package graphs' 'G-6 current must restore the audited package graph.'
+-    Require-Match $g6CurrentJob 'Validate current G-6 preflight' 'G-6 current must exercise the preflight fixture after Builds initialization.'
+-    Require-Match $g6CurrentJob 'Audit and qualify current G-6 when required' 'G-6 current must run the fail-closed selector.'
+-    Require-Match $g6CurrentJob 'run_g6_ci_gate.py' 'G-6 current must use the source-aware gate.'
+-    Require-Match $g6CurrentJob 'if-no-files-found: error' 'G-6 current must fail if its artifact is absent.'
+-    Forbid-Match $g6CurrentJob 'continue-on-error:|g6-candidate|g6-acceptance' 'G-6 current must be blocking and independent of historical packets.'
+-    Forbid-Match $g6CurrentJob '(?m)^    if:' 'G-6 current job must not be skipped.'
+-    $g6CurrentSteps = @(Get-NamedStepBlocks -JobText $g6CurrentJob)
+-    Require-G6PostgresqlPull -Steps $g6CurrentSteps -BeforeStep 'Audit and qualify current G-6 when required' -Owner 'g6-current'
+-    $g6InitializeStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Initialize root-declared submodules' -Owner 'g6-current'
+-    $g6PreflightStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Validate current G-6 preflight' -Owner 'g6-current'
+-    if ($null -ne $g6PreflightStep) {
+-        Forbid-Match $g6PreflightStep.Text '(?m)^\s{8}(if|continue-on-error):' 'Current G-6 preflight must always execute and block on failure.'
+-    }
+-    $g6DotnetStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Initialize .NET' -Owner 'g6-current'
+-    if ($null -ne $g6DotnetStep -and $null -ne $g6PreflightStep -and $g6PreflightStep.Index -le $g6DotnetStep.Index) {
+-        $failures.Add('Current G-6 build-property and packing controls must run after .NET initialization.')
+-    }
+-    Require-Match $g6PreflightStep.Text 'python3 -m unittest tests/tools/test_run_g6_current.py tests/tools/test_g6_qualification_runner.py -v' 'Current G-6 preflight must exercise runner environment and retention controls.'
+-    $expectedG6PreflightStep = @(
+-        '      - name: Validate current G-6 preflight'
+-        '        shell: bash'
+-        '        run: |'
+-        '          python3 -m unittest tests/tools/test_run_g6_current.py tests/tools/test_g6_qualification_runner.py -v'
+-        '          python3 -m unittest tests/tools/test_g6_deferred_contracts.py -v'
+-        '          python3 references/Hexalith.Builds/Tools/test_package_readme.py -v'
+-    ) -join "`n"
+-    if ($null -ne $g6PreflightStep -and (Get-TrimmedBlockText -Text $g6PreflightStep.Text) -cne $expectedG6PreflightStep) {
+-        $failures.Add('Current G-6 preflight must exercise deferred contract controls as a blocking command in the exact name/shell/run step.')
+-    }
+-    Require-Match $g6PreflightStep.Text 'python3 references/Hexalith.Builds/Tools/test_package_readme.py -v' 'Current G-6 preflight must exercise real package README controls.'
+-
+-    if ($null -ne $g6InitializeStep -and $null -ne $g6PreflightStep -and $g6PreflightStep.Index -le $g6InitializeStep.Index) {
+-        $failures.Add('Current G-6 preflight fixtures must run after root submodule initialization.')
+-    }
+-    $g6GateStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Audit and qualify current G-6 when required' -Owner 'g6-current'
+-    if ($null -ne $g6GateStep) {
+-        Forbid-Match $g6GateStep.Text '(?m)^\s{8}(if|continue-on-error):' 'The current G-6 gate must always execute and block on failure.'
+-    }
+-}
+-Forbid-Match $ci '(?m)^  g6-(?:candidate|acceptance):' 'Historical G-6 packet jobs must not gate current CI.'
+-Forbid-Match $ci 'allow_stale_g6|ALLOW_STALE_G6' 'CI must not contain a stale G-6 bypass.'
+-
+-# This checks direct ci.yml references only; it does not traverse Builds callees.
+-Require-Match $ci ('uses:\s*Hexalith/Hexalith\.Builds/\.github/workflows/domain-ci\.yml@' + $buildsExecutionSha) 'The direct ci.yml domain-ci reference must use the accepted package-aware workflow SHA.'
+-Require-Match $ci '(?ms)^  ci:\r?\n\s+needs:\s*workflow-gates\r?\n\s+uses:' 'The reusable restore/build job must wait for independent workflow and package fixtures.'
+-Forbid-Match $ci 'uses:\s*Hexalith/Hexalith\.Builds/.+@main' 'Direct ci.yml references must not select mutable Hexalith.Builds actions or workflows.'
+-foreach ($buildsCall in [regex]::Matches($ci, 'uses:\s*Hexalith/Hexalith\.Builds/[^\s]+@([^\s#]+)')) {
+-    if ($buildsCall.Groups[1].Value -cne $buildsExecutionSha) {
+-        $failures.Add("Direct ci.yml reference executes Hexalith.Builds at '$($buildsCall.Groups[1].Value)' instead of '$buildsExecutionSha'.")
+-    }
+-}
+-Require-Match $ci '^\s*test-platform:\s*microsoft-testing-platform\s*$' 'CI must explicitly select Microsoft.Testing.Platform.'
+-Require-Match $ci '^\s*run-consumer-validation:\s*true\s*$' 'CI must enable shared package and real-consumer validation.'
+-Require-Match $ci '^\s*build-timeout-minutes:\s*30\s*$' 'CI must preserve the accepted 30-minute shared build timeout.'
+-
+-# The reusable CI callee runs `dotnet restore "$SOLUTION"`: the input is one quoted
+-# argument, so an embedded MSBuild switch becomes part of the project path (MSB1009).
+-# `github.workspace` is also empty when a reusable-workflow `with:` block is evaluated,
+-# so any path built from it silently resolves to the filesystem root. Release is now
+-# caller-owned and its literal package-only restore/build commands are checked above.
+-foreach ($caller in @(@{ Name = 'ci.yml'; Text = $ci })) {
+-    $solutionInputs = [regex]::Matches($caller.Text, '(?m)^\s*solution:\s*(.+?)\s*$')
+-    foreach ($solutionInput in $solutionInputs) {
+-        $value = $solutionInput.Groups[1].Value
+-        if ($value -match '^>-|^\|') {
+-            $failures.Add("$($caller.Name) passes a multi-line solution input; it must be a bare solution path.")
+-        }
+-        elseif ($value -notmatch '^Hexalith\.Projects\.CI\.slnx$') {
+-            $failures.Add("$($caller.Name) solution input must be the bare 'Hexalith.Projects.CI.slnx', not '$value'.")
+-        }
+-    }
+-    if ($solutionInputs.Count -eq 0) {
+-        $failures.Add("$($caller.Name) must pass a solution input to the reusable workflow.")
+-    }
+-}
+-
+-Forbid-Match $ci '^\s*solution:.*-p:' 'A solution input must not embed MSBuild switches; the callee quotes it as a single argument.'
+-Forbid-Match $ci '^\s*(solution|.*-p:.*):.*\$\{\{ github\.workspace \}\}' 'github.workspace is empty when a reusable-workflow `with:` is evaluated; never build a path from it there.'
+-Require-Match $ci '^\s*cancel-in-progress:\s*\$\{\{ github\.event_name != ''push'' \|\| github\.ref != ''refs/heads/main'' \}\}\s*$' 'Main push/release workflows must never be cancelled by a newer run.'
+-Forbid-Match $ci '^\s*package-gates:\s*$' 'CI package creation and validation must stay in the accepted reusable workflow.'
+-Require-Match $ci '^\s*e2e:\s*$' 'CI must include the scheduled E2E job.'
+-Require-Match $ci "if:\s*\$\{\{ github\.event_name == 'schedule' \}\}" 'E2E must be limited to the scheduled lane.'
+-Require-Match $ci 'npm --prefix tests/e2e ci --ignore-scripts' 'E2E must use the lockfile with lifecycle scripts disabled.'
+-Require-Match $ci 'npm --prefix tests/e2e run install:browsers' 'E2E browser installation must be explicit.'
+-Require-Match $ci 'uses:\s*\./references/Hexalith\.Builds/Github/dapr-init' 'Scheduled E2E must initialize Dapr through the reviewed root dependency.'
+-Require-Match $ci "^\s*runtime-version:\s*'1\.19\.1'" 'Scheduled E2E must initialize the exact Dapr runtime 1.19.1.'
+-Require-Match $ci 'dotnet tool install --global Aspire\.Cli --version 13\.6\.5' 'Scheduled E2E must install the repository-supported Aspire CLI version.'
+-Require-Match $ci 'npm --prefix tests/e2e run test:live:managed' 'Scheduled E2E must use the managed AppHost lifecycle runner.'
+-Require-Match $ci '^\s*TEST_USER_PASSWORD:\s*\$\{\{ secrets\.[A-Z0-9_]+ \}\}\s*$' 'Scheduled E2E credentials must come from a GitHub secret.'
+-Require-Match $ci '^\s*if:\s*always\(\)\s*$' 'Scheduled E2E must unconditionally run exact-AppHost teardown.'
+-Require-Match $ci 'aspire stop --apphost "\$GITHUB_WORKSPACE/src/Hexalith\.Projects\.AppHost/Hexalith\.Projects\.AppHost\.csproj" --non-interactive' 'Scheduled E2E teardown must target the exact Projects AppHost.'
+-Require-Match $ci '^\s*if:\s*failure\(\)\s*$' 'E2E failure evidence must be uploaded on failure.'
+-
+-Require-Match $managedE2E '^trap cleanup EXIT\s*$' 'The managed E2E runner must unconditionally trap exact-AppHost cleanup.'
+-Require-Match $managedE2E 'Projects__E2E__LiveFixtures=1' 'The managed E2E runner must explicitly enable the fixture profile.'
+-Require-Match $managedE2E 'for resource in security eventstore tenants projects projects-workers projects-ui conversations folders memories live-fixtures' 'The managed E2E runner must wait for every required AppHost resource.'
+-$describeMatches = [regex]::Matches($managedE2E, '(?m)^aspire describe --apphost ').Count
+-if ($describeMatches -ne 1) {
+-    $failures.Add("The managed E2E runner must describe the AppHost exactly once; found $describeMatches calls.")
+-}
+-Require-Match $managedE2E 'npx playwright test[\s\S]*live-apphost-startup\.spec\.ts[\s\S]*projects-authentication\.spec\.ts[\s\S]*--workers 2' 'The managed E2E runner must run startup/auth smoke with two workers.'
+-Require-Match $managedE2E 'npx playwright test\s*\\\s*\r?\n\s*--project chromium\s*\\\s*\r?\n\s*--workers 2' 'The managed E2E runner must run the full Chromium lane with two workers.'
+-Forbid-Match $managedE2E 'aspire stop --all' 'The managed E2E runner must never stop unrelated AppHosts.'
+-
+-# The managed lane owns the lifecycle as a structural invariant: the AppHost is marked owned before
+-# it starts (so a partial start is still stopped), every wait is explicitly bounded, endpoints come
+-# only from the single describe capture, and the smoke and full phases use distinct run identities.
+-$runnerOwnedIndex = $managedE2E.IndexOf("`nstarted=1")
+-$runnerStartIndex = $managedE2E.IndexOf("`naspire start --apphost ")
+-if ($runnerOwnedIndex -lt 0 -or $runnerStartIndex -lt 0 -or $runnerOwnedIndex -gt $runnerStartIndex) {
+-    $failures.Add('The managed E2E runner must mark the exact AppHost as owned before aspire start so teardown covers a partial start.')
+-}
+-Require-Match $managedE2E 'aspire wait "\$resource" --apphost "\$apphost" --timeout "\$resource_timeout_seconds" --non-interactive' 'The managed E2E runner must bound every resource wait explicitly.'
+-Require-Match $managedE2E 'E2E_RUN_ID="\$run_id-smoke" npx playwright test' 'The managed E2E smoke phase must use its own run identity.'
+-Require-Match $managedE2E 'E2E_RUN_ID="\$run_id-full" npx playwright test' 'The managed E2E full phase must use its own run identity.'
+-foreach ($endpointName in @('BASE_URL', 'API_URL', 'EVENTSTORE_API_URL', 'KEYCLOAK_URL', 'FIXTURE_API_URL')) {
+-    Require-Match $managedE2E ('^' + $endpointName + '="\$\(endpoint [a-z-]+ http\)"\s*$') "The managed E2E runner must derive $endpointName from the single describe capture."
+-}
+-Forbid-Match $managedE2E '(?i)(localhost|127\.0\.0\.1|\[::1\]):\d+' 'The managed E2E runner must never guess ports.'
+-Forbid-Match $managedE2E '--(pass-with-no-tests|retries|grep-invert)\b' 'The managed E2E runner must not relax collection, retries, or selection.'
+-
+-$e2eJobs = @($ciJobBlocks | Where-Object { $_.Name -ceq 'e2e' })
+-if ($e2eJobs.Count -ne 1) {
+-    $failures.Add("CI must define exactly one scheduled e2e job; found $($e2eJobs.Count).")
+-}
+-else {
+-    $e2eJobText = $e2eJobs[0].Text
+-    $e2eSteps = @(Get-NamedStepBlocks -JobText $e2eJobText)
+-    $e2eDaprStep = Get-RequiredNamedStep -Steps $e2eSteps -Name 'Initialize Dapr' -Owner 'Scheduled E2E'
+-    if ($null -ne $e2eDaprStep) {
+-        Require-Match $e2eDaprStep.Text "^\s*version:\s*'1\.19\.1'\s*$" 'Scheduled E2E must initialize the exact Dapr CLI 1.19.1.'
+-        Require-Match $e2eDaprStep.Text "^\s*runtime-version:\s*'1\.19\.1'\s*$" 'Scheduled E2E must initialize the exact Dapr runtime 1.19.1.'
+-    }
+-    $e2eRunStep = Get-RequiredNamedStep -Steps $e2eSteps -Name 'Run managed AppHost E2E suite' -Owner 'Scheduled E2E'
+-    $e2eStopStep = Get-RequiredNamedStep -Steps $e2eSteps -Name 'Stop the exact Projects AppHost' -Owner 'Scheduled E2E'
+-    Require-Match $e2eJobText '^\s*submodules:\s*false\s*$' 'Scheduled E2E must check out without recursive submodules.'
+-    Forbid-Match $e2eJobText '(?i)continue-on-error' 'Scheduled E2E must not continue on error.'
+-    Forbid-Match $e2eJobText '\.auth' 'Scheduled E2E artifacts must never include browser session state.'
+-    if ($null -ne $e2eRunStep) {
+-        Require-Match $e2eRunStep.Text "^\s*CI:\s*'true'\s*$" 'The managed E2E run must build in CI package-reference mode.'
+-        Require-Match $e2eRunStep.Text '^\s*run:\s*npm --prefix tests/e2e run test:live:managed\s*$' 'The managed E2E run must invoke only the lifecycle runner.'
+-        Forbid-Match $e2eRunStep.Text '^\s*if:' 'The managed E2E run must not be conditional.'
+-    }
+-    if ($null -ne $e2eStopStep) {
+-        Require-Match $e2eStopStep.Text '^\s*if:\s*always\(\)\s*$' 'The exact-AppHost stop step must run unconditionally.'
+-        Require-Match $e2eStopStep.Text 'aspire stop --apphost "\$GITHUB_WORKSPACE/src/Hexalith\.Projects\.AppHost/Hexalith\.Projects\.AppHost\.csproj" --non-interactive' 'The scheduled stop step must target the exact Projects AppHost.'
+-        Forbid-Match $e2eStopStep.Text 'aspire stop --all' 'The scheduled stop step must never stop unrelated AppHosts.'
+-    }
+-    if ($null -ne $e2eRunStep -and $null -ne $e2eStopStep -and $e2eStopStep.Index -lt $e2eRunStep.Index) {
+-        $failures.Add('The exact-AppHost stop step must follow the managed E2E run.')
+-    }
+-}
+-
+-$playwrightConfigPath = Join-Path $repositoryRoot 'tests/e2e/playwright.config.ts'
+-$zeroSkipReporterPath = Join-Path $repositoryRoot 'tests/e2e/reporters/zero-live-skip-reporter.ts'
+-if (-not (Test-Path $playwrightConfigPath) -or -not (Test-Path $zeroSkipReporterPath)) {
+-    $failures.Add('The Playwright config and the zero-live-skip reporter must exist.')
+-}
+-else {
+-    $playwrightConfig = Get-Content -Path $playwrightConfigPath -Raw
+-    $zeroSkipReporter = Get-Content -Path $zeroSkipReporterPath -Raw
+-    Require-Match $playwrightConfig "LIVE_APPHOST_ENABLED \? \[\['\./reporters/zero-live-skip-reporter\.ts'\]\]" 'The live lane must register the zero-live-skip reporter.'
+-    Require-Match $playwrightConfig 'workers:\s*LIVE_APPHOST_ENABLED \? 2\b' 'The live lane must run with two isolated workers.'
+-    Require-Match $playwrightConfig "trace:\s*LIVE_APPHOST_ENABLED \? 'off'" 'Live traces carry bearer tokens and must stay disabled.'
+-    Require-Match $zeroSkipReporter 'this\.collected === 0 \|\| this\.skipped\.size > 0' 'The zero-live-skip reporter must fail empty or skipped live runs.'
+-    Require-Match $zeroSkipReporter "return \{ status: 'failed' \}" 'The zero-live-skip reporter must override the run status to failed.'
+-}
+-
+-$testProjects = @(
+-    'Hexalith.Projects.Contracts.Tests',
+-    'Hexalith.Projects.Client.Tests',
+-    'Hexalith.Projects.Tests',
+-    'Hexalith.Projects.Server.Tests',
+-    'Hexalith.Projects.UI.Tests',
+-    'Hexalith.Projects.Mcp.Tests',
+-    'Hexalith.Projects.Cli.Tests',
+-    'Hexalith.Projects.Integration.Tests'
+-)
+-foreach ($testProject in $testProjects) {
+-    Require-Match $ci ([regex]::Escape("tests/$testProject")) "CI does not list $testProject."
+-    Require-Match $solution ([regex]::Escape("tests/$testProject/$testProject.csproj")) "CI solution does not include $testProject."
+-}
+-
+-Require-Match $solution 'src/Hexalith\.Projects\.AppHost/Hexalith\.Projects\.AppHost\.csproj' 'CI solution must include AppHost so Integration.Tests has complete Release output.'
+-Require-Match $frontComposerGate '--configuration Release' 'FrontComposer gate must inspect Release output.'
+-Require-Match $frontComposerGate '--build' 'FrontComposer gate must build its own inspection inputs.'
+-Require-Match $openApiGate '--configuration Release' 'OpenAPI gate must build its compatibility owner in Release.'
+-Require-Match $openApiGate '-warnaserror' 'OpenAPI gate must fail on build warnings.'
+-Require-Match $releaseConfig 'run-package-dependency-gate\.ps1' 'Semantic release must validate prepared packages before publication.'
+-
+-# Release and CI always consume sibling libraries as packages. Directory.Build.props
+-# is imported before the SDK defaults an unset Configuration to Debug, so an unset
+-# Configuration and an explicit Debug build may default to source projects. AppHost
+-# executable resources are intentionally outside this library policy.
+-Require-Match $directoryBuildProps ([regex]::Escape("'`$(CI)' == 'true'") + '">false<') 'CI must force UseHexalithProjectReferences=false.'
+-Require-Match $directoryBuildProps ([regex]::Escape("'`$(UseHexalithProjectReferences)' == '' and ('`$(Configuration)' == '' or '`$(Configuration)' == 'Debug')") + '">true<') 'Only an unset Configuration or an explicit local Debug build may default to sibling project references.'
+-$referenceModeTargets = @($directoryBuildPropsXml.Project.Target | Where-Object { $_.Name -eq 'RejectUnsafeHexalithProjectReferenceMode' })
+-$expectedReferenceModeCondition = "'`$(UseHexalithProjectReferences)' == 'true' and ('`$(CI)' == 'true' or '`$(Configuration)' != 'Debug')"
+-if ($referenceModeTargets.Count -ne 1 -or
+-    $referenceModeTargets[0].BeforeTargets -ne 'Restore;PrepareForBuild' -or
+-    $referenceModeTargets[0].Condition -ne $expectedReferenceModeCondition -or
+-    $null -eq $referenceModeTargets[0].Error) {
+-    $failures.Add('Directory.Build.props must reject explicit source mode in CI and every non-Debug configuration before restore/build.')
+-}
+-# The shared Hexalith.Builds catalog owns the Conversations/Folders version set.
+-# The root must import it and must not redeclare, update, or remove those versions.
+-[xml] $directoryPackagesXml = $directoryPackages
+-$catalogImports = @($directoryPackagesXml.SelectNodes('/Project/Import[@Project="$(Hexalith1BuildPackageProps)"]'))
+-$catalogPaths = @($directoryPackagesXml.SelectNodes('/Project/PropertyGroup/Hexalith1BuildPackageProps'))
+-if ($catalogImports.Count -ne 1 -or
+-    $catalogPaths.Count -ne 1 -or
+-    $catalogPaths[0].InnerText.Trim() -cne '$(MSBuildThisFileDirectory)references/Hexalith.Builds/Props/Directory.Packages.props') {
+-    $failures.Add('Directory.Packages.props must import the root-declared Hexalith.Builds package catalog.')
+-}
+-$rootPackageVersionIds = @($directoryPackagesXml.SelectNodes('//PackageVersion') |
+-    ForEach-Object { $_.GetAttribute('Include'), $_.GetAttribute('Update'), $_.GetAttribute('Remove') } |
+-    Where-Object { $_ } |
+-    ForEach-Object { $_ -split ';' } |
+-    ForEach-Object { $_.Trim() })
+-foreach ($packageId in @('Hexalith.Conversations.Client', 'Hexalith.Conversations.Contracts', 'Hexalith.Folders.Client', 'Hexalith.Folders.Contracts')) {
+-    if ($rootPackageVersionIds -contains $packageId) {
+-        $failures.Add("$packageId version must be owned by the Hexalith.Builds package catalog, not root Directory.Packages.props.")
+-    }
+-}
+-
+-# MSBuild property names and environment imports are case-insensitive. Reject
+-# declarations even under conditions so catalog ownership cannot vary by lane.
+-foreach ($versionProperty in @('HexalithConversationsVersion', 'HexalithFoldersVersion')) {
+-    foreach ($props in @(
+-        @{ Name = 'Directory.Build.props'; Xml = $directoryBuildPropsXml },
+-        @{ Name = 'Directory.Packages.props'; Xml = $directoryPackagesXml }
+-    )) {
+-        $declarations = @($props.Xml.SelectNodes('//*[local-name()="PropertyGroup"]/*') |
+-            Where-Object { $_.LocalName -ieq $versionProperty })
+-        if ($declarations.Count -gt 0) {
+-            $failures.Add("$versionProperty must remain owned by the Hexalith.Builds package catalog; $($props.Name) declares it.")
+-        }
+-    }
+-    $propertyPattern = [regex]::Escape($versionProperty)
+-    $assignmentPatterns = @(
+-        # YAML environment keys, including quoted and inline mapping keys.
+-        ('(?im)^(?:\s*|[^\r\n#]*[,{]\s*)[''"]?' + $propertyPattern + '[''"]?\s*:'),
+-        # Literal MSBuild switches and semicolon-separated property lists.
+-        ('(?im)^[^\r\n#]*(?:--property:|[-/](?:p|property):)[^\r\n#]*\b' + $propertyPattern + '\s*='),
+-        # Shell assignment commands and PowerShell environment drives.
+-        ('(?im)^\s*(?:run:\s*)?(?:export\s+|env\s+)?[''"]?' + $propertyPattern + '='),
+-        ('(?im)^\s*(?:run:\s*)?\$env:' + $propertyPattern + '\s*='),
+-        ('(?im)^\s*(?:run:\s*)?(?:Set-Item|New-Item|Set-Content)\s+(?:(?:-Path|-LiteralPath)\s+)?[''"]?Env:' + $propertyPattern + '(?:[''"]|\s)'),
+-        ('(?im)^\s*(?:run:\s*)?\[(?:System\.)?Environment\]::SetEnvironmentVariable\(\s*[''"]' + $propertyPattern + '[''"]'),
+-        # GitHub's environment-file protocol accepts both NAME=value and NAME<<delimiter.
+-        ('(?im)^[^\r\n#]*\b' + $propertyPattern + '[''"]?\s*(?:=|<<)[^\r\n#]*\bGITHUB_ENV\b')
+-    )
+-    if (@($assignmentPatterns | Where-Object { [regex]::IsMatch($activeWorkflowText, $_) }).Count -gt 0) {
+-        $failures.Add("$versionProperty must remain owned by the Hexalith.Builds package catalog; an active workflow assigns it.")
+-    }
+-    foreach ($entry in [Environment]::GetEnvironmentVariables().GetEnumerator()) {
+-        if ($entry.Key -ieq $versionProperty -and -not [string]::IsNullOrEmpty($entry.Value)) {
+-            $failures.Add("$versionProperty must remain owned by the Hexalith.Builds package catalog; the inherited environment overrides it.")
+-        }
+-    }
+-}
+-
+-# Archived evidence copies are immutable observations, not active project graphs.
+-$activeProjectRoots = @('src', 'tests') | ForEach-Object { Join-Path $repositoryRoot $_ }
+-$projectFiles = Get-ChildItem -Path $activeProjectRoots -Recurse -Filter '*.csproj' -File |
+-    Where-Object { $_.FullName -notmatch '[\\/]references[\\/]' }
+-foreach ($projectFile in $projectFiles) {
+-    [xml] $projectXml = Get-Content -Path $projectFile.FullName -Raw
+-    foreach ($reference in @($projectXml.Project.ItemGroup.ProjectReference)) {
+-        if ($null -eq $reference -or $reference.Include -notlike '$(Hexalith*.csproj') {
+-            continue
+-        }
+-
+-        $normalizedInclude = $reference.Include -replace '\\', '/'
+-        $relativeProjectPath = $projectFile.FullName.Substring($repositoryRoot.Length + 1) -replace '\\', '/'
+-        $fixtureOutputTypes = @($projectXml.SelectNodes('/Project/PropertyGroup/OutputType'))
+-        # This named executable fixture launches these four sibling executables.
+-        # Keep its exception separate from every library and other consumer.
+-        $isPackageFixtureExecutable = $relativeProjectPath -ceq 'tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj' -and
+-            $fixtureOutputTypes.Count -eq 1 -and
+-            $fixtureOutputTypes[0].InnerText.Trim() -ceq 'Exe' -and
+-            [string]::IsNullOrWhiteSpace($fixtureOutputTypes[0].GetAttribute('Condition')) -and
+-            [string]::IsNullOrWhiteSpace($fixtureOutputTypes[0].ParentNode.GetAttribute('Condition')) -and
+-            $normalizedInclude -cin @(
+-                '$(HexalithEventStoreRoot)/src/Hexalith.EventStore/Hexalith.EventStore.csproj',
+-                '$(HexalithTenantsRoot)/src/Hexalith.Tenants/Hexalith.Tenants.csproj',
+-                '$(HexalithFoldersRoot)/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj',
+-                '$(HexalithFoldersRoot)/src/Hexalith.Folders.Workers/Hexalith.Folders.Workers.csproj'
+-            )
+-        $isAppHostExecutable = ($projectFile.Name -eq 'Hexalith.Projects.AppHost.csproj' -and
+-            $normalizedInclude -in @('$(HexalithEventStoreRoot)/src/Hexalith.EventStore/Hexalith.EventStore.csproj', '$(HexalithTenantsRoot)/src/Hexalith.Tenants/Hexalith.Tenants.csproj')) -or $isPackageFixtureExecutable
+-        $condition = if (-not [string]::IsNullOrWhiteSpace($reference.Condition)) { $reference.Condition } else { $reference.ParentNode.Condition }
+-        # These exact hosts and internal tooling are not published as packages.
+-        # They are permitted only in the named consumers with the strict source-mode
+-        # condition; package mode must never include their implementation edges.
+-        $sourceOnlyUnpackableDependencies = @(
+-            '$(HexalithFoldersRoot)/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj',
+-            '$(HexalithFoldersRoot)/src/Hexalith.Folders.Workers/Hexalith.Folders.Workers.csproj',
+-            '$(HexalithConversationsRoot)/src/Hexalith.Conversations.Server/Hexalith.Conversations.Server.csproj'
+-        )
+-        $sourceOnlyUnpackableConsumers = @(
+-            'Hexalith.Projects.AppHost.csproj',
+-            'Hexalith.Projects.Server.Tests.csproj'
+-        )
+-        $isSourceOnlyAppHostHelper = $projectFile.Name -eq 'Hexalith.Projects.AppHost.csproj' -and
+-            $normalizedInclude -in @(
+-                '$(HexalithFoldersRoot)/src/Hexalith.Folders.EventStore/Hexalith.Folders.EventStore.csproj',
+-                '$(HexalithBuildsRoot)/src/libraries/Hexalith.Builds.Tooling/Hexalith.Builds.Tooling.csproj'
+-            )
+-        $isSourceOnlyUnpackableDependency = (($sourceOnlyUnpackableConsumers -contains $projectFile.Name -and
+-            $sourceOnlyUnpackableDependencies -contains $normalizedInclude) -or $isSourceOnlyAppHostHelper) -and
+-            $condition -eq "'`$(UseHexalithProjectReferences)' == 'true'"
+-        $isConditionalSourceReference = $condition -eq "'`$(UseHexalithProjectReferences)' == 'true'" -or
+-            $condition -eq "'`$(UseHexalithProjectReferences)' == 'true' and '`$(HexalithConversationsFromSource)' != 'false'"
+-        if (-not $isAppHostExecutable -and -not $isSourceOnlyUnpackableDependency -and -not $isConditionalSourceReference) {
+-            $failures.Add("$($projectFile.FullName.Substring($repositoryRoot.Length + 1)) has an unconditional sibling library ProjectReference: $($reference.Include)")
+-        }
+-
+-        if (-not $isAppHostExecutable -and -not $isSourceOnlyUnpackableDependency) {
+-            $packageId = [System.IO.Path]::GetFileNameWithoutExtension($normalizedInclude)
+-            $matchingPackageReferences = @($projectXml.Project.ItemGroup.PackageReference | Where-Object { $_.Include -eq $packageId })
+-            $hasPackageModeReference = $false
+-            foreach ($packageReference in $matchingPackageReferences) {
+-                $packageCondition = if (-not [string]::IsNullOrWhiteSpace($packageReference.Condition)) { $packageReference.Condition } else { $packageReference.ParentNode.Condition }
+-                if ($packageCondition -eq "'`$(UseHexalithProjectReferences)' != 'true'" -or
+-                    $packageCondition -eq "'`$(UseHexalithProjectReferences)' != 'true' or '`$(HexalithConversationsFromSource)' == 'false'") {
+-                    $hasPackageModeReference = $true
+-                }
+-            }
+-
+-            if (-not $hasPackageModeReference) {
+-                $failures.Add("$($projectFile.FullName.Substring($repositoryRoot.Length + 1)) has no package-mode $packageId reference for sibling project $($reference.Include)")
+-            }
+-        }
+-    }
+-}
+-
+-Forbid-Match $ci '^\s*release:\s*$' 'CI must not own a release job; release.yml owns publication.'
+-Forbid-Match $allWorkflows '^\s*submodules:\s*(true|recursive)\s*$' 'Recursive or implicit recursive submodule checkout is forbidden.'
+-Forbid-Match $allWorkflows 'git\s+[^\r\n]*submodule\s+[^\r\n]*--recursive' 'Recursive submodule commands are forbidden.'
+-Forbid-Match $allWorkflows 'npm\s+(?:--prefix\s+\S+\s+)?install(?:\s|$)' 'Workflow dependency installation must not use npm install.'
+-
+-foreach ($workflowFile in $workflowFiles) {
+-    $workflowText = Get-Content -Path $workflowFile.FullName -Raw
+-    foreach ($usesReference in @(Get-UsesReferences -Text $workflowText)) {
+-        $reference = $usesReference.Reference
+-        if ($reference.StartsWith('./', [System.StringComparison]::Ordinal)) {
+-            continue
+-        }
+-
+-        $legacySharedWorkflowReference = "Hexalith/Hexalith.Builds/.github/workflows/$($workflowFile.Name)@main"
+-        if ($workflowFile.Name -in @('codeql.yml', 'commitlint.yml', 'dependency-review.yml') -and
+-            $reference -ceq $legacySharedWorkflowReference) {
+-            continue
+-        }
+-
+-        if ($reference -notmatch '@[0-9a-fA-F]{40}$') {
+-            $failures.Add("$($workflowFile.Name):$($usesReference.LineNumber) uses a mutable or unreviewed action reference: $reference")
+-        }
+-    }
+-}
+-
+-if ($failures.Count -gt 0) {
+-    foreach ($failure in $failures) {
+-        [Console]::Error.WriteLine("ci-workflow-gate: $failure")
+-    }
+-
+-    exit 1
+-}
+-
+-Write-Host "ci-workflow-gate: PASSED — $($workflowFiles.Count) workflow file(s), caller-owned Trusted Publishing, immutable release action refs, safe E2E, and root-only submodule policy validated."
+-exit 0
++#!/usr/bin/env pwsh
++
++$ErrorActionPreference = 'Stop'
++
++$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
++$repositoryRoot = (Resolve-Path (Join-Path $scriptRoot '..' '..')).Path
++$workflowRoot = Join-Path $repositoryRoot '.github/workflows'
++$ciPath = Join-Path $workflowRoot 'ci.yml'
++$releasePath = Join-Path $workflowRoot 'release.yml'
++$solutionPath = Join-Path $repositoryRoot 'Hexalith.Projects.CI.slnx'
++$releaseConfigPath = Join-Path $repositoryRoot 'release.config.cjs'
++$trustedPublishingRunbookPath = Join-Path $repositoryRoot 'docs/runbooks/nuget-trusted-publishing.md'
++$directoryBuildPropsPath = Join-Path $repositoryRoot 'Directory.Build.props'
++$directoryPackagesPath = Join-Path $repositoryRoot 'Directory.Packages.props'
++$frontComposerGatePath = Join-Path $scriptRoot 'run-frontcomposer-inspect-gate.ps1'
++$openApiGatePath = Join-Path $scriptRoot 'run-openapi-fingerprint-gate.ps1'
++$managedE2EPath = Join-Path $repositoryRoot 'tests/e2e/run-live-apphost.sh'
++$failures = [System.Collections.Generic.List[string]]::new()
++$buildsExecutionSha = '6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b'
++$releaseBuildsExecutionSha = '6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b'
++$g6PostgresqlImage = 'postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636'
++$nugetLoginSha = '8d196754b4036150537f80ac539e15c2f1028841'
++$expectedReleasePackageIds = @(
++    'Hexalith.Projects.Contracts',
++    'Hexalith.Projects',
++    'Hexalith.Projects.Client',
++    'Hexalith.Projects.Testing',
++    'Hexalith.Projects.ServiceDefaults'
++)
++
++function Require-Match {
++    param(
++        [string] $Text,
++        [string] $Pattern,
++        [string] $Message
++    )
++
++    if (-not [regex]::IsMatch($Text, $Pattern, [System.Text.RegularExpressions.RegexOptions]::Multiline)) {
++        $failures.Add($Message)
++    }
++}
++
++function Forbid-Match {
++    param(
++        [string] $Text,
++        [string] $Pattern,
++        [string] $Message
++    )
++
++    if ([regex]::IsMatch($Text, $Pattern, [System.Text.RegularExpressions.RegexOptions]::Multiline)) {
++        $failures.Add($Message)
++    }
++}
++
++function Get-WorkflowJobBlocks {
++    param([string] $Text)
++
++    $jobsMarker = [regex]::Match($Text, '(?m)^jobs:\r?$')
++    if (-not $jobsMarker.Success) {
++        return @()
++    }
++
++    $jobsText = $Text.Substring($jobsMarker.Index + $jobsMarker.Length).TrimStart("`r", "`n")
++    return @(
++        [regex]::Matches($jobsText, '(?ms)^  (?<name>[A-Za-z0-9_-]+):\r?\n.*?(?=^  [A-Za-z0-9_-]+:\r?$|\z)') |
++            ForEach-Object {
++                [pscustomobject]@{
++                    Name = $_.Groups['name'].Value
++                    Text = $_.Value
++                    Index = $_.Index
++                }
++            }
++    )
++}
++
++function Get-NamedStepBlocks {
++    param([string] $JobText)
++
++    return @(
++        [regex]::Matches($JobText, '(?ms)^      - name:\s*(?<name>[^\r\n#]+?)\s*\r?\n.*?(?=^      - |\z)') |
++            ForEach-Object {
++                [pscustomobject]@{
++                    Name = $_.Groups['name'].Value.Trim()
++                    Text = $_.Value
++                    Index = $_.Index
++                }
++            }
++    )
++}
++
++function Get-RequiredNamedStep {
++    param(
++        [object[]] $Steps,
++        [string] $Name,
++        [string] $Owner
++    )
++
++    $matches = @($Steps | Where-Object { $_.Name -ceq $Name })
++    if ($matches.Count -ne 1) {
++        $failures.Add("$Owner must contain exactly one '$Name' step; found $($matches.Count).")
++        return $null
++    }
++
++    return $matches[0]
++}
++
++function Require-G6PostgresqlPull {
++    param(
++        [object[]] $Steps,
++        [string] $BeforeStep,
++        [string] $Owner
++    )
++
++    $pull = Get-RequiredNamedStep -Steps $Steps -Name 'Pull pinned G-6 PostgreSQL fixture image' -Owner $Owner
++    $proof = Get-RequiredNamedStep -Steps $Steps -Name $BeforeStep -Owner $Owner
++    $expected = "      - name: Pull pinned G-6 PostgreSQL fixture image`n        run: docker pull $g6PostgresqlImage"
++    if ($null -ne $pull -and (Get-TrimmedBlockText -Text $pull.Text) -cne $expected) {
++        $failures.Add("$Owner must unconditionally pull the exact PostgreSQL fixture digest and stop on pull failure.")
++    }
++    if ($null -ne $pull -and $null -ne $proof -and $pull.Index -ge $proof.Index) {
++        $failures.Add("$Owner must pull the pinned PostgreSQL image before its live G-6 proof.")
++    }
++}
++
++function Get-UsesReferences {
++    param([string] $Text)
++
++    $results = [System.Collections.Generic.List[object]]::new()
++    $lineNumber = 0
++    foreach ($line in $Text -split "`r?`n") {
++        $lineNumber++
++        if ($line -notmatch '^(?<indent>\s*)(?<dash>-\s+)?uses:\s*(?<reference>[^\s#]+)\s*(?:#.*)?$') {
++            continue
++        }
++
++        $results.Add([pscustomobject]@{
++            Reference = $Matches['reference']
++            Indent = $Matches['indent'].Length
++            HasDash = -not [string]::IsNullOrEmpty($Matches['dash'])
++            LineNumber = $lineNumber
++        })
++    }
++
++    return @($results)
++}
++
++function Get-ActiveWorkflowText {
++    param([string] $Text)
++
++    return (($Text -split "`r?`n" | Where-Object { $_ -notmatch '^\s*#' }) -join "`n")
++}
++
++# Normalizes a job or step block for exact comparison: LF line endings, with the trailing
++# blank and comment-only lines that belong to the next block's leading comment removed.
++# Every other line, including any added key, command, `|| true`, `if:` or
++# `continue-on-error`, stays in the text and breaks exact equality.
++function Get-TrimmedBlockText {
++    param([string] $Text)
++
++    $lines = [System.Collections.Generic.List[string]]::new()
++    foreach ($line in (($Text -replace "`r`n", "`n") -split "`n")) {
++        $lines.Add($line)
++    }
++
++    while ($lines.Count -gt 0 -and $lines[$lines.Count - 1] -match '^\s*(#.*)?$') {
++        $lines.RemoveAt($lines.Count - 1)
++    }
++
++    return ($lines -join "`n")
++}
++
++function Require-ExactJob {
++    param(
++        [object[]] $JobBlocks,
++        [string] $Name,
++        [string] $Expected,
++        [string] $Message
++    )
++
++    $candidates = @($JobBlocks | Where-Object { $_.Name -ceq $Name })
++    if ($candidates.Count -ne 1) {
++        $failures.Add("CI must define exactly one $Name job; found $($candidates.Count).")
++    }
++    elseif ((Get-TrimmedBlockText -Text $candidates[0].Text) -cne $Expected) {
++        $failures.Add($Message)
++    }
++}
++
++if (-not (Test-Path $ciPath)) {
++    throw "CI workflow not found at $ciPath."
++}
++
++$ci = Get-Content -Path $ciPath -Raw
++$solution = Get-Content -Path $solutionPath -Raw
++$packageManifestPath = Join-Path $repositoryRoot 'tools/release-packages.json'
++$releaseConfig = Get-Content -Path $releaseConfigPath -Raw
++if (-not (Test-Path $trustedPublishingRunbookPath)) {
++    $failures.Add('The NuGet Trusted Publishing migration runbook must exist.')
++    $trustedPublishingRunbook = ''
++}
++else {
++    $trustedPublishingRunbook = Get-Content -Path $trustedPublishingRunbookPath -Raw
++}
++$directoryBuildProps = Get-Content -Path $directoryBuildPropsPath -Raw
++$directoryPackages = Get-Content -Path $directoryPackagesPath -Raw
++[xml] $directoryBuildPropsXml = $directoryBuildProps
++$frontComposerGate = Get-Content -Path $frontComposerGatePath -Raw
++$openApiGate = Get-Content -Path $openApiGatePath -Raw
++if (-not (Test-Path $managedE2EPath)) {
++    $failures.Add('The managed AppHost E2E runner must exist.')
++    $managedE2E = ''
++}
++else {
++    $managedE2E = Get-Content -Path $managedE2EPath -Raw
++}
++$workflowFiles = @(
++    Get-ChildItem -Path $workflowRoot -File |
++        Where-Object { $_.Extension -in @('.yml', '.yaml') }
++)
++$allWorkflows = ($workflowFiles | ForEach-Object { Get-Content -Path $_.FullName -Raw }) -join "`n"
++$workflowGatesMatch = [regex]::Match(
++    $ci,
++    '(?ms)^  workflow-gates:\r?\n.*?(?=^  [A-Za-z0-9_-]+:\r?$|\z)'
++)
++
++if (-not $workflowGatesMatch.Success) {
++    $failures.Add('CI must define the workflow-gates job.')
++}
++else {
++    $workflowGates = $workflowGatesMatch.Value
++    $workflowGateSteps = @(Get-NamedStepBlocks -JobText $workflowGates)
++    $workflowFixtureStep = Get-RequiredNamedStep -Steps $workflowGateSteps -Name 'Validate workflow policy regression fixtures' -Owner 'workflow-gates'
++    if ($null -ne $workflowFixtureStep) {
++        $expectedWorkflowFixtureStep = @(
++            '      - name: Validate workflow policy regression fixtures'
++            '        env:'
++            '          PYTHONDONTWRITEBYTECODE: ''1'''
++            '        run: python3 -m unittest tests/tools/test_run_ci_workflow_gates.py -v'
++        ) -join "`n"
++        if ((Get-TrimmedBlockText -Text $workflowFixtureStep.Text) -cne $expectedWorkflowFixtureStep) {
++            $failures.Add('The workflow policy regression fixtures must be an exact blocking name/env/run step with bytecode disabled.')
++        }
++        $ciInvariantStep = Get-RequiredNamedStep -Steps $workflowGateSteps -Name 'Validate CI/CD invariants' -Owner 'workflow-gates'
++        if ($null -ne $ciInvariantStep -and $workflowFixtureStep.Index -ge $ciInvariantStep.Index) {
++            $failures.Add('The workflow policy regression fixtures must run before CI/CD invariant validation.')
++        }
++    }
++    $rendererStepMatches = [regex]::Matches(
++        $workflowGates,
++        '(?ms)^      - name: Validate shared skill renderer\r?\n.*?(?=^      - |\z)'
++    )
++    if ($rendererStepMatches.Count -ne 1) {
++        $failures.Add('workflow-gates must contain exactly one shared skill renderer step.')
++    }
++    else {
++        $rendererStep = ($rendererStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
++        $expectedRendererStep = @(
++            '      - name: Validate shared skill renderer'
++            '        env:'
++            '          PYTHONDONTWRITEBYTECODE: ''1'''
++            '        run: python3 -m unittest tests/tools/test_render_skill.py -v'
++        ) -join "`n"
++        if ($rendererStep -cne $expectedRendererStep) {
++            $failures.Add('The shared skill renderer must be an exact blocking name/env/run step with bytecode disabled.')
++        }
++    }
++
++    $ownershipStepMatches = [regex]::Matches(
++        $workflowGates,
++        '(?ms)^      - name: Validate Build Auto workspace ownership\r?\n.*?(?=^      - |\z)'
++    )
++    if ($ownershipStepMatches.Count -ne 1) {
++        $failures.Add('workflow-gates must contain exactly one Build Auto workspace ownership step.')
++    }
++    else {
++        $ownershipStep = ($ownershipStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
++        $expectedOwnershipStep = @(
++            '      - name: Validate Build Auto workspace ownership'
++            '        env:'
++            '          PYTHONDONTWRITEBYTECODE: ''1'''
++            '        run: python3 .agents/skills/bmad-build-auto/scripts/tests/test_workspace_ownership.py'
++        ) -join "`n"
++        if ($ownershipStep -cne $expectedOwnershipStep) {
++            $failures.Add('The Build Auto workspace ownership fixture must be an exact blocking name/env/run step with bytecode disabled.')
++        }
++    }
++
++    $packageFixtureStepMatches = [regex]::Matches(
++        $workflowGates,
++        '(?ms)^      - name: Validate release package tool fixtures\r?\n.*?(?=^      - |\z)'
++    )
++    if ($packageFixtureStepMatches.Count -ne 1) {
++        $failures.Add('workflow-gates must run exactly one release package tool fixture step before restore-capable jobs.')
++    }
++    else {
++        $packageFixtureStep = ($packageFixtureStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
++        $expectedPackageFixtureStep = @(
++            '      - name: Validate release package tool fixtures'
++            '        env:'
++            '          PYTHONDONTWRITEBYTECODE: ''1'''
++            '        run: python3 -m unittest tests/tools/test_release_package_tools.py -v'
++        ) -join "`n"
++        if ($packageFixtureStep -cne $expectedPackageFixtureStep) {
++            $failures.Add('The release package fixture must be an exact blocking name/env/run step with bytecode disabled.')
++        }
++
++        $ciInvariantIndex = $workflowGates.IndexOf('      - name: Validate CI/CD invariants', [System.StringComparison]::Ordinal)
++        if ($packageFixtureStepMatches[0].Index -ge $ciInvariantIndex -or $ciInvariantIndex -lt 0) {
++            $failures.Add('The hermetic package fixtures must run before CI/CD invariant validation.')
++        }
++    }
++
++    $releaseWorkflowStepMatches = [regex]::Matches(
++        $workflowGates,
++        '(?ms)^      - name: Validate release workflow shell behavior\r?\n.*?(?=^      - |\z)'
++    )
++    if ($releaseWorkflowStepMatches.Count -ne 1) {
++        $failures.Add('workflow-gates must run exactly one release workflow shell behavior step.')
++    }
++    else {
++        $releaseWorkflowStep = ($releaseWorkflowStepMatches[0].Value -replace "`r`n", "`n").TrimEnd([char[]] "`r`n")
++        $expectedReleaseWorkflowStep = @(
++            '      - name: Validate release workflow shell behavior'
++            '        env:'
++            '          PYTHONDONTWRITEBYTECODE: ''1'''
++            '        run: python3 -m unittest tests/tools/test_release_workflow.py -v'
++        ) -join "`n"
++        if ($releaseWorkflowStep -cne $expectedReleaseWorkflowStep) {
++            $failures.Add('The release workflow shell behavior fixture must be an exact blocking name/env/run step with bytecode disabled.')
++        }
++
++        $ciInvariantIndex = $workflowGates.IndexOf('      - name: Validate CI/CD invariants', [System.StringComparison]::Ordinal)
++        if ($releaseWorkflowStepMatches[0].Index -ge $ciInvariantIndex -or $ciInvariantIndex -lt 0) {
++            $failures.Add('The release workflow shell behavior fixture must run before CI/CD invariant validation.')
++        }
++    }
++}
++
++# Release is an operator-dispatched caller-owned workflow behind exact-source CI.
++# A successful exact-source CI run is required; no G-6 failure exception exists.
++# The protected job reruns G-6 before requesting a NuGet credential.
++if (-not (Test-Path $releasePath)) {
++    $failures.Add('release.yml must exist; release is an operator-dispatched workflow in every Hexalith module.')
++    $release = ''
++}
++else {
++    $release = Get-Content -Path $releasePath -Raw
++}
++
++$releaseJobBlocks = @(Get-WorkflowJobBlocks -Text $release)
++$expectedReleaseJobNames = @('verify-source', 'release', 'qualify-contracts-prerequisite', 'publish-contracts-prerequisite')
++$releaseJobNames = @($releaseJobBlocks | ForEach-Object { $_.Name })
++if ($releaseJobNames.Count -ne $expectedReleaseJobNames.Count -or
++    @(Compare-Object -ReferenceObject $expectedReleaseJobNames -DifferenceObject $releaseJobNames).Count -ne 0) {
++    $failures.Add('Release must define exactly the reviewed full-release and Contracts prerequisite jobs; additional jobs are forbidden.')
++}
++
++# The package owner approved only these fixed prerequisite jobs. Bind their
++# complete executable text to the qualified immutable CiCd publisher source;
++# normal full-release checks below retain every preflight/G-6/OIDC invariant.
++$prerequisiteJobHashes = @{
++    'qualify-contracts-prerequisite' = '6c56e8718613347274c4138ba2f6abdfc32975d272da436864d6a7ad88762c9d'
++    'publish-contracts-prerequisite' = '2009465c17a4e4bc5e390ba1ad007dee72c47e647dd28a75023e825ff558592d'
++}
++foreach ($name in $prerequisiteJobHashes.Keys) {
++    $blocks = @($releaseJobBlocks | Where-Object { $_.Name -ceq $name })
++    if ($blocks.Count -ne 1) {
++        $failures.Add("The reviewed Contracts prerequisite job '$name' must exist exactly once.")
++        continue
++    }
++    $bytes = [System.Text.Encoding]::UTF8.GetBytes((Get-TrimmedBlockText -Text $blocks[0].Text))
++    $actualHash = [Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
++    if ($actualHash -cne $prerequisiteJobHashes[$name]) {
++        $failures.Add("The Contracts prerequisite job '$name' differs from the exact owner-qualified publisher.")
++    }
++}
++
++# Include inherited execution context and the complete dispatch defaults in
++# the approved shape; otherwise root defaults can change the hashed jobs.
++$releaseRootContext = [regex]::Match($release, '(?ms)\A.*?(?=^jobs:\r?$)')
++if (-not $releaseRootContext.Success) {
++    $failures.Add('Release workflow root context is missing.')
++}
++else {
++    $activeRootContext = Get-TrimmedBlockText -Text (Get-ActiveWorkflowText -Text $releaseRootContext.Value)
++    $rootBytes = [System.Text.Encoding]::UTF8.GetBytes($activeRootContext)
++    $rootHash = [Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($rootBytes)).ToLowerInvariant()
++    if ($rootHash -cne 'bedc9b3f51a5eea0ec555093a07c01e0a783b60fee6e9cadccf1aa2c93470447') {
++        $failures.Add('Release workflow root context differs from the approved publication profiles.')
++    }
++}
++
++$releaseJobCandidates = @($releaseJobBlocks | Where-Object { $_.Name -ceq 'release' })
++$verifySourceJobCandidates = @($releaseJobBlocks | Where-Object { $_.Name -ceq 'verify-source' })
++$releaseJob = if ($releaseJobCandidates.Count -eq 1) { $releaseJobCandidates[0].Text } else { '' }
++$verifySourceJob = if ($verifySourceJobCandidates.Count -eq 1) { $verifySourceJobCandidates[0].Text } else { '' }
++$releaseSteps = @(Get-NamedStepBlocks -JobText $releaseJob)
++$verifySourceSteps = @(Get-NamedStepBlocks -JobText $verifySourceJob)
++$fullReleaseProfileGuard = '    if: ${{ inputs.release-profile != ''contracts-prerequisite'' && inputs.release-profile != ''contracts-prerequisite-verify'' }}'
++Require-Match $verifySourceJob ('(?m)^' + [regex]::Escape($fullReleaseProfileGuard) + '\r?$') 'The full-release preflight may select only the normal full-release profile; package-only jobs must remain isolated.'
++
++$verifySourceStep = Get-RequiredNamedStep -Steps $verifySourceSteps -Name 'Require current main with successful exact-source CI' -Owner 'verify-source'
++
++foreach ($jobBlock in $releaseJobBlocks) {
++    foreach ($usesReference in @(Get-UsesReferences -Text $jobBlock.Text)) {
++        if ($usesReference.Indent -eq 4 -and -not $usesReference.HasDash) {
++            $failures.Add("Release job '$($jobBlock.Name)' must be caller-owned; job-level reusable call '$($usesReference.Reference)' is forbidden.")
++        }
++    }
++}
++
++foreach ($sharedWorkflow in @('codeql.yml', 'commitlint.yml', 'dependency-review.yml')) {
++    $sharedWorkflowPath = Join-Path $workflowRoot $sharedWorkflow
++    if (-not (Test-Path $sharedWorkflowPath)) {
++        $failures.Add("$sharedWorkflow must exist; every Hexalith module runs the shared $($sharedWorkflow -replace '\.yml$', '') lane.")
++    }
++    else {
++        $sharedWorkflowText = Get-Content -Path $sharedWorkflowPath -Raw
++        $expectedMutableReference = "Hexalith/Hexalith.Builds/.github/workflows/$sharedWorkflow@main"
++        $actualSharedReferences = @(
++            Get-UsesReferences -Text $sharedWorkflowText |
++                Where-Object { $_.Indent -eq 4 -and -not $_.HasDash -and $_.Reference -ceq $expectedMutableReference }
++        )
++        if ($actualSharedReferences.Count -ne 1) {
++            $failures.Add("$sharedWorkflow must contain exactly one actual job-level uses line for $expectedMutableReference.")
++        }
++    }
++}
++
++Require-Match $release '(?m)^on:\r?\n  workflow_dispatch:\r?$' 'Release must be dispatch-only.'
++Forbid-Match $release 'allow_stale_g6|ALLOW_STALE_G6' 'Release must not include a stale G-6 bypass.'
++Forbid-Match $release '^\s*(push|pull_request|schedule):\s*$' 'Release must never be triggered by push, pull_request, or schedule.'
++if ($null -eq $verifySourceStep) {
++    $verifySourceStepText = ''
++}
++else {
++    $verifySourceStepText = $verifySourceStep.Text
++}
++Require-Match $verifySourceStepText 'No successful push CI run exists for the exact current main SHA' 'The named exact-source preflight must prove a successful push CI run for the dispatched SHA.'
++Require-Match $verifySourceStepText 'The dispatched source is no longer the live main tip' 'The named exact-source preflight must prove the dispatch selected the live main tip.'
++Require-Match $releaseJob '^\s{4}needs:\s*verify-source\s*$' 'The release job must depend on the exact-source preflight.'
++Require-Match $releaseJob '^\s{4}runs-on:\s*ubuntu-latest\s*$' 'The release job must run as a caller-owned job.'
++Require-Match $releaseJob '^\s{4}environment:\s*production\s*$' 'Release must enter the protected production environment.'
++Require-Match $releaseJob '^\s{4}timeout-minutes:\s*120\s*$' 'The protected release job must allow the fresh isolated G-6 run.'
++Require-Match $release '^\s*cancel-in-progress:\s*false\s*$' 'An in-flight release must never be cancelled by a newer dispatch.'
++
++# The caller job needs OIDC only for the official NuGet login action and retains
++# the scopes used by the existing semantic-release lifecycle.
++foreach ($scope in @('actions: read', 'contents: write', 'id-token: write', 'issues: write', 'pull-requests: write')) {
++    Require-Match $releaseJob ("^\s{6}" + [regex]::Escape($scope) + "\s*$") "The caller-owned release job must grant '$scope'."
++}
++Forbid-Match $releaseJob '^\s{6}attestations:\s*write\s*$' 'The non-governed Projects release must not retain the reusable workflow attestation scope.'
++
++$checkoutBuildsStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Checkout approved Builds actions' -Owner 'release'
++$validateBuildsStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Validate approved Builds actions identity' -Owner 'release'
++$initializeBuildStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Initialize root-declared submodules' -Owner 'release'
++$installNpmStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Install npm dependencies' -Owner 'release'
++$verifyNpmStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Verify npm dependency provenance and signatures' -Owner 'release'
++$restoreStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Restore release solution' -Owner 'release'
++$buildStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Build release solution' -Owner 'release'
++Require-G6PostgresqlPull -Steps $releaseSteps -BeforeStep 'Run fresh exact-source G-6 qualifier' -Owner 'release'
++$g6RunStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Run fresh exact-source G-6 qualifier' -Owner 'release'
++$g6ValidateStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Validate fresh exact-source G-6 evidence' -Owner 'release'
++$g6UploadStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Upload exact-source G-6 evidence' -Owner 'release'
++$manifestStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Validate five-package manifest' -Owner 'release'
++$freezeStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Resolve release publication freeze' -Owner 'release'
++$sourceStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Revalidate current source before NuGet login' -Owner 'release'
++$loginStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Exchange GitHub OIDC token for temporary NuGet API key' -Owner 'release'
++$semanticReleaseStep = Get-RequiredNamedStep -Steps $releaseSteps -Name 'Semantic Release' -Owner 'release'
++
++# Caller-owned setup still consumes the approved root-submodule initializer from
++# one immutable Hexalith.Builds revision. Every assertion is bound to its named step.
++Require-Match $checkoutBuildsStep.Text '^\s{8}uses:\s*actions/checkout@[0-9a-f]{40}\s*(?:#.*)?$' 'The Builds checkout step must use an immutable checkout action.'
++Require-Match $checkoutBuildsStep.Text '^\s{10}repository:\s*Hexalith/Hexalith\.Builds\s*$' 'The Builds checkout step must target Hexalith.Builds.'
++Require-Match $checkoutBuildsStep.Text ('^\s{10}ref:\s*' + $releaseBuildsExecutionSha + '\s*$') 'The Builds checkout step must use the approved immutable execution SHA.'
++Require-Match $validateBuildsStep.Text ('^\s{10}BUILDS_EXECUTION_SHA:\s*' + $releaseBuildsExecutionSha + '\s*$') 'The Builds identity step must validate the approved execution SHA.'
++Require-Match $initializeBuildStep.Text '^\s{8}uses:\s*\./\.hexalith/builds-execution/Github/initialize-build\s*$' 'The initialization step must use the approved checked-out Builds action.'
++Require-Match $installNpmStep.Text '^\s{8}run:\s*npm ci --ignore-scripts\s*$' 'The npm install step must use the lockfile with lifecycle scripts disabled.'
++Require-Match $verifyNpmStep.Text '^\s{8}run:\s*npm audit signatures\s*$' 'The npm provenance step must verify registry signatures.'
++Require-Match $restoreStep.Text '^\s{8}run:\s*dotnet restore Hexalith\.Projects\.CI\.slnx\s*$' 'The restore step must use the package-only CI solution.'
++Require-Match $buildStep.Text '^\s{8}run:\s*dotnet build Hexalith\.Projects\.CI\.slnx --no-restore --configuration Release -warnaserror\s*$' 'The build step must use the package-only CI solution in Release with warnings as errors.'
++Require-Match $g6RunStep.Text 'run_g6_current\.py' 'Release must run the focused G-6 qualifier.'
++Require-Match $g6RunStep.Text '--execution-scope release' 'Release G-6 must record the release Builds execution pin.'
++Require-Match $g6ValidateStep.Text 'g6_current\.py validate' 'Release must validate the current G-6 result.'
++Require-Match $g6ValidateStep.Text '--release' 'Release G-6 validation must require exact source and gitlinks.'
++Require-Match $g6UploadStep.Text 'if-no-files-found: error' 'Release must fail if current G-6 evidence is absent.'
++foreach ($step in @($g6RunStep, $g6ValidateStep)) {
++    if ($null -ne $step) {
++        Forbid-Match $step.Text '(?m)^\s{8}(if|continue-on-error):' 'Fresh release G-6 execution and validation must not be conditional or tolerated.'
++    }
++}
++
++# The declared package count is the fail-closed gate: it must agree with both the
++# manifest it is checked against and the count semantic-release publishes.
++if (-not (Test-Path $packageManifestPath)) {
++    $failures.Add('tools/release-packages.json must exist; the release publication identity is frozen from it.')
++}
++else {
++    $manifest = Get-Content -Path $packageManifestPath -Raw | ConvertFrom-Json
++    $manifestPackageIds = @($manifest.packages | ForEach-Object { $_.id })
++    $manifestCount = $manifestPackageIds.Count
++    if ($manifestCount -ne $expectedReleasePackageIds.Count -or
++        @(Compare-Object -ReferenceObject $expectedReleasePackageIds -DifferenceObject $manifestPackageIds).Count -ne 0) {
++        $failures.Add('tools/release-packages.json must contain exactly the five approved Projects package IDs.')
++    }
++    Require-Match $manifestStep.Text ("^\s{10}EXPECTED_PACKAGE_COUNT:\s*'" + $manifestCount + "'\s*$") "The named manifest step count gate must equal the $manifestCount package(s) declared in tools/release-packages.json."
++    Require-Match $manifestStep.Text '\.packages \| length == \$expected' 'The named manifest step must compare the package count with its independent expected count.'
++    Require-Match $releaseConfig ('-eq ' + $manifestCount + "'") "release.config.cjs must publish exactly $manifestCount package(s)."
++}
++
++# Matrix row: frozen publication builds successfully but reaches neither the OIDC
++# exchange nor Semantic Release. The runbook requires a repository-level override
++# so the effective vars context cannot fall through to an organization value.
++Require-Match $freezeStep.Text '^\s{10}HEXALITH_RELEASE_PUBLISH_ENABLED:\s*\$\{\{ vars\.HEXALITH_RELEASE_PUBLISH_ENABLED \}\}\s*$' 'The freeze step must bind the effective Actions variable for an exact shell comparison.'
++Require-Match $freezeStep.Text ([regex]::Escape('if [ "${HEXALITH_RELEASE_PUBLISH_ENABLED-}" = "true" ]; then')) 'The freeze step must require the exact case-sensitive, untrimmed true value.'
++Require-Match $freezeStep.Text 'publish-enabled=false' 'The named freeze step must produce an explicit false verdict.'
++Require-Match $freezeStep.Text 'NuGet login and Semantic Release are skipped' 'The named freeze step must report that credential exchange and publication were skipped.'
++
++# Matrix rows: stale source fails before login, while a valid source reaches the
++# pinned official login action. A missing username or claim mismatch is therefore
++# a login failure before Semantic Release receives any credential.
++Require-Match $sourceStep.Text 'The release source became stale during setup' 'The named source-revalidation step must fail when main advances.'
++Require-Match $sourceStep.Text '^\s{10}SOURCE_BRANCH:\s*main\s*$' 'The named source-revalidation step must be bound to main.'
++Require-Match $sourceStep.Text '^\s{10}PUBLISH_ENABLED:\s*\$\{\{ steps\.publish-gate\.outputs\.publish-enabled \}\}\s*$' 'The source-revalidation step must consume the freeze-gate verdict.'
++Require-Match $sourceStep.Text ([regex]::Escape('publish_enabled="${PUBLISH_ENABLED-true}"')) 'An absent source-gate verdict must fail toward revalidation, not skip it.'
++Require-Match $loginStep.Text ('^\s{8}uses:\s*NuGet/login@' + $nugetLoginSha + '\s*#\s*v1\.2\.0\s*$') 'The named login step must use the reviewed NuGet/login v1.2.0 commit.'
++Require-Match $loginStep.Text '^\s{8}id:\s*nuget-login\s*$' 'The named login step must expose its temporary output through the reviewed step id.'
++Require-Match $loginStep.Text '^\s{10}user:\s*\$\{\{ vars\.NUGET_USER \}\}\s*$' 'The named login step must receive the configured NUGET_USER profile name.'
++$publishStepGuardPattern = '^\s{8}if:\s*\$\{\{ steps\.publish-gate\.outputs\.publish-enabled == ''true'' \}\}\s*$'
++Require-Match $loginStep.Text $publishStepGuardPattern 'The named login step must require the exact enabled verdict.'
++Require-Match $semanticReleaseStep.Text $publishStepGuardPattern 'The named Semantic Release step must require the exact enabled verdict.'
++Require-Match $semanticReleaseStep.Text '^\s{10}NUGET_API_KEY:\s*\$\{\{ steps\.nuget-login\.outputs\.NUGET_API_KEY \}\}\s*$' 'The named Semantic Release step must receive only the short-lived login output.'
++Require-Match $semanticReleaseStep.Text '^\s{8}run:\s*npm exec --no -- semantic-release\s*$' 'The named Semantic Release step must run the locked lifecycle.'
++$activeWorkflowText = (($workflowFiles | ForEach-Object { Get-ActiveWorkflowText -Text (Get-Content -Path $_.FullName -Raw) }) -join "`n")
++$legacyNuGetSecretPattern = 'secrets\s*(?:\.\s*NUGET_API_KEY|\[\s*(?:''NUGET_API_KEY''|"NUGET_API_KEY")\s*\])'
++Forbid-Match $activeWorkflowText $legacyNuGetSecretPattern 'No active workflow line may read the legacy NUGET_API_KEY secret through dot or bracket syntax.'
++if ([regex]::Matches((Get-ActiveWorkflowText -Text $releaseJob), '(?m)^.*NUGET_API_KEY.*$').Count -ne 1) {
++    $failures.Add('The temporary NUGET_API_KEY output must be bound only to the Semantic Release process environment.')
++}
++
++$orderedReleaseSteps = @(
++    'Install npm dependencies',
++    'Verify npm dependency provenance and signatures',
++    'Restore release solution',
++    'Build release solution',
++    'Pull pinned G-6 PostgreSQL fixture image',
++    'Run fresh exact-source G-6 qualifier',
++    'Validate fresh exact-source G-6 evidence',
++    'Upload exact-source G-6 evidence',
++    'Validate five-package manifest',
++    'Resolve release publication freeze',
++    'Revalidate current source before NuGet login',
++    'Exchange GitHub OIDC token for temporary NuGet API key',
++    'Semantic Release'
++)
++$previousStepIndex = -1
++foreach ($stepName in $orderedReleaseSteps) {
++    $matches = @($releaseSteps | Where-Object { $_.Name -ceq $stepName })
++    if ($matches.Count -ne 1) {
++        $failures.Add("Release ordering requires exactly one '$stepName' step.")
++        continue
++    }
++
++    $stepIndex = $matches[0].Index
++    if ($stepIndex -le $previousStepIndex) {
++        $failures.Add("Release step '$stepName' is out of the required guarded order.")
++    }
++    $previousStepIndex = $stepIndex
++}
++$allReleaseStepStarts = @([regex]::Matches($releaseJob, '(?m)^      - '))
++if ($null -ne $loginStep -and $null -ne $semanticReleaseStep) {
++    $nextStep = @($allReleaseStepStarts | Where-Object { $_.Index -gt $loginStep.Index } | Select-Object -First 1)
++    if ($nextStep.Count -ne 1 -or $nextStep[0].Index -ne $semanticReleaseStep.Index) {
++        $failures.Add('NuGet/login must be immediately before Semantic Release so the one-hour credential is acquired as late as possible.')
++    }
++}
++
++# The operator runbook freezes exact policy rows and package bullets. HTML
++# comments are removed first so comment-only decoys cannot satisfy the gate.
++$runbookPolicyText = [regex]::Replace($trustedPublishingRunbook, '(?s)<!--.*?-->', '')
++$expectedPolicyRows = @(
++    '| Policy owner | Organization `Hexalith` |',
++    '| Repository owner | `Hexalith` |',
++    '| Repository | `Hexalith.Projects` |',
++    '| Workflow file | `release.yml` (file name only) |',
++    '| Environment | `production` |'
++)
++foreach ($policyRow in $expectedPolicyRows) {
++    if ([regex]::Matches($runbookPolicyText, ('(?m)^' + [regex]::Escape($policyRow) + '\r?$')).Count -ne 1) {
++        $failures.Add("The Trusted Publishing runbook must contain exactly the policy table row: $policyRow")
++    }
++}
++
++$scopeStart = $runbookPolicyText.IndexOf('Grant publication of new versions only for these five exact package ID', [System.StringComparison]::Ordinal)
++$scopeEnd = if ($scopeStart -ge 0) { $runbookPolicyText.IndexOf('Do not grant a new-package scope.', $scopeStart, [System.StringComparison]::Ordinal) } else { -1 }
++if ($scopeStart -lt 0 -or $scopeEnd -le $scopeStart) {
++    $failures.Add('The Trusted Publishing runbook must contain the exact five-package policy-scope section.')
++}
++else {
++    $scopeSection = $runbookPolicyText.Substring($scopeStart, $scopeEnd - $scopeStart)
++    $runbookPackageIds = @(
++        [regex]::Matches($scopeSection, '(?m)^- `(?<id>[^`]+)`\r?$') |
++            ForEach-Object { $_.Groups['id'].Value }
++    )
++    if ($runbookPackageIds.Count -ne $expectedReleasePackageIds.Count -or
++        @(Compare-Object -ReferenceObject $expectedReleasePackageIds -DifferenceObject $runbookPackageIds).Count -ne 0) {
++        $failures.Add('The Trusted Publishing runbook policy scope must contain exactly the five manifest package-ID bullets, with no prefixes or extras.')
++    }
++}
++
++foreach ($runbookContract in @(
++    'gh variable set HEXALITH_RELEASE_PUBLISH_ENABLED --repo Hexalith/Hexalith.Projects --body false',
++    'npm exec --no -- semantic-release --dry-run',
++    'gh run list --repo Hexalith/Hexalith.Projects --workflow release.yml',
++    '_bmad-output/implementation-artifacts/release-evidence/nuget-trusted-publishing-',
++    'run-package-dependency-gate.ps1 -Version "$RELEASE_VERSION" -PackageDirectory "$PACKAGE_DIRECTORY" -SkipPack',
++    'dotnet nuget verify --all'
++)) {
++    Require-Match $runbookPolicyText ([regex]::Escape($runbookContract)) "The Trusted Publishing runbook must include the executable contract '$runbookContract'."
++}
++Require-Match $runbookPolicyText '(?im)^## Rollback\r?$' 'The Trusted Publishing runbook must include an explicit rollback section.'
++Require-Match $runbookPolicyText '(?im)^## Retire the legacy credential\r?$' 'The Trusted Publishing runbook must include an explicit legacy-secret retirement section.'
++Require-Match $runbookPolicyText 'permanently active' 'The Trusted Publishing runbook must require permanent policy activation before secret retirement.'
++
++Require-Match $ci '^\s*push:\s*$' 'CI must run on pushes.'
++Require-Match $ci '^\s*pull_request:\s*$' 'CI must run on pull requests.'
++Require-Match $ci '^\s*schedule:\s*$' 'CI must include a scheduled lane.'
++Require-Match $ci "dapr-version:\s*'1\.19\.1'" 'CI must use the exact Dapr CLI 1.19.1.'
++Require-Match $ci "dapr-runtime-version:\s*'1\.19\.1'" 'CI must use the exact Dapr runtime 1.19.1.'
++Require-Match $ci '^\s*integration-test-projects:\s*\|' 'The reusable CI workflow must run Integration.Tests separately.'
++# G-6 current proof is source-bound. Historical packet checks are retained as
++# archived test fixtures and are no longer required jobs in CI.
++$checkoutActionLine = '        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0'
++$initializeBuildLine = "        uses: Hexalith/Hexalith.Builds/Github/initialize-build@$buildsExecutionSha"
++$expectedWorkflowGatesJob = (@'
++  workflow-gates:
++    name: Validate workflow policy
++    runs-on: ubuntu-latest
++    steps:
++      - name: Checkout repository
++        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
++        with:
++          fetch-depth: 1
++          submodules: false
++
++      - name: Validate production-authority scheduling guard
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: |
++          python3 -m venv "${RUNNER_TEMP}/production-authority-tests"
++          "${RUNNER_TEMP}/production-authority-tests/bin/python" -m pip install --disable-pip-version-check pyyaml==6.0.3
++          "${RUNNER_TEMP}/production-authority-tests/bin/python" -m unittest tests/tools/test_production_authority_guard.py -v
++
++      - name: Validate BMAD Loop hook relay
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_bmad_loop_hook.py -v
++
++      - name: Validate shared skill renderer
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_render_skill.py -v
++
++      - name: Validate Git whitespace policy
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_git_whitespace_policy.py -v
++
++      - name: Validate Build Auto workspace ownership
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 .agents/skills/bmad-build-auto/scripts/tests/test_workspace_ownership.py
++
++      - name: Validate BMAD legacy cleanup atomicity
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 .agents/skills/bmad-module-builder/scripts/tests/test-cleanup-legacy.py
++
++      - name: Validate BMAD merge atomicity
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: |
++          python3 -m venv "${RUNNER_TEMP}/bmad-merge-tests"
++          "${RUNNER_TEMP}/bmad-merge-tests/bin/python" -m pip install --disable-pip-version-check pyyaml==6.0.3
++          "${RUNNER_TEMP}/bmad-merge-tests/bin/python" .agents/skills/bmad-module-builder/scripts/tests/test-merge-atomicity.py
++
++      - name: Validate release package tool fixtures
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_release_package_tools.py -v
++
++      - name: Validate release workflow shell behavior
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_release_workflow.py -v
++
++      - name: Validate G-6 packet gitlink check fixtures
++        # Historical packet fixtures remain regression coverage; current G-6 runs in g6-current.
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_check_g6_packet_gitlinks.py tests/tools/test_g6_packet_references.py -v
++
++      - name: Validate status-aware G-6 gate fixtures
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_run_g6_candidate_gate.py -v
++
++      - name: Initialize Builds for current G-6 policy fixtures
++        shell: bash
++        run: git -c submodule.recurse=false submodule update --init -- references/Hexalith.Builds
++
++      - name: Validate current G-6 change selection
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_run_g6_ci_gate.py tests/tools/test_current_g6_policy.py -v
++
++      - name: Validate workflow policy regression fixtures
++        env:
++          PYTHONDONTWRITEBYTECODE: '1'
++        run: python3 -m unittest tests/tools/test_run_ci_workflow_gates.py -v
++
++      - name: Validate CI/CD invariants
++        shell: pwsh
++        run: ./tests/tools/run-ci-workflow-gates.ps1
++'@ -replace "`r`n", "`n").TrimEnd("`n")
++$expectedP1rEvidenceJob = @(
++    '  p1r-candidate-evidence:'
++    '    name: P1R candidate evidence replay'
++    '    runs-on: ubuntu-latest'
++    '    needs: workflow-gates'
++    '    steps:'
++    '      - name: Checkout repository'
++    $checkoutActionLine
++    '        with:'
++    '          fetch-depth: 1'
++    '          submodules: false'
++    ''
++    '      - name: Initialize root-declared submodules'
++    $initializeBuildLine
++    ''
++    '      - name: Fetch EventStore history and tags read by the P1R evidence replay'
++    '        shell: bash'
++    '        run: |'
++    '          set -euo pipefail'
++    '          history=()'
++    '          if [ "$(git -C references/Hexalith.EventStore rev-parse --is-shallow-repository)" = true ]; then'
++    '            history+=(--unshallow)'
++    '          fi'
++    '          git -C references/Hexalith.EventStore -c submodule.recurse=false fetch \'
++    '            --no-recurse-submodules --no-tags "${history[@]}" origin \'
++    '            +refs/heads/main:refs/remotes/origin/main \'
++    '            +refs/tags/v3.110.0:refs/tags/v3.110.0'
++    ''
++    '      - name: Replay P1R candidate evidence'
++    '        env:'
++    '          GITHUB_TOKEN: ${{ github.token }}'
++    '          PYTHONDONTWRITEBYTECODE: ''1'''
++    '        run: >-'
++    '          python3 -m unittest'
++    '          tests.tools.test_p1r_candidate_evidence.SelectedPublishedEvidenceTests'
++    '          tests.tools.test_p1r_candidate_evidence.SelectedEvidenceMutationTests -v'
++) -join "`n"
++$expectedProjectGatesStepNames = @(
++    'Checkout repository',
++    'Initialize root-declared submodules',
++    'Initialize .NET',
++    'FrontComposer inspect gate',
++    'OpenAPI fingerprint / compatibility gate'
++)
++
++$ciJobBlocks = @(Get-WorkflowJobBlocks -Text $ci)
++Require-ExactJob -JobBlocks $ciJobBlocks -Name 'workflow-gates' -Expected $expectedWorkflowGatesJob -Message 'workflow-gates must be the exact job: every hermetic fixture step, including both G-6 fixture steps, is an exact blocking name/env/run block in its fixed order before the CI/CD invariants; extra steps or lines, || true, if: and continue-on-error are forbidden.'
++Require-ExactJob -JobBlocks $ciJobBlocks -Name 'p1r-candidate-evidence' -Expected $expectedP1rEvidenceJob -Message 'p1r-candidate-evidence must initialize root submodules, fetch the selected EventStore tags, and run only SelectedPublishedEvidenceTests and SelectedEvidenceMutationTests as an exact blocking step.'
++
++$projectGatesJobCandidates = @($ciJobBlocks | Where-Object { $_.Name -ceq 'project-gates' })
++if ($projectGatesJobCandidates.Count -ne 1) {
++    $failures.Add("CI must define exactly one project-gates job; found $($projectGatesJobCandidates.Count).")
++}
++$projectGatesJob = if ($projectGatesJobCandidates.Count -eq 1) { $projectGatesJobCandidates[0].Text } else { '' }
++$projectGatesStepNames = @(Get-NamedStepBlocks -JobText $projectGatesJob | ForEach-Object { $_.Name })
++if (($projectGatesStepNames -join "`n") -cne ($expectedProjectGatesStepNames -join "`n")) {
++    $failures.Add("project-gates must run exactly these steps in order: $($expectedProjectGatesStepNames -join '; '). Current G-6 runs in g6-current.")
++}
++Forbid-Match (Get-ActiveWorkflowText -Text $projectGatesJob) '(validate-runtime-toolchain-evidence|check_g6_packet_gitlinks|run_g6_candidate_gate|run_g6_ci_gate|run_g6_current|test_g6_packet_references)' 'project-gates must not run any G-6 check, so G-6 drift never skips the FrontComposer and OpenAPI gates.'
++Forbid-Match $projectGatesJob '^\s*continue-on-error:' 'project-gates must not tolerate failures with continue-on-error.'
++Forbid-Match $projectGatesJob '^    if:' 'project-gates must not be conditional.'
++Require-Match $projectGatesJob '(?m)^    needs: ci\r?$' 'Project gates must depend only on CI, independently of G-6 qualification.'
++$projectSteps = @(Get-NamedStepBlocks -JobText $projectGatesJob)
++foreach ($gate in @(
++    @{ Name = 'FrontComposer inspect gate'; Script = 'run-frontcomposer-inspect-gate.ps1' },
++    @{ Name = 'OpenAPI fingerprint / compatibility gate'; Script = 'run-openapi-fingerprint-gate.ps1' }
++)) {
++    $step = Get-RequiredNamedStep -Steps $projectSteps -Name $gate.Name -Owner 'project-gates'
++    $expected = "      - name: $($gate.Name)`n        shell: pwsh`n        timeout-minutes: 15`n        run: ./tests/tools/$($gate.Script)"
++    if ($null -ne $step -and (Get-TrimmedBlockText -Text $step.Text) -cne $expected) {
++        $failures.Add("$($gate.Name) must be an unconditional exact blocking command, independent of G-6.")
++    }
++}
++
++$e2eJobCandidates = @($ciJobBlocks | Where-Object { $_.Name -ceq 'e2e' })
++if ($e2eJobCandidates.Count -ne 1) {
++    $failures.Add("CI must define exactly one e2e job; found $($e2eJobCandidates.Count).")
++}
++else {
++    Require-Match $e2eJobCandidates[0].Text '(?m)^    needs:\r?\n      - ci\r?\n      - workflow-gates\r?\n      - project-gates\r?\n    steps:' 'Scheduled E2E must depend only on CI, workflow and project gates, independently of G-6 qualification.'
++}
++
++# The current result may fail without suppressing ordinary build and project gates.
++$g6CurrentJobCandidates = @($ciJobBlocks | Where-Object { $_.Name -ceq 'g6-current' })
++if ($g6CurrentJobCandidates.Count -ne 1) {
++    $failures.Add("CI must define exactly one g6-current job; found $($g6CurrentJobCandidates.Count).")
++}
++else {
++    $g6CurrentJob = $g6CurrentJobCandidates[0].Text
++    Require-Match $g6CurrentJob '(?m)^    needs: workflow-gates$' 'G-6 current must run independently of package and project gates.'
++    Require-Match $g6CurrentJob 'Restore effective G-6 package graphs' 'G-6 current must restore the audited package graph.'
++    Require-Match $g6CurrentJob 'Validate current G-6 preflight' 'G-6 current must exercise the preflight fixture after Builds initialization.'
++    Require-Match $g6CurrentJob 'Audit and qualify current G-6 when required' 'G-6 current must run the fail-closed selector.'
++    Require-Match $g6CurrentJob 'run_g6_ci_gate.py' 'G-6 current must use the source-aware gate.'
++    Require-Match $g6CurrentJob 'if-no-files-found: error' 'G-6 current must fail if its artifact is absent.'
++    Forbid-Match $g6CurrentJob 'continue-on-error:|g6-candidate|g6-acceptance' 'G-6 current must be blocking and independent of historical packets.'
++    Forbid-Match $g6CurrentJob '(?m)^    if:' 'G-6 current job must not be skipped.'
++    $g6CurrentSteps = @(Get-NamedStepBlocks -JobText $g6CurrentJob)
++    Require-G6PostgresqlPull -Steps $g6CurrentSteps -BeforeStep 'Audit and qualify current G-6 when required' -Owner 'g6-current'
++    $g6InitializeStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Initialize root-declared submodules' -Owner 'g6-current'
++    $g6PreflightStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Validate current G-6 preflight' -Owner 'g6-current'
++    if ($null -ne $g6PreflightStep) {
++        Forbid-Match $g6PreflightStep.Text '(?m)^\s{8}(if|continue-on-error):' 'Current G-6 preflight must always execute and block on failure.'
++    }
++    $g6DotnetStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Initialize .NET' -Owner 'g6-current'
++    if ($null -ne $g6DotnetStep -and $null -ne $g6PreflightStep -and $g6PreflightStep.Index -le $g6DotnetStep.Index) {
++        $failures.Add('Current G-6 build-property and packing controls must run after .NET initialization.')
++    }
++    Require-Match $g6PreflightStep.Text 'python3 -m unittest tests/tools/test_run_g6_current.py tests/tools/test_g6_qualification_runner.py -v' 'Current G-6 preflight must exercise runner environment and retention controls.'
++    $expectedG6PreflightStep = @(
++        '      - name: Validate current G-6 preflight'
++        '        shell: bash'
++        '        run: |'
++        '          python3 -m unittest tests/tools/test_run_g6_current.py tests/tools/test_g6_qualification_runner.py -v'
++        '          python3 -m unittest tests/tools/test_g6_deferred_contracts.py -v'
++        '          python3 references/Hexalith.Builds/Tools/test_package_readme.py -v'
++    ) -join "`n"
++    if ($null -ne $g6PreflightStep -and (Get-TrimmedBlockText -Text $g6PreflightStep.Text) -cne $expectedG6PreflightStep) {
++        $failures.Add('Current G-6 preflight must exercise deferred contract controls as a blocking command in the exact name/shell/run step.')
++    }
++    Require-Match $g6PreflightStep.Text 'python3 references/Hexalith.Builds/Tools/test_package_readme.py -v' 'Current G-6 preflight must exercise real package README controls.'
++
++    if ($null -ne $g6InitializeStep -and $null -ne $g6PreflightStep -and $g6PreflightStep.Index -le $g6InitializeStep.Index) {
++        $failures.Add('Current G-6 preflight fixtures must run after root submodule initialization.')
++    }
++    $g6GateStep = Get-RequiredNamedStep -Steps $g6CurrentSteps -Name 'Audit and qualify current G-6 when required' -Owner 'g6-current'
++    if ($null -ne $g6GateStep) {
++        Forbid-Match $g6GateStep.Text '(?m)^\s{8}(if|continue-on-error):' 'The current G-6 gate must always execute and block on failure.'
++    }
++}
++Forbid-Match $ci '(?m)^  g6-(?:candidate|acceptance):' 'Historical G-6 packet jobs must not gate current CI.'
++Forbid-Match $ci 'allow_stale_g6|ALLOW_STALE_G6' 'CI must not contain a stale G-6 bypass.'
++
++# This checks direct ci.yml references only; it does not traverse Builds callees.
++Require-Match $ci ('uses:\s*Hexalith/Hexalith\.Builds/\.github/workflows/domain-ci\.yml@' + $buildsExecutionSha) 'The direct ci.yml domain-ci reference must use the accepted package-aware workflow SHA.'
++Require-Match $ci '(?ms)^  ci:\r?\n\s+needs:\s*workflow-gates\r?\n\s+uses:' 'The reusable restore/build job must wait for independent workflow and package fixtures.'
++Forbid-Match $ci 'uses:\s*Hexalith/Hexalith\.Builds/.+@main' 'Direct ci.yml references must not select mutable Hexalith.Builds actions or workflows.'
++foreach ($buildsCall in [regex]::Matches($ci, 'uses:\s*Hexalith/Hexalith\.Builds/[^\s]+@([^\s#]+)')) {
++    if ($buildsCall.Groups[1].Value -cne $buildsExecutionSha) {
++        $failures.Add("Direct ci.yml reference executes Hexalith.Builds at '$($buildsCall.Groups[1].Value)' instead of '$buildsExecutionSha'.")
++    }
++}
++Require-Match $ci '^\s*test-platform:\s*microsoft-testing-platform\s*$' 'CI must explicitly select Microsoft.Testing.Platform.'
++Require-Match $ci '^\s*run-consumer-validation:\s*true\s*$' 'CI must enable shared package and real-consumer validation.'
++Require-Match $ci '^\s*build-timeout-minutes:\s*30\s*$' 'CI must preserve the accepted 30-minute shared build timeout.'
++
++# The reusable CI callee runs `dotnet restore "$SOLUTION"`: the input is one quoted
++# argument, so an embedded MSBuild switch becomes part of the project path (MSB1009).
++# `github.workspace` is also empty when a reusable-workflow `with:` block is evaluated,
++# so any path built from it silently resolves to the filesystem root. Release is now
++# caller-owned and its literal package-only restore/build commands are checked above.
++foreach ($caller in @(@{ Name = 'ci.yml'; Text = $ci })) {
++    $solutionInputs = [regex]::Matches($caller.Text, '(?m)^\s*solution:\s*(.+?)\s*$')
++    foreach ($solutionInput in $solutionInputs) {
++        $value = $solutionInput.Groups[1].Value
++        if ($value -match '^>-|^\|') {
++            $failures.Add("$($caller.Name) passes a multi-line solution input; it must be a bare solution path.")
++        }
++        elseif ($value -notmatch '^Hexalith\.Projects\.CI\.slnx$') {
++            $failures.Add("$($caller.Name) solution input must be the bare 'Hexalith.Projects.CI.slnx', not '$value'.")
++        }
++    }
++    if ($solutionInputs.Count -eq 0) {
++        $failures.Add("$($caller.Name) must pass a solution input to the reusable workflow.")
++    }
++}
++
++Forbid-Match $ci '^\s*solution:.*-p:' 'A solution input must not embed MSBuild switches; the callee quotes it as a single argument.'
++Forbid-Match $ci '^\s*(solution|.*-p:.*):.*\$\{\{ github\.workspace \}\}' 'github.workspace is empty when a reusable-workflow `with:` is evaluated; never build a path from it there.'
++Require-Match $ci '^\s*cancel-in-progress:\s*\$\{\{ github\.event_name != ''push'' \|\| github\.ref != ''refs/heads/main'' \}\}\s*$' 'Main push/release workflows must never be cancelled by a newer run.'
++Forbid-Match $ci '^\s*package-gates:\s*$' 'CI package creation and validation must stay in the accepted reusable workflow.'
++Require-Match $ci '^\s*e2e:\s*$' 'CI must include the scheduled E2E job.'
++Require-Match $ci "if:\s*\$\{\{ github\.event_name == 'schedule' \}\}" 'E2E must be limited to the scheduled lane.'
++Require-Match $ci 'npm --prefix tests/e2e ci --ignore-scripts' 'E2E must use the lockfile with lifecycle scripts disabled.'
++Require-Match $ci 'npm --prefix tests/e2e run install:browsers' 'E2E browser installation must be explicit.'
++Require-Match $ci 'uses:\s*\./references/Hexalith\.Builds/Github/dapr-init' 'Scheduled E2E must initialize Dapr through the reviewed root dependency.'
++Require-Match $ci "^\s*runtime-version:\s*'1\.19\.1'" 'Scheduled E2E must initialize the exact Dapr runtime 1.19.1.'
++Require-Match $ci 'dotnet tool install --global Aspire\.Cli --version 13\.6\.5' 'Scheduled E2E must install the repository-supported Aspire CLI version.'
++Require-Match $ci 'npm --prefix tests/e2e run test:live:managed' 'Scheduled E2E must use the managed AppHost lifecycle runner.'
++Require-Match $ci '^\s*TEST_USER_PASSWORD:\s*\$\{\{ secrets\.[A-Z0-9_]+ \}\}\s*$' 'Scheduled E2E credentials must come from a GitHub secret.'
++Require-Match $ci '^\s*if:\s*always\(\)\s*$' 'Scheduled E2E must unconditionally run exact-AppHost teardown.'
++Require-Match $ci 'aspire stop --apphost "\$GITHUB_WORKSPACE/src/Hexalith\.Projects\.AppHost/Hexalith\.Projects\.AppHost\.csproj" --non-interactive' 'Scheduled E2E teardown must target the exact Projects AppHost.'
++Require-Match $ci '^\s*if:\s*failure\(\)\s*$' 'E2E failure evidence must be uploaded on failure.'
++
++Require-Match $managedE2E '^trap cleanup EXIT\s*$' 'The managed E2E runner must unconditionally trap exact-AppHost cleanup.'
++Require-Match $managedE2E 'Projects__E2E__LiveFixtures=1' 'The managed E2E runner must explicitly enable the fixture profile.'
++Require-Match $managedE2E 'for resource in security eventstore tenants projects projects-workers projects-ui conversations folders memories live-fixtures' 'The managed E2E runner must wait for every required AppHost resource.'
++$describeMatches = [regex]::Matches($managedE2E, '(?m)^aspire describe --apphost ').Count
++if ($describeMatches -ne 1) {
++    $failures.Add("The managed E2E runner must describe the AppHost exactly once; found $describeMatches calls.")
++}
++Require-Match $managedE2E 'npx playwright test[\s\S]*live-apphost-startup\.spec\.ts[\s\S]*projects-authentication\.spec\.ts[\s\S]*--workers 2' 'The managed E2E runner must run startup/auth smoke with two workers.'
++Require-Match $managedE2E 'npx playwright test\s*\\\s*\r?\n\s*--project chromium\s*\\\s*\r?\n\s*--workers 2' 'The managed E2E runner must run the full Chromium lane with two workers.'
++Forbid-Match $managedE2E 'aspire stop --all' 'The managed E2E runner must never stop unrelated AppHosts.'
++
++# The managed lane owns the lifecycle as a structural invariant: the AppHost is marked owned before
++# it starts (so a partial start is still stopped), every wait is explicitly bounded, endpoints come
++# only from the single describe capture, and the smoke and full phases use distinct run identities.
++$runnerOwnedIndex = $managedE2E.IndexOf("`nstarted=1")
++$runnerStartIndex = $managedE2E.IndexOf("`naspire start --apphost ")
++if ($runnerOwnedIndex -lt 0 -or $runnerStartIndex -lt 0 -or $runnerOwnedIndex -gt $runnerStartIndex) {
++    $failures.Add('The managed E2E runner must mark the exact AppHost as owned before aspire start so teardown covers a partial start.')
++}
++Require-Match $managedE2E 'aspire wait "\$resource" --apphost "\$apphost" --timeout "\$resource_timeout_seconds" --non-interactive' 'The managed E2E runner must bound every resource wait explicitly.'
++Require-Match $managedE2E 'E2E_RUN_ID="\$run_id-smoke" npx playwright test' 'The managed E2E smoke phase must use its own run identity.'
++Require-Match $managedE2E 'E2E_RUN_ID="\$run_id-full" npx playwright test' 'The managed E2E full phase must use its own run identity.'
++foreach ($endpointName in @('BASE_URL', 'API_URL', 'EVENTSTORE_API_URL', 'KEYCLOAK_URL', 'FIXTURE_API_URL')) {
++    Require-Match $managedE2E ('^' + $endpointName + '="\$\(endpoint [a-z-]+ http\)"\s*$') "The managed E2E runner must derive $endpointName from the single describe capture."
++}
++Forbid-Match $managedE2E '(?i)(localhost|127\.0\.0\.1|\[::1\]):\d+' 'The managed E2E runner must never guess ports.'
++Forbid-Match $managedE2E '--(pass-with-no-tests|retries|grep-invert)\b' 'The managed E2E runner must not relax collection, retries, or selection.'
++
++$e2eJobs = @($ciJobBlocks | Where-Object { $_.Name -ceq 'e2e' })
++if ($e2eJobs.Count -ne 1) {
++    $failures.Add("CI must define exactly one scheduled e2e job; found $($e2eJobs.Count).")
++}
++else {
++    $e2eJobText = $e2eJobs[0].Text
++    $e2eSteps = @(Get-NamedStepBlocks -JobText $e2eJobText)
++    $e2eDaprStep = Get-RequiredNamedStep -Steps $e2eSteps -Name 'Initialize Dapr' -Owner 'Scheduled E2E'
++    if ($null -ne $e2eDaprStep) {
++        Require-Match $e2eDaprStep.Text "^\s*version:\s*'1\.19\.1'\s*$" 'Scheduled E2E must initialize the exact Dapr CLI 1.19.1.'
++        Require-Match $e2eDaprStep.Text "^\s*runtime-version:\s*'1\.19\.1'\s*$" 'Scheduled E2E must initialize the exact Dapr runtime 1.19.1.'
++    }
++    $e2eRunStep = Get-RequiredNamedStep -Steps $e2eSteps -Name 'Run managed AppHost E2E suite' -Owner 'Scheduled E2E'
++    $e2eStopStep = Get-RequiredNamedStep -Steps $e2eSteps -Name 'Stop the exact Projects AppHost' -Owner 'Scheduled E2E'
++    Require-Match $e2eJobText '^\s*submodules:\s*false\s*$' 'Scheduled E2E must check out without recursive submodules.'
++    Forbid-Match $e2eJobText '(?i)continue-on-error' 'Scheduled E2E must not continue on error.'
++    Forbid-Match $e2eJobText '\.auth' 'Scheduled E2E artifacts must never include browser session state.'
++    if ($null -ne $e2eRunStep) {
++        Require-Match $e2eRunStep.Text "^\s*CI:\s*'true'\s*$" 'The managed E2E run must build in CI package-reference mode.'
++        Require-Match $e2eRunStep.Text '^\s*run:\s*npm --prefix tests/e2e run test:live:managed\s*$' 'The managed E2E run must invoke only the lifecycle runner.'
++        Forbid-Match $e2eRunStep.Text '^\s*if:' 'The managed E2E run must not be conditional.'
++    }
++    if ($null -ne $e2eStopStep) {
++        Require-Match $e2eStopStep.Text '^\s*if:\s*always\(\)\s*$' 'The exact-AppHost stop step must run unconditionally.'
++        Require-Match $e2eStopStep.Text 'aspire stop --apphost "\$GITHUB_WORKSPACE/src/Hexalith\.Projects\.AppHost/Hexalith\.Projects\.AppHost\.csproj" --non-interactive' 'The scheduled stop step must target the exact Projects AppHost.'
++        Forbid-Match $e2eStopStep.Text 'aspire stop --all' 'The scheduled stop step must never stop unrelated AppHosts.'
++    }
++    if ($null -ne $e2eRunStep -and $null -ne $e2eStopStep -and $e2eStopStep.Index -lt $e2eRunStep.Index) {
++        $failures.Add('The exact-AppHost stop step must follow the managed E2E run.')
++    }
++}
++
++$playwrightConfigPath = Join-Path $repositoryRoot 'tests/e2e/playwright.config.ts'
++$zeroSkipReporterPath = Join-Path $repositoryRoot 'tests/e2e/reporters/zero-live-skip-reporter.ts'
++if (-not (Test-Path $playwrightConfigPath) -or -not (Test-Path $zeroSkipReporterPath)) {
++    $failures.Add('The Playwright config and the zero-live-skip reporter must exist.')
++}
++else {
++    $playwrightConfig = Get-Content -Path $playwrightConfigPath -Raw
++    $zeroSkipReporter = Get-Content -Path $zeroSkipReporterPath -Raw
++    Require-Match $playwrightConfig "LIVE_APPHOST_ENABLED \? \[\['\./reporters/zero-live-skip-reporter\.ts'\]\]" 'The live lane must register the zero-live-skip reporter.'
++    Require-Match $playwrightConfig 'workers:\s*LIVE_APPHOST_ENABLED \? 2\b' 'The live lane must run with two isolated workers.'
++    Require-Match $playwrightConfig "trace:\s*LIVE_APPHOST_ENABLED \? 'off'" 'Live traces carry bearer tokens and must stay disabled.'
++    Require-Match $zeroSkipReporter 'this\.collected === 0 \|\| this\.skipped\.size > 0' 'The zero-live-skip reporter must fail empty or skipped live runs.'
++    Require-Match $zeroSkipReporter "return \{ status: 'failed' \}" 'The zero-live-skip reporter must override the run status to failed.'
++}
++
++$testProjects = @(
++    'Hexalith.Projects.Contracts.Tests',
++    'Hexalith.Projects.Client.Tests',
++    'Hexalith.Projects.Tests',
++    'Hexalith.Projects.Server.Tests',
++    'Hexalith.Projects.UI.Tests',
++    'Hexalith.Projects.Mcp.Tests',
++    'Hexalith.Projects.Cli.Tests',
++    'Hexalith.Projects.Integration.Tests'
++)
++foreach ($testProject in $testProjects) {
++    Require-Match $ci ([regex]::Escape("tests/$testProject")) "CI does not list $testProject."
++    Require-Match $solution ([regex]::Escape("tests/$testProject/$testProject.csproj")) "CI solution does not include $testProject."
++}
++
++Require-Match $solution 'src/Hexalith\.Projects\.AppHost/Hexalith\.Projects\.AppHost\.csproj' 'CI solution must include AppHost so Integration.Tests has complete Release output.'
++Require-Match $frontComposerGate '--configuration Release' 'FrontComposer gate must inspect Release output.'
++Require-Match $frontComposerGate '--build' 'FrontComposer gate must build its own inspection inputs.'
++Require-Match $openApiGate '--configuration Release' 'OpenAPI gate must build its compatibility owner in Release.'
++Require-Match $openApiGate '-warnaserror' 'OpenAPI gate must fail on build warnings.'
++Require-Match $releaseConfig 'run-package-dependency-gate\.ps1' 'Semantic release must validate prepared packages before publication.'
++
++# Release and CI always consume sibling libraries as packages. Directory.Build.props
++# is imported before the SDK defaults an unset Configuration to Debug, so an unset
++# Configuration and an explicit Debug build may default to source projects. AppHost
++# executable resources are intentionally outside this library policy.
++Require-Match $directoryBuildProps ([regex]::Escape("'`$(CI)' == 'true'") + '">false<') 'CI must force UseHexalithProjectReferences=false.'
++Require-Match $directoryBuildProps ([regex]::Escape("'`$(UseHexalithProjectReferences)' == '' and ('`$(Configuration)' == '' or '`$(Configuration)' == 'Debug')") + '">true<') 'Only an unset Configuration or an explicit local Debug build may default to sibling project references.'
++$referenceModeTargets = @($directoryBuildPropsXml.Project.Target | Where-Object { $_.Name -eq 'RejectUnsafeHexalithProjectReferenceMode' })
++$expectedReferenceModeCondition = "'`$(UseHexalithProjectReferences)' == 'true' and ('`$(CI)' == 'true' or '`$(Configuration)' != 'Debug')"
++if ($referenceModeTargets.Count -ne 1 -or
++    $referenceModeTargets[0].BeforeTargets -ne 'Restore;PrepareForBuild' -or
++    $referenceModeTargets[0].Condition -ne $expectedReferenceModeCondition -or
++    $null -eq $referenceModeTargets[0].Error) {
++    $failures.Add('Directory.Build.props must reject explicit source mode in CI and every non-Debug configuration before restore/build.')
++}
++# The shared Hexalith.Builds catalog owns the Conversations/Folders version set.
++# The root must import it and must not redeclare, update, or remove those versions.
++[xml] $directoryPackagesXml = $directoryPackages
++$catalogImports = @($directoryPackagesXml.SelectNodes('/Project/Import[@Project="$(Hexalith1BuildPackageProps)"]'))
++$catalogPaths = @($directoryPackagesXml.SelectNodes('/Project/PropertyGroup/Hexalith1BuildPackageProps'))
++if ($catalogImports.Count -ne 1 -or
++    $catalogPaths.Count -ne 1 -or
++    $catalogPaths[0].InnerText.Trim() -cne '$(MSBuildThisFileDirectory)references/Hexalith.Builds/Props/Directory.Packages.props') {
++    $failures.Add('Directory.Packages.props must import the root-declared Hexalith.Builds package catalog.')
++}
++$rootPackageVersionIds = @($directoryPackagesXml.SelectNodes('//PackageVersion') |
++    ForEach-Object { $_.GetAttribute('Include'), $_.GetAttribute('Update'), $_.GetAttribute('Remove') } |
++    Where-Object { $_ } |
++    ForEach-Object { $_ -split ';' } |
++    ForEach-Object { $_.Trim() })
++foreach ($packageId in @('Hexalith.Conversations.Client', 'Hexalith.Conversations.Contracts', 'Hexalith.Folders.Client', 'Hexalith.Folders.Contracts')) {
++    if ($rootPackageVersionIds -contains $packageId) {
++        $failures.Add("$packageId version must be owned by the Hexalith.Builds package catalog, not root Directory.Packages.props.")
++    }
++}
++
++# MSBuild property names and environment imports are case-insensitive. Reject
++# declarations even under conditions so catalog ownership cannot vary by lane.
++foreach ($versionProperty in @('HexalithConversationsVersion', 'HexalithFoldersVersion')) {
++    foreach ($props in @(
++        @{ Name = 'Directory.Build.props'; Xml = $directoryBuildPropsXml },
++        @{ Name = 'Directory.Packages.props'; Xml = $directoryPackagesXml }
++    )) {
++        $declarations = @($props.Xml.SelectNodes('//*[local-name()="PropertyGroup"]/*') |
++            Where-Object { $_.LocalName -ieq $versionProperty })
++        if ($declarations.Count -gt 0) {
++            $failures.Add("$versionProperty must remain owned by the Hexalith.Builds package catalog; $($props.Name) declares it.")
++        }
++    }
++    $propertyPattern = [regex]::Escape($versionProperty)
++    $assignmentPatterns = @(
++        # YAML environment keys, including quoted and inline mapping keys.
++        ('(?im)^(?:\s*|[^\r\n#]*[,{]\s*)[''"]?' + $propertyPattern + '[''"]?\s*:'),
++        # Literal MSBuild switches and semicolon-separated property lists.
++        ('(?im)^[^\r\n#]*(?:--property:|[-/](?:p|property):)[^\r\n#]*\b' + $propertyPattern + '\s*='),
++        # Shell assignment commands and PowerShell environment drives.
++        ('(?im)^\s*(?:run:\s*)?(?:export\s+|env\s+)?[''"]?' + $propertyPattern + '='),
++        ('(?im)^\s*(?:run:\s*)?\$env:' + $propertyPattern + '\s*='),
++        ('(?im)^\s*(?:run:\s*)?(?:Set-Item|New-Item|Set-Content)\s+(?:(?:-Path|-LiteralPath)\s+)?[''"]?Env:' + $propertyPattern + '(?:[''"]|\s)'),
++        ('(?im)^\s*(?:run:\s*)?\[(?:System\.)?Environment\]::SetEnvironmentVariable\(\s*[''"]' + $propertyPattern + '[''"]'),
++        # GitHub's environment-file protocol accepts both NAME=value and NAME<<delimiter.
++        ('(?im)^[^\r\n#]*\b' + $propertyPattern + '[''"]?\s*(?:=|<<)[^\r\n#]*\bGITHUB_ENV\b')
++    )
++    if (@($assignmentPatterns | Where-Object { [regex]::IsMatch($activeWorkflowText, $_) }).Count -gt 0) {
++        $failures.Add("$versionProperty must remain owned by the Hexalith.Builds package catalog; an active workflow assigns it.")
++    }
++    foreach ($entry in [Environment]::GetEnvironmentVariables().GetEnumerator()) {
++        if ($entry.Key -ieq $versionProperty -and -not [string]::IsNullOrEmpty($entry.Value)) {
++            $failures.Add("$versionProperty must remain owned by the Hexalith.Builds package catalog; the inherited environment overrides it.")
++        }
++    }
++}
++
++# Archived evidence copies are immutable observations, not active project graphs.
++$activeProjectRoots = @('src', 'tests') | ForEach-Object { Join-Path $repositoryRoot $_ }
++$projectFiles = Get-ChildItem -Path $activeProjectRoots -Recurse -Filter '*.csproj' -File |
++    Where-Object { $_.FullName -notmatch '[\\/]references[\\/]' }
++foreach ($projectFile in $projectFiles) {
++    [xml] $projectXml = Get-Content -Path $projectFile.FullName -Raw
++    foreach ($reference in @($projectXml.Project.ItemGroup.ProjectReference)) {
++        if ($null -eq $reference -or $reference.Include -notlike '$(Hexalith*.csproj') {
++            continue
++        }
++
++        $normalizedInclude = $reference.Include -replace '\\', '/'
++        $relativeProjectPath = $projectFile.FullName.Substring($repositoryRoot.Length + 1) -replace '\\', '/'
++        $fixtureOutputTypes = @($projectXml.SelectNodes('/Project/PropertyGroup/OutputType'))
++        # This named executable fixture launches these four sibling executables.
++        # Keep its exception separate from every library and other consumer.
++        $isPackageFixtureExecutable = $relativeProjectPath -ceq 'tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj' -and
++            $fixtureOutputTypes.Count -eq 1 -and
++            $fixtureOutputTypes[0].InnerText.Trim() -ceq 'Exe' -and
++            [string]::IsNullOrWhiteSpace($fixtureOutputTypes[0].GetAttribute('Condition')) -and
++            [string]::IsNullOrWhiteSpace($fixtureOutputTypes[0].ParentNode.GetAttribute('Condition')) -and
++            $normalizedInclude -cin @(
++                '$(HexalithEventStoreRoot)/src/Hexalith.EventStore/Hexalith.EventStore.csproj',
++                '$(HexalithTenantsRoot)/src/Hexalith.Tenants/Hexalith.Tenants.csproj',
++                '$(HexalithFoldersRoot)/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj',
++                '$(HexalithFoldersRoot)/src/Hexalith.Folders.Workers/Hexalith.Folders.Workers.csproj'
++            )
++        $isAppHostExecutable = ($projectFile.Name -eq 'Hexalith.Projects.AppHost.csproj' -and
++            $normalizedInclude -in @('$(HexalithEventStoreRoot)/src/Hexalith.EventStore/Hexalith.EventStore.csproj', '$(HexalithTenantsRoot)/src/Hexalith.Tenants/Hexalith.Tenants.csproj')) -or $isPackageFixtureExecutable
++        $condition = if (-not [string]::IsNullOrWhiteSpace($reference.Condition)) { $reference.Condition } else { $reference.ParentNode.Condition }
++        # These exact hosts and internal tooling are not published as packages.
++        # They are permitted only in the named consumers with the strict source-mode
++        # condition; package mode must never include their implementation edges.
++        $sourceOnlyUnpackableDependencies = @(
++            '$(HexalithFoldersRoot)/src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj',
++            '$(HexalithFoldersRoot)/src/Hexalith.Folders.Workers/Hexalith.Folders.Workers.csproj',
++            '$(HexalithConversationsRoot)/src/Hexalith.Conversations.Server/Hexalith.Conversations.Server.csproj'
++        )
++        $sourceOnlyUnpackableConsumers = @(
++            'Hexalith.Projects.AppHost.csproj',
++            'Hexalith.Projects.Server.Tests.csproj'
++        )
++        $isSourceOnlyAppHostHelper = $projectFile.Name -eq 'Hexalith.Projects.AppHost.csproj' -and
++            $normalizedInclude -in @(
++                '$(HexalithFoldersRoot)/src/Hexalith.Folders.EventStore/Hexalith.Folders.EventStore.csproj',
++                '$(HexalithBuildsRoot)/src/libraries/Hexalith.Builds.Tooling/Hexalith.Builds.Tooling.csproj'
++            )
++        $isSourceOnlyUnpackableDependency = (($sourceOnlyUnpackableConsumers -contains $projectFile.Name -and
++            $sourceOnlyUnpackableDependencies -contains $normalizedInclude) -or $isSourceOnlyAppHostHelper) -and
++            $condition -eq "'`$(UseHexalithProjectReferences)' == 'true'"
++        $isConditionalSourceReference = $condition -eq "'`$(UseHexalithProjectReferences)' == 'true'" -or
++            $condition -eq "'`$(UseHexalithProjectReferences)' == 'true' and '`$(HexalithConversationsFromSource)' != 'false'"
++        if (-not $isAppHostExecutable -and -not $isSourceOnlyUnpackableDependency -and -not $isConditionalSourceReference) {
++            $failures.Add("$($projectFile.FullName.Substring($repositoryRoot.Length + 1)) has an unconditional sibling library ProjectReference: $($reference.Include)")
++        }
++
++        if (-not $isAppHostExecutable -and -not $isSourceOnlyUnpackableDependency) {
++            $packageId = [System.IO.Path]::GetFileNameWithoutExtension($normalizedInclude)
++            $matchingPackageReferences = @($projectXml.Project.ItemGroup.PackageReference | Where-Object { $_.Include -eq $packageId })
++            $hasPackageModeReference = $false
++            foreach ($packageReference in $matchingPackageReferences) {
++                $packageCondition = if (-not [string]::IsNullOrWhiteSpace($packageReference.Condition)) { $packageReference.Condition } else { $packageReference.ParentNode.Condition }
++                if ($packageCondition -eq "'`$(UseHexalithProjectReferences)' != 'true'" -or
++                    $packageCondition -eq "'`$(UseHexalithProjectReferences)' != 'true' or '`$(HexalithConversationsFromSource)' == 'false'") {
++                    $hasPackageModeReference = $true
++                }
++            }
++
++            if (-not $hasPackageModeReference) {
++                $failures.Add("$($projectFile.FullName.Substring($repositoryRoot.Length + 1)) has no package-mode $packageId reference for sibling project $($reference.Include)")
++            }
++        }
++    }
++}
++
++Forbid-Match $ci '^\s*release:\s*$' 'CI must not own a release job; release.yml owns publication.'
++Forbid-Match $allWorkflows '^\s*submodules:\s*(true|recursive)\s*$' 'Recursive or implicit recursive submodule checkout is forbidden.'
++Forbid-Match $allWorkflows 'git\s+[^\r\n]*submodule\s+[^\r\n]*--recursive' 'Recursive submodule commands are forbidden.'
++Forbid-Match $allWorkflows 'npm\s+(?:--prefix\s+\S+\s+)?install(?:\s|$)' 'Workflow dependency installation must not use npm install.'
++
++foreach ($workflowFile in $workflowFiles) {
++    $workflowText = Get-Content -Path $workflowFile.FullName -Raw
++    foreach ($usesReference in @(Get-UsesReferences -Text $workflowText)) {
++        $reference = $usesReference.Reference
++        if ($reference.StartsWith('./', [System.StringComparison]::Ordinal)) {
++            continue
++        }
++
++        $legacySharedWorkflowReference = "Hexalith/Hexalith.Builds/.github/workflows/$($workflowFile.Name)@main"
++        if ($workflowFile.Name -in @('codeql.yml', 'commitlint.yml', 'dependency-review.yml') -and
++            $reference -ceq $legacySharedWorkflowReference) {
++            continue
++        }
++
++        if ($reference -notmatch '@[0-9a-fA-F]{40}$') {
++            $failures.Add("$($workflowFile.Name):$($usesReference.LineNumber) uses a mutable or unreviewed action reference: $reference")
++        }
++    }
++}
++
++if ($failures.Count -gt 0) {
++    foreach ($failure in $failures) {
++        [Console]::Error.WriteLine("ci-workflow-gate: $failure")
++    }
++
++    exit 1
++}
++
++Write-Host "ci-workflow-gate: PASSED — $($workflowFiles.Count) workflow file(s), caller-owned Trusted Publishing, immutable release action refs, safe E2E, and root-only submodule policy validated."
++exit 0
+diff --git a/tests/tools/test_run_ci_workflow_gates.py b/tests/tools/test_run_ci_workflow_gates.py
+index 4a204162aada59bd2a722f205bdf75d70104231a..f0fd8fa703cac24cdbeb1ef032cb16e779bfbde6 100644
+--- a/tests/tools/test_run_ci_workflow_gates.py
++++ b/tests/tools/test_run_ci_workflow_gates.py
+@@ -1,334 +1,378 @@
+-"""Run the real workflow policy gate against isolated checkout mutations."""
+-
+-from __future__ import annotations
+-
+-import json
+-import os
+-import shutil
+-import subprocess
+-import sys
+-import tempfile
+-import unittest
+-from pathlib import Path
+-
+-
+-ROOT = Path(__file__).resolve().parents[2]
+-GATE = Path("tests/tools/run-ci-workflow-gates.ps1")
+-VERSION_PROPERTIES = ("HexalithConversationsVersion", "HexalithFoldersVersion")
+-PACKAGE_IDS = (
+-    "Hexalith.Conversations.Client", "Hexalith.Conversations.Contracts",
+-    "Hexalith.Folders.Client", "Hexalith.Folders.Contracts",
+-)
+-
+-
+-class WorkflowGateTests(unittest.TestCase):
+-    """Require success on the checkout and rejection of each controlled drift."""
+-
+-    def setUp(self) -> None:
+-        self.temporary = tempfile.TemporaryDirectory(prefix="projects-workflow-gate-")
+-        self.addCleanup(self.temporary.cleanup)
+-        self.root = Path(self.temporary.name)
+-        inputs = (
+-            GATE, Path("Hexalith.Projects.CI.slnx"), Path("release.config.cjs"),
+-            Path("Directory.Build.props"), Path("Directory.Packages.props"),
+-            Path("tools/release-packages.json"),
+-            Path("docs/runbooks/nuget-trusted-publishing.md"),
+-            Path("tests/tools/run-frontcomposer-inspect-gate.ps1"),
+-            Path("tests/tools/run-openapi-fingerprint-gate.ps1"),
+-            Path("tests/e2e/run-live-apphost.sh"),
+-            Path("tests/e2e/playwright.config.ts"),
+-            Path("tests/e2e/reporters/zero-live-skip-reporter.ts"),
+-        )
+-        projects = [path for directory in ("src", "tests")
+-                    for path in (ROOT / directory).rglob("*.csproj")]
+-        paths = [ROOT / path for path in inputs]
+-        paths.extend((ROOT / ".github/workflows").glob("*.y*ml"))
+-        paths.extend(projects)
+-        for source in paths:
+-            target = self.root / source.relative_to(ROOT)
+-            target.parent.mkdir(parents=True, exist_ok=True)
+-            shutil.copyfile(source, target)
+-
+-    def replace(self, path: str, before: str, after: str) -> None:
+-        target = self.root / path
+-        text = target.read_text(encoding="utf-8")
+-        self.assertIn(before, text)
+-        target.write_text(text.replace(before, after), encoding="utf-8")
+-
+-    def run_gate(self, *, environment: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+-        clean_environment = {key: value for key, value in os.environ.items()
+-                             if key.casefold() not in {name.casefold() for name in VERSION_PROPERTIES}}
+-        clean_environment.update(environment or {})
+-        return subprocess.run(
+-            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", str(self.root / GATE)],
+-            cwd=self.root, env=clean_environment, capture_output=True, text=True, timeout=30,
+-        )
+-
+-    def assert_rejected(self, diagnostic: str, **kwargs) -> None:
+-        result = self.run_gate(**kwargs)
+-        self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+-        self.assertIn(diagnostic, result.stderr)
+-        self.assertNotIn("PASSED", result.stdout)
+-
+-    def test_unpublished_apphost_helpers_require_the_exact_source_mode_condition(self) -> None:
+-        path = "src/Hexalith.Projects.AppHost/Hexalith.Projects.AppHost.csproj"
+-        target = self.root / path
+-        original = target.read_text()
+-        marker = "  <ItemGroup Condition=\"'$(UseHexalithProjectReferences)' == 'true'\">"
+-        self.assertEqual(1, original.count(marker))
+-        for condition in ("", " Condition=\"'$(UseHexalithProjectReferences)' != 'true'\""):
+-            with self.subTest(condition=condition):
+-                target.write_text(original.replace(marker, "  <ItemGroup" + condition + ">", 1))
+-                self.assert_rejected("unconditional sibling library ProjectReference")
+-        target.write_text(original)
+-
+-    def test_named_package_fixture_executable_edges_are_accepted(self) -> None:
+-        result = self.run_gate()
+-        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+-        self.assertIn("PASSED", result.stdout)
+-
+-    def test_package_fixture_exception_does_not_admit_library_references(self) -> None:
+-        path = "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
+-        self.replace(path, "</Project>", """
+-  <ItemGroup>
+-    <ProjectReference Include="$(HexalithEventStoreRoot)/src/Hexalith.EventStore.Abstractions/Hexalith.EventStore.Abstractions.csproj" />
+-  </ItemGroup>
+-</Project>""")
+-        self.assert_rejected("unconditional sibling library ProjectReference: $(HexalithEventStoreRoot)/src/Hexalith.EventStore.Abstractions/")
+-
+-    def test_package_fixture_exception_requires_the_exact_consumer_path(self) -> None:
+-        original = self.root / "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
+-        other = self.root / "tests/another-consumer" / original.name
+-        other.parent.mkdir()
+-        shutil.copyfile(original, other)
+-        self.assert_rejected("tests/another-consumer/Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference")
+-
+-    def test_package_fixture_exception_requires_an_unconditional_executable_type(self) -> None:
+-        target = self.root / "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
+-        original = target.read_text()
+-        for output in (
+-            "<OutputType>Library</OutputType>",
+-            '<OutputType Condition="false">Exe</OutputType>',
+-            "<OutputType>Exe</OutputType><OutputType>Library</OutputType>",
+-        ):
+-            with self.subTest(output=output):
+-                target.write_text(original.replace("<OutputType>Exe</OutputType>", output, 1))
+-                self.assert_rejected("Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference")
+-        target.write_text(original)
+-
+-    def test_archived_project_copies_are_ignored_but_active_copies_remain_checked(self) -> None:
+-        archive = Path("_bmad-output/implementation-artifacts/evidence/story-6-1-transport-20261102/"
+-                       "isolation-20261103/final-source-20261103/raw-changes")
+-        projects = (
+-            (Path("src/Hexalith.Projects.Workers/Hexalith.Projects.Workers.csproj"),
+-             "has no package-mode Hexalith.EventStore.ServiceDefaults reference"),
+-            (Path("tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj"),
+-             "unconditional sibling library ProjectReference"),
+-        )
+-        for project, _ in projects:
+-            target = self.root / archive / project
+-            target.parent.mkdir(parents=True, exist_ok=True)
+-            shutil.copyfile(ROOT / archive / project, target)
+-        result = self.run_gate()
+-        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+-        self.assertIn("PASSED", result.stdout)
+-        for project, diagnostic in projects:
+-            with self.subTest(project=project):
+-                active = self.root / project
+-                original = active.read_bytes()
+-                shutil.copyfile(ROOT / archive / project, active)
+-                self.assert_rejected(diagnostic)
+-                active.write_bytes(original)
+-
+-
+-
+-
+-    def test_catalog_package_versions_cannot_be_redeclared(self) -> None:
+-        for operation in ("Include", "Update", "Remove"):
+-            for package_id in PACKAGE_IDS:
+-                with self.subTest(operation=operation, package_id=package_id):
+-                    path = self.root / "Directory.Packages.props"
+-                    original = path.read_text()
+-                    entry = f'<ItemGroup><PackageVersion {operation}="{package_id}" Version="9.9.9" /></ItemGroup>'
+-                    path.write_text(original.replace("</Project>", entry + "</Project>"))
+-                    self.assert_rejected(f"{package_id} version must be owned")
+-                    path.write_text(original)
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-    def test_case_variant_semicolon_and_choose_entries_are_rejected(self) -> None:
+-        self.replace("Directory.Packages.props", "</Project>", """
+-  <Choose><When Condition="'true' == 'true'"><ItemGroup>
+-    <PackageVersion Update="Unrelated; hexalith.folders.client" Version="9.9.9" />
+-  </ItemGroup></When></Choose>
+-</Project>""")
+-        self.assert_rejected("Hexalith.Folders.Client version must be owned")
+-
+-    def test_catalog_import_must_be_present_unique_and_root_owned(self) -> None:
+-        path = self.root / "Directory.Packages.props"
+-        original = path.read_text()
+-        import_line = next(line for line in original.splitlines()
+-                           if '<Import Project="$(Hexalith1BuildPackageProps)"' in line)
+-        mutations = (
+-            original.replace(import_line, ""),
+-            original.replace(import_line, import_line + "\n" + import_line),
+-            original.replace("references/Hexalith.Builds/Props/", "elsewhere/"),
+-            original.replace("</Project>", "<PropertyGroup><Hexalith1BuildPackageProps>other</Hexalith1BuildPackageProps></PropertyGroup></Project>"),
+-        )
+-        for index, text in enumerate(mutations):
+-            with self.subTest(index=index):
+-                path.write_text(text)
+-                self.assert_rejected("must import the root-declared Hexalith.Builds package catalog")
+-
+-    def test_harmless_comments_and_unrelated_properties_and_packages_pass(self) -> None:
+-        self.replace("Directory.Packages.props", "</Project>", """
+-  <!-- <PropertyGroup><HexalithFoldersVersion>9.9.9</HexalithFoldersVersion></PropertyGroup> -->
+-  <!-- <ItemGroup><PackageVersion Include="Hexalith.Folders.Client" Version="9.9.9" /></ItemGroup> -->
+-  <PropertyGroup><UnrelatedVersion>1.0.0</UnrelatedVersion></PropertyGroup>
+-  <ItemGroup><PackageVersion Include="Unrelated" Version="1.0.0" /></ItemGroup>
+-</Project>""")
+-        self.replace(".github/workflows/ci.yml", "name: CI", "name: CI\n# HexalithFoldersVersion: 9.9.9")
+-        result = self.run_gate(environment={"HexalithFoldersVersion": ""})
+-        self.assertEqual(0, result.returncode, result.stderr)
+-
+-    def test_root_props_cannot_override_version_set_properties(self) -> None:
+-        for filename in ("Directory.Build.props", "Directory.Packages.props"):
+-            for property_name in VERSION_PROPERTIES:
+-                with self.subTest(filename=filename, property_name=property_name):
+-                    path = self.root / filename
+-                    original = path.read_text()
+-                    name = property_name.lower()
+-                    entry = f'<Choose><When Condition="false"><PropertyGroup><{name}>9.9.9</{name}></PropertyGroup></When></Choose>'
+-                    path.write_text(original.replace("</Project>", entry + "</Project>"))
+-                    self.assert_rejected(f"{property_name} must remain owned by the Hexalith.Builds package catalog")
+-                    path.write_text(original)
+-
+-
+-    def test_inherited_version_set_overrides_are_rejected_case_insensitively(self) -> None:
+-        for property_name in VERSION_PROPERTIES:
+-            with self.subTest(property_name=property_name):
+-                self.assert_rejected(
+-                    f"{property_name} must remain owned by the Hexalith.Builds package catalog",
+-                    environment={property_name.lower(): "9.9.9"},
+-                )
+-
+-    def test_namespaced_msbuild_properties_cannot_override_catalog(self) -> None:
+-        self.replace("Directory.Build.props", "<Project>", '<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">')
+-        self.replace("Directory.Build.props", "</Project>", """
+-  <PropertyGroup><HexalithFoldersVersion>9.9.9</HexalithFoldersVersion></PropertyGroup>
+-</Project>""")
+-        self.assert_rejected("HexalithFoldersVersion must remain owned by the Hexalith.Builds package catalog")
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-class FrontComposerInspectionTests(unittest.TestCase):
+-    """Execute the real helper on a fresh checkout with a controlled tool."""
+-
+-    def setUp(self) -> None:
+-        self.temporary = tempfile.TemporaryDirectory(prefix="frontcomposer fresh gate ")
+-        self.addCleanup(self.temporary.cleanup)
+-        self.root = Path(self.temporary.name)
+-        self.helper = self.root / "tests/tools/run-frontcomposer-inspect-gate.ps1"
+-        self.helper.parent.mkdir(parents=True)
+-        shutil.copyfile(ROOT / self.helper.relative_to(self.root), self.helper)
+-        self.contracts = self.root / "src/Hexalith.Projects.UI.Contracts"
+-        self.contracts.mkdir(parents=True)
+-        (self.contracts / "Projection.cs").write_text("[Projection]\nclass FixtureProjection {}\n")
+-        (self.contracts / "Hexalith.Projects.UI.Contracts.csproj").write_text("<Project />\n")
+-        self.record = self.root / "tool-call.json"
+-        self.bin = self.root / "tools"
+-        self.bin.mkdir()
+-        executable = self.bin / "dotnet"
+-        executable.write_text(f"#!{sys.executable}\n" + '''import json, os, sys
+-from pathlib import Path
+-args = sys.argv[1:]
+-if args[:5] != ["tool", "run", "frontcomposer", "--", "inspect"]:
+-    print("Unexpected source-tool invocation", file=sys.stderr)
+-    raise SystemExit(91)
+-project = Path(args[args.index("--project") + 1])
+-generated = project.parent / "obj/Release/generated/HexalithFrontComposer/Fixture.g.cs"
+-record = {"args": args, "cwd": str(Path.cwd()), "generated_before": generated.exists()}
+-Path(os.environ["FRONTCOMPOSER_STUB_RECORD"]).write_text(json.dumps(record))
+-if ("--build" not in args or "--fail-on-warning" not in args
+-        or args[args.index("--configuration") + 1] != "Release"):
+-    print("Missing fresh Release build or warning failure control", file=sys.stderr)
+-    raise SystemExit(92)
+-mode = os.environ["FRONTCOMPOSER_STUB_MODE"]
+-print("retained Release build output")
+-if mode == "build-failure":
+-    print("retained compiler failure", file=sys.stderr)
+-    raise SystemExit(17)
+-generated.parent.mkdir(parents=True)
+-generated.write_text("// fresh generated output\\n")
+-if mode == "warning":
+-    print("warning FC0001: retained generator warning", file=sys.stderr)
+-    raise SystemExit(23)
+-print("retained successful inspection output")
+-''')
+-        executable.chmod(0o755)
+-
+-    def run_helper(self, mode: str) -> subprocess.CompletedProcess[str]:
+-        environment = dict(os.environ, FRONTCOMPOSER_STUB_BIN=str(self.bin),
+-                           FRONTCOMPOSER_STUB_HELPER=str(self.helper),
+-                           FRONTCOMPOSER_STUB_RECORD=str(self.record), FRONTCOMPOSER_STUB_MODE=mode)
+-        # Some hosts launch pwsh through dotnet; replace PATH after that host starts.
+-        command = ("$env:PATH = $env:FRONTCOMPOSER_STUB_BIN + [IO.Path]::PathSeparator + $env:PATH\n"
+-                   "& $env:FRONTCOMPOSER_STUB_HELPER\n"
+-                   "$helperSucceeded = $?\n"
+-                   "if (-not $helperSucceeded) { if ($LASTEXITCODE) { exit $LASTEXITCODE }; exit 1 }\n"
+-                   "exit 0")
+-        return subprocess.run(
+-            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", command],
+-            cwd=self.root, env=environment, capture_output=True, text=True, timeout=30,
+-        )
+-
+-    def test_fresh_checkout_builds_and_inspects_release_with_the_packaged_tool(self) -> None:
+-        self.assertFalse((self.contracts / "obj").exists())
+-        result = self.run_helper("success")
+-        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+-        call = json.loads(self.record.read_text())
+-        self.assertFalse(call["generated_before"])
+-        self.assertEqual(str(self.root), call["cwd"])
+-        self.assertEqual([
+-            "tool", "run", "frontcomposer", "--", "inspect", "--project",
+-            str(self.contracts / "Hexalith.Projects.UI.Contracts.csproj"),
+-            "--configuration", "Release", "--build", "--fail-on-warning",
+-        ], call["args"])
+-        self.assertIn("retained successful inspection output", result.stdout)
+-        self.assertIn("PASSED", result.stdout)
+-
+-    def test_failed_fresh_build_retains_diagnostics_and_exit_code(self) -> None:
+-        result = self.run_helper("build-failure")
+-        self.assertEqual(17, result.returncode, result.stdout + result.stderr)
+-        self.assertIn("retained Release build output", result.stdout)
+-        self.assertIn("retained compiler failure", result.stderr)
+-        self.assertNotIn("PASSED", result.stdout)
+-
+-    def test_generated_warnings_remain_failures_with_diagnostics(self) -> None:
+-        result = self.run_helper("warning")
+-        self.assertEqual(23, result.returncode, result.stdout + result.stderr)
+-        self.assertIn("warning FC0001: retained generator warning", result.stderr)
+-        self.assertNotIn("PASSED", result.stdout)
+-
+-    def test_missing_annotated_inputs_fail_before_tool_execution(self) -> None:
+-        (self.contracts / "Projection.cs").unlink()
+-        result = self.run_helper("success")
+-        self.assertNotEqual(0, result.returncode, result.stdout + result.stderr)
+-        self.assertIn("no [Projection]/[Command] files found", result.stderr)
+-        self.assertFalse(self.record.exists())
+-
+-
+-if __name__ == "__main__":
+-    unittest.main()
++"""Run the real workflow policy gate against isolated checkout mutations."""
++
++from __future__ import annotations
++
++import json
++import os
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++from pathlib import Path
++
++
++ROOT = Path(__file__).resolve().parents[2]
++GATE = Path("tests/tools/run-ci-workflow-gates.ps1")
++VERSION_PROPERTIES = ("HexalithConversationsVersion", "HexalithFoldersVersion")
++PACKAGE_IDS = (
++    "Hexalith.Conversations.Client", "Hexalith.Conversations.Contracts",
++    "Hexalith.Folders.Client", "Hexalith.Folders.Contracts",
++)
++
++
++class WorkflowGateTests(unittest.TestCase):
++    """Require success on the checkout and rejection of each controlled drift."""
++
++    def setUp(self) -> None:
++        self.temporary = tempfile.TemporaryDirectory(prefix="projects-workflow-gate-")
++        self.addCleanup(self.temporary.cleanup)
++        self.root = Path(self.temporary.name)
++        inputs = (
++            GATE, Path("Hexalith.Projects.CI.slnx"), Path("release.config.cjs"),
++            Path("Directory.Build.props"), Path("Directory.Packages.props"),
++            Path("tools/release-packages.json"),
++            Path("docs/runbooks/nuget-trusted-publishing.md"),
++            Path("tests/tools/run-frontcomposer-inspect-gate.ps1"),
++            Path("tests/tools/run-openapi-fingerprint-gate.ps1"),
++            Path("tests/e2e/run-live-apphost.sh"),
++            Path("tests/e2e/playwright.config.ts"),
++            Path("tests/e2e/reporters/zero-live-skip-reporter.ts"),
++        )
++        projects = [path for directory in ("src", "tests")
++                    for path in (ROOT / directory).rglob("*.csproj")]
++        paths = [ROOT / path for path in inputs]
++        paths.extend((ROOT / ".github/workflows").glob("*.y*ml"))
++        paths.extend(projects)
++        for source in paths:
++            target = self.root / source.relative_to(ROOT)
++            target.parent.mkdir(parents=True, exist_ok=True)
++            shutil.copyfile(source, target)
++
++    def replace(self, path: str, before: str, after: str) -> None:
++        target = self.root / path
++        text = target.read_text(encoding="utf-8")
++        self.assertIn(before, text)
++        target.write_text(text.replace(before, after), encoding="utf-8")
++
++    def run_gate(self, *, environment: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
++        clean_environment = {key: value for key, value in os.environ.items()
++                             if key.casefold() not in {name.casefold() for name in VERSION_PROPERTIES}}
++        clean_environment.update(environment or {})
++        return subprocess.run(
++            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", str(self.root / GATE)],
++            cwd=self.root, env=clean_environment, capture_output=True, text=True, timeout=30,
++        )
++
++    def assert_rejected(self, diagnostic: str, **kwargs) -> None:
++        result = self.run_gate(**kwargs)
++        self.assertEqual(1, result.returncode, result.stdout + result.stderr)
++        self.assertIn(diagnostic, result.stderr)
++        self.assertNotIn("PASSED", result.stdout)
++
++    def test_reviewed_prerequisite_jobs_reject_any_changed_execution(self) -> None:
++        path = self.root / ".github/workflows/release.yml"
++        original = path.read_text()
++        for before, after in (
++            ("--profile projects --report prerequisite-qualification.json", "--profile eventstore --report prerequisite-qualification.json"),
++            ("--profile projects --report prerequisite-publication.json", "--profile eventstore --report prerequisite-publication.json"),
++        ):
++            with self.subTest(before=before):
++                self.assertIn(before, original)
++                path.write_text(original.replace(before, after))
++                self.assert_rejected("differs from the exact owner-qualified publisher")
++        path.write_text(original)
++
++    def test_unrelated_release_job_remains_forbidden(self) -> None:
++        self.replace(".github/workflows/release.yml", "jobs:\n", "jobs:\n  unrelated-publisher:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo forbidden\n")
++        self.assert_rejected("additional jobs are forbidden")
++
++    def test_root_execution_context_and_dispatch_default_cannot_drift(self) -> None:
++        path = self.root / ".github/workflows/release.yml"
++        original = path.read_text()
++        for before, after in (
++            ("default: full", "default: contracts-prerequisite"),
++            ("jobs:\n", "defaults:\n  run:\n    shell: python\njobs:\n"),
++            ("jobs:\n", "defaults:\n  run:\n    working-directory: does-not-exist\njobs:\n"),
++        ):
++            with self.subTest(after=after):
++                self.assertIn(before, original)
++                path.write_text(original.replace(before, after))
++                self.assert_rejected("root context differs from the approved publication profiles")
++        path.write_text(original)
++
++    def test_approved_release_workflow_accepts_crlf(self) -> None:
++        path = self.root / ".github/workflows/release.yml"
++        original = path.read_text()
++        path.write_bytes(original.replace("\r\n", "\n").replace("\n", "\r\n").encode())
++        result = self.run_gate()
++        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
++
++    def test_full_release_profile_guard_cannot_be_disabled(self) -> None:
++        self.replace(".github/workflows/release.yml",
++            "    if: ${{ inputs.release-profile != 'contracts-prerequisite' && inputs.release-profile != 'contracts-prerequisite-verify' }}",
++            "    if: ${{ false }}")
++        self.assert_rejected("full-release preflight may select only the normal full-release profile")
++
++    def test_unpublished_apphost_helpers_require_the_exact_source_mode_condition(self) -> None:
++        path = "src/Hexalith.Projects.AppHost/Hexalith.Projects.AppHost.csproj"
++        target = self.root / path
++        original = target.read_text()
++        marker = "  <ItemGroup Condition=\"'$(UseHexalithProjectReferences)' == 'true'\">"
++        self.assertEqual(1, original.count(marker))
++        for condition in ("", " Condition=\"'$(UseHexalithProjectReferences)' != 'true'\""):
++            with self.subTest(condition=condition):
++                target.write_text(original.replace(marker, "  <ItemGroup" + condition + ">", 1))
++                self.assert_rejected("unconditional sibling library ProjectReference")
++        target.write_text(original)
++
++    def test_named_package_fixture_executable_edges_are_accepted(self) -> None:
++        result = self.run_gate()
++        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
++        self.assertIn("PASSED", result.stdout)
++
++    def test_package_fixture_exception_does_not_admit_library_references(self) -> None:
++        path = "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
++        self.replace(path, "</Project>", """
++  <ItemGroup>
++    <ProjectReference Include="$(HexalithEventStoreRoot)/src/Hexalith.EventStore.Abstractions/Hexalith.EventStore.Abstractions.csproj" />
++  </ItemGroup>
++</Project>""")
++        self.assert_rejected("unconditional sibling library ProjectReference: $(HexalithEventStoreRoot)/src/Hexalith.EventStore.Abstractions/")
++
++    def test_package_fixture_exception_requires_the_exact_consumer_path(self) -> None:
++        original = self.root / "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
++        other = self.root / "tests/another-consumer" / original.name
++        other.parent.mkdir()
++        shutil.copyfile(original, other)
++        self.assert_rejected("tests/another-consumer/Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference")
++
++    def test_package_fixture_exception_requires_an_unconditional_executable_type(self) -> None:
++        target = self.root / "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
++        original = target.read_text()
++        for output in (
++            "<OutputType>Library</OutputType>",
++            '<OutputType Condition="false">Exe</OutputType>',
++            "<OutputType>Exe</OutputType><OutputType>Library</OutputType>",
++        ):
++            with self.subTest(output=output):
++                target.write_text(original.replace("<OutputType>Exe</OutputType>", output, 1))
++                self.assert_rejected("Hexalith.Projects.PackageFixtures.AppHost.csproj has an unconditional sibling library ProjectReference")
++        target.write_text(original)
++
++    def test_archived_project_copies_are_ignored_but_active_copies_remain_checked(self) -> None:
++        archive = Path("_bmad-output/implementation-artifacts/evidence/story-6-1-transport-20261102/"
++                       "isolation-20261103/final-source-20261103/raw-changes")
++        projects = (
++            (Path("src/Hexalith.Projects.Workers/Hexalith.Projects.Workers.csproj"),
++             "has no package-mode Hexalith.EventStore.ServiceDefaults reference"),
++            (Path("tests/Hexalith.Projects.Integration.Tests/Hexalith.Projects.Integration.Tests.csproj"),
++             "unconditional sibling library ProjectReference"),
++        )
++        for project, _ in projects:
++            target = self.root / archive / project
++            target.parent.mkdir(parents=True, exist_ok=True)
++            shutil.copyfile(ROOT / archive / project, target)
++        result = self.run_gate()
++        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
++        self.assertIn("PASSED", result.stdout)
++        for project, diagnostic in projects:
++            with self.subTest(project=project):
++                active = self.root / project
++                original = active.read_bytes()
++                shutil.copyfile(ROOT / archive / project, active)
++                self.assert_rejected(diagnostic)
++                active.write_bytes(original)
++
++
++
++
++    def test_catalog_package_versions_cannot_be_redeclared(self) -> None:
++        for operation in ("Include", "Update", "Remove"):
++            for package_id in PACKAGE_IDS:
++                with self.subTest(operation=operation, package_id=package_id):
++                    path = self.root / "Directory.Packages.props"
++                    original = path.read_text()
++                    entry = f'<ItemGroup><PackageVersion {operation}="{package_id}" Version="9.9.9" /></ItemGroup>'
++                    path.write_text(original.replace("</Project>", entry + "</Project>"))
++                    self.assert_rejected(f"{package_id} version must be owned")
++                    path.write_text(original)
++
++
++
++
++
++
++
++
++
++    def test_case_variant_semicolon_and_choose_entries_are_rejected(self) -> None:
++        self.replace("Directory.Packages.props", "</Project>", """
++  <Choose><When Condition="'true' == 'true'"><ItemGroup>
++    <PackageVersion Update="Unrelated; hexalith.folders.client" Version="9.9.9" />
++  </ItemGroup></When></Choose>
++</Project>""")
++        self.assert_rejected("Hexalith.Folders.Client version must be owned")
++
++    def test_catalog_import_must_be_present_unique_and_root_owned(self) -> None:
++        path = self.root / "Directory.Packages.props"
++        original = path.read_text()
++        import_line = next(line for line in original.splitlines()
++                           if '<Import Project="$(Hexalith1BuildPackageProps)"' in line)
++        mutations = (
++            original.replace(import_line, ""),
++            original.replace(import_line, import_line + "\n" + import_line),
++            original.replace("references/Hexalith.Builds/Props/", "elsewhere/"),
++            original.replace("</Project>", "<PropertyGroup><Hexalith1BuildPackageProps>other</Hexalith1BuildPackageProps></PropertyGroup></Project>"),
++        )
++        for index, text in enumerate(mutations):
++            with self.subTest(index=index):
++                path.write_text(text)
++                self.assert_rejected("must import the root-declared Hexalith.Builds package catalog")
++
++    def test_harmless_comments_and_unrelated_properties_and_packages_pass(self) -> None:
++        self.replace("Directory.Packages.props", "</Project>", """
++  <!-- <PropertyGroup><HexalithFoldersVersion>9.9.9</HexalithFoldersVersion></PropertyGroup> -->
++  <!-- <ItemGroup><PackageVersion Include="Hexalith.Folders.Client" Version="9.9.9" /></ItemGroup> -->
++  <PropertyGroup><UnrelatedVersion>1.0.0</UnrelatedVersion></PropertyGroup>
++  <ItemGroup><PackageVersion Include="Unrelated" Version="1.0.0" /></ItemGroup>
++</Project>""")
++        self.replace(".github/workflows/ci.yml", "name: CI", "name: CI\n# HexalithFoldersVersion: 9.9.9")
++        result = self.run_gate(environment={"HexalithFoldersVersion": ""})
++        self.assertEqual(0, result.returncode, result.stderr)
++
++    def test_root_props_cannot_override_version_set_properties(self) -> None:
++        for filename in ("Directory.Build.props", "Directory.Packages.props"):
++            for property_name in VERSION_PROPERTIES:
++                with self.subTest(filename=filename, property_name=property_name):
++                    path = self.root / filename
++                    original = path.read_text()
++                    name = property_name.lower()
++                    entry = f'<Choose><When Condition="false"><PropertyGroup><{name}>9.9.9</{name}></PropertyGroup></When></Choose>'
++                    path.write_text(original.replace("</Project>", entry + "</Project>"))
++                    self.assert_rejected(f"{property_name} must remain owned by the Hexalith.Builds package catalog")
++                    path.write_text(original)
++
++
++    def test_inherited_version_set_overrides_are_rejected_case_insensitively(self) -> None:
++        for property_name in VERSION_PROPERTIES:
++            with self.subTest(property_name=property_name):
++                self.assert_rejected(
++                    f"{property_name} must remain owned by the Hexalith.Builds package catalog",
++                    environment={property_name.lower(): "9.9.9"},
++                )
++
++    def test_namespaced_msbuild_properties_cannot_override_catalog(self) -> None:
++        self.replace("Directory.Build.props", "<Project>", '<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">')
++        self.replace("Directory.Build.props", "</Project>", """
++  <PropertyGroup><HexalithFoldersVersion>9.9.9</HexalithFoldersVersion></PropertyGroup>
++</Project>""")
++        self.assert_rejected("HexalithFoldersVersion must remain owned by the Hexalith.Builds package catalog")
++
++
++
++
++
++
++
++
++
++class FrontComposerInspectionTests(unittest.TestCase):
++    """Execute the real helper on a fresh checkout with a controlled tool."""
++
++    def setUp(self) -> None:
++        self.temporary = tempfile.TemporaryDirectory(prefix="frontcomposer fresh gate ")
++        self.addCleanup(self.temporary.cleanup)
++        self.root = Path(self.temporary.name)
++        self.helper = self.root / "tests/tools/run-frontcomposer-inspect-gate.ps1"
++        self.helper.parent.mkdir(parents=True)
++        shutil.copyfile(ROOT / self.helper.relative_to(self.root), self.helper)
++        self.contracts = self.root / "src/Hexalith.Projects.UI.Contracts"
++        self.contracts.mkdir(parents=True)
++        (self.contracts / "Projection.cs").write_text("[Projection]\nclass FixtureProjection {}\n")
++        (self.contracts / "Hexalith.Projects.UI.Contracts.csproj").write_text("<Project />\n")
++        self.record = self.root / "tool-call.json"
++        self.bin = self.root / "tools"
++        self.bin.mkdir()
++        executable = self.bin / "dotnet"
++        executable.write_text(f"#!{sys.executable}\n" + '''import json, os, sys
++from pathlib import Path
++args = sys.argv[1:]
++if args[:5] != ["tool", "run", "frontcomposer", "--", "inspect"]:
++    print("Unexpected source-tool invocation", file=sys.stderr)
++    raise SystemExit(91)
++project = Path(args[args.index("--project") + 1])
++generated = project.parent / "obj/Release/generated/HexalithFrontComposer/Fixture.g.cs"
++record = {"args": args, "cwd": str(Path.cwd()), "generated_before": generated.exists()}
++Path(os.environ["FRONTCOMPOSER_STUB_RECORD"]).write_text(json.dumps(record))
++if ("--build" not in args or "--fail-on-warning" not in args
++        or args[args.index("--configuration") + 1] != "Release"):
++    print("Missing fresh Release build or warning failure control", file=sys.stderr)
++    raise SystemExit(92)
++mode = os.environ["FRONTCOMPOSER_STUB_MODE"]
++print("retained Release build output")
++if mode == "build-failure":
++    print("retained compiler failure", file=sys.stderr)
++    raise SystemExit(17)
++generated.parent.mkdir(parents=True)
++generated.write_text("// fresh generated output\\n")
++if mode == "warning":
++    print("warning FC0001: retained generator warning", file=sys.stderr)
++    raise SystemExit(23)
++print("retained successful inspection output")
++''')
++        executable.chmod(0o755)
++
++    def run_helper(self, mode: str) -> subprocess.CompletedProcess[str]:
++        environment = dict(os.environ, FRONTCOMPOSER_STUB_BIN=str(self.bin),
++                           FRONTCOMPOSER_STUB_HELPER=str(self.helper),
++                           FRONTCOMPOSER_STUB_RECORD=str(self.record), FRONTCOMPOSER_STUB_MODE=mode)
++        # Some hosts launch pwsh through dotnet; replace PATH after that host starts.
++        command = ("$env:PATH = $env:FRONTCOMPOSER_STUB_BIN + [IO.Path]::PathSeparator + $env:PATH\n"
++                   "& $env:FRONTCOMPOSER_STUB_HELPER\n"
++                   "$helperSucceeded = $?\n"
++                   "if (-not $helperSucceeded) { if ($LASTEXITCODE) { exit $LASTEXITCODE }; exit 1 }\n"
++                   "exit 0")
++        return subprocess.run(
++            ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", command],
++            cwd=self.root, env=environment, capture_output=True, text=True, timeout=30,
++        )
++
++    def test_fresh_checkout_builds_and_inspects_release_with_the_packaged_tool(self) -> None:
++        self.assertFalse((self.contracts / "obj").exists())
++        result = self.run_helper("success")
++        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
++        call = json.loads(self.record.read_text())
++        self.assertFalse(call["generated_before"])
++        self.assertEqual(str(self.root), call["cwd"])
++        self.assertEqual([
++            "tool", "run", "frontcomposer", "--", "inspect", "--project",
++            str(self.contracts / "Hexalith.Projects.UI.Contracts.csproj"),
++            "--configuration", "Release", "--build", "--fail-on-warning",
++        ], call["args"])
++        self.assertIn("retained successful inspection output", result.stdout)
++        self.assertIn("PASSED", result.stdout)
++
++    def test_failed_fresh_build_retains_diagnostics_and_exit_code(self) -> None:
++        result = self.run_helper("build-failure")
++        self.assertEqual(17, result.returncode, result.stdout + result.stderr)
++        self.assertIn("retained Release build output", result.stdout)
++        self.assertIn("retained compiler failure", result.stderr)
++        self.assertNotIn("PASSED", result.stdout)
++
++    def test_generated_warnings_remain_failures_with_diagnostics(self) -> None:
++        result = self.run_helper("warning")
++        self.assertEqual(23, result.returncode, result.stdout + result.stderr)
++        self.assertIn("warning FC0001: retained generator warning", result.stderr)
++        self.assertNotIn("PASSED", result.stdout)
++
++    def test_missing_annotated_inputs_fail_before_tool_execution(self) -> None:
++        (self.contracts / "Projection.cs").unlink()
++        result = self.run_helper("success")
++        self.assertNotEqual(0, result.returncode, result.stdout + result.stderr)
++        self.assertIn("no [Projection]/[Command] files found", result.stderr)
++        self.assertFalse(self.record.exists())
++
++
++if __name__ == "__main__":
++    unittest.main()

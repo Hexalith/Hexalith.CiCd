@@ -1,0 +1,36 @@
+test_preparation_order_bounds_source_flags_and_nonsecret_exports (test_ci.CiHooksTests.test_preparation_order_bounds_source_flags_and_nonsecret_exports) ... FAIL
+
+======================================================================
+FAIL: test_preparation_order_bounds_source_flags_and_nonsecret_exports (test_ci.CiHooksTests.test_preparation_order_bounds_source_flags_and_nonsecret_exports)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_ci.py", line 602, in test_preparation_order_bounds_source_flags_and_nonsecret_exports
+    self.assertEqual(['tests/Hexalith.McpCli.EventStoreGateway.TestHost/Hexalith.McpCli.EventStoreGateway.TestHost.csproj',
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      'src/Hexalith.Tenants/Hexalith.Tenants.csproj', 'src/Hexalith.Parties/Hexalith.Parties.csproj'],
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [call[3] for call in source_builds])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['tests/Hexalith.McpCli.EventStoreGateway.T[150 chars]roj'] != ['src/Hexalith.Tenants/Hexalith.Tenants.csp[48 chars]roj']
+
+First differing element 0:
+'tests/Hexalith.McpCli.EventStoreGateway.T[53 chars]proj'
+'src/Hexalith.Tenants/Hexalith.Tenants.csproj'
+
+First list contains 1 additional elements.
+First extra element 2:
+'src/Hexalith.Parties/Hexalith.Parties.csproj'
+
+- ['tests/Hexalith.McpCli.EventStoreGateway.TestHost/Hexalith.McpCli.EventStoreGateway.TestHost.csproj',
+-  'src/Hexalith.Tenants/Hexalith.Tenants.csproj',
+? ^
+
++ ['src/Hexalith.Tenants/Hexalith.Tenants.csproj',
+? ^
+
+   'src/Hexalith.Parties/Hexalith.Parties.csproj']
+
+----------------------------------------------------------------------
+Ran 1 test in 7.563s
+
+FAILED (failures=1)

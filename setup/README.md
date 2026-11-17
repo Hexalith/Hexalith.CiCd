@@ -55,6 +55,21 @@ CI runs the two test hooks; `nightly` runs only in the Release workflow's
 `nightly-hook` job. Each Windows job `<name>` renders as CI workflow job ID
 `windows-<name>` (the example above becomes `windows-windows-tests`), while its
 action path and exclusion target keep the configured name.
+Hosted macOS jobs use the same minimal `windows-<name>` ID contract as current
+main; they still run on `macos-latest` and consume validated CI outputs for one
+package-mode Release build. `aspire: true` requires `dapr: true` and enables the
+trusted Linux amd64 native toolchain in shared environment preparation:
+authenticated Aspire CLI/DCP/dashboard, native libraries and namespace probes,
+and a private Python environment with pinned jsonschema. Product hooks receive
+`HEXALITH_CI_PYTHON` and `HEXALITH_CI_ASPIRE_QUALIFIED_BUNDLE`; they can reuse the
+interpreter and compare the installed bundle against authenticated bytes without
+repeating setup. It requires the trusted exact Core/ASP.NET runtime inventory.
+Installation and namespace failures fail CI before product hooks. Only disposable
+GitHub-hosted runners may receive the bounded AppArmor namespace adjustment.
+Module launchers own their source fixtures, runtime state, provenance, case
+selection and cleanup. These additive fields must be supported by the released
+`builds-version` tag before a registration uses them; older complete v1
+configurations remain valid.
 The render does not inspect modules or check action existence. Exclusions must
 name an enabled hook or job. The Builds submodule is implicit; `submodules` lists
 additional direct dependencies. With `solution: none`, tests/hooks/jobs must be

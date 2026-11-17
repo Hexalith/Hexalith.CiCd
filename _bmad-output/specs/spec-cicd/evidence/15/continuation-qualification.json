@@ -1,0 +1,368 @@
+{
+  "recorded_at": "2026-11-16T19:07:28.573321+00:00",
+  "status": "in-progress; independent draft qualification, not adoption",
+  "root_baseline": "d3f3ef864c08cd89e390246d1a5d1dedffc4a92b",
+  "product_baseline": "e2e3db7ba2d45d61feacc39c41b3051310fbc57f",
+  "product_sources": {
+    ".github/actions/after-unit-tests/action.yml": {
+      "sha256": "a8a241db9bc24bff876a634662e177325962b801aff557b0025eaa1b5328a972",
+      "mode": "0o664"
+    },
+    ".github/actions/macos-product/action.yml": {
+      "sha256": "882a74afe801ce5ef24580e89337730b70616d5ee1042ba101f9df7d3312cc9a",
+      "mode": "0o664"
+    },
+    ".github/actions/windows-product/action.yml": {
+      "sha256": "afab7a74de0f02afa6b3e855418c17a700a464dec12c4b7c3731ec123501d2cb",
+      "mode": "0o664"
+    },
+    "package-lock.json": {
+      "deleted": true
+    },
+    "package.json": {
+      "deleted": true
+    },
+    "scripts/product_ci.py": {
+      "sha256": "0ef43f370a5391c1550300cb1ff8d7c7656f479d82e7b8f038169efe1947196a",
+      "mode": "0o664"
+    },
+    "scripts/product_packages.py": {
+      "sha256": "f191208baad3731ab234cb096e62a72be9995992316ee947e5860212d432ee46",
+      "mode": "0o664"
+    },
+    "scripts/product_process.py": {
+      "sha256": "c96f2ce499003b480b1b141d25b3f4e9b5457d57cc6c101844dac2cfb7ec8b91",
+      "mode": "0o664"
+    },
+    "scripts/run-paired-platform-tests.py": {
+      "sha256": "d209bed8a912d0daf3f605cb63fa8dc0031996a39526555d0619a8fbe9acf5d3",
+      "mode": "0o664"
+    },
+    "scripts/smoke-bootstrap-consumer.sh": {
+      "sha256": "cf530db728002fc30c670cc76424e99dcdc751bf7d9f5701978345d96034ee84",
+      "mode": "0o664"
+    },
+    "scripts/smoke-paired-tool.py": {
+      "sha256": "dfe8fd9c2bb21e6a6bcadee251f518665e19cf7b16da0c5ffb227e9d6a079298",
+      "mode": "0o664"
+    },
+    "scripts/tests/select-release-version.test.mjs": {
+      "deleted": true
+    },
+    "scripts/tests/test_bootstrap_release.py": {
+      "deleted": true
+    },
+    "scripts/tests/test_paired_publication.py": {
+      "deleted": true
+    },
+    "scripts/tests/test_paired_release.py": {
+      "deleted": true
+    },
+    "scripts/tests/test_paired_smoke.py": {
+      "sha256": "0739cb50006e3fd7ae91a536ecc2d05241ccdebccde17dcb764dec763bb0a8bf",
+      "mode": "0o664"
+    },
+    "scripts/tests/test_product_ci.py": {
+      "sha256": "4b44c9709d84c6dbf88cc64a25b952da72adf9509edf40f7b16e9c7de90077b6",
+      "mode": "0o664"
+    },
+    "scripts/tests/test_product_packages.py": {
+      "sha256": "e875cd65bdd2700b5009cd8a368f6f2030387fbf4ae237958287032c05cc2e55",
+      "mode": "0o664"
+    },
+    "scripts/tests/test_product_process.py": {
+      "sha256": "29b6989fa6bb87ebd74630f022fdbe6e8f0dd840c67a3b53f48f1d1c40478dca",
+      "mode": "0o664"
+    },
+    "scripts/validate-release-packages.py": {
+      "sha256": "63e430110238a60fb88f83aa385fa038836f141540f868d9de8a14814a987980",
+      "mode": "0o664"
+    },
+    "src/Hexalith.McpCli.Core/Hexalith.McpCli.Core.csproj": {
+      "sha256": "6342e9629aada93300123c191b02fa7dd5ecea946283f168e9059c6270f727b3",
+      "mode": "0o664"
+    },
+    "tests/Hexalith.McpCli.AppHost/NativeCatalogRuntime.cs": {
+      "sha256": "e5feb05971d5ae6570d697bbac8afd5d844958a7a82d58edc4f8510b50fcdc5d",
+      "mode": "0o664"
+    },
+    "tests/Hexalith.McpCli.AppHost/NativeSourceFixtures.cs": {
+      "sha256": "da733db252c897f13ba90bd8bb71fdfa4832382bb8bf65228e05b887ecac11b7",
+      "mode": "0o664"
+    },
+    "tests/Hexalith.McpCli.AppHost/Program.cs": {
+      "sha256": "811790d2602c532e4aca41fe252ef52a576489bbc4fd59314a8b6e89088489fb",
+      "mode": "0o664"
+    },
+    "tests/Hexalith.McpCli.Core.Tests/CatalogPerformanceTests.cs": {
+      "sha256": "6a364ffcc7ad8c14742494f2e16e2a104ef6ce18316ed8e5037e28aad849f9a5",
+      "mode": "0o664"
+    },
+    "tools/conformance-vectors/v1/check_enrolled.py": {
+      "sha256": "b6bf918d5d7fb6c37fc1642083113d2d245af029e8679b19bd9540836b3201ec",
+      "mode": "0o664"
+    },
+    "tools/conformance-vectors/v1/run-sample-loopback.sh": {
+      "sha256": "901e3722113d2776bdbe5540674f45c067083711a8474049473b2454cd8738bf",
+      "mode": "0o775"
+    },
+    "tools/conformance-vectors/v1/run-sample-validation.sh": {
+      "sha256": "0287114b6424a517047b94860bc3a5c06c00d3f01e7c13e02c869f96f648838c",
+      "mode": "0o775"
+    },
+    "tools/conformance-vectors/v1/run_packaged_process_fixture.py": {
+      "sha256": "aee0fd17d1ebf1c970fe5e67d62e1490b728b31b113e1476e111611fa6f70573",
+      "mode": "0o664"
+    },
+    "tools/conformance-vectors/v1/test_enrolled.py": {
+      "sha256": "345af3c72a233d27c26c9cb165d8426864930fe3f9e2a462465eac694a1e013c",
+      "mode": "0o664"
+    },
+    "tools/conformance-vectors/v1/verify_artifact.py": {
+      "sha256": "6d81900b0bd125b420e6f9b37ff8985b7d6fbed2e6b0f654c0a637aede018261",
+      "mode": "0o664"
+    },
+    "tools/live-topology/ci.py": {
+      "sha256": "ab0bbdf0391a82145113f634b825da26cc439f6c235ccfd10593de6bb27682cf",
+      "mode": "0o664"
+    },
+    "tools/live-topology/native_audit.py": {
+      "sha256": "13d24bc124dbb5fa8024ffc1a4e2a40983a55194ac8191fadaa37a0dbb34098a",
+      "mode": "0o664"
+    },
+    "tools/live-topology/native_sources.py": {
+      "sha256": "e384c5ef5feb7d771cf4755b5683f410ec9ec133458fb75f2c2cc8ef1bb5c19f",
+      "mode": "0o664"
+    },
+    "tools/live-topology/run-ci.sh": {
+      "sha256": "146cde1684a39fad4508024f37d1d93e4e8574e3a89bce118628b5a5148e2fae",
+      "mode": "0o664"
+    },
+    "tools/live-topology/test_ci.py": {
+      "sha256": "1da32bdd5e8ca26dd1c0835aa937f12f8e7c9ee079cbe964870f4a7a6f4e1259",
+      "mode": "0o664"
+    },
+    "tools/live-topology/test_native_audit.py": {
+      "sha256": "a8b5d550751e4fe11f6d3ba2a9e971100ff36f240e9a05be81e650d79da1eb04",
+      "mode": "0o664"
+    },
+    "tools/live-topology/test_native_sources.py": {
+      "sha256": "596b17db8a4a973f13ddc95a4e131a6696ecdb66eaa2a4f962449b266ee18e78",
+      "mode": "0o664"
+    }
+  },
+  "nested_builds_initialized": false,
+  "builds_source": "6db97d4e9da392ef691ed3f367e73f1b7d2ef318",
+  "independent_builds_main": "26031f097198f001380c23f4b9fb855c3d7b88c6",
+  "qualified_prior_builds_ci": {
+    "source": "1f41d266bd4bd04acde7b64e8c907eb34233fe0f",
+    "run": 43914543010,
+    "conclusion": "success; real native Linux installer and actual Windows/macOS sample lanes"
+  },
+  "checks": {
+    "product_scripts": {
+      "tests": 70,
+      "log": "product-scripts-full-final.log",
+      "result": "pass"
+    },
+    "conformance": {
+      "tests": 188,
+      "log": "conformance-private-fixture-tests-final.log",
+      "result": "pass"
+    },
+    "native_launcher": {
+      "log": "native-launcher-full-python312-final.log",
+      "result": "failed:3 discovery fixture expectation failures,108 tests/1470.832s; corrected focused rerun underway",
+      "tests": 108,
+      "failures": 3,
+      "seconds": 1470.832
+    },
+    "other_native_suites": {
+      "tests": 149,
+      "failures": 9,
+      "errors": 47,
+      "log": "native-other-suites-python312-final.log",
+      "result": "failed; actual Integration.Tests/tool/ConformanceHost/assets absent in dependency-blocked checkout; no skips or assertion changes",
+      "classification": "native-other-suite-prerequisites.json",
+      "required_after_genuine_build": true
+    },
+    "focused_native_regressions": {
+      "tests": 16,
+      "seconds": 247.074,
+      "log": "native-launcher-targeted-final.log",
+      "result": "pass"
+    },
+    "native_windows_process": {
+      "log": "windows-product-process-qualification.json",
+      "result": "pass; attended host focused probe, not hosted complete module acceptance"
+    },
+    "builds_schema": {
+      "tests_each": 18,
+      "interpreters": [
+        "3.12",
+        "3.14"
+      ],
+      "log": "builds-rebased-config-tests.log",
+      "result": "pass"
+    },
+    "builds_prepare_environment": {
+      "log": "builds-long-path-rebased-tests.log",
+      "result": "pass",
+      "prepare_tests_each": 31,
+      "environment_tests_each": 30,
+      "interpreters": [
+        "3.12",
+        "3.14"
+      ]
+    },
+    "renderer": {
+      "result": "pass",
+      "tests_each": 36,
+      "interpreters": [
+        "3.12",
+        "3.14"
+      ],
+      "log": "renderer-latest-main-compatible-final.log",
+      "scope": "Current schema/loader defaults and timeout precedence; independent central defaults explicitly preserved. Old published-tag caller bytes unchanged."
+    },
+    "hosted_windows_long_path": {
+      "result": "pass",
+      "run": 43923585572,
+      "job": 133497977246,
+      "source": "86f184164caf0733cee86c3b63ad904c96bc0934",
+      "log": "builds-hosted-windows-long-path.log"
+    },
+    "native_discovery_corrections": {
+      "log": "native-discovery-fixture-corrections-final.log",
+      "result": "pass",
+      "growth_tests": 2,
+      "receipt_field_tests": 1
+    },
+    "native_windows_bash_directory": {
+      "log": "windows-bash-directory-qualification.json",
+      "result": "pass; attended focused path probe"
+    },
+    "native_windows_unicode": {
+      "log": "windows-product-unicode-probe.json",
+      "result": "pass; native cp1252 locale with Python UTF-8 mode off; explicit UTF-8 diagnostics retained"
+    },
+    "native_launcher_final": {
+      "log": "native-launcher-full-python312-rerun.log",
+      "result": "pass",
+      "expected_tests": 109,
+      "production_native_sources_unchanged": true,
+      "tests": 109,
+      "seconds": 2539.651,
+      "evidence": "native-launcher-full-qualification.json",
+      "before_after_source_hashes_identical": true,
+      "private_workspace_removed": true
+    },
+    "render_current_published_pin": {
+      "result": "pass",
+      "log": "render-current-pin-final.log",
+      "pin": "v6.0.6; no registration or version bump"
+    },
+    "shared_bf6_combined": {
+      "source": "bf6ee6fec6a67b25fe74b4101d855ef6dfd2912a",
+      "result": "pass",
+      "schema_tests_each": 18,
+      "prepare_tests_each": 31,
+      "environment_tests_each": 37,
+      "interpreters": [
+        "3.12",
+        "3.14"
+      ],
+      "log": "builds-current-main-combined-tests.log",
+      "scope": "Historical combined local qualification; later independent source qualified by actual hosted runs, not asserted identical"
+    },
+    "catalog_canonical_equivalence": {
+      "result": "pass",
+      "complete_map_cases": 26,
+      "finite_roles": 16,
+      "central_entries": 317,
+      "regression_methods_each": 7,
+      "interpreters": [
+        "3.12",
+        "3.14"
+      ],
+      "evidence": "catalog-include-equivalence.json",
+      "log": "catalog-canonical-includes-tests.log"
+    },
+    "current_catalog_audit": {
+      "result": "pass",
+      "source_commit": "4869e69d55fd8a62ce00f5e54e0dff1b2975641a",
+      "affected_family": "dotnet-10",
+      "selected_versions_unchanged": 317,
+      "unrequested_families_preserved": 156,
+      "evidence": "builds-current-audit-refresh.json",
+      "log": "builds-current-audit-refresh.log",
+      "auditor_regressions": "113 generator/109 validator passed earlier with identical auditor sources; not repeated"
+    }
+  },
+  "budget": "ci-budget.md;360-minute shared Linux job bound. Observed controlled native tests42.3275min; complete non-live/native/OS module and overall workflow timing still unqualified.",
+  "provisioning": "provisioning-status.json; complete authenticated prerequisites; policy20113 deletion and immutable releases enable held for immediate post-adoption",
+  "blockers": [
+    "Required public Hexalith.Projects.Contracts2.0.0-story66.3 remains absent in the authenticated/public18:57 readback; preserve enrollment pending publication coordination",
+    "Current exact-source shared CI and an acceptable immutable bot-authored Builds release through genuine central nightly are still prerequisites",
+    "Final committed package-mode product build/ordinary tests/consumer/platform/live checks and pre-push owned-content comparison, product push, setup/registration/render/pins, committed-candidate validation, App adoption, immediate cleanup and next genuine nightly remain incomplete"
+  ],
+  "shared_builds_ci": {
+    "source": "6db97d4e9da392ef691ed3f367e73f1b7d2ef318",
+    "run": 43935156026,
+    "url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43935156026",
+    "status": "queued",
+    "conclusion": "",
+    "observed_jobs": [
+      {
+        "name": "Package catalog contracts",
+        "status": "in_progress",
+        "conclusion": ""
+      },
+      {
+        "name": "Workflow lint and public API",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Python contract tests (runner)",
+        "status": "in_progress",
+        "conclusion": ""
+      },
+      {
+        "name": "Python contract tests (3.12)",
+        "status": "in_progress",
+        "conclusion": ""
+      },
+      {
+        "name": ".NET tests / Build and tests",
+        "status": "in_progress",
+        "conclusion": ""
+      },
+      {
+        "name": "Sample module / Build and tests",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Sample macOS tests",
+        "status": "queued",
+        "conclusion": ""
+      },
+      {
+        "name": "Sample Windows tests",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Sample module / Restore owned CI/CD content",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ]
+  },
+  "product_candidate_tree": "2863bf588d0537c8603edeac23e28b70ee226b4d",
+  "product_patch": "mcpcli-product-preparation.patch",
+  "candidate_note": "Uncommitted draft tree from a private temporary Git index; not a commit, push, source-built package receipt or module acceptance. Final committed qualification remains required.",
+  "product_patch_sha256": "7ae3110963e466260902dd7d06c0b0e2c669e5948c5e59641ef35c756c145330",
+  "local_children": "All launched disposable local qualification/patch jobs completed and were reaped; native and audit private scratch removed."
+}

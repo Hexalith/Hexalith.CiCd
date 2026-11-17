@@ -1,0 +1,48 @@
+{
+  "recorded_at": "2026-11-16T15:26:50.899167+00:00",
+  "profile": "/home/administrator/.config/gh",
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/code-scanning/analyses?per_page=100",
+      "exit": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": [
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "body": {
+        "message": "no analysis found",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+        "status": "404"
+      },
+      "stderr": "gh: no analysis found (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook\n"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.McpCli/code-scanning/alerts?per_page=100",
+      "exit": 1,
+      "status": "HTTP/2.0 404 Not Found",
+      "permission_headers": [
+        "X-Accepted-Oauth-Scopes: admin:repo_hook, delete_repo, read:repo_hook, repo, repo:invite, repo:status, repo_deployment, security_events, write:repo_hook",
+        "X-Oauth-Scopes: admin:org, gist, read:packages, repo, workflow"
+      ],
+      "body": {
+        "message": "no analysis found",
+        "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-a-repository",
+        "status": "404"
+      },
+      "stderr": "gh: no analysis found (HTTP 404)\ngh: This API operation needs the \"admin:repo_hook\" scope. To request it, run:  gh auth refresh -h github.com -s admin:repo_hook\n"
+    }
+  ],
+  "scope_diagnosis": "The accepted-scope header includes repo and the profile holds repo. The typed no-analysis response is not diagnosed as a permission failure from the gh hint.",
+  "official_documentation": [
+    {
+      "url": "https://docs.github.com/en/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+      "observation": "Lists all analyses; the documented 404 status is Resource not found. The docs do not document the exact no analysis found body."
+    },
+    {
+      "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps",
+      "observation": "X-Accepted-OAuth-Scopes names scopes checked by the action; security_events is a narrower grant used without repository code access. The observed accepted-scope header includes repo, which the intended profile holds."
+    }
+  ],
+  "conclusion": "The typed absence is repeated for filtered analyses, unfiltered analyses and alerts. No stale analysis deletion target is identified and no new permission/token is requested. A read-only security UI inventory was not performed; the parent will continue provisioning."
+}

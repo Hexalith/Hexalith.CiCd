@@ -99,8 +99,8 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Rule:**
   - A module's CI/CD configuration is the rendered `.github/hexalith-ci.json`: `schema`, `buildsTag`, `solution`, `dapr`, `browsers`, `registry`, `npmWorkspaces`, `dotnetTools`, `codeql`, `tests`, `hooks`, `jobs` and `submodules`.
   - Builds' CI, Builds' release and `check.py` read it from the checkout, through the AD-4 loader.
-  - It is complete: every knob is written out, so no reader applies a default or accepts a missing key.
-  - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, the Windows jobs (which take `solution` from the `ci` job's output, AD-12) and the publish job with its environment.
+  - It is complete: every knob is written out, so no reader applies a default or accepts a missing key. Additive native fields `aspire` and `job-timeout-minutes` may be omitted when the selected contract treats omission as disabled Aspire and the configured CI budget.
+  - The rendered callers carry only what `uses:` and job structure need: the Builds tag, triggers, permissions, concurrency, `cache-mode`, the secrets passed by name, hosted Windows/macOS jobs (which consume validated `ci` outputs, AD-12), an explicitly selected CI timeout and the publish job with its environment.
   - At run time Builds reads CiCd only for the guard and the release drift check (AD-8, AD-17).
 
 ### AD-2 — Builds is module-agnostic
@@ -122,6 +122,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - **Knobs:**
     - `solution`: a repo-relative path, or `none`, which runs stage 1 only and releases a GitHub release only.
     - `dapr`, `browsers`, `registry`; default-disabled `dotnetTools` and `npmWorkspaces` (story 18).
+    - Optional `aspire` (requires `dapr`) and native `job-timeout-minutes`, with AD-12's runtime and budget constraints.
     - At the next compatible Builds release, `ciTimeoutMinutes`: an integer from 1 to 360, default 30, materialized in the complete document and forwarded to the existing numeric `job-timeout-minutes` workflow input. Earlier tags retain their own contract and callers (story 23).
     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
@@ -321,6 +322,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        - Dapr if `dapr`, at the one Dapr version pinned in Builds;
        - browsers if `browsers`, or if stage 4 holds an E2E project;
        - registry login if `registry`, with the pull-only pair.
+       - the trusted Linux amd64 Aspire CLI and its verified embedded DCP/dashboard bundle, native prerequisites, namespace probe and pinned private Python tooling if `aspire`; this requires `dapr`. Exact Core/ASP.NET runtime selection is checked before hooks. Namespace configuration is bounded and allowed only on disposable GitHub-hosted runners.
 
        Then hook `after-unit-tests`, then integration tests project by project, then hook `after-integration-tests`.
   - The environment setup is one Builds composite. CI stage 4 and `prepare` on Linux use it.
@@ -360,7 +362,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Rule:**
   - Custom actions are composite only, at `.github/actions/<hook-name or job-name>/action.yml`, and always resolve from the workspace root.
   - The hooks are exactly `after-unit-tests`, `after-integration-tests` and `nightly`, with one action per hook point. That action may call local sub-actions.
-  - An action may use any language. A hook action assumes a restored, Release-built workspace with the Builds environment set up; a Windows job's action assumes a restored, Release-built workspace only. No action rebuilds the module or calls Builds. Product-owned fixtures may provision isolated pinned runtimes/backends and fixture-consumer projects; they preserve shared infrastructure and reuse current-module Release outputs.
+  - An action may use any language. A hook action assumes a restored, Release-built workspace with the Builds environment set up; a Windows or macOS job's action assumes a restored, Release-built workspace only. No action rebuilds the module or calls Builds. Product-owned fixtures may provision isolated pinned runtimes/backends and fixture-consumer projects; they preserve shared infrastructure and reuse current-module Release outputs. Module-owned isolated launchers retain product audit/provenance checks, diagnostics and bounded cleanup.
   - It gets a read-only token. Every secret its job references is readable by all of that job's steps, so the CI job and `nightly-hook` hold only the pull-only registry pair. Private-service secrets go only to the approved manual qualification job (AD-12), passed explicitly by name; ordinary hooks and nightly receive no Azure authority.
   - Directories that are not enabled stay dormant: linted and scanned, never run.
   - Failure means a failed step. Actions may retain native product reports and bounded fixture diagnostics; story/agent/workflow governance evidence is not a product gate.

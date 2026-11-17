@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-11-16T19:02:32.088822+00:00",
+  "kind": "complete controlled native launcher regression suite; not live module acceptance",
+  "python": "3.12.13",
+  "jsonschema": "4.26.0; exact hash-locked shared requirements",
+  "result": "pass",
+  "tests": 109,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "seconds": 2539.651,
+  "log": "native-launcher-full-python312-rerun.log",
+  "log_sha256": "ffd790162be8e9ae18c6564025cd059a23f20b50545cfc954d5b95231f8ed310",
+  "source_sha256": {
+    "tools/live-topology/ci.py": "ab0bbdf0391a82145113f634b825da26cc439f6c235ccfd10593de6bb27682cf",
+    "tools/live-topology/native_audit.py": "13d24bc124dbb5fa8024ffc1a4e2a40983a55194ac8191fadaa37a0dbb34098a",
+    "tools/live-topology/native_sources.py": "e384c5ef5feb7d771cf4755b5683f410ec9ec133458fb75f2c2cc8ef1bb5c19f",
+    "tools/live-topology/test_ci.py": "1da32bdd5e8ca26dd1c0835aa937f12f8e7c9ee079cbe964870f4a7a6f4e1259"
+  },
+  "before_after_source_hashes_identical": true,
+  "private_workspace_removed": true,
+  "historical_failed_attempt": {
+    "log": "native-launcher-full-python312-final.log",
+    "tests": 108,
+    "failures": 3,
+    "seconds": 1470.832,
+    "reason": "discovery-era fixture expectations corrected without changing production native source"
+  }
+}

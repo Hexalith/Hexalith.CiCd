@@ -1,0 +1,56 @@
+{
+  "at": "2026-11-17T08:17:09.533178+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "checks": [
+    {
+      "verb": "get",
+      "resource": "secrets",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "create",
+      "resource": "secrets",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "patch",
+      "resource": "secret/distribution-registry-htpasswd",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "get",
+      "resource": "secret/distribution-registry-htpasswd",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "patch",
+      "resource": "configmap/distribution-registry-config",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "get",
+      "resource": "configmap/distribution-registry-config",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "patch",
+      "resource": "deployment/distribution-registry",
+      "allowed": true,
+      "exit": 0
+    },
+    {
+      "verb": "get",
+      "resource": "deployment/distribution-registry",
+      "allowed": true,
+      "exit": 0
+    }
+  ],
+  "remoteMutations": false
+}

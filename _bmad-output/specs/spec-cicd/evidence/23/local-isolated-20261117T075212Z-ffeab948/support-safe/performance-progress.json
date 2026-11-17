@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "phase": "Seeding",
+  "status": "incomplete",
+  "failedPhase": null,
+  "benchmarkPassed": false,
+  "fixtureDisposed": false,
+  "commandsAccepted": 20000,
+  "configurationWritesAccepted": 6661,
+  "tenantsSeeded": 0,
+  "elapsedSeconds": 447.7429354,
+  "phaseElapsedSeconds": 444.01899180000004,
+  "completedPhaseSeconds": {
+    "FixtureCreated": 0.0241395,
+    "FixtureInitialization": 0.058841700000000004,
+    "DomainConfiguration": 0.31366079999999996,
+    "HostStartup": 3.2349385,
+    "FixtureReady": 0.0736604999999999,
+    "ExecutionGateWait": 0.011107800000000001,
+    "BenchmarkSetup": 0.007598100000000052
+  },
+  "rehydrationSeconds": null,
+  "optionsSnapshotInterval": 100,
+  "persistedPolicyResolverRegistered": false,
+  "effectiveSnapshotInterval": 100,
+  "snapshotIntervalSource": "Default",
+  "workload": {
+    "tenants": 1000,
+    "commandsPerTenant": 500,
+    "configurationKeys": 100,
+    "concurrency": 50,
+    "documentedSnapshotInterval": 50,
+    "rehydrationLimitSeconds": 30
+  }
+}

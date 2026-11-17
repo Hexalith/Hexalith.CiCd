@@ -1,0 +1,221 @@
+{
+  "at": "2026-11-17T07:55:49.017063+00:00",
+  "context": "jpiquot@local",
+  "server": "https://192.168.1.30:6443",
+  "operation": "read-only registry credential reference inventory",
+  "secretValuesPersisted": false,
+  "remoteMutations": false,
+  "exit": 0,
+  "secretCount": 195,
+  "references": [
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-channels",
+      "type": "Opaque",
+      "keys": [
+        "eventstore-app",
+        "eventstore-dapr",
+        "inventory-app",
+        "inventory-dapr",
+        "tenants-app",
+        "tenants-dapr"
+      ],
+      "resourceVersion": "32448623"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-idp-bootstrap",
+      "type": "Opaque",
+      "keys": [
+        "client-id",
+        "client-secret"
+      ],
+      "resourceVersion": "32448613"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-idp-db",
+      "type": "Opaque",
+      "keys": [
+        "password",
+        "username"
+      ],
+      "resourceVersion": "32448612"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-idp-tls",
+      "type": "kubernetes.io/tls",
+      "keys": [
+        "ca.crt",
+        "tls.crt",
+        "tls.key"
+      ],
+      "resourceVersion": "43101545"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-maintenance",
+      "type": "Opaque",
+      "keys": [
+        "password",
+        "username"
+      ],
+      "resourceVersion": "32454406"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-oidc-eventstore",
+      "type": "Opaque",
+      "keys": [
+        "client-id",
+        "client-secret"
+      ],
+      "resourceVersion": "32450656"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-oidc-inventory",
+      "type": "Opaque",
+      "keys": [
+        "client-id",
+        "client-secret"
+      ],
+      "resourceVersion": "32450660"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-oidc-registry-provisioner",
+      "type": "Opaque",
+      "keys": [
+        "client-id",
+        "client-secret"
+      ],
+      "resourceVersion": "32450671"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-oidc-tenants",
+      "type": "Opaque",
+      "keys": [
+        "client-id",
+        "client-secret"
+      ],
+      "resourceVersion": "32450659"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-provisioner",
+      "type": "Opaque",
+      "keys": [
+        "password",
+        "subject-id",
+        "username"
+      ],
+      "resourceVersion": "32450675"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-redis-acl",
+      "type": "Opaque",
+      "keys": [
+        "users.acl"
+      ],
+      "resourceVersion": "32474261"
+    },
+    {
+      "namespace": "ext-secrets-1-isolated",
+      "name": "ext-secrets-1-registry-state-credentials",
+      "type": "Opaque",
+      "keys": [
+        "eventstore",
+        "inventory",
+        "tenants"
+      ],
+      "resourceVersion": "32448624"
+    },
+    {
+      "namespace": "hexalith-memories",
+      "name": "registry-credentials",
+      "type": "kubernetes.io/dockerconfigjson",
+      "keys": [
+        ".dockerconfigjson"
+      ],
+      "resourceVersion": "27707216"
+    },
+    {
+      "namespace": "keycloak",
+      "name": "registry-tache-pull",
+      "type": "kubernetes.io/dockerconfigjson",
+      "keys": [
+        ".dockerconfigjson"
+      ],
+      "resourceVersion": "13151625"
+    },
+    {
+      "namespace": "registry-distribution",
+      "name": "distribution-registry-htpasswd",
+      "type": "Opaque",
+      "keys": [
+        "htpasswd"
+      ],
+      "resourceVersion": "47019842"
+    },
+    {
+      "namespace": "registry-distribution",
+      "name": "distribution-registry-letsencrypt-tls",
+      "type": "kubernetes.io/tls",
+      "keys": [
+        "tls.crt",
+        "tls.key"
+      ],
+      "resourceVersion": "36132947"
+    },
+    {
+      "namespace": "registry-distribution",
+      "name": "distribution-registry-oidc-secret",
+      "type": "Opaque",
+      "keys": [
+        "credentials.json"
+      ],
+      "resourceVersion": "12893493"
+    },
+    {
+      "namespace": "registry-distribution",
+      "name": "distribution-registry-session-keys",
+      "type": "Opaque",
+      "keys": [
+        "sessionKeys.json"
+      ],
+      "resourceVersion": "12893494"
+    },
+    {
+      "namespace": "registry-private",
+      "name": "private-registry-letsencrypt-tls",
+      "type": "kubernetes.io/tls",
+      "keys": [
+        "tls.crt",
+        "tls.key"
+      ],
+      "resourceVersion": "36132960"
+    },
+    {
+      "namespace": "registry-private",
+      "name": "private-registry-oidc-secret",
+      "type": "Opaque",
+      "keys": [
+        "credentials.json"
+      ],
+      "resourceVersion": "12893499"
+    },
+    {
+      "namespace": "registry-private",
+      "name": "private-registry-session-keys",
+      "type": "Opaque",
+      "keys": [
+        "sessionKeys.json"
+      ],
+      "resourceVersion": "12893500"
+    }
+  ]
+}

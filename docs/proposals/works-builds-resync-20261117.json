@@ -1,0 +1,156 @@
+{
+  "schema": "hexalith.works-builds-gitlink-proposal.v1",
+  "repository": "Hexalith.Works",
+  "root_base_commit": "e89d8b8b7ffc33d9ef7f53e4ee420bae9e7fc469",
+  "root_base_tree": "fb9505379733b7065ef20682c2b2ed62f2ef0911",
+  "owned_paths": [
+    "references/Hexalith.Builds"
+  ],
+  "before": {
+    "references/Hexalith.Builds": [
+      "160000",
+      "commit",
+      "07fdb22578ba55e092b2db1b4ff43f253b53fbbf"
+    ]
+  },
+  "after": {
+    "references/Hexalith.Builds": [
+      "160000",
+      "commit",
+      "af3752ddcbe94c007630703ab3803df5654f9933"
+    ]
+  },
+  "result_tree_for_single_path_delta": "0abc3925deb53daee1c004a85507ae60f5f605a6",
+  "gitmodules": {
+    "blob": "604585f3224aad434267d0a6f8d44963d52fd9c8",
+    "sha256": "be9366c89c1fb81ada8de0522826c61cab3983f3e668ebc2e99d9cea4b6d81a0",
+    "section": "submodule.Hexalith.Builds",
+    "path": "references/Hexalith.Builds",
+    "url": "https://github.com/Hexalith/Hexalith.Builds.git",
+    "unchanged": true
+  },
+  "target_publication": {
+    "remote": "https://github.com/Hexalith/Hexalith.Builds.git",
+    "branch": "main",
+    "observed_branch_head": "af3752ddcbe94c007630703ab3803df5654f9933",
+    "target_reachable_from_observed_head": true,
+    "published_commit_url": "https://github.com/Hexalith/Hexalith.Builds/commit/af3752ddcbe94c007630703ab3803df5654f9933",
+    "exact_source_runs": [
+      {
+        "id": 43992069354,
+        "name": "CI",
+        "head_sha": "af3752ddcbe94c007630703ab3803df5654f9933",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43992069354"
+      }
+    ],
+    "observed_at": "2026-11-17T01:02:43.686358+00:00",
+    "green_claimed": false
+  },
+  "build_inputs": {
+    "Props/ContainerProvenance.targets": {
+      "before_blob": "708e340aff0c41fd7651850c3460a47ecb3bf401",
+      "after_blob": "708e340aff0c41fd7651850c3460a47ecb3bf401",
+      "before_sha256": "2f45651a7d68445836dcb39f7a7096b868d4123d9f208e86a174b67984343f7c",
+      "after_sha256": "2f45651a7d68445836dcb39f7a7096b868d4123d9f208e86a174b67984343f7c",
+      "unchanged": true
+    },
+    "Props/Directory.Packages.props": {
+      "before_blob": "7ff7b4ed1f9729c46825805be071e70398123faf",
+      "after_blob": "db85d885ae1b7478ee2d053a5b54b9a43bff9ae7",
+      "before_sha256": "9ba3a73743716b5351840e333ea455db588c075182450369b1f32b0a2e96f267",
+      "after_sha256": "aa423407a51ca2ee6507c49c94effd9c3b2da144d24158a1223dd863550d22a4",
+      "unchanged": false
+    },
+    "Props/Environment.Build.props": {
+      "before_blob": "cbc38e61f098faadafc0552c24d4aa0e56fcc765",
+      "after_blob": "cbc38e61f098faadafc0552c24d4aa0e56fcc765",
+      "before_sha256": "e5d210cc151a8835d52e56addbd4e17debfa528c110b453aad6604b0a979989d",
+      "after_sha256": "e5d210cc151a8835d52e56addbd4e17debfa528c110b453aad6604b0a979989d",
+      "unchanged": true
+    },
+    "Props/Logging.Build.targets": {
+      "before_blob": "c9e30bf9f965ed1640873961982aced1cc513a4b",
+      "after_blob": "c9e30bf9f965ed1640873961982aced1cc513a4b",
+      "before_sha256": "7e01de7239cfaaa7840863b82540d2f5d6cd6623a9a0107d4e1b275f3748ca6e",
+      "after_sha256": "7e01de7239cfaaa7840863b82540d2f5d6cd6623a9a0107d4e1b275f3748ca6e",
+      "unchanged": true
+    },
+    "Props/dapr-toolchain-sha256.json": {
+      "before_blob": "7078c1e58d3347c81cfd794a730da3cc01b1bcab",
+      "after_blob": "7078c1e58d3347c81cfd794a730da3cc01b1bcab",
+      "before_sha256": "5efc6b13da703fb9f83265ef02973877f33e094192e0bf36c1fe30ebdfc23376",
+      "after_sha256": "5efc6b13da703fb9f83265ef02973877f33e094192e0bf36c1fe30ebdfc23376",
+      "unchanged": true
+    },
+    "Tools/package-version-audit.json": {
+      "before_blob": "e02cc9e9de7a86279a277c19e8098bdd94807d2b",
+      "after_blob": "08f5d47d56e9dcb1f0ea4400568c25aa746449e2",
+      "before_sha256": "2d5bda2aba2e16a556350d65ba4ddd3ee7fc2c0f6bb9a2b046d81a0416a47540",
+      "after_sha256": "5fbc1dcf08b58c7a05dc1b752e40e22f16876aa4dfb616a0ce2c6b2b490eaa63",
+      "unchanged": false
+    }
+  },
+  "catalog_change": {
+    "property": "HexalithOpenApiVersion",
+    "package": "Microsoft.OpenApi",
+    "before": "3.11.0",
+    "after": "3.11.1",
+    "only_catalog_property_changed": true,
+    "refreshed_audit_families": [
+      "package:microsoft.openapi"
+    ],
+    "other_audit_package_entries_unchanged": 316,
+    "other_audit_family_decisions_unchanged": 156,
+    "consumer_inventory_unchanged_except_repository_revision": true,
+    "all_other_props_bytes_unchanged": true
+  },
+  "root_sdk": {
+    "blob": "701104b3d54283ad578b7e1e71aca01d1a59d523",
+    "worktree_sha256": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f",
+    "committed_sha256": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05",
+    "version": "11.0.100",
+    "unchanged": true,
+    "attribute_normalized_blob_matches_base": true
+  },
+  "preserved_outside_owned_path": {
+    "root_index_sha256": "7d5dab5a6ec133afce1676330b3faf8c2c948a6fb7d056b261a77f71469df014",
+    "pending_product_text_sha256": {
+      "_bmad-output/implementation-artifacts/spec-release-dependency-refresh-2026-11-16.md": "4e4c8d3cabca59c0dd8423585fd618b411bea94cdf1a7aba1ec7efd472da8bf8",
+      "docs/boundary-decision-record.md": "66e21a3a6af0d9bb41276b1032887f57dcb995db845952b11dfaf29637e69caa",
+      "docs/development-assurance.md": "8ab47e63b51f62e5808c614e680165e84d4b7228cc8d8599b2d5f5e37a9d3386",
+      "docs/eventstore-api-surface-constraints.md": "af33b905856b1d6464f70f8900e43a54b779b754b573744859188b7d26dfa7c4",
+      "tests/Hexalith.Works.IntegrationTests/WorksPlatformProofRuntime.targets": "b2b08f043f0e818bd0cbc877d0cd70b30a8fa3cb8b6389b46048f9bfa570716d",
+      "tests/Hexalith.Works.IntegrationTests/WorksSdkProofPreparationQualification.cs": "efa0b8e752055615c9f2266c104329b28828f26d512ab0fdc1dab67e41e622ed",
+      "tools/source-debug-dependencies.json": "29bc94454d93b1f06d9cebdecc4f1ddcc521ac0d3185459427b9e4124be8c221"
+    },
+    "platform_checkout": "3f14b712ab24ca6008e718979e944eef26b695e3",
+    "workflow_sha256": {
+      ".github/workflows/ci.yml": {
+        "committed_sha256": "130c025cd1ba4d2e0720a16efbbc22f282d4850eb08563d1d9831560c5363ece",
+        "worktree_sha256": "130c025cd1ba4d2e0720a16efbbc22f282d4850eb08563d1d9831560c5363ece"
+      },
+      ".github/workflows/codeql.yml": {
+        "committed_sha256": "177250a0fcd196d71c1a8496325461c1b9ea8cf2c90d4f48930994781a50e31f",
+        "worktree_sha256": "177250a0fcd196d71c1a8496325461c1b9ea8cf2c90d4f48930994781a50e31f"
+      },
+      ".github/workflows/commitlint.yml": {
+        "committed_sha256": "a2ef288e299c6785baeb32e2308e0c9cd7292e47595873a6a120588328442842",
+        "worktree_sha256": "a2ef288e299c6785baeb32e2308e0c9cd7292e47595873a6a120588328442842"
+      },
+      ".github/workflows/dependency-review.yml": {
+        "committed_sha256": "277342697c9e60f53a06c4ba623ac8cd5bc20189a542394d1f2105c823f1047a",
+        "worktree_sha256": "277342697c9e60f53a06c4ba623ac8cd5bc20189a542394d1f2105c823f1047a"
+      },
+      ".github/workflows/release.yml": {
+        "committed_sha256": "4559b15827fd26c8391f3f69c6dc18a8d57014ee3260083662a3b4f5a4cf36bb",
+        "worktree_sha256": "4559b15827fd26c8391f3f69c6dc18a8d57014ee3260083662a3b4f5a4cf36bb"
+      }
+    },
+    "physical_builds_checkout_written": false,
+    "root_index_written": false
+  },
+  "authority": "User-authorized synchronization/push of existing repository and submodule changes; bounded CiCd owner record for exactly one root gitlink.",
+  "application": "Parent stages this exact one-path gitlink delta with separately authorized product/source-owner changes only after this owner proposal is committed and pushed. This record does not stage the root index or change the physical Builds checkout. Exact-source Works CI, canonical parity and release/publication checks remain required."
+}

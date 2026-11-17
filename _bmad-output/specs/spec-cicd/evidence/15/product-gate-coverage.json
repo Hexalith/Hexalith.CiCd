@@ -1,0 +1,73 @@
+{
+  "scope": "Pure package payload and isolated analyzer-consumer behavior retained from mixed release tests; obsolete push/tag/workflow/approval orchestration retired.",
+  "new_product_test_methods": [
+    "test_invalid_package_matrix_is_rejected_by_product_validation",
+    "test_extra_artifacts_and_symbol_packages_are_rejected_by_product_validation",
+    "test_duplicate_archive_entries_and_symlink_packages_are_rejected_by_product_validation",
+    "test_missing_package_and_malformed_archives_are_rejected_by_product_validation",
+    "test_analyzer_diagnostic_rejections_propagate_from_the_product_consumer",
+    "test_consumer_failure_propagates_without_release_orchestration",
+    "test_product_receipt_rejects_package_mutation_during_consumer_build_and_symlink_receipts",
+    "test_paired_validation_rejects_unsafe_archive_members",
+    "test_paired_validation_keeps_existing_tool_structure_checks",
+    "test_paired_validator_rejects_runtime_and_enrollment_drift",
+    "test_paired_validator_refuses_native_files_and_native_dependency_entries",
+    "test_paired_validator_binds_both_nuspec_commits_and_never_receipts_failure",
+    "test_validator_rejects_changed_package_manifest_unknown_phase_and_invalid_version",
+    "test_bootstrap_framework_and_consumer_follow_effective_source",
+    "test_bootstrap_refuses_compile_framework_different_from_effective_source",
+    "test_bootstrap_refuses_unsupported_or_multiple_effective_frameworks",
+    "test_paired_abstractions_refuses_historical_or_additional_compile_framework",
+    "test_paired_abstractions_refuses_rid_specific_payload",
+    "test_consumer_uses_fresh_cache_config_and_clears_fallback_folders",
+    "test_consumer_overrides_inherited_restore_source_and_package_directory",
+    "test_consumer_resolves_relative_sources_from_the_calling_directory",
+    "test_consumer_preserves_url_sources_in_config_restore_and_build",
+    "test_consumer_references_only_abstractions_at_the_exact_requested_version",
+    "test_consumer_disables_parent_build_and_package_imports",
+    "test_consumer_disables_terminal_logger_even_when_forced",
+    "test_consumer_refuses_reusing_a_directory_before_dotnet"
+  ],
+  "method_count": 26,
+  "passed_suite": {
+    "log": "product-scripts-full-final.log",
+    "tests": 70,
+    "python": "3.12.13"
+  },
+  "mappings": {
+    "old test_invalid_package_matrix_never_pushes": "test_invalid_package_matrix_is_rejected_by_product_validation; all six malformed ID/version/DLL/analyzer/dependency/nuspec cases",
+    "old test_extra_artifacts_and_symbol_packages_are_rejected": "test_extra_artifacts_and_symbol_packages_are_rejected_by_product_validation; extra nupkg, snupkg, text, directory",
+    "old test_duplicate_archive_entries_and_symlink_packages_are_rejected": "test_duplicate_archive_entries_and_symlink_packages_are_rejected_by_product_validation",
+    "old test_missing_package_and_malformed_archives_are_rejected": "test_missing_package_and_malformed_archives_are_rejected_by_product_validation",
+    "old test_analyzer_diagnostic_rejections_prevent_preparation_receipt": "test_analyzer_diagnostic_rejections_propagate_from_the_product_consumer; missing/wrong-file MCPCLI001, extra warning, CS8032 and CS9057 all fail",
+    "old test_failed_consumer_smoke_prevents_preparation_receipt": "test_consumer_failure_propagates_without_release_orchestration",
+    "old test_package_mutation_during_consumer_build_prevents_preparation_receipt": "test_product_receipt_rejects_package_mutation_during_consumer_build_and_symlink_receipts; byte mismatch rejected by product receipt",
+    "paired payload/enrollment/native DLL/deps/runtime/source commits/framework/RID assertions": "retained original test_paired_* methods and framework methods in ProductPackageTests",
+    "consumer cache/config/source/version/import/terminal logger/fresh directory assertions": "retained original test_consumer_* methods in ProductPackageTests",
+    "unsafe archive paths": "test_paired_validation_rejects_unsafe_archive_members; traversal, absolute and backslash paths",
+    "old topology-vector-discovery assertion": "ci.py validates actual pre-enumerated Integration.Tests discovery against all approved companion-plan vectors plus exact GatewaySmoke and SharedHeadBoundary cases; discovery missing/extra/duplicate refusal cases retained in test_ci.py",
+    "old compare-paired-evidence raw cross-platform discovery assertion": "ProductControllerTests.test_raw_discovery_requires_complete_identical_filenames_and_bytes and immutable Linux discovery manifest; actual cross-platform package smoke remains required",
+    "old effective framework, managed PE, platform XML and seven Windows cases": "ProductPlatformTests retains effective-property refusal matrix, malformed managed PE, both Windows suites despite earlier failure, required named cases, malformed/empty/failing XML assertions"
+  },
+  "remaining": "All 70 product scripts tests pass locally. Actual complete package consumer/platform/live acceptance remains blocked by the unpublished Projects contract and subsequent hosted module CI; obsolete release wrappers are not retained.",
+  "controller_and_platform_methods": [
+    "test_controller_platform_runner_call_reaches_real_parser_and_refuses_unsupported_os",
+    "test_controller_smoke_call_reaches_the_real_cli_parser_and_propagates_failure",
+    "test_effective_properties_reject_unportable_or_mismatched_packages",
+    "test_linux_discovery_keeps_preparation_immutable_and_binds_its_exact_hash",
+    "test_linux_entry_point_requires_prepared_python_without_reinstalling_tools",
+    "test_native_or_malformed_managed_payload_is_rejected",
+    "test_platform_identity_mismatch_refuses_before_package_or_test_effects",
+    "test_platform_runner_collects_both_suites_before_acceptance",
+    "test_raw_discovery_requires_complete_identical_filenames_and_bytes",
+    "test_source_or_package_drift_refuses_before_children",
+    "test_staging_uses_one_no_build_pair_and_real_payload_validator",
+    "test_xml_errors_or_empty_execution_are_rejected"
+  ],
+  "process_methods": [
+    "test_failure_is_propagated_with_both_sanitized_channels_and_outcome",
+    "test_missing_executable_records_failure_and_restores_supervision_state",
+    "test_reaped_root_identity_is_not_treated_as_a_live_owned_process",
+    "test_timeout_stops_and_reaps_detached_grandchild_while_preserving_foreign_process"
+  ]
+}

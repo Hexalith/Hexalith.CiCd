@@ -1,0 +1,363 @@
+{
+  "recorded_at": "2026-11-17T08:29:18.578600+00:00",
+  "effective_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "requests": [
+    {
+      "credential": "cicd-agent",
+      "endpoint": "user",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4888",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 112"
+      ],
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.EventStore",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4887",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 113"
+      ],
+      "data": {
+        "id": 1155154671,
+        "full_name": "Hexalith/Hexalith.EventStore",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/releases/latest",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4988",
+        "X-Ratelimit-Reset: 1794906514",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 12"
+      ],
+      "data": {
+        "id": 447094086,
+        "tag_name": "v5.2.0",
+        "draft": false,
+        "immutable": false,
+        "target_commitish": "main",
+        "published_at": "2026-11-16T13:41:59Z",
+        "html_url": "https://github.com/Hexalith/Hexalith.EventStore/releases/tag/v5.2.0",
+        "author": {
+          "login": "github-actions[bot]",
+          "id": 41898282
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/git/ref/heads/main",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4886",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 114"
+      ],
+      "data": {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDORNpC769yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/Hexalith/Hexalith.EventStore/git/refs/heads/main",
+        "object": {
+          "sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.EventStore/git/commits/96363934c6fd1da4d50c2078b13929c473ecab7f"
+        }
+      },
+      "stderr": "",
+      "state": "ok"
+    },
+    {
+      "credential": "cicd-agent",
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/actions/runs?branch=main&per_page=20",
+      "exit": 0,
+      "http_status": 200,
+      "headers": [
+        "HTTP/2.0 200 OK",
+        "Link: <https://api.github.com/repositories/1155154671/actions/runs?branch=main&per_page=20&page=2>; rel=\"next\", <https://api.github.com/repositories/1155154671/actions/runs?branch=main&per_page=20&page=125>; rel=\"last\"",
+        "X-Accepted-Github-Permissions: actions=read",
+        "X-Ratelimit-Limit: 5000",
+        "X-Ratelimit-Remaining: 4885",
+        "X-Ratelimit-Reset: 1794905860",
+        "X-Ratelimit-Resource: core",
+        "X-Ratelimit-Used: 115"
+      ],
+      "data": {
+        "total_count": 2500,
+        "workflow_runs": [
+          {
+            "id": 44035997844,
+            "name": "Commitlint",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/commitlint.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997844",
+            "created_at": "2026-11-17T07:05:18Z"
+          },
+          {
+            "id": 44035997711,
+            "name": "CodeQL",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/codeql.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997711",
+            "created_at": "2026-11-17T07:05:18Z"
+          },
+          {
+            "id": 44035997829,
+            "name": "CI",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/ci.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997829",
+            "created_at": "2026-11-17T07:05:18Z"
+          },
+          {
+            "id": 44035997134,
+            "name": "Phase 4 transition fixtures",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/phase-4-transition-fixtures.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997134",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997259,
+            "name": "OQ8 governing-design availability",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/oq8-governing-design.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997259",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997158,
+            "name": "Publication authority",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/publication-authority.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997158",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997133,
+            "name": "Phase 4 gate risk matrix",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/phase-4-gate-risk-matrix.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997133",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997123,
+            "name": "Integration Tests",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/integration.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997123",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997143,
+            "name": "Payload Protection Lifecycle",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/payload-protection-lifecycle.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997143",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997074,
+            "name": "Payload Protection",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/payload-protection.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997074",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997147,
+            "name": "Advisory Tests",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/advisory-tests.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997147",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035997141,
+            "name": "Payload Protection Azure",
+            "head_sha": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+            "path": ".github/workflows/payload-protection-azure.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035997141",
+            "created_at": "2026-11-17T07:05:17Z"
+          },
+          {
+            "id": 44035325839,
+            "name": "Payload Protection",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/payload-protection.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035325839",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035325742,
+            "name": "Payload Protection Azure",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/payload-protection-azure.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035325742",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035325944,
+            "name": "Phase 4 gate risk matrix",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/phase-4-gate-risk-matrix.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035325944",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035326309,
+            "name": "CodeQL",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/codeql.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "cancelled",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035326309",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035325734,
+            "name": "Publication authority",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/publication-authority.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035325734",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035325832,
+            "name": "Phase 4 transition fixtures",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/phase-4-transition-fixtures.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035325832",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035325727,
+            "name": "OQ8 governing-design availability",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/oq8-governing-design.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035325727",
+            "created_at": "2026-11-17T07:00:05Z"
+          },
+          {
+            "id": 44035326360,
+            "name": "Commitlint",
+            "head_sha": "aad10e206bd50f9c61b4c7188b8e36b3e1ec6271",
+            "path": ".github/workflows/commitlint.yml",
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/Hexalith/Hexalith.EventStore/actions/runs/44035326360",
+            "created_at": "2026-11-17T07:00:05Z"
+          }
+        ]
+      },
+      "stderr": "",
+      "state": "ok"
+    }
+  ],
+  "collections": [],
+  "remote_mutations": false,
+  "inventory_scope": "Paginated readbacks, not AD-21 approval; incomplete reads remain unverified."
+}

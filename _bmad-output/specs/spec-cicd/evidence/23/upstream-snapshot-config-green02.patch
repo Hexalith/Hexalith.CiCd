@@ -1,0 +1,971 @@
+diff --git a/src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs b/src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs
+index 203d36dbe..9fbb1b8bd 100644
+--- a/src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs
++++ b/src/Hexalith.EventStore.Client/Aggregates/EventStoreAggregate.cs
+@@ -13,6 +13,7 @@ using Hexalith.EventStore.Contracts.Events;
+ using Hexalith.EventStore.Contracts.Replay;
+ using Hexalith.EventStore.Contracts.Results;
+ using Hexalith.EventStore.Contracts.Serialization;
++using Hexalith.EventStore.Contracts.Snapshots;
+ 
+ namespace Hexalith.EventStore.Client.Aggregates;
+ /// <summary>
+@@ -20,7 +21,7 @@ namespace Hexalith.EventStore.Client.Aggregates;
+ /// and state rehydration so that concrete aggregates only declare typed Handle and Apply methods.
+ /// </summary>
+ /// <typeparam name="TState">The aggregate state type. Must be a reference type with a parameterless constructor.</typeparam>
+-public abstract class EventStoreAggregate<TState> : IDomainProcessor, IAggregateReplay, IAsyncDomainProcessor, IAsyncAggregateReplay, IAdmittedLegacyAggregateReplay, IEventPayloadEvolutionAware
++public abstract class EventStoreAggregate<TState> : IDomainProcessor, IAggregateReplay, IAsyncDomainProcessor, IAsyncAggregateReplay, IAdmittedLegacyAggregateReplay, IEventPayloadEvolutionAware, IAsyncFoldedSnapshotProcessor
+     where TState : class, new() {
+     private static readonly ConcurrentDictionary<Type, AggregateCommandDispatchMetadata> _metadataCache = new();
+ 
+@@ -34,6 +35,29 @@ public abstract class EventStoreAggregate<TState> : IDomainProcessor, IAggregate
+     /// <remarks>Undeclared legacy state retains its existing typed-reference behavior.</remarks>
+     protected virtual DetachedStateCapture<TState>? SnapshotCapture => null;
+ 
++    /// <summary>Gets the optional reviewed state/serializer profile; absence preserves ordinary replay-only processing.</summary>
++    protected virtual FoldedSnapshotCaptureProfile<TState>? FoldedSnapshotCapture => null;
++
++    /// <inheritdoc/>
++    public bool IsQualified(Type stateType, string profileId, string parityEvidenceId, FoldedSnapshotCaptureLimits limits)
++    {
++        FoldedSnapshotCaptureProfile<TState>? profile = FoldedSnapshotCapture;
++        return stateType == typeof(TState) && profile is not null
++            && string.Equals(profile.ProfileId, profileId, StringComparison.Ordinal)
++            && string.Equals(profile.ParityEvidenceId, parityEvidenceId, StringComparison.Ordinal)
++            && Equals(profile.Limits, limits);
++    }
++
++    /// <inheritdoc/>
++    public Task<FoldedSnapshotProcessingResult> ProcessForSnapshotAsync(
++        DomainServiceRequest request, string qualifiedProfileId, FoldedSnapshotCaptureLimits limits,
++        CancellationToken cancellationToken)
++    {
++        ArgumentNullException.ThrowIfNull(request);
++        return ProcessCoreAsync(request.Command, request.CurrentState,
++            request.IncludePostCommandState ? qualifiedProfileId : null, limits, cancellationToken);
++    }
++
+     /// <summary>
+     /// Called once during cascade configuration resolution to allow subclasses to set per-domain options imperatively (Layer 3).
+     /// The default implementation is a no-op. Override this method to customize domain resource names.
+@@ -106,27 +130,37 @@ public abstract class EventStoreAggregate<TState> : IDomainProcessor, IAggregate
+         cancellationToken.ThrowIfCancellationRequested();
+ 
+         AggregateCommandDispatchMetadata metadata = GetOrBuildMetadata();
+-        DetachedStateCapture<TState>? snapshotCapture;
+-        try { snapshotCapture = SnapshotCapture; }
+-        catch (Exception) when (cancellationToken.IsCancellationRequested) {
+-            cancellationToken.ThrowIfCancellationRequested();
+-            throw;
+-        }
++        return (await FoldedSnapshotProcessor<TState>.ProcessAsync(command, currentState, null, null,
++            () => SnapshotCapture, () => FoldedSnapshotCapture,
++            (envelope, state, token) => DispatchRehydratedAsync(envelope, state, metadata, token),
++            () => metadata.ApplyMethods, EvolutionRegistry, cancellationToken).ConfigureAwait(false)).Result;
++    }
++
++    private Task<FoldedSnapshotProcessingResult> ProcessCoreAsync(
++        CommandEnvelope command, object? currentState, string? qualifiedProfileId,
++        FoldedSnapshotCaptureLimits? qualifiedLimits, CancellationToken cancellationToken)
++    {
++        ArgumentNullException.ThrowIfNull(command);
+         cancellationToken.ThrowIfCancellationRequested();
+-        TState? state = DomainProcessorStateRehydrator.RehydrateState<TState>(currentState, metadata.ApplyMethods, cancellationToken, snapshotCapture, EvolutionRegistry);
++        AggregateCommandDispatchMetadata metadata = GetOrBuildMetadata();
++        return FoldedSnapshotProcessor<TState>.ProcessAsync(command, currentState, qualifiedProfileId, qualifiedLimits,
++            () => SnapshotCapture, () => FoldedSnapshotCapture,
++            (envelope, state, token) => DispatchRehydratedAsync(envelope, state, metadata, token),
++            () => metadata.ApplyMethods, EvolutionRegistry, cancellationToken);
++    }
+ 
++    private Task<DomainResult> DispatchRehydratedAsync(CommandEnvelope command, TState? state,
++        AggregateCommandDispatchMetadata metadata, CancellationToken cancellationToken)
++    {
+         bool terminated = state is ITerminatable { IsTerminated: true };
+         cancellationToken.ThrowIfCancellationRequested();
+-        if (terminated) {
+-            return DomainResult.Rejection(new IRejectionEvent[] {
++        if (terminated)
++        {
++            return Task.FromResult(DomainResult.Rejection(new IRejectionEvent[] {
+                 new AggregateTerminated(AggregateType: GetType().Name, AggregateId: command.AggregateId),
+-            });
++            }));
+         }
+-
+-        cancellationToken.ThrowIfCancellationRequested();
+-        DomainResult result = await DispatchCommandAsync(command, state, metadata, cancellationToken).ConfigureAwait(false);
+-        cancellationToken.ThrowIfCancellationRequested();
+-        return result;
++        return DispatchCommandAsync(command, state, metadata, cancellationToken);
+     }
+ 
+     private AggregateCommandDispatchMetadata GetOrBuildMetadata() =>
+diff --git a/src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs b/src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs
+index 7398dd243..bcdaf8dae 100644
+--- a/src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs
++++ b/src/Hexalith.EventStore.Client/Handlers/DomainProcessorBase.cs
+@@ -1,11 +1,8 @@
+ 
+-using System.Text;
+ using System.Text.Json;
+ 
+ using Hexalith.EventStore.Contracts.Commands;
+-using Hexalith.EventStore.Contracts.Events;
+ using Hexalith.EventStore.Contracts.Results;
+-using Hexalith.EventStore.Contracts.Serialization;
+ using Hexalith.EventStore.Contracts.Snapshots;
+ 
+ namespace Hexalith.EventStore.Client.Handlers;
+@@ -57,140 +54,12 @@ public abstract class DomainProcessorBase<TState> : IDomainProcessor, IAsyncDoma
+             request.IncludePostCommandState ? qualifiedProfileId : null, limits, cancellationToken);
+     }
+ 
+-    private async Task<FoldedSnapshotProcessingResult> ProcessCoreAsync(
++    private Task<FoldedSnapshotProcessingResult> ProcessCoreAsync(
+         CommandEnvelope command, object? currentState, string? qualifiedProfileId,
+-        FoldedSnapshotCaptureLimits? qualifiedLimits, CancellationToken cancellationToken) {
+-        ArgumentNullException.ThrowIfNull(command);
+-        cancellationToken.ThrowIfCancellationRequested();
+-        DetachedStateCapture<TState>? snapshotCapture;
+-        try { snapshotCapture = SnapshotCapture; }
+-        catch (Exception) when (cancellationToken.IsCancellationRequested) {
+-            cancellationToken.ThrowIfCancellationRequested();
+-            throw;
+-        }
+-        cancellationToken.ThrowIfCancellationRequested();
+-        TState? typedState = DomainProcessorStateRehydrator.RehydrateState<TState>(
+-            currentState,
+-            DomainProcessorStateRehydrator.DiscoverApplyMethods(typeof(TState)),
+-            cancellationToken, snapshotCapture);
+-        cancellationToken.ThrowIfCancellationRequested();
+-        FoldedSnapshotCaptureProfile<TState>? profile = null;
+-        TState? preCommandState = null;
+-        if (qualifiedProfileId is not null)
+-        {
+-            try
+-            {
+-                profile = FoldedSnapshotCapture;
+-                if (profile is null || !string.Equals(profile.ProfileId, qualifiedProfileId, StringComparison.Ordinal)
+-                    || !Equals(profile.Limits, qualifiedLimits)
+-                    || !BoundedSnapshotJsonBuffer.CanSerialize(profile.MaximumStateJsonBytes,
+-                        EventStorePayloadSerialization.Options, profile.Limits.MaximumSerializerScratchBytes,
+-                        profile.Limits.MaximumWorkingStateGraphBytes))
+-                {
+-                    profile = null;
+-                }
+-                else if (typedState is not null)
+-                {
+-                    // The declared graph maximum was admitted when the immutable profile was built.
+-                    preCommandState = profile.StateCapture.Capture(typedState, cancellationToken);
+-                }
+-            }
+-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+-            catch { profile = null; preCommandState = null; }
+-        }
+-        DomainResult result = await HandleAsync(command, typedState, cancellationToken).ConfigureAwait(false);
+-        cancellationToken.ThrowIfCancellationRequested();
+-        if (profile is null || result.IsNoOp)
+-        {
+-            return new FoldedSnapshotProcessingResult(result, null);
+-        }
+-        FoldedSnapshotCaptureProfile<TState> admittedProfile = profile;
+-        TState? admittedState = preCommandState;
+-        long preSequence = currentState switch
+-        {
+-            DomainServiceCurrentState dscs => dscs.CurrentSequence,
+-            JsonElement { ValueKind: JsonValueKind.Object } json
+-                when json.TryGetProperty("events", out _)
+-                    && json.TryGetProperty("currentSequence", out JsonElement sequence)
+-                    && sequence.ValueKind == JsonValueKind.Number
+-                    && sequence.TryGetInt64(out long value) => value,
+-            _ => 0,
+-        };
+-        return new FoldedSnapshotProcessingResult(result,
+-            (wireEvents, token) => CaptureFoldedState(command, preSequence, admittedState, admittedProfile, wireEvents, token));
+-    }
+-
+-    private static string CaptureFoldedState(
+-        CommandEnvelope command,
+-        long preSequence,
+-        TState? preCommandState,
+-        FoldedSnapshotCaptureProfile<TState> profile,
+-        IReadOnlyList<DomainServiceWireEvent> wireEvents,
+-        CancellationToken cancellationToken)
+-    {
+-        cancellationToken.ThrowIfCancellationRequested();
+-        if (wireEvents.Count is < 1 || wireEvents.Count > profile.MaximumEventCount)
+-        {
+-            throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
+-        }
+-        long totalBytes = 0;
+-        foreach (DomainServiceWireEvent item in wireEvents)
+-        {
+-            totalBytes = checked(totalBytes + item.Payload.Length);
+-            if (totalBytes > profile.MaximumEventBytes
+-                || !string.Equals(item.SerializationFormat, "json", StringComparison.OrdinalIgnoreCase))
+-            {
+-                throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
+-            }
+-        }
+-        using var replayInput = new LegacyCommandReplayInput(cancellationToken, profile.Limits);
+-        replayInput.AdmitCaptureEnvelopes(wireEvents.Count);
+-        var detached = new EventEnvelope[wireEvents.Count];
+-        for (int index = 0; index < wireEvents.Count; index++)
+-        {
+-            cancellationToken.ThrowIfCancellationRequested();
+-            DomainServiceWireEvent item = wireEvents[index];
+-            var metadata = new EventMetadata(
+-                command.MessageId, command.AggregateId, command.Domain, command.TenantId, command.Domain,
+-                checked(preSequence + index + 1), 0, DateTimeOffset.UtcNow, command.CorrelationId,
+-                command.CausationId ?? command.CorrelationId, command.UserId, "capture", item.EventTypeName,
+-                item.MetadataVersion ?? 1, item.SerializationFormat) { PayloadVersion = item.PayloadVersion };
+-            // The router already supplied private once-admitted bytes. Shared replay
+-            // admits and makes the final private envelope copy before payload parsing.
+-            detached[index] = new EventEnvelope(metadata, item.Payload, null);
+-        }
+-        var input = new DomainServiceCurrentState(preCommandState, detached, preSequence,
+-            checked(preSequence + detached.Length));
+-        TState folded = DomainProcessorStateRehydrator.RehydrateState<TState>(input,
+-            DomainProcessorStateRehydrator.DiscoverApplyMethods(typeof(TState)), cancellationToken,
+-            admittedInput: replayInput)
+-            ?? throw new InvalidOperationException("SnapshotCaptureStateInvalid");
+-        using var output = new BoundedSnapshotJsonStream(profile.MaximumStateJsonBytes,
+-            EventStorePayloadSerialization.Options, profile.Limits.MaximumSerializerScratchBytes,
+-            profile.Limits.MaximumWorkingStateGraphBytes);
+-        BoundedSnapshotJsonBuffer.Serialize(output, folded, typeof(TState), EventStorePayloadSerialization.Options,
+-            profile.MaximumStateJsonBytes, profile.Limits.MaximumSerializerScratchBytes,
+-            profile.Limits.MaximumWorkingStateGraphBytes);
+-        byte[] bytes = output.ToArray();
+-        cancellationToken.ThrowIfCancellationRequested();
+-        var reader = new Utf8JsonReader(bytes, new JsonReaderOptions { MaxDepth = profile.MaximumDepth });
+-        int nodes = 0;
+-        while (reader.Read())
+-        {
+-            if (++nodes > profile.MaximumNodeCount) { throw new InvalidOperationException("SnapshotCaptureLimitExceeded"); }
+-        }
+-        if (checked(16L * bytes.Length + 64L * nodes) > profile.Limits.MaximumDomainParsedStateGraphBytes)
+-        {
+-            throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
+-        }
+-        using JsonDocument document = JsonDocument.Parse(bytes);
+-        JsonElement state = document.RootElement;
+-        if (state.ValueKind != JsonValueKind.Object)
+-        {
+-            throw new InvalidOperationException("SnapshotCaptureStateInvalid");
+-        }
+-        return Encoding.UTF8.GetString(bytes);
+-    }
++        FoldedSnapshotCaptureLimits? qualifiedLimits, CancellationToken cancellationToken)
++        => FoldedSnapshotProcessor<TState>.ProcessAsync(command, currentState, qualifiedProfileId, qualifiedLimits,
++            () => SnapshotCapture, () => FoldedSnapshotCapture, HandleAsync,
++            () => DomainProcessorStateRehydrator.DiscoverApplyMethods(typeof(TState)), null, cancellationToken);
+ 
+     /// <summary>
+     /// Processes a command against optional typed aggregate state and returns domain events.
+diff --git a/src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs b/src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs
+new file mode 100644
+index 000000000..d1dc042f0
+--- /dev/null
++++ b/src/Hexalith.EventStore.Client/Handlers/FoldedSnapshotProcessor.cs
+@@ -0,0 +1,163 @@
++using System.Text;
++using System.Text.Json;
++
++using Hexalith.EventStore.Client.Aggregates;
++using Hexalith.EventStore.Client.Events;
++using Hexalith.EventStore.Contracts.Commands;
++using Hexalith.EventStore.Contracts.Events;
++using Hexalith.EventStore.Contracts.Results;
++using Hexalith.EventStore.Contracts.Serialization;
++using Hexalith.EventStore.Contracts.Snapshots;
++
++namespace Hexalith.EventStore.Client.Handlers;
++
++/// <summary>Shares the bounded optional capture path across typed processors and convention aggregates.</summary>
++/// <typeparam name="TState">The exact owner-declared aggregate state.</typeparam>
++internal static class FoldedSnapshotProcessor<TState> where TState : class, new()
++{
++    /// <summary>Processes an ordinary command and optionally captures only its admitted event effects.</summary>
++    internal static async Task<FoldedSnapshotProcessingResult> ProcessAsync(
++        CommandEnvelope command, object? currentState, string? qualifiedProfileId,
++        FoldedSnapshotCaptureLimits? qualifiedLimits,
++        Func<DetachedStateCapture<TState>?> getSnapshotCapture,
++        Func<FoldedSnapshotCaptureProfile<TState>?> getFoldedSnapshotCapture,
++        Func<CommandEnvelope, TState?, CancellationToken, Task<DomainResult>> handleAsync,
++        Func<ApplyMethodTable> getApplyMethods,
++        EventPayloadEvolutionRegistry? evolution,
++        CancellationToken cancellationToken) {
++        ArgumentNullException.ThrowIfNull(command);
++        cancellationToken.ThrowIfCancellationRequested();
++        DetachedStateCapture<TState>? snapshotCapture;
++        try { snapshotCapture = getSnapshotCapture(); }
++        catch (Exception) when (cancellationToken.IsCancellationRequested) {
++            cancellationToken.ThrowIfCancellationRequested();
++            throw;
++        }
++        cancellationToken.ThrowIfCancellationRequested();
++        ApplyMethodTable applyMethods = getApplyMethods();
++        TState? typedState = DomainProcessorStateRehydrator.RehydrateState<TState>(
++            currentState,
++            applyMethods,
++            cancellationToken, snapshotCapture, evolution);
++        cancellationToken.ThrowIfCancellationRequested();
++        FoldedSnapshotCaptureProfile<TState>? profile = null;
++        TState? preCommandState = null;
++        if (qualifiedProfileId is not null)
++        {
++            try
++            {
++                profile = getFoldedSnapshotCapture();
++                if (profile is null || !string.Equals(profile.ProfileId, qualifiedProfileId, StringComparison.Ordinal)
++                    || !Equals(profile.Limits, qualifiedLimits)
++                    || !BoundedSnapshotJsonBuffer.CanSerialize(profile.MaximumStateJsonBytes,
++                        EventStorePayloadSerialization.Options, profile.Limits.MaximumSerializerScratchBytes,
++                        profile.Limits.MaximumWorkingStateGraphBytes))
++                {
++                    profile = null;
++                }
++                else if (typedState is not null)
++                {
++                    // The declared graph maximum was admitted when the immutable profile was built.
++                    preCommandState = profile.StateCapture.Capture(typedState, cancellationToken);
++                }
++            }
++            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
++            catch { profile = null; preCommandState = null; }
++        }
++        DomainResult result = await handleAsync(command, typedState, cancellationToken).ConfigureAwait(false);
++        cancellationToken.ThrowIfCancellationRequested();
++        if (profile is null || result.IsNoOp)
++        {
++            return new FoldedSnapshotProcessingResult(result, null);
++        }
++        FoldedSnapshotCaptureProfile<TState> admittedProfile = profile;
++        TState? admittedState = preCommandState;
++        long preSequence = currentState switch
++        {
++            DomainServiceCurrentState dscs => dscs.CurrentSequence,
++            JsonElement { ValueKind: JsonValueKind.Object } json
++                when json.TryGetProperty("events", out _)
++                    && json.TryGetProperty("currentSequence", out JsonElement sequence)
++                    && sequence.ValueKind == JsonValueKind.Number
++                    && sequence.TryGetInt64(out long value) => value,
++            _ => 0,
++        };
++        return new FoldedSnapshotProcessingResult(result,
++            (wireEvents, token) => CaptureFoldedState(command, preSequence, admittedState, admittedProfile, wireEvents, applyMethods, evolution, token));
++    }
++
++    private static string CaptureFoldedState(
++        CommandEnvelope command,
++        long preSequence,
++        TState? preCommandState,
++        FoldedSnapshotCaptureProfile<TState> profile,
++        IReadOnlyList<DomainServiceWireEvent> wireEvents,
++        ApplyMethodTable applyMethods,
++        EventPayloadEvolutionRegistry? evolution,
++        CancellationToken cancellationToken)
++    {
++        cancellationToken.ThrowIfCancellationRequested();
++        if (wireEvents.Count is < 1 || wireEvents.Count > profile.MaximumEventCount)
++        {
++            throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
++        }
++        long totalBytes = 0;
++        foreach (DomainServiceWireEvent item in wireEvents)
++        {
++            totalBytes = checked(totalBytes + item.Payload.Length);
++            if (totalBytes > profile.MaximumEventBytes
++                || !string.Equals(item.SerializationFormat, "json", StringComparison.OrdinalIgnoreCase))
++            {
++                throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
++            }
++        }
++        using var replayInput = new LegacyCommandReplayInput(cancellationToken, profile.Limits);
++        replayInput.AdmitCaptureEnvelopes(wireEvents.Count);
++        var detached = new EventEnvelope[wireEvents.Count];
++        for (int index = 0; index < wireEvents.Count; index++)
++        {
++            cancellationToken.ThrowIfCancellationRequested();
++            DomainServiceWireEvent item = wireEvents[index];
++            var metadata = new EventMetadata(
++                command.MessageId, command.AggregateId, command.Domain, command.TenantId, command.Domain,
++                checked(preSequence + index + 1), 0, DateTimeOffset.UtcNow, command.CorrelationId,
++                command.CausationId ?? command.CorrelationId, command.UserId, "capture", item.EventTypeName,
++                item.MetadataVersion ?? 1, item.SerializationFormat) { PayloadVersion = item.PayloadVersion };
++            // The router already supplied private once-admitted bytes. Shared replay
++            // admits and makes the final private envelope copy before payload parsing.
++            detached[index] = new EventEnvelope(metadata, item.Payload, null);
++        }
++        var input = new DomainServiceCurrentState(preCommandState, detached, preSequence,
++            checked(preSequence + detached.Length));
++        TState folded = DomainProcessorStateRehydrator.RehydrateState<TState>(input,
++            applyMethods, cancellationToken, evolution: evolution,
++            admittedInput: replayInput)
++            ?? throw new InvalidOperationException("SnapshotCaptureStateInvalid");
++        using var output = new BoundedSnapshotJsonStream(profile.MaximumStateJsonBytes,
++            EventStorePayloadSerialization.Options, profile.Limits.MaximumSerializerScratchBytes,
++            profile.Limits.MaximumWorkingStateGraphBytes);
++        BoundedSnapshotJsonBuffer.Serialize(output, folded, typeof(TState), EventStorePayloadSerialization.Options,
++            profile.MaximumStateJsonBytes, profile.Limits.MaximumSerializerScratchBytes,
++            profile.Limits.MaximumWorkingStateGraphBytes);
++        byte[] bytes = output.ToArray();
++        cancellationToken.ThrowIfCancellationRequested();
++        var reader = new Utf8JsonReader(bytes, new JsonReaderOptions { MaxDepth = profile.MaximumDepth });
++        int nodes = 0;
++        while (reader.Read())
++        {
++            if (++nodes > profile.MaximumNodeCount) { throw new InvalidOperationException("SnapshotCaptureLimitExceeded"); }
++        }
++        if (checked(16L * bytes.Length + 64L * nodes) > profile.Limits.MaximumDomainParsedStateGraphBytes)
++        {
++            throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
++        }
++        using JsonDocument document = JsonDocument.Parse(bytes);
++        JsonElement state = document.RootElement;
++        if (state.ValueKind != JsonValueKind.Object)
++        {
++            throw new InvalidOperationException("SnapshotCaptureStateInvalid");
++        }
++        return Encoding.UTF8.GetString(bytes);
++    }
++
++}
+diff --git a/src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs b/src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs
+new file mode 100644
+index 000000000..8a3255e1d
+--- /dev/null
++++ b/src/Hexalith.EventStore.Server/Configuration/FoldedSnapshotActorConfigurationExtensions.cs
+@@ -0,0 +1,97 @@
++using System.Globalization;
++
++using Hexalith.EventStore.Contracts.Snapshots;
++using Hexalith.EventStore.DomainService;
++
++using Microsoft.Extensions.Configuration;
++using Microsoft.Extensions.DependencyInjection;
++
++namespace Hexalith.EventStore.Server.Configuration;
++
++/// <summary>Enrolls explicit deployment-owned actor profiles without loading domain assemblies.</summary>
++public static class FoldedSnapshotActorConfigurationExtensions
++{
++    /// <summary>The optional deployment configuration array of reviewed actor declarations.</summary>
++    public const string SectionName = "EventStore:Snapshots:ActorQualifications";
++
++    private static readonly HashSet<string> s_entryKeys = new(StringComparer.OrdinalIgnoreCase)
++    {
++        "Domain", "AggregateType", "ProfileId", "ParityEvidenceId", "Limits",
++    };
++
++    private static readonly HashSet<string> s_limitKeys = typeof(FoldedSnapshotCaptureLimits)
++        .GetConstructors().Single().GetParameters().Select(parameter => parameter.Name!)
++        .ToHashSet(StringComparer.OrdinalIgnoreCase);
++
++    /// <summary>Validates the complete optional configuration before adding any actor qualification.</summary>
++    /// <param name="services">The actor host service collection.</param>
++    /// <param name="configuration">Trusted serving-deployment configuration, never command input.</param>
++    /// <returns>The service collection for chaining.</returns>
++    /// <remarks>Absent configuration preserves unenrolled behavior. Present invalid configuration fails closed.</remarks>
++    public static IServiceCollection AddEventStoreConfiguredFoldedSnapshotActorQualifications(
++        this IServiceCollection services, IConfiguration configuration)
++    {
++        ArgumentNullException.ThrowIfNull(services);
++        ArgumentNullException.ThrowIfNull(configuration);
++        IConfigurationSection? section = configuration.GetSection("EventStore:Snapshots").GetChildren()
++            .SingleOrDefault(child => string.Equals(child.Key, "ActorQualifications", StringComparison.OrdinalIgnoreCase));
++        if (section is null) return services;
++
++        FoldedSnapshotQualification[] declarations;
++        try
++        {
++            IConfigurationSection[] entries = section.GetChildren().ToArray();
++            if (section.Value is not null || entries.Length == 0) throw InvalidConfiguration();
++            var parsed = new List<FoldedSnapshotQualification>();
++            for (int index = 0; index < entries.Length; index++)
++            {
++                IConfigurationSection entry = entries[index];
++                if (entry.Key != index.ToString(CultureInfo.InvariantCulture) || entry.Value is not null
++                    || entry.GetChildren().Count() != s_entryKeys.Count
++                    || entry.GetChildren().Any(child => !s_entryKeys.Contains(child.Key))) throw InvalidConfiguration();
++                IConfigurationSection limitsSection = entry.GetSection("Limits");
++                IConfigurationSection[] limitEntries = limitsSection.GetChildren().ToArray();
++                if (limitsSection.Value is not null || limitEntries.Length != s_limitKeys.Count
++                    || limitEntries.Any(child => !s_limitKeys.Contains(child.Key) || child.Value is null || child.GetChildren().Any()))
++                    throw InvalidConfiguration();
++                FoldedSnapshotCaptureLimits limits = limitsSection.Get<FoldedSnapshotCaptureLimits>(
++                    options => options.ErrorOnUnknownConfiguration = true) ?? throw InvalidConfiguration();
++                parsed.Add(new FoldedSnapshotQualification(
++                    Identity(entry, "Domain"), Identity(entry, "AggregateType"), typeof(object),
++                    Identity(entry, "ProfileId"), Identity(entry, "ParityEvidenceId"), limits));
++            }
++
++            // Registry validation covers code/config collisions as well as duplicate config entries.
++            var existing = new List<FoldedSnapshotQualification>();
++            foreach (ServiceDescriptor descriptor in services.Where(item => item.ServiceType == typeof(FoldedSnapshotQualification)))
++            {
++                if (descriptor.IsKeyedService || descriptor.ImplementationInstance is not FoldedSnapshotQualification declaration)
++                    throw InvalidConfiguration();
++                existing.Add(declaration);
++            }
++            _ = new FoldedSnapshotQualificationRegistry(existing.Concat(parsed));
++            declarations = parsed.ToArray();
++        }
++        catch
++        {
++            // Configuration can contain private deployment values. Never retain binder/constructor exceptions.
++            throw InvalidConfiguration();
++        }
++
++        foreach (FoldedSnapshotQualification declaration in declarations)
++            services.AddEventStoreFoldedSnapshotActorQualification(declaration.Domain, declaration.AggregateType,
++                declaration.ProfileId, declaration.ParityEvidenceId, declaration.Limits);
++        return services;
++    }
++
++    private static string Identity(IConfigurationSection entry, string key)
++    {
++        IConfigurationSection value = entry.GetSection(key);
++        if (string.IsNullOrWhiteSpace(value.Value) || value.Value != value.Value.Trim() || value.GetChildren().Any())
++            throw InvalidConfiguration();
++        return value.Value;
++    }
++
++    private static InvalidOperationException InvalidConfiguration()
++        => new("SnapshotActorQualificationConfigurationInvalid");
++}
+diff --git a/src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs b/src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs
+index aafafb607..a87ba2628 100644
+--- a/src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs
++++ b/src/Hexalith.EventStore.Server/Configuration/ServiceCollectionExtensions.cs
+@@ -92,6 +92,7 @@ public static class EventStoreServerServiceCollectionExtensions {
+         ArgumentNullException.ThrowIfNull(services);
+         ArgumentNullException.ThrowIfNull(configuration);
+ 
++        _ = services.AddEventStoreConfiguredFoldedSnapshotActorQualifications(configuration);
+         _ = Hexalith.EventStore.ServiceDefaults.Routing.RouteCatalogServiceCollectionExtensions.AddEventStoreRouteCatalog(services, configuration);
+         if (!string.IsNullOrEmpty(configuration["EventStore:RouteCatalog:DevelopmentBootstrap:CatalogPath"]))
+             _ = Hexalith.EventStore.Server.Routing.RunScopedRouteCatalogGateway.AddEventStoreRunScopedCatalogGateway(services, configuration);
+diff --git a/tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj b/tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj
+index 94158025a..b2cf39151 100644
+--- a/tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj
++++ b/tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj
+@@ -7,6 +7,7 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\src\Hexalith.EventStore.DomainService\Hexalith.EventStore.DomainService.csproj" />
+     <ProjectReference Include="..\..\src\Hexalith.EventStore.Testing\Hexalith.EventStore.Testing.csproj" />
++    <ProjectReference Include="../Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs
+new file mode 100644
+index 000000000..49b80ccb2
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderAggregate.cs
+@@ -0,0 +1,70 @@
++using Hexalith.EventStore.Client.Aggregates;
++using Hexalith.EventStore.Client.Attributes;
++using Hexalith.EventStore.Client.Handlers;
++using Hexalith.EventStore.Contracts.Results;
++using Hexalith.EventStore.Contracts.Snapshots;
++
++namespace Hexalith.EventStore.FoldedSnapshotFixture;
++
++/// <summary>Convention-discovered SDK fixture retaining ordinary dispatch and both replay contracts.</summary>
++[EventStoreDomain("folded-orders")]
++public sealed class FoldedOrderAggregate : EventStoreAggregate<FoldedOrderState>
++{
++    /// <summary>The SDK-fixture profile, not a module enrollment.</summary>
++    public const string ProfileId = "sdk-order-fixture-v1";
++    /// <summary>The SDK-fixture parity identity, not consuming-module evidence.</summary>
++    public const string ParityId = "sdk-order-fixture-parity-v1";
++
++    /// <summary>Gets or sets the exact finite fixture limits.</summary>
++    public FoldedSnapshotCaptureLimits CaptureLimits { get; set; } = FoldedOrderLimits.Create();
++    /// <summary>Gets or sets a fixture callback for copy failure/cancellation controls.</summary>
++    public Action<CancellationToken>? OnCopy { get; set; }
++    /// <summary>Gets the number of owner-copier calls.</summary>
++    public int Copies { get; private set; }
++
++    /// <inheritdoc/>
++    protected override DetachedStateCapture<FoldedOrderState> SnapshotCapture => FoldedSnapshotCapture.StateCapture;
++    /// <inheritdoc/>
++    protected override FoldedSnapshotCaptureProfile<FoldedOrderState> FoldedSnapshotCapture
++        => new(ProfileId, ParityId, new(CaptureLimits.MaximumPreCommandStateGraphBytes, Copy), CaptureLimits);
++
++    /// <summary>Uses the original reflection command-dispatch route and does not apply returned events.</summary>
++    public static DomainResult Handle(FoldedOrderCommand command, FoldedOrderState? state, CancellationToken cancellationToken)
++    {
++        ArgumentNullException.ThrowIfNull(command);
++        cancellationToken.ThrowIfCancellationRequested();
++        if (command.Operation == "noop") return DomainResult.NoOp();
++        if (command.Operation == "reject") return DomainResult.Rejection([new FoldedOrderRejected("declined")]);
++        if (state is not null && command.Operation == "mutate")
++        {
++            state.Items["handler-only"] = "excluded";
++            state.Tags.Add("handler-only");
++        }
++        return DomainResult.Success([new FoldedOrderChanged(command.Operation == "mutate" ? "set" : command.Operation, command.Key, command.Value)]);
++    }
++
++    private FoldedOrderState Copy(FoldedOrderState state, CancellationToken cancellationToken)
++    {
++        cancellationToken.ThrowIfCancellationRequested();
++        Copies++;
++        OnCopy?.Invoke(cancellationToken);
++        long charge = checked(1024L + 4L * state.Name.Length);
++        foreach ((string key, string value) in state.Items)
++        {
++            cancellationToken.ThrowIfCancellationRequested();
++            charge = checked(charge + 256L + 4L * key.Length + 4L * value.Length);
++        }
++        foreach (string tag in state.Tags)
++        {
++            cancellationToken.ThrowIfCancellationRequested();
++            charge = checked(charge + 128L + 4L * tag.Length);
++        }
++        if (charge > CaptureLimits.MaximumPreCommandStateGraphBytes) throw new InvalidOperationException("SnapshotCaptureLimitExceeded");
++        return new FoldedOrderState
++        {
++            Name = state.Name, Items = new(state.Items, StringComparer.Ordinal), Tags = [.. state.Tags],
++            Closed = state.Closed, HasItemHistory = state.HasItemHistory,
++            CreatedAt = state.CreatedAt, ThrowOnApply = state.ThrowOnApply,
++        };
++    }
++}
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs
+new file mode 100644
+index 000000000..f1ccb1716
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderChanged.cs
+@@ -0,0 +1,9 @@
++using Hexalith.EventStore.Contracts.Events;
++
++namespace Hexalith.EventStore.FoldedSnapshotFixture;
++
++/// <summary>A canonical order fixture event.</summary>
++/// <param name="Operation">The persisted operation.</param>
++/// <param name="Key">The item key.</param>
++/// <param name="Value">The item value or name.</param>
++public sealed record FoldedOrderChanged(string Operation, string Key, string Value) : IEventPayload;
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs
+new file mode 100644
+index 000000000..e8d2b78cd
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderCommand.cs
+@@ -0,0 +1,7 @@
++namespace Hexalith.EventStore.FoldedSnapshotFixture;
++
++/// <summary>A fixture order mutation; it grants no real module qualification.</summary>
++/// <param name="Operation">The order operation.</param>
++/// <param name="Key">The item key.</param>
++/// <param name="Value">The item value or name.</param>
++public sealed record FoldedOrderCommand(string Operation, string Key, string Value);
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs
+new file mode 100644
+index 000000000..efc45c6e4
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderLimits.cs
+@@ -0,0 +1,29 @@
++using Hexalith.EventStore.Contracts.Snapshots;
++
++namespace Hexalith.EventStore.FoldedSnapshotFixture;
++
++/// <summary>Finite SDK-fixture reservations; never a declaration for a consuming module.</summary>
++public static class FoldedOrderLimits
++{
++    /// <summary>Creates independently selectable output, node and serializer refusal controls.</summary>
++    public static FoldedSnapshotCaptureLimits Create(int stateBytes = 16_384, int nodes = 2_048, long scratchBytes = 1_048_576)
++        => new(
++            maximumCaptureWorkspaceBytes: 4_194_304,
++            maximumPreCommandStateGraphBytes: 65_536,
++            maximumWorkingStateGraphBytes: 65_536,
++            maximumDetachedEventGraphBytes: 65_536,
++            maximumEventCount: 8,
++            maximumEventBytes: 16_384,
++            maximumStateJsonBytes: stateBytes,
++            maximumDomainParsedStateGraphBytes: 524_288,
++            maximumEscapedWireStateBytes: checked(6 * stateBytes + 2),
++            maximumActorParsedStateBytes: stateBytes,
++            maximumActorParsedGraphBytes: 524_288,
++            maximumCanonicalStateMeasurementBytes: stateBytes,
++            maximumCanonicalEnvelopeBytes: stateBytes + 4096,
++            maximumNodeCount: nodes,
++            maximumDepth: 16,
++            maximumSerializerScratchBytes: scratchBytes,
++            maximumSimultaneousLiveBytes: 4_194_304,
++            maximumActorWorkspaceBytes: 4_194_304);
++}
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs
+new file mode 100644
+index 000000000..f2ad8b978
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderRejected.cs
+@@ -0,0 +1,7 @@
++using Hexalith.EventStore.Contracts.Events;
++
++namespace Hexalith.EventStore.FoldedSnapshotFixture;
++
++/// <summary>A persisted order rejection that leaves business state unchanged.</summary>
++/// <param name="Reason">The bounded fixture reason.</param>
++public sealed record FoldedOrderRejected(string Reason) : IRejectionEvent;
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs
+new file mode 100644
+index 000000000..a5f896e1f
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/FoldedOrderState.cs
+@@ -0,0 +1,40 @@
++namespace Hexalith.EventStore.FoldedSnapshotFixture;
++
++/// <summary>Mutable collections, lifecycle and history used for SDK restore/capture parity only.</summary>
++public sealed class FoldedOrderState
++{
++    /// <summary>Gets or sets the name.</summary>
++    public string Name { get; set; } = string.Empty;
++    /// <summary>Gets or sets the order items.</summary>
++    public Dictionary<string, string> Items { get; set; } = [];
++    /// <summary>Gets or sets the item-change history.</summary>
++    public List<string> Tags { get; set; } = [];
++    /// <summary>Gets or sets the lifecycle state.</summary>
++    public bool Closed { get; set; }
++    /// <summary>Gets or sets membership-independent history.</summary>
++    public bool HasItemHistory { get; set; }
++    /// <summary>Gets or sets the original creation timestamp.</summary>
++    public DateTimeOffset CreatedAt { get; set; }
++    /// <summary>Gets or sets a fixture-only optional Apply failure.</summary>
++    public bool ThrowOnApply { get; set; }
++
++    /// <summary>Folds the exact persisted event into every supported state member.</summary>
++    public void Apply(FoldedOrderChanged payload)
++    {
++        ArgumentNullException.ThrowIfNull(payload);
++        if (ThrowOnApply) throw new InvalidOperationException("fixture-apply-refused");
++        switch (payload.Operation)
++        {
++            case "create": Name = payload.Value; CreatedAt = DateTimeOffset.UnixEpoch; break;
++            case "set": Items[payload.Key] = payload.Value; Tags.Add(payload.Value); HasItemHistory = true; break;
++            case "remove": Items.Remove(payload.Key); break;
++            case "rename": Name = payload.Value; break;
++            case "close": Closed = true; break;
++            case "open": Closed = false; break;
++            default: throw new InvalidOperationException("fixture-operation-invalid");
++        }
++    }
++
++    /// <summary>Rejections preserve the complete authoritative state.</summary>
++    public void Apply(FoldedOrderRejected payload) => ArgumentNullException.ThrowIfNull(payload);
++}
+diff --git a/tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj b/tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj
+new file mode 100644
+index 000000000..201ae13ee
+--- /dev/null
++++ b/tests/Hexalith.EventStore.FoldedSnapshotFixture/Hexalith.EventStore.FoldedSnapshotFixture.csproj
+@@ -0,0 +1,10 @@
++<Project Sdk="Microsoft.NET.Sdk">
++  <PropertyGroup>
++    <IsPackable>false</IsPackable>
++    <IsPublishable>false</IsPublishable>
++    <IsTestProject>false</IsTestProject>
++  </PropertyGroup>
++  <ItemGroup>
++    <ProjectReference Include="../../src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj" />
++  </ItemGroup>
++</Project>
+diff --git a/tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs b/tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs
+new file mode 100644
+index 000000000..958ca6fed
+--- /dev/null
++++ b/tests/Hexalith.EventStore.Server.Tests/Configuration/FoldedSnapshotActorConfigurationTests.cs
+@@ -0,0 +1,189 @@
++using System.Globalization;
++using System.Reflection;
++using System.Text;
++
++using Hexalith.EventStore.Contracts.Snapshots;
++using Hexalith.EventStore.DomainService;
++using Hexalith.EventStore.Server.Configuration;
++using Hexalith.EventStore.Server.Tests.Actors;
++using Hexalith.EventStore.Server.Tests.TestUtilities;
++
++using Microsoft.Extensions.Configuration;
++using Microsoft.Extensions.DependencyInjection;
++using Microsoft.Extensions.Logging;
++
++using Shouldly;
++
++namespace Hexalith.EventStore.Server.Tests.Configuration;
++
++/// <summary>Exercises the real actor-host registration contract without starting a sidecar.</summary>
++public sealed class FoldedSnapshotActorConfigurationTests
++{
++    private const string Prefix = "EventStore:Snapshots:ActorQualifications";
++
++    [Fact]
++    public void AbsentConfigurationPreservesUnenrolledHost()
++    {
++        var services = new ServiceCollection();
++        services.AddEventStoreServer(new ConfigurationBuilder().Build());
++        using ServiceProvider provider = services.BuildServiceProvider();
++        provider.GetService<FoldedSnapshotQualificationRegistry>().ShouldBeNull();
++    }
++
++    [Fact]
++    public async Task ExistingActorHostStartupConsumesExactDeploymentDeclarations()
++    {
++        var services = new ServiceCollection();
++        List<LogEntry> logs = [];
++        services.AddSingleton<ILogger<FoldedSnapshotQualificationHostedService>>(
++            new TestLogger<FoldedSnapshotQualificationHostedService>(logs));
++        Dictionary<string, string?> values = Values();
++        foreach ((string key, string? value) in Values(1, "inventory", "InventoryAggregate", "inventory-fold-v1")) values.Add(key, value);
++        services.AddEventStoreServer(new ConfigurationBuilder().AddInMemoryCollection(values).Build());
++        using ServiceProvider provider = services.BuildServiceProvider();
++
++        await ActivatorUtilities.CreateInstance<FoldedSnapshotQualificationHostedService>(provider).StartAsync(CancellationToken.None);
++
++        logs.ShouldBeEmpty();
++        FoldedSnapshotQualificationRegistry registry = provider.GetRequiredService<FoldedSnapshotQualificationRegistry>();
++        FoldedSnapshotQualification orders = registry.Find("orders", "OrderAggregate").ShouldNotBeNull();
++        orders.StateType.ShouldBe(typeof(object));
++        orders.ProfileId.ShouldBe("orders-fold-v1");
++        orders.ParityEvidenceId.ShouldBe("orders-parity-v1");
++        orders.Limits.ShouldBe(SnapshotTestLimits.ForState());
++        registry.FindByProfile("inventory", "inventory-fold-v1").ShouldNotBeNull();
++        registry.Find("orders", "OtherAggregate").ShouldBeNull();
++        registry.Find("ORDERS", "OrderAggregate").ShouldBeNull();
++        registry.FindByProfile("inventory", "orders-fold-v1").ShouldBeNull();
++    }
++
++    [Theory]
++    [InlineData("unknown-entry")]
++    [InlineData("unknown-limit")]
++    [InlineData("computed-limit")]
++    [InlineData("invalid-number")]
++    [InlineData("invalid-limit")]
++    [InlineData("inconsistent-limits")]
++    [InlineData("missing-limits")]
++    [InlineData("scalar-limits")]
++    [InlineData("missing-domain")]
++    [InlineData("missing-aggregate")]
++    [InlineData("missing-profile")]
++    [InlineData("missing-parity")]
++    [InlineData("blank-domain")]
++    [InlineData("blank-aggregate")]
++    [InlineData("blank-profile")]
++    [InlineData("blank-parity")]
++    [InlineData("noncanonical-index")]
++    [InlineData("sparse-index")]
++    [InlineData("scalar-entry")]
++    [InlineData("scalar-array")]
++    public void MalformedDeclarationRefusesAtomicallyWithoutRetainingPrivateValues(string mutation)
++    {
++        const string sentinel = "credential-sentinel";
++        Dictionary<string, string?> values = Values();
++        string entry = Prefix + ":0:";
++        switch (mutation)
++        {
++            case "unknown-entry": values[entry + "StateType"] = sentinel; break;
++            case "unknown-limit": values[entry + "Limits:Unknown"] = sentinel; break;
++            case "computed-limit": values[entry + "Limits:DomainReservationBytes"] = sentinel; break;
++            case "invalid-number": values[entry + "Limits:MaximumDepth"] = sentinel; break;
++            case "invalid-limit": values[entry + "Limits:MaximumDepth"] = "65"; break;
++            case "inconsistent-limits": values[entry + "Limits:MaximumActorWorkspaceBytes"] = "1"; break;
++            case "missing-limits": values = values.Where(item => !item.Key.Contains(":Limits:", StringComparison.Ordinal)).ToDictionary(); break;
++            case "scalar-limits": values[entry + "Limits"] = sentinel; break;
++            case "missing-domain": values.Remove(entry + "Domain"); break;
++            case "missing-aggregate": values.Remove(entry + "AggregateType"); break;
++            case "missing-profile": values.Remove(entry + "ProfileId"); break;
++            case "missing-parity": values.Remove(entry + "ParityEvidenceId"); break;
++            case "blank-domain": values[entry + "Domain"] = " "; break;
++            case "blank-aggregate": values[entry + "AggregateType"] = " "; break;
++            case "blank-profile": values[entry + "ProfileId"] = " " + sentinel; break;
++            case "blank-parity": values[entry + "ParityEvidenceId"] = sentinel + " "; break;
++            case "noncanonical-index": values = values.ToDictionary(item => item.Key.Replace(":0:", ":00:", StringComparison.Ordinal), item => item.Value); break;
++            case "sparse-index": values = values.ToDictionary(item => item.Key.Replace(":0:", ":1:", StringComparison.Ordinal), item => item.Value); break;
++            case "scalar-entry": values[Prefix + ":0"] = sentinel; break;
++            case "scalar-array": values[Prefix] = sentinel; break;
++        }
++        var services = new ServiceCollection();
++        services.AddSingleton("foreign-preserved");
++        int count = services.Count;
++
++        InvalidOperationException failure = Should.Throw<InvalidOperationException>(() =>
++            services.AddEventStoreServer(new ConfigurationBuilder().AddInMemoryCollection(values).Build()));
++
++        failure.Message.ShouldBe("SnapshotActorQualificationConfigurationInvalid");
++        failure.ToString().ShouldNotContain(sentinel);
++        failure.InnerException.ShouldBeNull();
++        services.Count.ShouldBe(count);
++    }
++
++    /// <summary>Every finite constructor parameter is required; none receives an implicit numeric default.</summary>
++    public static IEnumerable<object[]> LimitNames()
++        => typeof(FoldedSnapshotCaptureLimits).GetConstructors().Single().GetParameters().Select(parameter => new object[] { parameter.Name! });
++
++    [Theory]
++    [MemberData(nameof(LimitNames))]
++    public void EveryCaptureLimitMustBeExplicit(string name)
++    {
++        Dictionary<string, string?> values = Values();
++        string key = values.Keys.Single(item => item.EndsWith(":" + name, StringComparison.OrdinalIgnoreCase));
++        values.Remove(key);
++        Should.Throw<InvalidOperationException>(() => new ServiceCollection().AddEventStoreServer(
++            new ConfigurationBuilder().AddInMemoryCollection(values).Build())).Message.ShouldBe("SnapshotActorQualificationConfigurationInvalid");
++    }
++
++    [Theory]
++    [InlineData("null")]
++    [InlineData("[]")]
++    [InlineData("{}")]
++    [InlineData("\"\"")]
++    public void PresentEmptyConfigurationDoesNotSilentlyDisappear(string value)
++    {
++        using var json = new MemoryStream(Encoding.UTF8.GetBytes("{\"EventStore\":{\"Snapshots\":{\"ActorQualifications\":" + value + "}}}"));
++        IConfiguration configuration = new ConfigurationBuilder().AddJsonStream(json).Build();
++        Should.Throw<InvalidOperationException>(() => new ServiceCollection().AddEventStoreServer(configuration))
++            .Message.ShouldBe("SnapshotActorQualificationConfigurationInvalid");
++    }
++
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    public void DuplicateAggregateOrProfileRefusesBeforeRegistration(bool duplicateProfile)
++    {
++        Dictionary<string, string?> values = Values();
++        foreach ((string key, string? value) in Values(1, "orders", duplicateProfile ? "OtherAggregate" : "OrderAggregate",
++            duplicateProfile ? "orders-fold-v1" : "other-profile")) values.Add(key, value);
++        var services = new ServiceCollection();
++        Should.Throw<InvalidOperationException>(() => services.AddEventStoreServer(new ConfigurationBuilder().AddInMemoryCollection(values).Build()));
++        services.ShouldBeEmpty();
++    }
++
++    [Fact]
++    public void ExistingCodeRegistrationIsPreservedAndDuplicateConfigRefuses()
++    {
++        var services = new ServiceCollection();
++        services.AddEventStoreFoldedSnapshotActorQualification("orders", "OrderAggregate", "orders-fold-v1", "orders-parity-v1", SnapshotTestLimits.ForState());
++        int before = services.Count;
++        Should.Throw<InvalidOperationException>(() => services.AddEventStoreServer(new ConfigurationBuilder().AddInMemoryCollection(Values()).Build()));
++        services.Count.ShouldBe(before);
++    }
++
++    private static Dictionary<string, string?> Values(int index = 0, string domain = "orders", string aggregate = "OrderAggregate", string profile = "orders-fold-v1")
++    {
++        string entry = Prefix + ":" + index.ToString(CultureInfo.InvariantCulture) + ":";
++        var values = new Dictionary<string, string?>
++        {
++            [entry + "Domain"] = domain, [entry + "AggregateType"] = aggregate,
++            [entry + "ProfileId"] = profile, [entry + "ParityEvidenceId"] = "orders-parity-v1",
++        };
++        FoldedSnapshotCaptureLimits limits = SnapshotTestLimits.ForState();
++        foreach (ParameterInfo parameter in typeof(FoldedSnapshotCaptureLimits).GetConstructors().Single().GetParameters())
++        {
++            PropertyInfo property = typeof(FoldedSnapshotCaptureLimits).GetProperty(parameter.Name!, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)!;
++            values.Add(entry + "Limits:" + property.Name, Convert.ToString(property.GetValue(limits), CultureInfo.InvariantCulture));
++        }
++        return values;
++    }
++}
