@@ -224,3 +224,19 @@ original isolated-worktree path; restore it there before reviewing/running it.
 Parent independently checked both source hashes and saved patch hash against
 the child manifest, backed up the utility and confirmed scratch absence. All
 uncommitted work remains preserved. Resume only when requested.
+
+
+## Publication update — subsequent user request
+
+The user subsequently requested pushing all saved changes. The shared main
+checkpoint is `a46a061c02f3865296cc3e98231f92abb8e36987`. The scanner source,
+baseline and draft utility are now committed and remotely verified on
+`story/23-discovery-prerequisite` at `efc6285bedebf0a96452952256378178e46715d5`. Its worktree is clean; its
+original implementation baseline remains a2eb5fd2. The branch's
+`discovery-publication-checkpoint.json` records six focused methods passing
+again on the exact source, zero failures/skips, and released-policy commit
+validation. Full qualification remains incomplete and implementation paused.
+
+Resume from that published feature branch and the saved stop handoff. The
+scanner changes have not been merged into main and no story completion,
+release, adoption or scheduled acceptance is claimed by this publication.
