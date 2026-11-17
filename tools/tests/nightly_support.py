@@ -26,7 +26,11 @@ STAMP = "2026-11-14T02:17:00Z"
 def zip_document(member, document):
     stream = io.BytesIO()
     with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(member, document if isinstance(document, bytes) else json.dumps(document).encode())
+        # Listing and download reconstruct one immutable artifact. Real wall
+        # time must not change its ZIP header and authenticated digest.
+        entry = zipfile.ZipInfo(member, date_time=(1980, 1, 1, 0, 0, 0))
+        entry.compress_type = zipfile.ZIP_DEFLATED
+        archive.writestr(entry, document if isinstance(document, bytes) else json.dumps(document).encode())
     return stream.getvalue()
 
 

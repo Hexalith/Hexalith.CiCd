@@ -670,6 +670,19 @@ class RuntimeTests(unittest.TestCase):
                     api.pages("/repos/Hexalith/Hexalith.Alpha/actions/runs/9/artifacts", "inert", field="artifacts")
                 self.assertNotIsInstance(failure.exception, rt.InventoryChanged)
 
+    def test_fixture_artifact_identity_survives_listing_download_clock_boundary(self):
+        value = {"schema": "hexalith.release-outcome.v1", "sha": "a" * 40, "outcome": "ready",
+                 "version": "1.0.0", "draftId": 880, "lastTag": ""}
+        with mock.patch("nightly_support.zipfile.time.localtime", return_value=(2026, 11, 14, 2, 17, 0)):
+            listed = zip_document("outcome.json", value)
+        info = metadata(8, "hexalith-release-outcome", listed, 9, "a" * 40)
+        # The fake HTTP endpoint reconstructs this same immutable artifact on
+        # each request. ZIP timestamps must not alter its authenticated bytes.
+        with mock.patch("nightly_support.zipfile.time.localtime", return_value=(2026, 11, 14, 2, 17, 2)):
+            downloaded = zip_document("outcome.json", value)
+        api, _, _ = self.api([downloaded])
+        self.assertEqual(api.artifact_member("Hexalith.Alpha", info, "outcome.json", "inert"), value)
+
     def test_artifact_digest_exact_member_and_json(self):
         payload = zip_document("outcome.json", {"ok": True})
         info = metadata(8, "hexalith-release-outcome", payload, 9, "a" * 40)
