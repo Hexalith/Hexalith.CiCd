@@ -1,0 +1,101 @@
+{
+  "started_at": "2026-11-16T23:39:52.015278+00:00",
+  "result": "failed",
+  "phases": [
+    {
+      "phase": "full-affected-python-qualification",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "3.12",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/tests",
+        "-p",
+        "test_dapr*qualification.py",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.fuzLIhbJ/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/dapr-current-source-bindings-attempt-1.log",
+      "started_at": "2026-11-16T23:40:03.028690+00:00",
+      "exit": 1,
+      "completed_at": "2026-11-16T23:41:11.994948+00:00"
+    }
+  ],
+  "source_committed_or_pushed": false,
+  "live_dapr_docker_azure_calls": false,
+  "dotnet_suite_or_whole_offline_rerun": false,
+  "all_jobs_finished": true,
+  "diagnosis": "Historical 1.18.7 and 1.19.1 locks are immutable (existing hash assertions). Platform schema3 descriptor binds current source and current execution tools. Preserve the old fixture in the existing trusted historical archive; refresh only current Platform fixture/helper/test-source hashes.",
+  "append_durability_race_binding": "Not selected by the Dapr runtime lanes and absent from the existing profile inventories; no unnecessary binding or source edit.",
+  "source_head": "b172ba50cc835083271ecf78911c8184e0378ff1",
+  "preview_tree": "722c8dfdfcfc5843932ad607a562cddd80c77241",
+  "preview_is_unpublished_fixture_snapshot": true,
+  "source_sha256": {
+    "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/archive.json": "8d5e859cb1fc8d4018d1c49caa5c3babaaacc736c4a5ca48561196f506500a2f",
+    "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs": "97764901a957fdf14f27fa112c1f4ad0c1e88632221ac7626233890d35629248",
+    "deploy/dapr/qualification/runtime-lock-1.19.1-platform-config-v1.json": "3a806c1e05e73a62c715f02780b889add66f2bc04fe6876baa3c8e33f172ba50"
+  },
+  "direct_dependencies": {
+    "Hexalith.Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Hexalith.Tenants": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+    "Hexalith.Platform": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+    "Hexalith.FrontComposer": "0d065fceb2bfca9999307cb864a3f93392fb3400"
+  },
+  "unchanged_historical_locks": {
+    "runtime-lock.json": "326a24228313b4f76428f3091bfa449ba00c6a37fc4bdca55fb78409ab433238",
+    "runtime-lock-1.19.1.json": "5bce69c02c7aee8e3ec37003186a7e602ef25adb2c2808137302b0f4a908ca58"
+  },
+  "runtime_binary_image_chart_sources_authority_unchanged": true,
+  "input_changes": {
+    "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs": {
+      "before": "97764901a957fdf14f27fa112c1f4ad0c1e88632221ac7626233890d35629248",
+      "after": "72b768676682c2ebc39fd45a78779159107e968fa752e35291a3b6cbef2589a3"
+    },
+    "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainers.cs": {
+      "before": null,
+      "after": "4a56163c5061ad826f5cc091a46fccdac75d9999e611b280bded8df1690010b6"
+    },
+    "tools/tests/test_dapr_runtime_qualification.py": {
+      "before": "1f398ea9416631df122a2c076c3c9e43b13b63d1365464fb7a6cbb80dac0d017",
+      "after": "deda81b4771b6ea7ba0a05fde922fdca1181d7bb983e9b27b949ad54b43c6c2f"
+    }
+  },
+  "historical_fixture_provenance": {
+    "revision": "c94e6fffaf2d689c94bb288f151a65e10a2fea82",
+    "sha256": "97764901a957fdf14f27fa112c1f4ad0c1e88632221ac7626233890d35629248",
+    "byte_identical": true,
+    "used_only_by_existing_trusted_archive_resolution": true
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 67,
+      "added_only": [
+        "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/archive.json",
+        "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs",
+        "deploy/dapr/qualification/runtime-lock-1.19.1-platform-config-v1.json"
+      ],
+      "sha256": "22a42dc26d2ae6aa6153ae6a308baac19da488c6c6aa59c52720a8e9130d69d6"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 67,
+      "added_only": [
+        "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/archive.json",
+        "deploy/dapr/qualification/public-identities/1.19.1-original-inputs/tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs",
+        "deploy/dapr/qualification/runtime-lock-1.19.1-platform-config-v1.json"
+      ],
+      "sha256": "22a42dc26d2ae6aa6153ae6a308baac19da488c6c6aa59c52720a8e9130d69d6"
+    }
+  ],
+  "error": "RuntimeError: affected suite failed (1); see /home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/dapr-current-source-bindings-focused.log",
+  "completed_at": "2026-11-16T23:41:11.995401+00:00",
+  "attempt_disposition": "Failed: incomplete archive metadata binding and uv Python 3.12 missing pidfd_open; raw failures retained. No source assertion or custody API changed."
+}

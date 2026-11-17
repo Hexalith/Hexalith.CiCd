@@ -1,0 +1,61 @@
+{
+  "recorded_at": "2026-11-16T20:09:02.869963+00:00",
+  "scope": "Preparation contract projection only; adoption configuration/API requirements unchanged",
+  "result": "targeted tests passed; actual complete gate delegated to parent",
+  "local_identities": {
+    "cicd_head": "5f35b38174316427ebe1e63fbad5dbf0d9d19b6d",
+    "builds_worktree_head": "c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+    "eventstore_head": "f06ff0b782e971c4173c00051fde0cc643a4cdf6",
+    "eventstore_base": "0be0c922883d4ea61b18e843e24472162261d934"
+  },
+  "trusted_release_exercised": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "changed_files": [
+    "_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+    "_bmad-output/specs/spec-cicd/evidence/20/test_pre_adoption_verify.py",
+    "_bmad-output/specs/spec-cicd/evidence/20/execution.md",
+    "_bmad-output/implementation-artifacts/spec-20-migrate-eventstore.md"
+  ],
+  "source_sha256": {
+    "_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py": "803a4216dfdb93ef001d07993e5e1be1ca5edf4b7f124187ef5b67f669495144",
+    "_bmad-output/specs/spec-cicd/evidence/20/test_pre_adoption_verify.py": "f87f1dd70e73551ecc12f92f7eb1f5c2c2710a5e87547c64bff1041f505a3a71",
+    "_bmad-output/specs/spec-cicd/evidence/20/execution.md": "0e52140057d6fb352b0d3e32b46788dac0b07a073a63831fc0ed58b476466a01",
+    "_bmad-output/implementation-artifacts/spec-20-migrate-eventstore.md": "ff97b6bb46b8fc1ed951f29c997df754eb5fb4f307638cf0adc93dfdd3b4119f"
+  },
+  "tests": {
+    "command": [
+      "run-with-temp",
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "_bmad-output/specs/spec-cicd/evidence/20",
+      "-p",
+      "test_pre_adoption_verify.py",
+      "-v"
+    ],
+    "python": "Python 3.14.4",
+    "passed": 14,
+    "existing_controls_retained": 9,
+    "new_projection_checks": 5,
+    "log": "_bmad-output/specs/spec-cicd/evidence/20/preparation-stage-projection-tests.log",
+    "log_sha256": "ce93b49930c7213c6d75d2163b1abb29ce5a9bf4b1e09d28a0a08c5e7943d684"
+  },
+  "constraints_preserved": [
+    "Exact selected immutable release and source trust",
+    "CLI/tag/SHA contract, designated credentials and accepted-adoption expiry",
+    "Protected endpoint bytes/modes/gitlinks and introduced-history parent-edge checks",
+    "Explicit main refspec and immediate freshness rechecks",
+    "All shared Release/unit and applicable offline product/package/consumer checks and nonzero propagation",
+    "Additional SDK checked through actual dotnet --list-sdks; no installation",
+    "Only the exact sole Azure manual job/classification is projected; service cases remain authority-owned and unexecuted",
+    "No planned/production config, shared Builds code, EventStore source/owned portion or scanner edits"
+  ],
+  "all_patch_jobs_finished": true,
+  "broad_product_checks_run": false,
+  "commit_push_or_remote_mutation_performed": false
+}

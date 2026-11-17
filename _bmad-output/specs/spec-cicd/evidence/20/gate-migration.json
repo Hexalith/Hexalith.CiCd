@@ -1,0 +1,245 @@
+{
+  "removed_files": [
+    "tools/tests/test_check_committed_files.py",
+    "tools/tests/test_oq8_governing_design.py",
+    "tools/tests/test_phase_4_gate_decision.py",
+    "tools/tests/test_phase_4_gate_risk_matrix.py",
+    "tools/tests/test_phase_4_story_completion.py",
+    "tools/tests/test_phase_4_transition.py",
+    "tools/tests/test_phase_4_story_5_3.py",
+    "tools/tests/test_published_compatibility_workflow.py",
+    "tools/tests/test_published_runner_exit.py",
+    "tools/tests/test_published_workflow_context.py",
+    "tools/tests/test_release_candidate.py",
+    "tools/tests/test_release_publication_authority.py",
+    "tools/tests/test_release_source_branch.py",
+    "tools/tests/test_run_with_temp.py",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContainerPublishingGovernanceTests.cs",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/TrustedPublishingReleaseTests.cs",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceVocabularyAtddTests.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/IDw6GovernanceCheckerInvoker.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6BookkeepingAtddTests.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6RuleVocabulary.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6CheckerReportAtddTests.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6LedgerSweepAtddTests.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceDiagnostic.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceCheckerInvokerFactory.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6TestPaths.cs",
+    "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj.lscache"
+  ],
+  "removed_methods": {
+    "tools/tests/test_dapr_runtime_qualification.py": [
+      "testQualificationUploadsPreserveHiddenInputsForIndependentValidation"
+    ],
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs": [
+      "PublicationAuthorityFixturesPassWithoutSkippedCases"
+    ],
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PackageOwnershipGovernanceTests.cs": [
+      "EventStoreDependabotDoesNotOwnNuGetCatalogUpdates",
+      "GatewayLedgerDoesNotReportObsoleteUnconditionalSourceEdge"
+    ],
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ReleasePackageManifestTests.cs": [
+      "Normal_gate_triggers_include_only_main_and_exact_maintenance",
+      "Semantic_release_delegates_package_inventory_to_manifest_scripts",
+      "Semantic_release_NuGet_publication_guard_rejects_additional_commands_and_operands",
+      "Shared_ci_workflow_uses_domain_ci_with_deterministic_server_tests",
+      "Shared_ci_requires_the_pinned_tool_and_keeps_the_declared_package_suite",
+      "Semantic_release_governance_job_is_unique_unconditional_and_blocking",
+      "SemanticReleaseGovernanceValidationAcceptsValidJob",
+      "Semantic_release_governance_validation_rejects_skip_or_tolerance_mutations",
+      "SemanticReleaseGovernanceValidationRejectsChangedTimeout",
+      "TenantsSourceModeJobValidationRejectsSkippedJob",
+      "TenantsSourceModeJobValidationRejectsTokenOnlyMatch",
+      "Workflow_job_block_extraction_handles_line_endings_reordered_siblings_and_final_job",
+      "Workflow_job_block_extraction_fails_closed_when_target_is_missing_or_duplicate",
+      "Live_sidecar_workflow_targets_live_project_outside_release_gate",
+      "Contracts_and_live_sidecar_workflow_jobs_remain_blocking",
+      "Live_sidecar_workflow_guardrail_rejects_forbidden_mutations",
+      "Release_workflow_owns_trusted_publishing_with_approved_eventstore_container_only",
+      "Security_gate_workflows_remain_shared_callers",
+      "Advisory_tests_workflow_preserves_non_release_blocking_suites",
+      "Payload_protection_workflow_preserves_the_complete_blocking_vector_lane",
+      "Payload_protection_workflow_guard_rejects_missing_automatic_triggers",
+      "Payload_protection_workflow_guard_rejects_path_restrictions",
+      "Payload_protection_workflow_guard_rejects_shell_operators",
+      "Azure_payload_companion_stays_non_packable_and_live_service_is_explicitly_authorized",
+      "Azure_payload_workflow_guard_rejects_authority_and_test_bypasses",
+      "Test_projects_are_classified_into_release_live_advisory_or_deferred_lanes"
+    ]
+  },
+  "retained_mixed_files": [
+    "tools/tests/test_release_api_compatibility.py",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PackageOwnershipGovernanceTests.cs",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ReleasePackageManifestTests.cs",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ProcessPackageContractTests.cs"
+  ],
+  "mixed_csharp_syntax_audit": {
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ReleasePackageManifestTests.cs": {
+      "original_test_methods": [
+        "Normal_gate_triggers_include_only_main_and_exact_maintenance",
+        "Release_manifest_includes_rest_api_generator_package",
+        "Release_manifest_includes_domain_service_sdk_packages",
+        "Release_manifest_projects_exist_and_entries_are_unique",
+        "Non_manifest_src_projects_cannot_produce_release_packages",
+        "Manifest_loader_fails_closed_before_packing",
+        "Manifest_loader_accepts_the_normalized_control_manifest",
+        "Rest_api_generator_project_packs_analyzer_assets_without_runtime_lib_output",
+        "Semantic_release_delegates_package_inventory_to_manifest_scripts",
+        "Semantic_release_NuGet_publication_guard_rejects_additional_commands_and_operands",
+        "ManifestPackerDryRunEmitsExactReleasePackageCommands",
+        "ArchiveValidatorsAcceptValidGroupedDependencyShapes",
+        "ArchiveValidatorsRejectInventoryAndIdentityMutations",
+        "ArchiveValidatorsRejectSourceMetadataAndGatewayDependencyLoss",
+        "Shared_ci_workflow_uses_domain_ci_with_deterministic_server_tests",
+        "Shared_ci_requires_the_pinned_tool_and_keeps_the_declared_package_suite",
+        "PlatformPackageIntegrationUsesOwnedHarnessAcrossDependencyModes",
+        "Semantic_release_governance_job_is_unique_unconditional_and_blocking",
+        "SemanticReleaseGovernanceValidationAcceptsValidJob",
+        "Semantic_release_governance_validation_rejects_skip_or_tolerance_mutations",
+        "SemanticReleaseGovernanceValidationRejectsChangedTimeout",
+        "TenantsSourceModeJobValidationRejectsSkippedJob",
+        "TenantsSourceModeJobValidationRejectsTokenOnlyMatch",
+        "Workflow_job_block_extraction_handles_line_endings_reordered_siblings_and_final_job",
+        "Workflow_job_block_extraction_fails_closed_when_target_is_missing_or_duplicate",
+        "Live_sidecar_workflow_targets_live_project_outside_release_gate",
+        "Contracts_and_live_sidecar_workflow_jobs_remain_blocking",
+        "Live_sidecar_workflow_guardrail_rejects_forbidden_mutations",
+        "Release_workflow_owns_trusted_publishing_with_approved_eventstore_container_only",
+        "Security_gate_workflows_remain_shared_callers",
+        "Advisory_tests_workflow_preserves_non_release_blocking_suites",
+        "Payload_protection_workflow_preserves_the_complete_blocking_vector_lane",
+        "Payload_protection_workflow_guard_rejects_missing_automatic_triggers",
+        "Payload_protection_workflow_guard_rejects_path_restrictions",
+        "Payload_protection_workflow_guard_rejects_shell_operators",
+        "Azure_payload_companion_stays_non_packable_and_live_service_is_explicitly_authorized",
+        "Azure_payload_workflow_guard_rejects_authority_and_test_bypasses",
+        "Test_projects_are_classified_into_release_live_advisory_or_deferred_lanes",
+        "Server_tests_do_not_contain_live_sidecar_markers",
+        "Shared_ci_package_scripts_exist_and_remain_manifest_backed",
+        "Active_package_docs_do_not_contain_obsolete_release_package_counts",
+        "Active_package_inventory_docs_match_manifest_package_set",
+        "Active_docs_do_not_use_superseded_ui_host_generator_wording"
+      ],
+      "retained_test_methods": [
+        "Release_manifest_includes_rest_api_generator_package",
+        "Release_manifest_includes_domain_service_sdk_packages",
+        "Release_manifest_projects_exist_and_entries_are_unique",
+        "Non_manifest_src_projects_cannot_produce_release_packages",
+        "Manifest_loader_fails_closed_before_packing",
+        "Manifest_loader_accepts_the_normalized_control_manifest",
+        "Rest_api_generator_project_packs_analyzer_assets_without_runtime_lib_output",
+        "ManifestPackerDryRunEmitsExactReleasePackageCommands",
+        "ArchiveValidatorsAcceptValidGroupedDependencyShapes",
+        "ArchiveValidatorsRejectInventoryAndIdentityMutations",
+        "ArchiveValidatorsRejectSourceMetadataAndGatewayDependencyLoss",
+        "PlatformPackageIntegrationUsesOwnedHarnessAcrossDependencyModes",
+        "Server_tests_do_not_contain_live_sidecar_markers",
+        "Shared_ci_package_scripts_exist_and_remain_manifest_backed",
+        "Active_package_docs_do_not_contain_obsolete_release_package_counts",
+        "Active_package_inventory_docs_match_manifest_package_set",
+        "Active_docs_do_not_use_superseded_ui_host_generator_wording"
+      ],
+      "removed_methods": [
+        "Normal_gate_triggers_include_only_main_and_exact_maintenance",
+        "Semantic_release_delegates_package_inventory_to_manifest_scripts",
+        "Semantic_release_NuGet_publication_guard_rejects_additional_commands_and_operands",
+        "Shared_ci_workflow_uses_domain_ci_with_deterministic_server_tests",
+        "Shared_ci_requires_the_pinned_tool_and_keeps_the_declared_package_suite",
+        "Semantic_release_governance_job_is_unique_unconditional_and_blocking",
+        "SemanticReleaseGovernanceValidationAcceptsValidJob",
+        "Semantic_release_governance_validation_rejects_skip_or_tolerance_mutations",
+        "SemanticReleaseGovernanceValidationRejectsChangedTimeout",
+        "TenantsSourceModeJobValidationRejectsSkippedJob",
+        "TenantsSourceModeJobValidationRejectsTokenOnlyMatch",
+        "Workflow_job_block_extraction_handles_line_endings_reordered_siblings_and_final_job",
+        "Workflow_job_block_extraction_fails_closed_when_target_is_missing_or_duplicate",
+        "Live_sidecar_workflow_targets_live_project_outside_release_gate",
+        "Contracts_and_live_sidecar_workflow_jobs_remain_blocking",
+        "Live_sidecar_workflow_guardrail_rejects_forbidden_mutations",
+        "Release_workflow_owns_trusted_publishing_with_approved_eventstore_container_only",
+        "Security_gate_workflows_remain_shared_callers",
+        "Advisory_tests_workflow_preserves_non_release_blocking_suites",
+        "Payload_protection_workflow_preserves_the_complete_blocking_vector_lane",
+        "Payload_protection_workflow_guard_rejects_missing_automatic_triggers",
+        "Payload_protection_workflow_guard_rejects_path_restrictions",
+        "Payload_protection_workflow_guard_rejects_shell_operators",
+        "Azure_payload_companion_stays_non_packable_and_live_service_is_explicitly_authorized",
+        "Azure_payload_workflow_guard_rejects_authority_and_test_bypasses",
+        "Test_projects_are_classified_into_release_live_advisory_or_deferred_lanes"
+      ]
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs": {
+      "original_test_methods": [
+        "RealMultiRidArchiveContainsExactProvenanceInBothChildConfigs",
+        "ContainerPublicationRejectsMissingProvenanceInputs",
+        "ContainerPublicationRejectsMalformedProvenanceInputs",
+        "ContainerPublicationDefaultsTagToProvenanceVersion",
+        "ProvenanceLabelMutationsFailClosed",
+        "PublicationAuthorityFixturesPassWithoutSkippedCases"
+      ],
+      "retained_test_methods": [
+        "RealMultiRidArchiveContainsExactProvenanceInBothChildConfigs",
+        "ContainerPublicationRejectsMissingProvenanceInputs",
+        "ContainerPublicationRejectsMalformedProvenanceInputs",
+        "ContainerPublicationDefaultsTagToProvenanceVersion",
+        "ProvenanceLabelMutationsFailClosed"
+      ],
+      "removed_methods": [
+        "PublicationAuthorityFixturesPassWithoutSkippedCases"
+      ]
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ProcessPackageContractTests.cs": {
+      "original_test_methods": [
+        "RequiredReleasePackageGateIncludesHostedProcessExecution"
+      ],
+      "retained_test_methods": [
+        "RequiredReleasePackageGateIncludesHostedProcessExecution"
+      ],
+      "removed_methods": []
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PackageOwnershipGovernanceTests.cs": {
+      "original_test_methods": [
+        "DocumentationVersionCheckReadsSharedBuildsCatalog",
+        "DocumentationVersionCheckPinsExpectedDaprRowMultiplicities",
+        "EventStoreDependabotDoesNotOwnNuGetCatalogUpdates",
+        "InternalPackageGuidanceNamesBuildsAsVersionOwner",
+        "NonCpmVersionCategoriesAreClassified",
+        "GatewayLedgerDoesNotReportObsoleteUnconditionalSourceEdge",
+        "TenantsGatewayAndDomainServiceUseComplementaryModeEdges"
+      ],
+      "retained_test_methods": [
+        "DocumentationVersionCheckReadsSharedBuildsCatalog",
+        "DocumentationVersionCheckPinsExpectedDaprRowMultiplicities",
+        "InternalPackageGuidanceNamesBuildsAsVersionOwner",
+        "NonCpmVersionCategoriesAreClassified",
+        "TenantsGatewayAndDomainServiceUseComplementaryModeEdges"
+      ],
+      "removed_methods": [
+        "EventStoreDependabotDoesNotOwnNuGetCatalogUpdates",
+        "GatewayLedgerDoesNotReportObsoleteUnconditionalSourceEdge"
+      ]
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PostgreSqlImageGovernanceTests.cs": {
+      "original_test_methods": [
+        "PostgreSqlImageAuthoritiesRemainSynchronizedAndDigestPinned",
+        "MutableMalformedOrUnreviewedImagesFailClosed",
+        "InvalidAuthorityDeclarationsFailClosed",
+        "ImageDriftReportsComparedAuthorityValues"
+      ],
+      "retained_test_methods": [
+        "PostgreSqlFixtureRemainsDigestPinned",
+        "MutableMalformedOrUnreviewedImagesFailClosed",
+        "InvalidFixtureDeclarationsFailClosed"
+      ],
+      "removed_methods": [
+        "PostgreSqlImageAuthoritiesRemainSynchronizedAndDigestPinned",
+        "InvalidAuthorityDeclarationsFailClosed",
+        "ImageDriftReportsComparedAuthorityValues"
+      ]
+    }
+  },
+  "mixed_file_verification": "Affected Contracts test project compiled successfully; Roslyn retained 17 independent ReleasePackageManifest product methods and their 13 reachable helpers."
+}

@@ -1,0 +1,58 @@
+{
+  "started_at": "2026-11-16T16:06:24.664914+00:00",
+  "source_head": "f85419d501f279e9a813435aa73538185ad26ada",
+  "builds_product_import_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "shared_helpers": "current local Builds candidate; no release/adoption claim",
+  "phases": [
+    {
+      "phase": "policy",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.mK6JxC3s/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.mK6JxC3s/module",
+        "policy",
+        "d336e56e7df1ee11e6d79010033c429a24410604",
+        "/tmp/hexalith-job.mK6JxC3s/policy-tools"
+      ],
+      "cwd": "/tmp/hexalith-job.mK6JxC3s/module",
+      "exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-policy.log"
+    },
+    {
+      "phase": "solution-build",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.mK6JxC3s/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.mK6JxC3s/module",
+        "build",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json"
+      ],
+      "cwd": "/tmp/hexalith-job.mK6JxC3s/module",
+      "exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-solution-build.log"
+    },
+    {
+      "phase": "classified-unit",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.mK6JxC3s/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.mK6JxC3s/module",
+        "unit",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json"
+      ],
+      "cwd": "/tmp/hexalith-job.mK6JxC3s/module",
+      "exit": 1,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    }
+  ],
+  "candidate_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "source_gitlink": "160000 commit e2bbbd0893f586e4d447ef8358ff747ea3d34435\treferences/Hexalith.Builds",
+  "completed_at": "2026-11-16T16:12:18.779384+00:00",
+  "result": "failed"
+}

@@ -1,0 +1,89 @@
+{
+  "started_at": "2026-11-16T17:17:26.665798+00:00",
+  "result": "failed",
+  "phases": [
+    {
+      "phase": "necessary-build",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zmg5cF2p/finish.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zmg5cF2p/module",
+        "build",
+        "/tmp/hexalith-job.zmg5cF2p/selected-products.slnx"
+      ],
+      "cwd": "/tmp/hexalith-job.zmg5cF2p/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-helper-correction-necessary-build.log",
+      "started_at": "2026-11-16T17:18:47.681708+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T17:19:12.247160+00:00"
+    },
+    {
+      "phase": "evaluated-helper",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zmg5cF2p/finish.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zmg5cF2p/module",
+        "metadata",
+        "tests/Hexalith.EventStore.TestSubscriber/Hexalith.EventStore.TestSubscriber.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.zmg5cF2p/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-helper-correction-evaluated-helper.log",
+      "started_at": "2026-11-16T17:19:12.247601+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T17:19:13.488777+00:00"
+    },
+    {
+      "phase": "testing-unit",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zmg5cF2p/finish.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zmg5cF2p/module",
+        "unit",
+        "tests/Hexalith.EventStore.Testing.Tests/Hexalith.EventStore.Testing.Tests.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.zmg5cF2p/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-helper-correction-testing-unit.log",
+      "started_at": "2026-11-16T17:19:13.489463+00:00",
+      "exit": 1,
+      "completed_at": "2026-11-16T17:19:33.395865+00:00"
+    }
+  ],
+  "scope": "Preserve built private preview, stop/reap only mistaken non-test host, explicitly mark it non-test while retaining its build, then compile the two necessary projects and execute Testing.Tests only",
+  "source_repositories_read_only_except_authorized_helper_metadata": true,
+  "global_nuget_cache_unchanged": true,
+  "push_performed": false,
+  "preserved_preview_from": "/tmp/hexalith-job.zw4b4mSG",
+  "retained_private_packages_copied": true,
+  "stopped_exact_process": {
+    "pid": 2943711,
+    "executable": "/tmp/hexalith-job.zw4b4mSG/module/tests/Hexalith.EventStore.TestSubscriber/bin/Release/net11.0/Hexalith.EventStore.TestSubscriber",
+    "signal": "SIGTERM",
+    "reason": "Fixture web host has no tests; inherited IsTestProject=true launched app.Run() as a test"
+  },
+  "exact_helper_reaped": true,
+  "previous_wrapper_result": "failed",
+  "previous_wrapper_completed_at": "2026-11-16T17:17:49.189490+00:00",
+  "candidate_tree": "1c24e5d1fea496e143ffefff8a1eae1787ddaaf6",
+  "previous_candidate_tree": "8b7c63af22fdaa82085c39992840b832a83de59a",
+  "changes_after_cache_preview": [
+    "tests/Hexalith.EventStore.TestSubscriber/Hexalith.EventStore.TestSubscriber.csproj"
+  ],
+  "final_policy": {
+    "result": "passed",
+    "tree": "1c24e5d1fea496e143ffefff8a1eae1787ddaaf6",
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-helper-correction-policy.log"
+  },
+  "helper_is_test_project": false,
+  "helper_remains_built": true,
+  "failure": "testing-unit failed: /home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-helper-correction-testing-unit.log",
+  "completed_at": "2026-11-16T17:19:33.405914+00:00"
+}

@@ -139,3 +139,27 @@ Browsers use locked npm Playwright or existing built .NET Playwright tooling;
 requesting browsers without either fails. Module hooks inspect or run the shared
 Release/package outputs and contain no generic tool/browser setup or solution
 rebuilds. New API consumers remain distinct package product checks.
+
+## Approved EventStore migration routing (2026-11-16)
+
+The refreshed product inventory and identities are in `evidence/20/`. The live
+legacy caller uses `domain-ci.yml`; its historical v2/13-test description is
+obsolete. All ordinary projects compile once in the shared Release/package build.
+Payload vectors and the Azure live project's offline authority-schema class run
+in `after-unit-tests`; that class receives no Azure secrets. The shared classifier
+runs browser and other ordinary integration projects. Enabled exclusions route
+Server.LiveSidecar, PublishedCompatibility and payload lifecycle/Kubernetes
+coverage to `after-integration-tests`, with fixture-owned runtimes: 1.18.2 private
+sidecar/control planes, private 1.18.4 compatibility archives, 1.18.7 payload and
+catalog executables, and 1.19.1 Kubernetes crypto plus kind 0.31.0. Shared 1.19.1
+infrastructure remains intact. The `nightly` action owns the real broker matrix.
+
+The sole Azure service lane uses the generic rendered `qualification.yml`: an
+explicit `job=payload-azure` dispatch plus exact `authority-sha256`. The default
+`nightly` selection never selects Azure. It depends on fresh successful shared
+`qualification-ci` from the same SHA, uses its designated private runner and approval
+environment, builds once with `prepare.environment: preserve`, and passes only
+the two named authority/custody secrets plus generic `HEXALITH_AUTHORITY_SHA256`
+and `HEXALITH_SOURCE_SHA` to the module action. No unattended
+release or nightly job runs Azure faults. Runtime-owner authority, private
+networking, source binding, expiry and custody checks remain unchanged.

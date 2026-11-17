@@ -1,0 +1,209 @@
+{
+  "recorded_at": "2026-11-16T17:55:07.379016+00:00",
+  "checks": [
+    {
+      "command": "run-with-temp uv run --no-cache --python 3.12 tools/tests/test_render.py",
+      "tests": 34,
+      "exit_code": 0,
+      "log": "review-parent-render-py3.12.log"
+    },
+    {
+      "command": "run-with-temp uv run --no-cache --python 3.12 tools/tests/test_validate.py",
+      "tests": 52,
+      "exit_code": 0,
+      "log": "review-parent-validate-py3.12.log"
+    },
+    {
+      "command": "run-with-temp uv run --no-cache --python 3.14 tools/tests/test_render.py",
+      "tests": 34,
+      "exit_code": 0,
+      "log": "review-parent-render-py3.14.log"
+    },
+    {
+      "command": "run-with-temp uv run --no-cache --python 3.14 tools/tests/test_validate.py",
+      "tests": 52,
+      "exit_code": 0,
+      "log": "review-parent-validate-py3.14.log"
+    },
+    {
+      "suite": "Builds config",
+      "python": "3.12",
+      "tests": 20,
+      "exit_code": 0,
+      "log": "review-parent-builds-config-py3.12.log"
+    },
+    {
+      "suite": "Builds pipeline",
+      "python": "3.12",
+      "tests": 36,
+      "exit_code": 0,
+      "log": "review-parent-builds-pipeline-py3.12.log"
+    },
+    {
+      "suite": "Builds api",
+      "python": "3.12",
+      "tests": 28,
+      "exit_code": 0,
+      "log": "review-parent-builds-api-py3.12.log"
+    },
+    {
+      "suite": "Builds config",
+      "python": "3.14",
+      "tests": 20,
+      "exit_code": 0,
+      "log": "review-parent-builds-config-py3.14.log"
+    },
+    {
+      "suite": "Builds pipeline",
+      "python": "3.14",
+      "tests": 36,
+      "exit_code": 0,
+      "log": "review-parent-builds-pipeline-py3.14.log"
+    },
+    {
+      "suite": "Builds api",
+      "python": "3.14",
+      "tests": 28,
+      "exit_code": 0,
+      "log": "review-parent-builds-api-py3.14.log"
+    },
+    {
+      "suite": "bootstrap",
+      "python": "3.14",
+      "tests": 9,
+      "exit_code": 0,
+      "log": "review-parent-bootstrap-py3.14.log"
+    },
+    {
+      "suite": "catalog",
+      "python": "3.14",
+      "tests": 7,
+      "exit_code": 0,
+      "log": "review-parent-catalog-module-cwd-py3.14.log"
+    },
+    {
+      "suite": "fixtures",
+      "python": "3.14",
+      "tests": 14,
+      "exit_code": 0,
+      "log": "review-parent-fixtures-py3.14.log"
+    },
+    {
+      "suite": "prepare request",
+      "python": "3.14",
+      "tests": 3,
+      "exit_code": 0,
+      "log": "review-parent-request-py3.14.log"
+    }
+  ],
+  "source_heads": {
+    "CiCd": "d3f3ef864c08cd89e390246d1a5d1dedffc4a92b",
+    "Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "EventStore": "f85419d501f279e9a813435aa73538185ad26ada"
+  },
+  "production_registration_pin_render_changed": false,
+  "module_owned_and_legacy_publication_paths_changed": false,
+  "scope": "Local tests and read-only working-tree invariants. No committed candidate, remote validation, release, adoption, live fixture or hosted-nightly claim.",
+  "corrected_invocations": [
+    {
+      "log": "review-parent-catalog-py3.14.log",
+      "result": "4 FileNotFoundError cases from invoking module-relative tests at CiCd root; unchanged tests pass from EventStore root in review-parent-catalog-module-cwd-py3.14.log."
+    }
+  ],
+  "source_coverage": {
+    "report": "scan-source-coverage-review.json",
+    "selected_files": 22,
+    "diagnostics": 58,
+    "passed": false,
+    "activation_blocking": true
+  },
+  "history_path_followup": {
+    "finding": "P1",
+    "pre_patch_result": "Real Git add/delete of leading-newline path aliases an allowed path when subprocess stdout is stripped.",
+    "post_patch_control": "HistoryTests.test_leading_newline_add_and_delete_cannot_alias_reviewed_path passes in bootstrap suite."
+  },
+  "review_resolution": "review-patch-resolution.json",
+  "review_patch_findings_resolved": 19,
+  "activation_blocking_deferred_findings": [
+    "S1"
+  ],
+  "current_preparation_paths": {
+    "changed_paths": [
+      ".github/actions/after-integration-tests/action.yml",
+      ".github/actions/after-unit-tests/action.yml",
+      ".github/actions/nightly/action.yml",
+      ".github/actions/payload-azure/action.yml",
+      "Hexalith.EventStore.slnx",
+      "docs/ci.md",
+      "docs/concepts/dapr-infrastructure-boundary.md",
+      "scripts/ci-product-checks.py",
+      "scripts/legacy_sidecar_runtime.py",
+      "scripts/qualify-payload-azure.py",
+      "src/Hexalith.EventStore.Contracts/Deployment/ProductionProfileValidationResult.cs",
+      "tests/Hexalith.EventStore.Admin.UI.E2E/Hexalith.EventStore.Admin.UI.E2E.csproj",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContainerPublishingGovernanceTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PackageOwnershipGovernanceTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/PostgreSqlImageGovernanceTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ProcessPackageContractTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/ReleasePackageManifestTests.cs",
+      "tests/Hexalith.EventStore.Contracts.Tests/Packaging/TrustedPublishingReleaseTests.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6BookkeepingAtddTests.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6CheckerReportAtddTests.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceCheckerInvokerFactory.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceDiagnostic.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceVocabularyAtddTests.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6LedgerSweepAtddTests.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6RuleVocabulary.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6TestPaths.cs",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj.lscache",
+      "tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/IDw6GovernanceCheckerInvoker.cs",
+      "tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests/PayloadProtectionDaprFixture.cs",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Actors/AppendDurabilityRaceLiveSidecarTests.cs",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainers.cs",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainersTests.cs",
+      "tests/Hexalith.EventStore.TestSubscriber/Hexalith.EventStore.TestSubscriber.csproj",
+      "tools/folded-snapshot-compatibility/run.sh",
+      "tools/pack-release-packages.py",
+      "tools/prepare-route-catalog-tools.py",
+      "tools/tests/test_check_committed_files.py",
+      "tools/tests/test_dapr_runtime_qualification.py",
+      "tools/tests/test_ext_protection_1_cross_language.py",
+      "tools/tests/test_managed_product_fixtures.py",
+      "tools/tests/test_oq8_governing_design.py",
+      "tools/tests/test_phase_4_gate_decision.py",
+      "tools/tests/test_phase_4_gate_risk_matrix.py",
+      "tools/tests/test_phase_4_story_5_3.py",
+      "tools/tests/test_phase_4_story_completion.py",
+      "tools/tests/test_phase_4_transition.py",
+      "tools/tests/test_published_compatibility_workflow.py",
+      "tools/tests/test_published_runner_exit.py",
+      "tools/tests/test_published_workflow_context.py",
+      "tools/tests/test_release_api_compatibility.py",
+      "tools/tests/test_release_candidate.py",
+      "tools/tests/test_release_publication_authority.py",
+      "tools/tests/test_release_source_branch.py",
+      "tools/tests/test_route_catalog_ci_tools.py",
+      "tools/tests/test_run_with_temp.py"
+    ],
+    "all_allowed": true,
+    "count": 59
+  },
+  "eventstore_review_tree": "6e553e7c62500e4b7029a35fd4d06dd8577e2054",
+  "tracked_whitespace_checks": {
+    "CiCd": "passed",
+    "Builds": "passed",
+    "EventStore": "passed"
+  },
+  "status": "Local implementation and review patches verified; activation blocked, story remains in-review.",
+  "final_policy": {
+    "result": "passed",
+    "log": "review-parent-policy.log",
+    "scope": "Actual integrity-locked guard_actions and unchanged audit_lint on local working-tree snapshot; no committed-candidate or normal-checker claim."
+  },
+  "all_verification_children_finished": true,
+  "completed_at": "2026-11-16T18:18:13.292429+00:00"
+}

@@ -1,0 +1,180 @@
+{
+  "started_at": "2026-11-16T20:47:14.596405+00:00",
+  "result": "passed",
+  "scope": "Existing Process read slots collection attribute only; exact reviewed path in both CiCd allowlists; DomainService.Tests compilation and complete ReminderDiscoveryOwnershipTests class only",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.t1m0bfhh/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.t1m0bfhh/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/reminder-discovery-collection-build.log",
+      "started_at": "2026-11-16T20:47:22.915271+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T20:47:50.433385+00:00"
+    },
+    {
+      "phase": "focused",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.t1m0bfhh/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-class",
+        "Hexalith.EventStore.DomainService.Tests.ReminderDiscoveryOwnershipTests",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.t1m0bfhh/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/reminder-discovery-collection-focused.log",
+      "started_at": "2026-11-16T20:47:50.433816+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T20:47:52.365613+00:00"
+    }
+  ],
+  "source_committed_or_pushed": false,
+  "assertions_pass_counts_or_deadlines_changed": false,
+  "source_head": "0d52e6c0d0d82ca51b2a9dc69774d13d23127986",
+  "source_diff": "diff --git a/tests/Hexalith.EventStore.DomainService.Tests/ReminderDiscoveryOwnershipTests.cs b/tests/Hexalith.EventStore.DomainService.Tests/ReminderDiscoveryOwnershipTests.cs\nindex 4a09b0fe5..bf9530653 100644\n--- a/tests/Hexalith.EventStore.DomainService.Tests/ReminderDiscoveryOwnershipTests.cs\n+++ b/tests/Hexalith.EventStore.DomainService.Tests/ReminderDiscoveryOwnershipTests.cs\n@@ -13,6 +13,7 @@ using Shouldly;\n namespace Hexalith.EventStore.DomainService.Tests;\n \n /// <summary>Owned discovery proofs and bounded fair service survive races, abandonment and restart.</summary>\n+[Collection(\"Process read slots\")]\n public sealed class ReminderDiscoveryOwnershipTests\n {\n     /// <summary>A competing failure inserted at completion CAS survives both old completion and cleanup.</summary>",
+  "source_sha256": "5f1c24e45716eb1748be0cb80a7fb5cb7ff0267c340dcd323b12781c9da95953",
+  "preview_tree": "fa8cb3056a5fc3e2e57a7d24fb8c4426b43aa1bd",
+  "dependencies": {
+    "Hexalith.Builds": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.Builds",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.Tenants",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.Platform",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.FrontComposer",
+      "source_read_only": true
+    }
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "literal_reviewed_paths": 61,
+      "sha256": "3b9b8c558f32e242a5dc5e8717e3d943647acfddf7bb7a8e7cd937b348e3c835"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "literal_reviewed_paths": 61,
+      "sha256": "3b9b8c558f32e242a5dc5e8717e3d943647acfddf7bb7a8e7cd937b348e3c835"
+    }
+  ],
+  "completed_at": "2026-11-16T20:47:52.374674+00:00",
+  "focused_test_counts": {
+    "total": 5,
+    "failed": 0,
+    "succeeded": 5,
+    "skipped": 0
+  },
+  "all_jobs_finished": true,
+  "full_gate_reexecuted": false,
+  "bootstrap_unit_completion": {
+    "scope": "Pre-adoption bootstrap only; normal check.py and shared Builds code unchanged",
+    "behavior": "Use released classified_projects, test_runner and execute_unit_projects for each project. Collect only PipelineError failures, complete later projects, preserve failed results and nonzero code, then raise before package checks if any failed. Unexpected errors propagate.",
+    "changed_files": [
+      {
+        "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+        "sha256": "3b9b8c558f32e242a5dc5e8717e3d943647acfddf7bb7a8e7cd937b348e3c835"
+      },
+      {
+        "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/test_pre_adoption_verify.py",
+        "sha256": "fb7ada3374b7132660e33c9106128e88ad82395714c1d3c9f8ac311cce2427eb"
+      },
+      {
+        "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+        "sha256": "3b9b8c558f32e242a5dc5e8717e3d943647acfddf7bb7a8e7cd937b348e3c835"
+      },
+      {
+        "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/test_pre_adoption_verify.py",
+        "sha256": "fb7ada3374b7132660e33c9106128e88ad82395714c1d3c9f8ac311cce2427eb"
+      }
+    ],
+    "checks": [
+      {
+        "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20",
+        "command": [
+          "run-with-temp",
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "_bmad-output/specs/spec-cicd/evidence/20",
+          "-p",
+          "test_pre_adoption_verify.py",
+          "-k",
+          "CompletePreparationUnitsTests",
+          "-v"
+        ],
+        "passed": 3,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/preparation-unit-completion-controls.log"
+      },
+      {
+        "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20-final",
+        "command": [
+          "run-with-temp",
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "_bmad-output/specs/spec-cicd/evidence/20",
+          "-p",
+          "test_pre_adoption_verify.py",
+          "-k",
+          "CompletePreparationUnitsTests",
+          "-v"
+        ],
+        "passed": 3,
+        "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/preparation-unit-completion-controls-final-root.log"
+      }
+    ]
+  }
+}

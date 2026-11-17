@@ -1,0 +1,46 @@
+{
+  "repositories": {
+    "CiCd": {
+      "path": "/home/administrator/projects/hexalith/cicd-story-20",
+      "starting_head": "d3f3ef864c08cd89e390246d1a5d1dedffc4a92b",
+      "local_origin_main": "66e3a5a3a0e9bb01dd161c19349953594e01a22f",
+      "branch": "story/20-migrate-eventstore"
+    },
+    "Builds": {
+      "path": "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds",
+      "starting_head": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "local_origin_main": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "branch": "HEAD"
+    },
+    "EventStore": {
+      "path": "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.EventStore",
+      "starting_head": "f85419d501f279e9a813435aa73538185ad26ada",
+      "local_origin_main": "f85419d501f279e9a813435aa73538185ad26ada",
+      "branch": "HEAD"
+    }
+  },
+  "remote_refresh_performed": false,
+  "authorization_readbacks": "Prior planning evidence only; fresh remote readbacks deferred by no-remote-operations boundary",
+  "builds_version": "v6.0.6",
+  "eventstore_protected_paths": [
+    ".github/workflows",
+    ".github/hexalith-ci.json",
+    ".github/dependabot.yml",
+    ".gitmodules",
+    "references/Hexalith.Builds",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".github/copilot-instructions.md",
+    ".claude/settings.json",
+    ".releaserc.json",
+    "release.config.js",
+    "commitlint.config.mjs",
+    "package.json",
+    "package-lock.json",
+    ".husky"
+  ],
+  "eventstore_protected_diff": "",
+  "last_accepted_render_check": "passed; current production rendered tree unchanged",
+  "nested_submodule_initialization": false,
+  "commits_or_pushes_performed": false
+}

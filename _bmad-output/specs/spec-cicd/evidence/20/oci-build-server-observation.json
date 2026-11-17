@@ -1,0 +1,25 @@
+{
+  "recorded_at": "2026-11-16T21:32:56.734889+00:00",
+  "read_only": true,
+  "processes_signaled": false,
+  "observed_msbuild_nodes": [
+    {
+      "pid": 507127,
+      "node_reuse_argument": "python3 -B - <<'PY'\nfrom pathlib import Path\nfrom datetime import datetime,timezone\nimport json,subprocess\nnodes=[]\nfor directory in Path('/proc').iterdir():\n if not directory.name.isdigit():continue\n try:\n  args=(directory/'cmdline').read_bytes().split(b'\\0')\n  if not any(b'MSBuild.dll' in arg for arg in args) or not any(b'nodemode' in arg.lower() for arg in args):continue\n  # Only temp-directory metadata is retained; never print or record other env.\n  values={part.split(b'=',1)[0].decode():part.split(b'=',1)[1].decode(errors='replace') for part in (directory/'environ').read_bytes().split(b'\\0') if b'=' in part and part.split(b'=',1)[0] in (b'TMPDIR',b'TMP',b'TEMP')}\n  nodes.append({'pid':int(directory.name),'node_reuse_argument':next((arg.decode() for arg in args if b'nodereuse' in arg.lower()),None),'temp_directories_exist':{key:Path(value).is_dir() for key,value in values.items()}})\n except (OSError,ProcessLookupError):pass\nroot=Path('_bmad-output/specs/spec-cicd/evidence/20');root.joinpath('oci-build-server-observation.json').write_text(json.dumps({'recorded_at':datetime.now(timezone.utc).isoformat(),'read_only':True,'processes_signaled':False,'observed_msbuild_nodes':nodes,'cli_help':{'publish_disable_build_servers':'Force the command to ignore any persistent build servers','msbuild_node_reuse_default':True}},indent=2)+'\\n');print('Read-only MSBuild nodes:',len(nodes),'nodes with removed temp roots:',sum(any(not exists for exists in node['temp_directories_exist'].values()) for node in nodes))\nPY",
+      "temp_directories_exist": {}
+    },
+    {
+      "pid": 3860683,
+      "node_reuse_argument": "/nodeReuse:true",
+      "temp_directories_exist": {
+        "TMPDIR": false,
+        "TEMP": false,
+        "TMP": false
+      }
+    }
+  ],
+  "cli_help": {
+    "publish_disable_build_servers": "Force the command to ignore any persistent build servers",
+    "msbuild_node_reuse_default": true
+  }
+}

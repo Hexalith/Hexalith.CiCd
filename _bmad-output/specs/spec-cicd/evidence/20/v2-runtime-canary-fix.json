@@ -1,0 +1,191 @@
+{
+  "started_at": "2026-11-16T21:21:16.114015+00:00",
+  "result": "passed",
+  "scope": "Only remaining V2 runtime-canary source patch; focused complete V2 fixture and unchanged real tracked scanner. Already-published two fixture fixes are overlaid read-only in scratch, never edited/rebased in source.",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "contracts-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.Bn97F3fZ/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.Bn97F3fZ/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/v2-runtime-canary-contracts-build.log",
+      "started_at": "2026-11-16T21:21:21.196538+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T21:21:31.062546+00:00"
+    },
+    {
+      "phase": "server-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.Bn97F3fZ/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.Bn97F3fZ/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/v2-runtime-canary-server-build.log",
+      "started_at": "2026-11-16T21:21:31.062922+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T21:21:44.144219+00:00"
+    },
+    {
+      "phase": "fixture",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.Bn97F3fZ/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-class",
+        "Hexalith.EventStore.Contracts.Tests.Deployment.ProductionProfileV2Tests",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.Bn97F3fZ/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/v2-runtime-canary-fixture.log",
+      "started_at": "2026-11-16T21:21:44.144680+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T21:21:46.529556+00:00"
+    },
+    {
+      "phase": "tracked-scanner",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.Bn97F3fZ/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-method",
+        "Hexalith.EventStore.Server.Tests.Security.SecretsProtectionTests.TrackedReusableContent_DoesNotContainUsableSecrets",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.Bn97F3fZ/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/v2-runtime-canary-tracked-scanner.log",
+      "started_at": "2026-11-16T21:21:46.530024+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T21:21:54.232999+00:00"
+    }
+  ],
+  "source_committed_pushed_or_rebased": false,
+  "potential_fixture_values_recorded": false,
+  "assertions_or_scanner_policy_changed": false,
+  "source_head": "85737bed450eaf75786f74e8b96cd4eb9b5cff12",
+  "source_file_sha256": "3c9b7b9209cd07a01d0f889743b16fb0d5b8346e597d7c737924982be1c473a1",
+  "scanner_source_sha256": "d9cf6873aff4aead75a26bf8ebeccaa54b267122cf1e429db62bafe35de51bbc",
+  "upstream_fixes": {
+    "revision": "d8171e6cc18cd4b67ea310822b36e49d007fa2ec",
+    "files": [
+      "tests/Hexalith.EventStore.Contracts.Tests/Deployment/ProductionProfileTests.cs",
+      "tools/tests/test_publication_authority.py"
+    ],
+    "source_files_unchanged": true
+  },
+  "preview_tree": "6aaab1116113ef40863ed35e928aa2ac82e86c99",
+  "dependencies": {
+    "Hexalith.Builds": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source_read_only": true
+    }
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "literal_reviewed_paths": 62,
+      "sha256": "7ea956a6cda9b36bf755d813bd41b954c2cbf2ebb7102bd791d16ef7a9b17da5"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "literal_reviewed_paths": 62,
+      "sha256": "7ea956a6cda9b36bf755d813bd41b954c2cbf2ebb7102bd791d16ef7a9b17da5"
+    }
+  ],
+  "completed_at": "2026-11-16T21:21:54.240284+00:00",
+  "focused_test_counts": {
+    "fixture": {
+      "total": 105,
+      "failed": 0,
+      "succeeded": 105,
+      "skipped": 0
+    },
+    "tracked-scanner": {
+      "total": 1,
+      "failed": 0,
+      "succeeded": 1,
+      "skipped": 0
+    }
+  },
+  "source_cause": "A fixed credential-shaped unknown-field canary remained in reusable V2 test source. It is now generated at runtime with the existing cryptographic fixture pattern; every validation and no-echo assertion remains. The other six findings were already corrected upstream and were not duplicated.",
+  "changed_files": [
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Deployment/ProductionProfileV2Tests.cs",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py"
+  ],
+  "all_jobs_finished": true,
+  "broad_product_gate_rerun": false
+}

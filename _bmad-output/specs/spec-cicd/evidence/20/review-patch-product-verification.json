@@ -1,0 +1,153 @@
+{
+  "started_at": "2026-11-16T18:09:18.064214+00:00",
+  "result": "passed",
+  "scope": "Only affected Contracts and Server.LiveSidecar Release compilation; restored Azure packaging method; modified cross-language fixture in managed package and developer source modes",
+  "phases": [
+    {
+      "phase": "contracts-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-contracts-build.log",
+      "started_at": "2026-11-16T18:09:38.034746+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T18:10:18.074961+00:00"
+    },
+    {
+      "phase": "sidecar-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Hexalith.EventStore.Server.LiveSidecar.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-sidecar-build.log",
+      "started_at": "2026-11-16T18:10:18.075325+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T18:11:03.526110+00:00"
+    },
+    {
+      "phase": "azure-packaging",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-method",
+        "Hexalith.EventStore.Contracts.Tests.Packaging.ReleasePackageManifestTests.Azure_payload_companion_projects_are_non_packable_and_in_the_solution",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-azure-packaging.log",
+      "started_at": "2026-11-16T18:11:03.526511+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T18:11:07.573608+00:00"
+    },
+    {
+      "phase": "interop-package",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/tests",
+        "-p",
+        "test_ext_protection_1_cross_language.py",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-interop-package.log",
+      "started_at": "2026-11-16T18:11:07.574955+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T18:11:12.407559+00:00"
+    },
+    {
+      "phase": "interop-developer-default",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/tests",
+        "-p",
+        "test_ext_protection_1_cross_language.py",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-interop-developer-default.log",
+      "started_at": "2026-11-16T18:11:12.409277+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T18:11:25.392068+00:00"
+    }
+  ],
+  "source_repositories_read_only": true,
+  "push_performed": false,
+  "source_head": "f85419d501f279e9a813435aa73538185ad26ada",
+  "candidate_tree": "6e553e7c62500e4b7029a35fd4d06dd8577e2054",
+  "package_interop_current_contracts_outputs_unchanged": {
+    "before": {
+      "src/Hexalith.EventStore.Contracts/bin/Release/net11.0/Hexalith.EventStore.Contracts.dll": {
+        "sha256": "7166376c7683959d499dbacc2d2c3a329cefcb341d3211147d3e2096564fc5f9",
+        "mtime_ns": 1794852587777846913
+      },
+      "src/Hexalith.EventStore.Contracts/obj/project.assets.json": {
+        "sha256": "f5dc854eb768c56bebf98f37ada7a7eb98e1c2fdd55759e20633de65c05e6dc6",
+        "mtime_ns": 1794852582557599152
+      }
+    },
+    "after": {
+      "src/Hexalith.EventStore.Contracts/bin/Release/net11.0/Hexalith.EventStore.Contracts.dll": {
+        "sha256": "7166376c7683959d499dbacc2d2c3a329cefcb341d3211147d3e2096564fc5f9",
+        "mtime_ns": 1794852587777846913
+      },
+      "src/Hexalith.EventStore.Contracts/obj/project.assets.json": {
+        "sha256": "f5dc854eb768c56bebf98f37ada7a7eb98e1c2fdd55759e20633de65c05e6dc6",
+        "mtime_ns": 1794852582557599152
+      }
+    }
+  },
+  "completed_at": "2026-11-16T18:11:25.392455+00:00"
+}

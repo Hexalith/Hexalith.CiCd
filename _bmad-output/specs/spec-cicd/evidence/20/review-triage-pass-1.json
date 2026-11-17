@@ -1,0 +1,170 @@
+[
+  {
+    "id": "B1",
+    "verdict": "high",
+    "route": "patch",
+    "evidence": "Legacy CI invokes verify-process-packages.py after checkout/SDK only. Its new unconditional --no-build prevents the still-active job from producing packages. Managed offline checks already call the packer independently, so restore the standalone default.",
+    "group": "legacy-reuse"
+  },
+  {
+    "id": "B2",
+    "verdict": "high",
+    "route": "patch",
+    "evidence": "Legacy folded-snapshot CI likewise has no prior build. The script now unconditionally refuses build/restore; select reuse only in the managed hook and preserve the standalone default.",
+    "group": "legacy-reuse"
+  },
+  {
+    "id": "B3",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "The new private supervisor pulls a mutable 1.18.2 tag; resolving its image ID only within a run does not pin later runs. Use an official reviewed content digest while retaining the runtime version check.",
+    "group": "runtime-pin"
+  },
+  {
+    "id": "B4",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "integration() performs an ambient Docker pull before prepare-route-catalog-tools.py rejects remote/conflicting contexts. Validate and bind the local Docker selection before any mutation.",
+    "group": "docker-boundary"
+  },
+  {
+    "id": "B5",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "Catalog binaries use RUNNER_TEMP and global GITHUB_ENV although the caller already passes selectors. They outlive the private wrapper workspace. Keep them under TMPDIR and remove unused global exports.",
+    "group": "catalog-scratch"
+  },
+  {
+    "id": "B6",
+    "verdict": "high",
+    "route": "patch",
+    "evidence": "The executable digest comparison is a Python assert, removed by -O/PYTHONOPTIMIZE. Replace it with an explicit exception and exercise optimized execution.",
+    "group": "catalog-integrity"
+  },
+  {
+    "id": "B7",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "The verifier accepts an HTTP 404 substring without first proving intended account/repository/ref access. Add a known-main readback before interpreting accepted-ref absence; never infer absence from an authorization failure.",
+    "group": "adoption-access"
+  },
+  {
+    "id": "B8",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "Broad tools/scripts/tests prefixes include legacy publication helpers despite the preparation-only approval. Bind this verifier to the reviewed exact preparation paths.",
+    "group": "preparation-scope"
+  },
+  {
+    "id": "B9",
+    "verdict": "high",
+    "route": "patch",
+    "evidence": "Endpoint tree equality alone admits an intermediate owned-file edit followed by a revert. Range-wide commitlint exists, but ownership must also be checked for each introduced commit.",
+    "group": "preparation-history"
+  },
+  {
+    "id": "B10",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "A readiness timeout removes owned containers before their native startup logs are retained. Emit bounded diagnostics for verified owned IDs on exceptional cleanup.",
+    "group": "startup-diagnostics"
+  },
+  {
+    "id": "E1",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "fetch origin main can leave origin/main stale under a custom fetch mapping; fresh() then compares the stale ref. Fetch main into the exact tracking ref explicitly.",
+    "group": "fresh-refspec"
+  },
+  {
+    "id": "E2",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "Same unchecked adoption-404 root cause as B7; the guard must establish successful known-ref access before deciding the accepted ref is absent.",
+    "group": "adoption-access"
+  },
+  {
+    "id": "E3",
+    "verdict": "high",
+    "route": "patch",
+    "evidence": "Same optimization-removable checksum check as B6; normal download integrity must not depend on assertions being enabled.",
+    "group": "catalog-integrity"
+  },
+  {
+    "id": "E4",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "AppendDurabilityRaceLiveSidecarTests inspects redis:6 even though the private supervisor selects a separate pinned image. Inspect the actual observed Redis image ID and label the probe truthfully.",
+    "group": "redis-provenance"
+  },
+  {
+    "id": "E5",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "The removed mixed Azure workflow method also evaluated IsPackable=false for three companion projects. No equivalent independent assertions remain; restore their product-only packaging check.",
+    "group": "azure-packaging"
+  },
+  {
+    "id": "E6",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "The retained cross-language fixture builds an Interop project referencing current Contracts, so ordinary managed hooks restore/build the current module again. Consume its prebuilt Release output/package in package mode while preserving isolated fixture compilation.",
+    "group": "interop-reuse"
+  },
+  {
+    "id": "V1",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "Pre-verified gap: helper tests call validate_qualification_request directly, while entrypoint tests cover prepare/build only. Add executable request-phase rejection controls demonstrating no preparation effects.",
+    "group": "request-entrypoint"
+  },
+  {
+    "id": "V2",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "Pre-verified gap: existing fixture tests call close() manually. Exercise the actual context manager on success, startup failure and body failure, asserting owned cleanup and restored handlers.",
+    "group": "context-cleanup"
+  },
+  {
+    "id": "S1",
+    "verdict": "high",
+    "route": "defer",
+    "evidence": "The unchanged conservative source-discovery model reports 56 unsupported-coverage diagnostics for 22 candidate files. This existing pipeline capability is a blocking activation prerequisite; preserve the audit and do not publish/adopt on an incomplete result.",
+    "group": "source-coverage-prerequisite"
+  },
+  {
+    "id": "P1",
+    "verdict": "medium",
+    "route": "patch",
+    "evidence": "A real disposable Git branch adding then deleting a leading-newline scripts/ci-product-checks.py path passed the first history fix because the Git adapter stripped leading whitespace. Preserve NUL-delimited paths; the exact regression now belongs to preparation-history verification.",
+    "group": "preparation-history-path-decoding"
+  },
+  {
+    "id": "P2",
+    "verdict": "high",
+    "route": "patch",
+    "group": "preparation-stage-contract",
+    "evidence": "The actual approved preparation run refused future CI fields against immutable Builds v6.0.6 before product checks. Preparation needs released stages1\u20133, while future job/tool settings belong to adoption; project only the exact reviewed plan and disabled defaults, preserving all actual checks and verifying the additional SDK."
+  },
+  {
+    "id": "P3",
+    "verdict": "medium",
+    "route": "patch",
+    "group": "preparation-job-scope",
+    "evidence": "The first projection preserved extra legacy Windows jobs that v6.0.6 accepts; an added exclusion could therefore remove an ordinary project without executing that job. Require the exact sole approved Azure job, with a regression for extra windows-latest jobs."
+  },
+  {
+    "id": "P4",
+    "verdict": "medium",
+    "route": "patch",
+    "group": "direct-render-context",
+    "evidence": "The current-main Windows forwarding fixture directly renders the CI template without the new manual_jobs context, causing the only renderer error on both Python versions. Supply the empty nonmanual context; all forwarding and legacy assertions remain, and the exact case passes on both versions."
+  },
+  {
+    "id": "P5",
+    "verdict": "medium",
+    "route": "patch",
+    "group": "bounded-discovery-test-isolation",
+    "evidence": "The required full Client run failed when its 100ms discovery deadline beat corrupt-registry validation under parallel collection load. Under the explicit fix request, reuse the existing nonparallel admission collection; production deadline, exact exception assertion and every test remain unchanged. All17 class cases pass with no skips."
+  }
+]

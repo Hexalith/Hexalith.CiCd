@@ -194,6 +194,8 @@ def string_values(value):
 def check_interfaces(project: Path, repository: str, contract) -> None:
     """Qualify actual caller arguments, outputs, permissions and every Builds ref."""
     prefix = "Hexalith/Hexalith.Builds/"
+    config_source = f"rendered/{repository}/.github/hexalith-ci.json"
+    config = contract.validate("ci", renderer.safe_path(project, config_source).read_bytes(), config_source, repository)
     manifests = {}
     for path in (".github/workflows/ci.yml", ".github/workflows/release.yml",
                  "Github/prepare/action.yml", "Github/publish/action.yml"):
@@ -206,6 +208,19 @@ def check_interfaces(project: Path, repository: str, contract) -> None:
         path = renderer.safe_path(project, source)
         document = renderer.yaml_document(path.read_bytes(), source)
         jobs = document["jobs"]
+        if filename == "qualification.yml":
+            expected_jobs = renderer.execution_jobs(config, contract.schemas["ci"])[2]
+            for action, options in config["jobs"].items():
+                if not isinstance(options["runner"], dict):
+                    continue
+                name = "custom-" + action
+                job = jobs.get(name, {})
+                expected = expected_jobs[name]
+                if any(job.get(field) != expected.get(field) for field in
+                       ("needs", "if", "runs-on", "environment", "timeout-minutes", "permissions")):
+                    raise CheckError(f"{source}/{name}: manual qualification isolation differs from configuration")
+                if (job.get("steps") != expected["steps"] or job.get("env") or job.get("secrets")):
+                    raise CheckError(f"{source}/{name}: qualification preparation, explicit secrets or source binding differ")
         outputs = {}
         for name, job in jobs.items():
             reference = job.get("uses", "")

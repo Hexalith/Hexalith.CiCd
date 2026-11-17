@@ -1,0 +1,38 @@
+[
+  {
+    "repository": "Builds",
+    "message": "feat(ci): add manual private qualification jobs\n\nValidate explicit authority and source identity before private preparation.\nPreserve existing hosted jobs, runtime preparation and timeout settings.\n",
+    "policy_sha256": "d6d1ca8d51001e2802818ce665299d7f0929918acbd95e9a5c53057d6547352c",
+    "cli_version": "21.2.4",
+    "command": [
+      "node",
+      "/tmp/hexalith-job.atvnST2C/commit-tools/node_modules/@commitlint/cli/cli.js",
+      "--config",
+      "/tmp/hexalith-job.atvnST2C/commit-tools/Builds.config.mjs",
+      "--edit",
+      "/tmp/hexalith-job.atvnST2C/commit-tools/Builds.message",
+      "--verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "\u29d7   --- input ---\nfeat(ci): add manual private qualification jobs\n\nValidate explicit authority and source identity before private preparation.\nPreserve existing hosted jobs, runtime preparation and timeout settings.\n\u2714   found 0 problems, 0 warnings\n",
+    "stderr": ""
+  },
+  {
+    "repository": "EventStore",
+    "message": "build(ci): prepare retained product qualification actions\n\nRetain product coverage and legacy publishing during CiCd preparation.\nAdd isolated fixture actions and separately authorized Azure qualification.\n",
+    "policy_sha256": "796a04abdd8c35e645f654c9d8d571556f34ccf4ab3611c9327697a452add38d",
+    "cli_version": "21.2.4",
+    "command": [
+      "node",
+      "/tmp/hexalith-job.atvnST2C/commit-tools/node_modules/@commitlint/cli/cli.js",
+      "--config",
+      "/tmp/hexalith-job.atvnST2C/commit-tools/EventStore.config.mjs",
+      "--edit",
+      "/tmp/hexalith-job.atvnST2C/commit-tools/EventStore.message",
+      "--verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "\u29d7   --- input ---\nbuild(ci): prepare retained product qualification actions\n\nRetain product coverage and legacy publishing during CiCd preparation.\nAdd isolated fixture actions and separately authorized Azure qualification.\n\u2714   found 0 problems, 0 warnings\n",
+    "stderr": ""
+  }
+]

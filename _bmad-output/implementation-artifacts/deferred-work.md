@@ -390,3 +390,7 @@ status: open
 - source_spec: `spec-fix-projects-publication-checks.md`
   summary: Verify native-library resolution if a selected Projects catalog adapter factory requires an unmanaged dependency.
   evidence: Blind review identified a possible gap in the fixture-only managed owner loader, but no current selected factory requiring this path was demonstrated. Medium severity remains unverified; reproduce a real factory with a selected native dependency and conflicting ambient resolution before expanding the loader.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-20-migrate-eventstore.md`
+  summary: Resolve the existing CiCd source-discovery capability gap before activating EventStore.
+  evidence: Latest candidate discovery selects 22 files but reports 58 unresolved source-coverage diagnostics; see evidence/20/scan-source-coverage-review.json. This remains a blocking activation prerequisite, with no exclusions or audit bypass.

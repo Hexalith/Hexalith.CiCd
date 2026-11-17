@@ -1,0 +1,121 @@
+{
+  "started_at": "2026-11-16T20:24:32.189727+00:00",
+  "result": "passed",
+  "scope": "One existing nonparallel collection attribute; exact reviewed allowlist path in both owning CiCd roots; Client.Tests compilation and only SharedProjectionControlIndexTests execution",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Client.Tests/Hexalith.EventStore.Client.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.RY4zQXI0/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.RY4zQXI0/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/client-admission-collection-build.log",
+      "started_at": "2026-11-16T20:24:42.128084+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T20:25:27.808926+00:00"
+    },
+    {
+      "phase": "focused",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Client.Tests/Hexalith.EventStore.Client.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.RY4zQXI0/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-class",
+        "Hexalith.EventStore.Client.Tests.Projections.SharedProjectionControlIndexTests",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.RY4zQXI0/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/client-admission-collection-focused.log",
+      "started_at": "2026-11-16T20:25:27.809383+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T20:25:29.585730+00:00"
+    }
+  ],
+  "source_committed_or_pushed": false,
+  "runtime_deadline_or_assertions_changed": false,
+  "source_head": "f06ff0b782e971c4173c00051fde0cc643a4cdf6",
+  "source_diff": "diff --git a/tests/Hexalith.EventStore.Client.Tests/Projections/SharedProjectionControlIndexTests.cs b/tests/Hexalith.EventStore.Client.Tests/Projections/SharedProjectionControlIndexTests.cs\nindex d5d2eca97..8b799d457 100644\n--- a/tests/Hexalith.EventStore.Client.Tests/Projections/SharedProjectionControlIndexTests.cs\n+++ b/tests/Hexalith.EventStore.Client.Tests/Projections/SharedProjectionControlIndexTests.cs\n@@ -7,6 +7,8 @@ using Shouldly;\n \n namespace Hexalith.EventStore.Client.Tests.Projections;\n \n+// Keep real-time admission assertions free of competing test collections.\n+[Collection(\"GatewayNativeSourceMetadataAdmission\")]\n public sealed class SharedProjectionControlIndexTests\n {\n     private const string ControlIndexName = \"widget-discovery\";",
+  "source_sha256": "348bc384dc275073ed20f6709964de77cd201bebb1ca3ed8dd8d8802b6cbb0a6",
+  "preview_tree": "fa28991ee70b339fddebf7b165e92d73a3cc3cd6",
+  "dependencies": {
+    "Hexalith.Builds": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.Builds",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.Tenants",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.Platform",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.FrontComposer",
+      "source_read_only": true
+    }
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "literal_reviewed_paths": 60,
+      "sha256": "c2c48bcabd2336e9eb7b24b3ae6331dd42a93564cc194d724bef27afabb211c5"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "literal_reviewed_paths": 60,
+      "sha256": "c2c48bcabd2336e9eb7b24b3ae6331dd42a93564cc194d724bef27afabb211c5"
+    }
+  ],
+  "completed_at": "2026-11-16T20:25:29.592028+00:00",
+  "focused_test_counts": {
+    "total": 17,
+    "failed": 0,
+    "succeeded": 17,
+    "skipped": 0
+  },
+  "all_jobs_finished": true,
+  "changed_files": [
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/tests/Hexalith.EventStore.Client.Tests/Projections/SharedProjectionControlIndexTests.cs",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py"
+  ],
+  "full_gate_reexecuted": false
+}

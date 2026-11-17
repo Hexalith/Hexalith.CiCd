@@ -572,25 +572,29 @@
 - id: "20"
   title: "Migrate EventStore"
   description: >-
-    Move EventStore off domain-ci v2, keeping its payload-protection and Dapr
-    broker tests as custom actions and deleting its 13 YAML-asserting tests
-    (CAP-10, CAP-16). Add hook secrets for its Azure-backed tests as a minor
-    Builds API change, passed explicitly by name, and decide where they go:
-    the CI job, where every step can read them, or a dedicated job, which
-    needs a spec update to the one-CI-job constraint and CAP-5 (AD-14).
+    Move current EventStore off frozen domain-ci.yml, preserving package,
+    consumer, folded-snapshot, browser, payload and Dapr/broker product coverage
+    through managed actions. Retire workflow, agent and story-evidence gates
+    using the refreshed evidence/20 inventory. Add the approved manual private
+    Azure qualification contract as a compatible minor Builds API; ordinary
+    CI keeps offline Azure schema coverage without Azure secrets. Preserve
+    fixture runtimes and require green CI plus an actual nightly outcome.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first, including the
-    hexalith-release environment with this module's own Zot push identity and
-    a nuget.org policy scoped to its package IDs, added beside the existing
-    one. Product-side changes (custom actions, gate-rule deletions, deleting
-    module NuGet audit waivers and a tool-only root package.json, its lockfile
-    and .husky/) go in references/Hexalith.EventStore with the module-agent
-    token; never edit owned files there. A CiCd agent adds the waivers to
-    Builds' Props/, and adoption waits for a builds-version that contains
-    them. Then commit submodule + setup file + render here; delivery adopts
-    the module. Right after adoption, the maintainer turns on immutable
-    releases, deletes the other nuget.org policies, and removes the repo from
-    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
+    Follow the approved spec-20-migrate-eventstore.md and AD-21 ordering.
+    Provision the private runner and approval environment without manufacturing
+    Azure authority or running faults. Use the EventStore-only evidence/20
+    pre-adoption verifier before preparation pushes, with exact source/Builds
+    identities, unchanged owned portions and immediate freshness checks. This
+    exception expires at accepted adoption; normal check.py then becomes
+    mandatory. Product writes use module-agent, shared changes use CiCd-agent,
+    and approved administration uses command-local maintainer access. Preserve
+    legacy publishing until delivery adopts the module; retire tool-only npm
+    and Husky assets after adoption. Release a compatible Builds API before
+    registration; require live-main actions, one committed setup/pin/render
+    candidate and successful locked validation. Immediately after adoption,
+    enable immutable releases and retire legacy grants/policies. Record actual
+    normal-checker, CI, qualification prerequisites/outcome and scheduled-night
+    publication or valid no-release result before closing the story.
 - id: "21"
   title: "Migrate Parties"
   description: >-

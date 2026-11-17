@@ -50,12 +50,13 @@ The architecture spine (first companion) decides how each capability is built, i
     - A module that fails its own checks is skipped and reported, and the other modules are still delivered. The skipped module's guard, restore and release keep enforcing its last accepted render, so the rejected render never turns it red. Every delivery run re-applies that render, even while this repository's global checks fail. A module with no accepted render yet gets nothing.
     - A repository is onboarded when the maintainer preconditions are met (AD-21) and it is added here as a submodule with its setup file. It then comes under delivery, the guard, the scheduler, and the duplicate scan.
 - **CAP-5** Custom actions at hook points
-  - **intent:** A module's custom actions in `.github/actions/**` run at named hook points inside the shared CI job and reuse its build and environment. An action that needs another operating system gets its own rendered job.
+  - **intent:** A module's custom actions in `.github/actions/**` run at named hook points inside the shared CI job and reuse its build and environment. Independently prepared hosted jobs and explicit private-service qualifications use the selected Builds contract's generic job model.
   - **success:**
     - The only hook points are `after-unit-tests`, `after-integration-tests`, and `nightly`.
     - An enabled hook runs without repeating checkout, restore, build, or environment setup.
-    - An action that needs browsers or Dapr runs as a hook in the main job, with that knob turned on.
+    - A hook that needs browsers or Dapr enables that shared knob. An independently prepared custom job uses its validated setup, runner, matrix and dependencies.
     - An action declared for Windows runs in its own job on that runner, only after the main job passes.
+    - Approved manual qualifications use a designated private Linux runner and approval environment, only on an explicit dispatch selection after green CI at the same source SHA. They receive only explicitly named environment secrets and the exact per-run authority digest; ordinary CI and unattended nightly jobs receive none of these secrets. The private job builds once with environment preparation disabled, preserving its owner-provisioned fixture runtimes.
 - **CAP-6** One Builds version
   - **intent:** Every module references one exact Builds release tag, through the callers, `hexalith-ci.json`, and the submodule, moved together by delivery.
   - **success:**
@@ -155,9 +156,10 @@ The architecture spine (first companion) decides how each capability is built, i
   - That is accepted. Per-module publish credentials limit it to that module, and the guard, nightly's pre-dispatch check, the release drift check, and hourly delivery repair the files.
 - Agents push directly to `main`. Human review, CODEOWNERS, and required-status-check rulesets are not enforcement layers. The design assumes careless agents, not malicious ones.
 - `uses:` can't be an expression, so Builds calls custom actions only at fixed, named hook points.
-- CI is one job, run in a fixed order: cheapest and most likely to fail first (`pipeline-stages.md`). A separate job is allowed only for one of these (AD-8, AD-12):
-  - an action that needs another operating system, run after the main job
+- Shared CI is one job, run in a fixed order: cheapest and most likely to fail first (`pipeline-stages.md`). Separate jobs follow the selected contract (AD-8, AD-12):
+  - enabled hosted custom jobs, including validated Linux/matrix lanes, run after main CI; nightly/manual lanes use the separate qualification workflow
   - the restore job, which isolates write permission from custom actions
+  - the approved manual private-service qualification job described in CAP-5; it is never automatically dispatched
 - Nothing runs twice:
   - CodeQL runs only in the nightly release.
   - CI checks out Builds and only the other submodules that the module's package-mode build or its tests read, as listed in its `submodules` knob (`pipeline-stages.md`).
@@ -165,7 +167,7 @@ The architecture spine (first companion) decides how each capability is built, i
   - Commitlint runs inside the guard.
   - The release trusts green CI for the same SHA, skips the tests, and packs once.
   - Dependency review is dropped. NuGet audit runs only in the release build.
-  - Known exception: a module with a `nightly` hook compiles twice a night.
+  - Known exceptions: a module with a `nightly` hook compiles twice a night; a separately requested private qualification builds once on its designated runner because no cross-run binary transfer exists.
 - A gate exists only if it checks the product: compilation, tests, security and dependency scans, commit format, or package publishing (`gate-classification.md`).
 - Builds is referenced by exact release tag, and its `v*` tags can't be moved or deleted (the AD-21 tag ruleset, applied to Builds by AD-19). The callers, `hexalith-ci.json`, and the submodule move together. Adopting a new major or rolling back is a commit in this repository, at any time (AD-10).
   - Modules take only an acceptable tag: its GitHub release is published, immutable, and authored by `github-actions[bot]`, and its commit is an ancestor of Builds' `main`. This repository's global checks reject any other.

@@ -1,0 +1,160 @@
+{
+  "started_at": "2026-11-16T17:11:42.353071+00:00",
+  "result": "failed",
+  "phases": [
+    {
+      "phase": "selected-build",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zw4b4mSG/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zw4b4mSG/module",
+        "build",
+        "/tmp/hexalith-job.zw4b4mSG/selected-products.slnx"
+      ],
+      "cwd": "/tmp/hexalith-job.zw4b4mSG/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-selected-build.log",
+      "started_at": "2026-11-16T17:12:18.949189+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T17:13:04.205067+00:00"
+    },
+    {
+      "phase": "new-default-test",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zw4b4mSG/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zw4b4mSG/module",
+        "focus",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "--filter-method",
+        "Hexalith.EventStore.Contracts.Tests.Packaging.CorrectiveOciProvenanceReleaseTests.ContainerDefaultsRetainTheProductReleaseContract",
+        "1"
+      ],
+      "cwd": "/tmp/hexalith-job.zw4b4mSG/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-new-default-test.log",
+      "started_at": "2026-11-16T17:13:04.210257+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T17:13:06.190595+00:00"
+    },
+    {
+      "phase": "unchanged-abi-class",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zw4b4mSG/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zw4b4mSG/module",
+        "focus",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "--filter-class",
+        "Hexalith.EventStore.Server.Tests.Routing.PublishedTenantQuerySelectorAbiTests",
+        "3"
+      ],
+      "cwd": "/tmp/hexalith-job.zw4b4mSG/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-unchanged-abi-class.log",
+      "started_at": "2026-11-16T17:13:06.192007+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T17:13:10.850726+00:00"
+    },
+    {
+      "phase": "remaining-units",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/tmp/hexalith-job.zw4b4mSG/verify.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.zw4b4mSG/module",
+        "unit",
+        "/tmp/hexalith-job.zw4b4mSG/remaining.json",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-passed-projects.json"
+      ],
+      "cwd": "/tmp/hexalith-job.zw4b4mSG/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-remaining-units.log",
+      "started_at": "2026-11-16T17:13:10.851126+00:00",
+      "exit": 1,
+      "completed_at": "2026-11-16T17:17:49.188534+00:00"
+    }
+  ],
+  "full_gate_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "source_repositories_read_only": true,
+  "push_performed": false,
+  "global_nuget_cache_unchanged": true,
+  "retained_other_server_succeeded": 8444,
+  "retained_server_existing_skips": 25,
+  "scope": "Private NuGet cache correction: unchanged 3-case published ABI fixture and four remaining classified units. Separately compile/run one added container-default product test; remove synthetic outcome wrapper and add upload version comments.",
+  "private_nuget_caches": {
+    "NUGET_PACKAGES": "/tmp/hexalith-job.zw4b4mSG/nuget-packages",
+    "NUGET_HTTP_CACHE_PATH": "/tmp/hexalith-job.zw4b4mSG/nuget-http-cache",
+    "NUGET_PLUGINS_CACHE_PATH": "/tmp/hexalith-job.zw4b4mSG/nuget-plugins-cache"
+  },
+  "source_head": "f85419d501f279e9a813435aa73538185ad26ada",
+  "candidate_tree": "8b7c63af22fdaa82085c39992840b832a83de59a",
+  "changes_after_full_gate": [
+    ".github/actions/after-integration-tests/action.yml",
+    ".github/actions/after-unit-tests/action.yml",
+    ".github/actions/nightly/action.yml",
+    ".github/actions/payload-azure/action.yml",
+    "scripts/ci-product-checks.py",
+    "tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs"
+  ],
+  "dependencies": {
+    "Hexalith.Builds": {
+      "disposable_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source_gitlink": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+      "source": "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "disposable_revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source_gitlink": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "disposable_revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source_gitlink": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "disposable_revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source_gitlink": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.FrontComposer",
+      "source_read_only": true
+    }
+  },
+  "final_policy": {
+    "result": "passed",
+    "tree": "8b7c63af22fdaa82085c39992840b832a83de59a",
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-policy.log"
+  },
+  "compiled_projects": [
+    "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+    "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+    "tests/Hexalith.EventStore.ServiceDefaults.Tests/Hexalith.EventStore.ServiceDefaults.Tests.csproj",
+    "tests/Hexalith.EventStore.SignalR.Tests/Hexalith.EventStore.SignalR.Tests.csproj",
+    "tests/Hexalith.EventStore.TestSubscriber/Hexalith.EventStore.TestSubscriber.csproj",
+    "tests/Hexalith.EventStore.Testing.Tests/Hexalith.EventStore.Testing.Tests.csproj"
+  ],
+  "remaining_unit_projects": [
+    "tests/Hexalith.EventStore.ServiceDefaults.Tests/Hexalith.EventStore.ServiceDefaults.Tests.csproj",
+    "tests/Hexalith.EventStore.SignalR.Tests/Hexalith.EventStore.SignalR.Tests.csproj",
+    "tests/Hexalith.EventStore.TestSubscriber/Hexalith.EventStore.TestSubscriber.csproj",
+    "tests/Hexalith.EventStore.Testing.Tests/Hexalith.EventStore.Testing.Tests.csproj"
+  ],
+  "authentic_materialized_fixture": {
+    "sha256": "e21f5ac7b5f332f1921f70a249ab2032b9978d56ffdd6641a0a4b94d04850bdc",
+    "signature_bytes": 12983,
+    "materialized_by": "existing CopyPublishedTenantQuerySelectorFixture target",
+    "private_package_root": "/tmp/hexalith-job.zw4b4mSG/nuget-packages"
+  },
+  "failure": "remaining-units failed: /home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-cache-correction-remaining-units.log",
+  "completed_at": "2026-11-16T17:17:49.189490+00:00"
+}

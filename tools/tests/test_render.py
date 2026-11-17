@@ -24,6 +24,11 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = Path(__file__).resolve().parent / "fixtures/render"
+MANUAL_JOB = {
+    "trigger": "manual", "runner": {"group": "private-ephemeral", "labels": ["self-hosted", "linux", "x64"]},
+    "environment": "owner-approval", "secrets": ["AUTHORITY_JSON", "CUSTODY_JSON"],
+    "preparation": "build-only", "timeoutMinutes": 45,
+}
 sys.dont_write_bytecode = True
 
 
@@ -127,6 +132,12 @@ class Workspace:
             if move_tag:
                 git(self.builds, "update-ref", f"refs/tags/{self.tag}", commit)
             return commit
+
+    def qualification_contract(self):
+        """Synthetic tagged candidate: production's release selector stays untouched."""
+        paths = ("schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py", ".github/workflows/ci.yml",
+                 "Github/prepare/action.yml")
+        self.change_tag({path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in paths})
 
 
 @contextmanager
@@ -276,6 +287,58 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn(r"\u0026", data.decode())
         self.assertEqual("${{ inputs.parameters || '{}' }}",
                          workflow["jobs"]["custom-worker"]["steps"][1]["env"]["HEXALITH_QUALIFICATION_PARAMETERS"])
+    def test_manual_qualification_preserves_secrets_runner_and_green_source(self):
+        with workspace() as fixture:
+            fixture.qualification_contract()
+            fixture.document({"solution": "Fixture.slnx", "additionalSdkVersion": "10.0.404", "ciTimeoutMinutes": 180,
+                              "jobs": {"azure": MANUAL_JOB,
+                                       "windows-tests": {"runner": "windows-latest"}}})
+            fixture.cli()
+            ci = fixture.yaml(".github/workflows/ci.yml")
+            workflow = fixture.yaml(".github/workflows/qualification.yml")
+            expected_arguments = {"additional-sdk-version": "10.0.404", "job-timeout-minutes": 180}
+            self.assertEqual(expected_arguments, ci["jobs"]["ci"]["with"])
+            self.assertIsNone(ci["on"]["workflow_dispatch"])
+            self.assertNotIn("custom-azure", ci["jobs"])
+            dispatch = workflow["on"]["workflow_dispatch"]["inputs"]
+            self.assertEqual(["nightly", "azure"], dispatch["job"]["options"])
+            self.assertEqual("nightly", dispatch["job"]["default"])
+            self.assertEqual("", dispatch["authority-sha256"]["default"])
+            green = workflow["jobs"]["qualification-ci"]
+            self.assertEqual(expected_arguments, green["with"])
+            job = workflow["jobs"]["custom-azure"]
+            self.assertEqual(["qualification-ci"], job["needs"])
+            self.assertIn("github.ref == 'refs/heads/main'", job["if"])
+            self.assertIn("needs.qualification-ci.result == 'success'", job["if"])
+            self.assertIn("github.event_name == 'workflow_dispatch'", job["if"])
+            self.assertIn("contains(fromJSON(", job["if"])
+            self.assertIn('"azure"', job["if"])
+            self.assertIn("inputs.job", job["if"])
+            self.assertEqual(MANUAL_JOB["runner"], job["runs-on"])
+            self.assertEqual("owner-approval", job["environment"])
+            self.assertEqual("preserve", job["steps"][0]["with"]["environment"])
+            self.assertEqual("${{ inputs.authority-sha256 }}", job["steps"][0]["with"]["authority-sha256"])
+            self.assertEqual("${{ needs.qualification-ci.outputs.source-sha }}", job["steps"][0]["with"]["source-sha"])
+            environment = job["steps"][1]["env"]
+            for name in MANUAL_JOB["secrets"]:
+                self.assertEqual("${{ secrets." + name + " }}", environment[name])
+            self.assertEqual("${{ inputs.authority-sha256 }}", environment["HEXALITH_AUTHORITY_SHA256"])
+            self.assertEqual("${{ needs.qualification-ci.outputs.source-sha }}", environment["HEXALITH_SOURCE_SHA"])
+            self.assertNotIn("with", job["steps"][1])
+            self.assertNotIn("env", job)
+            self.assertNotIn("env", job["steps"][0])
+            for caller in (ci["jobs"]["ci"], green):
+                self.assertEqual({"registry-pull-username", "registry-pull-password"}, set(caller["secrets"]))
+            with renderer.pinned_contract(fixture.root) as contract:
+                global_checks.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+            fixture.cli("--check")
+
+    def test_old_release_rejects_manual_shape_without_replacing_accepted_render(self):
+        with workspace() as fixture:
+            fixture.setup()
+            fixture.cli()
+            fixture.document({"solution": "Fixture.slnx", "jobs": {"azure": MANUAL_JOB}})
+            self.assert_failure_unchanged(fixture)
 
     def assert_arguments_supplied(self, supplied, declarations):
         self.assertLessEqual(set(supplied), set(declarations))

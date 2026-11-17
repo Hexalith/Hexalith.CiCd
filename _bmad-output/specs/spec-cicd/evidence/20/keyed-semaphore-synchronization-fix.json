@@ -1,0 +1,135 @@
+{
+  "started_at": "2026-11-17T00:27:53.100668+00:00",
+  "result": "passed",
+  "scope": "Build Server.Tests only, then execute the complete four-case KeyedSemaphoreTests class with mandatory released Release/package/analyzer flags and zero skips",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.5pBkDF8d/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.5pBkDF8d/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/keyed-semaphore-synchronization-build.log",
+      "started_at": "2026-11-17T00:28:00.546438+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-17T00:28:32.043649+00:00"
+    },
+    {
+      "phase": "focused",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.5pBkDF8d/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-class",
+        "Hexalith.EventStore.Server.Tests.Projections.KeyedSemaphoreTests",
+        "--minimum-expected-tests",
+        "4",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.5pBkDF8d/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/keyed-semaphore-synchronization-focused.log",
+      "started_at": "2026-11-17T00:28:32.044307+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-17T00:28:34.080723+00:00"
+    }
+  ],
+  "full_server_or_unit_or_offline_suite_run": false,
+  "shared_processes_signaled": false,
+  "source_committed_or_pushed": false,
+  "all_jobs_finished": true,
+  "reasoning": "The old firstReleased flag was set after Dispose released the semaphore, so the second lease could legitimately acquire before the flag changed. The second AcquireAsync now executes directly up to its pending semaphore await while the first lease is held. Its incomplete task proves exclusion, acquisition after release proves progress, Count==1 while the second lease is held proves retained entry ownership, and Count==0 after its disposal proves cleanup. No scheduling delay, post-release flag, assertion relaxation, production change or retry is used.",
+  "source_head": "febcc0b378a49563f2f417ac391fb7d2aa71fbce",
+  "source_sha256": "7725b3f5facb66f116239e22f7afb7de685ab04a082cc7b90d4d2f6d39e04935",
+  "source_diff": "diff --git a/tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs b/tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs\nindex ed369578f..7ed2f3567 100644\n--- a/tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs\n+++ b/tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs\n@@ -32,23 +32,17 @@ public class KeyedSemaphoreTests {\n     [Fact]\n     public async Task AcquireAsync_SameKeyConcurrentWaiters_SerializesAndReleasesAtBaseline() {\n         var keyed = new KeyedSemaphore<string>();\n-        var firstReady = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);\n-        var firstReleased = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);\n+        using IDisposable first = await keyed.AcquireAsync(\"a\", CancellationToken.None);\n+        Task<IDisposable> secondTask = keyed.AcquireAsync(\"a\", CancellationToken.None);\n \n-        var secondTask = Task.Run(async () => {\n-            await firstReady.Task;\n-            using IDisposable second = await keyed.AcquireAsync(\"a\", CancellationToken.None);\n-            firstReleased.Task.IsCompleted.ShouldBeTrue();\n-        });\n-\n-        IDisposable first = await keyed.AcquireAsync(\"a\", CancellationToken.None);\n-        firstReady.SetResult();\n-        await Task.Delay(50);\n+        // The second waiter cannot acquire the same key while the first lease is held.\n+        secondTask.IsCompleted.ShouldBeFalse();\n         keyed.Count.ShouldBe(1);\n         first.Dispose();\n-        firstReleased.SetResult();\n \n-        await secondTask;\n+        using (IDisposable second = await secondTask) {\n+            keyed.Count.ShouldBe(1);\n+        }\n         keyed.Count.ShouldBe(0);\n     }\n ",
+  "preview_tree": "50ca1d3154f757533ae7d47ccfd67de57b67702d",
+  "preview_is_unpublished_fixture_snapshot": true,
+  "dependencies": {
+    "Hexalith.Builds": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "revision": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "revision": "84a578bb3447f2c4999e502361b18ae485931c45",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "revision": "a3970e1ec6e8b0ce1c82505542d97ad4f386033c",
+      "source_read_only": true
+    }
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 68,
+      "added_only": "tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs",
+      "sha256": "5786daecdec77e924d5b79586b0367f976fcc9ce9cf68f454d1132a5414db763"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 68,
+      "added_only": "tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs",
+      "sha256": "5786daecdec77e924d5b79586b0367f976fcc9ce9cf68f454d1132a5414db763"
+    }
+  ],
+  "focused_test_counts": {
+    "total": 4,
+    "failed": 0,
+    "succeeded": 4,
+    "skipped": 0
+  },
+  "build_summary": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "production_keyed_semaphore_unchanged": true,
+  "completed_at": "2026-11-17T00:28:34.096408+00:00",
+  "temporary_workspace_removed": true,
+  "build_elapsed": "00:00:31.12",
+  "changed_files": [
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Projections/KeyedSemaphoreTests.cs",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py"
+  ],
+  "proof_assertions": [
+    "second acquisition remains incomplete while first lease held",
+    "entry count remains1 with a pending waiter",
+    "second acquisition completes after first lease release",
+    "entry count remains1 while second lease held",
+    "entry count returns0 after final disposal"
+  ]
+}

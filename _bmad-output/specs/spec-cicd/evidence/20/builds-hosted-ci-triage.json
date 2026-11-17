@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-16T20:58:41.023367+00:00",
+  "source": "c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+  "run": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/43943459612",
+  "conclusion": "failure",
+  "findings": [
+    {
+      "job": "Python contract tests, both interpreters",
+      "cause": "Release graph fixture omitted the already-added accepted-delivered-sha build input.",
+      "upstream_fix": "05bda4e01d70afacb5048d5c336f383a301c0974",
+      "disposition": "Already corrected on main by concurrent work; do not duplicate the patch."
+    },
+    {
+      "job": "Sample",
+      "cause": "Dapr initialization failed because host port 58080 was in use, after sample build and unit tests passed.",
+      "disposition": "Worker fixture failure; no audit/test weakening or shared-container removal performed."
+    },
+    {
+      "job": "Package catalog contracts",
+      "cause": "Generated package-version audit names an older Tooling.csproj declaration revision; seven dirty-declaration diagnostics.",
+      "disposition": "Pipeline/catalog evidence failure; preserved unchanged and requires owning follow-up before adopting/releasing."
+    }
+  ],
+  "logs": [
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/fix-builds-ci-failures.log",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/fix-builds-sample-job.log"
+  ],
+  "scope": "Historical hosted run triage. Focused source verification passed independently. This record does not certify hosted CI or adoption readiness.",
+  "rerun_or_credentials_changed": false
+}

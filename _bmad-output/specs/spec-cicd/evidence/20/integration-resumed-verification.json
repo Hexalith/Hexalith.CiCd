@@ -1,0 +1,58 @@
+{
+  "started_at": "2026-11-16T16:15:04.929953+00:00",
+  "previous_report": "integration-corrections-verification.json",
+  "previous_verified_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "previous_passing_unit_projects": [
+    "samples/Hexalith.EventStore.Sample.Tests/Hexalith.EventStore.Sample.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Abstractions.Tests/Hexalith.EventStore.Admin.Abstractions.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Cli.Tests/Hexalith.EventStore.Admin.Cli.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Mcp.Tests/Hexalith.EventStore.Admin.Mcp.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Server.Host.Tests/Hexalith.EventStore.Admin.Server.Host.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Server.Tests/Hexalith.EventStore.Admin.Server.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.UI.Tests/Hexalith.EventStore.Admin.UI.Tests.csproj",
+    "tests/Hexalith.EventStore.Client.Tests/Hexalith.EventStore.Client.Tests.csproj"
+  ],
+  "correction": "Disposable module/dependency clones retain verified source origins and real Git identity; no product identity check weakened",
+  "phases": [
+    {
+      "phase": "resumed-build",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.uKeI3BHa/resume.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.uKeI3BHa/module",
+        "build",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json"
+      ],
+      "cwd": "/tmp/hexalith-job.uKeI3BHa/module",
+      "exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-resumed-build.log"
+    },
+    {
+      "phase": "resumed-unit",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.uKeI3BHa/resume.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.uKeI3BHa/module",
+        "unit",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json",
+        "/tmp/hexalith-job.uKeI3BHa/passed.json"
+      ],
+      "cwd": "/tmp/hexalith-job.uKeI3BHa/module",
+      "exit": 1,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-resumed-unit.log"
+    }
+  ],
+  "candidate_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "builds_preview": {
+    "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "origin": "https://github.com/Hexalith/Hexalith.Builds.git",
+    "actual_source_gitlink": "160000 commit e2bbbd0893f586e4d447ef8358ff747ea3d34435\treferences/Hexalith.Builds",
+    "source_gitlink_unchanged": true
+  },
+  "completed_at": "2026-11-16T16:20:25.458866+00:00",
+  "result": "failed"
+}

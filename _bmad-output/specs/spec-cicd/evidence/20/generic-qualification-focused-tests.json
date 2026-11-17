@@ -1,0 +1,146 @@
+{
+  "started_at": "2026-11-16T22:52:49.121150+00:00",
+  "result": "passed",
+  "phases": [
+    {
+      "phase": "render-py3.12",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/tests/test_render.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20-final",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/generic-qualification-render-py3.12.log",
+      "started_at": "2026-11-16T22:52:49.126401+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:53:26.561894+00:00",
+      "passed_tests": 46,
+      "elapsed_seconds": 37.041
+    },
+    {
+      "phase": "validate-py3.12",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/tests/test_validate.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20-final",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/generic-qualification-validate-py3.12.log",
+      "started_at": "2026-11-16T22:53:26.562317+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:53:51.994392+00:00",
+      "passed_tests": 54,
+      "elapsed_seconds": 25.127
+    },
+    {
+      "phase": "azure-requests-py3.12",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "3.12",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_managed_product_fixtures.AzureRequestTests",
+        "-v"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/generic-qualification-azure-requests-py3.12.log",
+      "started_at": "2026-11-16T22:53:51.994688+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:53:52.109212+00:00",
+      "passed_tests": 5,
+      "elapsed_seconds": 0.003
+    },
+    {
+      "phase": "render-py3.14",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.14",
+        "tools/tests/test_render.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20-final",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/generic-qualification-render-py3.14.log",
+      "started_at": "2026-11-16T22:53:52.109509+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:54:35.540359+00:00",
+      "passed_tests": 46,
+      "elapsed_seconds": 42.974
+    },
+    {
+      "phase": "validate-py3.14",
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.14",
+        "tools/tests/test_validate.py"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20-final",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/generic-qualification-validate-py3.14.log",
+      "started_at": "2026-11-16T22:54:35.540694+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:55:07.570009+00:00",
+      "passed_tests": 54,
+      "elapsed_seconds": 31.665
+    },
+    {
+      "phase": "azure-requests-py3.14",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "3.14",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_managed_product_fixtures.AzureRequestTests",
+        "-v"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/generic-qualification-azure-requests-py3.14.log",
+      "started_at": "2026-11-16T22:55:07.570320+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:55:07.685252+00:00",
+      "passed_tests": 5,
+      "elapsed_seconds": 0.003
+    }
+  ],
+  "full_product_suite_run": false,
+  "azure_services_run": false,
+  "all_jobs_finished": true,
+  "cicd_head": "195d03e2d0a4ef43da623c2542faa9079c80c811",
+  "builds_head": "4a23d186f31331b856e7aa87e12aba16384f5f6a",
+  "module_head": "06a37746beabb886e8e96208852ff947b883d735",
+  "source_sha256": {
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/tools/check_global.py": "9a91a93522f5fa5b0e445ff969d92adfb974996a77e64ea75e4ae221df6c78fb",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/tools/tests/test_render.py": "77a00cc9790cd76e38f939dfb9c27e982e05e1ce3ec5d49f73f2797ed7f334cf",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/tools/tests/test_validate.py": "c81c92918263c7c2818346591a8b75d6c6320b62c698d6a9514df1032c9127f1",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/tools/render.py": "29dbe3d4ad3df9b5671216cc5bde113032f03b2d4e34b3100bff6a8deb4988f7",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/templates/.github/workflows/ci.yml.j2": "0187c72feeadb54c8d688fbfc609be8d97ccda2a3a26136110729e3eace482c7",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/templates/.github/workflows/qualification.yml.j2": "ff3ab421d5d8bdc0626d0eb13500f54866af369ce2fb0931c39802cf400f5b13",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/.github/actions/payload-azure/action.yml": "3f13c9cdb9256cce5d458cee37059ae33160cee365db5276798f360efea4028e",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/scripts/qualify-payload-azure.py": "889c8bddf7806a2f15564bcbb5854c8232a85ff42760080ba470a5fd065777ee"
+  },
+  "completed_at": "2026-11-16T22:55:07.685481+00:00",
+  "runner_python": "3.14"
+}

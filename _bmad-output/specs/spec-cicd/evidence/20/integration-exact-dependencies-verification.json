@@ -1,0 +1,75 @@
+{
+  "started_at": "2026-11-16T16:23:47.481983+00:00",
+  "previous_verified_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "previous_passing_unit_projects": [
+    "samples/Hexalith.EventStore.Sample.Tests/Hexalith.EventStore.Sample.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Abstractions.Tests/Hexalith.EventStore.Admin.Abstractions.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Cli.Tests/Hexalith.EventStore.Admin.Cli.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Mcp.Tests/Hexalith.EventStore.Admin.Mcp.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Server.Host.Tests/Hexalith.EventStore.Admin.Server.Host.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.Server.Tests/Hexalith.EventStore.Admin.Server.Tests.csproj",
+    "tests/Hexalith.EventStore.Admin.UI.Tests/Hexalith.EventStore.Admin.UI.Tests.csproj",
+    "tests/Hexalith.EventStore.Client.Tests/Hexalith.EventStore.Client.Tests.csproj"
+  ],
+  "dependency_sources": {
+    "Hexalith.Tenants": {
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "source_head": "292dbf164f26bcf376ef86d749b149b075f8b502",
+      "source_origin": "https://github.com/Hexalith/Hexalith.Tenants.git",
+      "eventstore_gitlink": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "exact_commit_available": true,
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform",
+      "source_head": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+      "source_origin": "https://github.com/Hexalith/Hexalith.Platform.git",
+      "eventstore_gitlink": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "exact_commit_available": true,
+      "source_read_only": true
+    }
+  },
+  "source_repositories_read_only": true,
+  "nested_submodule_initialization": false,
+  "phases": [
+    {
+      "phase": "exact-dependencies-build",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.pAykR1BH/resume.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.pAykR1BH/module",
+        "build",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json"
+      ],
+      "cwd": "/tmp/hexalith-job.pAykR1BH/module",
+      "exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-build.log"
+    },
+    {
+      "phase": "exact-dependencies-unit",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.pAykR1BH/resume.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.pAykR1BH/module",
+        "unit",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json",
+        "/tmp/hexalith-job.pAykR1BH/passed.json"
+      ],
+      "cwd": "/tmp/hexalith-job.pAykR1BH/module",
+      "exit": 1,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-unit.log"
+    }
+  ],
+  "candidate_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "builds_preview": {
+    "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "actual_source_gitlink": "160000 commit e2bbbd0893f586e4d447ef8358ff747ea3d34435\treferences/Hexalith.Builds",
+    "source_gitlink_unchanged": true
+  },
+  "completed_at": "2026-11-16T16:34:15.639271+00:00",
+  "result": "failed"
+}

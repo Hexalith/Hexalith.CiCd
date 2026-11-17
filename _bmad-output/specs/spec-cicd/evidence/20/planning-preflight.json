@@ -1,0 +1,1321 @@
+{
+  "recorded_at": "2026-11-16T15:02:28.761286+00:00",
+  "default_GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+  "token_override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "administration_profile": "/home/administrator/.config/gh",
+  "requests": [
+    {
+      "endpoint": "user",
+      "exit": 0,
+      "data": {
+        "login": "jpiquot"
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore",
+      "exit": 0,
+      "data": {
+        "id": 1155154671,
+        "full_name": "Hexalith/Hexalith.EventStore",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        },
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          },
+          "dependabot_security_updates": {
+            "status": "disabled"
+          },
+          "secret_scanning_non_provider_patterns": {
+            "status": "disabled"
+          },
+          "secret_scanning_validity_checks": {
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/rulesets?includes_parents=true",
+      "exit": 0,
+      "data": [
+        {
+          "id": 14479516,
+          "name": "Protect",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.EventStore",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5E2kLvzgDc8Jw",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.EventStore/rulesets/14479516"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.EventStore/rules/14479516"
+            }
+          },
+          "created_at": "2026-03-29T17:47:10.987+02:00",
+          "updated_at": "2026-11-15T17:37:52.517+01:00"
+        },
+        {
+          "id": 26299155,
+          "name": "Protect finite Parties SDK 3.130.2",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "Hexalith/Hexalith.EventStore",
+          "enforcement": "active",
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5E2kLvzgGRSxM",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/Hexalith/Hexalith.EventStore/rulesets/26299155"
+            },
+            "html": {
+              "href": "https://github.com/Hexalith/Hexalith.EventStore/rules/26299155"
+            }
+          },
+          "created_at": "2026-11-01T04:13:49.343+01:00",
+          "updated_at": "2026-11-01T04:13:49.476+01:00"
+        }
+      ]
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/rulesets/14479516",
+      "exit": 0,
+      "data": {
+        "id": 14479516,
+        "name": "Protect",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.EventStore",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "~DEFAULT_BRANCH"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          },
+          {
+            "type": "pull_request",
+            "parameters": {
+              "required_approving_review_count": 0,
+              "dismiss_stale_reviews_on_push": false,
+              "required_reviewers": [],
+              "require_code_owner_review": false,
+              "dismissal_restriction": {
+                "enabled": false,
+                "allowed_actors": []
+              },
+              "require_last_push_approval": false,
+              "required_review_thread_resolution": false,
+              "require_extra_approval_for_unattributed_changes": true,
+              "allowed_merge_methods": [
+                "squash"
+              ]
+            }
+          },
+          {
+            "type": "required_status_checks",
+            "parameters": {
+              "strict_required_status_checks_policy": true,
+              "do_not_enforce_on_create": false,
+              "required_status_checks": [
+                {
+                  "context": "advisory",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "ci / build-and-test",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "ci / tenants-source-mode",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "codeql / analyze",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "commitlint / commitlint",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "dependency-review / dependency-review",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "live-sidecar",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "Phase 4 gate risk matrix fixtures",
+                  "integration_id": 15368
+                }
+              ]
+            }
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5E2kLvzgDc8Jw",
+        "created_at": "2026-03-29T17:47:10.987+02:00",
+        "updated_at": "2026-11-15T17:37:52.517+01:00",
+        "bypass_actors": [
+          {
+            "actor_id": 6775094,
+            "actor_type": "User",
+            "bypass_mode": "always"
+          },
+          {
+            "actor_id": 148322258,
+            "actor_type": "User",
+            "bypass_mode": "always"
+          }
+        ],
+        "current_user_can_bypass": "always",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.EventStore/rulesets/14479516"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.EventStore/rules/14479516"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/rulesets/26299155",
+      "exit": 0,
+      "data": {
+        "id": 26299155,
+        "name": "Protect finite Parties SDK 3.130.2",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "Hexalith/Hexalith.EventStore",
+        "enforcement": "active",
+        "conditions": {
+          "ref_name": {
+            "exclude": [],
+            "include": [
+              "refs/heads/release/parties-sdk-3.130.2"
+            ]
+          }
+        },
+        "rules": [
+          {
+            "type": "deletion"
+          },
+          {
+            "type": "non_fast_forward"
+          },
+          {
+            "type": "pull_request",
+            "parameters": {
+              "required_approving_review_count": 0,
+              "dismiss_stale_reviews_on_push": false,
+              "required_reviewers": [],
+              "require_code_owner_review": false,
+              "dismissal_restriction": {
+                "enabled": false,
+                "allowed_actors": []
+              },
+              "require_last_push_approval": false,
+              "required_review_thread_resolution": false,
+              "require_extra_approval_for_unattributed_changes": true,
+              "allowed_merge_methods": [
+                "squash"
+              ]
+            }
+          },
+          {
+            "type": "required_status_checks",
+            "parameters": {
+              "strict_required_status_checks_policy": true,
+              "do_not_enforce_on_create": false,
+              "required_status_checks": [
+                {
+                  "context": "advisory",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "ci / build-and-test",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "ci / tenants-source-mode",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "codeql / analyze",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "commitlint / commitlint",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "dependency-review / dependency-review",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "live-sidecar",
+                  "integration_id": 15368
+                }
+              ]
+            }
+          }
+        ],
+        "node_id": "RRS_lACqUmVwb3NpdG9yec5E2kLvzgGRSxM",
+        "created_at": "2026-11-01T04:13:49.343+01:00",
+        "updated_at": "2026-11-01T04:13:49.476+01:00",
+        "bypass_actors": [
+          {
+            "actor_id": 6775094,
+            "actor_type": "User",
+            "bypass_mode": "always"
+          },
+          {
+            "actor_id": 148322258,
+            "actor_type": "User",
+            "bypass_mode": "always"
+          }
+        ],
+        "current_user_can_bypass": "always",
+        "_links": {
+          "self": {
+            "href": "https://api.github.com/repos/Hexalith/Hexalith.EventStore/rulesets/26299155"
+          },
+          "html": {
+            "href": "https://github.com/Hexalith/Hexalith.EventStore/rules/26299155"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/environments",
+      "exit": 0,
+      "data": {
+        "environments": [
+          {
+            "name": "copilot",
+            "deployment_branch_policy": null,
+            "protection_types": []
+          },
+          {
+            "name": "production",
+            "deployment_branch_policy": {
+              "protected_branches": false,
+              "custom_branch_policies": true
+            },
+            "protection_types": [
+              "required_reviewers",
+              "branch_policy"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/actions/secrets",
+      "exit": 0,
+      "data": {
+        "total_count": 7,
+        "secrets": [
+          {
+            "name": "HEXALITH_CI_REGISTRY_PASSWORD",
+            "created_at": "2026-11-03T09:06:59Z",
+            "updated_at": "2026-11-03T09:06:59Z"
+          },
+          {
+            "name": "HEXALITH_CI_REGISTRY_USERNAME",
+            "created_at": "2026-11-03T09:06:59Z",
+            "updated_at": "2026-11-03T09:06:59Z"
+          },
+          {
+            "name": "REGISTRY_PASSWORD",
+            "created_at": "2026-03-17T16:08:16Z",
+            "updated_at": "2026-03-17T16:08:16Z"
+          },
+          {
+            "name": "REGISTRY_USERNAME",
+            "created_at": "2026-03-17T16:08:05Z",
+            "updated_at": "2026-03-17T16:08:05Z"
+          },
+          {
+            "name": "STAGING_SSH_HOST",
+            "created_at": "2026-03-17T16:03:34Z",
+            "updated_at": "2026-03-17T16:03:34Z"
+          },
+          {
+            "name": "STAGING_SSH_KEY",
+            "created_at": "2026-03-17T16:07:52Z",
+            "updated_at": "2026-03-17T16:07:52Z"
+          },
+          {
+            "name": "STAGING_SSH_USER",
+            "created_at": "2026-03-17T16:03:44Z",
+            "updated_at": "2026-03-17T16:03:44Z"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/actions/variables",
+      "exit": 0,
+      "data": {
+        "variables": [
+          {
+            "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+            "value": "true"
+          },
+          {
+            "name": "NUGET_TRUSTED_PUBLISHING_USER"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/actions/permissions/artifact-and-log-retention",
+      "exit": 0,
+      "data": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/code-scanning/default-setup",
+      "exit": 0,
+      "data": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "go",
+          "javascript",
+          "javascript-typescript",
+          "python",
+          "typescript"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/automated-security-fixes",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "paused": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/immutable-releases",
+      "exit": 0,
+      "data": {
+        "enabled": false,
+        "enforced_by_owner": false
+      }
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.EventStore/releases?per_page=100",
+      "exit": 0,
+      "data": [
+        {
+          "id": 447094086,
+          "tag_name": "v5.2.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 446116006,
+          "tag_name": "v5.1.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 445225635,
+          "tag_name": "v5.1.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 444432321,
+          "tag_name": "v5.0.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 443361998,
+          "tag_name": "v5.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 439157379,
+          "tag_name": "v4.2.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 433830750,
+          "tag_name": "v4.1.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 432298709,
+          "tag_name": "v4.0.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 432223815,
+          "tag_name": "v4.0.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 432131310,
+          "tag_name": "v4.0.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 432054443,
+          "tag_name": "v4.0.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 431872733,
+          "tag_name": "v4.0.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 431439418,
+          "tag_name": "v3.133.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 431230055,
+          "tag_name": "v3.132.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 431023949,
+          "tag_name": "v3.132.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 430991531,
+          "tag_name": "v3.132.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 430795843,
+          "tag_name": "v3.131.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 430385896,
+          "tag_name": "v3.130.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 430218296,
+          "tag_name": "v3.130.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 430197286,
+          "tag_name": "v3.130.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 429846407,
+          "tag_name": "v3.129.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 426421136,
+          "tag_name": "v3.128.4",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 425962567,
+          "tag_name": "v3.128.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 423716035,
+          "tag_name": "v3.128.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 423681931,
+          "tag_name": "v3.128.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 423527760,
+          "tag_name": "v3.128.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 421772639,
+          "tag_name": "v3.127.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 420079977,
+          "tag_name": "v3.126.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 416713076,
+          "tag_name": "v3.126.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 416477547,
+          "tag_name": "v3.125.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 416450265,
+          "tag_name": "v3.125.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 415271061,
+          "tag_name": "v3.124.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 415029445,
+          "tag_name": "v3.123.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 412879561,
+          "tag_name": "v3.122.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 412416814,
+          "tag_name": "v3.121.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 408761491,
+          "tag_name": "v3.120.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 408142008,
+          "tag_name": "v3.119.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 408029092,
+          "tag_name": "v3.118.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 406650006,
+          "tag_name": "v3.117.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 406609890,
+          "tag_name": "v3.117.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 405390666,
+          "tag_name": "v3.115.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 403907506,
+          "tag_name": "v3.114.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 403209128,
+          "tag_name": "v3.113.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 403055540,
+          "tag_name": "v3.112.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 399402734,
+          "tag_name": "v3.110.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 397211110,
+          "tag_name": "v3.109.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 395866727,
+          "tag_name": "v3.108.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 390125772,
+          "tag_name": "v3.106.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 389136083,
+          "tag_name": "v3.105.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 387840471,
+          "tag_name": "v3.104.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 384178065,
+          "tag_name": "v3.103.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 383149714,
+          "tag_name": "v3.102.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 380275170,
+          "tag_name": "v3.101.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 379235587,
+          "tag_name": "v3.100.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 379126551,
+          "tag_name": "v3.100.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 378694431,
+          "tag_name": "v3.99.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 378282726,
+          "tag_name": "v3.98.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 374682748,
+          "tag_name": "v3.97.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 373676516,
+          "tag_name": "v3.96.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 371073794,
+          "tag_name": "v3.95.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 370433111,
+          "tag_name": "v3.94.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 369797987,
+          "tag_name": "v3.94.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 369029855,
+          "tag_name": "v3.93.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 368747416,
+          "tag_name": "v3.92.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 365394841,
+          "tag_name": "v3.91.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 365054508,
+          "tag_name": "v3.91.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 364381787,
+          "tag_name": "v3.90.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 363483895,
+          "tag_name": "v3.89.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 363443545,
+          "tag_name": "v3.88.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 363269036,
+          "tag_name": "v3.87.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 362536631,
+          "tag_name": "v3.86.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 362156938,
+          "tag_name": "v3.85.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 361817142,
+          "tag_name": "v3.85.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 361511262,
+          "tag_name": "v3.84.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 360590467,
+          "tag_name": "v3.83.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 358858894,
+          "tag_name": "v3.82.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 358354909,
+          "tag_name": "v3.81.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 357580664,
+          "tag_name": "v3.80.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 357117377,
+          "tag_name": "v3.79.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356894319,
+          "tag_name": "v3.78.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356385614,
+          "tag_name": "v3.77.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356337574,
+          "tag_name": "v3.76.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356331897,
+          "tag_name": "v3.76.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356316689,
+          "tag_name": "v3.75.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356085543,
+          "tag_name": "v3.74.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356082281,
+          "tag_name": "v3.73.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356073515,
+          "tag_name": "v3.72.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356069454,
+          "tag_name": "v3.71.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 356041812,
+          "tag_name": "v3.70.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355918649,
+          "tag_name": "v3.70.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355705258,
+          "tag_name": "v3.70.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355286132,
+          "tag_name": "v3.69.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355260276,
+          "tag_name": "v3.68.6",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355238825,
+          "tag_name": "v3.68.5",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355179258,
+          "tag_name": "v3.68.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355115915,
+          "tag_name": "v3.68.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 355094976,
+          "tag_name": "v3.68.1",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 354967200,
+          "tag_name": "v3.68.0",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 354784095,
+          "tag_name": "v3.67.3",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        },
+        {
+          "id": 354764731,
+          "tag_name": "v3.67.2",
+          "draft": false,
+          "prerelease": false,
+          "immutable": false
+        }
+      ]
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations",
+      "exit": 0,
+      "data": {
+        "installations": [
+          {
+            "id": 31615326,
+            "app_slug": "travis-ci",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "deployments": "write",
+              "pull_requests": "read",
+              "repository_hooks": "write"
+            }
+          },
+          {
+            "id": 31626264,
+            "app_slug": "codacy-production",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "repository_hooks": "write",
+              "organization_hooks": "write",
+              "repository_custom_properties": "read",
+              "organization_custom_properties": "read"
+            }
+          },
+          {
+            "id": 31641834,
+            "app_slug": "codecov",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "issues": "read",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "administration": "read"
+            }
+          },
+          {
+            "id": 77847816,
+            "app_slug": "chatgpt-codex-connector",
+            "repository_selection": "selected",
+            "permissions": {
+              "checks": "read",
+              "issues": "write",
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "statuses": "read",
+              "workflows": "write",
+              "pull_requests": "write"
+            }
+          },
+          {
+            "id": 97329264,
+            "app_slug": "sonarqubecloud",
+            "repository_selection": "all",
+            "permissions": {
+              "checks": "write",
+              "members": "read",
+              "contents": "read",
+              "metadata": "read",
+              "statuses": "write",
+              "pull_requests": "write",
+              "security_events": "write",
+              "organization_copilot_seat_management": "read"
+            }
+          },
+          {
+            "id": 179966090,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "exit": 1,
+      "data": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "exit": 0,
+      "data": {
+        "repositories": [
+          "Hexalith/Hexalith.Builds",
+          "Hexalith/Hexalith.Commons",
+          "Hexalith/Hexalith.PolymorphicSerializations"
+        ],
+        "total_count": 3
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "exit": 0,
+      "data": {
+        "repositories": [
+          "Hexalith/Hexalith.Builds",
+          "Hexalith/Hexalith.Commons",
+          "Hexalith/Hexalith.PolymorphicSerializations"
+        ],
+        "total_count": 3
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "exit": 0,
+      "data": {
+        "repositories": [
+          "Hexalith/Hexalith.Builds",
+          "Hexalith/Hexalith.Commons",
+          "Hexalith/Hexalith.PolymorphicSerializations"
+        ],
+        "total_count": 3
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "exit": 0,
+      "data": {
+        "repositories": [
+          "Hexalith/Hexalith.Builds",
+          "Hexalith/Hexalith.Commons",
+          "Hexalith/Hexalith.PolymorphicSerializations"
+        ],
+        "total_count": 3
+      }
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "exit": 0,
+      "data": {
+        "repositories": [
+          "Hexalith/Hexalith.Builds",
+          "Hexalith/Hexalith.Commons",
+          "Hexalith/Hexalith.PolymorphicSerializations"
+        ],
+        "total_count": 3
+      }
+    }
+  ],
+  "cicd_base": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+  "nuget_policy": "Not yet verified; no credential or policy mutations during planning."
+}

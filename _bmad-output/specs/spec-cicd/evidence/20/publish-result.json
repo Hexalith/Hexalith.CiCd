@@ -1,0 +1,52 @@
+{
+  "recorded_at": "2026-11-16T19:51:38.643644+00:00",
+  "request": "Push all story20 changes to main",
+  "all_changes_pushed": false,
+  "publication_worktree": "/home/administrator/projects/hexalith/cicd-publish-story-20",
+  "Builds": {
+    "result": "pushed_to_main",
+    "commit": "c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+    "url": "https://github.com/Hexalith/Hexalith.Builds/commit/c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+    "remote_readback_verified": true,
+    "checks": {
+      "config": 23,
+      "pipeline": 40,
+      "prepare": 34,
+      "protected_checkout": 10,
+      "workflow_security_lints": "passed",
+      "public_api": "compatible, no removals",
+      "commitlint": "passed"
+    }
+  },
+  "EventStore": {
+    "result": "blocked_before_push",
+    "local_commit": "fa93b05ee7f9396f83190b1f09d0c72b897ed962",
+    "base": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "failure": ".github/hexalith-ci.json: $: unknown keys: additionalSdkVersion, ciTimeoutMinutes",
+    "command": [
+      "run-with-temp",
+      "python3",
+      "-B",
+      "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "70bf20dceaafd37229236e11d279a5d6ea434759",
+      "fa93b05ee7f9396f83190b1f09d0c72b897ed962",
+      "v6.0.6",
+      "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "--module",
+      "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore",
+      "--report",
+      "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/publish-eventstore-pre-adoption.json"
+    ],
+    "required_next_step": "A compatible immutable Builds release from the central nightly process, followed by successful full approved preparation verification. No module push occurred."
+  },
+  "CiCd": {
+    "result": "held_before_commit_and_push",
+    "reason": "Required submodules-first publication ordering; EventStore is not pushed.",
+    "policy": "references/Hexalith.AI.Tools/hexalith-git-instructions.md:82",
+    "policy_quote": "If a submodule commit, push, or remote verification fails, report the exact command and blocker and stop before creating the superproject commit. Never record a submodule commit that has not been pushed.",
+    "local_candidate": "publish/story20-main",
+    "verification": "Renderer37 and validator53 passed during integration; full committed-candidate checks remain required before publication."
+  },
+  "activation": "Still blocked; no release, production pin/registration/delivery, Azure run or nightly outcome was created.",
+  "all_child_jobs_finished": true
+}

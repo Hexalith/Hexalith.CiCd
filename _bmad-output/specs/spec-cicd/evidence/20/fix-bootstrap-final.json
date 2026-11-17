@@ -1,0 +1,63 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/administrator/.local/share/uv/python/cpython-3.12-linux-x86_64-gnu/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20",
+        "-p",
+        "test_pre_adoption_verify.py",
+        "-v"
+      ],
+      "exit": 1,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/fix-bootstrap-final-py312.log"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20",
+        "-p",
+        "test_pre_adoption_verify.py",
+        "-v"
+      ],
+      "exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/fix-bootstrap-final-py314.log"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--no-cache",
+        "--python",
+        "3.12",
+        "--with",
+        "jsonschema==4.26.0",
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20",
+        "-p",
+        "test_pre_adoption_verify.py",
+        "-v"
+      ],
+      "exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/fix-bootstrap-final-py312-deps.log",
+      "reason": "The bare Python 3.12 interpreter lacked jsonschema; rerun with the exact pinned dependency."
+    }
+  ],
+  "at": "2026-11-16T20:56:54.897500+00:00",
+  "completed_at": "2026-11-16T20:57:13.338205+00:00",
+  "result": "passed"
+}

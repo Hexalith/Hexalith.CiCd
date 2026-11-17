@@ -1,0 +1,20 @@
+[
+  {
+    "repository": "EventStore",
+    "message": "test(client): isolate bounded discovery admission coverage\n\nUse the existing nonparallel admission collection to avoid interference from unrelated fixtures.\nKeep the production deadline and corrupt-registry exception assertion unchanged.\n",
+    "cli_version": "21.2.4",
+    "policy": "796a04abdd8c35e645f654c9d8d571556f34ccf4ab3611c9327697a452add38d",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "repository": "CiCd",
+    "message": "feat(cicd): add manual private qualification and preparation checks\n\nRetain product checks through the EventStore preparation verifier.\nKeep qualification authority and secrets separate from ordinary CI.\n",
+    "cli_version": "21.2.4",
+    "policy": "Released v6.0.6 canonical guard policy",
+    "exit_code": 0,
+    "stdout": "Canonical released commitlint passed",
+    "stderr": ""
+  }
+]

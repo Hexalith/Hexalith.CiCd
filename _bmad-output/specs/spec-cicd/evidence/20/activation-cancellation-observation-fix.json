@@ -1,0 +1,142 @@
+{
+  "started_at": "2026-11-16T22:21:15.053455+00:00",
+  "result": "passed",
+  "scope": "Build Server.Tests with unchanged v6.0.6 Release/package/analyzer flags; run only the whole ProjectionActivationWorkerTests partial class, including all four cancellation/ambiguity cases with zero skips",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.e8omwCQL/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.e8omwCQL/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/activation-cancellation-observation-build.log",
+      "started_at": "2026-11-16T22:21:20.495777+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:21:38.391535+00:00"
+    },
+    {
+      "phase": "focused",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Server.Tests/Hexalith.EventStore.Server.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.e8omwCQL/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-class",
+        "Hexalith.EventStore.Server.Tests.Projections.ProjectionActivationWorkerTests",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.e8omwCQL/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/activation-cancellation-observation-focused.log",
+      "started_at": "2026-11-16T22:21:38.391900+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:21:41.515208+00:00"
+    }
+  ],
+  "source_committed_or_pushed": false,
+  "shared_build_servers_or_other_jobs_signaled": false,
+  "runtime_production_or_owned_ci_changed": false,
+  "full_gate_reexecuted": false,
+  "historical_failure": {
+    "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/fix5-eventstore-pre-adoption.log",
+    "line": 6302,
+    "case": "ambiguous=false,cancelStopWait=true",
+    "assertion": "final outbox item should not be null"
+  },
+  "reasoning": "StopAsync caller cancellation can complete before BackgroundService asynchronous host cancellation reaches the fake guard WaitAsync. Releasing native success before observing that cancellation can correctly return FinalizedCleanupProven and complete the outbox. The fake now signals only when its protocol WaitAsync actually throws cancellation; the test awaits that signal before releasing the independently enrolled native call. Production independent cleanup, drain and ambiguity semantics are unchanged.",
+  "source_head": "f4d749627f4e80396821c0d95ddb600e6239f0b3",
+  "source_diff": "diff --git a/tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs b/tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs\nindex 8fdbbd985..927251f35 100644\n--- a/tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs\n+++ b/tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs\n@@ -24,10 +24,11 @@ public sealed partial class ProjectionActivationWorkerTests\n         var catalog = new RouteCatalogTestFixture();\n         await catalog.ActivateAsync(catalog.Candidate());\n         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);\n+        var protocolCanceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);\n         var resume = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);\n         var guard = Substitute.For<IProjectionSourceGuardDelivery>();\n         Task<ProjectionSourceGuardDeliveryResult>? nativeCall = null;\n-        guard.TryDeliverAsync(fixture.Identity, Arg.Any<CancellationToken>()).Returns(call =>\n+        guard.TryDeliverAsync(fixture.Identity, Arg.Any<CancellationToken>()).Returns(async call =>\n         {\n             // Existing actor helpers can stop awaiting a native RPC when the host token\n             // cancels. Its actual boundary remains enrolled independently of that wait.\n@@ -38,7 +39,13 @@ public sealed partial class ProjectionActivationWorkerTests\n                 return new ProjectionSourceGuardDeliveryResult(true, true, null) { FinalizedCleanupProven = true };\n             });\n             entered.TrySetResult();\n-            return nativeCall.WaitAsync(call.Arg<CancellationToken>());\n+            CancellationToken protocolToken = call.Arg<CancellationToken>();\n+            try { return await nativeCall.WaitAsync(protocolToken); }\n+            catch (OperationCanceledException) when (protocolToken.IsCancellationRequested)\n+            {\n+                protocolCanceled.TrySetResult();\n+                throw;\n+            }\n         });\n         using var worker = new ProjectionActivationWorker(fixture.Outbox, Substitute.For<IProjectionUpdateOrchestrator>(),\n             Options.Create(new ProjectionDispatchOptions { RetryWorkerInterval = TimeSpan.FromMilliseconds(10) }),\n@@ -59,6 +66,8 @@ public sealed partial class ProjectionActivationWorkerTests\n                 worker.ExecuteTask.ShouldNotBeNull().IsCompleted.ShouldBeFalse();\n                 nativeCall.ShouldNotBeNull().IsCompleted.ShouldBeFalse();\n             }\n+            // Native success must follow the protocol's observed cancellation, not race it.\n+            await protocolCanceled.Task.WaitAsync(TimeSpan.FromSeconds(5));\n             (await catalog.Store.ReadAsync(default)).State.Leases.ShouldHaveSingleItem();\n             (await fixture.Outbox.GetAsync(fixture.Identity)).ShouldNotBeNull();\n             resume.SetResult();",
+  "source_sha256": "3d1bf85a312e1b71e4c57aac33d72e51cc3f91c1f4c1c8e764eb04e30b757ee9",
+  "source_status": " M tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs",
+  "preview_tree": "902d9964e30fd69cc2eb3845f92439260fb27a1a",
+  "preview_tree_is_unpublished_fixture_snapshot": true,
+  "dependencies": {
+    "Hexalith.Builds": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source_read_only": true
+    }
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 63,
+      "added_only": "tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs",
+      "sha256": "7d178fa0cd60a235daee7b952aa726f657bc431e4906eb25983dbe15afab8155"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 63,
+      "added_only": "tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs",
+      "sha256": "7d178fa0cd60a235daee7b952aa726f657bc431e4906eb25983dbe15afab8155"
+    }
+  ],
+  "focused_summary": "Test run summary: Passed!\n  total: 34\n  failed: 0\n  succeeded: 34\n  skipped: 0\n  duration: 2s 648ms",
+  "focused_test_counts": {
+    "total": 34,
+    "failed": 0,
+    "succeeded": 34,
+    "skipped": 0
+  },
+  "matrix_source_controls": {
+    "all_four_inline_data_retained": true,
+    "assertions_and_deadlines_unchanged": true
+  },
+  "completed_at": "2026-11-16T22:21:41.515762+00:00",
+  "all_jobs_finished": true,
+  "build_summary": {
+    "warnings": 0,
+    "errors": 0,
+    "elapsed": "00:00:17.61"
+  },
+  "whole_partial_class_executed": true,
+  "matrix_cases_executed": 4,
+  "temporary_workspace_removed": true,
+  "changed_files": [
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/tests/Hexalith.EventStore.Server.Tests/Projections/ProjectionActivationWorkerTests.Drain.cs",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+    "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py"
+  ]
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-m:1",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:NuGetAudit=false",
+      "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true"
+    ],
+    "exit": 0,
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/Hexalith.EventStore.Contracts.Tests.build-final.log"
+  },
+  {
+    "command": [
+      "dotnet",
+      "tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll",
+      "-class",
+      "*PostgreSqlImageGovernanceTests",
+      "-class",
+      "*ProcessPackageContractTests"
+    ],
+    "exit": 0,
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/Hexalith.EventStore.Contracts.Tests.focused-final.log"
+  },
+  {
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Hexalith.EventStore.Server.LiveSidecar.Tests.csproj",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-m:1",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:NuGetAudit=false",
+      "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true"
+    ],
+    "exit": 0,
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/Hexalith.EventStore.Server.LiveSidecar.Tests.build-final.log"
+  },
+  {
+    "command": [
+      "dotnet",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/bin/Release/net11.0/Hexalith.EventStore.Server.LiveSidecar.Tests.dll",
+      "-class",
+      "*DaprTestInfrastructureContainersTests",
+      "-class",
+      "*DaprTestInfrastructurePortsTests",
+      "-class",
+      "*Oq8QualificationOverridesTests"
+    ],
+    "exit": 0,
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/Hexalith.EventStore.Server.LiveSidecar.Tests.focused-final.log"
+  }
+]

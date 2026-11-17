@@ -1,0 +1,51 @@
+{
+  "status": "local implementation prepared and focused product verification complete; integration review and activation blocked by unchanged source-coverage scanner",
+  "python_312": {
+    "renderer": 34,
+    "validator": 52,
+    "ci_config": 20,
+    "managed_product_fixtures": 9
+  },
+  "python_runner_314": {
+    "renderer": 34,
+    "validator": 52,
+    "ci_config": 20,
+    "ci_pipeline": 35,
+    "local_check": 37,
+    "public_api": 28,
+    "managed_product_fixtures": 9,
+    "route_catalog": 6
+  },
+  "final_targeted_both_python_versions": {
+    "private_preparation_request": 2,
+    "manual_renderer": 2,
+    "manual_validator": 1,
+    "reserved_manual_none": 1
+  },
+  "csharp": {
+    "affected_project_builds": "both passed; mandatory Release/package/analyzer flags",
+    "focused_contract_tests": 9,
+    "focused_infrastructure_tests": 28,
+    "skipped": 0,
+    "full_final_solution_build_unit_package_consumer_gate": "Original whole-solution Release build and final affected direct Release builds passed. Composed classified units passed (21 projects / 18487 succeeded / 51 existing skips). Complete offline hook, live fixtures, normal checker and hosted/operational gates pending."
+  },
+  "production_render_check": "passed; unchanged",
+  "bootstrap_execution": "failed closed on uncommitted local inputs before any remote call",
+  "operational_gates": "pending; see execution.md",
+  "integration_corrections": {
+    "actual_action_audit_lint": "passed on exact final EventStore candidate tree d336e56e7df1ee11e6d79010033c429a24410604; integration-clean-provenance-policy.log",
+    "azure_preflight": "positive PascalCase authority/custody/source/expiry case passes with service execution mocked; unchanged C# schema",
+    "oci_product_tests": "real isolated SDK multi-RID archive/provenance assertions passed within full Contracts project; no duplicate current-module build",
+    "shared_release_build": "passed with zero warnings/errors; final clean-provenance build log",
+    "classified_unit": "21 real unit projects verified through explicit composed evidence: 18487 succeeded, 0 unresolved failures, 51 existing skips. See integration-unit-summary.json.",
+    "bootstrap": "token-file module authentication; exact selected Builds cloned as clean separate repository; explicit direct Tenants/Platform/FrontComposer dependencies; source gitlink preserved",
+    "final_policy": "Actual action/audit lint passed on final EventStore tree 1c24e5d1fea496e143ffefff8a1eae1787ddaaf6",
+    "container_defaults": "1 new evaluated-MSBuild test passed; four product assertions restored",
+    "helper_metadata": "TestSubscriber remains built; IsTestProject=false; never added to tests.exclude"
+  },
+  "activation_blocked": {
+    "source_coverage_diagnostics": 56,
+    "selected_files": 22,
+    "report": "scan-source-coverage.json"
+  }
+}

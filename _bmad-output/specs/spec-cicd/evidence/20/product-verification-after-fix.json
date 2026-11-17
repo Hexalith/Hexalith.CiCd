@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-m:1",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:NuGetAudit=false",
+      "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true"
+    ],
+    "exit": 1,
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/Hexalith.EventStore.Contracts.Tests.build-after-fix.log"
+  },
+  {
+    "command": [
+      "dotnet",
+      "build",
+      "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Hexalith.EventStore.Server.LiveSidecar.Tests.csproj",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-m:1",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:NuGetAudit=false",
+      "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true"
+    ],
+    "exit": 1,
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/Hexalith.EventStore.Server.LiveSidecar.Tests.build-after-fix.log"
+  }
+]

@@ -149,6 +149,30 @@ class Api:
 
 
 class ValidateTests(unittest.TestCase):
+    def test_manual_qualification_requires_live_action_and_exact_isolation(self):
+        for present in (True, False):
+            with self.subTest(present=present), workspace() as fixture:
+                fixture.qualification_contract()
+                fixture.module(actions=("azure",) if present else (),
+                               setup={"solution": "Fixture.slnx", "jobs": {"azure": render_tests.MANUAL_JOB}})
+                fixture.commit()
+                verdict, status, diagnostic = self.verdict(fixture)
+                self.assertEqual(0 if present else 1, status)
+                if not present:
+                    self.assertIn("live main is missing enabled action", diagnostic)
+                with renderer.pinned_contract(fixture.root) as contract:
+                    global_check.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+                    path = fixture.output(".github/workflows/qualification.yml")
+                    accepted = path.read_text()
+                    for before, after in (("environment: preserve", "environment: setup"),
+                                          ("secrets.AUTHORITY_JSON", "secrets.WRONG_JSON"),
+                                          ("github.event_name == 'workflow_dispatch'", "github.event_name != 'workflow_dispatch'")):
+                        with self.subTest(corruption=before):
+                            path.write_text(accepted.replace(before, after))
+                            with self.assertRaises(global_check.CheckError):
+                                global_check.check_interfaces(fixture.root, "Hexalith.Fixture", contract)
+                    path.write_text(accepted)
+
     def verdict(self, fixture, *, global_ok=True):
         with (mock.patch.object(validator, "global_checks", return_value=global_ok) as global_call,
               mock.patch.object(validator, "clone_module", side_effect=fixture.clone),

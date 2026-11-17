@@ -1,0 +1,439 @@
+{
+  "recorded_at": "2026-11-16T18:14:14.211052+00:00",
+  "status": "local review patches complete; activation blocked by unchanged source coverage",
+  "eventstore_final_tree": "6e553e7c62500e4b7029a35fd4d06dd8577e2054",
+  "historical_prepatch_tree": "1c24e5d1fea496e143ffefff8a1eae1787ddaaf6",
+  "historical_full_unit_succeeded": 18487,
+  "historical_results_reused_as_fresh_run": false,
+  "finding_groups": {
+    "legacy-reuse": {
+      "finding_ids": [
+        "B1",
+        "B2"
+      ],
+      "routes": {
+        "B1": "patch",
+        "B2": "patch"
+      },
+      "result": "patched",
+      "change": "Restored verify-process standalone build default; folded compatibility reuses outputs only when the managed caller sets FOLDED_SNAPSHOT_REUSE_OUTPUTS=true.",
+      "evidence": [
+        "review-patch-fixtures-py312.log"
+      ]
+    },
+    "runtime-pin": {
+      "finding_ids": [
+        "B3"
+      ],
+      "routes": {
+        "B3": "patch"
+      },
+      "result": "patched",
+      "change": "Pinned the official immutable Dapr index digest and retained the exact 1.18.2 executable check. Official manifest readback is separate from unexecuted runtime qualification.",
+      "evidence": [
+        "legacy-runtime-image-readback.json",
+        "review-patch-fixtures-py312.log"
+      ]
+    },
+    "docker-boundary": {
+      "finding_ids": [
+        "B4"
+      ],
+      "routes": {
+        "B4": "patch"
+      },
+      "result": "patched",
+      "change": "Reused the existing local Unix selection guard before the first PostgreSQL pull; removed conflicting context/TLS selectors and bound all inherited child operations to that validated endpoint.",
+      "evidence": [
+        "review-patch-fixtures-py312.log",
+        "review-patch-catalog-py312.log"
+      ]
+    },
+    "catalog-scratch": {
+      "finding_ids": [
+        "B5"
+      ],
+      "routes": {
+        "B5": "patch"
+      },
+      "result": "patched",
+      "change": "Downloaded binaries remain below TMPDIR and no longer write global GITHUB_ENV selectors; the parent passes selectors explicitly.",
+      "evidence": [
+        "review-patch-catalog-py312.log"
+      ]
+    },
+    "catalog-integrity": {
+      "finding_ids": [
+        "B6",
+        "E3"
+      ],
+      "routes": {
+        "B6": "patch",
+        "E3": "patch"
+      },
+      "result": "patched",
+      "change": "Explicit checksum comparison raises even in an actual optimized Python interpreter; corrupt bytes are never selected.",
+      "evidence": [
+        "review-patch-catalog-py312.log"
+      ]
+    },
+    "adoption-access": {
+      "finding_ids": [
+        "B7",
+        "E2"
+      ],
+      "routes": {
+        "B7": "patch",
+        "E2": "patch"
+      },
+      "result": "patched",
+      "change": "Require the established CiCd-agent login plus successful known repository/main reads before accepting the exact Git-ref Not Found response. Other 404/auth failures remain unknown/failure.",
+      "evidence": [
+        "review-patch-bootstrap-py312.log"
+      ]
+    },
+    "preparation-scope": {
+      "finding_ids": [
+        "B8"
+      ],
+      "routes": {
+        "B8": "patch"
+      },
+      "result": "patched",
+      "change": "Frozen literal list of 59 reviewed paths replaces blanket directory prefixes; all other paths remain protected.",
+      "evidence": [
+        "review-patch-bootstrap-py312.log"
+      ]
+    },
+    "preparation-history": {
+      "finding_ids": [
+        "B9"
+      ],
+      "routes": {
+        "B9": "patch"
+      },
+      "result": "patched",
+      "change": "Check each introduced commit against every parent edge, rejecting owned edit/revert and merge-edge changes. Preserve raw NUL-delimited path whitespace, including the leading-newline add/delete control.",
+      "evidence": [
+        "review-patch-bootstrap-py312.log"
+      ]
+    },
+    "startup-diagnostics": {
+      "finding_ids": [
+        "B10"
+      ],
+      "routes": {
+        "B10": "patch"
+      },
+      "result": "patched",
+      "change": "Exceptional context exits emit bounded native state and tail logs only for ownership-verified IDs before removal; diagnostic failures do not prevent cleanup.",
+      "evidence": [
+        "review-patch-fixtures-py312.log"
+      ]
+    },
+    "fresh-refspec": {
+      "finding_ids": [
+        "E1"
+      ],
+      "routes": {
+        "E1": "patch"
+      },
+      "result": "patched",
+      "change": "Explicit main source/destination refspec refreshes origin/main even under custom remote fetch mappings; controlled with real disposable Git repositories.",
+      "evidence": [
+        "review-patch-bootstrap-py312.log"
+      ]
+    },
+    "redis-provenance": {
+      "finding_ids": [
+        "E4"
+      ],
+      "routes": {
+        "E4": "patch"
+      },
+      "result": "patched",
+      "change": "Repository-digest inspection uses observedRedisImageId and the probe description names the selected container and observed image identity.",
+      "evidence": [
+        "review-patch-sidecar-build.log"
+      ]
+    },
+    "azure-packaging": {
+      "finding_ids": [
+        "E5"
+      ],
+      "routes": {
+        "E5": "patch"
+      },
+      "result": "patched",
+      "change": "Restored evaluated non-packability for all three Azure companion projects, product solution membership and release inventory exclusions/count without workflow assertions.",
+      "evidence": [
+        "review-patch-azure-packaging.log"
+      ]
+    },
+    "interop-reuse": {
+      "finding_ids": [
+        "E6"
+      ],
+      "routes": {
+        "E6": "patch"
+      },
+      "result": "patched",
+      "change": "Package mode references the prebuilt Release Contracts DLL; actual fixture compilation and all cross-language assertions remain. Developer default retains its source ProjectReference. Current Contracts build/restore outputs stayed unchanged during package-mode execution.",
+      "evidence": [
+        "review-patch-interop-package.log",
+        "review-patch-interop-developer-default.log",
+        "review-patch-product-verification.json"
+      ]
+    },
+    "request-entrypoint": {
+      "finding_ids": [
+        "V1"
+      ],
+      "routes": {
+        "V1": "patch"
+      },
+      "result": "patched",
+      "change": "Added actual request subprocess failure/positive controls plus a real composite refusal before external checkout/setup callbacks and SDK commands.",
+      "evidence": [
+        "review-patch-request-entrypoint-py312.log"
+      ]
+    },
+    "context-cleanup": {
+      "finding_ids": [
+        "V2"
+      ],
+      "routes": {
+        "V2": "patch"
+      },
+      "result": "patched",
+      "change": "Actual contextmanager normal/startup-error/body-error cases assert owned cleanup, shared preservation and restored real signal handlers, including failed diagnostics.",
+      "evidence": [
+        "review-patch-fixtures-py312.log"
+      ]
+    },
+    "source-coverage-prerequisite": {
+      "finding_ids": [
+        "S1"
+      ],
+      "routes": {
+        "S1": "defer"
+      },
+      "result": "blocked",
+      "change": "Deferred blocking pipeline capability: preserve unchanged audit; latest parent report has 58 diagnostics across 22 selected files. No publication/adoption or bypass.",
+      "evidence": [
+        "scan-source-coverage-review.json"
+      ]
+    },
+    "preparation-history-path-decoding": {
+      "finding_ids": [
+        "P1"
+      ],
+      "routes": {
+        "P1": "patch"
+      },
+      "result": "patched",
+      "change": "Preserve raw NUL-delimited Git path stdout; the real leading-newline add/delete regression cannot alias a reviewed path. Parent P1 triage row remains authoritative.",
+      "evidence": [
+        "review-patch-bootstrap-py312.log"
+      ]
+    }
+  },
+  "targeted_python_checks": [
+    {
+      "check": "bootstrap",
+      "python": "3.12",
+      "tests": 9,
+      "result": "passed",
+      "command": "run-with-temp python3.12 -B -m unittest discover -s _bmad-output/specs/spec-cicd/evidence/20 -p test_pre_adoption_verify.py -v",
+      "cwd": "CiCd root",
+      "log": "review-patch-bootstrap-py312.log"
+    },
+    {
+      "check": "catalog",
+      "python": "3.12",
+      "tests": 7,
+      "result": "passed",
+      "command": "run-with-temp python3.12 -B -m unittest discover -s tools/tests -p test_route_catalog_ci_tools.py -v",
+      "cwd": "EventStore root",
+      "log": "review-patch-catalog-py312.log"
+    },
+    {
+      "check": "fixtures",
+      "python": "3.12",
+      "tests": 14,
+      "result": "passed",
+      "command": "run-with-temp python3.12 -B -m unittest discover -s tools/tests -p test_managed_product_fixtures.py -v",
+      "cwd": "EventStore root",
+      "log": "review-patch-fixtures-py312.log"
+    },
+    {
+      "check": "request",
+      "python": "3.12",
+      "tests": 3,
+      "result": "passed",
+      "command": "run-with-temp bash -c 'UV_CACHE_DIR=\"$TMPDIR/uv-cache\" uv run --no-project --python 3.12 --with PyYAML==6.0.3 python -B -m unittest test_ci_prepare.PrepareTests.test_request_entrypoint_refuses_missing_invalid_digest_and_source_before_preparation test_ci_prepare.PrepareTests.test_request_entrypoint_accepts_exact_digest_and_source_without_preparation test_ci_prepare.PrepareTests.test_preserve_composite_rejects_request_before_checkout_sdk_or_build -v'",
+      "cwd": "Builds/Github/lib/tests",
+      "log": "review-patch-request-entrypoint-py312.log"
+    }
+  ],
+  "targeted_product_checks": {
+    "started_at": "2026-11-16T18:09:18.064214+00:00",
+    "result": "passed",
+    "scope": "Only affected Contracts and Server.LiveSidecar Release compilation; restored Azure packaging method; modified cross-language fixture in managed package and developer source modes",
+    "phases": [
+      {
+        "phase": "contracts-build",
+        "command": [
+          "dotnet",
+          "build",
+          "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+          "-noAutoResponse",
+          "-p:Configuration=Release",
+          "-warnaserror",
+          "-p:UseHexalithProjectReferences=false",
+          "-p:NuGetAudit=false",
+          "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+          "-p:EnableNETAnalyzers=true",
+          "-p:RunAnalyzers=true",
+          "-p:RunAnalyzersDuringBuild=true",
+          "-m:1"
+        ],
+        "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+        "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-contracts-build.log",
+        "started_at": "2026-11-16T18:09:38.034746+00:00",
+        "exit": 0,
+        "completed_at": "2026-11-16T18:10:18.074961+00:00"
+      },
+      {
+        "phase": "sidecar-build",
+        "command": [
+          "dotnet",
+          "build",
+          "tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Hexalith.EventStore.Server.LiveSidecar.Tests.csproj",
+          "-noAutoResponse",
+          "-p:Configuration=Release",
+          "-warnaserror",
+          "-p:UseHexalithProjectReferences=false",
+          "-p:NuGetAudit=false",
+          "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+          "-p:EnableNETAnalyzers=true",
+          "-p:RunAnalyzers=true",
+          "-p:RunAnalyzersDuringBuild=true",
+          "-m:1"
+        ],
+        "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+        "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-sidecar-build.log",
+        "started_at": "2026-11-16T18:10:18.075325+00:00",
+        "exit": 0,
+        "completed_at": "2026-11-16T18:11:03.526110+00:00"
+      },
+      {
+        "phase": "azure-packaging",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+          "--no-build",
+          "--no-restore",
+          "-p:Configuration=Release",
+          "-p:UseHexalithProjectReferences=false",
+          "-p:NuGetAudit=false",
+          "-p:RestoreConfigFile=/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/NuGet.ci.Config",
+          "-p:EnableNETAnalyzers=true",
+          "-p:RunAnalyzers=true",
+          "-p:RunAnalyzersDuringBuild=true",
+          "-p:TreatWarningsAsErrors=true",
+          "-p:MSBuildTreatWarningsAsErrors=true",
+          "--filter-method",
+          "Hexalith.EventStore.Contracts.Tests.Packaging.ReleasePackageManifestTests.Azure_payload_companion_projects_are_non_packable_and_in_the_solution",
+          "--minimum-expected-tests",
+          "1",
+          "--fail-skips",
+          "on",
+          "--stop-on-fail",
+          "off"
+        ],
+        "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+        "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-azure-packaging.log",
+        "started_at": "2026-11-16T18:11:03.526511+00:00",
+        "exit": 0,
+        "completed_at": "2026-11-16T18:11:07.573608+00:00"
+      },
+      {
+        "phase": "interop-package",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/tests",
+          "-p",
+          "test_ext_protection_1_cross_language.py",
+          "-v"
+        ],
+        "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+        "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-interop-package.log",
+        "started_at": "2026-11-16T18:11:07.574955+00:00",
+        "exit": 0,
+        "completed_at": "2026-11-16T18:11:12.407559+00:00"
+      },
+      {
+        "phase": "interop-developer-default",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/tests",
+          "-p",
+          "test_ext_protection_1_cross_language.py",
+          "-v"
+        ],
+        "cwd": "/tmp/hexalith-job.IglhhgPI/module",
+        "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/review-patch-interop-developer-default.log",
+        "started_at": "2026-11-16T18:11:12.409277+00:00",
+        "exit": 0,
+        "completed_at": "2026-11-16T18:11:25.392068+00:00"
+      }
+    ],
+    "source_repositories_read_only": true,
+    "push_performed": false,
+    "source_head": "f85419d501f279e9a813435aa73538185ad26ada",
+    "candidate_tree": "6e553e7c62500e4b7029a35fd4d06dd8577e2054",
+    "package_interop_current_contracts_outputs_unchanged": {
+      "before": {
+        "src/Hexalith.EventStore.Contracts/bin/Release/net11.0/Hexalith.EventStore.Contracts.dll": {
+          "sha256": "7166376c7683959d499dbacc2d2c3a329cefcb341d3211147d3e2096564fc5f9",
+          "mtime_ns": 1794852587777846913
+        },
+        "src/Hexalith.EventStore.Contracts/obj/project.assets.json": {
+          "sha256": "f5dc854eb768c56bebf98f37ada7a7eb98e1c2fdd55759e20633de65c05e6dc6",
+          "mtime_ns": 1794852582557599152
+        }
+      },
+      "after": {
+        "src/Hexalith.EventStore.Contracts/bin/Release/net11.0/Hexalith.EventStore.Contracts.dll": {
+          "sha256": "7166376c7683959d499dbacc2d2c3a329cefcb341d3211147d3e2096564fc5f9",
+          "mtime_ns": 1794852587777846913
+        },
+        "src/Hexalith.EventStore.Contracts/obj/project.assets.json": {
+          "sha256": "f5dc854eb768c56bebf98f37ada7a7eb98e1c2fdd55759e20633de65c05e6dc6",
+          "mtime_ns": 1794852582557599152
+        }
+      }
+    },
+    "completed_at": "2026-11-16T18:11:25.392455+00:00"
+  },
+  "parent_verification": "review-parent-verification.json; parent separately verified Python3.14 checks. No parent core suites repeated in this patch pass.",
+  "limitations": [
+    "Dapr/Redis live runtime fixtures were not executed; official manifest index content was read back, not runtime-qualified.",
+    "Only targeted affected builds/tests ran; parent owns final full verification.",
+    "No source-scanner change, audit waiver, publication, registration, adoption, provisioning, credential switch or remote mutation."
+  ],
+  "all_child_jobs_finished": true
+}

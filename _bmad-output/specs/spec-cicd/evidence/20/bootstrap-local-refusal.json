@@ -1,0 +1,44 @@
+{
+  "approval": "Story 20 frozen human decision, 2026-11-16",
+  "base": "f85419d501f279e9a813435aa73538185ad26ada",
+  "head": "f85419d501f279e9a813435aa73538185ad26ada",
+  "builds_tag": "v6.0.6",
+  "builds_sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "result": "failed",
+  "started_at": "2026-11-16T15:47:10.932991+00:00",
+  "push_performed": false,
+  "nested_submodule_initialization": false,
+  "azure_executed": false,
+  "operations": [
+    {
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.EventStore",
+      "profile": null,
+      "exit": 0,
+      "stdout": "f85419d501f279e9a813435aa73538185ad26ada\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "status",
+        "--porcelain",
+        "--ignore-submodules=all"
+      ],
+      "cwd": "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.EventStore",
+      "profile": null,
+      "exit": 0,
+      "stdout": " M Hexalith.EventStore.slnx\n M docs/ci.md\n M docs/concepts/dapr-infrastructure-boundary.md\n M scripts/verify-process-packages.py\n M src/Hexalith.EventStore.Contracts/Deployment/ProductionProfileValidationResult.cs\n M tests/Hexalith.EventStore.Admin.UI.E2E/Hexalith.EventStore.Admin.UI.E2E.csproj\n D tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs\n D tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContainerPublishingGovernanceTests.cs\n M tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs\n M tests/Hexalith.EventStore.Contracts.Tests/Packaging/PackageOwnershipGovernanceTests.cs\n M tests/Hexalith.EventStore.Contracts.Tests/Packaging/PostgreSqlImageGovernanceTests.cs\n M tests/Hexalith.EventStore.Contracts.Tests/Packaging/ProcessPackageContractTests.cs\n M tests/Hexalith.EventStore.Contracts.Tests/Packaging/ReleasePackageManifestTests.cs\n D tests/Hexalith.EventStore.Contracts.Tests/Packaging/TrustedPublishingReleaseTests.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6BookkeepingAtddTests.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6CheckerReportAtddTests.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceCheckerInvokerFactory.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceDiagnostic.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6GovernanceVocabularyAtddTests.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6LedgerSweepAtddTests.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6RuleVocabulary.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Dw6TestPaths.cs\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/Hexalith.EventStore.DeferredWorkGovernance.Tests.csproj.lscache\n D tests/Hexalith.EventStore.DeferredWorkGovernance.Tests/IDw6GovernanceCheckerInvoker.cs\n M tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests/PayloadProtectionDaprFixture.cs\n M tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestContainerFixture.cs\n M tools/folded-snapshot-compatibility/run.sh\n M tools/pack-release-packages.py\n D tools/tests/test_check_committed_files.py\n M tools/tests/test_dapr_runtime_qualification.py\n D tools/tests/test_oq8_governing_design.py\n D tools/tests/test_phase_4_gate_decision.py\n D tools/tests/test_phase_4_gate_risk_matrix.py\n D tools/tests/test_phase_4_story_5_3.py\n D tools/tests/test_phase_4_story_completion.py\n D tools/tests/test_phase_4_transition.py\n D tools/tests/test_published_compatibility_workflow.py\n D tools/tests/test_published_runner_exit.py\n D tools/tests/test_published_workflow_context.py\n M tools/tests/test_release_api_compatibility.py\n D tools/tests/test_release_candidate.py\n D tools/tests/test_release_publication_authority.py\n D tools/tests/test_release_source_branch.py\n M tools/tests/test_route_catalog_ci_tools.py\n D tools/tests/test_run_with_temp.py\n?? .github/actions/\n?? scripts/ci-product-checks.py\n?? scripts/legacy_sidecar_runtime.py\n?? scripts/qualify-payload-azure.py\n?? tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainers.cs\n?? tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Fixtures/DaprTestInfrastructureContainersTests.cs\n?? tools/prepare-route-catalog-tools.py\n?? tools/tests/test_managed_product_fixtures.py\n",
+      "stderr": ""
+    }
+  ],
+  "failure": "Commit every preparation input before verifying"
+}

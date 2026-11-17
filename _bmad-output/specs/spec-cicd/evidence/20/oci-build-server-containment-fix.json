@@ -1,0 +1,108 @@
+{
+  "started_at": "2026-11-16T21:34:20.038186+00:00",
+  "result": "passed",
+  "scope": "Fixture-only standard --disable-build-servers on the two real SDK publish commands; whole CorrectiveOciProvenanceReleaseTests class, including real multi-RID archive publication and all unchanged provenance assertions",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.yHTXgwzl/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.yHTXgwzl/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/oci-build-server-containment-build.log",
+      "started_at": "2026-11-16T21:34:29.484368+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T21:34:44.011826+00:00"
+    },
+    {
+      "phase": "focused",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "--no-build",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=false",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.yHTXgwzl/module/references/Hexalith.Builds/NuGet.ci.Config",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:TreatWarningsAsErrors=true",
+        "-p:MSBuildTreatWarningsAsErrors=true",
+        "--filter-class",
+        "Hexalith.EventStore.Contracts.Tests.Packaging.CorrectiveOciProvenanceReleaseTests",
+        "--minimum-expected-tests",
+        "1",
+        "--fail-skips",
+        "on",
+        "--stop-on-fail",
+        "off"
+      ],
+      "cwd": "/tmp/hexalith-job.yHTXgwzl/module",
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/oci-build-server-containment-focused.log",
+      "started_at": "2026-11-16T21:34:44.012242+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T21:35:23.627747+00:00"
+    }
+  ],
+  "source_committed_or_pushed": false,
+  "shared_build_servers_or_other_jobs_signaled": false,
+  "runtime_production_or_owned_ci_changed": false,
+  "allowlist_expanded": false,
+  "diagnosis": "Read-only SDK CLI help documents persistent-server isolation; one observed MSBuild worker retained removed temp directories. See oci-build-server-observation.json.",
+  "source_head": "db9122b30252b0cc9c6183a075464d7de99bbd01",
+  "source_diff": "diff --git a/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs b/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs\nindex 75f6832cb..9a36035d8 100644\n--- a/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs\n+++ b/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs\n@@ -40,6 +40,7 @@ public sealed class CorrectiveOciProvenanceReleaseTests\n                 new[]\n             {\n                 \"publish\",\n+                \"--disable-build-servers\",\n                 fixture,\n                 \"--configuration\", \"Release\",\n                 \"-t:PublishContainer\",\n@@ -124,6 +125,7 @@ public sealed class CorrectiveOciProvenanceReleaseTests\n             List<string> arguments =\n             [\n                 \"publish\",\n+                \"--disable-build-servers\",\n                 fixture,\n                 \"--configuration\", \"Release\",\n                 \"--os\", \"linux\",",
+  "source_sha256": "acb2d2dec5c0f0014cf777256a999fde089ae88a6e2501e22d9a9ecb940c1c2b",
+  "preview_tree": "600c5dd72aed28149edc180fadb40c62497e4834",
+  "dependencies": {
+    "Hexalith.Builds": {
+      "revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "source_read_only": true
+    }
+  },
+  "completed_at": "2026-11-16T21:35:23.628027+00:00",
+  "focused_test_counts": {
+    "total": 21,
+    "failed": 0,
+    "succeeded": 21,
+    "skipped": 0
+  },
+  "all_jobs_finished": true,
+  "full_gate_reexecuted": false,
+  "additional_environment_override_needed": false,
+  "real_multi_rid_archive_publish_retained_and_executed": true,
+  "changed_files": [
+    "/home/administrator/projects/hexalith/cicd-publish-story-20/references/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CorrectiveOciProvenanceReleaseTests.cs"
+  ]
+}

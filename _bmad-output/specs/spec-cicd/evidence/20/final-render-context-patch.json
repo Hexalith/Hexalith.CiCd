@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-11-16T20:19:21.132065+00:00",
+  "worktree": "/home/administrator/projects/hexalith/cicd-publish-story-20-final",
+  "scope": "Fixture-only integration correction: add manual_jobs={} to the exact nonmanual Windows metadata-forwarding context. Existing positive and legacy assertions preserved.",
+  "changed_source_file": "tools/tests/test_render.py",
+  "source_sha256": "a49a79e4d40aa6952fca49233a77b0e00339fa904b2b95ddff08812b06d92601",
+  "pinned_script_dependencies": [
+    "Jinja2==3.1.6",
+    "PyYAML==6.0.3",
+    "jsonschema==4.26.0"
+  ],
+  "runs": [
+    {
+      "python": "3.12",
+      "command": "run-with-temp bash -c 'UV_CACHE_DIR=\"$TMPDIR/uv-cache\" uv run --script --python 3.12 tools/tests/test_render.py RenderTests.test_additive_windows_outputs_require_a_contract_that_defines_the_fields -v'",
+      "result": "passed",
+      "tests": 1,
+      "log": "final-render-context-py312.log"
+    },
+    {
+      "python": "3.14",
+      "command": "run-with-temp bash -c 'UV_CACHE_DIR=\"$TMPDIR/uv-cache\" uv run --script --python 3.14 tools/tests/test_render.py RenderTests.test_additive_windows_outputs_require_a_contract_that_defines_the_fields -v'",
+      "result": "passed",
+      "tests": 1,
+      "log": "final-render-context-py314.log"
+    }
+  ],
+  "broader_tests_run": false,
+  "template_or_runtime_changed": false,
+  "previous_worktree_or_full_gate_inputs_changed": false,
+  "all_jobs_finished": true,
+  "commit_or_push_performed": false
+}

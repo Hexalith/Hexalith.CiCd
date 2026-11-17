@@ -1,0 +1,146 @@
+{
+  "started_at": "2026-11-16T22:58:54.842628+00:00",
+  "result": "failed",
+  "released_builds": {
+    "tag": "v6.0.6",
+    "sha": "fdda17c0a4538b0f7c99f813c20ca24b49006530"
+  },
+  "phases": [
+    {
+      "phase": "legacy-policy",
+      "command": [
+        "/home/administrator/.cache/uv/builds-v0/.tmpJNyLzp/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ext_protection_1_loop7_installation.PairedCheckoutPreflightTests",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.Ojyi162Z/module",
+      "expected_exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/managed-paired-legacy-policy.log",
+      "started_at": "2026-11-16T22:59:07.517759+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:59:08.236557+00:00"
+    },
+    {
+      "phase": "wrong-policy-control",
+      "command": [
+        "/home/administrator/.cache/uv/builds-v0/.tmpJNyLzp/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ext_protection_1_loop7_installation.PairedCheckoutPreflightTests",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.Ojyi162Z/module",
+      "expected_exit": 1,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/managed-paired-wrong-policy-control.log",
+      "started_at": "2026-11-16T22:59:08.236920+00:00",
+      "exit": 1,
+      "completed_at": "2026-11-16T22:59:08.351583+00:00"
+    },
+    {
+      "phase": "canonical-policy",
+      "command": [
+        "/home/administrator/.cache/uv/builds-v0/.tmpJNyLzp/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ext_protection_1_loop7_installation.PairedCheckoutPreflightTests",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.Ojyi162Z/module",
+      "expected_exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/managed-paired-canonical-policy.log",
+      "started_at": "2026-11-16T22:59:13.836014+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:59:14.602217+00:00"
+    },
+    {
+      "phase": "shipped-roles",
+      "command": [
+        "/home/administrator/.cache/uv/builds-v0/.tmpJNyLzp/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ext_protection_1_loop7_installation.ShippedRoleClosureTests",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.Ojyi162Z/module",
+      "expected_exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/managed-paired-shipped-roles.log",
+      "started_at": "2026-11-16T22:59:14.602600+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:59:48.369674+00:00"
+    },
+    {
+      "phase": "hook-controls",
+      "command": [
+        "/home/administrator/.cache/uv/builds-v0/.tmpJNyLzp/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_managed_product_fixtures.ManagedStageBoundaryTests",
+        "tools.tests.test_managed_product_fixtures.AzureRequestTests",
+        "-v"
+      ],
+      "cwd": "/tmp/hexalith-job.Ojyi162Z/module",
+      "expected_exit": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/managed-paired-hook-controls.log",
+      "started_at": "2026-11-16T22:59:48.370129+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T22:59:48.685146+00:00"
+    }
+  ],
+  "full_product_suite_run": false,
+  "azure_service_or_daemon_calls": false,
+  "all_jobs_finished": true,
+  "source_committed_or_pushed": false,
+  "source_root_npm_assets_changed": false,
+  "historical_existing_python_skip": {
+    "class": "ProducerOriginalTests",
+    "method": "test_actual_native_snapshot_cache_backup_and_restore_have_distinct_bound_purposes",
+    "source": "tools/tests/test_ext_protection_1_producer_originals.py:68",
+    "reason": "Separate configured source run is covered when an exact component assembly is supplied",
+    "required_input": "EXT_PROTECTION_SNAPSHOT_COMPONENT_ASSEMBLY"
+  },
+  "source_head": "06a37746beabb886e8e96208852ff947b883d735",
+  "source_sha256": {
+    ".github/actions/payload-azure/action.yml": "3f13c9cdb9256cce5d458cee37059ae33160cee365db5276798f360efea4028e",
+    "docs/ci.md": "e8737a9a9e36de14dc7ed75a713603a68ec3dffb081ab44b4af292ff61141a2a",
+    "scripts/ci-product-checks.py": "7bec639e791db6b7b1bf0ab8fa3775d05bad6e2f94dacbebce2e9e49929e0b6d",
+    "tools/tests/test_ext_protection_1_loop7_installation.py": "777d6376a98fe6dd94de0c1484c84329ee6bfb55ae0bf5a48585cef87c625e63",
+    "tools/tests/test_managed_product_fixtures.py": "c886c44f3e798bf9e788fc24c8287d2f13fbedcd230410c266bd6efb22fa2009"
+  },
+  "preview_tree": "0aeea937d042c81e066087345af5e9da496c9270",
+  "unpublished_fixture_snapshot": true,
+  "dependencies": {
+    "Hexalith.Builds": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "Hexalith.Tenants": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+    "Hexalith.Platform": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+    "Hexalith.FrontComposer": "0d065fceb2bfca9999307cb864a3f93392fb3400"
+  },
+  "allowlists": [
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 64,
+      "added_only": "tools/tests/test_ext_protection_1_loop7_installation.py"
+    },
+    {
+      "path": "/home/administrator/projects/hexalith/cicd-publish-story-20-final/_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+      "reviewed_path_count": 64,
+      "added_only": "tools/tests/test_ext_protection_1_loop7_installation.py"
+    }
+  ],
+  "trusted_cli": {
+    "version": "21.2.4",
+    "lock_sha256": "f243c4248fc4b43a00bd63f8492c5ae3e37bb7a211c14cc3c13fd8e9a9fd89e0",
+    "signed_locked_tools_constructor_completed": true,
+    "legacy_policy_sha256": "796a04abdd8c35e645f654c9d8d571556f34ccf4ab3611c9327697a452add38d"
+  },
+  "canonical_policy_sha256": "685fce2f6e2a389fdfecc440ba72d516c6fd555950e4f260dbe1d7b39335cd1e",
+  "edited_action_released_guard_lint": "passed",
+  "error": "ModuleNotFoundError: No module named 'tools.tests.test_managed_product_fixtures'",
+  "completed_at": "2026-11-16T22:59:48.809098+00:00"
+}

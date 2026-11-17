@@ -1,0 +1,194 @@
+{
+  "started_at": "2026-11-16T16:48:27.334503+00:00",
+  "result": "failed",
+  "phases": [
+    {
+      "phase": "build",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.Ux5M67r9/remaining.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.Ux5M67r9/module",
+        "build",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json"
+      ],
+      "cwd": "/tmp/hexalith-job.Ux5M67r9/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-final-build.log",
+      "started_at": "2026-11-16T16:48:54.341986+00:00",
+      "exit": 0,
+      "completed_at": "2026-11-16T16:50:07.298562+00:00"
+    },
+    {
+      "phase": "unit",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/tmp/hexalith-job.Ux5M67r9/remaining.py",
+        "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds/Github/lib",
+        "/tmp/hexalith-job.Ux5M67r9/module",
+        "unit",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/planned-configuration.json",
+        "/tmp/hexalith-job.Ux5M67r9/prefix.json",
+        "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-final-passed-projects.json"
+      ],
+      "cwd": "/tmp/hexalith-job.Ux5M67r9/module",
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-final-unit.log",
+      "started_at": "2026-11-16T16:50:07.299116+00:00",
+      "exit": 1,
+      "completed_at": "2026-11-16T17:05:38.027818+00:00"
+    }
+  ],
+  "source_repositories_read_only": true,
+  "nested_submodule_initialization": false,
+  "push_performed": false,
+  "shared_helpers": "Current local Builds candidate; no release or adoption claim",
+  "source_head": "f85419d501f279e9a813435aa73538185ad26ada",
+  "candidate_tree": "d336e56e7df1ee11e6d79010033c429a24410604",
+  "source_builds_gitlink": "160000 commit e2bbbd0893f586e4d447ef8358ff747ea3d34435\treferences/Hexalith.Builds",
+  "fixture_commitlint": {
+    "result": "passed",
+    "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-final-fixture-commitlint.log",
+    "message": "test: prepare isolated eventstore verification snapshot\n",
+    "validated_before_commit": true
+  },
+  "fixture_only_unpublished_commit": "1e03996e2c826b1140bee62bb16beedd29f25a06",
+  "fixture_tree_equals_source_candidate_tree": true,
+  "dependencies": {
+    "Hexalith.Builds": {
+      "source": "/home/administrator/projects/hexalith/cicd-story-20/references/Hexalith.Builds",
+      "source_head": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "source_origin": "https://github.com/Hexalith/Hexalith.Builds.git",
+      "source_candidate_gitlink": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+      "disposable_revision": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "clean_separate_git_checkout": true,
+      "source_read_only": true
+    },
+    "Hexalith.Tenants": {
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "source_head": "292dbf164f26bcf376ef86d749b149b075f8b502",
+      "source_origin": "https://github.com/Hexalith/Hexalith.Tenants.git",
+      "source_candidate_gitlink": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "disposable_revision": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "clean_separate_git_checkout": true,
+      "source_read_only": true
+    },
+    "Hexalith.Platform": {
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Platform",
+      "source_head": "c2236a9f95c37d4d2ef8dee3fe2cbfe5e9ab41d2",
+      "source_origin": "https://github.com/Hexalith/Hexalith.Platform.git",
+      "source_candidate_gitlink": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "disposable_revision": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "clean_separate_git_checkout": true,
+      "source_read_only": true
+    },
+    "Hexalith.FrontComposer": {
+      "source": "/home/administrator/projects/hexalith/cicd/references/Hexalith.FrontComposer",
+      "source_head": "bc9dbedc6141b750ca92f01b40ac840dc2066704",
+      "source_origin": "https://github.com/Hexalith/Hexalith.FrontComposer.git",
+      "source_candidate_gitlink": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "disposable_revision": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "clean_separate_git_checkout": true,
+      "source_read_only": true
+    }
+  },
+  "provider_affecting_source_clean": true,
+  "preview_difference": "Selected Builds release is a clean separate Git checkout; source/fixture gitlinks unchanged. Scratch-only commit has identical candidate tree and validated message, not a published source identity.",
+  "retained_green_prefix": {
+    "samples/Hexalith.EventStore.Sample.Tests/Hexalith.EventStore.Sample.Tests.csproj": {
+      "total": 4,
+      "failed": 0,
+      "succeeded": 4,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Admin.Abstractions.Tests/Hexalith.EventStore.Admin.Abstractions.Tests.csproj": {
+      "total": 510,
+      "failed": 0,
+      "succeeded": 510,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Admin.Cli.Tests/Hexalith.EventStore.Admin.Cli.Tests.csproj": {
+      "total": 384,
+      "failed": 0,
+      "succeeded": 384,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Admin.Mcp.Tests/Hexalith.EventStore.Admin.Mcp.Tests.csproj": {
+      "total": 437,
+      "failed": 0,
+      "succeeded": 429,
+      "skipped": 8,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Admin.Server.Host.Tests/Hexalith.EventStore.Admin.Server.Host.Tests.csproj": {
+      "total": 70,
+      "failed": 0,
+      "succeeded": 70,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Admin.Server.Tests/Hexalith.EventStore.Admin.Server.Tests.csproj": {
+      "total": 852,
+      "failed": 0,
+      "succeeded": 839,
+      "skipped": 13,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Admin.UI.Tests/Hexalith.EventStore.Admin.UI.Tests.csproj": {
+      "total": 1141,
+      "failed": 0,
+      "succeeded": 1141,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Client.Tests/Hexalith.EventStore.Client.Tests.csproj": {
+      "total": 2440,
+      "failed": 0,
+      "succeeded": 2438,
+      "skipped": 2,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-classified-unit.log"
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj": {
+      "total": 1420,
+      "failed": 0,
+      "succeeded": 1418,
+      "skipped": 2,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-unit.log"
+    },
+    "tests/Hexalith.EventStore.DomainService.Tests/Hexalith.EventStore.DomainService.Tests.csproj": {
+      "total": 1413,
+      "failed": 0,
+      "succeeded": 1412,
+      "skipped": 1,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-unit.log"
+    },
+    "tests/Hexalith.EventStore.LoadTests.Tests/Hexalith.EventStore.LoadTests.Tests.csproj": {
+      "total": 9,
+      "failed": 0,
+      "succeeded": 9,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-unit.log"
+    },
+    "tests/Hexalith.EventStore.Operations.Tests/Hexalith.EventStore.Operations.Tests.csproj": {
+      "total": 111,
+      "failed": 0,
+      "succeeded": 111,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-unit.log"
+    },
+    "tests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.Tests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.Tests.csproj": {
+      "total": 192,
+      "failed": 0,
+      "succeeded": 192,
+      "skipped": 0,
+      "log": "/home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-exact-dependencies-unit.log"
+    }
+  },
+  "inherited_green_succeeded_tests": 8957,
+  "inherited_existing_skips": 26,
+  "failure": "unit failed; /home/administrator/projects/hexalith/cicd-story-20/_bmad-output/specs/spec-cicd/evidence/20/integration-final-unit.log",
+  "completed_at": "2026-11-16T17:05:38.029424+00:00"
+}
