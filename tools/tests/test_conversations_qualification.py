@@ -23,8 +23,6 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
-sys.path.insert(0, str(ROOT / "references/Hexalith.Builds/Github/lib"))
-import perimeter
 
 SPEC = importlib.util.spec_from_file_location("qualify_conversations", ROOT / "tools/qualify_conversations.py")
 QUALIFY = importlib.util.module_from_spec(SPEC)
@@ -109,6 +107,14 @@ class QualificationTests(unittest.TestCase):
             command.assert_not_called()
 
     def test_canonical_owned_mask_preserves_partial_npm_and_instruction_files(self):
+        # A nightly bump leases released Git objects without a Builds checkout.
+        # Keep the real pinned library export alive for this complete control.
+        contract = self.enterContext(QUALIFY.renderer.pinned_contract(ROOT))
+        spec = importlib.util.spec_from_file_location(
+            "_qualification_fixture_perimeter", contract.root / "Github/lib/perimeter.py")
+        perimeter = importlib.util.module_from_spec(spec)
+        self.enterContext(mock.patch.dict(sys.modules, {spec.name: perimeter}))
+        spec.loader.exec_module(perimeter)
         document = {"entries": [{"kind": "whole-dir", "path": ".github/workflows"},
             {"kind": "gitlink", "path": "references/Hexalith.Builds"},
             {"kind": "marker-block", "path": "AGENTS.md"},

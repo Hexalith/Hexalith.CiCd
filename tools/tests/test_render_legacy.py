@@ -145,7 +145,9 @@ class Workspace:
         """Synthetic tagged candidate: production's release selector stays untouched."""
         paths = ("schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py", ".github/workflows/ci.yml",
                  "Github/prepare/action.yml")
-        self.change_tag({path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in paths})
+        with renderer.pinned_contract(ROOT) as contract:
+            changes = {path: (contract.root / path).read_bytes() for path in paths}
+        self.change_tag(changes)
 
 
 @contextmanager
@@ -230,8 +232,9 @@ class RenderTests(unittest.TestCase):
 
     def test_tagged_platform_prerequisite_schema_reader_and_defaults_round_trip(self):
         with workspace() as fixture:
-            changes = {path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in (
-                "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")}
+            with renderer.pinned_contract(ROOT) as contract:
+                changes = {path: (contract.root / path).read_bytes() for path in (
+                    "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")}
             fixture.change_tag(changes)
             fixture.document({"solution": "Fixture.slnx"})
             fixture.cli()
