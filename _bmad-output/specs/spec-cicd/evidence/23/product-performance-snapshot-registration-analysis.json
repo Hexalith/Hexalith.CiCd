@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-17T08:06:07.664352+00:00",
+  "source": "a1ad5f5bb531516a49f91166a2d2306d20ef7570",
+  "selectedPackage": "Hexalith.EventStore.Server/5.1.1",
+  "currentNativePacket": "local-isolated-20261117T075212Z-ffeab948",
+  "actualNativeEffectiveInterval": 100,
+  "registryHostWarningCount": 1,
+  "hostWarningStage": "FoldedSnapshotQualificationAbsent",
+  "warningEffect": "automatic snapshots skipped; manual snapshots unsupported; legacy history-bearing snapshots require full replay",
+  "actualFoldedSnapshotCommitMessagesObserved": 0,
+  "sourceFacts": {
+    "TenantsFoldedSnapshotQualificationRegistrationsFound": 0,
+    "eventStore511Actor": "Find exact domain/aggregate qualification before ShouldCreateSnapshotAsync and snapshot-request flag; no qualification means false",
+    "eventStore511Startup": "Warns once when FoldedSnapshotQualificationRegistry is not a registered service"
+  },
+  "inference": "Missing snapshot enrollment is a concrete compatibility lead for repeated replay during seeding; stack sample/declining throughput do not alone establish full timeout causality",
+  "productionChangesMade": false,
+  "requiredNextVerification": [
+    "actual published qualification API and source/assembly binding",
+    "genuine full-prefix versus folded-state parity evidence before profile enrollment",
+    "finite capture resource limits/serializer/domain/aggregate identity and both-host enrollment",
+    "preserve complete workload and assertions; no fake test-profile/evidence identifiers",
+    "native rehydration and exact-source bootstrap after an accepted correction"
+  ]
+}
