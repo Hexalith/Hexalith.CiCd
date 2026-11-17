@@ -1,0 +1,88 @@
+{
+  "kind": "story16 released-input followup before whole qualification",
+  "status": "in-progress",
+  "builds": {
+    "tag": "v6.2.0",
+    "source": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "requiredCi": 44021561686,
+    "releaseRun": 44026029259,
+    "packageSha256": "06a06622f82f5aca5018f817aa2be58a6d397190744403f093f99d49be09da3a"
+  },
+  "candidateBeforeThisRecord": "3bba1325e02b628cb0fb40d701efc0655bd9a645",
+  "productHead": "c0767f61c3be3a5f92b5e2426dd9d801a2ca0b17",
+  "publishedProductBaseline": "4ab8f9060d9d16302c1132734f0b234b4489b8a5",
+  "productPushed": false,
+  "apiApproval": {
+    "decision": "Approve scoped v4 successor (Recommended)",
+    "scope": [
+      "ReadPurpose",
+      "AdvisoryMetadataOnly",
+      "NativeMembershipOnly",
+      "NativeMembershipPurpose",
+      "QueryType"
+    ],
+    "newSnapshotSha256": "4de710b386ff63a2316c603e40556bc78b0f61bbf1635a419cf0d436a1353d74",
+    "previousArtifactsUnchanged": true,
+    "newControlCases": 53,
+    "newControlsVerified": false
+  },
+  "fixtureChecks": {
+    "candidate": "42dadc04a8249df8d8e23d87790fb1d669389baa",
+    "contexts": [
+      "Git objects only",
+      "normal checkout"
+    ],
+    "python": [
+      "3.12",
+      "3.14"
+    ],
+    "testExecutions": 336,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "existingAssertionAstsPreserved": 341
+  },
+  "previousProductProbe": {
+    "product": "4239b6188a82608784f726b35a802784a1da0b4d",
+    "sixOtherUnitProjectsPassed": 2669,
+    "testSupportWithInit": {
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0
+    },
+    "portableBeforeApprovedV4": {
+      "passed": 253,
+      "failed": 2,
+      "skipped": 0
+    },
+    "wholeQualification": false
+  },
+  "externalRunnerCorrection": {
+    "onlyChange": "Docker --init for private SDK container",
+    "sha256": "97fc954bb4b7f20cd447f7239cef26a9208d680e68ab623efa5d11aacdade78c",
+    "proof": "Unchanged full TestSupport: no-init41pass/3fail with killed PID-file-bound descendants Z/PPID1; init44pass/0fail/0skip and no zombies."
+  },
+  "nuget": {
+    "authenticatedPrincipal": "jpiquot",
+    "readbackAt": "2026-11-17T07:34:56.213215+00:00",
+    "retainedLegacyPolicy": 18928,
+    "scopedPolicy": 27245,
+    "cleanupAccessReady": true,
+    "policyMutationPerformed": false
+  },
+  "publishedFixtureFix": {
+    "commit": "ba4cc3cafed953ee41bbe1dd597370ff249198c5",
+    "run": 44035327965,
+    "hostedValidate": "success",
+    "deliveryAggregate": "failure",
+    "moduleReason": "Hexalith.AI.Tools: App precondition check failed: AD-21 main/v* rulesets check failed"
+  },
+  "pending": [
+    "Full unfiltered released Linux qualification on final committed inputs",
+    "Native Windows qualification on its retained exact bundle",
+    "Restricted product publication and App adoption",
+    "Immediate immutable-release and legacy-access retirement readbacks",
+    "Normal checker, green adopted CI and next genuine scheduled-night outcome"
+  ],
+  "bulkLogs": "Retained outside repository in story-16-operational-logs/resume-20261116; not copied into this receipt."
+}

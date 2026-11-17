@@ -258,6 +258,20 @@ Conversations' released-input qualification remains mandatory.
   the catalog mutation. That focused evidence is not full qualification and does
   not grant product publication, native Windows acceptance or adoption.
 
+- Follow-up qualification fixes preserve the frozen intent and baseline. The
+  portable verifier now distinguishes authored SDK declarations from reconciled
+  references while validating both closures; its positive live SDK and 18 refusal
+  controls passed on clean product `4239b6188a82608784f726b35a802784a1da0b4d`.
+  Six other unit projects passed 2,669 cases. A proven external-container reaping
+  defect was corrected with Docker init; the unchanged full Linux TestSupport DLL
+  then passed 44/44. The actual public producer and all frozen artifacts remain
+  unchanged. The user explicitly approved the scoped five-member v4 successor;
+  product `c0767f61c3be3a5f92b5e2426dd9d801a2ca0b17` records that approval,
+  retains v1/v2/v3/review bytes and adds 53 exact-scope control cases. Whole
+  released-input execution on these final inputs remains required. NuGet
+  authenticated readback as `jpiquot` verifies policies 18928/27245 and cleanup
+  readiness. See the [compact follow-up receipt](../specs/spec-cicd/evidence/16/resume-20261116/released-input-followup.json).
+
 ## Spec Change Log
 
 - 2026-11-16 follow-up: the user requested "fix" after the publication report.
