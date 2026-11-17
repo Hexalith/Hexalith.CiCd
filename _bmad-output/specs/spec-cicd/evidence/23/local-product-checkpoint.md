@@ -327,3 +327,20 @@ The full retained500,000-event performance workload is now running under its
 existing60-minute allowance. Final semantic NuGet audit and outer cleanup/source/
 host preservation remain required before a complete bootstrap pass. No scheduled
 nightly, adoption, registration or product publication is claimed.
+
+Full cca7ad07 packet053556Z-cb96fec3 FINISHED FAILED5727.1s. All11,903
+completed TRX tests pass, zero skips; complete CI-equivalent stages, actual
+browser25/25/full10-field after-content stability,5 fresh DB/cold profiles and
+strict cleanup, Dapr baseline15 and expected4-call mutation pass. Performance
+hits unchanged3600s limit with no completed TRX or internal phase/counter
+artifact. Which internal phase timed out and whether30s rehydration assertion
+ran remain unverified. Final semantic NuGet audit did not run. All scratch/
+containers removed, source/retained host Redis unchanged. Failure analysis is
+product-performance-timeout-analysis.json; no complete bootstrap pass accepted.
+Existing product agent re-engaged sequentially for actual benchmark/fixture/API
+inspection and sparse safe internal phase/count diagnostics, preserving all
+workload sizes/concurrency/snapshot/assertions/budgets/flags. No native workload
+or parent harness edit in child; parent currently has no native job active.
+Fresh NuGet key metadata read remained unverified; its own new tab closed and
+all existing policy forms/account settings preserved. Old Zot UUID/full consumer
+boundary still unanswered. Remote Tenantsmainac7b6ba9/CiCdmainf56dcbfb at06:51UTC.

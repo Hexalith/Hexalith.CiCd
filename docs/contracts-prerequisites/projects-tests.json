@@ -1,0 +1,312 @@
+{
+  "kind": "qualification-only",
+  "status": "partial",
+  "recordedAt": "2026-11-17T00:24:58.777981+00:00",
+  "source": "0bb322c2105c841eba150fd6cb5aab2b3d4b2d4c",
+  "verificationScope": "focused-contracts-only",
+  "contractsCandidate": {
+    "version": "5.3.0",
+    "sha256": "1c3bdabc4778467d74b468a47f0413f5f85272539d9969891036c8865f6949c3",
+    "pathRelativeToImmutablePacket": "producer-replay-20261116T214600Z/unpublished-candidates/Hexalith.EventStore.Contracts.5.3.0.nupkg",
+    "producerSource": "0be0c922883d4ea61b18e843e24472162261d934"
+  },
+  "materialization": "Exact committed product trees; root-declared dependencies are ordinary archives, with no submodule initialization. Agent skills and retained planning/evidence are not build inputs and are omitted.",
+  "sources": {
+    ".": {
+      "revision": "0bb322c2105c841eba150fd6cb5aab2b3d4b2d4c",
+      "tree": "cd27ce82a4a9871643022a7c9b7dc865e310be39",
+      "selectedArchiveSha256": "8bc6fa92bdd7424e0f9fe9feeeabe597e890552ac2b8c6f700e75112fb5bb16a",
+      "omittedTopLevelNonProductTrees": [
+        ".agent",
+        ".agents",
+        ".claude",
+        "_bmad",
+        "_bmad-output",
+        "references"
+      ]
+    },
+    "references/Hexalith.Builds": {
+      "revision": "717e5ab29569fc57b0f43415f1aee2fc93441859",
+      "tree": "3b6b46f501448b53a7a799801fd4242f6a10a78e",
+      "selectedArchiveSha256": "19433cf9bee1e92c3a8336480311427c02f497bd10136cca7bc0b8b01cb48f68",
+      "omittedTopLevelNonProductTrees": [
+        ".claude",
+        "_bmad-output",
+        "references"
+      ]
+    }
+  },
+  "commands": [
+    {
+      "label": "candidate-contracts-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/Hexalith.Projects.Contracts/Hexalith.Projects.Contracts.csproj",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-m:1",
+        "--disable-build-servers",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.Ex4l5H2G/NuGet.qualification.Config"
+      ],
+      "exitCode": 0,
+      "seconds": 9.884,
+      "log": "candidate-contracts-build.log",
+      "logSha256": "585376ddf06f0e2bf30cb0037223fc4ebbf23a7741b8d3b6999ee3ac64d49332"
+    },
+    {
+      "label": "candidate-contract-tests-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Projects.Contracts.Tests/Hexalith.Projects.Contracts.Tests.csproj",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-m:1",
+        "--disable-build-servers",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.Ex4l5H2G/NuGet.qualification.Config"
+      ],
+      "exitCode": 0,
+      "seconds": 10.3,
+      "log": "candidate-contract-tests-build.log",
+      "logSha256": "723d248f17ab5204a57125c83ccaae3df2915b6a14b127d052826a7da095166c"
+    },
+    {
+      "label": "candidate-contract-tests-run",
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.Ex4l5H2G/projects/tests/Hexalith.Projects.Contracts.Tests/bin/Release/net11.0/Hexalith.Projects.Contracts.Tests.dll",
+        "-xml",
+        "/home/administrator/projects/hexalith/projects/_bmad-output/implementation-artifacts/evidence/projects-package-compatibility-20261116/approved-resume-20261117/current-pin-candidate/contracts-qualification/candidate-contract-tests.xml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.806,
+      "log": "candidate-contract-tests-run.log",
+      "logSha256": "4a7cde46a7414bb6de89250cf3b4775b81cdc246c609d58f57c769b66c4a53f2",
+      "tests": {
+        "total": 207,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "notRun": 0
+      }
+    }
+  ],
+  "rootGitlinks": {
+    "references/Hexalith.AI.Tools": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+    "references/Hexalith.Builds": "717e5ab29569fc57b0f43415f1aee2fc93441859",
+    "references/Hexalith.Commons": "49187d47da882d5470deac982bb383486c90202c",
+    "references/Hexalith.Conversations": "dc661903b063cdf56cdca3299d881e437f095d8c",
+    "references/Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "references/Hexalith.Folders": "e5760ca105652f4d89c4f240e0ca455723c9a473",
+    "references/Hexalith.FrontComposer": "21c208f7045fdb4556cef23178f464207605c42a",
+    "references/Hexalith.McpCli": "c9ffbd5c9f6bc100ecbf6ac13acf4fbe50a498a9",
+    "references/Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826",
+    "references/Hexalith.Parties": "0f261ccd3b461102dcac35da2e074d15a195ebb4",
+    "references/Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "references/Hexalith.Tenants": "0e0e85fd646da904c5528854e271b71a2b0b9066"
+  },
+  "sourceTreeSha256": "d37f3d77eef4c13153b5ef301ad809c87bb4774e5bf126fe8cc77bd650b2387b",
+  "catalogProvenance": {
+    "source": "717e5ab29569fc57b0f43415f1aee2fc93441859",
+    "path": "Props/Directory.Packages.props",
+    "sha256": "58739467f142c54d5afc95bb59b2ad19bf60338883988e9f4a7c8089f4559307",
+    "blob": "7ff7b4ed1f9729c46825805be071e70398123faf"
+  },
+  "changedFiles": {
+    "Directory.Packages.props": {
+      "beforeSha256": "7fab9ed9ed3927248f7b755e42b9cca2d41857528206e950c4ee21694c7c59c1",
+      "afterSha256": "d3b15b81e31073b4d161fd3a6399c618ae93a9bf361cf938210e1f2856b1cf0a"
+    },
+    "tools/release-packages.json": {
+      "beforeSha256": "71d6bb332e4152e201c42ca45d8e743a0f2f01b72df057c25669d65646886edb",
+      "afterSha256": "ee692784ee2b9d1f89a758c74bb4476e1087400ee9f39ebea7e318a043c089e1"
+    }
+  },
+  "unchangedFamilyProperty": "HexalithEventStoreVersion=5.1.1",
+  "patchSha256": "8a8d17efaf169b46dc4b8956913d89825c1aa4317a87277ef759ae64a035b4ba",
+  "completeTreeProof": {
+    "pathRelativeToImmutablePacket": "approved-resume-20261117/current-pin-candidate/candidate-tree.json",
+    "sha256": "fcd2770567df84b4cf84a0f7d2352366ad3ef0ede2257bb6f7bdcd39d5ca9a71",
+    "candidateTree": "0c212c466f878c01354ecb531d48acdd61ef910a",
+    "reused": true
+  },
+  "priorArtifactQualification": {
+    "pathRelativeToImmutablePacket": "projects/qualification.json",
+    "sha256": "b978b84028a337ab4c62065e5dd65959559def957b52c4a428952f08b3a6ffb2",
+    "candidateSha256": "e367e3e9a8d4a5d68942ed56b380acaddaeb4368f19273e6481c0ce2fce941ce",
+    "fullReleaseBuild": "previously failed with 13 subsequent errors; not rerun for this archive",
+    "otherLibraryBuilds": "previous artifact qualification only; not rerun for this archive",
+    "publicApiComparisonReusedFrom": {
+      "pathRelativeToImmutablePacket": "consumer-fresh-artifact-20261116T215857Z/qualification.json",
+      "sha256": "bf0459b58b1a59be1db1e128d3db97cdedaf6453fcba0bb55b875a6fe36469d7"
+    },
+    "sameProducerSourceAndPublicApi": true,
+    "inspectionToolVersion": "0.27.0",
+    "publicApiComparisonSummary": {
+      "changedTypeCount": 0,
+      "addedTypeCount": 0,
+      "removedTypeCount": 0,
+      "changedMemberCount": 0,
+      "breakingCount": 0,
+      "additiveCount": 0,
+      "potentiallyBreakingCount": 0
+    }
+  },
+  "qualificationConfig": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources><clear />\n    <add key=\"unpublished-qualification-only\" value=\"${TMPDIR}/candidate-feed\" />\n    <add key=\"nuget.org\" value=\"https://api.nuget.org/v3/index.json\" protocolVersion=\"3\" />\n  </packageSources>\n  <packageSourceMapping>\n    <packageSource key=\"unpublished-qualification-only\"><package pattern=\"Hexalith.EventStore.Contracts\" /></packageSource>\n    <packageSource key=\"nuget.org\"><package pattern=\"*\" /></packageSource>\n  </packageSourceMapping>\n</configuration>\n",
+  "contractsTestXml": {
+    "path": "candidate-contract-tests.xml",
+    "sha256": "f7df8225189cae7e3cae630e8ea8158315570bf0c44feaeaea1aa911fc003297"
+  },
+  "contractsResolvedPackages": [
+    "ByteAether.Ulid/1.4.2",
+    "Hexalith.Commons.UniqueIds/3.0.0",
+    "Hexalith.EventStore.Contracts/5.3.0",
+    "Hexalith.McpCli.Abstractions/3.0.0"
+  ],
+  "restoredCandidateSha256": "1c3bdabc4778467d74b468a47f0413f5f85272539d9969891036c8865f6949c3",
+  "contractsDependencyGraph": {
+    "net11.0": {
+      "ByteAether.Ulid/1.4.2": {},
+      "Hexalith.Commons.UniqueIds/3.0.0": {
+        "ByteAether.Ulid": "1.4.2"
+      },
+      "Hexalith.EventStore.Contracts/5.3.0": {
+        "ByteAether.Ulid": "1.4.2",
+        "Hexalith.Commons.UniqueIds": "3.0.0"
+      },
+      "Hexalith.McpCli.Abstractions/3.0.0": {}
+    }
+  },
+  "contractsTestResolvedPackages": [
+    "ByteAether.Ulid/1.4.2",
+    "DiffEngine/11.3.0",
+    "EmptyFiles/4.4.0",
+    "Hexalith.Commons.UniqueIds/3.0.0",
+    "Hexalith.EventStore.Contracts/5.3.0",
+    "Hexalith.McpCli.Abstractions/3.0.0",
+    "Microsoft.ApplicationInsights/2.23.0",
+    "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+    "Microsoft.CodeCoverage/18.12.0",
+    "Microsoft.NET.Test.Sdk/18.12.0",
+    "Microsoft.TestPlatform.ObjectModel/18.12.0",
+    "Microsoft.TestPlatform.TestHost/18.12.0",
+    "Microsoft.Testing.Extensions.Telemetry/2.5.2",
+    "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.5.2",
+    "Microsoft.Testing.Platform.MSBuild/2.5.2",
+    "Microsoft.Testing.Platform/2.5.2",
+    "Microsoft.Win32.Registry/5.0.0",
+    "Shouldly/4.3.0",
+    "System.CodeDom/6.0.0",
+    "System.Management/6.0.1",
+    "System.Security.AccessControl/6.0.1",
+    "YamlDotNet/18.1.0",
+    "coverlet.collector/10.1.1",
+    "xunit.analyzers/2.3.0",
+    "xunit.runner.visualstudio/4.0.1",
+    "xunit.v3.assert/4.0.3",
+    "xunit.v3.common/4.0.3",
+    "xunit.v3.core.mtp-v2/4.0.3",
+    "xunit.v3.extensibility.core/4.0.3",
+    "xunit.v3.mtp-v2/4.0.3",
+    "xunit.v3.runner.common/4.0.3",
+    "xunit.v3.runner.inproc.console/4.0.3",
+    "xunit.v3/4.0.3"
+  ],
+  "contractsTestDependencyGraph": {
+    "net11.0": {
+      "ByteAether.Ulid/1.4.2": {},
+      "coverlet.collector/10.1.1": {},
+      "DiffEngine/11.3.0": {
+        "EmptyFiles": "4.4.0",
+        "System.Management": "6.0.1"
+      },
+      "EmptyFiles/4.4.0": {},
+      "Hexalith.Commons.UniqueIds/3.0.0": {
+        "ByteAether.Ulid": "1.4.2"
+      },
+      "Hexalith.EventStore.Contracts/5.3.0": {
+        "ByteAether.Ulid": "1.4.2",
+        "Hexalith.Commons.UniqueIds": "3.0.0"
+      },
+      "Hexalith.McpCli.Abstractions/3.0.0": {},
+      "Microsoft.ApplicationInsights/2.23.0": {},
+      "Microsoft.Bcl.AsyncInterfaces/6.0.0": {},
+      "Microsoft.CodeCoverage/18.12.0": {},
+      "Microsoft.NET.Test.Sdk/18.12.0": {
+        "Microsoft.CodeCoverage": "18.12.0",
+        "Microsoft.TestPlatform.TestHost": "18.12.0"
+      },
+      "Microsoft.Testing.Extensions.Telemetry/2.5.2": {
+        "Microsoft.ApplicationInsights": "2.23.0",
+        "Microsoft.Testing.Platform": "[2.5.2, 3.0.0)"
+      },
+      "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.5.2": {
+        "Microsoft.Testing.Platform": "[2.5.2, 3.0.0)"
+      },
+      "Microsoft.Testing.Platform/2.5.2": {},
+      "Microsoft.Testing.Platform.MSBuild/2.5.2": {
+        "Microsoft.Testing.Platform": "[2.5.2, 3.0.0)"
+      },
+      "Microsoft.TestPlatform.ObjectModel/18.12.0": {},
+      "Microsoft.TestPlatform.TestHost/18.12.0": {
+        "Microsoft.TestPlatform.ObjectModel": "18.12.0"
+      },
+      "Microsoft.Win32.Registry/5.0.0": {},
+      "Shouldly/4.3.0": {
+        "DiffEngine": "11.3.0",
+        "EmptyFiles": "4.4.0"
+      },
+      "System.CodeDom/6.0.0": {},
+      "System.Management/6.0.1": {
+        "System.CodeDom": "6.0.0"
+      },
+      "System.Security.AccessControl/6.0.1": {},
+      "xunit.analyzers/2.3.0": {},
+      "xunit.runner.visualstudio/4.0.1": {},
+      "xunit.v3/4.0.3": {
+        "xunit.v3.mtp-v2": "[4.0.3]"
+      },
+      "xunit.v3.assert/4.0.3": {},
+      "xunit.v3.common/4.0.3": {
+        "Microsoft.Bcl.AsyncInterfaces": "6.0.0"
+      },
+      "xunit.v3.core.mtp-v2/4.0.3": {
+        "Microsoft.Testing.Extensions.Telemetry": "2.5.2",
+        "Microsoft.Testing.Extensions.TrxReport.Abstractions": "2.5.2",
+        "Microsoft.Testing.Platform": "2.5.2",
+        "Microsoft.Testing.Platform.MSBuild": "2.5.2",
+        "xunit.v3.extensibility.core": "[4.0.3]",
+        "xunit.v3.runner.inproc.console": "[4.0.3]"
+      },
+      "xunit.v3.extensibility.core/4.0.3": {
+        "xunit.v3.common": "[4.0.3]"
+      },
+      "xunit.v3.mtp-v2/4.0.3": {
+        "xunit.analyzers": "2.3.0",
+        "xunit.v3.assert": "[4.0.3]",
+        "xunit.v3.core.mtp-v2": "[4.0.3]"
+      },
+      "xunit.v3.runner.common/4.0.3": {
+        "Microsoft.Win32.Registry": "[5.0.0]",
+        "System.Security.AccessControl": "[6.0.1]",
+        "xunit.v3.common": "[4.0.3]"
+      },
+      "xunit.v3.runner.inproc.console/4.0.3": {
+        "xunit.v3.extensibility.core": "[4.0.3]",
+        "xunit.v3.runner.common": "[4.0.3]"
+      },
+      "YamlDotNet/18.1.0": {},
+      "Hexalith.Projects.Contracts/1.0.0": {
+        "Hexalith.EventStore.Contracts": "5.3.0",
+        "Hexalith.McpCli.Abstractions": "3.0.0"
+      }
+    }
+  },
+  "focusedContractsPassed": true,
+  "completeReleaseBuild": "not run for this archive; prior independent blockers remain",
+  "g6": "not run",
+  "hostedAcceptance": false
+}

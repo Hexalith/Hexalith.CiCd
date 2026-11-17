@@ -6,6 +6,7 @@ import stat
 import sys
 import time
 import xml.etree.ElementTree as ET
+from performance_checkpoint import read_checkpoint
 
 
 packet = Path(__file__).resolve().parent / sys.argv[1]
@@ -34,6 +35,9 @@ if scratch.exists():
         except (OSError, ET.ParseError):
             pass
     output['completedTrx'] = reports
+    checkpoint = read_checkpoint(scratch)
+    if checkpoint is not None:
+        output['performanceCheckpoint'] = checkpoint
     raw_path = scratch / 'worker-private.log'
     if raw_path.is_file():
         raw = raw_path.read_text(errors='replace')

@@ -1,0 +1,146 @@
+name: Deliver reviewed contracts prerequisites
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Fixed reviewed prerequisite
+        required: true
+        type: choice
+        options:
+          - eventstore-publisher
+          - projects-publisher
+          - projects-pins
+
+permissions: {}
+
+concurrency:
+  group: deliver-contracts-prerequisites
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: ${{ github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && github.workflow_ref == 'Hexalith/Hexalith.CiCd/.github/workflows/deliver-contracts-prerequisites.yml@refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    outputs:
+      plan: ${{ steps.qualify.outputs.plan }}
+      behavioral-result: ${{ steps.tests.outcome }}
+    steps:
+      - name: Initialize qualification failure receipt
+        run: >-
+          printf '%s\n' '{"schema":"hexalith.contracts-prerequisites-delivery.v1","status":"failed","failed_operation":"workflow initialization","reason":"qualification controller has not completed","push_attempted":false,"candidate_sha":null,"candidate_tree":null,"delivered_sha":null,"delivered_tree":null}' > contracts-prerequisites-qualification.json
+
+      - name: Checkout exact owner source without dependencies or persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .contracts-validation
+          submodules: false
+          persist-credentials: false
+
+      - name: Run secret-free behavioral qualification
+        id: tests
+        run: python3 -I .contracts-validation/tools/tests/test_deliver_contracts_prerequisites.py
+
+      - name: Bind fixed prerequisite to exact owner source and current target
+        id: qualify
+        if: ${{ !cancelled() }}
+        env:
+          PREREQUISITE_OWNER_SOURCE: ${{ github.sha }}
+          PREREQUISITE_PROFILE: ${{ inputs.profile }}
+          PREREQUISITE_BEHAVIORAL_RESULT: ${{ steps.tests.outcome }}
+        run: >-
+          python3 -I .contracts-validation/tools/deliver_contracts_prerequisites.py qualify
+          --profile "$PREREQUISITE_PROFILE" --report contracts-prerequisites-qualification.json
+
+      - name: Upload qualification receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: contracts-prerequisites-qualification-${{ inputs.profile }}
+          path: contracts-prerequisites-qualification.json
+          if-no-files-found: error
+          retention-days: 90
+
+  deliver:
+    needs: validate
+    if: ${{ !cancelled() && github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && github.workflow_ref == 'Hexalith/Hexalith.CiCd/.github/workflows/deliver-contracts-prerequisites.yml@refs/heads/main' && needs.validate.result == 'success' && needs.validate.outputs.behavioral-result == 'success' && needs.validate.outputs.plan != '' }}
+    concurrency:
+      group: deliver-owned-writes
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: cicd-app
+    permissions:
+      contents: read
+    steps:
+      - name: Initialize delivery failure receipt
+        run: >-
+          printf '%s\n' '{"schema":"hexalith.contracts-prerequisites-delivery.v1","status":"failed","failed_operation":"workflow initialization","reason":"delivery controller has not completed","push_attempted":false,"candidate_sha":null,"candidate_tree":null,"delivered_sha":null,"delivered_tree":null}' > contracts-prerequisites-delivery.json
+
+      - name: Checkout only exact qualified trusted owner sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .contracts-owner
+          sparse-checkout: |
+            tools/deliver_contracts_prerequisites.py
+            tools/delivery_runtime.py
+            tools/tests/test_deliver_contracts_prerequisites.py
+            .github/workflows/deliver-contracts-prerequisites.yml
+            docs/proposals/contracts-prerequisites/
+          sparse-checkout-cone-mode: false
+          submodules: false
+          persist-credentials: false
+
+      - name: Mint fixed publisher repository contents and workflows token
+        if: ${{ inputs.profile == 'eventstore-publisher' || inputs.profile == 'projects-publisher' }}
+        id: publisher-token
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: ${{ inputs.profile == 'eventstore-publisher' && 'Hexalith.EventStore' || 'Hexalith.Projects' }}
+          permission-contents: write
+          permission-workflows: write
+
+      - name: Mint only Projects contents token for fixed pins
+        if: ${{ inputs.profile == 'projects-pins' }}
+        id: pins-token
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.Projects
+          permission-contents: write
+
+      - name: Deliver only the exact qualified prerequisite
+        if: ${{ !cancelled() }}
+        env:
+          PREREQUISITE_OWNER_SOURCE: ${{ github.sha }}
+          PREREQUISITE_PROFILE: ${{ inputs.profile }}
+          PREREQUISITE_BEHAVIORAL_RESULT: ${{ needs.validate.outputs.behavioral-result }}
+          PREREQUISITE_QUALIFICATION: ${{ needs.validate.result }}
+          PREREQUISITE_PLAN: ${{ needs.validate.outputs.plan }}
+          MODULE_TOKEN: ${{ inputs.profile == 'projects-pins' && steps.pins-token.outputs.token || steps.publisher-token.outputs.token }}
+        run: >-
+          python3 -I .contracts-owner/tools/deliver_contracts_prerequisites.py deliver
+          --profile "$PREREQUISITE_PROFILE" --report contracts-prerequisites-delivery.json
+
+      - name: Upload delivery receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: contracts-prerequisites-delivery-${{ inputs.profile }}
+          path: contracts-prerequisites-delivery.json
+          if-no-files-found: error
+          retention-days: 90

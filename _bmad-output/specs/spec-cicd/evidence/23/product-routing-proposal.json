@@ -56,7 +56,7 @@
     "sdk": "11.0.100",
     "daprCli": "1.19.1",
     "daprRuntime": "1.19.1",
-    "status": "Current cca7ad07 fixes final provenance comparison with complete structural equality, required scalar/closure checks and retained sourceAfter. Focused 133 Node controls pass with zero skips. Full exact-current released sequence is starting; prior d25495a7 failed final array-identity comparison despite 25 passed live browser scenarios and is not a complete bootstrap pass.",
+    "status": "Current cca7ad07 full attempt passes all11903 completed TRX tests, complete CI hooks/coverage/all5 cold profiles, actual live25-case browser/full10-field provenance stability, and real Dapr controls. Performance reaches unchanged60-minute limit without completed TRX/internal phase data; final semantic NuGet audit is unrun. Narrow phase/count observability investigation is in progress. No complete bootstrap/adoption/publication pass.",
     "nativeAspireCli": {
       "invoked": false,
       "required": false,
@@ -116,7 +116,8 @@
       "excludedTraits": [
         "Category=Performance"
       ],
-      "assertions": "Every non-live in-process/slim-Dapr integration class, including generated HTTP/catalog controls, bound bootstrap, command status/UI, protected project contracts, replay and audit persistence, executes once."
+      "assertions": "Every non-live in-process/slim-Dapr integration class, including generated HTTP/catalog controls, bound bootstrap, command status/UI, protected project contracts, replay and audit persistence, executes once.",
+      "expectedExecutionCount": 741
     },
     "coldProfiles": [
       {
@@ -235,8 +236,8 @@
   },
   "ownedContentEdits": false,
   "nestedSubmoduleInitialization": false,
-  "finalLocalCandidateTree": "9472f47e23de188363699be3c5e3c074fb3de68e",
-  "finalLocalProductRevision": "cca7ad07211967e604b8f7f33aa21dbbb853ec10",
+  "finalLocalCandidateTree": "e04a10e3f6249f9c6b8e5c1c6685a1f2af11c0c3",
+  "finalLocalProductRevision": "a1ad5f5bb531516a49f91166a2d2306d20ef7570",
   "freshUiQualification": {
     "evidence": "local-isolated-20261116T232705Z-17d40dbd/result.json",
     "executed": 8085,
@@ -295,5 +296,8 @@
   },
   "latestStatusFilterEvidence": "product-status-browser-local-commit.json",
   "latestLiveCaptureFailureEvidence": "product-live-capture-failure-analysis.json",
-  "latestLiveCaptureEvidence": "product-live-capture-local-commit.json"
+  "latestLiveCaptureEvidence": "product-live-capture-local-commit.json",
+  "latestPerformanceTimeoutEvidence": "product-performance-timeout-analysis.json",
+  "latestActualLiveStabilityEvidence": "product-live-stability-observation-cca7ad07.json",
+  "latestPerformanceObservabilityEvidence": "product-performance-observability-final.json"
 }
