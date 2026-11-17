@@ -350,8 +350,10 @@ class ValidateTests(unittest.TestCase):
 
     def test_platform_prerequisite_uses_the_same_tagged_schema_and_reader(self):
         with workspace() as fixture:
-            fixture.change_tag({path: (ROOT / "references/Hexalith.Builds" / path).read_bytes() for path in (
-                "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")})
+            with renderer.pinned_contract(ROOT) as contract:
+                changes = {path: (contract.root / path).read_bytes() for path in (
+                    "schemas/hexalith.ci.v1.json", "Github/lib/ci_config.py")}
+            fixture.change_tag(changes)
             declaration = {"id": "sdk-420", "project": "compat/Consumer.csproj", "versions": {"HexalithEventStoreVersion": "4.2.0"}}
             fixture.module(setup={"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json", "buildProjects": [declaration]})
             fixture.commit()
