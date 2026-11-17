@@ -93,6 +93,8 @@ class GitExportTests(unittest.TestCase):
         self.assertEqual(len(fetches), 2)
         self.assertTrue(all(len(call.kwargs["data"].splitlines()) <= 128 for call in fetches))
         self.assertLess(len(calls), 30)
+        bodies = [call for call in run.call_args_list if call.args == ("cat-file", "--batch")]
+        self.assertEqual([len(call.kwargs["data"].splitlines()) for call in bodies], [128, 14])
         self.assertFalse((store.root / "index").exists())
         missing = git(store.root, "rev-list", "--objects", "--all", "--missing=print")
         self.assertEqual(sum(row.startswith("?") for row in missing.splitlines()), 1)
@@ -108,6 +110,40 @@ class GitExportTests(unittest.TestCase):
         self.assertTrue(all(len(call.kwargs["data"].splitlines()) <= 7 for call in bodies))
         for index in range(9):
             self.assertEqual((self.root / f"exported/selected/{index}").read_bytes(), bytes([index]) * rt.MAX_JSON)
+
+    def assert_body_boundary(self, overflow):
+        for index in range(7):
+            self.write(f"selected/{index}", bytes([index]) * rt.MAX_JSON)
+        # Each large blob has a 40-hex identity, " blob ", a seven-digit
+        # size, header LF and body LF: 55 framing bytes on the Git wire.
+        tail_size = rt.MAX_GIT - 7 * rt.MAX_JSON - 8 * 55 + overflow
+        self.write("selected/7", b"t" * tail_size)
+        self.write("selected/8", b"tail")
+        store, revision = self.acquire(partial=True)
+        batches = []
+        original = store.run
+        def capture(*args, **kwargs):
+            output = original(*args, **kwargs)
+            if args == ("cat-file", "--batch"):
+                batches.append((len(kwargs["data"].splitlines()), len(output)))
+            return output
+        with mock.patch.object(store, "run", side_effect=capture):
+            store.export(revision, "selected", self.root / "exported")
+        self.assertEqual(len(batches), 2)
+        self.assertTrue(all(size <= rt.MAX_GIT for _, size in batches))
+        self.assertEqual([count for count, _ in batches], [7, 2] if overflow else [8, 1])
+        if not overflow:
+            self.assertEqual(batches[0][1], rt.MAX_GIT)
+        for index in range(7):
+            self.assertEqual((self.root / f"exported/selected/{index}").read_bytes(), bytes([index]) * rt.MAX_JSON)
+        self.assertEqual((self.root / "exported/selected/7").read_bytes(), b"t" * tail_size)
+        self.assertEqual((self.root / "exported/selected/8").read_bytes(), b"tail")
+
+    def test_byte_packed_body_fills_exact_command_output_limit(self):
+        self.assert_body_boundary(0)
+
+    def test_byte_packed_body_splits_one_framing_byte_over_limit(self):
+        self.assert_body_boundary(1)
 
     def assert_capacity_failure(self, count, size, diagnostic):
         for index in range(count):

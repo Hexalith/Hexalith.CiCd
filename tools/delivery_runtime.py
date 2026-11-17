@@ -260,10 +260,20 @@ class Git:
             total += sum(sizes[entries[path][2]] for path in group)
             if total > 32 * MAX_JSON:
                 raise DeliveryError("trusted source export limit exceeded")
-            # At most seven 2 MiB blobs plus headers fit below Git.run's
-            # unchanged 16 MiB output cap. Size preflight precedes body reads.
-            for offset in range(0, len(group), 7):
-                batch = group[offset:offset + 7]
+            # Pack exact body and framing bytes within Git.run's output cap.
+            # Size preflight still precedes every body read.
+            offset = 0
+            while offset < len(group):
+                batch, batch_size = [], 0
+                while offset < len(group):
+                    path = group[offset]
+                    oid = entries[path][2]
+                    record_size = sizes[oid] + len(f"{oid} blob {sizes[oid]}\n") + 1
+                    if batch and batch_size + record_size > MAX_GIT:
+                        break
+                    batch.append(path)
+                    batch_size += record_size
+                    offset += 1
                 request = "".join(entries[path][2] + "\n" for path in batch).encode("ascii")
                 output = self.run("cat-file", "--batch", data=request)
                 position = 0
