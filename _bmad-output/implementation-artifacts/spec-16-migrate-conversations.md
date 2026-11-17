@@ -214,6 +214,16 @@ immutable excluded-tree IDs; ordinary index expansion is unsafe.
   stay fatal. This owning-source prerequisite repair grants no product adoption
   or nightly acceptance and does not change the frozen migration requirements.
 
+- Pre-adoption qualification now accepts the CiCd owner read token only through a
+  bounded stdin envelope from token-free ancestors. Inherited GitHub credential
+  aliases refuse after scrubbing; only the mandatory global-owner-check child
+  receives the token. Product/protocol/build/hook children inherit none. Before
+  disposable cleanup, successful Linux qualification retains bounded exact
+  TestSupport binaries, committed signed-evidence inputs, the authentic historical
+  Git object and released support sources with identity/SDK/file-hash binding.
+  Retention grants no native Windows execution or adoption result; those checks
+  remain pending and mandatory.
+
 ## Spec Change Log
 
 - 2026-11-16 follow-up: the user requested "fix" after the publication report.

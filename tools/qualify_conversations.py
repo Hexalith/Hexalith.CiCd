@@ -20,6 +20,8 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -34,6 +36,57 @@ import render as renderer
 REPOSITORY = "Hexalith/Hexalith.Conversations"
 PRODUCT_PATHS = ("src/", "tests/", "scripts/", "tools/", ".github/actions/", ".githooks/commit-msg", ".config/dotnet-tools.json",
                  "Directory.Build.props", ".gitattributes", "Hexalith.Conversations.slnx", "references/Hexalith.Platform")
+CREDENTIAL_KEYS = ("GH_TOKEN", "GITHUB_TOKEN", "ZIZMOR_GITHUB_TOKEN")
+NATIVE_PROJECT = "tests/Hexalith.Conversations.TestSupport.Tests"
+NATIVE_HISTORICAL_COMMIT = "79f4b126ca66d419a584855936ce56a1266cce67"
+NATIVE_MAX_FILES = 10000
+NATIVE_MAX_FILE_BYTES = 128 * 1024 * 1024
+NATIVE_MAX_BYTES = 1024 * 1024 * 1024
+
+
+def scrub_credentials() -> bool:
+    """Remove inherited aliases before any child; remember values for redaction."""
+    inherited = [os.environ.pop(key, "") for key in CREDENTIAL_KEYS]
+    delivery._SECRETS.extend(value for value in inherited if value)
+    return any(inherited)
+
+
+def read_owner_token(stream) -> str:
+    # Read through EOF: no credential bytes may remain on a product child's stdin.
+    payload = stream.read(8193)
+    try:
+        if len(payload) > 8192:
+            raise ValueError()
+        value = delivery.json_read(payload)
+        if not isinstance(value, dict) or set(value) != {"ownerReadToken"}:
+            raise ValueError()
+        token = value["ownerReadToken"]
+        if (not isinstance(token, str) or not 1 <= len(token) <= 4096
+                or any(not 33 <= ord(character) <= 126 for character in token)):
+            raise ValueError()
+    except (ValueError, TypeError):
+        raise delivery.DeliveryError("invalid owner read-token stdin envelope") from None
+    delivery._SECRETS.append(token)
+    return token
+
+
+def check_global(candidate_root: Path, token: str) -> None:
+    if not token:
+        raise delivery.DeliveryError("global owner checks require --global-check-token-stdin")
+    if any(key in os.environ for key in CREDENTIAL_KEYS):
+        raise delivery.DeliveryError("credential aliases must be absent before global owner checks")
+    delivery._SECRETS.append(token)
+    # Only this trusted owner check and its own audits receive the read token.
+    # Capture diagnostics so even an unexpected child error cannot print it raw.
+    environment = dict(os.environ, GH_TOKEN=token)
+    result = subprocess.run([sys.executable, "-I", str(candidate_root / "tools/check_global.py"),
+        "--project-root", str(candidate_root)], env=environment, stdin=subprocess.DEVNULL,
+        capture_output=True, check=False)
+    for content, stream in ((result.stdout, sys.stdout), (result.stderr, sys.stderr)):
+        for line in content.decode("utf-8", "backslashreplace").splitlines():
+            print(delivery.clean(line), file=stream, flush=True)
+    if result.returncode:
+        raise delivery.DeliveryError("mandatory global owner checks failed")
 
 
 def digest(value: bytes) -> str:
@@ -173,7 +226,129 @@ def qualify_fixture_results(candidate_root: Path, module: Path) -> dict:
     return receipt
 
 
-def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, output: Path) -> dict:
+def retain_native_inputs(module: Path, builds: Path, destination: Path, *, identities: dict) -> dict:
+    """Retain only complete built TestSupport output and committed native inputs.
+
+    Export blobs instead of copying Git directories, caches or machine settings.
+    This is input retention; it confers no Windows execution/adoption result.
+    """
+    entries, names, components, total = [], set(), {}, 0
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.mkdir(mode=0o700)
+
+    def write(relative: str, payload: bytes, *, executable=False) -> None:
+        nonlocal total
+        parts = relative.split("/")
+        if (any(part in ("", ".", "..") or part.endswith((".", " ")) for part in parts)
+                or any(character in relative for character in '<>:"\\|?*')
+                or any(ord(character) < 32 or 127 <= ord(character) <= 159 for character in relative)
+                or any(re.fullmatch(r"(?i:con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])", part.split(".")[0].rstrip(" ")) for part in parts)
+                or relative.casefold() in names):
+            raise delivery.DeliveryError("native qualification input has an unsafe or colliding path")
+        for index in range(1, len(parts) + 1):
+            prefix = "/".join(parts[:index])
+            if components.setdefault(prefix.casefold(), prefix) != prefix:
+                raise delivery.DeliveryError("native qualification input has a case-colliding directory")
+        if (len(entries) >= NATIVE_MAX_FILES or len(payload) > NATIVE_MAX_FILE_BYTES
+                or total + len(payload) > NATIVE_MAX_BYTES):
+            raise delivery.DeliveryError("native qualification inputs exceed retention bounds")
+        path = destination / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("xb") as target:
+            target.write(payload)
+        path.chmod(0o755 if executable else 0o644)
+        entries.append({"path": relative, "bytes": len(payload), "sha256": digest(payload),
+                        "mode": "100755" if executable else "100644"})
+        names.add(relative.casefold())
+        total += len(payload)
+
+    def export(root: Path, prefix: str, paths: list[str]) -> None:
+        rows = git(root, "ls-tree", "-r", "-z", "HEAD", "--", *paths).split(b"\0")
+        for row in rows:
+            if not row:
+                continue
+            metadata, name = row.split(b"\t", 1)
+            mode, kind, oid = metadata.decode().split()
+            path = name.decode("utf-8")
+            if mode not in ("100644", "100755") or kind != "blob":
+                raise delivery.DeliveryError("native input source is not a regular committed blob")
+            if int(git(root, "cat-file", "-s", oid)) > NATIVE_MAX_FILE_BYTES:
+                raise delivery.DeliveryError("native qualification inputs exceed retention bounds")
+            payload = git(root, "cat-file", "blob", oid)
+            # A runtime hook cannot silently change the source accompanying its DLL.
+            actual = root / path
+            for parent in actual.parents:
+                if parent == root:
+                    break
+                if not stat.S_ISDIR(parent.lstat().st_mode):
+                    raise delivery.DeliveryError("native input source has a linked ancestor")
+            if (not stat.S_ISREG(actual.lstat().st_mode) or actual.read_bytes() != payload
+                    or bool(actual.lstat().st_mode & 0o111) != (mode == "100755")):
+                raise delivery.DeliveryError("native input source differs from its tested commit: " + path)
+            write(prefix + "/" + path, payload, executable=mode == "100755")
+
+    try:
+        if git(module, "rev-parse", "HEAD").decode().strip() != identities["productHead"]:
+            raise delivery.DeliveryError("native input product identity changed")
+        if git(builds, "rev-parse", "HEAD").decode().strip() != identities["buildsCommit"]:
+            raise delivery.DeliveryError("native input released Builds identity changed")
+        expected_sdk = delivery.json_read(git(module, "show", "HEAD:global.json"))["sdk"]["version"]
+        sdk = subprocess.check_output(["dotnet", "--version"], cwd=module, text=True).strip()
+        if sdk != expected_sdk:
+            raise delivery.DeliveryError("native input SDK differs from the tested product selection")
+        export(module, "module", ["Hexalith.Conversations.slnx", NATIVE_PROJECT + "/",
+            "tests/Hexalith.Conversations.TestSupport/", "docs/release-evidence/story-10.1-final-record-v2.json",
+            "docs/release-evidence/success-metric-report-and-attestation-v1.json"])
+        required = ["Hexalith.Conversations.slnx", NATIVE_PROJECT + "/BoundaryAssertionsTests.cs",
+            "docs/release-evidence/story-10.1-final-record-v2.json",
+            "docs/release-evidence/success-metric-report-and-attestation-v1.json"]
+        if any(not (destination / "module" / path).is_file() for path in required):
+            raise delivery.DeliveryError("native input committed evidence is incomplete")
+        export(builds, "support", ["Github/lib/", "Github/prepare-module-build/"])
+        if not (destination / "support/Github/lib/module_preparation.py").is_file():
+            raise delivery.DeliveryError("native input released support library is incomplete")
+        historical = git(module, "cat-file", "commit", NATIVE_HISTORICAL_COMMIT)
+        if hashlib.sha1(b"commit " + str(len(historical)).encode() + b"\0" + historical).hexdigest() != NATIVE_HISTORICAL_COMMIT:
+            raise delivery.DeliveryError("native input historical commit object differs")
+        write("historical-commit.bin", historical)
+        binary_path = NATIVE_PROJECT + "/bin/Release/net11.0"
+        binary_root = module / binary_path
+        # Do not follow links, including a linked parent of the output directory.
+        for parent in [binary_root, *binary_root.parents]:
+            if parent == module:
+                break
+            if not stat.S_ISDIR(parent.lstat().st_mode):
+                raise delivery.DeliveryError("native TestSupport output has a non-directory ancestor")
+        for directory, subdirs, files in os.walk(binary_root, followlinks=False):
+            for name in [*subdirs, *files]:
+                path = Path(directory) / name
+                mode = path.lstat().st_mode
+                if not stat.S_ISDIR(mode) and not stat.S_ISREG(mode):
+                    raise delivery.DeliveryError("native TestSupport output contains a link or special file")
+                if stat.S_ISREG(mode):
+                    if path.stat().st_size > NATIVE_MAX_FILE_BYTES:
+                        raise delivery.DeliveryError("native qualification inputs exceed retention bounds")
+                    write("module/" + path.relative_to(module).as_posix(), path.read_bytes(), executable=bool(mode & 0o111))
+        entrypoint = "module/" + binary_path + "/Hexalith.Conversations.TestSupport.Tests.dll"
+        for suffix in (".dll", ".deps.json", ".runtimeconfig.json"):
+            if not (destination / (entrypoint.removesuffix(".dll") + suffix)).is_file():
+                raise delivery.DeliveryError("native TestSupport output is incomplete")
+        manifest = {"schema": "hexalith.conversations-native-inputs.v1", "kind": "candidate-qualification-inputs",
+            "nativeWindows": "pending separate released-input execution", "identities": identities,
+            "sdk": sdk, "entrypoint": entrypoint, "historicalCommit": NATIVE_HISTORICAL_COMMIT,
+            "files": sorted(entries, key=lambda row: row["path"]), "bytes": total}
+        payload = canonical(manifest) + b"\n"
+        (destination / "manifest.json").write_bytes(payload)
+        return {"path": str(destination), "manifestSha256": digest(payload), "files": len(entries), "bytes": total}
+    except BaseException:
+        shutil.rmtree(destination)
+        raise
+
+
+def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, output: Path, owner_read_token: str = "") -> dict:
+    inherited = scrub_credentials()
+    if inherited:
+        raise delivery.DeliveryError("inherited credential aliases are forbidden; use token-free ancestors and stdin")
     candidate, product_head, baseline = map(delivery.sha, (candidate, product_head, baseline))
     scratch = Path(os.environ["TMPDIR"]).resolve(strict=True)
     output = output.resolve()
@@ -181,6 +356,8 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
             or output.is_relative_to(project / "rendered") or output.is_relative_to(project / "setup")
             or output.is_relative_to(project / "templates")):
         raise delivery.DeliveryError("qualification receipt requires a fresh non-product path outside disposable scratch")
+    if output.with_name(output.name + ".native-inputs").exists() or output.with_name(output.name + ".native-inputs").is_symlink():
+        raise delivery.DeliveryError("native qualification inputs require a fresh receipt sibling directory")
     module_source = project / "references/Hexalith.Conversations"
     transport = delivery.Transport()
     report = {"schema": "hexalith.conversations-qualification.v1", "kind": "candidate-qualification", "result": "failed",
@@ -220,7 +397,8 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
                 raise delivery.DeliveryError("released checkout changed after authenticated acquisition")
             if renderer.render(candidate_root, check=True):
                 raise delivery.DeliveryError("committed candidate render is not reproducible from its released contract")
-            subprocess.run([sys.executable, "-I", str(candidate_root / "tools/check_global.py"), "--project-root", str(candidate_root)], check=True)
+            check_global(candidate_root, owner_read_token)
+            owner_read_token = ""
             sys.path.insert(0, str(builds / "Github/lib"))
             import audit_lint, ci_config, ci_dapr_scope, ci_environment, ci_pipeline, expected_state, guard_actions, guard_commitlint, guard_tools, module_preparation, perimeter
             config_path = "rendered/Hexalith.Conversations/.github/hexalith-ci.json"
@@ -307,6 +485,10 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
                 raise delivery.DeliveryError("baseline or tested product head changed; qualification cannot be reused")
             if owned_inventory(expected_state.tree_snapshot(source_git, "HEAD"), perimeter_doc, perimeter) != owned_before:
                 raise delivery.DeliveryError("qualification changed owned state")
+            report["nativeInputs"] = retain_native_inputs(module, builds, output.with_name(output.name + ".native-inputs"),
+                identities={"candidate": candidate, "productHead": product_head, "baselineHead": baseline,
+                    "buildsTag": tag, "buildsCommit": release, "producer": provenance,
+                    "platformCommit": platform_commit, "configurationDigest": digest(config_bytes)})
             report.update(result="passed", authority=authority, producer=provenance, ownedInventory=owned_before,
                           productDiff=differences, outputs=environment.files, nativeWindows="pending separate released-input execution")
     except Exception as error:
@@ -319,15 +501,22 @@ def qualify(project: Path, *, candidate: str, product_head: str, baseline: str, 
 
 
 def main() -> int:
+    inherited = scrub_credentials()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--candidate", required=True)
     parser.add_argument("--product-head", required=True)
     parser.add_argument("--baseline", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--global-check-token-stdin", action="store_true",
+                        help="read the owner read token from a bounded JSON stdin envelope; ancestors must be token-free")
     args = parser.parse_args()
     try:
-        qualify(args.project_root.resolve(), candidate=args.candidate, product_head=args.product_head, baseline=args.baseline, output=args.output)
+        if inherited:
+            raise delivery.DeliveryError("inherited credential aliases are forbidden; use token-free ancestors and stdin")
+        token = read_owner_token(sys.stdin.buffer) if args.global_check_token_stdin else ""
+        qualify(args.project_root.resolve(), candidate=args.candidate, product_head=args.product_head, baseline=args.baseline,
+                output=args.output, owner_read_token=token)
         return 0
     except Exception as error:
         print(delivery.clean(error), file=sys.stderr)
