@@ -100,6 +100,20 @@ def run(arguments, timeout=3600):
     subprocess.run(arguments, cwd=root, check=True, timeout=timeout)
 
 
+def semantic_nuget_audit():
+    audit = subprocess.run(['dotnet', 'package', 'list', '--project', proposal['solution'], '--vulnerable',
+                            '--include-transitive', '--format', 'json', '--no-restore'],
+                           cwd=root, capture_output=True, text=True, timeout=180)
+    audit_json = json.loads(audit.stdout)
+    findings = [package for project in audit_json.get('projects', []) for framework in project.get('frameworks', [])
+                for group in ('topLevelPackages', 'transitivePackages') for package in framework.get(group, [])
+                if package.get('vulnerabilities')]
+    record['nugetAudit'] = {'exit': audit.returncode, 'findings': len(findings),
+                          'errors': bool(audit_json.get('errors') or audit_json.get('error'))}
+    if audit.returncode or findings or record['nugetAudit']['errors'] or not audit_json.get('projects'):
+        raise ValueError('NuGet audit did not pass')
+
+
 def node_runtime():
     filename = 'node-v24.22.3-linux-x64.tar.xz'
     with urlopen('https://nodejs.org/dist/v24.22.3/' + filename, timeout=120) as response:
@@ -283,7 +297,20 @@ try:
             'inMemoryTestRoutingOnly':document, 'deliveredStateFabricated':False,
             'publicationReceipt':'shared-v610-publication-verification.json'}
         phase('released-custom-actions-and-actual-commit-policy', released_product_policy)
-    if record['scope'] == 'tool-tests':
+    if record['scope'] == 'performance-only':
+        record['diagnosticOmittedStages'] = ['unit-projects', 'released-commit-policy',
+            'shared-integration-projects', 'coverage-gate', 'after-unit-tests-hook',
+            'ordinary-integration-tier', 'cold-profiles', 'Dapr-retry-controls']
+        record['performanceScope'] = 'Fresh standalone local job backend; original daily workload/3600s bound, not scheduled acceptance'
+        phase('one-release-package-build', lambda: ci_pipeline.restore_and_build(prepared))
+        phase('semantic-nuget-audit', semantic_nuget_audit)
+        phase('one-shared-environment', lambda: ci_environment.setup_environment(
+            root, solution=proposal['solution'], dapr=proposal['dapr'], browsers=proposal['browsers'],
+            registry=proposal['registry'], npm_workspaces=proposal['npmWorkspaces'],
+            prerequisites=proposal['prerequisites']))
+        phase('nightly-product-workload-local-only', lambda: run(['bash', 'scripts/run-product-nightly.sh', 'daily']))
+        record['status'] = 'passed'
+    elif record['scope'] == 'tool-tests':
         record['diagnosticOmittedStages'] = ['build', 'unit-projects', 'shared-environment',
             'browser-and-package-consumer', 'shared-integration-projects', 'cold-profiles',
             'coverage-gate', 'Dapr-retry-controls', 'nightly-workload', 'NuGet-audit']
@@ -358,18 +385,8 @@ try:
                 if 'run' in step:
                     phase('after-integration-step-' + str(index + 1),
                           lambda body=step['run']: run(['bash', '--noprofile', '--norc', '-e', '-o', 'pipefail', '-c', body], 14400))
+            phase('semantic-nuget-audit', semantic_nuget_audit)
             phase('nightly-product-workload-local-only', lambda: run(['bash', 'scripts/run-product-nightly.sh', 'daily']))
-            audit = subprocess.run(['dotnet', 'package', 'list', '--project', proposal['solution'], '--vulnerable',
-                                    '--include-transitive', '--format', 'json', '--no-restore'],
-                                   cwd=root, capture_output=True, text=True, timeout=180)
-            audit_json = json.loads(audit.stdout)
-            findings = [package for project in audit_json.get('projects', []) for framework in project.get('frameworks', [])
-                        for group in ('topLevelPackages', 'transitivePackages') for package in framework.get(group, [])
-                        if package.get('vulnerabilities')]
-            record['nugetAudit'] = {'exit': audit.returncode, 'findings': len(findings),
-                                    'errors': bool(audit_json.get('errors') or audit_json.get('error'))}
-            if audit.returncode or findings or record['nugetAudit']['errors'] or not audit_json.get('projects'):
-                raise ValueError('NuGet audit did not pass')
         subprocess.run(['git', 'diff', '--exit-code', 'HEAD'], cwd=root, capture_output=True, check=True)
         record['status'] = 'passed'
 except BaseException as error:

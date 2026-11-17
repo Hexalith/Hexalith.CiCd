@@ -1,0 +1,123 @@
+{
+  "kind": "qualification-only",
+  "candidateSha256": "349f938db77dd83ff45e200997b1cba97147c46b1855ec58fd6e2a4b0572eff5",
+  "candidateSource": "_bmad-output/implementation-artifacts/evidence/epic6/6.6/review-pass2/candidate/Hexalith.Projects.Contracts.2.0.0-story66.3.nupkg",
+  "sources": {
+    "Hexalith.McpCli": {
+      "revision": "5008de388c5e37257ca78e48d8afe899cf7aaa2a",
+      "archiveSha256": "b57bc0f646adae70568dd4801e3115bf89f90341fd789b0dc002667d594ebc91"
+    },
+    "Hexalith.Builds": {
+      "revision": "c751d23aa4e73e8f7d74579db26a9fcf1df4c8e5",
+      "archiveSha256": "925c6f5f4745e65bd5ae5f890eb6bdcb57cc142ecfa9db4842356c839723eb1f"
+    }
+  },
+  "commands": [
+    {
+      "name": "historical-candidate-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "references/Hexalith.McpCli/src/Hexalith.McpCli/Hexalith.McpCli.csproj",
+        "-p:UseHexalithProjectReferences=true",
+        "-p:HexalithConversationsFromSource=false",
+        "--configfile",
+        "/tmp/hexalith-job.JAmwavGl/exact-source/NuGet.Config"
+      ],
+      "exitCode": 0,
+      "seconds": 2.363,
+      "logSha256": "aec31d9c73b44a50ef32f73d2dffd68ac5909bce7b33ede62e7f6c5805f999f5"
+    },
+    {
+      "name": "historical-candidate-release-build",
+      "command": [
+        "dotnet",
+        "build",
+        "references/Hexalith.McpCli/src/Hexalith.McpCli/Hexalith.McpCli.csproj",
+        "--no-restore",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1",
+        "--disable-build-servers"
+      ],
+      "exitCode": 0,
+      "seconds": 6.34,
+      "logSha256": "47992ded220211d4cb200fcf781731e3670bb2e15cd268ef5f416534f4238859"
+    },
+    {
+      "name": "historical-candidate-projects-discovery",
+      "command": [
+        "dotnet",
+        "references/Hexalith.McpCli/src/Hexalith.McpCli/bin/Release/net11.0/Hexalith.McpCli.dll",
+        "operations",
+        "projects",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 0.348,
+      "logSha256": "26d95c7dcd9e169114a98e32fa30bbb65ecc0a8230aaef9fb6fe72401ec4cad2"
+    }
+  ],
+  "resolvedPackageIdentities": [
+    "ByteAether.Ulid/1.4.2",
+    "Dapr.Client/1.19.1",
+    "Dapr.Common/1.19.1",
+    "Dapr.Protos/1.19.1",
+    "Google.Api.CommonProtos/2.17.0",
+    "Google.Protobuf/3.36.2",
+    "Grpc.Core.Api/2.85.0",
+    "Grpc.Net.Client/2.85.0",
+    "Grpc.Net.Common/2.85.0",
+    "Grpc.Reflection/2.85.0",
+    "Hexalith.Commons.UniqueIds/3.0.0",
+    "Hexalith.EventStore.Client/5.1.0",
+    "Hexalith.EventStore.Contracts/5.1.0",
+    "Hexalith.Parties.Contracts/3.1.1",
+    "Hexalith.Projects.Contracts/2.0.0-story66.3",
+    "Hexalith.Tenants.Contracts/8.0.0",
+    "Humanizer.Core/3.0.10",
+    "Json.More.Net/3.1.0",
+    "JsonPointer.Net/7.1.0",
+    "JsonSchema.Net/9.7.0",
+    "Microsoft.AspNetCore.DataProtection.Abstractions/11.0.0",
+    "Microsoft.Extensions.AI.Abstractions/11.0.0",
+    "Microsoft.Extensions.Configuration.Binder/11.0.0",
+    "Microsoft.Extensions.Configuration.CommandLine/11.0.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables/11.0.0",
+    "Microsoft.Extensions.Configuration.FileExtensions/11.0.0",
+    "Microsoft.Extensions.Configuration.Json/11.0.0",
+    "Microsoft.Extensions.Configuration.UserSecrets/11.0.0",
+    "Microsoft.Extensions.Configuration/11.0.0",
+    "Microsoft.Extensions.DependencyInjection/11.0.0",
+    "Microsoft.Extensions.Diagnostics/11.0.0",
+    "Microsoft.Extensions.FileProviders.Physical/11.0.0",
+    "Microsoft.Extensions.FileSystemGlobbing/11.0.0",
+    "Microsoft.Extensions.Hosting/11.0.0",
+    "Microsoft.Extensions.Http/11.0.0",
+    "Microsoft.Extensions.Logging.Configuration/11.0.0",
+    "Microsoft.Extensions.Logging.Console/11.0.0",
+    "Microsoft.Extensions.Logging.Debug/11.0.0",
+    "Microsoft.Extensions.Logging.EventLog/11.0.0",
+    "Microsoft.Extensions.Logging.EventSource/11.0.0",
+    "Microsoft.Extensions.Logging/11.0.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions/11.0.0",
+    "ModelContextProtocol.Core/2.4.0",
+    "ModelContextProtocol/2.4.0",
+    "System.CommandLine/3.0.0",
+    "System.Diagnostics.EventLog/11.0.0"
+  ],
+  "restoredCandidate": {
+    "sha512": "9mBIjqP7y9JjHiFnm65/vxqb1WbmbHg69KmjrWRXblKB7VwW2nYpS2bV1SAcPH+KbmmR37yZeNqqbu1wOZHVDA==",
+    "type": "package",
+    "path": "hexalith.projects.contracts/2.0.0-story66.3",
+    "files": [
+      ".nupkg.metadata",
+      "README.md",
+      "hexalith.projects.contracts.2.0.0-story66.3.nupkg.sha512",
+      "hexalith.projects.contracts.nuspec",
+      "lib/net11.0/Hexalith.Projects.Contracts.dll"
+    ]
+  },
+  "allRequestedCommandsPassed": true
+}

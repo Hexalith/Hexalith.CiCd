@@ -1,5 +1,6 @@
 """Read visible NuGet API-key metadata in a new tab; never read key values."""
 import base64
+import argparse
 import datetime
 import json
 from pathlib import Path
@@ -7,7 +8,10 @@ import subprocess
 
 
 HERE = Path(__file__).resolve().parent
-report = HERE / 'nuget-legacy-key-fresh-ui-01.json'
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--attempt', type=int, default=1)
+arguments = parser.parse_args()
+report = HERE / ('nuget-legacy-key-fresh-ui-' + str(arguments.attempt).zfill(2) + '.json')
 assert not report.exists()
 code = r'''[Console]::OutputEncoding=[System.Text.Encoding]::UTF8
 $ErrorActionPreference='Stop'

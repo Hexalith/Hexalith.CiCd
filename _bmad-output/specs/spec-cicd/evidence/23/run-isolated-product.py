@@ -16,6 +16,7 @@ import subprocess
 import time
 import uuid
 import xml.etree.ElementTree as ET
+from performance_checkpoint import read_checkpoint
 
 
 HERE = Path(__file__).resolve().parent
@@ -25,15 +26,15 @@ SCRATCH = Path(os.environ['TMPDIR']).resolve(strict=True)
 if (SCRATCH.parent != Path('/tmp') or not SCRATCH.name.startswith('hexalith-job.')
         or SCRATCH.stat().st_uid != os.getuid() or stat.S_IMODE(SCRATCH.stat().st_mode) != 0o700):
     raise ValueError('Use the current private run-with-temp workspace')
-REVISION = 'cca7ad07211967e604b8f7f33aa21dbbb853ec10'
-TREE = '9472f47e23de188363699be3c5e3c074fb3de68e'
+REVISION = 'a1ad5f5bb531516a49f91166a2d2306d20ef7570'
+TREE = 'e04a10e3f6249f9c6b8e5c1c6685a1f2af11c0c3'
 PRODUCT_BASE = 'ac7b6ba9edd88c197701fa1d1503cf2743ee022a'
 BUILDS = 'a1e0c310b1f1a50d78e6132890fae6bcba769f6d'
 SDK = 'mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea'
 DIND = 'docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654'
 NONCE = uuid.uuid4().hex
 MODE = os.environ.get('S23_MODE', 'full')
-if MODE not in ('full', 'unit-ui', 'prerequisites', 'cold-integration', 'cold-rest', 'tool-tests', 'unit-hook'):
+if MODE not in ('full', 'unit-ui', 'prerequisites', 'cold-integration', 'cold-rest', 'tool-tests', 'unit-hook', 'performance-only'):
     raise ValueError('Unsupported local workload scope')
 CONTAINER_ROOT = Path('/work/s23')
 PACKET = HERE / ('local-isolated-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + NONCE[:8])
@@ -251,6 +252,13 @@ def safe_results(raw):
                 target.chmod(0o600)
                 outputs.append(name)
     record['supportSafeArtifacts'] = outputs
+    checkpoint = read_checkpoint(SCRATCH)
+    if checkpoint is not None:
+        target = destination / 'performance-progress.json'
+        target.write_text(json.dumps(checkpoint, indent=2) + '\n')
+        target.chmod(0o600)
+        outputs.append(target.name)
+        record['performanceCheckpoint'] = checkpoint
     summaries = []
     for path in (SCRATCH / 'Hexalith.Tenants/TestResults').rglob('*.trx'):
         if path.is_symlink():
@@ -317,6 +325,7 @@ try:
     record['orchestratorSha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     shutil.copyfile(Path(__file__), PACKET / 'run-isolated-product.py')
     shutil.copyfile(SCRATCH / 'worker.py', PACKET / 'run-isolated-product-worker.py')
+    shutil.copyfile(HERE / 'performance_checkpoint.py', PACKET / 'performance_checkpoint.py')
     note('Exact source projections ready; no nested submodules initialized')
     command(['docker', 'pull', DIND], timeout=600)
     note('Exact official DinD image available')

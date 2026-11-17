@@ -1,0 +1,72 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "ffeab94890a04c8fba403a0ef8808505",
+  "source": "a1ad5f5bb531516a49f91166a2d2306d20ef7570",
+  "tree": "e04a10e3f6249f9c6b8e5c1c6685a1f2af11c0c3",
+  "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "sharedPublicationReceipt": "shared-v610-publication-verification.json",
+  "deliveredBaselineVerified": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "4c307bdc59068cbf92348073e9defa3aa1820174772a6f395e30f813dedb0313"
+    },
+    {
+      "kind": "worker",
+      "id": "2948c1f5e5440f66bc02f7d5312a7f984383f48f5b0f008a147a3c9fd03cab95"
+    }
+  ],
+  "startedAt": 1794901932.765673,
+  "events": [
+    {
+      "at": 1794901951.6015496,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794901952.599789,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794901954.2089913,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794901968.2125015,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794901970.212998,
+      "message": "Worker phase: one-release-package-build/running"
+    }
+  ],
+  "cleanup": [],
+  "privateScratchPath": "/tmp/hexalith-job.0x1AFplc",
+  "scope": "performance-only",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+  },
+  "workerSha256": "6714d6d87e877efce5aaf48a211f561dbd9b3c6d58f6803a8a2529e3d241ef39",
+  "orchestratorSha256": "80b7af79412bad942d2afa4a18bf16cf1a5fddb675417e51a0794a3b0aa6e06b",
+  "innerDaemonId": "\"cfbd0dcd-6286-4ba2-9ed0-84406433144c\""
+}

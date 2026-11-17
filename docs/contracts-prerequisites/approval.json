@@ -1,0 +1,41 @@
+{
+  "recorded_at": "2026-11-17T07:01:08.520609+00:00",
+  "user_response": "*yes",
+  "status": "approved",
+  "contract": "_bmad-output/implementation-artifacts/evidence/projects-package-compatibility-20261116/approved-resume-20261117/prerequisite-publisher-gate-contract.json",
+  "scope": {
+    "name": "fixed-contracts-prerequisite-publication",
+    "source_delivery": "qualified closed CiCd owner mechanism only; no module workflow edits directly",
+    "publisher_identity": "existing repository/release.yml/production OIDC identity",
+    "artifacts": "only exact approved archive and coordinate for each fixed owner; no repacking",
+    "mandatory_checks": [
+      "explicit approved source/coordinate/payload hashes",
+      "owner App already covers fixed repository with existing permissions",
+      "package-only Release qualification and exact package consumers",
+      "EventStore full1704 Contracts cases and14-family API gate",
+      "Projects207 Contracts cases,119-source-file provenance and strict pinnedMcp restore/build/discovery",
+      "verified named inventory approver capacity",
+      "approved feed coordinate absence and bounded exact archive transport",
+      "single-file NuGet upload via existing OIDC; public signature and all payload entries verified"
+    ],
+    "full_application_CI_and_G6": "remain required for full application releases and post-publication correction acceptance; would not be preconditions of this new prerequisite-only upload",
+    "native_B4_V1": "remain unqualified and required for native runtime/main acceptance; no routing activation, deployment or tracking advance",
+    "no_new_feed_credentials_repository_grants_or_author_signer": true,
+    "no_full_family_or_container_publication": true
+  },
+  "coordinates": [
+    {
+      "id": "Hexalith.EventStore.Contracts",
+      "version": "5.3.0",
+      "source": "0be0c922883d4ea61b18e843e24472162261d934",
+      "archive_sha256": "1c3bdabc4778467d74b468a47f0413f5f85272539d9969891036c8865f6949c3"
+    },
+    {
+      "id": "Hexalith.Projects.Contracts",
+      "version": "2.0.0-story66.3",
+      "source": "5b4bdeacde318a1d948db7ef76843df0c548f084",
+      "archive_sha256": "349f938db77dd83ff45e200997b1cba97147c46b1855ec58fd6e2a4b0572eff5"
+    }
+  ],
+  "interpretation": "Explicit approval of prerequisite-only gate scope; normal full-release gates preserved. No credential or repository grant expansion."
+}
