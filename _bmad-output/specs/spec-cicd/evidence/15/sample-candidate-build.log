@@ -1,0 +1,49 @@
+["dotnet", "restore", "Samples/Hexalith.Sample/solutions/Hexalith.Sample.slnx", "-noAutoResponse", "-nodeReuse:false", "-p:Configuration=Release", "-p:UseHexalithProjectReferences=false", "-p:MinVerVersionOverride=1.0.0", "-p:UseSharedCompilation=false", "-p:RestoreConfigFile=/tmp/hexalith-job.ItV3HmjY/builds/NuGet.ci.Config", "-warnaserror"]
+  Determining projects to restore...
+  Restored /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/src/Hexalith.Sample/Hexalith.Sample.csproj (in 634 ms).
+  Restored /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.HookTests/Hexalith.Sample.HookTests.csproj (in 1.4 sec).
+  Restored /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.WindowsTests/Hexalith.Sample.WindowsTests.csproj (in 1.4 sec).
+  Restored /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.IntegrationTests/Hexalith.Sample.IntegrationTests.csproj (in 1.4 sec).
+  Restored /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.UnitTests/Hexalith.Sample.UnitTests.csproj (in 1.4 sec).
+  Restored /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.MacOSTests/Hexalith.Sample.MacOSTests.csproj (in 1.4 sec).
+["dotnet", "build", "Samples/Hexalith.Sample/solutions/Hexalith.Sample.slnx", "--no-restore", "-m:1", "-noAutoResponse", "-nodeReuse:false", "-p:Configuration=Release", "-p:UseHexalithProjectReferences=false", "-p:MinVerVersionOverride=1.0.0", "-p:UseSharedCompilation=false", "-p:RestoreConfigFile=/tmp/hexalith-job.ItV3HmjY/builds/NuGet.ci.Config", "-warnaserror"]
+  Hexalith.Sample -> /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/src/Hexalith.Sample/bin/Release/net11.0/Hexalith.Sample.dll
+  Hexalith.Sample.HookTests -> /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.HookTests/bin/Release/net11.0/Hexalith.Sample.HookTests.dll
+  Hexalith.Sample.IntegrationTests -> /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.IntegrationTests/bin/Release/net11.0/Hexalith.Sample.IntegrationTests.dll
+  Hexalith.Sample.MacOSTests -> /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.MacOSTests/bin/Release/net11.0/Hexalith.Sample.MacOSTests.dll
+  Hexalith.Sample.UnitTests -> /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.UnitTests/bin/Release/net11.0/Hexalith.Sample.UnitTests.dll
+  Hexalith.Sample.WindowsTests -> /tmp/hexalith-job.ItV3HmjY/builds/Samples/Hexalith.Sample/test/Hexalith.Sample.WindowsTests/bin/Release/net11.0/Hexalith.Sample.WindowsTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:14.40
+["dotnet", "Samples/Hexalith.Sample/test/Hexalith.Sample.UnitTests/bin/Release/net11.0/Hexalith.Sample.UnitTests.dll", "-failSkips"]
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 (64-bit .NET 11.0.0)
+  Discovering: Hexalith.Sample.UnitTests
+  Discovered:  Hexalith.Sample.UnitTests
+  Starting:    Hexalith.Sample.UnitTests
+  Finished:    Hexalith.Sample.UnitTests (ID = 'b4a106d23a05e7d12f373ef65d68959e521d124a4272d9e6d61a832c3c9b3583')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Sample.UnitTests  Total: 2, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 0.100s
+["dotnet", "Samples/Hexalith.Sample/test/Hexalith.Sample.HookTests/bin/Release/net11.0/Hexalith.Sample.HookTests.dll", "-failSkips"]
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 (64-bit .NET 11.0.0)
+  Discovering: Hexalith.Sample.HookTests
+  Discovered:  Hexalith.Sample.HookTests
+  Starting:    Hexalith.Sample.HookTests
+  Finished:    Hexalith.Sample.HookTests (ID = 'a5e1a6a8ac3e4e104e42f6d86197ca5d1f6052fb25dbb3cd6080c4d027d7624c')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Sample.HookTests  Total: 1, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 0.107s
+["dotnet", "Samples/Hexalith.Sample/test/Hexalith.Sample.IntegrationTests/bin/Release/net11.0/Hexalith.Sample.IntegrationTests.dll", "-failSkips"]
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 (64-bit .NET 11.0.0)
+  Discovering: Hexalith.Sample.IntegrationTests
+  Discovered:  Hexalith.Sample.IntegrationTests
+  Starting:    Hexalith.Sample.IntegrationTests
+  Finished:    Hexalith.Sample.IntegrationTests (ID = 'adb6a2f15007a762e5b5d6015ee64ba9dd50dafd3e637598df6f90d576d86c48')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.Sample.IntegrationTests  Total: 1, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 0.104s
+["dotnet", "Samples/Hexalith.Sample/test/Hexalith.Sample.MacOSTests/bin/Release/net11.0/Hexalith.Sample.MacOSTests.dll", "-list", "tests"]
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 (64-bit .NET 11.0.0)
+
+Hexalith.Sample.MacOSTests.CalculatorTests.UsesTheProductOnMacOS

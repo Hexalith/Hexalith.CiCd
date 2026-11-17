@@ -1,0 +1,13 @@
+Running: git clone --shared --quiet /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli /tmp/hexalith-job.CBYaxrPg/module
+Running: dotnet restore tests/Hexalith.McpCli.AppHost/Hexalith.McpCli.AppHost.csproj -p:UseHexalithProjectReferences=false -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -warnaserror
+  Determining projects to restore...
+  Restored /tmp/hexalith-job.CBYaxrPg/module/tests/Hexalith.McpCli.AppHost/Hexalith.McpCli.AppHost.csproj (in 2.43 sec).
+Running: dotnet build tests/Hexalith.McpCli.AppHost/Hexalith.McpCli.AppHost.csproj --no-restore --configuration Release -p:UseHexalithProjectReferences=false -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -warnaserror
+  Hexalith.McpCli.AppHost -> /tmp/hexalith-job.CBYaxrPg/module/tests/Hexalith.McpCli.AppHost/bin/Release/net11.0/Hexalith.McpCli.AppHost.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.63
+AppHost source/API compile qualification passed; no lifecycle or live acceptance claimed.

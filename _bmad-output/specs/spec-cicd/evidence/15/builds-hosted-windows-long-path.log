@@ -1,0 +1,293 @@
+﻿2026-11-16T17:58:07.4550639Z Current runner version: '2.338.2'
+2026-11-16T17:58:07.4884250Z ##[group]Runner Image Provisioner
+2026-11-16T17:58:07.4885213Z Hosted Compute Agent
+2026-11-16T17:58:07.4885805Z Version: 20261103.629
+2026-11-16T17:58:07.4886438Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-16T17:58:07.4887212Z Build Date: 2026-11-03T17:26:59Z
+2026-11-16T17:58:07.4887918Z Worker ID: {e361d1e7-97b0-4940-95a6-a7834636709f}
+2026-11-16T17:58:07.4888639Z Region: eastus
+2026-11-16T17:58:07.4889142Z Cloud: Azure
+2026-11-16T17:58:07.4889628Z ##[endgroup]
+2026-11-16T17:58:07.4890991Z ##[group]Operating System
+2026-11-16T17:58:07.4891612Z Microsoft Windows Server 2025
+2026-11-16T17:58:07.4892165Z 10.0.26100
+2026-11-16T17:58:07.4892665Z Datacenter
+2026-11-16T17:58:07.4893140Z ##[endgroup]
+2026-11-16T17:58:07.4893629Z ##[group]Runner Image
+2026-11-16T17:58:07.4894182Z Image: windows-2025-vs2026
+2026-11-16T17:58:07.4894785Z Version: 20261103.298.1
+2026-11-16T17:58:07.4896249Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-16T17:58:07.4897847Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-16T17:58:07.4898814Z ##[endgroup]
+2026-11-16T17:58:07.4899843Z ##[group]GITHUB_TOKEN Permissions
+2026-11-16T17:58:07.4902086Z Contents: read
+2026-11-16T17:58:07.4902640Z Metadata: read
+2026-11-16T17:58:07.4903246Z ##[endgroup]
+2026-11-16T17:58:07.4905548Z Secret source: Actions
+2026-11-16T17:58:07.4906522Z Cache mode: write
+2026-11-16T17:58:07.4907457Z Prepare workflow directory
+2026-11-16T17:58:07.6207668Z Prepare all required actions
+2026-11-16T17:58:07.6304105Z Getting action download info
+2026-11-16T17:58:07.8565523Z Download action repository 'Hexalith/Hexalith.Builds@86f184164caf0733cee86c3b63ad904c96bc0934' (SHA:86f184164caf0733cee86c3b63ad904c96bc0934)
+2026-11-16T17:58:12.7654648Z Getting action download info
+2026-11-16T17:58:12.8818715Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-16T17:58:12.9784661Z Download action repository 'actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73' (SHA:0f4a354dd5547a28c70b7853dbd95d5b67886e73)
+2026-11-16T17:58:13.2801553Z Complete job name: Sample Windows tests
+2026-11-16T17:58:13.5029078Z ##[group]Run Hexalith/Hexalith.Builds/Github/prepare@86f184164caf0733cee86c3b63ad904c96bc0934
+2026-11-16T17:58:13.5031042Z with:
+2026-11-16T17:58:13.5031998Z   solution: Samples/Hexalith.Sample/solutions/Hexalith.Sample.slnx
+2026-11-16T17:58:13.5033144Z   submodules: []
+2026-11-16T17:58:13.5033960Z   global-json: Samples/Hexalith.Sample/global.json
+2026-11-16T17:58:13.5035140Z ##[endgroup]
+2026-11-16T17:58:13.5116740Z ##[start-action display=Enable long Git paths on disposable Windows runners;id=__self.__run]
+2026-11-16T17:58:13.5333578Z ##[group]Run git config --global core.longpaths true
+2026-11-16T17:58:13.5334848Z [36;1mgit config --global core.longpaths true[0m
+2026-11-16T17:58:13.5336141Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-16T17:58:13.5337551Z [36;1m$configured = git config --global --type=bool --get core.longpaths[0m
+2026-11-16T17:58:13.5338975Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-16T17:58:13.5341125Z [36;1mif ($configured -ne 'true') { throw 'Windows checkout requires core.longpaths=true.' }[0m
+2026-11-16T17:58:13.6108140Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-16T17:58:13.6109447Z ##[endgroup]
+2026-11-16T17:58:14.5857631Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=1073]
+2026-11-16T17:58:14.5861489Z ##[start-action display=Checkout module;id=__self.__actions_checkout]
+2026-11-16T17:58:14.6092489Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-16T17:58:14.6093002Z with:
+2026-11-16T17:58:14.6093271Z   submodules: false
+2026-11-16T17:58:14.6093566Z   persist-credentials: false
+2026-11-16T17:58:14.6095931Z   repository: Hexalith/Hexalith.Builds
+2026-11-16T17:58:14.6098957Z   token: ***
+2026-11-16T17:58:14.6099219Z   ssh-strict: true
+2026-11-16T17:58:14.6099480Z   ssh-user: git
+2026-11-16T17:58:14.6099748Z   clean: true
+2026-11-16T17:58:14.6100050Z   sparse-checkout-cone-mode: true
+2026-11-16T17:58:14.6100396Z   fetch-depth: 1
+2026-11-16T17:58:14.6100656Z   fetch-tags: false
+2026-11-16T17:58:14.6100929Z   show-progress: true
+2026-11-16T17:58:14.6101194Z   lfs: false
+2026-11-16T17:58:14.6101448Z   set-safe-directory: true
+2026-11-16T17:58:14.6101760Z   allow-unsafe-pr-checkout: false
+2026-11-16T17:58:14.6102077Z ##[endgroup]
+2026-11-16T17:58:14.7575357Z Syncing repository: Hexalith/Hexalith.Builds
+2026-11-16T17:58:14.7576905Z ##[group]Getting Git version info
+2026-11-16T17:58:14.7577425Z Working directory is 'D:\a\Hexalith.Builds\Hexalith.Builds'
+2026-11-16T17:58:14.8576342Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-16T17:58:14.8939114Z git version 2.56.0.windows.4
+2026-11-16T17:58:14.8987993Z ##[endgroup]
+2026-11-16T17:58:14.8998128Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\20cc6329-9810-44b5-82ae-0cf36a612585\.gitconfig'
+2026-11-16T17:58:14.9018944Z Temporarily overriding HOME='D:\a\_temp\20cc6329-9810-44b5-82ae-0cf36a612585' before making global git config changes
+2026-11-16T17:58:14.9019988Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-16T17:58:14.9029832Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Hexalith.Builds\Hexalith.Builds
+2026-11-16T17:58:14.9414531Z Deleting the contents of 'D:\a\Hexalith.Builds\Hexalith.Builds'
+2026-11-16T17:58:14.9419703Z ##[group]Determining repository object format
+2026-11-16T17:58:14.9421942Z ##[endgroup]
+2026-11-16T17:58:14.9422512Z ##[group]Initializing the repository
+2026-11-16T17:58:14.9430622Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Hexalith.Builds\Hexalith.Builds
+2026-11-16T17:58:15.0281873Z Initialized empty Git repository in D:/a/Hexalith.Builds/Hexalith.Builds/.git/
+2026-11-16T17:58:15.0339970Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/Hexalith/Hexalith.Builds
+2026-11-16T17:58:15.1120534Z ##[endgroup]
+2026-11-16T17:58:15.1124798Z ##[group]Disabling automatic garbage collection
+2026-11-16T17:58:15.1129859Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-16T17:58:15.1515887Z ##[endgroup]
+2026-11-16T17:58:15.1516793Z ##[group]Setting up auth
+2026-11-16T17:58:15.1517254Z Removing SSH command configuration
+2026-11-16T17:58:15.1527832Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-16T17:58:15.1911521Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-16T17:58:16.7386106Z Removing HTTP extra header
+2026-11-16T17:58:16.7397020Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-16T17:58:16.7821791Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-16T17:58:17.3629341Z Removing includeIf entries pointing to credentials config files
+2026-11-16T17:58:17.3641512Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-16T17:58:17.4028190Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-16T17:58:17.9578493Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-16T17:58:17.9982200Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git.path D:\a\_temp\git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:18.0376841Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git/worktrees/*.path D:\a\_temp\git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:18.0813234Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:18.1216837Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:18.1642000Z ##[endgroup]
+2026-11-16T17:58:18.1642512Z ##[group]Fetching the repository
+2026-11-16T17:58:18.1643443Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +86f184164caf0733cee86c3b63ad904c96bc0934:refs/remotes/origin/main
+2026-11-16T17:58:20.1873614Z From https://github.com/Hexalith/Hexalith.Builds
+2026-11-16T17:58:20.1874582Z  * [new ref]         86f184164caf0733cee86c3b63ad904c96bc0934 -> origin/main
+2026-11-16T17:58:20.1936260Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/main
+2026-11-16T17:58:20.2415670Z   origin/main
+2026-11-16T17:58:20.2468562Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/main
+2026-11-16T17:58:20.2930871Z 86f184164caf0733cee86c3b63ad904c96bc0934
+2026-11-16T17:58:20.3008277Z ##[endgroup]
+2026-11-16T17:58:20.3008913Z ##[group]Determining the checkout info
+2026-11-16T17:58:20.3009613Z ##[endgroup]
+2026-11-16T17:58:20.3018839Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-16T17:58:20.3537140Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-16T17:58:20.3975581Z ##[group]Checking out the ref
+2026-11-16T17:58:20.3985663Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2026-11-16T17:58:21.4672329Z Updating files:  89% (3285/3665)
+2026-11-16T17:58:21.4796552Z Updating files:  90% (3299/3665)
+2026-11-16T17:58:21.4888196Z Updating files:  91% (3336/3665)
+2026-11-16T17:58:21.4973398Z Updating files:  92% (3372/3665)
+2026-11-16T17:58:21.5060617Z Updating files:  93% (3409/3665)
+2026-11-16T17:58:21.5149664Z Updating files:  94% (3446/3665)
+2026-11-16T17:58:21.5232593Z Updating files:  95% (3482/3665)
+2026-11-16T17:58:21.5324499Z Updating files:  96% (3519/3665)
+2026-11-16T17:58:21.5420118Z Updating files:  97% (3556/3665)
+2026-11-16T17:58:21.5514796Z Updating files:  98% (3592/3665)
+2026-11-16T17:58:21.5629189Z Updating files:  99% (3629/3665)
+2026-11-16T17:58:21.5629713Z Updating files: 100% (3665/3665)
+2026-11-16T17:58:21.5630120Z Updating files: 100% (3665/3665), done.
+2026-11-16T17:58:21.5815648Z Switched to a new branch 'main'
+2026-11-16T17:58:21.5833855Z branch 'main' set up to track 'origin/main'.
+2026-11-16T17:58:21.5913010Z ##[endgroup]
+2026-11-16T17:58:21.6958670Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-16T17:58:21.7418929Z 86f184164caf0733cee86c3b63ad904c96bc0934
+2026-11-16T17:58:21.7469443Z ##[group]Removing auth
+2026-11-16T17:58:21.7469865Z Removing SSH command configuration
+2026-11-16T17:58:21.7479221Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-16T17:58:21.7894525Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-16T17:58:22.3626363Z Removing HTTP extra header
+2026-11-16T17:58:22.3639959Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-16T17:58:22.4052281Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-16T17:58:22.9877516Z Removing includeIf entries pointing to credentials config files
+2026-11-16T17:58:22.9886538Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-16T17:58:23.0247046Z includeif.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git.path
+2026-11-16T17:58:23.0248422Z includeif.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git/worktrees/*.path
+2026-11-16T17:58:23.0248969Z includeif.gitdir:/github/workspace/.git.path
+2026-11-16T17:58:23.0249380Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-16T17:58:23.0295493Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git.path
+2026-11-16T17:58:23.0641340Z D:\a\_temp\git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:23.0692391Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git.path D\:\\a\\_temp\\git\-credentials\-580e6450\-1b7b\-495e\-842f\-9d0d50be47ea\.config
+2026-11-16T17:58:23.1101709Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git/worktrees/*.path
+2026-11-16T17:58:23.1445158Z D:\a\_temp\git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:23.1489401Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/Hexalith.Builds/Hexalith.Builds/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-580e6450\-1b7b\-495e\-842f\-9d0d50be47ea\.config
+2026-11-16T17:58:23.1889616Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-16T17:58:23.2247766Z /github/runner_temp/git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:23.2311240Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-580e6450\-1b7b\-495e\-842f\-9d0d50be47ea\.config
+2026-11-16T17:58:23.2749703Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-16T17:58:23.3096623Z /github/runner_temp/git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config
+2026-11-16T17:58:23.3142019Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-580e6450\-1b7b\-495e\-842f\-9d0d50be47ea\.config
+2026-11-16T17:58:23.3530872Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-16T17:58:23.9082304Z Removing credentials config 'D:\a\_temp\git-credentials-580e6450-1b7b-495e-842f-9d0d50be47ea.config'
+2026-11-16T17:58:23.9095619Z ##[endgroup]
+2026-11-16T17:58:23.9252047Z ##[end-action id=__self.__actions_checkout;outcome=success;conclusion=success;duration_ms=9339]
+2026-11-16T17:58:23.9257181Z ##[start-action display=Validate Linux configuration and direct dependencies;id=__self.linux]
+2026-11-16T17:58:23.9265510Z ##[end-action id=__self.linux;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-16T17:58:23.9284476Z ##[start-action display=Validate platform paths and direct dependencies;id=__self.__run_2]
+2026-11-16T17:58:23.9433857Z ##[group]Run & "$env:GITHUB_ACTION_PATH/prepare_windows.ps1" -Phase Validate
+2026-11-16T17:58:23.9434380Z [36;1m& "$env:GITHUB_ACTION_PATH/prepare_windows.ps1" -Phase Validate[0m
+2026-11-16T17:58:23.9506826Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-16T17:58:23.9507177Z env:
+2026-11-16T17:58:23.9507480Z   CI_PREPARE_SOLUTION: Samples/Hexalith.Sample/solutions/Hexalith.Sample.slnx
+2026-11-16T17:58:23.9507942Z   CI_PREPARE_GLOBAL_JSON: Samples/Hexalith.Sample/global.json
+2026-11-16T17:58:23.9508254Z   CI_PREPARE_SUBMODULES: 
+2026-11-16T17:58:23.9508451Z ##[endgroup]
+2026-11-16T17:58:24.5232820Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=594]
+2026-11-16T17:58:24.5236862Z ##[start-action display=Set up Linux module SDK;id=__self.__actions_setup-dotnet]
+2026-11-16T17:58:24.5246075Z ##[end-action id=__self.__actions_setup-dotnet;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-16T17:58:24.5248161Z ##[start-action display=Set up platform module SDK;id=__self.__actions_setup-dotnet_2]
+2026-11-16T17:58:24.5432263Z ##[group]Run actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73
+2026-11-16T17:58:24.5432729Z with:
+2026-11-16T17:58:24.5433064Z   global-json-file: Samples/Hexalith.Sample/global.json
+2026-11-16T17:58:24.5433466Z   skip-lts-prepass: false
+2026-11-16T17:58:24.5433766Z   cache: false
+2026-11-16T17:58:24.5434027Z ##[endgroup]
+2026-11-16T17:58:24.8281214Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & 'D:\a\_actions\actions\setup-dotnet\0f4a354dd5547a28c70b7853dbd95d5b67886e73\externals\install-dotnet.ps1' -SkipNonVersionedFiles -Runtime dotnet -Channel LTS
+2026-11-16T17:58:27.0054796Z dotnet-install: Downloaded file https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.15/dotnet-runtime-10.0.15-win-x64.zip size is 36980907 bytes.
+2026-11-16T17:58:27.0057797Z dotnet-install: Either downloaded or local package size can not be measured. One of them may be corrupted.
+2026-11-16T17:58:27.0088336Z dotnet-install: Extracting the archive.
+2026-11-16T17:58:28.3878924Z dotnet-install: Note that the script does not ensure your Windows version is supported during the installation.
+2026-11-16T17:58:28.3885059Z dotnet-install: To check the list of supported versions, go to https://learn.microsoft.com/dotnet/core/install/windows#supported-versions
+2026-11-16T17:58:28.3892073Z dotnet-install: Installed version is 10.0.15
+2026-11-16T17:58:28.3898221Z dotnet-install: Installation finished
+2026-11-16T17:58:28.5571322Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & 'D:\a\_actions\actions\setup-dotnet\0f4a354dd5547a28c70b7853dbd95d5b67886e73\externals\install-dotnet.ps1' -SkipNonVersionedFiles -Channel 11.0.1xx
+2026-11-16T17:58:37.8929843Z dotnet-install: Downloaded file https://builds.dotnet.microsoft.com/dotnet/Sdk/11.0.100/dotnet-sdk-11.0.100-win-x64.tar.gz size is 257619451 bytes.
+2026-11-16T17:58:37.8935966Z dotnet-install: Either downloaded or local package size can not be measured. One of them may be corrupted.
+2026-11-16T17:58:37.8962996Z dotnet-install: Extracting the archive.
+2026-11-16T17:58:53.6751070Z dotnet-install: Note that the script does not ensure your Windows version is supported during the installation.
+2026-11-16T17:58:53.6757556Z dotnet-install: To check the list of supported versions, go to https://learn.microsoft.com/dotnet/core/install/windows#supported-versions
+2026-11-16T17:58:53.6765352Z dotnet-install: Installed version is 11.0.100
+2026-11-16T17:58:53.6773364Z dotnet-install: Installation finished
+2026-11-16T17:58:53.7310146Z ##[end-action id=__self.__actions_setup-dotnet_2;outcome=success;conclusion=success;duration_ms=29206]
+2026-11-16T17:58:53.7314800Z ##[start-action display=Restore and build Linux module;id=__self.build]
+2026-11-16T17:58:53.7319129Z ##[end-action id=__self.build;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-16T17:58:53.7321536Z ##[start-action display=Prepare Linux environment;id=__self.__selfRepository]
+2026-11-16T17:58:53.7326112Z ##[end-action id=__self.__selfRepository;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-16T17:58:53.7329568Z ##[start-action display=Initialize direct dependencies and build platform module;id=__self.__run_3]
+2026-11-16T17:58:53.7476598Z ##[group]Run & "$env:GITHUB_ACTION_PATH/prepare_windows.ps1" -Phase Build
+2026-11-16T17:58:53.7477156Z [36;1m& "$env:GITHUB_ACTION_PATH/prepare_windows.ps1" -Phase Build[0m
+2026-11-16T17:58:53.7617427Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-16T17:58:53.7617795Z env:
+2026-11-16T17:58:53.7618006Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-11-16T17:58:53.7618406Z   CI_PREPARE_SOLUTION: Samples/Hexalith.Sample/solutions/Hexalith.Sample.slnx
+2026-11-16T17:58:53.7618876Z   CI_PREPARE_GLOBAL_JSON: Samples/Hexalith.Sample/global.json
+2026-11-16T17:58:53.7619196Z   CI_PREPARE_SUBMODULES: 
+2026-11-16T17:58:53.7619400Z ##[endgroup]
+2026-11-16T17:58:56.6853649Z   Determining projects to restore...
+2026-11-16T17:59:00.2661687Z   Restored D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\src\Hexalith.Sample\Hexalith.Sample.csproj (in 2.37 sec).
+2026-11-16T17:59:02.9565135Z   Restored D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.UnitTests\Hexalith.Sample.UnitTests.csproj (in 2.69 sec).
+2026-11-16T17:59:02.9569263Z   Restored D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.WindowsTests\Hexalith.Sample.WindowsTests.csproj (in 5.78 sec).
+2026-11-16T17:59:02.9572490Z   Restored D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.HookTests\Hexalith.Sample.HookTests.csproj (in 5.68 sec).
+2026-11-16T17:59:02.9574893Z   Restored D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.MacOSTests\Hexalith.Sample.MacOSTests.csproj (in 5.78 sec).
+2026-11-16T17:59:03.0076756Z   Restored D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.IntegrationTests\Hexalith.Sample.IntegrationTests.csproj (in 8 ms).
+2026-11-16T17:59:09.6082220Z   Hexalith.Sample -> D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\src\Hexalith.Sample\bin\Release\net11.0\Hexalith.Sample.dll
+2026-11-16T17:59:11.8633919Z   Hexalith.Sample.IntegrationTests -> D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.IntegrationTests\bin\Release\net11.0\Hexalith.Sample.IntegrationTests.dll
+2026-11-16T17:59:11.8715924Z   Hexalith.Sample.MacOSTests -> D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.MacOSTests\bin\Release\net11.0\Hexalith.Sample.MacOSTests.dll
+2026-11-16T17:59:11.9132597Z   Hexalith.Sample.UnitTests -> D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.UnitTests\bin\Release\net11.0\Hexalith.Sample.UnitTests.dll
+2026-11-16T17:59:12.8965917Z   Hexalith.Sample.HookTests -> D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.HookTests\bin\Release\net11.0\Hexalith.Sample.HookTests.dll
+2026-11-16T17:59:12.9461972Z   Hexalith.Sample.WindowsTests -> D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.WindowsTests\bin\Release\net11.0\Hexalith.Sample.WindowsTests.dll
+2026-11-16T17:59:12.9466322Z 
+2026-11-16T17:59:12.9473408Z Build succeeded.
+2026-11-16T17:59:12.9477331Z     0 Warning(s)
+2026-11-16T17:59:12.9478094Z     0 Error(s)
+2026-11-16T17:59:12.9479457Z 
+2026-11-16T17:59:12.9479981Z Time Elapsed 00:00:09.23
+2026-11-16T17:59:13.1092260Z ##[end-action id=__self.__run_3;outcome=success;conclusion=success;duration_ms=19376]
+2026-11-16T17:59:13.1337703Z Prepare all required actions
+2026-11-16T17:59:13.1403924Z ##[group]Run ./.github/actions/sample-windows
+2026-11-16T17:59:13.1404416Z env:
+2026-11-16T17:59:13.1404737Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-11-16T17:59:13.1405179Z ##[endgroup]
+2026-11-16T17:59:13.1409987Z ##[start-action display=Run built sample WindowsTests;id=__self_2.__run]
+2026-11-16T17:59:13.4241545Z ##[group]Run dotnet test --project test/Hexalith.Sample.WindowsTests/Hexalith.Sample.WindowsTests.csproj --no-build --no-restore --configuration Release --stop-on-fail off
+2026-11-16T17:59:13.4244115Z [36;1mdotnet test --project test/Hexalith.Sample.WindowsTests/Hexalith.Sample.WindowsTests.csproj --no-build --no-restore --configuration Release --stop-on-fail off[0m
+2026-11-16T17:59:13.4245442Z [36;1mexit $LASTEXITCODE[0m
+2026-11-16T17:59:13.4467754Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-16T17:59:13.4468328Z env:
+2026-11-16T17:59:13.4468724Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-11-16T17:59:13.4469145Z ##[endgroup]
+2026-11-16T17:59:17.5001840Z Running tests from D:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.WindowsTests\bin\Release\net11.0\Hexalith.Sample.WindowsTests.dll (net11.0|x64)
+2026-11-16T17:59:18.2575495Z [mD:\a\Hexalith.Builds\Hexalith.Builds\Samples\Hexalith.Sample\test\Hexalith.Sample.WindowsTests\bin\Release\net11.0\Hexalith.Sample.WindowsTests.dll (net11.0|x64) [32mpassed[m [[32m+2[m/[31mx0[m/[33m?0[m] [90m(759ms)[m
+2026-11-16T17:59:18.2663781Z 
+2026-11-16T17:59:18.2669425Z [32mTest run summary: Passed!
+2026-11-16T17:59:18.2670195Z [m  total: 2
+2026-11-16T17:59:18.2670763Z   failed: 0
+2026-11-16T17:59:18.2671392Z [32m  succeeded: 2
+2026-11-16T17:59:18.2671941Z [m  skipped: 0
+2026-11-16T17:59:18.2672535Z   duration: 1s 131ms
+2026-11-16T17:59:18.7254696Z ##[end-action id=__self_2.__run;outcome=success;conclusion=success;duration_ms=5584]
+2026-11-16T17:59:18.7684761Z Post job cleanup.
+2026-11-16T17:59:18.7692123Z ##[start-action display=Set up platform module SDK;id=__327bb3e7-c8cf-4a5d-9ad4-ee92997edb05.__actions_setup-dotnet_2]
+2026-11-16T17:59:18.7903165Z Post job cleanup.
+2026-11-16T17:59:18.9680467Z ##[end-action id=__327bb3e7-c8cf-4a5d-9ad4-ee92997edb05.__actions_setup-dotnet_2;outcome=success;conclusion=success;duration_ms=198]
+2026-11-16T17:59:18.9684973Z ##[start-action display=Checkout module;id=__327bb3e7-c8cf-4a5d-9ad4-ee92997edb05.__actions_checkout]
+2026-11-16T17:59:18.9931862Z Post job cleanup.
+2026-11-16T17:59:19.2638613Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-16T17:59:19.3031749Z git version 2.56.0.windows.4
+2026-11-16T17:59:19.3104968Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\3cc2fc0a-8863-4eb2-8854-dd3530d29030\.gitconfig'
+2026-11-16T17:59:19.3133430Z Temporarily overriding HOME='D:\a\_temp\3cc2fc0a-8863-4eb2-8854-dd3530d29030' before making global git config changes
+2026-11-16T17:59:19.3134944Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-16T17:59:19.3144152Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Hexalith.Builds\Hexalith.Builds
+2026-11-16T17:59:19.3645164Z Removing SSH command configuration
+2026-11-16T17:59:19.3662902Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-16T17:59:19.4160927Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-16T17:59:20.0852035Z Removing HTTP extra header
+2026-11-16T17:59:20.0863801Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-16T17:59:20.1287309Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-16T17:59:20.7957379Z Removing includeIf entries pointing to credentials config files
+2026-11-16T17:59:20.7970117Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-16T17:59:20.8434144Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-16T17:59:21.5610689Z ##[end-action id=__327bb3e7-c8cf-4a5d-9ad4-ee92997edb05.__actions_checkout;outcome=success;conclusion=success;duration_ms=2592]
+2026-11-16T17:59:21.5690429Z Cleaning up orphan processes
+2026-11-16T17:59:21.6476964Z Terminate orphan process: pid (752) (MSBuild)
+2026-11-16T17:59:21.6563760Z Terminate orphan process: pid (676) (conhost)
+2026-11-16T17:59:21.6750315Z Terminate orphan process: pid (10016) (MSBuild)
+2026-11-16T17:59:21.6946005Z Terminate orphan process: pid (1124) (MSBuild)
+2026-11-16T17:59:21.7148629Z Terminate orphan process: pid (10156) (MSBuild)
+2026-11-16T17:59:21.7379152Z Terminate orphan process: pid (7392) (VBCSCompiler)
+2026-11-16T17:59:21.7455385Z Terminate orphan process: pid (832) (conhost)

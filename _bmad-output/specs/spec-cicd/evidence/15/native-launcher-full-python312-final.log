@@ -1,0 +1,170 @@
+Collecting attrs==26.1.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 1))
+  Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+Collecting jsonschema==4.26.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 7))
+  Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Collecting jsonschema-specifications==2025.9.1 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 11))
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Collecting referencing==0.37.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 15))
+  Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Collecting rpds-py==2026.9.1 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 21))
+  Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+Collecting typing-extensions==4.16.0 (from -r /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds/Github/ci-environment/requirements.txt (line 153))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /tmp/hexalith-job.enpqdgSq/python/bin/python -m pip install --upgrade pip
+3.12.13 (main, May 10 2026, 19:30:01) [Clang 22.1.3 ]
+4.26.0
+ab0bbdf0391a82145113f634b825da26cc439f6c235ccfd10593de6bb27682cf  tools/live-topology/ci.py
+13d24bc124dbb5fa8024ffc1a4e2a40983a55194ac8191fadaa37a0dbb34098a  tools/live-topology/native_audit.py
+e384c5ef5feb7d771cf4755b5683f410ec9ec133458fb75f2c2cc8ef1bb5c19f  tools/live-topology/native_sources.py
+429bb6e5dd71257011d641e0692879560bba21822a5068a4fcb8877cee6dff08  tools/live-topology/test_ci.py
+test_actual_composition_and_client_public_tenants_bytes_are_sealed (test_ci.CiHooksTests.test_actual_composition_and_client_public_tenants_bytes_are_sealed) ... ok
+test_actual_domain_asset_version_and_project_mutations_refuse_prepare_and_execute (test_ci.CiHooksTests.test_actual_domain_asset_version_and_project_mutations_refuse_prepare_and_execute) ... ok
+test_actual_integration_discovery_refuses_missing_extra_or_duplicate_product_cases (test_ci.CiHooksTests.test_actual_integration_discovery_refuses_missing_extra_or_duplicate_product_cases) ... ok
+test_after_preparation_source_and_selection_drift_refuse_before_vectors (test_ci.CiHooksTests.test_after_preparation_source_and_selection_drift_refuse_before_vectors) ... ok
+test_after_vector_source_and_selection_drift_refuse_before_independent_smoke (test_ci.CiHooksTests.test_after_vector_source_and_selection_drift_refuse_before_independent_smoke) ... ok
+test_aggregate_deadline_names_interrupted_operation_from_pending_lane (test_ci.CiHooksTests.test_aggregate_deadline_names_interrupted_operation_from_pending_lane) ... ok
+test_approved_vector_without_a_plan_is_loopback_only_and_not_expected_live (test_ci.CiHooksTests.test_approved_vector_without_a_plan_is_loopback_only_and_not_expected_live) ... ok
+test_archive_extracted_deployed_and_configuration_mutations_refuse_before_runners (test_ci.CiHooksTests.test_archive_extracted_deployed_and_configuration_mutations_refuse_before_runners) ... ok
+test_archive_only_utility_does_not_relax_actual_adapter_deployment_gate (test_ci.CiHooksTests.test_archive_only_utility_does_not_relax_actual_adapter_deployment_gate) ... ok
+test_audit_proof_drift_after_vectors_refuses_smoke (test_ci.CiHooksTests.test_audit_proof_drift_after_vectors_refuses_smoke) ... ok
+test_bootstrapped_binary_hash_mismatch_refuses_preparation (test_ci.CiHooksTests.test_bootstrapped_binary_hash_mismatch_refuses_preparation) ... ok
+test_boundary_skip_or_wrong_case_cannot_grant_live_acceptance (test_ci.CiHooksTests.test_boundary_skip_or_wrong_case_cannot_grant_live_acceptance) ... ok
+test_bounded_command_console_and_retained_arguments_are_sanitized (test_ci.CiHooksTests.test_bounded_command_console_and_retained_arguments_are_sanitized) ... ok
+test_caller_contract_and_unsafe_evidence_paths_are_refused (test_ci.CiHooksTests.test_caller_contract_and_unsafe_evidence_paths_are_refused) ... ok
+test_cancellation_escalation_finishes_within_outer_kill_grace (test_ci.CiHooksTests.test_cancellation_escalation_finishes_within_outer_kill_grace) ... Running (1s): inert-child
+ok
+test_cancellation_waits_for_real_vector_runner_detached_child_cleanup (test_ci.CiHooksTests.test_cancellation_waits_for_real_vector_runner_detached_child_cleanup) ... ok
+test_changed_gateway_package_bytes_refuse_before_any_live_runner (test_ci.CiHooksTests.test_changed_gateway_package_bytes_refuse_before_any_live_runner) ... ok
+test_changed_prepared_binary_refuses_live (test_ci.CiHooksTests.test_changed_prepared_binary_refuses_live) ... ok
+test_child_only_environment_secrets_are_redacted_on_success_failure_and_cancellation (test_ci.CiHooksTests.test_child_only_environment_secrets_are_redacted_on_success_failure_and_cancellation) ... ok
+test_competing_nested_catalog_created_after_vectors_blocks_independent_smoke (test_ci.CiHooksTests.test_competing_nested_catalog_created_after_vectors_blocks_independent_smoke) ... ok
+test_competing_nested_catalog_is_rechecked_before_either_live_runner (test_ci.CiHooksTests.test_competing_nested_catalog_is_rechecked_before_either_live_runner) ... ok
+test_complete_lane_and_smoke_acceptance_retains_only_sanitized_diagnostics (test_ci.CiHooksTests.test_complete_lane_and_smoke_acceptance_retains_only_sanitized_diagnostics) ... ok
+test_compression_libraries_are_required_before_commands (test_ci.CiHooksTests.test_compression_libraries_are_required_before_commands) ... ok
+test_configuration_change_with_preserved_native_parity_still_refuses (test_ci.CiHooksTests.test_configuration_change_with_preserved_native_parity_still_refuses) ... ok
+test_current_managed_resource_runtime_inventory_is_closed_before_source_builds (test_ci.CiHooksTests.test_current_managed_resource_runtime_inventory_is_closed_before_source_builds) ... ok
+test_current_source_catalog_escapes_quoted_and_special_workspace_path_literals (test_ci.CiHooksTests.test_current_source_catalog_escapes_quoted_and_special_workspace_path_literals) ... ok
+test_current_source_catalog_preserves_owner_framework_and_package_graphs (test_ci.CiHooksTests.test_current_source_catalog_preserves_owner_framework_and_package_graphs) ... ok
+test_current_source_policy_refuses_changed_missing_duplicate_conditional_and_unknown_root_rows (test_ci.CiHooksTests.test_current_source_policy_refuses_changed_missing_duplicate_conditional_and_unknown_root_rows) ... ok
+test_current_tenant_generator_selection_uses_real_msbuild_and_refuses_identity_drift (test_ci.CiHooksTests.test_current_tenant_generator_selection_uses_real_msbuild_and_refuses_identity_drift) ... ok
+test_dapr_cli_and_initialized_runtime_are_independently_required (test_ci.CiHooksTests.test_dapr_cli_and_initialized_runtime_are_independently_required) ... ok
+test_diagnostic_copy_excludes_symlinked_runs_and_files (test_ci.CiHooksTests.test_diagnostic_copy_excludes_symlinked_runs_and_files) ... ok
+test_different_gateway_cohort_refuses_before_build_or_runtime (test_ci.CiHooksTests.test_different_gateway_cohort_refuses_before_build_or_runtime) ... ok
+test_each_vector_acceptance_field_is_independently_required (test_ci.CiHooksTests.test_each_vector_acceptance_field_is_independently_required) ... 
+  test_each_vector_acceptance_field_is_independently_required (test_ci.CiHooksTests.test_each_vector_acceptance_field_is_independently_required) (mode='extra-approved-vector') ... FAIL
+  test_each_vector_acceptance_field_is_independently_required (test_ci.CiHooksTests.test_each_vector_acceptance_field_is_independently_required) (mode='duplicate-approved-operation') ... FAIL
+test_early_independent_rebuild_drift_is_refused_before_any_vector (test_ci.CiHooksTests.test_early_independent_rebuild_drift_is_refused_before_any_vector) ... ok
+test_embedded_archive_identity_and_source_are_validated_before_preparation (test_ci.CiHooksTests.test_embedded_archive_identity_and_source_are_validated_before_preparation) ... ok
+test_exact_openssl_three_sonames_are_required_before_builds (test_ci.CiHooksTests.test_exact_openssl_three_sonames_are_required_before_builds) ... ok
+test_execution_refuses_missing_changed_or_inconsistent_head_catalog_capture (test_ci.CiHooksTests.test_execution_refuses_missing_changed_or_inconsistent_head_catalog_capture) ... ok
+test_exited_child_signal_race_preserves_cancellation_diagnostics (test_ci.CiHooksTests.test_exited_child_signal_race_preserves_cancellation_diagnostics) ... Running (1s): inert-child
+ok
+test_exited_supervisor_still_stops_remaining_owned_group (test_ci.CiHooksTests.test_exited_supervisor_still_stops_remaining_owned_group) ... Running (1s): inert-child
+ok
+test_extra_runtime_refuses_complete_lane_acceptance (test_ci.CiHooksTests.test_extra_runtime_refuses_complete_lane_acceptance) ... ok
+test_failed_preparation_retains_owned_private_location (test_ci.CiHooksTests.test_failed_preparation_retains_owned_private_location) ... ok
+test_fresh_pkcs8_private_keys_are_redacted_in_direct_escaped_and_xml_diagnostics (test_ci.CiHooksTests.test_fresh_pkcs8_private_keys_are_redacted_in_direct_escaped_and_xml_diagnostics) ... ok
+test_frozen_reader_without_cohort_source_prepares_and_rechecks_audit (test_ci.CiHooksTests.test_frozen_reader_without_cohort_source_prepares_and_rechecks_audit) ... ok
+test_generated_signing_keys_are_redacted_without_breaking_json (test_ci.CiHooksTests.test_generated_signing_keys_are_redacted_without_breaking_json) ... ok
+test_generation_child_logs_and_xml_are_redacted (test_ci.CiHooksTests.test_generation_child_logs_and_xml_are_redacted) ... ok
+test_hosted_product_preparation_rejects_stale_shared_bundle_without_repairing_it (test_ci.CiHooksTests.test_hosted_product_preparation_rejects_stale_shared_bundle_without_repairing_it) ... ok
+test_hosted_product_probe_requires_prepared_namespaces_without_reconfiguring_host (test_ci.CiHooksTests.test_hosted_product_probe_requires_prepared_namespaces_without_reconfiguring_host) ... ok
+test_incomplete_embedded_bundle_stops_before_builds (test_ci.CiHooksTests.test_incomplete_embedded_bundle_stops_before_builds) ... ok
+test_independent_cases_cannot_share_one_runtime_receipt (test_ci.CiHooksTests.test_independent_cases_cannot_share_one_runtime_receipt) ... ok
+test_inherited_live_and_gateway_variables_never_reach_vectors_or_smoke (test_ci.CiHooksTests.test_inherited_live_and_gateway_variables_never_reach_vectors_or_smoke) ... ok
+test_inherited_source_override_pins_abstractions_during_real_msbuild_evaluation (test_ci.CiHooksTests.test_inherited_source_override_pins_abstractions_during_real_msbuild_evaluation) ... ok
+test_installed_bundle_must_match_fresh_selected_cli_bytes (test_ci.CiHooksTests.test_installed_bundle_must_match_fresh_selected_cli_bytes) ... ok
+test_json_escaped_known_environment_secrets_are_redacted_without_changing_ordinary_text (test_ci.CiHooksTests.test_json_escaped_known_environment_secrets_are_redacted_without_changing_ordinary_text) ... ok
+test_lane_level_errors_are_named_and_only_failed_operations_are_failures (test_ci.CiHooksTests.test_lane_level_errors_are_named_and_only_failed_operations_are_failures) ... ok
+test_malformed_native_ownership_proof_is_refused (test_ci.CiHooksTests.test_malformed_native_ownership_proof_is_refused) ... ok
+test_malformed_ownership_marker_refuses_live (test_ci.CiHooksTests.test_malformed_ownership_marker_refuses_live) ... ok
+test_mismatched_root_mcpcli_pin_refuses_before_source_builds (test_ci.CiHooksTests.test_mismatched_root_mcpcli_pin_refuses_before_source_builds) ... ok
+test_missing_built_integration_tests_refuses_live (test_ci.CiHooksTests.test_missing_built_integration_tests_refuses_live) ... ok
+test_missing_git_marker_and_symlinked_source_stop_before_builds (test_ci.CiHooksTests.test_missing_git_marker_and_symlinked_source_stop_before_builds) ... ok
+test_missing_preparation_and_reused_runtime_refuse_live (test_ci.CiHooksTests.test_missing_preparation_and_reused_runtime_refuse_live) ... ok
+test_missing_shared_aspire_is_named_before_any_product_installation_or_build (test_ci.CiHooksTests.test_missing_shared_aspire_is_named_before_any_product_installation_or_build) ... ok
+test_missing_shared_bundle_is_named_and_never_reinstalled_by_product_preparation (test_ci.CiHooksTests.test_missing_shared_bundle_is_named_and_never_reinstalled_by_product_preparation) ... ok
+test_missing_source_is_named_before_build (test_ci.CiHooksTests.test_missing_source_is_named_before_build) ... ok
+test_missing_tool_is_named_before_build (test_ci.CiHooksTests.test_missing_tool_is_named_before_build) ... ok
+test_native_builds_inherit_one_fresh_task_owned_package_cache (test_ci.CiHooksTests.test_native_builds_inherit_one_fresh_task_owned_package_cache) ... ok
+test_nested_python_uses_prepared_venv_and_its_installed_modules (test_ci.CiHooksTests.test_nested_python_uses_prepared_venv_and_its_installed_modules) ... ok
+test_online_audit_receipt_reaches_both_runners_and_refuses_drift (test_ci.CiHooksTests.test_online_audit_receipt_reaches_both_runners_and_refuses_drift) ... ok
+test_opaque_bearer_truncated_pem_and_malformed_xml_are_redacted_in_retained_children (test_ci.CiHooksTests.test_opaque_bearer_truncated_pem_and_malformed_xml_are_redacted_in_retained_children) ... ok
+test_platform_and_python_patch_prerequisites_stop_before_commands (test_ci.CiHooksTests.test_platform_and_python_patch_prerequisites_stop_before_commands) ... ok
+test_preparation_binds_the_hosted_head_catalog_and_capture_failure_stops_it (test_ci.CiHooksTests.test_preparation_binds_the_hosted_head_catalog_and_capture_failure_stops_it) ... ok
+test_preparation_order_bounds_source_flags_and_nonsecret_exports (test_ci.CiHooksTests.test_preparation_order_bounds_source_flags_and_nonsecret_exports) ... ok
+test_preparation_path_and_ownership_must_match_current_evidence (test_ci.CiHooksTests.test_preparation_path_and_ownership_must_match_current_evidence) ... ok
+test_preparation_requires_exact_root_redis_override_before_builds (test_ci.CiHooksTests.test_preparation_requires_exact_root_redis_override_before_builds) ... ok
+test_prepared_hosted_namespaces_are_rechecked_before_private_source_builds (test_ci.CiHooksTests.test_prepared_hosted_namespaces_are_rechecked_before_private_source_builds) ... ok
+test_prerequisite_failures_precede_source_builds (test_ci.CiHooksTests.test_prerequisite_failures_precede_source_builds) ... ok
+test_private_temp_root_must_not_overlap_evidence (test_ci.CiHooksTests.test_private_temp_root_must_not_overlap_evidence) ... ok
+test_published_gateway_profile_binds_both_vector_and_independent_smoke (test_ci.CiHooksTests.test_published_gateway_profile_binds_both_vector_and_independent_smoke) ... ok
+test_reader_audit_seals_complete_catalog_template_sources (test_ci.CiHooksTests.test_reader_audit_seals_complete_catalog_template_sources) ... ok
+test_reader_requires_complete_successful_online_graph_audits (test_ci.CiHooksTests.test_reader_requires_complete_successful_online_graph_audits) ... ok
+test_repository_sdk_resolution_failure_stops_before_source_builds (test_ci.CiHooksTests.test_repository_sdk_resolution_failure_stops_before_source_builds) ... ok
+test_repository_sdk_rollforward_accepts_selected_newer_patch (test_ci.CiHooksTests.test_repository_sdk_rollforward_accepts_selected_newer_patch) ... ok
+test_root_package_drift_refuses_preparation_and_execution_before_live (test_ci.CiHooksTests.test_root_package_drift_refuses_preparation_and_execution_before_live) ... ok
+test_runner_contract_mismatch_refuses_live_after_preparation (test_ci.CiHooksTests.test_runner_contract_mismatch_refuses_live_after_preparation) ... ok
+test_second_provenance_check_refuses_drift_after_vectors_before_smoke (test_ci.CiHooksTests.test_second_provenance_check_refuses_drift_after_vectors_before_smoke) ... ok
+test_self_hosted_namespace_failure_never_changes_host_configuration (test_ci.CiHooksTests.test_self_hosted_namespace_failure_never_changes_host_configuration) ... ok
+test_separate_adapter_materializes_its_ordinary_package_runtime_closure (test_ci.CiHooksTests.test_separate_adapter_materializes_its_ordinary_package_runtime_closure) ... ok
+test_shared_comparison_bundle_is_required_and_never_reconstructed_by_product (test_ci.CiHooksTests.test_shared_comparison_bundle_is_required_and_never_reconstructed_by_product) ... ok
+test_sigterm_during_smoke_preserves_cancellation_after_vector_failure (test_ci.CiHooksTests.test_sigterm_during_smoke_preserves_cancellation_after_vector_failure) ... ok
+test_sigterm_stops_detached_child_and_retains_failed_receipt_and_diagnostics (test_ci.CiHooksTests.test_sigterm_stops_detached_child_and_retains_failed_receipt_and_diagnostics) ... ok
+test_smoke_cleanup_proof_is_required_after_all_vectors_pass (test_ci.CiHooksTests.test_smoke_cleanup_proof_is_required_after_all_vectors_pass) ... ok
+test_smoke_control_exceptions_are_not_combined_with_vector_failure (test_ci.CiHooksTests.test_smoke_control_exceptions_are_not_combined_with_vector_failure) ... Running (960s): /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/runner-temp/shared-venv/bin/python /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/tools/live-topology/run-isolated.py -- dotnet /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll -class Hexalith.McpCli.Integration.Tests.SharedHeadBoundaryTests -failSkips -result-xml /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/evidence/70598348f842470088fd807f11c2efa0/boundary/tests.xml
+Running (11280s): /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/runner-temp/shared-venv/bin/python /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/tools/live-topology/run-vectors.py --output /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/evidence/70598348f842470088fd807f11c2efa0/vectors
+Running (960s): /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/runner-temp/shared-venv/bin/python /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/tools/live-topology/run-isolated.py -- dotnet /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll -class Hexalith.McpCli.Integration.Tests.SharedHeadBoundaryTests -failSkips -result-xml /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/evidence/2c7b90f4752b4328857c3fc2cf07219b/boundary/tests.xml
+Running (11280s): /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/runner-temp/shared-venv/bin/python /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/tools/live-topology/run-vectors.py --output /tmp/hexalith-job.enpqdgSq/tmpu13w7gg6/module/evidence/2c7b90f4752b4328857c3fc2cf07219b/vectors
+ok
+test_smoke_requires_exactly_one_runtime_receipt (test_ci.CiHooksTests.test_smoke_requires_exactly_one_runtime_receipt) ... ok
+test_smoke_skips_missing_receipts_nonzero_and_cleanup_fail_closed (test_ci.CiHooksTests.test_smoke_skips_missing_receipts_nonzero_and_cleanup_fail_closed) ... ok
+test_snapshot_manifest_cohort_source_identity_and_blob_binding_refuse_before_runners (test_ci.CiHooksTests.test_snapshot_manifest_cohort_source_identity_and_blob_binding_refuse_before_runners) ... ok
+test_source_catalog_and_private_override_drift_refuse_before_live (test_ci.CiHooksTests.test_source_catalog_and_private_override_drift_refuse_before_live) ... ok
+test_source_catalog_checkout_mismatch_or_owned_dirt_refuses_before_selection (test_ci.CiHooksTests.test_source_catalog_checkout_mismatch_or_owned_dirt_refuses_before_selection) ... ok
+test_source_catalog_override_reaches_all_builds_and_both_isolated_runners (test_ci.CiHooksTests.test_source_catalog_override_reaches_all_builds_and_both_isolated_runners) ... ok
+test_source_failure_and_timeout_never_prepare_or_execute_live (test_ci.CiHooksTests.test_source_failure_and_timeout_never_prepare_or_execute_live) ... ok
+test_stdout_only_source_failure_names_both_retained_output_paths (test_ci.CiHooksTests.test_stdout_only_source_failure_names_both_retained_output_paths) ... ok
+test_symlinked_evidence_is_refused_without_touching_its_target (test_ci.CiHooksTests.test_symlinked_evidence_is_refused_without_touching_its_target) ... ok
+test_tenant_output_rebuild_drift_is_refused_before_any_vector (test_ci.CiHooksTests.test_tenant_output_rebuild_drift_is_refused_before_any_vector) ... ok
+test_unowned_evidence_is_untouched_and_retry_requires_fresh_directory (test_ci.CiHooksTests.test_unowned_evidence_is_untouched_and_retry_requires_fresh_directory) ... ok
+test_vector_and_runtime_counts_follow_inventory_growth (test_ci.CiHooksTests.test_vector_and_runtime_counts_follow_inventory_growth) ... FAIL
+test_vector_and_smoke_failures_are_both_named (test_ci.CiHooksTests.test_vector_and_smoke_failures_are_both_named) ... ok
+test_vector_nonacceptance_and_nonzero_exits_still_run_smoke (test_ci.CiHooksTests.test_vector_nonacceptance_and_nonzero_exits_still_run_smoke) ... ok
+test_wrong_aspire_version_refuses_source_builds (test_ci.CiHooksTests.test_wrong_aspire_version_refuses_source_builds) ... ok
+test_xml_entities_cannot_hide_known_secrets (test_ci.CiHooksTests.test_xml_entities_cannot_hide_known_secrets) ... ok
+test_case_identity_counts_skips_errors_and_budgets_are_enforced (test_ci.IndependentCaseTests.test_case_identity_counts_skips_errors_and_budgets_are_enforced) ... ok
+
+======================================================================
+FAIL: test_each_vector_acceptance_field_is_independently_required (test_ci.CiHooksTests.test_each_vector_acceptance_field_is_independently_required) (mode='extra-approved-vector')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_ci.py", line 1852, in test_each_vector_acceptance_field_is_independently_required
+    self.assertIn('Complete current passing evidence for every approved live vector is required', result.stderr)
+AssertionError: 'Complete current passing evidence for every approved live vector is required' not found in 'Live CI failed: ValueError: Live discovery requires unique approved vectors with companion plans.\n'
+
+======================================================================
+FAIL: test_each_vector_acceptance_field_is_independently_required (test_ci.CiHooksTests.test_each_vector_acceptance_field_is_independently_required) (mode='duplicate-approved-operation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_ci.py", line 1852, in test_each_vector_acceptance_field_is_independently_required
+    self.assertIn('Complete current passing evidence for every approved live vector is required', result.stderr)
+AssertionError: 'Complete current passing evidence for every approved live vector is required' not found in 'Live CI failed: ValueError: Live discovery requires unique approved vectors with companion plans.\n'
+
+======================================================================
+FAIL: test_vector_and_runtime_counts_follow_inventory_growth (test_ci.CiHooksTests.test_vector_and_runtime_counts_follow_inventory_growth)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli/tools/live-topology/test_ci.py", line 1776, in test_vector_and_runtime_counts_follow_inventory_growth
+    self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+AssertionError: 0 != 1 : Live CI failed: ValueError: Prepared Integration test discovery or binary changed after preparation.
+
+
+----------------------------------------------------------------------
+Ran 108 tests in 1470.832s
+
+FAILED (failures=3)

@@ -1,0 +1,87 @@
+Loading API documentation...
+IProjectMetadata Properties
+
+• Package: Aspire.Hosting (https://aspire.dev/reference/api/csharp/aspire.hosting.md)                
+• Type: IProjectMetadata (https://aspire.dev/reference/api/csharp/aspire.hosting/iprojectmetadata.md)
+• Kind: Properties                                                                                   
+• Members: 6                                                                                         
+
+Represents metadata about a project resource.
+
+BuildEnvironment
+
+> Experimental: ASPIREEXTENSION001 - Learn more (https://aspire.dev/diagnostics/aspireextension001/)
+
+• Name: BuildEnvironment                                                                                                                       
+• Modifiers: virtual get                                                                                                                       
+• Returns: IReadOnlyDictionary<string, string>                                                                                                 
+• Source: GitHub (https://github.com/microsoft/aspire/blob/b33d222049f1ecc3bc7257ec07b622fe550b2580/src/Aspire.Hosting/IProjectMetadata.cs#L44)
+
+Gets the resolved environment variables that affected an externally produced build.
+
+public virtual IReadOnlyDictionary<string, string> BuildEnvironment { get; }
+
+Remarks
+
+IDE launchers use these values when evaluating build properties such as TargetPath. These values are not a secret transport and can appear in build diagnostics and IDE launch metadata.
+
+BuildWorkingDirectory
+
+> Experimental: ASPIREEXTENSION001 - Learn more (https://aspire.dev/diagnostics/aspireextension001/)
+
+• Name: BuildWorkingDirectory                                                                                                                  
+• Modifiers: virtual nullable get                                                                                                              
+• Returns: string?                                                                                                                             
+• Source: GitHub (https://github.com/microsoft/aspire/blob/b33d222049f1ecc3bc7257ec07b622fe550b2580/src/Aspire.Hosting/IProjectMetadata.cs#L54)
+
+Gets the working directory used by an externally produced build.
+
+public virtual string? BuildWorkingDirectory { get; }
+
+Remarks
+
+IDE launchers use this directory to select the same .NET SDK and repository configuration as the external build.
+
+IsFileBasedApp
+
+• Name: IsFileBasedApp                                                                                                                         
+• Modifiers: virtual get                                                                                                                       
+• Returns: bool                                                                                                                                
+• Source: GitHub (https://github.com/microsoft/aspire/blob/b33d222049f1ecc3bc7257ec07b622fe550b2580/src/Aspire.Hosting/IProjectMetadata.cs#L59)
+
+Gets a value indicating whether the project is a file-based app (a .cs file) rather than a full project (.csproj).
+
+public virtual bool IsFileBasedApp { get; }
+
+LaunchSettings
+
+• Name: LaunchSettings                                                                                                                         
+• Modifiers: virtual nullable get                                                                                                              
+• Returns: LaunchSettings? (https://aspire.dev/reference/api/csharp/aspire.hosting/launchsettings.md)                                          
+• Source: GitHub (https://github.com/microsoft/aspire/blob/b33d222049f1ecc3bc7257ec07b622fe550b2580/src/Aspire.Hosting/IProjectMetadata.cs#L26)
+
+Gets the launch settings associated with the project.
+
+public virtual LaunchSettings? LaunchSettings { get; }
+
+ProjectPath
+
+• Name: ProjectPath      
+• Modifiers: abstract get
+• Returns: string        
+
+Gets the fully-qualified path to the project or file-based app file.
+
+public abstract string ProjectPath { get; }
+
+SuppressBuild
+
+• Name: SuppressBuild                                                                                                                          
+• Modifiers: virtual get                                                                                                                       
+• Returns: bool                                                                                                                                
+• Source: GitHub (https://github.com/microsoft/aspire/blob/b33d222049f1ecc3bc7257ec07b622fe550b2580/src/Aspire.Hosting/IProjectMetadata.cs#L34)
+
+Gets a value indicating whether building the project before running it should be suppressed.
+
+public virtual bool SuppressBuild { get; }
+

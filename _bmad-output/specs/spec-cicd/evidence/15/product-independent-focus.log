@@ -1,0 +1,28 @@
+Running: git clone --shared --quiet /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli /tmp/hexalith-job.U6vYHK2q/module
+Running: dotnet restore tests/Hexalith.McpCli.Abstractions.Tests/Hexalith.McpCli.Abstractions.Tests.csproj -p:UseHexalithProjectReferences=false -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -warnaserror
+  Determining projects to restore...
+  Restored /tmp/hexalith-job.U6vYHK2q/module/src/Hexalith.McpCli.Abstractions/Hexalith.McpCli.Abstractions.csproj (in 0.6 ms).
+  Restored /tmp/hexalith-job.U6vYHK2q/module/tests/Hexalith.McpCli.Sample.Contracts/Hexalith.McpCli.Sample.Contracts.csproj (in 487 ms).
+  Restored /tmp/hexalith-job.U6vYHK2q/module/src/Hexalith.McpCli.Analyzers/Hexalith.McpCli.Analyzers.csproj (in 592 ms).
+  Restored /tmp/hexalith-job.U6vYHK2q/module/tests/Hexalith.McpCli.Abstractions.Tests/Hexalith.McpCli.Abstractions.Tests.csproj (in 968 ms).
+Running: dotnet build tests/Hexalith.McpCli.Abstractions.Tests/Hexalith.McpCli.Abstractions.Tests.csproj --no-restore --configuration Release -p:UseHexalithProjectReferences=false -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -warnaserror
+  Hexalith.McpCli.Analyzers -> /tmp/hexalith-job.U6vYHK2q/module/src/Hexalith.McpCli.Analyzers/bin/Release/netstandard2.0/Hexalith.McpCli.Analyzers.dll
+  Hexalith.McpCli.Abstractions -> /tmp/hexalith-job.U6vYHK2q/module/src/Hexalith.McpCli.Abstractions/bin/Release/net11.0/Hexalith.McpCli.Abstractions.dll
+  Hexalith.McpCli.Sample.Contracts -> /tmp/hexalith-job.U6vYHK2q/module/tests/Hexalith.McpCli.Sample.Contracts/bin/Release/net11.0/Hexalith.McpCli.Sample.Contracts.dll
+  Hexalith.McpCli.Abstractions.Tests -> /tmp/hexalith-job.U6vYHK2q/module/tests/Hexalith.McpCli.Abstractions.Tests/bin/Release/net11.0/Hexalith.McpCli.Abstractions.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.16
+Running: dotnet tests/Hexalith.McpCli.Abstractions.Tests/bin/Release/net11.0/Hexalith.McpCli.Abstractions.Tests.dll
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 (64-bit .NET 11.0.0)
+  Discovering: Hexalith.McpCli.Abstractions.Tests
+  Discovered:  Hexalith.McpCli.Abstractions.Tests
+  Starting:    Hexalith.McpCli.Abstractions.Tests
+  Finished:    Hexalith.McpCli.Abstractions.Tests (ID = 'f1d01026e2f29ee39725a1c62d41a6a66add63c909460d301798dbcd17f07610')
+=== TEST EXECUTION SUMMARY ===
+   Hexalith.McpCli.Abstractions.Tests  Total: 20, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 0.176s
+Evaluated complete solution pack set: ['Hexalith.McpCli.Abstractions', 'Hexalith.McpCli']
+Input revision: e2e3db7ba2d45d61feacc39c41b3051310fbc57f Builds: 65fd22f37b9fad64b595841923cdbe050563ab99 tracked patch SHA256: 0df162cf410caad012268309c87ea565f2fe81ba7538aa83c57d2c1b9be1e3e3

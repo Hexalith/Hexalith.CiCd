@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-11-16T19:35:21.998032+00:00",
+  "commit": "3b8f4184c5db71f75db00c5e14d7a2c27dea4a38",
+  "base": "e2e3db7ba2d45d61feacc39c41b3051310fbc57f",
+  "builds_import": "65fd22f37b9fad64b595841923cdbe050563ab99",
+  "command": [
+    "dotnet",
+    "restore",
+    "tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj",
+    "-p:UseHexalithProjectReferences=false",
+    "-p:NuGetAudit=true",
+    "-p:NuGetAuditMode=all",
+    "-p:NuGetAuditLevel=low",
+    "-warnaserror"
+  ],
+  "exit_code": 1,
+  "log": "push-request-package-mode.log",
+  "nested_initialized": false,
+  "module_push_permitted": false,
+  "note": "A passing restore alone would not complete the approved build/test/consumer pre-push gate."
+}

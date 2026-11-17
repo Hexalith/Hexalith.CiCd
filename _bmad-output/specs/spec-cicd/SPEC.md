@@ -55,7 +55,8 @@ The architecture spine (first companion) decides how each capability is built, i
     - The only hook points are `after-unit-tests`, `after-integration-tests`, and `nightly`.
     - An enabled hook runs without repeating checkout, restore, build, or environment setup.
     - A hook that needs browsers or Dapr enables that shared knob. An independently prepared custom job uses its validated setup, runner, matrix and dependencies.
-    - An action declared for Windows runs in its own job on that runner, only after the main job passes.
+    - An action declared for Windows or macOS runs in its own job on that runner, only after the main job passes.
+    - Native Aspire hooks enable the shared trusted Linux toolchain and retain module-owned isolated case execution and provenance. An optional complete-job timeout is bounded to six hours; existing modules keep the 30-minute default.
     - Approved manual qualifications use a designated private Linux runner and approval environment, only on an explicit dispatch selection after green CI at the same source SHA. They receive only explicitly named environment secrets and the exact per-run authority digest; ordinary CI and unattended nightly jobs receive none of these secrets. The private job builds once with environment preparation disabled, preserving its owner-provisioned fixture runtimes.
 - **CAP-6** One Builds version
   - **intent:** Every module references one exact Builds release tag, through the callers, `hexalith-ci.json`, and the submodule, moved together by delivery.

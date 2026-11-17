@@ -1,0 +1,55 @@
+{
+  "recorded_at": "2026-11-16T15:59:48.244653+00:00",
+  "App_selection": "verified after actual save and browser reload",
+  "repositories": [
+    "Hexalith.Builds",
+    "Hexalith.CiCd",
+    "Hexalith.Commons",
+    "Hexalith.McpCli",
+    "Hexalith.PolymorphicSerializations"
+  ],
+  "preserved_prior_selection": true,
+  "source": "app-selection-observe-155821.json",
+  "remaining": "Product publication/adoption held for Projects contract availability and remaining qualification. Shared Builds release and actual acceptance remain incomplete.",
+  "cleanup": {
+    "result": "pass",
+    "source": "provision-cleanup.json",
+    "completed_at": "2026-11-16T16:00:54.068411+00:00"
+  },
+  "rulesets": {
+    "result": "pass",
+    "source": "provision-rulesets.json",
+    "completed_at": "2026-11-16T16:01:19.194087+00:00"
+  },
+  "environments": {
+    "result": "pass",
+    "source": "provision-environments.json",
+    "completed_at": "2026-11-16T16:01:44.260878+00:00"
+  },
+  "settings-grants": {
+    "result": "pass",
+    "source": "provision-settings-grants.json",
+    "completed_at": "2026-11-16T16:05:39.157613+00:00"
+  },
+  "provision-registry.json": {
+    "result": "pass",
+    "source": "provision-registry.json"
+  },
+  "nuget-policy-verification.json": {
+    "result": "pass",
+    "source": "nuget-policy-verification.json"
+  },
+  "immediate_cleanup_plan": {
+    "source": "immediate-cleanup-plan.md",
+    "legacy_nuget_policy_to_remove_after_adoption": 20113,
+    "new_policy_to_preserve": 27180,
+    "legacy_github_secret_grants": "no deletion target in fresh metadata",
+    "legacy_registry_identity": "no deletion target in ACL metadata",
+    "nuget_api_key_inventory": "verified after actual reload; only key954800 expired, no live legacy key target in attended account"
+  },
+  "nuget_api_key_inventory": {
+    "result": "pass",
+    "source": "nuget-api-key-metadata.json",
+    "completed_at": "2026-11-16T17:08:52.571636+00:00"
+  }
+}

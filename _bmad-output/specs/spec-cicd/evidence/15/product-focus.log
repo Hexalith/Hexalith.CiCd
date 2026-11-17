@@ -1,0 +1,35 @@
+Running: git clone --shared --quiet /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.McpCli /tmp/hexalith-job.o29xx8Z1/module
+Running: git clone --shared --quiet --no-checkout /home/administrator/projects/hexalith/cicd-story-15/references/Hexalith.Builds /tmp/hexalith-job.o29xx8Z1/module/references/Hexalith.Builds
+Running: git -C /tmp/hexalith-job.o29xx8Z1/module/references/Hexalith.Builds checkout --quiet --detach 65fd22f37b9fad64b595841923cdbe050563ab99
+Running: dotnet restore tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj -p:UseHexalithProjectReferences=false -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -warnaserror
+  Determining projects to restore...
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Manifest.Unmarked.Contracts/Manifest.Unmarked.Contracts.csproj (in 0.9 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Catalog.String.Contracts/Catalog.String.Contracts.csproj (in 0.8 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Manifest.MarkedEmpty.Contracts/Manifest.MarkedEmpty.Contracts.csproj (in 1 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Catalog.InvalidProvider.Contracts/Catalog.InvalidProvider.Contracts.csproj (in 0.7 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Catalog.Explicit.Contracts/Catalog.Explicit.Contracts.csproj (in 0.8 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli.Abstractions/Hexalith.McpCli.Abstractions.csproj (in 80 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Catalog.Invalid.Contracts/Catalog.Invalid.Contracts.csproj (in 916 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Catalog.Routing.Contracts/Catalog.Routing.Contracts.csproj (in 916 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/Hexalith.McpCli.Sample.Contracts/Hexalith.McpCli.Sample.Contracts.csproj (in 914 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/tests/fixtures/Catalog.Lint.Contracts/Catalog.Lint.Contracts.csproj (in 916 ms).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli.Analyzers/Hexalith.McpCli.Analyzers.csproj (in 1.31 sec).
+/tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli/Hexalith.McpCli.csproj : error NU1102: Unable to find package Hexalith.Projects.Contracts with version (>= 2.0.0-story66.3) [/tmp/hexalith-job.o29xx8Z1/module/tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj]
+/tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli/Hexalith.McpCli.csproj : error NU1102:   - Found 6 version(s) in nuget.org [ Nearest version: 1.2.4 ] [/tmp/hexalith-job.o29xx8Z1/module/tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj]
+  Restored /tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli.Core/Hexalith.McpCli.Core.csproj (in 1.35 sec).
+  Restored /tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli.Mcp/Hexalith.McpCli.Mcp.csproj (in 1.35 sec).
+  Failed to restore /tmp/hexalith-job.o29xx8Z1/module/src/Hexalith.McpCli/Hexalith.McpCli.csproj (in 1.35 sec).
+/tmp/hexalith-job.o29xx8Z1/module/tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj : error NU1102: Unable to find package Hexalith.Projects.Contracts with version (>= 2.0.0-story66.3)
+/tmp/hexalith-job.o29xx8Z1/module/tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj : error NU1102:   - Found 6 version(s) in nuget.org [ Nearest version: 1.2.4 ]
+  Failed to restore /tmp/hexalith-job.o29xx8Z1/module/tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj (in 1.62 sec).
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-story-15/_bmad-output/specs/spec-cicd/evidence/15/verify-product-focus.py", line 19, in <module>
+    run(['dotnet','restore',project,*flags],env=env)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-story-15/_bmad-output/specs/spec-cicd/evidence/15/verify-product-focus.py", line 7, in run
+    subprocess.run(list(map(str,args)),cwd=cwd,env=env,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['dotnet', 'restore', 'tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj', '-p:UseHexalithProjectReferences=false', '-p:NuGetAudit=true', '-p:NuGetAuditMode=all', '-p:NuGetAuditLevel=low', '-warnaserror']' returned non-zero exit status 1.

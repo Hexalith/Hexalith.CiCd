@@ -1,0 +1,71 @@
+{
+  "recorded_at": "2026-11-16T15:52:51.658233+00:00",
+  "story_status": "in-progress",
+  "builds_base_commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "builds_staged_tree": "56057db895795395474ae024c8d3037f13abdf7d",
+  "builds_worktree_sha256": {
+    ".github/actions/sample-macos/action.yml": "e5292885e853bbb3980f42bc23c198018258e25d1d160914e21cd3efcd2848ad",
+    ".github/workflows/builds-ci.yml": "0d4587383b614fdaed3ec9990a02275a24f22c5ae5ded159321732a66966771b",
+    ".github/workflows/ci.yml": "eaa2a052f820568afbd168b49ac70db0e39071252fbc87c658be1082db4cd1c5",
+    "Github/ci-environment/action.yml": "52aac4c07d19b462f4707e79fb0f1ac2b7e28f9da847f23f61a5113f04a25408",
+    "Github/ci-environment/requirements.in": "756cc9e506ae4ee1a6f6c0507088b5cfc0dc8ba350fb2d2d46f1ffa72033adb6",
+    "Github/ci-environment/requirements.txt": "bd6494d126a1ef01753c9b8ce3ed5345881f1e918f78ae15e263f8fbe6965d27",
+    "Github/ci-unit-tests/action.yml": "a2cd54c30b4f152d8f4a43d20f49f4a31cae958a1989f9f66965c9281e46d6b6",
+    "Github/lib/ci_config.py": "edef9219ab15601c688a8c1e805b1e37e54e619531c91e0caa00e37969c4c903",
+    "Github/lib/ci_environment.py": "0d3b26eb0c64cb77a51be5249780792976cbc37093a4c540a5284fd050b45b1f",
+    "Github/lib/ci_pipeline.py": "d1b3ca3e050182021cebee56b508669734441b189485b07515a21faa329eedbd",
+    "Github/lib/tests/fixtures/contract.json": "50edeea1d1d06b8bbd92b7f200f51597d12bce35e3a0f2bdfb3aa55bcfe59f5b",
+    "Github/lib/tests/test_ci_environment.py": "dd1ff47b8571ddd011cd52394b4eaefa5f501a1d455b98531a596ff59e4d1996",
+    "Github/lib/tests/test_ci_pipeline.py": "214a24197f0be5ae2873162ac8abb474a7c643b21f2d4de82de9828c02ab948a",
+    "Github/lib/tests/test_ci_prepare.py": "b97381ffe8e0e56000c1fbd623faf3aa48b446f72e51ba2d50c060c23d9bcb45",
+    "Github/prepare/action.yml": "ce98bfbab89a9ac90d6a8d1d92faa3758f08455aae45951bf1ba147fa27cf22d",
+    "Samples/Hexalith.Sample/.github/hexalith-ci.json": "9111f27d3c970f58b9ffa3220296e9b6d763c268703adcdab1581a26ef464381",
+    "Samples/Hexalith.Sample/README.md": "850cf2aebe20ab054b0a8446c5b30f63db1a23f33e5d8be2734ed182576d6834",
+    "Samples/Hexalith.Sample/expected-source/rendered/Hexalith.Sample/.github/hexalith-ci.json": "9111f27d3c970f58b9ffa3220296e9b6d763c268703adcdab1581a26ef464381",
+    "Samples/Hexalith.Sample/solutions/Hexalith.Sample.slnx": "eb52545f3fbd70243b5c5dc2053519fba47d5dd21c0694642924e40872e409db",
+    "Samples/Hexalith.Sample/test/Hexalith.Sample.MacOSTests/CalculatorTests.cs": "04cd774fd444fe31a20ea80cbef971f7bc1aae051b147ea3c469b8a8a3b73e27",
+    "Samples/Hexalith.Sample/test/Hexalith.Sample.MacOSTests/Hexalith.Sample.MacOSTests.csproj": "e99d36e06fb6efba3fc29686e38dc452c778c9d6ef8feea8614891766074fb0d",
+    "schemas/hexalith.ci.v1.json": "28abbe568ef6d90c3ea1202d034d98cf6c6e59e1213f4c7a7b232a6cf6c752e6"
+  },
+  "checks": {
+    "shared_tests": {
+      "python312": 109,
+      "python314": 109
+    },
+    "renderer_tests": {
+      "python312": 35,
+      "python314": 35
+    },
+    "platform_action_tests_after_hosted_sample_addition": {
+      "python312": 28,
+      "python314": 28
+    },
+    "sample_release_build": {
+      "warnings": 0,
+      "errors": 0
+    },
+    "sample_linux_test_execution": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "sample_macos_test": "compiled and discovered; body not executed on Linux",
+    "workflow_online_audits": {
+      "new_findings": 0,
+      "existing_exact_frozen_findings": 10
+    }
+  },
+  "not_completed": [
+    "ordered module provisioning",
+    "Builds release",
+    "McpCli product preparation",
+    "real Windows/macOS/native module qualification",
+    "registration and committed-candidate qualification",
+    "App delivery",
+    "legacy access cleanup",
+    "next genuine nightly acceptance"
+  ],
+  "next_dependency": "GitHub Confirm access after actual installation-settings reload; user authentication requested asynchronously",
+  "remote_mutations": false,
+  "commits_created": false
+}

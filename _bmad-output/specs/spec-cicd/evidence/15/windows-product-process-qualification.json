@@ -1,0 +1,64 @@
+{
+  "recorded_at": "2026-11-16T17:45:19.217631+00:00",
+  "source_sha256": {
+    "product_process.py": "c96f2ce499003b480b1b141d25b3f4e9b5457d57cc6c101844dac2cfb7ec8b91",
+    "evidence_redaction.py": "a8f9aaad4c7a24b2175704475daedf82a1d7b76b6b764d7a2810b597be6254b7"
+  },
+  "kind": "native attended Windows host focused subprocess/path qualification; not hosted full product acceptance",
+  "exit": 0,
+  "stdout": "{\r\n  \"python\": \"3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]\",\r\n  \"platform\": \"win32\",\r\n  \"home_overridden\": false,\r\n  \"absolute_windows_bash_path\": {\r\n    \"exit\": 0,\r\n    \"stdout\": \"WINDOWS_BASH_PATH_OK\\n\",\r\n    \"stderr\": \"\"\r\n  },\r\n  \"successful_child\": {\r\n    \"command\": [\r\n      \"C:\\\\Python314\\\\python.exe\",\r\n      \"-c\",\r\n      \"print(\\\"successful-child\\\")\"\r\n    ],\r\n    \"exitCode\": 0,\r\n    \"timeoutSeconds\": 5,\r\n    \"timedOut\": false,\r\n    \"error\": null,\r\n    \"cleanup\": \"complete\",\r\n    \"cleanupError\": null\r\n  },\r\n  \"nonzero_child\": {\r\n    \"command\": [\r\n      \"C:\\\\Python314\\\\python.exe\",\r\n      \"-c\",\r\n      \"import sys;print(\\\"retained-out\\\");print(\\\"retained-err\\\",file=sys.stderr);sys.exit(7)\"\r\n    ],\r\n    \"exitCode\": 7,\r\n    \"timeoutSeconds\": 5,\r\n    \"timedOut\": false,\r\n    \"error\": null,\r\n    \"cleanup\": \"complete\",\r\n    \"cleanupError\": null\r\n  },\r\n  \"timeout_tree\": {\r\n    \"receipt\": {\r\n      \"command\": [\r\n        \"C:\\\\Python314\\\\python.exe\",\r\n        \"-c\",\r\n        \"import subprocess,sys,time;subprocess.Popen([sys.executable,\\\"-c\\\",\\\"import os,time;from pathlib import Path;Path('C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\JeromePiquot\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Temp\\\\\\\\\\\\\\\\hexalith-job.XxDdwwqC\\\\\\\\\\\\\\\\grandchild.pid').write_text(str(os.getpid()));time.sleep(60)\\\"]);print(\\\"parent-ready\\\",flush=True);time.sleep(60)\"\r\n      ],\r\n      \"exitCode\": 1,\r\n      \"timeoutSeconds\": 2,\r\n      \"timedOut\": true,\r\n      \"error\": \"Command '['C:\\\\\\\\Python314\\\\\\\\python.exe', '-c', 'import pathlib,subprocess,sys,time\\\\nready=pathlib.Path(sys.argv[1]);deadline=time.monotonic()+30\\\\nwhile not ready.is_file():\\\\n if time.monotonic()>deadline:sys.exit(125)\\\\n time.sleep(.01)\\\\nsys.exit(subprocess.call(sys.argv[2:]))\\\\n', 'C:\\\\\\\\Users\\\\\\\\JeromePiquot\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\hexalith-job.XxDdwwqC\\\\\\\\mcpcli-process-bt8wotrf\\\\\\\\assigned', 'C:\\\\\\\\Python314\\\\\\\\python.exe', '-c', 'import subprocess,sys,time;subprocess.Popen([sys.executable,\\\"-c\\\",\\\"import os,time;from pathlib import Path;Path(\\\\'C:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\JeromePiquot\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Temp\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\hexalith-job.XxDdwwqC\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\grandchild.pid\\\\').write_text(str(os.getpid()));time.sleep(60)\\\"]);print(\\\"parent-ready\\\",flush=True);time.sleep(60)']' timed out after 2 seconds\",\r\n      \"cleanup\": \"complete\",\r\n      \"cleanupError\": null\r\n    },\r\n    \"owned_grandchild_stopped\": true,\r\n    \"foreign_sentinel_unchanged\": true\r\n  }\r\n}\r\n",
+  "stderr": "",
+  "result": {
+    "python": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "win32",
+    "home_overridden": false,
+    "absolute_windows_bash_path": {
+      "exit": 0,
+      "stdout": "WINDOWS_BASH_PATH_OK\n",
+      "stderr": ""
+    },
+    "successful_child": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-c",
+        "print(\"successful-child\")"
+      ],
+      "exitCode": 0,
+      "timeoutSeconds": 5,
+      "timedOut": false,
+      "error": null,
+      "cleanup": "complete",
+      "cleanupError": null
+    },
+    "nonzero_child": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-c",
+        "import sys;print(\"retained-out\");print(\"retained-err\",file=sys.stderr);sys.exit(7)"
+      ],
+      "exitCode": 7,
+      "timeoutSeconds": 5,
+      "timedOut": false,
+      "error": null,
+      "cleanup": "complete",
+      "cleanupError": null
+    },
+    "timeout_tree": {
+      "receipt": {
+        "command": [
+          "C:\\Python314\\python.exe",
+          "-c",
+          "import subprocess,sys,time;subprocess.Popen([sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('C:\\\\\\\\Users\\\\\\\\JeromePiquot\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\hexalith-job.XxDdwwqC\\\\\\\\grandchild.pid').write_text(str(os.getpid()));time.sleep(60)\"]);print(\"parent-ready\",flush=True);time.sleep(60)"
+        ],
+        "exitCode": 1,
+        "timeoutSeconds": 2,
+        "timedOut": true,
+        "error": "Command '['C:\\\\Python314\\\\python.exe', '-c', 'import pathlib,subprocess,sys,time\\nready=pathlib.Path(sys.argv[1]);deadline=time.monotonic()+30\\nwhile not ready.is_file():\\n if time.monotonic()>deadline:sys.exit(125)\\n time.sleep(.01)\\nsys.exit(subprocess.call(sys.argv[2:]))\\n', 'C:\\\\Users\\\\JeromePiquot\\\\AppData\\\\Local\\\\Temp\\\\hexalith-job.XxDdwwqC\\\\mcpcli-process-bt8wotrf\\\\assigned', 'C:\\\\Python314\\\\python.exe', '-c', 'import subprocess,sys,time;subprocess.Popen([sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path(\\'C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\JeromePiquot\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Temp\\\\\\\\\\\\\\\\hexalith-job.XxDdwwqC\\\\\\\\\\\\\\\\grandchild.pid\\').write_text(str(os.getpid()));time.sleep(60)\"]);print(\"parent-ready\",flush=True);time.sleep(60)']' timed out after 2 seconds",
+        "cleanup": "complete",
+        "cleanupError": null
+      },
+      "owned_grandchild_stopped": true,
+      "foreign_sentinel_unchanged": true
+    }
+  }
+}
