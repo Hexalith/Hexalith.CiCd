@@ -36,6 +36,14 @@ import render as renderer
 REPOSITORY = "Hexalith/Hexalith.Conversations"
 PRODUCT_PATHS = ("src/", "tests/", "scripts/", "tools/", ".github/actions/", ".githooks/commit-msg", ".config/dotnet-tools.json",
                  "Directory.Build.props", ".gitattributes", "Hexalith.Conversations.slnx", "references/Hexalith.Platform")
+# Explicit 2026-11-17 user approval, recorded in Conversations c0767f61.
+# These exact artifact bytes may be added once; existing artifacts stay immutable.
+APPROVED_ARTIFACT_ADDITIONS = {
+    "docs/release-evidence/public-contract-shape-bounded-read-v4.json":
+        "4de710b386ff63a2316c603e40556bc78b0f61bbf1635a419cf0d436a1353d74",
+    "docs/release-evidence/public-contract-shape-bounded-read-v4-review.json":
+        "f90f69acda2e858b99980ae8b59ee00b936ff2fb91276215f4a1c71aa5716227",
+}
 CREDENTIAL_KEYS = ("GH_TOKEN", "GITHUB_TOKEN", "ZIZMOR_GITHUB_TOKEN")
 NATIVE_PROJECT = "tests/Hexalith.Conversations.TestSupport.Tests"
 NATIVE_HISTORICAL_COMMIT = "79f4b126ca66d419a584855936ce56a1266cce67"
@@ -169,7 +177,11 @@ def product_difference(before, after) -> list[dict]:
         old, new = before.items.get(path), after.items.get(path)
         if old == new:
             continue
-        if not any(path == prefix or prefix.endswith("/") and path.startswith(prefix) for prefix in PRODUCT_PATHS):
+        if path in APPROVED_ARTIFACT_ADDITIONS:
+            if (old is not None or new is None or new.mode != "100644"
+                    or digest(after.read(path)) != APPROVED_ARTIFACT_ADDITIONS[path]):
+                raise delivery.DeliveryError("preparation requires an exact approved append-only artifact addition: " + path)
+        elif not any(path == prefix or prefix.endswith("/") and path.startswith(prefix) for prefix in PRODUCT_PATHS):
             raise delivery.DeliveryError("preparation changed a path outside the approved central product inventory: " + path)
         result.append({"path": path, "before": {"mode": old.mode, "oid": old.oid} if old else None,
                        "after": {"mode": new.mode, "oid": new.oid} if new else None})

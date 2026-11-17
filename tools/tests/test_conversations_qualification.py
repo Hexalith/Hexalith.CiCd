@@ -141,6 +141,87 @@ class QualificationTests(unittest.TestCase):
         after = snapshot({"src/Product.cs": ("100644", b"new"), ".github/actions/after-unit-tests/action.yml": ("100644", b"product action")})
         self.assertEqual(2, len(QUALIFY.product_difference(before, after)))
 
+    def test_approved_artifact_inventory_pins_only_the_two_user_approved_v4_bytes(self):
+        self.assertEqual({
+            "docs/release-evidence/public-contract-shape-bounded-read-v4.json":
+                "4de710b386ff63a2316c603e40556bc78b0f61bbf1635a419cf0d436a1353d74",
+            "docs/release-evidence/public-contract-shape-bounded-read-v4-review.json":
+                "f90f69acda2e858b99980ae8b59ee00b936ff2fb91276215f4a1c71aa5716227",
+        }, QUALIFY.APPROVED_ARTIFACT_ADDITIONS)
+        self.assertFalse(any(prefix.startswith("docs/") for prefix in QUALIFY.PRODUCT_PATHS))
+
+    def test_product_diff_accepts_exact_approved_regular_artifact_additions(self):
+        # Supply a small test approval for the same literal paths, then exercise
+        # the production digest/mode/addition guard without a module checkout.
+        payloads = {path: ("100644", ("approved fixture " + path).encode())
+                    for path in QUALIFY.APPROVED_ARTIFACT_ADDITIONS}
+        pins = {path: QUALIFY.digest(data) for path, (_, data) in payloads.items()}
+        before = {"src/Product.cs": ("100644", b"old")}
+        after = {"src/Product.cs": ("100644", b"new"), **payloads}
+        with mock.patch.dict(QUALIFY.APPROVED_ARTIFACT_ADDITIONS, pins, clear=True):
+            result = QUALIFY.product_difference(snapshot(before), snapshot(after))
+        additions = {row["path"]: row for row in result if row["path"] in payloads}
+        self.assertEqual(set(payloads), set(additions))
+        for path, row in additions.items():
+            self.assertIsNone(row["before"])
+            self.assertEqual({"mode": "100644", "oid": QUALIFY.digest(payloads[path][1])}, row["after"])
+
+    def test_product_diff_refuses_wrong_bytes_modes_and_existing_artifact_changes(self):
+        for path in tuple(QUALIFY.APPROVED_ARTIFACT_ADDITIONS):
+            approved = b"exact approved test artifact"
+            pins = {path: QUALIFY.digest(approved)}
+            cases = {
+                "wrong-bytes": ({}, {path: ("100644", approved + b"changed")}),
+                "executable": ({}, {path: ("100755", approved)}),
+                "symlink": ({}, {path: ("120000", approved)}),
+                "gitlink": ({}, {path: ("160000", approved)}),
+                "modify-existing": ({path: ("100644", b"previous")}, {path: ("100644", approved)}),
+                "remove-existing": ({path: ("100644", approved)}, {}),
+                "change-existing-mode": ({path: ("100644", approved)}, {path: ("100755", approved)}),
+            }
+            for fault, (before, after) in cases.items():
+                with self.subTest(path=path, fault=fault), \
+                        mock.patch.dict(QUALIFY.APPROVED_ARTIFACT_ADDITIONS, pins, clear=True), \
+                        self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "exact approved append-only"):
+                    QUALIFY.product_difference(snapshot(before), snapshot(after))
+
+    def test_product_diff_does_not_let_valid_additions_admit_an_unapproved_frozen_change(self):
+        payloads = {path: ("100644", ("approved fixture " + path).encode())
+                    for path in QUALIFY.APPROVED_ARTIFACT_ADDITIONS}
+        pins = {path: QUALIFY.digest(data) for path, (_, data) in payloads.items()}
+        frozen = "docs/release-evidence/public-contract-shape-story-6.4-v3.json"
+        with mock.patch.dict(QUALIFY.APPROVED_ARTIFACT_ADDITIONS, pins, clear=True), \
+                self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "outside the approved central product inventory"):
+            QUALIFY.product_difference(snapshot({frozen: ("100644", b"original")}),
+                snapshot({**payloads, frozen: ("100644", b"changed")}))
+
+    def test_product_diff_keeps_unchanged_approved_artifacts_without_retiring_immutability(self):
+        path = next(iter(QUALIFY.APPROVED_ARTIFACT_ADDITIONS))
+        retained = {path: ("100644", b"already published unchanged artifact")}
+        before = snapshot({**retained, "src/Product.cs": ("100644", b"old")})
+        after = snapshot({**retained, "src/Product.cs": ("100644", b"new")})
+        self.assertEqual(["src/Product.cs"], [row["path"] for row in QUALIFY.product_difference(before, after)])
+
+    def test_product_diff_refuses_all_unapproved_docs_and_frozen_api_changes(self):
+        approved_path = next(iter(QUALIFY.APPROVED_ARTIFACT_ADDITIONS))
+        paths = (
+            "docs/release-evidence/public-contract-shape-baseline-v1.json",
+            "docs/release-evidence/public-contract-shape-story-9.2-v2.json",
+            "docs/release-evidence/public-contract-shape-story-6.4-v3.json",
+            "docs/release-evidence/public-contract-shape-story-6.4-v3-review.json",
+            "docs/release-evidence/unapproved.json", "docs/README.md",
+            approved_path + ".bak", approved_path + "/child.json", approved_path.upper(),
+        )
+        for path in paths:
+            for operation, before, after in (
+                ("add", {}, {path: ("100644", b"new")}),
+                ("modify", {path: ("100644", b"old")}, {path: ("100644", b"new")}),
+                ("remove", {path: ("100644", b"old")}, {}),
+            ):
+                with self.subTest(path=path, operation=operation), \
+                        self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "outside the approved central product inventory"):
+                    QUALIFY.product_difference(snapshot(before), snapshot(after))
+
     def test_stale_candidate_records_failure_before_any_remote_sdk_or_source_command(self):
         with tempfile.TemporaryDirectory(prefix="qualification-controls-") as temporary:
             directory = Path(temporary)
