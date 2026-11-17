@@ -1,0 +1,812 @@
+#!/usr/bin/env python3
+"""Restore and build isolated package-only consumers for the release inventory."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import pathlib
+import subprocess
+import sys
+import tempfile
+import textwrap
+from xml.sax.saxutils import quoteattr
+
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+
+# The parent CI job builds mapped owner source. These package-only probes run in
+# separate temporary projects and must not inherit that source mapping.
+# MSBuild import property names are case-insensitive.
+SOURCE_MAPPING_IMPORTS = frozenset(key.casefold() for key in {
+    "AfterMicrosoftNETSdkTargets",
+    "CustomAfterDirectoryBuildTargets",
+    "CustomAfterMicrosoftCommonProps",
+    "CustomBeforeDirectoryBuildProps",
+    "CustomBeforeDirectoryBuildTargets",
+})
+
+from release_package_contract import (  # noqa: E402
+    TOOL_PACKAGE_IDS,
+    PackageMetadata,
+    validate_package_directory,
+)
+
+
+def write_nuget_config(consumer_dir: pathlib.Path, package_source: pathlib.Path) -> pathlib.Path:
+    """Write an isolated source list containing only release packages and NuGet.org."""
+
+    config_path = consumer_dir / "nuget.config"
+    config_path.write_text(
+        textwrap.dedent(f"""\
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+            <add key="local-release-packages" value={quoteattr(str(package_source))} />
+            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+          </packageSources>
+          <packageSourceMapping>
+            <packageSource key="local-release-packages">
+              <package pattern="Hexalith.EventStore" />
+              <package pattern="Hexalith.EventStore.*" />
+            </packageSource>
+            <packageSource key="nuget.org">
+              <package pattern="*" />
+            </packageSource>
+          </packageSourceMapping>
+        </configuration>
+        """),
+        encoding="utf-8",
+    )
+    return config_path
+
+
+def write_consumer_project(
+    consumer_dir: pathlib.Path,
+    package_id: str,
+    version: str,
+) -> pathlib.Path:
+    """Create a primary package consumer and its required compiler-contract fixture."""
+
+    generator_contract_version = (
+        f'<PackageVersion Include="Hexalith.EventStore.Contracts" Version="{version}" />'
+        if package_id == "Hexalith.EventStore.RestApi.Generators" else ""
+    )
+    generator_contract_reference = (
+        '<PackageReference Include="Hexalith.EventStore.Contracts" />'
+        if package_id == "Hexalith.EventStore.RestApi.Generators" else ""
+    )
+    (consumer_dir / "Directory.Packages.props").write_text(
+        textwrap.dedent(f"""\
+        <Project>
+          <PropertyGroup>
+            <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+          </PropertyGroup>
+          <ItemGroup>
+            <PackageVersion Include="{package_id}" Version="{version}" />
+            {generator_contract_version}
+          </ItemGroup>
+        </Project>
+        """),
+        encoding="utf-8",
+    )
+    framework_reference = (
+        '<FrameworkReference Include="Microsoft.AspNetCore.App" />'
+        if package_id in {"Hexalith.EventStore.Client", "Hexalith.EventStore.DomainService", "Hexalith.EventStore.Server"}
+        else ""
+    )
+    project_path = consumer_dir / "PackageConsumer.csproj"
+    project_path.write_text(
+        textwrap.dedent(f"""\
+        <Project Sdk="Microsoft.NET.Sdk">
+          <PropertyGroup>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net11.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings>
+            <Nullable>enable</Nullable>
+          </PropertyGroup>
+          <ItemGroup>
+            <PackageReference Include="{package_id}" />
+            {generator_contract_reference}
+            {framework_reference}
+          </ItemGroup>
+        </Project>
+        """),
+        encoding="utf-8",
+    )
+    probes = {
+        "Hexalith.EventStore.RestApi.Generators": textwrap.dedent("""\
+            using Hexalith.EventStore.Contracts.Rest;
+
+            [assembly: RestApi("api/package-probe")]
+
+            Type manifest = typeof(global::Hexalith.EventStore.RestApi.Generated.RestApiGeneratorManifest);
+            const global::System.Reflection.BindingFlags flags = global::System.Reflection.BindingFlags.Static
+                | global::System.Reflection.BindingFlags.NonPublic;
+            if (manifest.GetField("RestApiAttributeFound", flags)?.GetRawConstantValue() is not true
+                || manifest.GetField("RoutePrefix", flags)?.GetRawConstantValue() as string != "api/package-probe")
+                throw new InvalidOperationException("The packaged REST generator did not emit its manifest.");
+            """),
+        "Hexalith.EventStore.Contracts": textwrap.dedent("""\
+            using Hexalith.EventStore.Contracts.Streams;
+            using Hexalith.EventStore.Contracts.Effects;
+            using Hexalith.EventStore.Contracts.Reminders;
+            using Hexalith.EventStore.Contracts.Processes;
+
+            var effectIdentity = new EffectIdentity("tenant-a", "widget", "source-1", 1,
+                EffectKindCatalog.DateResume, "widget", "item-1", 0);
+            var effectId = EffectIdentityCodec.ComputeEffectId(effectIdentity);
+            var effectMessage = EffectIdentityCodec.ComputeMessageId(effectIdentity);
+            var effect = new TrustedEffectSubmission(effectIdentity, "CreateWidget", [123, 125],
+                effectMessage, effectMessage);
+            var provenance = new TrustedEffectContext("synthetic-worker", "synthetic-date-resume",
+                "source-cause", "synthetic-delegation");
+            if (effectId.Length != 52 || effect.MessageId != "wrk-" + effectId
+                || provenance.Workload != "synthetic-worker")
+                throw new InvalidOperationException("Trusted effect public identity API changed.");
+
+            var reminderIntent = new ReminderIntent("tenant-a", "widget", "item-1",
+                new DateTimeOffset(2026, 10, 1, 9, 30, 0, TimeSpan.Zero), EffectKindCatalog.DateResume,
+                "widget.resume.v1", [1], "widget", "item-1", 1, 1);
+            string reminderActor = ReminderIdentityCodec.ComputeActorId(reminderIntent);
+            string reminderName = ReminderIdentityCodec.ComputeReminderName(reminderIntent);
+            if (ReminderIdentityCodec.Version != 1
+                || reminderActor != "wra-HZT1ANXRJ95M9MPNEVPJYRE4QS912QRKTCMEZWE0EBFQK015G1WG"
+                || reminderName != "date-wrs-AED0KV4P0SF4RAQGXRJ8AZJEJ1NE6TVF5GWFHD0Z3HRMVRSQA8D0"
+                || !ReminderIdentityCodec.TryParseReminderName(reminderName, out string reminderKind, out _)
+                || reminderKind != EffectKindCatalog.DateResume
+                || !ReminderIdentityCodec.Rederives("tenant-a", "item-1", EffectKindCatalog.DateResume,
+                    reminderIntent.DueUtc, 1, reminderActor, reminderName)
+                || ReminderIdentityCodec.IsSupportedKind(EffectKindCatalog.CascadeCancel)
+                || new ReminderConvergenceResult(1, 0, 0, 0, 0).Armed != 1
+                || ReminderDisposition.Submitted == ReminderDisposition.Stale)
+                throw new InvalidOperationException("Typed reminder identity API changed.");
+
+            var request = new StreamReadRequest("tenant-a", "widget", "item-1");
+            var page = new StreamReadPage("tenant-a", "widget", "item-1", [],
+                new StreamReadMetadata(0, null, null, 0, 0, false, null));
+            if (StreamReadPageValidator.ValidateAndGetNextSequence(request, page) != 0)
+                throw new InvalidOperationException("The exclusive cursor contract changed.");
+            if (new ProcessEffect(EffectKindCatalog.Registry, "widget", "item-1", 0,
+                "CreateWidget", [123]).Ordinal != 0)
+                throw new InvalidOperationException("Process effect contract changed.");
+            """),
+        "Hexalith.EventStore.Client": textwrap.dedent("""\
+            using Hexalith.EventStore.Client.Projections;
+            using Hexalith.EventStore.Client.Effects;
+            using Hexalith.EventStore.Client.Reminders;
+            using Hexalith.EventStore.Client.Processes;
+            using Hexalith.EventStore.Contracts.Effects;
+            using Hexalith.EventStore.Contracts.Reminders;
+            using System.Text.Json;
+
+            var syntheticIdentity = new EffectIdentity("tenant-a", "widget", "source-1", 1,
+                EffectKindCatalog.DateResume, "widget", "item-1", 0);
+            string syntheticMessage = EffectIdentityCodec.ComputeMessageId(syntheticIdentity);
+            ITrustedEffectSubmitter effectSubmitter = new HttpTrustedEffectSubmitter(
+                new HttpClient(new SyntheticEffectHandler()) { BaseAddress = new Uri("https://example.invalid/") });
+            var syntheticResult = await effectSubmitter.SubmitAsync(
+                new TrustedEffectSubmission(syntheticIdentity, "CreateWidget", [123, 125],
+                    syntheticMessage, syntheticMessage),
+                new TrustedEffectContext("synthetic-worker", "synthetic-date-resume",
+                    "source-cause", "synthetic-delegation"));
+            if (syntheticResult.EffectId != EffectIdentityCodec.ComputeEffectId(syntheticIdentity)
+                || syntheticResult.Disposition != TrustedEffectDisposition.NoOp
+                || EffectIdentityCodec.Version != 1)
+                throw new InvalidOperationException("Trusted effect SDK API changed.");
+
+            var store = new ProbeStore();
+            var coordinator = new SharedProjectionEpochCoordinator(store, store);
+            var scope = new SharedProjectionScope("statestore", "tenant-a", "widget", "widget-index", ["ordinary"]);
+            var lease = await coordinator.RegisterWriterAsync(scope, "ordinary");
+            if (await coordinator.JournalAsync(scope, lease, new SharedProjectionDelivery("item-1", 1, [1], [1]))
+                != SharedProjectionJournalResult.Journaled)
+                throw new InvalidOperationException("Initial delivery was not journaled.");
+            if (await coordinator.CatchUpAsync(scope, (_, _, _) =>
+                Task.FromResult<IReadOnlyList<ReadModelBatchOperation>>([
+                    ReadModelBatchOperation.Write("index", new Counter(1), ReadModelBatchConcurrency.LastWrite)])) != 1)
+                throw new InvalidOperationException("Initial catch-up did not drain the journal.");
+
+            if (await coordinator.BeginAsync(scope, "rebuild", "inventory", new Dictionary<string, long> {
+                ["item-1"] = 1,
+            }) != 1)
+                throw new InvalidOperationException("Capture did not advance the epoch.");
+            lease = await coordinator.RefreshLeaseAsync(scope, "ordinary");
+            if (await coordinator.JournalAsync(scope, lease, new SharedProjectionDelivery("item-1", 2, [2], [2]))
+                != SharedProjectionJournalResult.Journaled)
+                throw new InvalidOperationException("Post-capture delivery was not journaled.");
+            _ = await coordinator.StageAsync(scope, "rebuild", [ReadModelBatchOperation.Write(
+                "index", new Counter(1), ReadModelBatchConcurrency.LastWrite)]);
+            await coordinator.CommitAsync(scope, "rebuild");
+            if (await coordinator.CatchUpAsync(scope, (_, _, _) =>
+                Task.FromResult<IReadOnlyList<ReadModelBatchOperation>>([
+                    ReadModelBatchOperation.Write("index", new Counter(2), ReadModelBatchConcurrency.LastWrite)])) != 1)
+                throw new InvalidOperationException("Committed catch-up did not drain the journal.");
+            var selected = await coordinator.ReadAsync<Counter>(scope, "index");
+            if (selected.Generation != 1 || selected.IsStale || selected.Value?.Value != 2
+                || (await coordinator.GetCheckpointAsync(scope, "item-1"))?.Position != 2)
+                throw new InvalidOperationException("The selected generation lost acknowledged delivery.");
+            if (await coordinator.JournalAsync(scope, lease, new SharedProjectionDelivery("item-1", 2, [2], [2]))
+                != SharedProjectionJournalResult.AlreadyJournaled)
+                throw new InvalidOperationException("Identical redelivery was not idempotent.");
+
+            var bounded = new SharedProjectionScope("statestore", "tenant-bound", "widget", "widget-index", ["ordinary"]);
+            var boundedLease = await coordinator.RegisterWriterAsync(bounded, "ordinary");
+            for (int position = 1; position <= 128; position++) {
+                if (await coordinator.JournalAsync(bounded, boundedLease,
+                    new SharedProjectionDelivery("stream", position, [(byte)position], [1]))
+                    != SharedProjectionJournalResult.Journaled)
+                    throw new InvalidOperationException("The bounded journal rejected an in-range position.");
+            }
+            if (await coordinator.JournalAsync(bounded, boundedLease,
+                new SharedProjectionDelivery("stream", 129, [129], [1]))
+                != SharedProjectionJournalResult.Backpressure
+                || (await coordinator.GetStatusAsync(bounded)).PendingDeliveryCount != 128)
+                throw new InvalidOperationException("The bounded journal accepted an over-limit position.");
+
+            IReminderIntentSource reminderSource = new SyntheticReminderSource();
+            IReadOnlyList<ReminderIntent> reminderIntents = await reminderSource.GetCurrentIntentsAsync(
+                new ReminderTarget("tenant-a", "widget", "item-1"));
+            ReminderCommand reminderCommand = reminderSource.TranslateDueIntent(reminderIntents[0]);
+            IReminderDelegationTokenProvider reminderTokens = new SyntheticReminderTokens();
+            string? reminderToken = await reminderTokens.GetDelegationTokenAsync(new ReminderDelegationRequest(
+                new TrustedEffectSubmission(syntheticIdentity, reminderCommand.CommandType, reminderCommand.Payload,
+                    syntheticMessage, syntheticMessage),
+                "synthetic-worker", "synthetic-date-resume", syntheticMessage));
+            if (reminderIntents.Count != 1 || reminderCommand.CommandType != "ResumeWidget"
+                || reminderToken != "synthetic-delegation" || typeof(IReminderRegistrar).GetMethod("ConvergeAsync") is null)
+                throw new InvalidOperationException("Typed reminder SDK API changed.");
+            var processSource = new ProcessSource("tenant-a", "widget", "item-1");
+            processSource.Validate();
+            if (processSource.CatalogKey != "tenant-a\\0widget\\0item-1"
+                || typeof(IReminderTargetCatalog).GetMethod("ListAsync") is null
+                || (reminderIntents[0] with { Ordinal = 1, SourceMessageId = "committed-source" }).Ordinal != 1
+                || TrustedEffectOriginScope.Current is not null
+                || typeof(TrustedEffectOrigin).GetProperty("CommandDigest") is null
+                || typeof(Hexalith.EventStore.Client.Streams.AuthoritativeStreamReadDeadline).GetMethod("ReadWithAdmissionAsync") is null
+                || !(new ProcessSourcePage([], null) { IsIncomplete = true }).IsIncomplete
+                || typeof(IProcessSourceCatalog).GetMethod("ListAsync") is null
+                || typeof(IProcessTranslator).GetMethod("TranslateAsync") is null
+                || new ProcessEvidenceUnavailableException().InnerException is not null
+                || new ProcessEvidenceUnavailableException(new HttpRequestException()).InnerException is not HttpRequestException
+                || typeof(IProcessDelegationProvider).GetMethod("CreateAsync") is null)
+                throw new InvalidOperationException("Checkpointed process client API changed.");
+
+            record Counter(int Value);
+
+            sealed class SyntheticReminderSource : IReminderIntentSource {
+                public Task<IReadOnlyList<ReminderIntent>> GetCurrentIntentsAsync(ReminderTarget target,
+                    CancellationToken cancellationToken = default)
+                    => Task.FromResult<IReadOnlyList<ReminderIntent>>([new ReminderIntent(target.Tenant, target.Domain,
+                        target.Aggregate, new DateTimeOffset(2026, 10, 1, 9, 30, 0, TimeSpan.Zero),
+                        EffectKindCatalog.DateResume, "widget.resume.v1", [1], target.Domain, target.Aggregate, 1, 1)]);
+
+                public ReminderCommand TranslateDueIntent(ReminderIntent intent) => new("ResumeWidget", intent.Payload);
+            }
+
+            sealed class SyntheticReminderTokens : IReminderDelegationTokenProvider {
+                public Task<string?> GetDelegationTokenAsync(ReminderDelegationRequest request,
+                    CancellationToken cancellationToken = default)
+                    => Task.FromResult<string?>(request.Purpose == "synthetic-date-resume"
+                        && request.CausationId == request.Submission.MessageId
+                        && request.CausationId == "wrk-" + EffectIdentityCodec.ComputeEffectId(request.Submission.Identity)
+                        ? "synthetic-delegation" : null);
+            }
+
+            sealed class SyntheticEffectHandler : HttpMessageHandler {
+                protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+                    CancellationToken cancellationToken) {
+                    if (request.Method != HttpMethod.Post
+                        || request.RequestUri?.AbsolutePath != "/api/v1/trusted-effects")
+                        throw new InvalidOperationException("Trusted effect SDK route changed.");
+                    string effectId = EffectIdentityCodec.ComputeEffectId(new EffectIdentity(
+                        "tenant-a", "widget", "source-1", 1, EffectKindCatalog.DateResume,
+                        "widget", "item-1", 0));
+                    return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+                        Content = System.Net.Http.Json.JsonContent.Create(
+                            new TrustedEffectResult(effectId, TrustedEffectDisposition.NoOp, false, null)),
+                    });
+                }
+            }
+
+            sealed class ProbeStore : IReadModelStore, IReadModelBatchStore {
+                private readonly Dictionary<string, (byte[] Value, string ETag)> _values = new(StringComparer.Ordinal);
+                private readonly object _gate = new();
+                private long _revision;
+                private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
+
+                public Task<ReadModelEntry<T>> GetAsync<T>(string storeName, string key,
+                    CancellationToken cancellationToken = default) where T : class {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    lock (_gate) {
+                        return Task.FromResult(_values.TryGetValue(storeName + ":" + key, out var entry)
+                            ? new ReadModelEntry<T>(JsonSerializer.Deserialize<T>(entry.Value, Json), entry.ETag)
+                            : new ReadModelEntry<T>(null, null));
+                    }
+                }
+
+                public Task SaveAsync<T>(string storeName, string key, T value,
+                    CancellationToken cancellationToken = default) where T : class {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    lock (_gate) {
+                        _values[storeName + ":" + key] = (JsonSerializer.SerializeToUtf8Bytes(value, Json),
+                            (++_revision).ToString());
+                    }
+                    return Task.CompletedTask;
+                }
+
+                public Task<bool> TrySaveAsync<T>(string storeName, string key, T value, string etag,
+                    CancellationToken cancellationToken = default) where T : class {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    lock (_gate) {
+                        string stateKey = storeName + ":" + key;
+                        bool exists = _values.TryGetValue(stateKey, out var prior);
+                        if (exists ? prior.ETag != etag : etag.Length != 0)
+                            return Task.FromResult(false);
+                        _values[stateKey] = (JsonSerializer.SerializeToUtf8Bytes(value, Json),
+                            (++_revision).ToString());
+                        return Task.FromResult(true);
+                    }
+                }
+
+                public Task<ReadModelBatchResult> ExecuteAsync(ReadModelBatch batch,
+                    CancellationToken cancellationToken = default) {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    lock (_gate) {
+                        foreach (var operation in batch.Operations) {
+                            string stateKey = batch.Scope.StoreName + ":" + operation.Key;
+                            if (operation.Kind == ReadModelBatchOperationKind.Write)
+                                _values[stateKey] = (operation.CanonicalValue.ToArray(), (++_revision).ToString());
+                            else
+                                _values.Remove(stateKey);
+                        }
+                    }
+                    return Task.FromResult(ReadModelBatchResult.Completed(batch.Scope.ComputeScopeHash()));
+                }
+            }
+            """),
+        "Hexalith.EventStore.DomainService": textwrap.dedent("""\
+            using Dapr.Actors.Runtime;
+            using Hexalith.EventStore.Client.Reminders;
+            using Hexalith.EventStore.Client.Processes;
+            using Hexalith.EventStore.Client.Gateway;
+            using Hexalith.EventStore.Client.Effects;
+            using Hexalith.EventStore.Client.Projections;
+            using Hexalith.EventStore.Contracts.Processes;
+            using Hexalith.EventStore.Contracts.Streams;
+            using Hexalith.EventStore.Contracts.Commands;
+            using Hexalith.EventStore.Contracts.Queries;
+            using Hexalith.EventStore.Contracts.Effects;
+            using Hexalith.EventStore.Contracts.Projections;
+            using Hexalith.EventStore.Contracts.Reminders;
+            using Hexalith.EventStore.DomainService;
+            using Microsoft.Extensions.Configuration;
+            using Microsoft.Extensions.DependencyInjection;
+            using Microsoft.Extensions.Diagnostics.HealthChecks;
+            using Microsoft.Extensions.Hosting;
+            using Microsoft.Extensions.Options;
+            using System.Security.Claims;
+            using System.Text.Json;
+
+            var request = new ProjectionRequest("tenant-a", "widget", "item-1", []);
+            using var provider = new ServiceCollection().BuildServiceProvider();
+            if (DomainProjectionDispatcher.Project(provider, request) is not null)
+                throw new InvalidOperationException("An unregistered projection route was admitted.");
+
+            var reminderServices = new ServiceCollection();
+            reminderServices.AddLogging();
+            reminderServices.AddSingleton<IConfiguration>(new ConfigurationBuilder().AddInMemoryCollection(
+                new Dictionary<string, string?> {
+                    ["EventStore:Reminders:ActorTypeName"] = "WidgetReminderActor",
+                    ["EventStore:Reminders:Workload"] = "widget-service",
+                    ["EventStore:Reminders:Purposes:" + EffectKindCatalog.DateResume] = "synthetic-date-resume",
+                }).Build());
+            reminderServices.AddDaprClient();
+            reminderServices.AddEventStoreReminders<SyntheticReminderSource>();
+            using (ServiceProvider reminderProvider = reminderServices.BuildServiceProvider()) {
+                IReminderRegistrar registrar = reminderProvider.GetRequiredService<IReminderRegistrar>();
+                ActorRuntimeOptions actorOptions = reminderProvider.GetRequiredService<IOptions<ActorRuntimeOptions>>().Value;
+                HealthCheckServiceOptions health = reminderProvider.GetRequiredService<IOptions<HealthCheckServiceOptions>>().Value;
+                EventStoreReminderOptions reminderOptions = reminderProvider
+                    .GetRequiredService<IOptions<EventStoreReminderOptions>>().Value;
+                if (!actorOptions.Actors.Any(registration => registration.Type.ActorTypeName == "WidgetReminderActor"
+                        && registration.Type.ImplementationType == typeof(ReminderActor))
+                    || !health.Registrations.Any(registration => registration.Name
+                        == EventStoreDomainTelemetry.RemindersUnresolvedHealthCheckName
+                        && registration.Tags.Contains("ready"))
+                    || reminderOptions.Purposes[EffectKindCatalog.DateResume] != "synthetic-date-resume")
+                    throw new InvalidOperationException("Typed reminder runtime registration changed.");
+                bool rejected = false;
+                try {
+                    await registrar.ConvergeAsync(new ReminderTarget("Tenant-A", "widget", "item-1"));
+                }
+                catch (ArgumentException) {
+                    rejected = true;
+                }
+                if (!rejected)
+                    throw new InvalidOperationException("A non-canonical reminder target was admitted.");
+            }
+
+            var processServices = new ServiceCollection();
+            processServices.AddLogging();
+            processServices.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
+            processServices.AddSingleton<IReadModelStore, SyntheticProcessStore>();
+            processServices.AddSingleton<IEventStoreGatewayClient, SyntheticProcessGateway>();
+            processServices.AddSingleton<ITrustedEffectSubmitter, SyntheticProcessSubmitter>();
+            processServices.AddSingleton<IProcessDelegationProvider, SyntheticProcessDelegation>();
+            processServices.AddSingleton<IProcessDispositionAuthorizer, SyntheticProcessAuthorizer>();
+            processServices.AddSingleton<IProcessDispositionAuditSink, SyntheticProcessAudit>();
+            processServices.AddEventStoreProcesses<SyntheticProcessCatalog, SyntheticProcessTranslator>(options => {
+                options.ReconciliationInterval = TimeSpan.FromSeconds(1);
+                options.ReadinessMaxAge = TimeSpan.FromMinutes(1);
+                options.LeaseDuration = TimeSpan.FromSeconds(3);
+                options.SupportedCandidateCount = 1;
+            });
+            using (ServiceProvider processProvider = processServices.BuildServiceProvider()) {
+                var processHost = processProvider.GetServices<IHostedService>().OfType<ProcessReconciler>().Single();
+                await processHost.StartAsync(CancellationToken.None);
+                var source = new ProcessSource("tenant-a", "widget", "source-1");
+                var checkpoint = processProvider.GetRequiredService<ProcessCheckpointStore>();
+                var deadline = DateTimeOffset.UtcNow.AddSeconds(10);
+                while ((await checkpoint.GetAsync(source)).Checkpoint < 1 && DateTimeOffset.UtcNow < deadline)
+                    await Task.Delay(20);
+                await processHost.StopAsync(CancellationToken.None);
+                if ((await checkpoint.GetAsync(source)).Checkpoint != 1)
+                    throw new InvalidOperationException("Hosted checkpointed process did not advance.");
+            }
+
+            sealed class SyntheticReminderSource : IReminderIntentSource {
+                public Task<IReadOnlyList<ReminderIntent>> GetCurrentIntentsAsync(ReminderTarget target,
+                    CancellationToken cancellationToken = default)
+                    => Task.FromResult<IReadOnlyList<ReminderIntent>>([]);
+
+                public ReminderCommand TranslateDueIntent(ReminderIntent intent) => new("ResumeWidget", intent.Payload);
+            }
+
+            sealed class SyntheticProcessCatalog : IProcessSourceCatalog {
+                public Task<ProcessSourcePage> ListAsync(string? afterKey, int limit,
+                    CancellationToken cancellationToken = default) {
+                    var source = new ProcessSource("tenant-a", "widget", "source-1");
+                    return Task.FromResult(new ProcessSourcePage(afterKey is null ? [source] : [], null));
+                }
+            }
+
+            sealed class SyntheticProcessTranslator : IProcessTranslator {
+                public ValueTask<IReadOnlyList<ProcessEffect>> TranslateAsync(ProcessSource source,
+                    StreamReadEvent streamEvent, CancellationToken cancellationToken = default)
+                    => ValueTask.FromResult<IReadOnlyList<ProcessEffect>>([
+                        new ProcessEffect(EffectKindCatalog.Registry, "widget", "item-1", 0, "CreateWidget", [123])]);
+            }
+
+            sealed class SyntheticProcessDelegation : IProcessDelegationProvider {
+                public Task<TrustedEffectContext> CreateAsync(TrustedEffectSubmission submission,
+                    string causationId, CancellationToken cancellationToken = default)
+                    => Task.FromResult(new TrustedEffectContext("synthetic-worker", "synthetic-process",
+                        causationId, "synthetic-delegation"));
+            }
+
+            sealed class SyntheticProcessAuthorizer : IProcessDispositionAuthorizer {
+                public Task<bool> AuthorizeAsync(ClaimsPrincipal principal, ProcessSource source,
+                    CancellationToken cancellationToken = default) => Task.FromResult(false);
+            }
+
+            sealed class SyntheticProcessAudit : IProcessDispositionAuditSink {
+                public Task RecordAsync(ClaimsPrincipal principal, ProcessSource source, string reason,
+                    CancellationToken cancellationToken = default) => Task.CompletedTask;
+            }
+
+            sealed class SyntheticProcessSubmitter : ITrustedEffectSubmitter {
+                public Task<TrustedEffectResult> SubmitAsync(TrustedEffectSubmission submission,
+                    TrustedEffectContext context, CancellationToken cancellationToken = default)
+                    => Task.FromResult(new TrustedEffectResult(EffectIdentityCodec.ComputeEffectId(submission.Identity),
+                        TrustedEffectDisposition.NoOp, false, null));
+            }
+
+            sealed class SyntheticProcessGateway : IEventStoreGatewayClient {
+                public Task<StreamReadPage> ReadWorkloadStreamAsync(StreamReadRequest request,
+                    CancellationToken cancellationToken = default) {
+                    StreamReadEvent[] events = request.FromSequence == 0
+                        ? [new StreamReadEvent(1, "SyntheticEvent", [123], "json", 1, "message-1",
+                            null, null, DateTimeOffset.UtcNow, null)] : [];
+                    return Task.FromResult(new StreamReadPage(request.Tenant, request.Domain, request.AggregateId,
+                        events, new StreamReadMetadata(request.FromSequence, null,
+                            events.Length == 0 ? null : 1, 1, events.Length, false, null)));
+                }
+                public Task<SubmitCommandResponse> SubmitCommandAsync(SubmitCommandRequest request,
+                    CancellationToken cancellationToken = default) => throw new NotSupportedException();
+                public Task<EventStoreQueryResult> SubmitQueryAsync(SubmitQueryRequest request,
+                    string? ifNoneMatch = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+                public Task<EventStoreQueryResult<T>> SubmitQueryAsync<T>(SubmitQueryRequest request,
+                    string? ifNoneMatch = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+                public Task<StreamReadPage> ReadStreamAsync(StreamReadRequest request,
+                    CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            }
+
+            sealed class SyntheticProcessStore : IReadModelStore {
+                private readonly Dictionary<string, (byte[] Value, string ETag)> _values = new(StringComparer.Ordinal);
+                private long _revision;
+                private readonly object _gate = new();
+                private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
+                public Task<ReadModelEntry<T>> GetAsync<T>(string storeName, string key,
+                    CancellationToken cancellationToken = default) where T : class {
+                    lock (_gate) {
+                        return Task.FromResult(_values.TryGetValue(storeName + ":" + key, out var entry)
+                            ? new ReadModelEntry<T>(JsonSerializer.Deserialize<T>(entry.Value, Json), entry.ETag)
+                            : new ReadModelEntry<T>(null, null));
+                    }
+                }
+                public Task SaveAsync<T>(string storeName, string key, T value,
+                    CancellationToken cancellationToken = default) where T : class {
+                    lock (_gate) _values[storeName + ":" + key] = (JsonSerializer.SerializeToUtf8Bytes(value, Json),
+                        (++_revision).ToString());
+                    return Task.CompletedTask;
+                }
+                public Task<bool> TrySaveAsync<T>(string storeName, string key, T value, string etag,
+                    CancellationToken cancellationToken = default) where T : class {
+                    lock (_gate) {
+                        string stateKey = storeName + ":" + key;
+                        bool exists = _values.TryGetValue(stateKey, out var previous);
+                        if (exists ? previous.ETag != etag : etag.Length != 0) return Task.FromResult(false);
+                        _values[stateKey] = (JsonSerializer.SerializeToUtf8Bytes(value, Json),
+                            (++_revision).ToString());
+                        return Task.FromResult(true);
+                    }
+                }
+            }
+            """),
+    }
+    (consumer_dir / "ConsumerProbe.cs").write_text(
+        probes.get(
+            package_id,
+            "namespace Hexalith.EventStore.PackageConsumer;\n\npublic static class ConsumerProbe { public static void Main() {} }\n",
+        ),
+        encoding="utf-8",
+    )
+    if package_id in {"Hexalith.EventStore.Client", "Hexalith.EventStore.DomainService", "Hexalith.EventStore.Server"}:
+        # Exercise the actual NuGet buildTransitive imports used by plain ASP.NET consumers.
+        # Without the packaged generator selection, the two logging providers emit CS0757.
+        (consumer_dir / "PackageLoggingProbe.cs").write_text(
+            textwrap.dedent("""\
+            using Microsoft.Extensions.Logging;
+
+            /// <summary>Exercises logging generation through the restored package targets.</summary>
+            internal static partial class PackageLoggingProbe
+            {
+                /// <summary>Emits a synthetic package consumer message.</summary>
+                /// <param name="logger">The synthetic consumer logger.</param>
+                [LoggerMessage(1, LogLevel.Information, "Package consumer logging")]
+                internal static partial void Log(ILogger logger);
+            }
+            """),
+            encoding="utf-8",
+        )
+    return project_path
+
+
+def run(
+    command: list[str],
+    cwd: pathlib.Path = ROOT,
+    packages_folder: pathlib.Path | None = None,
+    expected_error_code: str | None = None,
+) -> None:
+    """Run one consumer command and preserve its diagnostic output."""
+
+    env = {
+        key: value for key, value in os.environ.items()
+        if key.casefold() not in SOURCE_MAPPING_IMPORTS and not key.casefold().startswith("hexalith_source_mapping_")
+    }
+    if packages_folder is not None:
+        env["NUGET_PACKAGES"] = str(packages_folder)
+    completed = subprocess.run(command, cwd=cwd, check=False, env=env,
+                               capture_output=expected_error_code is not None, text=expected_error_code is not None)
+    if expected_error_code is not None:
+        output = (completed.stdout or "") + (completed.stderr or "")
+        print(output, end="", flush=True)
+        if completed.returncode == 0 or expected_error_code not in output or "CS8784" in output:
+            raise ValueError(f"Unsupported compiler host did not refuse with {expected_error_code} before analyzer initialization.")
+    elif completed.returncode != 0:
+        raise subprocess.CalledProcessError(completed.returncode, completed.args)
+
+
+def assert_assets_use_packages(project_path: pathlib.Path, package_id: str, version: str) -> None:
+    """Reject project-backed or unresolved direct references in restored assets."""
+
+    assets_path = project_path.parent / "obj" / "project.assets.json"
+    with assets_path.open("r", encoding="utf-8") as handle:
+        assets = json.load(handle)
+
+    libraries = assets.get("libraries")
+    if not isinstance(libraries, dict):
+        raise ValueError(f"Consumer assets file is missing libraries: {assets_path}")
+
+    project_libraries = [
+        name
+        for name, value in libraries.items()
+        if isinstance(value, dict) and value.get("type") == "project"
+    ]
+    if project_libraries:
+        raise ValueError(
+            "Consumer restore resolved project references instead of packages: "
+            + ", ".join(sorted(project_libraries))
+        )
+
+    library_keys = {key.casefold() for key in libraries}
+    expected_key = f"{package_id}/{version}".casefold()
+    if expected_key not in library_keys:
+        raise ValueError(f"Consumer restore did not resolve {package_id} at {version}.")
+
+
+def validate_library_package(
+    package: PackageMetadata,
+    package_path: pathlib.Path,
+) -> None:
+    """Restore and run one isolated package consumer with no project references."""
+
+    with tempfile.TemporaryDirectory(prefix="eventstore-package-consumer-") as temp_dir_name:
+        consumer_dir = pathlib.Path(temp_dir_name)
+        project_path = write_consumer_project(consumer_dir, package.package_id, package.version)
+        config_path = write_nuget_config(consumer_dir, package_path)
+        run(
+            [
+                "dotnet",
+                "restore",
+                str(project_path),
+                "--configfile",
+                str(config_path),
+                "--packages",
+                str(consumer_dir / "packages"),
+                "-p:UseHexalithProjectReferences=false",
+            ]
+        )
+        run(
+            [
+                "dotnet",
+                "build",
+                str(project_path),
+                "--no-restore",
+                "--configuration",
+                "Release",
+                "-p:UseHexalithProjectReferences=false",
+            ]
+        )
+        if package.package_id in {
+            "Hexalith.EventStore.Contracts",
+            "Hexalith.EventStore.Client",
+            "Hexalith.EventStore.DomainService",
+            "Hexalith.EventStore.RestApi.Generators",
+        }:
+            run(["dotnet", "run", "--no-build", "--configuration", "Release", "--project", str(project_path)])
+        assert_assets_use_packages(project_path, package.package_id, package.version)
+        if package.package_id == "Hexalith.EventStore.RestApi.Generators":
+            # The new major generator requires SDK11 despite its netstandard packaging.
+            # Verify SDK10 refuses clearly, independently of NET11 product references.
+            legacy_project = write_legacy_generator_host_project(consumer_dir, project_path)
+            run(["dotnet", "restore", str(legacy_project), "--configfile", str(config_path),
+                 "--packages", str(consumer_dir / "packages"), "-p:UseHexalithProjectReferences=false"],
+                cwd=legacy_project.parent)
+            run(["dotnet", "build", str(legacy_project), "--no-restore", "--configuration", "Release",
+                 "-t:Rebuild", "-warnaserror", "-p:UseHexalithProjectReferences=false"], cwd=legacy_project.parent,
+                expected_error_code="HXRESTSDK001")
+            assert_assets_use_packages(legacy_project, package.package_id, package.version)
+
+
+def write_legacy_generator_host_project(consumer_dir: pathlib.Path, current_project: pathlib.Path) -> pathlib.Path:
+    """Exercise the explicit SDK10 refusal without referencing NET11 products."""
+
+    legacy = consumer_dir / "legacy-analyzer-host"
+    legacy.mkdir()
+    sources = [ROOT / "src/Hexalith.EventStore.Contracts/Rest" / name
+               for name in ("RestApiAttribute.cs", "RestTenantSource.cs")]
+    for source in sources:
+        if not source.is_file():
+            raise ValueError(f"Canonical analyzer contract source is absent: {source}")
+    includes = "".join(f"<Compile Include={quoteattr(str(source))} />" for source in sources)
+    project = legacy / "LegacyAnalyzerHost.csproj"
+    project.write_text(textwrap.dedent(f"""\
+        <Project Sdk="Microsoft.NET.Sdk">
+          <PropertyGroup>
+            <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+            <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+            <NuGetAudit>true</NuGetAudit><NuGetAuditMode>all</NuGetAuditMode><NuGetAuditLevel>low</NuGetAuditLevel>
+          </PropertyGroup>
+          <ItemGroup><PackageReference Include="Hexalith.EventStore.RestApi.Generators" />{includes}</ItemGroup>
+        </Project>
+        """), encoding="utf-8")
+    (legacy / "ConsumerProbe.cs").write_bytes((current_project.parent / "ConsumerProbe.cs").read_bytes())
+    (legacy / "global.json").write_text(
+        json.dumps({"sdk": {"version": "10.0.403", "rollForward": "latestPatch"}}), encoding="utf-8")
+    return project
+
+
+def validate_dotnet_tool_package(
+    package: PackageMetadata,
+    package_path: pathlib.Path,
+) -> None:
+    """Install one tool package in its own manifest and source boundary."""
+
+    with tempfile.TemporaryDirectory(prefix="eventstore-package-tool-consumer-") as temp_dir_name:
+        consumer_dir = pathlib.Path(temp_dir_name)
+        config_path = write_nuget_config(consumer_dir, package_path)
+        # `dotnet tool install` has no `--packages` switch, so the global packages
+        # folder is redirected instead. Without it a cached archive at the same
+        # fixed CI version would satisfy the install and the archive under test
+        # would never be read.
+        packages_folder = consumer_dir / "packages"
+        run(["dotnet", "new", "tool-manifest", "--force"], cwd=consumer_dir)
+        run(
+            [
+                "dotnet",
+                "tool",
+                "install",
+                package.package_id,
+                "--version",
+                package.version,
+                "--configfile",
+                str(config_path),
+            ],
+            cwd=consumer_dir,
+            packages_folder=packages_folder,
+        )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("package_directory", help="Directory containing manifest-built .nupkg files.")
+    parser.add_argument(
+        "--package",
+        action="append",
+        default=[],
+        metavar="PACKAGE_ID",
+        help=(
+            "Run only this package's consumer probe; repeatable. The whole inventory is "
+            "still validated, and an id outside the manifest is an error."
+        ),
+    )
+    args = parser.parse_args()
+
+    package_dir = pathlib.Path(args.package_directory)
+    package_path = package_dir if package_dir.is_absolute() else ROOT / package_dir
+    packages, version = validate_package_directory(package_path)
+    selected = set(args.package)
+    unknown = sorted(selected - {package.package_id for package in packages})
+    if unknown:
+        raise ValueError("Requested packages are not in the release inventory: " + ", ".join(unknown))
+    if selected:
+        packages = [package for package in packages if package.package_id in selected]
+    # Route on the manifest tool contract, not on the archive's own <packageTypes>:
+    # a library archive that declared DotnetTool would otherwise skip the
+    # restore/build proof entirely and only be installed as a tool.
+    tool_packages = [package for package in packages if package.package_id in TOOL_PACKAGE_IDS]
+    library_packages = [package for package in packages if package.package_id not in TOOL_PACKAGE_IDS]
+
+    for package in library_packages:
+        print(f"Validating isolated package-only consumer for {package.package_id}...", flush=True)
+        try:
+            validate_library_package(package, package_path)
+        except Exception as error:
+            raise ValueError(f"Package-only consumer failed for {package.package_id}: {error}") from error
+
+    for package in tool_packages:
+        print(f"Validating isolated tool consumer for {package.package_id}...", flush=True)
+        try:
+            validate_dotnet_tool_package(package, package_path)
+        except Exception as error:
+            raise ValueError(f"Tool-package consumer failed for {package.package_id}: {error}") from error
+
+    print(
+        f"Validated {len(library_packages)} isolated package-only consumers and "
+        f"{len(tool_packages)} isolated tool consumers at version {version}."
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as error:  # noqa: BLE001 - CI should print the exact release validation failure.
+        print(f"validate-consumer-package-references: {error}", file=sys.stderr)
+        raise SystemExit(1)

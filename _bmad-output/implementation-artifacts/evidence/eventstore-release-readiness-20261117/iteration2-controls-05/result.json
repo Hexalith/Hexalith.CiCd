@@ -1,0 +1,370 @@
+{
+  "passed": true,
+  "checks": {
+    "native-0-preserved": true,
+    "native-7-preserved": true,
+    "escape-normal": true,
+    "escape-normal-bound": true,
+    "escape-timeout": true,
+    "escape-timeout-bound": true,
+    "timeout-native-term-preserved": true,
+    "foreign-orphan-survives-0": true,
+    "foreign-orphan-not-reaped-0": true,
+    "foreign-orphan-survives-1": true,
+    "foreign-orphan-not-reaped-1": true,
+    "foreign-orphan-survives-2": true,
+    "foreign-orphan-not-reaped-2": true,
+    "active-cancel-2": true,
+    "active-cancel-15": true,
+    "early-cancel-no-job": true,
+    "fork-startup-cancel-custody": true,
+    "caller-never-scanned": true,
+    "git-policy-selector-quarantine": true,
+    "credential-selection-preserved": true,
+    "exact-frozen-security-exceptions": true,
+    "reject-added-NoWarn-NU1903": true,
+    "reject-added-NoWarn-NU1904": true,
+    "reject-added-WarningsNotAsErrors-NU1903": true,
+    "reject-added-WarningsNotAsErrors-NU1904": true,
+    "reject-analyzer-disable": true,
+    "synthetic-has-no-security-exceptions": true,
+    "only-evaluated-active-graph": true,
+    "effective-source-sanitized": true,
+    "graph-error-is-explicit": true,
+    "designated-output-accepted": true,
+    "unexpected-build-input-rejected": true,
+    "input-manifest-replayed": true,
+    "input-manifest-mutation-rejected": true,
+    "interrupted-inspection-records-command": true,
+    "interrupted-inspection-records-cleanup": true,
+    "primary-error-propagated": true,
+    "primary-error-survives-graph-capture": true,
+    "primary-failed-command-receipt-preserved": true,
+    "original-cli-compatible": true,
+    "authority-bound-unchanged": true
+  },
+  "lifecycle_receipts": {
+    "native-0": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(0)"
+      ],
+      "log": "native-0.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2592168
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2592167,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-7": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(7)"
+      ],
+      "log": "native-7.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 7,
+      "process_started": true,
+      "owned_pids": [
+        2592269
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2592268,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "escape-normal": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    os._exit(0)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/escape-normal.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "escape-normal.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2592408,
+        2592409,
+        2592410
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2592407,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2592409,
+        2592410
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "escape-timeout": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    time.sleep(60)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/escape-timeout.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "escape-timeout.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        2592412,
+        2592413,
+        2592414
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2592411,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2592412,
+        2592413,
+        2592414
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "foreign-orphan-race-0": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/foreign-trigger-0').touch();time.sleep(60)"
+      ],
+      "log": "foreign-orphan-race-0.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        2592436
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2592435,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2592436
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "foreign-orphan-race-1": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/foreign-trigger-1').touch();time.sleep(60)"
+      ],
+      "log": "foreign-orphan-race-1.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        2592464
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2592463,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2592464
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "foreign-orphan-race-2": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/foreign-trigger-2').touch();time.sleep(60)"
+      ],
+      "log": "foreign-orphan-race-2.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        2592605
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 2592598,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        2592605
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "active-cancel-2": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    time.sleep(60)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/active-cancel-2.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "active-cancel-2.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        2592751,
+        2592752,
+        2592753
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2592750,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "remaining_owned_before_cleanup": [
+        2592751,
+        2592752,
+        2592753
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "active-cancel-15": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    time.sleep(60)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.uN6smbCt/active-cancel-15.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "active-cancel-15.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        2592779,
+        2592790,
+        2592791
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2592767,
+      "cancelled": true,
+      "cancellation_signal": 15,
+      "remaining_owned_before_cleanup": [
+        2592779,
+        2592790,
+        2592791
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "early-cancel": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(0)"
+      ],
+      "log": "early-cancel.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": null,
+      "process_started": false,
+      "owned_pids": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fork-startup-cancel": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;time.sleep(60)"
+      ],
+      "log": "fork-startup-cancel.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": null,
+      "process_started": false,
+      "owned_pids": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2593006,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original-cli-help": {
+      "command": [
+        "/usr/bin/python3",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py",
+        "--help"
+      ],
+      "log": "original-cli-help.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2593068
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2593067,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "63451225ab3ea1d85c8b3f9050e217e232736e1aeb4fed4bddc8cd52678b64df"
+    }
+  },
+  "source_sha256": {
+    "iteration2_controls.py": "a4ce6c095a112ddff0dd2accbf35c3e818830ef952efda105bde23cd05b9cbed",
+    "verification_core.py": "6baa3a656aab0506b85985f40d5bf210f57ef097e8900571c5d2ac5cc3ea0c44",
+    "verify.py": "95ad8df0f54e20c0b9d752954474a04fb9d91500a0dccbeb9a4dd88cd5f040bb",
+    "query_package_probe.py": "b8a8f7c2043ce353e30edb887abd7e2dbb8fbde887a507ca967af1de5ee0ffac",
+    "inspect_public_api.py": "9cf7930f01526ecbb52ddfef22415cdb72aed980ff83fa7c9518f4261a817aaf"
+  },
+  "python_optimization": 1,
+  "scratch": "/tmp/hexalith-job.uN6smbCt",
+  "complete_release_acceptance": false,
+  "invocation": "run-with-temp python3 -O -B /home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/iteration2_controls.py --output /home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/iteration2-controls-05"
+}

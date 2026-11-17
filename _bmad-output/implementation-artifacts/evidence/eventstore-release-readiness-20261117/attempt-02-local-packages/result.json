@@ -1,0 +1,637 @@
+{
+  "started_utc": "2026-11-17T00:05:16.544010+00:00",
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "helper_sha256": "b7af0a3cef54501bcf411ae511ee6c6cd1419dcac1c529dc5f523d2a726833ae",
+  "scratch": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0",
+  "commands": [
+    {
+      "name": "clone-Hexalith.EventStore",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.EventStore",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0",
+      "started_utc": "2026-11-17T00:05:16.546302+00:00",
+      "log": "clone-Hexalith.EventStore.log",
+      "native_exit": 0,
+      "elapsed_seconds": 7.287,
+      "finished_utc": "2026-11-17T00:05:23.831375+00:00",
+      "log_sha256": "fa06e1f1059b2a9ca7e868af4106af63343c1392afc893d8b5504e5b243c28b5"
+    },
+    {
+      "name": "checkout-Hexalith.EventStore",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:05:23.831937+00:00",
+      "log": "checkout-Hexalith.EventStore.log",
+      "native_exit": 0,
+      "elapsed_seconds": 2.632,
+      "finished_utc": "2026-11-17T00:05:26.467620+00:00",
+      "log_sha256": "29a2ade1e143bd18f3eeef0a79f0ee273bf15460d23510375f1f5a33f385901e"
+    },
+    {
+      "name": "origin-Hexalith.EventStore",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.EventStore.git"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:05:26.471105+00:00",
+      "log": "origin-Hexalith.EventStore.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.006,
+      "finished_utc": "2026-11-17T00:05:26.477710+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clone-Hexalith.Builds",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Builds"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0",
+      "started_utc": "2026-11-17T00:05:26.892915+00:00",
+      "log": "clone-Hexalith.Builds.log",
+      "native_exit": 0,
+      "elapsed_seconds": 1.481,
+      "finished_utc": "2026-11-17T00:05:28.392423+00:00",
+      "log_sha256": "b59dce42e766ced263ad67850a83dcff40e492c8663bf327ea05f603cf5342d5"
+    },
+    {
+      "name": "checkout-Hexalith.Builds",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "16cf0db6f843eb4defdc87105804d42eded634d6"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Builds",
+      "started_utc": "2026-11-17T00:05:28.392965+00:00",
+      "log": "checkout-Hexalith.Builds.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.495,
+      "finished_utc": "2026-11-17T00:05:28.888448+00:00",
+      "log_sha256": "0a21267e72ec5b32c48513f3492741e89da8e5e2ad9664ae6ad42482e81ab4fd"
+    },
+    {
+      "name": "origin-Hexalith.Builds",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Builds.git"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Builds",
+      "started_utc": "2026-11-17T00:05:28.890294+00:00",
+      "log": "origin-Hexalith.Builds.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.002,
+      "finished_utc": "2026-11-17T00:05:28.893111+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clone-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.AI.Tools",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.AI.Tools"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0",
+      "started_utc": "2026-11-17T00:05:29.109787+00:00",
+      "log": "clone-Hexalith.AI.Tools.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.256,
+      "finished_utc": "2026-11-17T00:05:29.365794+00:00",
+      "log_sha256": "92b2db5b49f8ac12a8fa974dddb3116a637ac51af5b23805892e04df3a5de82e"
+    },
+    {
+      "name": "checkout-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.AI.Tools",
+      "started_utc": "2026-11-17T00:05:29.366152+00:00",
+      "log": "checkout-Hexalith.AI.Tools.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.026,
+      "finished_utc": "2026-11-17T00:05:29.393146+00:00",
+      "log_sha256": "57a26fa4f0a53c3361fac4980ce5b3b12bd007a8775d911467a820e47f09c83f"
+    },
+    {
+      "name": "origin-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.AI.Tools.git"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.AI.Tools",
+      "started_utc": "2026-11-17T00:05:29.393526+00:00",
+      "log": "origin-Hexalith.AI.Tools.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.004,
+      "finished_utc": "2026-11-17T00:05:29.404340+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clone-Hexalith.Tenants",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Tenants"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0",
+      "started_utc": "2026-11-17T00:05:29.434595+00:00",
+      "log": "clone-Hexalith.Tenants.log",
+      "native_exit": 0,
+      "elapsed_seconds": 2.193,
+      "finished_utc": "2026-11-17T00:05:31.628609+00:00",
+      "log_sha256": "cadfc36151d6f8b6a272cd73b2e9f0c90bc62322b6e712c9d42c128d8c6e7d11"
+    },
+    {
+      "name": "checkout-Hexalith.Tenants",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Tenants",
+      "started_utc": "2026-11-17T00:05:31.629071+00:00",
+      "log": "checkout-Hexalith.Tenants.log",
+      "native_exit": 0,
+      "elapsed_seconds": 1.657,
+      "finished_utc": "2026-11-17T00:05:33.285936+00:00",
+      "log_sha256": "d404b34248e29950823c7217744d10f898038cb7b75e29c28ba52ddd8d5ef357"
+    },
+    {
+      "name": "origin-Hexalith.Tenants",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Tenants.git"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Tenants",
+      "started_utc": "2026-11-17T00:05:33.286964+00:00",
+      "log": "origin-Hexalith.Tenants.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.002,
+      "finished_utc": "2026-11-17T00:05:33.289836+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "dotnet-info",
+      "command": [
+        "dotnet",
+        "--info"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:05:33.776349+00:00",
+      "log": "dotnet-info.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.06,
+      "finished_utc": "2026-11-17T00:05:33.836601+00:00",
+      "log_sha256": "b339897135e323f3b40f48883f9581a6492bf2a95bb8cf524b63593112f0e0f9"
+    },
+    {
+      "name": "pack-manifest-local-candidate",
+      "command": [
+        "python3",
+        "tools/pack-release-packages.py",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/local-candidate-packages",
+        "0.0.0-local-readiness.3b2350e7"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:05:33.837378+00:00",
+      "log": "pack-manifest-local-candidate.log",
+      "native_exit": 0,
+      "elapsed_seconds": 146.78,
+      "finished_utc": "2026-11-17T00:08:00.611455+00:00",
+      "log_sha256": "17d69167e715efc90be2de924c97ed6335a144b2703c1616a2aab3618ee9af87"
+    },
+    {
+      "name": "all-package-consumer-probes",
+      "command": [
+        "python3",
+        "scripts/validate-consumer-package-references.py",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/local-candidate-packages"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:08:00.616848+00:00",
+      "log": "all-package-consumer-probes.log",
+      "native_exit": 1,
+      "elapsed_seconds": 47.064,
+      "finished_utc": "2026-11-17T00:08:47.679230+00:00",
+      "log_sha256": "42a631b1fa3eaba081b0fcf5069f51072890f34bd6bfbde1a4752d907375c105"
+    },
+    {
+      "name": "reminder-package-consumer-probes",
+      "command": [
+        "python3",
+        "scripts/validate-consumer-package-references.py",
+        "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/local-candidate-packages",
+        "--package",
+        "Hexalith.EventStore.Contracts",
+        "--package",
+        "Hexalith.EventStore.Client",
+        "--package",
+        "Hexalith.EventStore.DomainService"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:08:47.679661+00:00",
+      "log": "reminder-package-consumer-probes.log",
+      "native_exit": 0,
+      "elapsed_seconds": 11.058,
+      "finished_utc": "2026-11-17T00:08:58.735102+00:00",
+      "log_sha256": "e73bb2f7e8140cf2780862fafd1958abae7f4f88b8ff126a6f567d8df8e90a04"
+    },
+    {
+      "name": "final-source-Hexalith.EventStore",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:08:58.739949+00:00",
+      "log": "final-source-Hexalith.EventStore.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.541,
+      "finished_utc": "2026-11-17T00:08:59.282112+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-source-Hexalith.Builds",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Builds",
+      "started_utc": "2026-11-17T00:08:59.307211+00:00",
+      "log": "final-source-Hexalith.Builds.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.008,
+      "finished_utc": "2026-11-17T00:08:59.315415+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-source-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.AI.Tools",
+      "started_utc": "2026-11-17T00:08:59.348045+00:00",
+      "log": "final-source-Hexalith.AI.Tools.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.011,
+      "finished_utc": "2026-11-17T00:08:59.359745+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-source-Hexalith.Tenants",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore/references/Hexalith.Tenants",
+      "started_utc": "2026-11-17T00:08:59.365235+00:00",
+      "log": "final-source-Hexalith.Tenants.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.018,
+      "finished_utc": "2026-11-17T00:08:59.383244+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "later-observed-main",
+      "command": [
+        "git",
+        "ls-remote",
+        "--refs",
+        "origin",
+        "refs/heads/main"
+      ],
+      "cwd": "/tmp/hexalith-job.dHtLVWGj/eventstore-readiness-geggpgv0/Hexalith.EventStore",
+      "started_utc": "2026-11-17T00:08:59.394218+00:00",
+      "log": "later-observed-main.log",
+      "native_exit": 0,
+      "elapsed_seconds": 0.4,
+      "finished_utc": "2026-11-17T00:08:59.794736+00:00",
+      "log_sha256": "79bd6638b31f296dce97a9785f11fe9512754930df199d38866b0c90bd31e72e"
+    }
+  ],
+  "inputs": {
+    "AGENTS.md": {
+      "blob": "bb866a2bda4d7d45044ec884c09a167c74daa34f",
+      "sha256": "d46133d3b08b30a1b6b36ea4465c90e045a2a264be518a9e7fa1a73ba8afa92b"
+    },
+    "Directory.Build.props": {
+      "blob": "22114fc070b668a021234ccef5660b543b8dd8ae",
+      "sha256": "0010f094df7f40bf9cecaaea4d47493737f9e9409d914c206d0396a64a406b81"
+    },
+    "Directory.Build.targets": {
+      "blob": "2e3ea766a356d125bbbc248c19048dec6a890544",
+      "sha256": "d95dd40a0f6676bbcb46eca3e1a4d7a0a8c94fa64e13c908be7cdeb4beada3ff"
+    },
+    "Directory.Packages.props": {
+      "blob": "9b8b14f99ab70052c4c13e5dfdbc4304305e82ee",
+      "sha256": "4fe25096ceefd11e8ffffe1ab6a1854e18ac36c853a6805fa72285433b03b638"
+    },
+    ".editorconfig": {
+      "blob": "91afd5c462fc3b08a39efbc6ec4fb4aca61f4b28",
+      "sha256": "c9a43ea4f0ecac612713588347871ab1d91a15c145a705f328220bdf7e1db09d"
+    },
+    ".gitattributes": {
+      "blob": "9d3776b4371207e10575286229305717e125268a",
+      "sha256": "21e89425541c773c841d2ff924cbf446e00844f6fc15dd55da98e0c1044b4abb"
+    },
+    "global.json": {
+      "blob": "701104b3d54283ad578b7e1e71aca01d1a59d523",
+      "sha256": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05"
+    },
+    ".gitmodules": {
+      "blob": "c62b48798894bb3576f02fdf4ebb8c552756e35b",
+      "sha256": "b449c9b1f825b01d56f8273948765b20229c1faecb2f9ae358490dcf5a6828d4"
+    },
+    ".github/workflows/ci.yml": {
+      "blob": "784896cd8e561439b986cc95c6691d7b22be5ab5",
+      "sha256": "5ac3b3bef0f22a2eb0d692e3c4ec174056e745a3affb26743c8805d0bde35667"
+    },
+    ".github/workflows/release.yml": {
+      "blob": "0ff025fd5aed2c74df66e119c87a6ecaecee4722",
+      "sha256": "55e43d3f4be8f8dc92a25b80b19e172b6226d1e6344d77b349986f72d7fcd24b"
+    },
+    "tests/Directory.Build.props": {
+      "blob": "17921e9274ba1fcc8f8b564a7c8344a609151a1c",
+      "sha256": "66778cfb669b1db4d60acfabe502e1e4be39c120d931add0f0cd04dbc01d16ed"
+    },
+    "scripts/verify-release-source.sh": {
+      "blob": "e8c315b4dd03bef5818507d643e251c924720e87",
+      "sha256": "e0f896d333cd903642730190109f3c4e3338da51d590b7781cb15bb23d73a0fe"
+    },
+    "tools/release-packages.json": {
+      "blob": "ce6f8f252b548efaee5999eb0107268a6a950279",
+      "sha256": "6b0b70b856839d4117bcd969f6a2de0093c477c109cb79f3f2882b1f05effcae"
+    },
+    "tools/pack-release-packages.py": {
+      "blob": "6a7277645d3b7ee80df2c0e5bc4e59c8f247f546",
+      "sha256": "97c0ff7ac4fddd219f4a1e66d0b0cd808e3e54d09eb5bf347e434025d87be62b"
+    },
+    "tools/release_package_contract.py": {
+      "blob": "8593a7b2ffe5a6e7e1ddaad6148e783e27547c8f",
+      "sha256": "cab95e223e8a83055ff888433206728b6fc0f62b67b6338057543395f618663a"
+    },
+    "scripts/validate-consumer-package-references.py": {
+      "blob": "20b71af30276fe66fc3c008e23a8bc26c107f2cc",
+      "sha256": "79bcab68cd6ad6a14d6c38df616b7209377b5c3a1c8c922d8af79586493ca49c"
+    },
+    "src/Hexalith.EventStore.Contracts/Queries/QueryResultContractAttribute.cs": {
+      "blob": "eb9064725344e6c3404ab453a3fa8fcd0c3747ca",
+      "sha256": "a2a2b24289ee5a38819dd664f44ec3903495d0d93071d2dc804558ed2b384403"
+    },
+    "tests/Hexalith.EventStore.RestApi.Generators.Tests/TypedGatewayQueryGenerationTests.cs": {
+      "blob": "735ab6a34a1557e6cd695838cad34773234ff11b",
+      "sha256": "94fa7b39dadeb7a5f21e18b32f7bd27dc52a0700ebef82c48ea8fff85580dd8d"
+    },
+    "tests/Hexalith.EventStore.RestApi.Generators.Tests/Hexalith.EventStore.RestApi.Generators.Tests.csproj": {
+      "blob": "f02f9065c3ede2ce19a7b06f7d581900d5b2e76e",
+      "sha256": "c2156a84962870c14f59c26937e68b3231547cd944eb9d4376c3fe9cea1952e7"
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj": {
+      "blob": "1421d2e70690cff60b3bdef4e91421feda1c7b1e",
+      "sha256": "d63323504d6c1b9c0bf1ed4b006b893b0eaddcb80c684be8e5395f51bccd93f1"
+    },
+    "src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj": {
+      "blob": "086446f81a8678b18568f6d2f55b279f6b03955d",
+      "sha256": "b8a89ddb4337da6b2b9a3244fb03f0d817902ac503ce904d64811b17369f4039"
+    }
+  },
+  "dependencies": {
+    "Hexalith.EventStore": {
+      "commit": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+      "tree": "43b99652e373f66d24cceaf9a7a42237d3d3092e",
+      "object_store": "/home/administrator/projects/hexalith/cicd/references/Hexalith.EventStore",
+      "nested_submodules_initialized": false,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    },
+    "Hexalith.Builds": {
+      "commit": "16cf0db6f843eb4defdc87105804d42eded634d6",
+      "tree": "32876c80d661c34940c268644348b0a26817ecac",
+      "object_store": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Builds",
+      "nested_submodules_initialized": false,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    },
+    "Hexalith.AI.Tools": {
+      "commit": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+      "tree": "660ea16a129113d510b931cf91a6472955820989",
+      "object_store": "/home/administrator/projects/hexalith/cicd/references/Hexalith.AI.Tools",
+      "nested_submodules_initialized": false,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    },
+    "Hexalith.Tenants": {
+      "commit": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+      "tree": "1b9f4f0b8d61f1b32b1cb2de93684ca9f6817605",
+      "object_store": "/home/administrator/projects/hexalith/cicd/references/Hexalith.Tenants",
+      "nested_submodules_initialized": false,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    }
+  },
+  "test_results": {},
+  "checks": {
+    "pack-manifest-local-candidate": 0,
+    "all-package-consumer-probes": 1,
+    "reminder-package-consumer-probes": 0,
+    "reminder-three-consumer-summary": 0
+  },
+  "complete_release_acceptance": false,
+  "filters": [],
+  "source_changes_authorized_only_on_demonstrated_product_failure": true,
+  "scope": "local-package-probes",
+  "builds_catalog_sha256": "58739467f142c54d5afc95bb59b2ad19bf60338883988e9f4a7c8089f4559307",
+  "release_package_inventory": {
+    "packages": [
+      {
+        "id": "Hexalith.EventStore.Contracts",
+        "project": "src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Client",
+        "project": "src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Server",
+        "project": "src/Hexalith.EventStore.Server/Hexalith.EventStore.Server.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.SignalR",
+        "project": "src/Hexalith.EventStore.SignalR/Hexalith.EventStore.SignalR.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Testing",
+        "project": "src/Hexalith.EventStore.Testing/Hexalith.EventStore.Testing.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Testing.Integration",
+        "project": "src/Hexalith.EventStore.Testing.Integration/Hexalith.EventStore.Testing.Integration.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Aspire",
+        "project": "src/Hexalith.EventStore.Aspire/Hexalith.EventStore.Aspire.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.ServiceDefaults",
+        "project": "src/Hexalith.EventStore.ServiceDefaults/Hexalith.EventStore.ServiceDefaults.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.DomainService",
+        "project": "src/Hexalith.EventStore.DomainService/Hexalith.EventStore.DomainService.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.RestApi.Generators",
+        "project": "src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Gateway",
+        "project": "src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Admin.Abstractions",
+        "project": "src/Hexalith.EventStore.Admin.Abstractions/Hexalith.EventStore.Admin.Abstractions.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Admin.Cli",
+        "project": "src/Hexalith.EventStore.Admin.Cli/Hexalith.EventStore.Admin.Cli.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Admin.Server",
+        "project": "src/Hexalith.EventStore.Admin.Server/Hexalith.EventStore.Admin.Server.csproj"
+      }
+    ]
+  },
+  "local_candidate_packages": {
+    "version": "0.0.0-local-readiness.3b2350e7",
+    "published": false,
+    "archives": [
+      {
+        "name": "Hexalith.EventStore.Admin.Abstractions.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "8e95dfe75c56678a69af109951273804c95fc7c5501fa1b350bef83bcde16a56"
+      },
+      {
+        "name": "Hexalith.EventStore.Admin.Cli.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "562bc8483bf43bca89b90655307adbdd00a8c85299a646bfed9bb303e3246113"
+      },
+      {
+        "name": "Hexalith.EventStore.Admin.Server.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "c12d45ec97b3e916ec110f769e0286973282468d23570d0db7703c3eb0a2dc79"
+      },
+      {
+        "name": "Hexalith.EventStore.Aspire.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "b8517c0044696b8d6d7510eae6ca540af8c8f66a7b4b6b141815f46c9af5f2bd"
+      },
+      {
+        "name": "Hexalith.EventStore.Client.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "25e5a0b6cb1bb9a3c03bb85688b543e8674eb1934b9d6373b683675a00c6f282"
+      },
+      {
+        "name": "Hexalith.EventStore.Contracts.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "66b5ac5a3a07a00f3ab046f8288e927f6d74d84ce3dab567754d95892e1f99e8"
+      },
+      {
+        "name": "Hexalith.EventStore.DomainService.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "129d27b49cf44e1bd6fa39625aed7e99462ae2fd2900545651374bd791a5e504"
+      },
+      {
+        "name": "Hexalith.EventStore.Gateway.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "42418812b40eee1b47b36a67cebedb1250b9aa7f6c81574395f0205731e501bb"
+      },
+      {
+        "name": "Hexalith.EventStore.RestApi.Generators.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "50f3f10a1e1e3e45bcf1bc5b1bac51a6b464f4b2905064a275e3a7ebc8fb1dc3"
+      },
+      {
+        "name": "Hexalith.EventStore.Server.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "7115f681db41677496756f8c4ad57fd943f66049c4388ff54d067f02bb9f64f1"
+      },
+      {
+        "name": "Hexalith.EventStore.ServiceDefaults.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "a7f58792f8a678159ca1f699d262fccd2381c7589e50f7da64c0b45c4dc2aa1a"
+      },
+      {
+        "name": "Hexalith.EventStore.SignalR.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "0a947e8a89d9da003ecedea4b268dbfed3f8791a86d78a605bda0b8e1b07271b"
+      },
+      {
+        "name": "Hexalith.EventStore.Testing.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "744115386ff26e2cc461b2ce4e1d548ce49686a1e83d586c8e0292e8c0d251da"
+      },
+      {
+        "name": "Hexalith.EventStore.Testing.Integration.0.0.0-local-readiness.3b2350e7.nupkg",
+        "sha256": "26cd0f0b848a45d0f5054b4570282abc48c518baa8a9744c698c6ad8ca828229"
+      }
+    ]
+  },
+  "focused_checks_passed": false,
+  "package_probes_passed": false,
+  "completed_utc": "2026-11-17T00:08:59.800832+00:00"
+}

@@ -2,7 +2,7 @@
 title: 'Repair Projects publication qualification'
 type: 'bugfix'
 created: '2026-11-16'
-status: 'ready-for-dev'
+status: 'in-progress'
 route: 'dispatch'
 baseline_commit: 'ec481fd50b280e2d41f9baecbd03945c833e4538'
 review_loop_iteration: 0

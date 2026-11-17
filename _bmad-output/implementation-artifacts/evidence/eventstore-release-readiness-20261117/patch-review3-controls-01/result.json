@@ -1,0 +1,596 @@
+{
+  "passed": true,
+  "checks": {
+    "native-0-preserved": true,
+    "native-7-preserved": true,
+    "escape-normal": true,
+    "escape-normal-bound": true,
+    "escape-timeout": true,
+    "escape-timeout-bound": true,
+    "timeout-native-term-preserved": true,
+    "foreign-orphan-survives-0": true,
+    "foreign-orphan-not-reaped-0": true,
+    "foreign-orphan-survives-1": true,
+    "foreign-orphan-not-reaped-1": true,
+    "foreign-orphan-survives-2": true,
+    "foreign-orphan-not-reaped-2": true,
+    "active-cancel-2": true,
+    "active-cancel-15": true,
+    "early-cancel-no-job": true,
+    "fork-startup-cancel-custody": true,
+    "caller-never-scanned": true,
+    "git-policy-selector-quarantine": true,
+    "credential-selection-preserved": true,
+    "exact-frozen-security-exceptions": true,
+    "reject-added-NoWarn-NU1903": true,
+    "reject-added-NoWarn-NU1904": true,
+    "reject-added-WarningsNotAsErrors-NU1903": true,
+    "reject-added-WarningsNotAsErrors-NU1904": true,
+    "reject-analyzer-disable": true,
+    "synthetic-has-no-security-exceptions": true,
+    "only-evaluated-active-graph": true,
+    "effective-source-sanitized": true,
+    "graph-error-is-explicit": true,
+    "designated-output-accepted": true,
+    "unexpected-build-input-rejected": true,
+    "input-manifest-replayed": true,
+    "input-manifest-mutation-rejected": true,
+    "interrupted-inspection-records-command": true,
+    "interrupted-inspection-records-cleanup": true,
+    "primary-error-propagated": true,
+    "primary-error-survives-graph-capture": true,
+    "primary-failed-command-receipt-preserved": true,
+    "verify-main-interruption-receipt": true,
+    "verify-main-cleanup-error-receipt": true,
+    "external-diff-selectors-quarantined": true,
+    "analyzer-mode-level-selectors-quarantined": true,
+    "reject-analysis-mode-none": true,
+    "reject-analysis-level-none": true,
+    "reject-effective-mode-none": true,
+    "external-diff-reproduces-false-clean": true,
+    "internal-diff-detects-tracked-change": true,
+    "archive-content-sha512-matches": true,
+    "archive-content-sha512-substitution-rejected": true,
+    "trx-byte-hash-control": true,
+    "trx-changed-bytes-rejected": true,
+    "api-outcome-native-control": true,
+    "api-outcome-wrong-type-rejected": true,
+    "api-outcome-wrong-version-rejected": true,
+    "api-outcome-native-exit-rejected": true,
+    "api-outcome-diagnostic-rejected": true,
+    "empty-control-report-rejected": true,
+    "truncated-controls-rejected": true,
+    "truncated-receipts-rejected": true,
+    "restore-policy-secrets-removed": true,
+    "restore-policy-replayed": true,
+    "restore-policy-mutation-rejected": true,
+    "graph-target-framework-edges-retained": true,
+    "tool-artifact-not-in-packet": true,
+    "tool-artifact-sidecar-bound": true,
+    "original-cli-compatible": true,
+    "authority-bound-unchanged": true
+  },
+  "lifecycle_receipts": {
+    "native-0": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(0)"
+      ],
+      "log": "native-0.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4076900
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4076899,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-7": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(7)"
+      ],
+      "log": "native-7.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 7,
+      "process_started": true,
+      "owned_pids": [
+        4076924
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4076922,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "escape-normal": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    os._exit(0)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/escape-normal.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "escape-normal.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4077010,
+        4077012,
+        4077013
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4077008,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        4077012,
+        4077013
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "escape-timeout": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    time.sleep(60)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/escape-timeout.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "escape-timeout.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        4077162,
+        4077184,
+        4077185
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 4077161,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        4077162,
+        4077184,
+        4077185
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "foreign-orphan-race-0": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/foreign-trigger-0').touch();time.sleep(60)"
+      ],
+      "log": "foreign-orphan-race-0.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        4077517
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 4077516,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        4077517
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "foreign-orphan-race-1": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/foreign-trigger-1').touch();time.sleep(60)"
+      ],
+      "log": "foreign-orphan-race-1.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        4077678
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 4077677,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        4077678
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "foreign-orphan-race-2": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/foreign-trigger-2').touch();time.sleep(60)"
+      ],
+      "log": "foreign-orphan-race-2.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": 0.3,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        4078147
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": true,
+      "custodian_pid": 4078145,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        4078147
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "active-cancel-2": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    time.sleep(60)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/active-cancel-2.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "active-cancel-2.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        4078680,
+        4078683,
+        4078684
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4078679,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "remaining_owned_before_cleanup": [
+        4078680,
+        4078683,
+        4078684
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "active-cancel-15": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import os,sys,time\nif os.fork():\n    time.sleep(60)\nelse:\n    os.setsid()\n    if os.fork(): os._exit(0)\n    os.execve(sys.executable,[sys.executable,\"-c\",\"import os,time;from pathlib import Path;Path('/tmp/hexalith-job.Q9EX74M3/active-cancel-15.pid').write_text(str(os.getpid()));time.sleep(60)\"],{})\n"
+      ],
+      "log": "active-cancel-15.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": -15,
+      "process_started": true,
+      "owned_pids": [
+        4079000,
+        4079005,
+        4079006
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4078999,
+      "cancelled": true,
+      "cancellation_signal": 15,
+      "remaining_owned_before_cleanup": [
+        4079000,
+        4079005,
+        4079006
+      ],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "early-cancel": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(0)"
+      ],
+      "log": "early-cancel.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": null,
+      "process_started": false,
+      "owned_pids": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fork-startup-cancel": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import time;time.sleep(60)"
+      ],
+      "log": "fork-startup-cancel.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": null,
+      "process_started": false,
+      "owned_pids": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079165,
+      "cancelled": true,
+      "cancellation_signal": 2,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verify-main-interruption": {
+      "name": "git-read-0",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+        "cat-file",
+        "-t",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.Q9EX74M3/eventstore-readiness-reb8h99r",
+      "started_utc": "2026-11-17T03:03:58.468277+00:00",
+      "log": "verify-main-interruption/git-read-0.log",
+      "native_exit": -2,
+      "cancelled": true,
+      "process_tree_fully_waited": true,
+      "custodian_waited": true,
+      "remaining_owned_after_cleanup": [],
+      "owned_pids": [],
+      "elapsed_seconds": 0.0,
+      "finished_utc": "2026-11-17T03:03:58.468425+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verify-main-cleanup-error": {
+      "name": "git-read-0",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+        "cat-file",
+        "-t",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.Q9EX74M3/eventstore-readiness-s1fyo5lv",
+      "started_utc": "2026-11-17T03:03:58.471488+00:00",
+      "log": "verify-main-cleanup-error/git-read-0.log",
+      "native_exit": -9,
+      "cancelled": false,
+      "process_tree_fully_waited": false,
+      "custodian_waited": true,
+      "remaining_owned_after_cleanup": [
+        999999999
+      ],
+      "owned_pids": [],
+      "elapsed_seconds": 0.0,
+      "finished_utc": "2026-11-17T03:03:58.471636+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "diff-fixture-init": {
+      "command": [
+        "git",
+        "init",
+        "--initial-branch=main",
+        "/tmp/hexalith-job.Q9EX74M3/diff-fixture"
+      ],
+      "log": "diff-fixture-init.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4079244
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079242,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e0d6734d6c7b6e9ecf5d54fd298a0e09d13a6a34609e6d3e2b38afbff4909498"
+    },
+    "diff-fixture-add": {
+      "command": [
+        "git",
+        "-C",
+        "/tmp/hexalith-job.Q9EX74M3/diff-fixture",
+        "add",
+        "data.txt"
+      ],
+      "log": "diff-fixture-add.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4079298
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079297,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "diff-fixture-commit": {
+      "command": [
+        "git",
+        "-C",
+        "/tmp/hexalith-job.Q9EX74M3/diff-fixture",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "user.name=Verification Fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "commit",
+        "-m",
+        "fixture"
+      ],
+      "log": "diff-fixture-commit.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4079343,
+        4079347
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079341,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [
+        4079347
+      ],
+      "custodian_waited": true,
+      "log_sha256": "fded41fde1782ea9e01ebc7d589d66677b813ddd2a32cce13e25f468bcc3c4c6"
+    },
+    "external-diff-false-clean": {
+      "command": [
+        "git",
+        "-C",
+        "/tmp/hexalith-job.Q9EX74M3/diff-fixture",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "log": "external-diff-false-clean.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4079461
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079448,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "internal-diff-changed": {
+      "command": [
+        "git",
+        "-C",
+        "/tmp/hexalith-job.Q9EX74M3/diff-fixture",
+        "diff",
+        "--no-ext-diff",
+        "--no-textconv",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "log": "internal-diff-changed.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 1,
+      "process_started": true,
+      "owned_pids": [
+        4079538
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079536,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "36ac5ebdf6e0b084cc1bcf10982e14655bc0fdff868f692935c7787589c49fde"
+    },
+    "original-cli-help": {
+      "command": [
+        "/usr/bin/python3",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py",
+        "--help"
+      ],
+      "log": "original-cli-help.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4079669
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4079667,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "63451225ab3ea1d85c8b3f9050e217e232736e1aeb4fed4bddc8cd52678b64df"
+    }
+  },
+  "source_sha256": {
+    "iteration2_controls.py": "6b173987988036f29fef13a890a56cd2fb6b0efed4da685d5515d27a684c3b7c",
+    "verification_core.py": "877ca7328e86f5be86efafa3362151b5a902c955c68d0d830f3cd655f4911600",
+    "verify.py": "712d5308e7c94e7f4f9e3f7dc8b5251193bcff0b909b4a7224ac17b51db6f223",
+    "query_package_probe.py": "aa2654c4b7cefba9801bf2368e1e1cc21eab5f868bf0266aa2c9bf705e5bac44",
+    "inspect_public_api.py": "9d28279d1a3ee0b5fba4530d8e1ebcf96a7625062b50e9d74d2629c0626f3f03",
+    "audit_evidence.py": "8857106505edfa652885ab1a65dc22a650a3960b9651e9ee665f6a92f704837f",
+    "artifact_resolver.py": "0f488077d6cdd2aa64e445d338b7fbe91e19bd6e35983a102688bf6eb422667b",
+    "control-inventory.json": "2341aeb269cac4c82e186baeda7dd58d7507dc09ef5258d55d084272a84e849a"
+  },
+  "python_optimization": 1,
+  "inventory_sha256": "2341aeb269cac4c82e186baeda7dd58d7507dc09ef5258d55d084272a84e849a",
+  "scratch": "/tmp/hexalith-job.Q9EX74M3",
+  "complete_release_acceptance": false,
+  "invocation": "run-with-temp python3 -O -B /home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/iteration2_controls.py --output /home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/patch-review3-controls-01"
+}

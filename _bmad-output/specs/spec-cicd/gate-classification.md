@@ -66,6 +66,16 @@ remove product tests or enable release publication. EventStore registration,
 complete owned-perimeter delivery and successful adoption qualification remain
 the separate story 20 prerequisites for central nightly eligibility.
 
+The local Contracts run at `3b2350e7c1fff640131f8101596c78a59e31a03f`
+also reproduces `CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions`
+failing on stale shared-instruction wording. Retire this agent-tooling class
+during the same migration; its cases inspect instruction, Markdown, hook and
+configuration text rather than run commitlint on history or message inputs.
+The [checked proposal](../../implementation-artifacts/evidence/eventstore-release-readiness-20261117/retire-agent-policy-assertions.json)
+preserves the actual pinned commitlint workflow, policy and hook. Package
+boundary tests needing real candidate archives remain product checks and must
+run with their documented package inventory.
+
 ## ChatBot runtime classification during story 19
 
 Keep the genuine runtime checks and preserve their roles with whole test projects:

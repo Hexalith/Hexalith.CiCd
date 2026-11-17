@@ -1,0 +1,201 @@
+{
+  "started_utc": "2026-11-17T00:52:42.828683+00:00",
+  "commands": [
+    {
+      "name": "install-pinned-inspector",
+      "command": [
+        "dotnet",
+        "tool",
+        "install",
+        "dotnet-inspect",
+        "--version",
+        "0.28.0",
+        "--tool-path",
+        "/tmp/hexalith-job.t7bAh4Fj/inspector",
+        "--configfile",
+        "/tmp/hexalith-job.t7bAh4Fj/NuGet.Config"
+      ],
+      "log": "install-pinned-inspector.log",
+      "log_sha256": "f0c22c5fb51e9ef0d4dbeb4d48a2d52cafd4518a5bcaf8df7ee1b72186df7d45",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 0,
+      "owned_pids": [
+        3563593,
+        3563915,
+        3563999,
+        3564621,
+        3564783
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "inspector-version",
+      "command": [
+        "/tmp/hexalith-job.t7bAh4Fj/inspector/dotnet-inspect",
+        "--version"
+      ],
+      "log": "inspector-version.log",
+      "log_sha256": "aba20f5e8622a5fcabf96a116a30b61ff594f70b555e34337654730e5e62632b",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 0,
+      "owned_pids": [
+        3565390
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "contracts-5.1.1-missing-query-result",
+      "command": [
+        "/tmp/hexalith-job.t7bAh4Fj/inspector/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "--package",
+        "/tmp/hexalith-job.t7bAh4Fj/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.1.1-missing-query-result.log",
+      "log_sha256": "fe27edf6af5fa1a1772066ce92636d439642744bcece1a96f179aa0cc0812ffe",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 1,
+      "owned_pids": [
+        3565500
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "contracts-5.1.1-known-present-submit-query",
+      "command": [
+        "/tmp/hexalith-job.t7bAh4Fj/inspector/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "--package",
+        "/tmp/hexalith-job.t7bAh4Fj/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.1.1-known-present-submit-query.log",
+      "log_sha256": "c0bd7d465dca037ac95aecd272fd0809f9d7d01e3c16dec1e6e5c01db32075d9",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 0,
+      "owned_pids": [
+        3565668
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "contracts-5.2.0-missing-query-result",
+      "command": [
+        "/tmp/hexalith-job.t7bAh4Fj/inspector/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "--package",
+        "/tmp/hexalith-job.t7bAh4Fj/hexalith.eventstore.contracts.5.2.0.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.2.0-missing-query-result.log",
+      "log_sha256": "fe27edf6af5fa1a1772066ce92636d439642744bcece1a96f179aa0cc0812ffe",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 1,
+      "owned_pids": [
+        3565920
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "contracts-5.2.0-known-present-submit-query",
+      "command": [
+        "/tmp/hexalith-job.t7bAh4Fj/inspector/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "--package",
+        "/tmp/hexalith-job.t7bAh4Fj/hexalith.eventstore.contracts.5.2.0.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.2.0-known-present-submit-query.log",
+      "log_sha256": "ec67ce88bc1a3a830146a04da96e6363a45c0b3fc725dd7fb15995b0ec874d1a",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 0,
+      "owned_pids": [
+        3566366
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    }
+  ],
+  "tool": {
+    "id": "dotnet-inspect",
+    "version": "0.28.0",
+    "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+    "nupkg_sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+    "reported_version": "0.28.0+3dbe19e"
+  },
+  "packages": [
+    {
+      "version": "5.1.1",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.1.1/hexalith.eventstore.contracts.5.1.1.nupkg",
+      "sha256": "38d1e13eea64437584f2718f3aceb1345e76e2ae16dd048f94a392d7dc63f357",
+      "source_commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+      "missing_type": {
+        "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "native_exit": 1,
+        "absent": true
+      },
+      "known_present_control": {
+        "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "native_exit": 0,
+        "present": true
+      }
+    },
+    {
+      "version": "5.2.0",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.2.0/hexalith.eventstore.contracts.5.2.0.nupkg",
+      "sha256": "2b0ca2eebe215ec7dcc98163a61b575199b1f0354deac0da88a6ad7f1d84a324",
+      "source_commit": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+      "missing_type": {
+        "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "native_exit": 1,
+        "absent": true
+      },
+      "known_present_control": {
+        "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "native_exit": 0,
+        "present": true
+      }
+    }
+  ],
+  "quarantined_selector_names": [],
+  "scratch": "/tmp/hexalith-job.t7bAh4Fj",
+  "helper_sha256": "d7cc4015fd2039737d1c1c7052081e8dd30ac1fc44c0139dad432c0bb0e399bf",
+  "original_inspection_logs_unchanged": true,
+  "complete_release_acceptance": false,
+  "passed": true,
+  "completed_utc": "2026-11-17T00:52:46.864565+00:00"
+}

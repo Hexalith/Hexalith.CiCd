@@ -1,0 +1,566 @@
+{
+  "recorded_utc": "2026-11-17T03:08:59.529309+00:00",
+  "status": "iteration-2 review patches verified by focused controls and narrow metadata-complete query/API runs; original Contracts remains failed; publication blocked",
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "source_tree": "43b99652e373f66d24cceaf9a7a42237d3d3092e",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "dependencies": {
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+    "Hexalith.AI.Tools": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+    "Hexalith.Tenants": "0e0e85fd646da904c5528854e271b71a2b0b9066"
+  },
+  "verified_query_contract_api_in_frozen_source": true,
+  "product_source_correction": null,
+  "baseline_whole_suite_green": false,
+  "whole_test_projects": {
+    "generators": {
+      "native_exit": 0,
+      "counters": {
+        "total": "203",
+        "executed": "203",
+        "passed": "203",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassing": []
+    },
+    "contracts": {
+      "native_exit": 2,
+      "counters": {
+        "total": "1809",
+        "executed": "1807",
+        "passed": "1805",
+        "failed": "2",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "2",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassing": [
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions",
+          "outcome": "Failed",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "34657cc5-1eb2-42f2-9195-dbbe9d78c51e",
+          "executionId": "34657cc5-1eb2-42f2-9195-dbbe9d78c51e",
+          "computerName": "unknown",
+          "duration": "00:00:00.3910000",
+          "startTime": "2026-11-16T23:57:49.0833327+00:00",
+          "endTime": "2026-11-16T23:57:49.5042307+00:00",
+          "detail": "Shouldly.ShouldAssertException : sharedGitInstructions\n    should contain (case insensitive comparison)\n\\\"validate it with commitlint\\\"\n    but was actually\n\\\"# Hexalith Git Instructions\n\nThese rules apply before creating Git commits in a Hexalith repositor...\\\"   at Hexalith.EventStore.Contracts.Tests.Packaging.CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions() in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs:line 80\n   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)\n   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)"
+        },
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.PackagedReminderApiTests.PackagedReminderApiRunsWithoutWorksTypes",
+          "outcome": "NotExecuted",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "e0a4e463-32f2-4700-9a49-cd1e27700a72",
+          "executionId": "e0a4e463-32f2-4700-9a49-cd1e27700a72",
+          "computerName": "unknown",
+          "duration": "00:00:00.0000000",
+          "startTime": "2026-11-16T23:57:49.5411846+00:00",
+          "endTime": "2026-11-16T23:57:49.5848020+00:00",
+          "detail": "EVENTSTORE_PACKAGE_CONTRACT_DIR is not set; no release package inventory was supplied."
+        },
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.TrustedEffectPackageContractTests.NamedPackagesExposeTrustedEffectContracts",
+          "outcome": "NotExecuted",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "8d1c5c4a-784a-49f2-a694-a7dcea931d03",
+          "executionId": "8d1c5c4a-784a-49f2-a694-a7dcea931d03",
+          "computerName": "unknown",
+          "duration": "00:00:00.0000000",
+          "startTime": "2026-11-16T23:57:49.7457116+00:00",
+          "endTime": "2026-11-16T23:57:49.7468123+00:00",
+          "detail": "EVENTSTORE_PACKAGE_CONTRACT_DIR is not set; no release package inventory was supplied."
+        },
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.SharedConsumerAuthorityValidatorPassesForEveryTrackedMsBuildSurfaceAsync",
+          "outcome": "Failed",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "cde1b7a6-226e-4b73-83c1-94f73354670e",
+          "executionId": "cde1b7a6-226e-4b73-83c1-94f73354670e",
+          "computerName": "unknown",
+          "duration": "00:08:01.0790000",
+          "startTime": "2026-11-16T23:58:59.5914592+00:00",
+          "endTime": "2026-11-17T00:07:00.6453860+00:00",
+          "detail": "System.TimeoutException : Consumer package authority validation timed out after 00:08:00.\n---- System.Threading.Tasks.TaskCanceledException : A task was canceled.   at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.RunConsumerAuthorityValidatorAsync(String repositoryRoot, String root, String catalogPath, Boolean useApprovedException) in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:line 291\n   at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.SharedConsumerAuthorityValidatorPassesForEveryTrackedMsBuildSurfaceAsync() in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:line 147\n--- End of stack trace from previous location ---\n----- Inner Stack Trace -----\n   at System.Diagnostics.Process.WaitForExitAsync(CancellationToken cancellationToken)\n   at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.RunConsumerAuthorityValidatorAsync(String repositoryRoot, String root, String catalogPath, Boolean useApprovedException) in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:line 286"
+        }
+      ]
+    }
+  },
+  "ordinary_release_package_checks": {
+    "generators-properties": 0,
+    "generators-restore": 0,
+    "generators-build": 0,
+    "contracts-properties": 0,
+    "contracts-restore": 0,
+    "contracts-build": 0,
+    "gateway-properties": 0,
+    "gateway-restore": 0,
+    "gateway-build": 0,
+    "generators-test": 0,
+    "contracts-test": 2
+  },
+  "evaluated_policy_supplement": "attempt-01-policy-validation.json",
+  "existing_audit_warning_exceptions": [
+    "NU1901",
+    "NU1902"
+  ],
+  "explicit_original_package_skips": 2,
+  "projection_package_probe_returned_early_in_original_suite": true,
+  "original_local_package_setup_failure": {
+    "attempt": "attempt-02-local-packages",
+    "full_validator_native_exit": 1,
+    "cause": "Local-only 0.0.0 candidate label violated the real Tenants.Contracts -> EventStore.Contracts >=5.1.1 minimum (NU1605). Original failure retained."
+  },
+  "unpublished_local_packages": {
+    "attempt": "attempt-03-local-packages",
+    "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "version": "5.2.1-local-readiness.3b2350e7",
+    "published": false,
+    "archive_count": 14,
+    "archive_hashes": [
+      {
+        "name": "Hexalith.EventStore.Admin.Abstractions.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "53a2c654369104b0727544ea9d3dbdfa8300ef61bdd7dcb2bfaaf71c711f6e97"
+      },
+      {
+        "name": "Hexalith.EventStore.Admin.Cli.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "d4bf8ecef133d3b8b55b12862b44c186786d50872ee0e88c803743fba4b0b617"
+      },
+      {
+        "name": "Hexalith.EventStore.Admin.Server.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "06a4d8a262be39adf62b342a8f1f1dd1d4300edfd2d3a8d4e2f8a666c431cd63"
+      },
+      {
+        "name": "Hexalith.EventStore.Aspire.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "5bcacf980faf8d0147b82623cb5f6dadd898e71161eed714d5b89b817893e0fc"
+      },
+      {
+        "name": "Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ba981628cebadca109ea5ce34372b0fc7955170dbe216e382e3960eb1eb5b442"
+      },
+      {
+        "name": "Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "dd9a0af426cf252d7252be92912ea084534b59e1cc74f3aa7ca5cbb4ae0a9e4d"
+      },
+      {
+        "name": "Hexalith.EventStore.DomainService.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "52fd6441aaab0ecd4df02da263e03facf21f069cb37a81bd0f089ed02bc04228"
+      },
+      {
+        "name": "Hexalith.EventStore.Gateway.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "c0a215d83ea9fa6b15d0172e9e876384ea43252961bba010c96066f7b14a4274"
+      },
+      {
+        "name": "Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ebb0d5c8634f65713076d04d1bb52170199bccaeb49dabdae2aef3af7941aaa5"
+      },
+      {
+        "name": "Hexalith.EventStore.Server.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "e00ea0f2d93db487a3ba756274f2ffa397ac0c01a92d894e778d83295e845fc5"
+      },
+      {
+        "name": "Hexalith.EventStore.ServiceDefaults.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ca95e86a86b4a31aea02f2ee0624320fc1d8dd58b096cfacf6df8b5b8b5fda5e"
+      },
+      {
+        "name": "Hexalith.EventStore.SignalR.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "524387e3358761d780b34f7f07a03de32e53e760437aeb41a1165ee957879af9"
+      },
+      {
+        "name": "Hexalith.EventStore.Testing.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "5fb605b5d888e7933cf8e18c53c6b1263404a3993f57abc7ef910176db650bfb"
+      },
+      {
+        "name": "Hexalith.EventStore.Testing.Integration.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "924fb5cd7d5f531bbc58480fae43be18a9e3c66715c9ca5357142af0c9652854"
+      }
+    ],
+    "checks": {
+      "pack-manifest-local-candidate": 0,
+      "all-package-consumer-probes": 0,
+      "reminder-package-consumer-probes": 0,
+      "reminder-three-consumer-summary": 0
+    },
+    "full_validator_library_consumers": 13,
+    "full_validator_tool_consumers": 1,
+    "reminder_subset_consumers": 3,
+    "passed": true
+  },
+  "package_authority_reproduction": {
+    "attempt": "attempt-04-authority",
+    "native_exit": 0,
+    "timeout_seconds": 480,
+    "timed_out": false,
+    "elapsed_seconds": 364.903,
+    "projects": 73,
+    "exclusions": [],
+    "process_tree_fully_waited": null,
+    "original_whole_suite_timeout_preserved": true,
+    "original_group_receipt_claimed_fully_waited": true,
+    "custody_limit": "Historical process-group receipt; session-escape custody was not established for this original attempt."
+  },
+  "later_observed_remote_main": {
+    "observed_utc": "2026-11-17T03:04:47.649914+00:00",
+    "value": "22e2e2470ed5d692b2bf4970251d02b5c1823f9f\trefs/heads/main"
+  },
+  "complete_release_acceptance": false,
+  "publication_authorized_by_packet": false,
+  "actions_not_performed": [
+    "product source or owned policy edit",
+    "module push",
+    "release or tag",
+    "dispatch",
+    "adoption or setup registration",
+    "parent gitlink edit",
+    "credential change",
+    "Projects consumer retest or source/package fallback"
+  ],
+  "remaining_gates": [
+    "Exact-current-main green hosted push CI and commitlint; the original local Contracts suite remains failed.",
+    "Complete retained product, security, published compatibility, container and fourteen-package real-release acceptance.",
+    "Released shared infrastructure and EventStore ordered-adoption preparation/qualification, including browsers/live/private/Azure workloads.",
+    "EventStore setup registration, complete delivery/adoption state and standalone Builds checker; no approved pre-adoption push substitute exists.",
+    "Verified production publication permissions, account/OIDC/publication prerequisites and successful central nightly publication.",
+    "Actual published query-contract API availability before Projects consumer acceptance; frozen spec records published SDK 5.2.0 as missing it."
+  ],
+  "integrity_report": "revision-controls-04/result.json",
+  "integrity_passed": true,
+  "all_disposable_jobs_completed_and_cleaned": null,
+  "original_report_snapshot": "readiness-pre-revision.json",
+  "verified_query_contract_api_in_synthetic_package_consumer": true,
+  "query_api_package_probe": {
+    "attempt": "patch-review3-query-api-01",
+    "passed": true,
+    "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "version": "5.2.1-local-readiness.3b2350e7",
+    "published": false,
+    "archives": [
+      {
+        "name": "Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "49e396e095d837986168d7dd1239137ef40e7f673d9d56f3275329f94acc67c9",
+        "sha512_base64": "s8I8z0zZRrzdpwUfLoJ0n+579P08HqwudAeTGbYfkrFvgNqUjxciZOPsTgeHf0g2OERRbb/7R9oaek2WeIe7MA==",
+        "id": "Hexalith.EventStore.Contracts",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false,
+        "nuspec": {
+          "path": "package-metadata/Hexalith.EventStore.Contracts.nuspec",
+          "sha256": "5436c7d514bd3734fc0408fb834239df87e78c1b049059492aa3c735b2bdaa15"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ec45b9f4a57220a4ac48374b87c8773ee6622e8a20fb20054ef82b17d580f67a",
+        "sha512_base64": "1qkCs4dQ9/f1cHUormP+U8RPNYaI6AWAgmcjO4hEKb2+nntlKyuRZWknRG9NqUh9Opo1JoDIXA6gPEvyDWxe1g==",
+        "id": "Hexalith.EventStore.Client",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false,
+        "nuspec": {
+          "path": "package-metadata/Hexalith.EventStore.Client.nuspec",
+          "sha256": "526495f6a3834354e7dea4a279199aa244dd8f5f3a9086769477b2c180dc00ef"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "337d7eba335a210cc8285772d81cbdc5a6ada55df9307dc1a704df96e073055b",
+        "sha512_base64": "2ICiHLIgbSaZ9iORbyg46emQkA+7viud/1pS1Eb9JQvhc0ojWGbZFINPyxJDcaA9Hf8F5YZ9Zm4iok+OzhOUcQ==",
+        "id": "Hexalith.EventStore.RestApi.Generators",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false,
+        "nuspec": {
+          "path": "package-metadata/Hexalith.EventStore.RestApi.Generators.nuspec",
+          "sha256": "75f1328ca0f87d7242a6fcdab9858397927d6e778c9810e2e97855b32b7ebf73"
+        }
+      }
+    ],
+    "synthetic_input_manifest": {
+      "NuGet.Config": "5fa3f568e8e6f1599a4e8f8ff2e1642c98cbbc457d4daa2e923add5c7e252580",
+      "Owner.Contracts/Owner.Contracts.csproj": "2fc01cbdea91cc75ea35ca57f12eecdc0ce58e292d37adc428df0cfa0a73a9fb",
+      "Owner.Contracts/Query.cs": "fc8559fb2db73f4796f4a28b11096a0c49ebd3396cd9c0a8de09691af250a0ce",
+      "Owner.Contracts/Result.cs": "b5279d742afb720f79ac0df1e1dc07e7ff74759d603a605dbbc03cf94313fd2a",
+      "Probe.Consumer/Probe.Consumer.csproj": "a0f0555751aeafb33498b3450805a85d87455b1afd601717a848f62c04d90e10",
+      "Probe.Consumer/RequireGeneratedQuery.cs": "7b1702653249885dc5538ca2dff0ad327a11785d753a22fcd0262482ffb2f1a6",
+      "global.json": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f"
+    },
+    "pre_execution_manifest": {
+      "synthetic-consumer-inputs/NuGet.Config": "5fa3f568e8e6f1599a4e8f8ff2e1642c98cbbc457d4daa2e923add5c7e252580",
+      "synthetic-consumer-inputs/Owner.Contracts/Owner.Contracts.csproj": "2fc01cbdea91cc75ea35ca57f12eecdc0ce58e292d37adc428df0cfa0a73a9fb",
+      "synthetic-consumer-inputs/Owner.Contracts/Query.cs": "fc8559fb2db73f4796f4a28b11096a0c49ebd3396cd9c0a8de09691af250a0ce",
+      "synthetic-consumer-inputs/Owner.Contracts/Result.cs": "b5279d742afb720f79ac0df1e1dc07e7ff74759d603a605dbbc03cf94313fd2a",
+      "synthetic-consumer-inputs/Probe.Consumer/Probe.Consumer.csproj": "a0f0555751aeafb33498b3450805a85d87455b1afd601717a848f62c04d90e10",
+      "synthetic-consumer-inputs/Probe.Consumer/RequireGeneratedQuery.cs": "7b1702653249885dc5538ca2dff0ad327a11785d753a22fcd0262482ffb2f1a6",
+      "synthetic-consumer-inputs/global.json": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f",
+      "package-metadata/Hexalith.EventStore.Client.nuspec": "526495f6a3834354e7dea4a279199aa244dd8f5f3a9086769477b2c180dc00ef",
+      "package-metadata/Hexalith.EventStore.Contracts.nuspec": "5436c7d514bd3734fc0408fb834239df87e78c1b049059492aa3c735b2bdaa15",
+      "package-metadata/Hexalith.EventStore.RestApi.Generators.nuspec": "75f1328ca0f87d7242a6fcdab9858397927d6e778c9810e2e97855b32b7ebf73",
+      "candidate-packages/Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg": "ec45b9f4a57220a4ac48374b87c8773ee6622e8a20fb20054ef82b17d580f67a",
+      "candidate-packages/Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg": "49e396e095d837986168d7dd1239137ef40e7f673d9d56f3275329f94acc67c9",
+      "candidate-packages/Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg": "337d7eba335a210cc8285772d81cbdc5a6ada55df9307dc1a704df96e073055b"
+    },
+    "resolved_libraries": {
+      "Owner.Contracts": [
+        "ByteAether.Ulid/1.4.2",
+        "Hexalith.Commons.UniqueIds/3.0.0",
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7"
+      ],
+      "Probe.Consumer": [
+        "ByteAether.Ulid/1.4.2",
+        "Dapr.Client/1.19.1",
+        "Dapr.Common/1.19.1",
+        "Dapr.Protos/1.19.1",
+        "Google.Api.CommonProtos/2.17.0",
+        "Google.Protobuf/3.35.0",
+        "Grpc.Core.Api/2.80.0",
+        "Grpc.Net.Client/2.80.0",
+        "Grpc.Net.Common/2.80.0",
+        "Grpc.Reflection/2.80.0",
+        "Hexalith.Commons.UniqueIds/3.0.0",
+        "Hexalith.EventStore.Client/5.2.1-local-readiness.3b2350e7",
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7",
+        "Hexalith.EventStore.RestApi.Generators/5.2.1-local-readiness.3b2350e7",
+        "Microsoft.AspNetCore.DataProtection.Abstractions/11.0.0",
+        "Microsoft.Extensions.Configuration.Binder/11.0.0",
+        "Microsoft.Extensions.Configuration/11.0.0",
+        "Microsoft.Extensions.DependencyInjection/11.0.0",
+        "Microsoft.Extensions.Diagnostics/11.0.0",
+        "Microsoft.Extensions.Http/11.0.0",
+        "Microsoft.Extensions.Logging/11.0.0",
+        "Microsoft.Extensions.Options.ConfigurationExtensions/11.0.0",
+        "Owner.Contracts/1.0.0"
+      ]
+    },
+    "archive_content_bindings": {
+      "Owner.Contracts": {
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7": "s8I8z0zZRrzdpwUfLoJ0n+579P08HqwudAeTGbYfkrFvgNqUjxciZOPsTgeHf0g2OERRbb/7R9oaek2WeIe7MA=="
+      },
+      "Probe.Consumer": {
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7": "s8I8z0zZRrzdpwUfLoJ0n+579P08HqwudAeTGbYfkrFvgNqUjxciZOPsTgeHf0g2OERRbb/7R9oaek2WeIe7MA==",
+        "Hexalith.EventStore.Client/5.2.1-local-readiness.3b2350e7": "1qkCs4dQ9/f1cHUormP+U8RPNYaI6AWAgmcjO4hEKb2+nntlKyuRZWknRG9NqUh9Opo1JoDIXA6gPEvyDWxe1g==",
+        "Hexalith.EventStore.RestApi.Generators/5.2.1-local-readiness.3b2350e7": "2ICiHLIgbSaZ9iORbyg46emQkA+7viud/1pS1Eb9JQvhc0ojWGbZFINPyxJDcaA9Hf8F5YZ9Zm4iok+OzhOUcQ=="
+      }
+    },
+    "generated_binding": {
+      "path": "TypedGatewayQueries.g.cs",
+      "sha256": "d7f5671f9e3a055c24e8b99feae3ea32938c5cad92cb5922436bc8c3e8e8d001"
+    },
+    "boundary": "synthetic attributed owner assembly plus consumer compiled with packaged analyzer",
+    "projects_consumer_retested": false,
+    "producer_source_changed": false,
+    "retained_manifest": {
+      "synthetic-consumer-inputs/NuGet.Config": "5fa3f568e8e6f1599a4e8f8ff2e1642c98cbbc457d4daa2e923add5c7e252580",
+      "synthetic-consumer-inputs/Owner.Contracts/Owner.Contracts.csproj": "2fc01cbdea91cc75ea35ca57f12eecdc0ce58e292d37adc428df0cfa0a73a9fb",
+      "synthetic-consumer-inputs/Owner.Contracts/Query.cs": "fc8559fb2db73f4796f4a28b11096a0c49ebd3396cd9c0a8de09691af250a0ce",
+      "synthetic-consumer-inputs/Owner.Contracts/Result.cs": "b5279d742afb720f79ac0df1e1dc07e7ff74759d603a605dbbc03cf94313fd2a",
+      "synthetic-consumer-inputs/Probe.Consumer/Probe.Consumer.csproj": "a0f0555751aeafb33498b3450805a85d87455b1afd601717a848f62c04d90e10",
+      "synthetic-consumer-inputs/Probe.Consumer/RequireGeneratedQuery.cs": "7b1702653249885dc5538ca2dff0ad327a11785d753a22fcd0262482ffb2f1a6",
+      "synthetic-consumer-inputs/global.json": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f",
+      "package-metadata/Hexalith.EventStore.Client.nuspec": "526495f6a3834354e7dea4a279199aa244dd8f5f3a9086769477b2c180dc00ef",
+      "package-metadata/Hexalith.EventStore.Contracts.nuspec": "5436c7d514bd3734fc0408fb834239df87e78c1b049059492aa3c735b2bdaa15",
+      "package-metadata/Hexalith.EventStore.RestApi.Generators.nuspec": "75f1328ca0f87d7242a6fcdab9858397927d6e778c9810e2e97855b32b7ebf73",
+      "candidate-packages/Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg": "ec45b9f4a57220a4ac48374b87c8773ee6622e8a20fb20054ef82b17d580f67a",
+      "candidate-packages/Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg": "49e396e095d837986168d7dd1239137ef40e7f673d9d56f3275329f94acc67c9",
+      "candidate-packages/Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg": "337d7eba335a210cc8285772d81cbdc5a6ada55df9307dc1a704df96e073055b",
+      "TypedGatewayQueries.g.cs": "d7f5671f9e3a055c24e8b99feae3ea32938c5cad92cb5922436bc8c3e8e8d001"
+    },
+    "resolved_package_graphs": {
+      "path": "resolved-package-graphs.json",
+      "sha256": "25836ad17bb8ea49984fb91fdb2d24e4daf74ee260e55ee961452fe549f7f966",
+      "project_count": 5,
+      "selection": "explicit evaluated active ProjectAssetsFile paths only",
+      "retained_sections": [
+        "libraries",
+        "targets",
+        "project_frameworks",
+        "restore_frameworks",
+        "projectFileDependencyGroups",
+        "analyzer_files",
+        "restore_policy"
+      ]
+    }
+  },
+  "public_api_inspection": {
+    "attempt": "patch-review3-public-api-01",
+    "helper": "inspect_public_api.py",
+    "tool": {
+      "id": "dotnet-inspect",
+      "version": "0.28.0",
+      "runtime_archive": {
+        "id": "dotnet-inspect.linux-x64",
+        "version": "0.28.0",
+        "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect.linux-x64/0.28.0/dotnet-inspect.linux-x64.0.28.0.nupkg",
+        "path": "dotnet-inspect.linux-x64.0.28.0.nupkg",
+        "sha256": "f72e538944c654759c5db922ef8749d897dd3a0af3072d9ac5d43c3b8319cfa3",
+        "artifact": {
+          "filename": "dotnet-inspect.linux-x64.0.28.0.nupkg",
+          "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect.linux-x64/0.28.0/dotnet-inspect.linux-x64.0.28.0.nupkg",
+          "sha256": "f72e538944c654759c5db922ef8749d897dd3a0af3072d9ac5d43c3b8319cfa3",
+          "local_path": "/home/administrator/verification/eventstore-release-readiness-20261117/dotnet-inspect.linux-x64.0.28.0.nupkg"
+        }
+      },
+      "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+      "nupkg_sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+      "archive": "dotnet-inspect.0.28.0.nupkg",
+      "archive_artifact": {
+        "filename": "dotnet-inspect.0.28.0.nupkg",
+        "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+        "sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+        "local_path": "/home/administrator/verification/eventstore-release-readiness-20261117/dotnet-inspect.0.28.0.nupkg"
+      },
+      "installation_source": "captured archive in isolated local-only feed",
+      "installed_payload": {
+        "tools/any/linux-x64/DotnetToolSettings.xml": {
+          "sha256": "795ffe51d7c1de603360c726b653928d2e302e0ff04e5c13d8fab639fe96879f",
+          "installed_relative_path": ".store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/DotnetToolSettings.xml"
+        },
+        "tools/any/linux-x64/dotnet-inspect": {
+          "sha256": "c25653a8968c46dfdf059073447692556d8553208737d48bd3d09cfb58072c1d",
+          "installed_relative_path": ".store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect"
+        }
+      },
+      "executed_payload": {
+        "relative_path": ".store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+        "sha256": "c25653a8968c46dfdf059073447692556d8553208737d48bd3d09cfb58072c1d"
+      },
+      "command_prefix": [
+        "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect"
+      ],
+      "reported_version": "0.28.0+3dbe19e"
+    },
+    "packages": [
+      {
+        "version": "5.1.1",
+        "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.1.1/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "sha256": "38d1e13eea64437584f2718f3aceb1345e76e2ae16dd048f94a392d7dc63f357",
+        "source_commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+        "missing_type": {
+          "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+          "native_exit": 1,
+          "absent": true
+        },
+        "known_present_control": {
+          "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+          "native_exit": 0,
+          "present": true
+        }
+      },
+      {
+        "version": "5.2.0",
+        "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.2.0/hexalith.eventstore.contracts.5.2.0.nupkg",
+        "sha256": "2b0ca2eebe215ec7dcc98163a61b575199b1f0354deac0da88a6ad7f1d84a324",
+        "source_commit": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+        "missing_type": {
+          "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+          "native_exit": 1,
+          "absent": true
+        },
+        "known_present_control": {
+          "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+          "native_exit": 0,
+          "present": true
+        }
+      }
+    ],
+    "passed": true,
+    "original_logs_unchanged": true
+  },
+  "rederived_helper_validation": {
+    "verifier": "audit_evidence.py",
+    "result": "revision-controls-04/result.json",
+    "checks": 450,
+    "python_optimization": 1,
+    "passed": true,
+    "scope": "retained-report replay and executable controls; no producer suites rerun",
+    "applies_to": "Recorded revision-controls-04 helper snapshot; not the later ancestry/adoption implementation."
+  },
+  "resolved_dependency_graph_provenance": {
+    "original_attempts": "unavailable: original disposable graphs were removed; no reconstruction claimed",
+    "attempt_05_capture": "flawed historical capture: 11 files included 6 committed Windows history assets and 5 active Linux assets; original capture preserved",
+    "new_query_probe": "5 explicitly evaluated active Linux ProjectAssetsFile paths with targets, dependency/framework/asset selections, exact candidate archive content hashes and pre/post sanitized restore policy",
+    "previous_iteration2_capture": "inventory-only package libraries/content hashes; dependency edges, target asset selections and pre-execution effective restore policy were not retained"
+  },
+  "historical_custody_limit": "Original group-based receipts lack session-escape/cancellation coverage. Nonce-based attempt-05, public-api-recheck and revision-controls-01..04 receipts do not cover descendants clearing their environments. Each original receipt and valid package/API result is preserved; no retroactive full-tree custody claim. Shared-supervisor ancestry/adoption helpers, including review-fix-controls-01, cannot establish foreign-orphan safety; three independent controls reproduced the ambiguity. Only dedicated iteration-2 custodian receipts establish the new custody boundary.",
+  "original_disposable_scratch_removed": true,
+  "new_revision_jobs_fully_waited_and_scratch_removed": null,
+  "nonce_based_query_and_inspection_scratch_removed": true,
+  "nonce_based_query_and_inspection_complete_descendant_custody_established": false,
+  "review_fix_validation": {
+    "result": "review-fix-controls-01/result.json",
+    "verifier": "verify_review_fixes.py",
+    "checks": 18,
+    "python_optimization": 1,
+    "passed": true,
+    "source_sha256": {
+      "verification_core.py": "786b991d893a7bffd554c6b0deb37b6919ea9d5fd174dc822709f79376426592",
+      "query_package_probe.py": "ffbfe80bec5525c18ed07afa0b1e7603b438807fbcdf154e2155fbb783ace33e",
+      "verify_review_fixes.py": "68c2dd93ec1ac114d8f9eec2ba9f57bb54b4bb791e0aba389396c4405cd060f4"
+    },
+    "scope": "owned-job lifecycle and C# source layout only; no producer/package runs",
+    "scratch_removed": true,
+    "cleared_environment_double_fork_and_startup_cancellation_covered": true,
+    "custody_limit": "The original 18 passing controls did not exercise the foreign-orphan race; preserved historical success is not dedicated-custodian proof."
+  },
+  "iteration2_verification": {
+    "controls": "patch-review3-controls-02/result.json",
+    "controls_passed": true,
+    "controls_count": 71,
+    "python_optimization": 1,
+    "query_attempt": "patch-review3-query-api-01",
+    "public_attempt": "patch-review3-public-api-01",
+    "receipt_bindings": {
+      "attempt-01/result.json": "92c0137ff00a434f70a53e43cc31e08181eb94bcb49e80f68fc2fcebe12dd423",
+      "attempt-02-local-packages/result.json": "342927d2ded09099664c20b1b830ea7c37839c3924a3f230dc33ec8c9571629e",
+      "attempt-03-local-packages/result.json": "cb0051b0c6f629fc0bcfd1c1e04cab46db7e678b839dd296a995cd75dd957370",
+      "attempt-04-authority/result.json": "2c06dcdb9e2ae1c0cd0e2f8b09c2e1fe790373184359bb736d670357722a63cf",
+      "patch-review3-query-api-01/result.json": "96583bf478d87e9f6cee86fac8ccc6398bdcf19825a70ae3014b9acb6869e6df",
+      "patch-review3-public-api-01/result.json": "10bd7e259b56d62ebda82d1c2d9aff866677ffa44728fc9ead628c7c79b69a3d",
+      "patch-review3-controls-02/result.json": "c32e3937448764b336f257b90f3957c5da48f138a7c33a86c4e48c0da73687d4"
+    }
+  },
+  "iteration2_jobs_fully_waited_and_scratch_removed": true,
+  "iteration2_no_broad_producer_or_unrelated_consumer_reruns": true,
+  "iteration2_original_failures_and_snapshots_preserved": true,
+  "review_patch_provenance": {
+    "query": "patch-review3-query-api-01/result.json",
+    "public_api": "patch-review3-public-api-01/result.json",
+    "controls": "patch-review3-controls-02/result.json",
+    "audit": "patch-review3-audit-01/result.json",
+    "historical_limits": [
+      "Prior evaluated policies did not capture effective analyzer mode/level.",
+      "Prior active graphs retained library inventory/content hashes without targets, dependency/framework/compile-runtime-analyzer selections.",
+      "Prior attempts did not retain pre-execution sanitized effective restore policy.",
+      "Prior archive identity/hash receipts did not require actual archive SHA512 equality to restored graph content hashes.",
+      "Historical source diffs did not force --no-ext-diff --no-textconv; no retroactive guard is claimed."
+    ],
+    "third_party_tool_artifacts": "external-artifacts.json; durable local cache or pinned digest-verified NuGet retrieval into TMPDIR",
+    "captured_input_aliases": "retained-input-aliases.json; original receipt keys/hash bytes unchanged",
+    "audit_checks": 773,
+    "controls_checks": 71,
+    "passed": true,
+    "all_wrapper_scratch_removed": true
+  }
+}

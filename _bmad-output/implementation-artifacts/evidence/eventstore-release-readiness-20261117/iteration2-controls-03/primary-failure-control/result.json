@@ -1,0 +1,60 @@
+{
+  "started_utc": "2026-11-17T02:01:07.260849+00:00",
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "helper_sha256": "6e86fbacaf17dc3b7d48fba2077bb4827b46b9adad633293bfe5403b2bafe2de",
+  "supporting_sha256": {
+    "verification_core.py": "a1e855a86fe14d3de957ff690c793e935fd99f33a1f6ba1784e9ea0826d503d6",
+    "query_package_probe.py": "b8a8f7c2043ce353e30edb887abd7e2dbb8fbde887a507ca967af1de5ee0ffac",
+    "frozen-suite-inventories.json": "9aa2bdb50e4991e2d9af11459ae5abfdd9e013b871cfbbf56dae37ce1ca2e948"
+  },
+  "effective_inputs": {
+    "quarantined_selector_names": [],
+    "package_contract_directory": null,
+    "credential_profile_selection_preserved": true,
+    "GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "token_override_present": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    }
+  },
+  "scratch": "/tmp/hexalith-job.TuBZT2eo/eventstore-readiness-ppls6_tv",
+  "commands": [
+    {
+      "name": "git-read-0",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+        "cat-file",
+        "-t",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.TuBZT2eo/eventstore-readiness-ppls6_tv",
+      "started_utc": "2026-11-17T02:01:07.261208+00:00",
+      "log": "git-read-0.log",
+      "native_exit": 7,
+      "process_tree_fully_waited": true,
+      "custodian_waited": true,
+      "timed_out": false,
+      "remaining_owned_after_cleanup": [],
+      "owned_pids": [],
+      "elapsed_seconds": 0.0,
+      "finished_utc": "2026-11-17T02:01:07.261384+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "inputs": {},
+  "dependencies": {},
+  "test_results": {},
+  "checks": {},
+  "complete_release_acceptance": false,
+  "filters": [],
+  "source_changes_authorized_only_on_demonstrated_product_failure": true,
+  "scope": "baseline",
+  "fatal_error": "git-read-0 failed: exit 7; see git-read-0.log",
+  "primary_error_type": "RuntimeError",
+  "completed_utc": "2026-11-17T02:01:07.261521+00:00",
+  "graph_capture_error": "OSError('secondary graph failure')"
+}

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py", line 248, in main
+    clone("Hexalith.EventStore", SOURCE, owner)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py", line 188, in clone
+    if git(store, "cat-file", "-t", commit) != "commit":
+       ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py", line 183, in git
+    _, text = run(name, ["git", "--no-replace-objects", "-C", str(root), *arguments], required=True)
+              ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py", line 178, in run
+    raise RuntimeError(f"{name} failed: exit {record['native_exit']}; see {log.name}")
+RuntimeError: git-read-0 failed: exit 7; see git-read-0.log

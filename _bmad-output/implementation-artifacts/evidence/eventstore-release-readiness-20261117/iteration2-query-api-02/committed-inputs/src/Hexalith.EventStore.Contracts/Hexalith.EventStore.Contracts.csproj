@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>CQRS and DDD contract types for the Hexalith event store — commands, events, results, and aggregate identities for .NET event sourcing</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Hexalith.EventStore.ServiceDefaults" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Client" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.DomainService" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Server" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Server.Tests" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Server.LiveSidecar.Tests" />
+    <ProjectReference Include="$(HexalithCommonsRoot)\src\libraries\Hexalith.Commons.UniqueIds\Hexalith.Commons.UniqueIds.csproj" Condition="'$(HexalithCommonsFromSource)' == 'true'" />
+    <PackageReference Include="Hexalith.Commons.UniqueIds" Condition="'$(HexalithCommonsFromSource)' != 'true'" />
+    <!-- Public route contracts expose JSON types, so owners must restore this same dependency. -->
+  </ItemGroup>
+
+</Project>
