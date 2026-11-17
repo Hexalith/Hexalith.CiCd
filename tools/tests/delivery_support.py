@@ -17,8 +17,9 @@ from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.dont_write_bytecode = True
-TAG = "v5.1.0"
-RELEASE = "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4"
+RELEASE_FIXTURE = json.loads((ROOT / "tools/tests/fixtures/builds-releases.json").read_bytes())["delivery"]
+TAG = RELEASE_FIXTURE["tag"]
+RELEASE = RELEASE_FIXTURE["commit"]
 
 
 def git(root, *args, data=None, check=True):
@@ -77,6 +78,8 @@ class Workspace:
         git(self.builds, "init", "--bare", "--quiet")
         filtered_remote(self.builds)
         git(self.builds, "fetch", "--quiet", "--depth=1", ROOT / "references/Hexalith.Builds", f"refs/tags/{TAG}:refs/tags/{TAG}")
+        if git(self.builds, "rev-parse", f"refs/tags/{TAG}^{{commit}}") != RELEASE:
+            raise AssertionError("Delivery fixture must use the authentic released commit")
         self.config = {"cicd": str(self.remote), "builds": str(self.builds), "modules": self.remotes,
                        "release": RELEASE, "fail_app": [], "mint_fail": [], "push_fail": [], "races": {},
                        "ref_races": {}, "api": {}, "bad_release": False,

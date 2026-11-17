@@ -806,6 +806,25 @@ The detailed interface/rationale and source-only evidence are recorded in
 `evidence/16/implementation-and-verification.md`; this is shared generic support,
 not a module-name exception or a qualification receipt that grants adoption.
 
+Builds v6.2.0 adds a closed `buildProjects` alternative
+`{id, project, isolatedContract}`. It requires managed `moduleManifest` authority,
+committed descriptor/owner paths and the exact evaluated nonshipping adapter
+shape and build-order references. Shared orchestration restores and builds the
+adapter in separate SDK processes after the root solution, preserving distinct
+SDK selections and canonical fixture outputs. Every isolated SDK invocation,
+including preflight, disables node reuse so .NET 11's build server cannot share
+resolver state. This route applies to CI, local
+checking, Windows preparation and release preparation. Hooks only inspect or
+execute the resulting product outputs. The existing finite-version build form
+keeps its guards, private outputs and platform restrictions.
+
+The same managed preparation lifetime retains an immutable producer inventory.
+Unseeded consumer catalog selections use the existing SDK evaluator without
+recording new entries or lock files in that inventory. Preseeded conditional
+selections and ordinary legacy catalog caching retain their behavior. Neither
+this declaration nor local source qualification grants adoption before the
+implementing immutable Builds/CLI release is selected and qualified.
+
 ### Story 18 additive preparation and scan clarification (AD-3, AD-12, AD-14)
 
 `npmWorkspaces: []` and `dotnetTools: false` become complete required fields only

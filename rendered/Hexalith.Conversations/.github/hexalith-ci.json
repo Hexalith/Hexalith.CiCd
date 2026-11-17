@@ -1,0 +1,82 @@
+{
+  "browsers": true,
+  "buildProjects": [
+    {
+      "id": "minimal-module-compatibility",
+      "isolatedContract": "tests/compatibility/MinimalModule/hexalith.isolated-build.v1.json",
+      "project": "tests/compatibility/MinimalModule/Hexalith.Conversations.MinimalModule.Compatibility.csproj"
+    }
+  ],
+  "buildsTag": "v6.2.0",
+  "ciTimeoutMinutes": 30,
+  "codeql": [
+    "csharp"
+  ],
+  "dapr": true,
+  "dotnetTools": false,
+  "hooks": [
+    "after-unit-tests"
+  ],
+  "jobs": {
+    "testsupport-windows": {
+      "runner": "windows-latest"
+    }
+  },
+  "moduleManifest": "module/hexalith.module-manifest.v2.json",
+  "npmWorkspaces": [],
+  "publishedBuilds": null,
+  "registry": false,
+  "schema": "hexalith.ci.v1",
+  "solution": "Hexalith.Conversations.slnx",
+  "submodules": [
+    "references/Hexalith.Platform"
+  ],
+  "tests": {
+    "exclude": {},
+    "failSkips": false,
+    "integration": [
+      "tests/Hexalith.Conversations.Admin.Web.Tests/Hexalith.Conversations.Admin.Web.Tests.csproj"
+    ],
+    "minimumExpectedTests": {}
+  },
+  "windowsCheckout": {
+    "exclude": [
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-01/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-02/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-03/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-04/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-05/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-code/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-source/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-verified/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      },
+      {
+        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-measured/isolated/http-cache",
+        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
+      }
+    ]
+  }
+}

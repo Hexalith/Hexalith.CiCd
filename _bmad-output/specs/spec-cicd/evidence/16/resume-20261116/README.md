@@ -66,3 +66,33 @@ full exact-input product qualification, protected preparation push, live validat
 App adoption/preservation, normal checker, full Linux/Windows CI, immediate legacy
 cleanup and the next genuine scheduled-night outcome. No adoption or nightly
 acceptance is claimed here.
+
+
+## Released-input follow-up, 2026-11-17
+
+The [current compact receipt](released-input-followup.json) supersedes earlier
+pending-release and sign-in statements. The real immutable Builds v6.2.0 and
+public CLI bind source `0ccd12af6576a3aac601340dec7dba53e86768c3`. The
+released producer now preserves its catalog during consumer evaluation and
+builds the declared isolated adapter in independent SDK processes.
+
+Product `c0767f61c3be3a5f92b5e2426dd9d801a2ca0b17` contains the portable
+reference-provenance fix and explicitly approved five-member v4 successor.
+All previous snapshot/review bytes remain unchanged. Its 53 new exact-scope
+controls await the whole released-input run. Earlier clean product probes
+passed 2,669 tests in six other unit projects; correcting the external SDK
+container to use Docker init made all 44 unchanged TestSupport tests pass.
+The two old portable API failures belong to the pre-v4 commit and are retained
+as historical failed evidence. No source-built producer or whole-qualification
+clearance is inferred from these focused runs.
+
+The affected owner fixtures passed 336 executions across Python 3.12/3.14 and
+normal/Git-only contexts, preserving all 341 existing assertion ASTs. Hosted
+validation of their published main fix passed; the delivery aggregate refused
+AI.Tools' AD-21 ruleset precondition. Concurrent published main evidence and
+Folders/Platform gitlinks were merged without overwriting story inputs.
+
+Authenticated NuGet readback as `jpiquot` confirms legacy policy 18928 and scoped
+policy 27245 remain active. Cleanup access is ready; retirement and immutable
+releases still follow authenticated adoption. The product remains unpushed,
+and whole Linux/native qualification and all external acceptance remain pending.
