@@ -1,0 +1,25 @@
+{
+  "module": "projects",
+  "operations": [
+    {
+      "name": "projects.describe",
+      "kind": "read",
+      "description": "Read Project detail, lifecycle and reference health. Supply the Project identifier through --aggregate-id. Safe metadata is the default; descriptive metadata requires separate permission and a durable audit."
+    },
+    {
+      "name": "projects.list",
+      "kind": "read",
+      "description": "List authorized Projects with one snapshot. Use payload paging: default 50, maximum 200; continue with the opaque cursor and unchanged filters and authority. Descriptive metadata requires a separate permission and durable audit."
+    },
+    {
+      "name": "projects.trace-attachments",
+      "kind": "read",
+      "description": "Trace unselected advisory Project candidates from at most 32 opaque owner references, counted before deduplication. File mapping is unsupported. Coverage and freshness never grant selection or confirmation authority."
+    },
+    {
+      "name": "projects.trace-conversation",
+      "kind": "read",
+      "description": "Trace unselected advisory Project candidates from an authorized committed Conversation. Coverage and freshness are explicit; suggestions never authorize selection, context or confirmation."
+    }
+  ]
+}

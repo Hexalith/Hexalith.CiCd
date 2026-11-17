@@ -1,0 +1,603 @@
+{
+  "source": "0be0c922883d4ea61b18e843e24472162261d934",
+  "observed_remote_main": "d8171e6cc18cd4b67ea310822b36e49d007fa2ec",
+  "started_at": "2026-11-16T23:41:04.475633+00:00",
+  "status": "passed",
+  "steps": [
+    {
+      "label": "owner-clone",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.EventStore",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "owner-clone.log",
+      "sha256": "1be8cd77d242046edf54d6bafae32b4358339b1e3b02d663fbc2a6523444cbf9"
+    },
+    {
+      "label": "owner-origin",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.EventStore.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "owner-origin.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "owner-current-source",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "fetch",
+        "--no-recurse-submodules",
+        "--no-tags",
+        "origin",
+        "d8171e6cc18cd4b67ea310822b36e49d007fa2ec"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "owner-current-source.log",
+      "sha256": "8cf30a4c7477bc358fe429de9f049652a9ba01921aa98370ca28dea22ea9b783"
+    },
+    {
+      "label": "owner-approved-checkout",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "0be0c922883d4ea61b18e843e24472162261d934"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "owner-approved-checkout.log",
+      "sha256": "d1b2bc8ecf3f64cbeec8171cb3c988573c8ae129f9be0f0c500c574bb6a7fe6e"
+    },
+    {
+      "label": "clone-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.AI.Tools",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.AI.Tools"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.AI.Tools.log",
+      "sha256": "e3c41a028dfc6d1e890c63c211e30eb070b30c2ef4a41c9a36c0276635b730ac"
+    },
+    {
+      "label": "origin-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.AI.Tools.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.AI.Tools.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "17a37d83db193f0b7494c1b931fd1e82a67c1424"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.AI.Tools.log",
+      "sha256": "1321318fa19d4cf4f659794bf94c438a2cd081c8a63624827910765a99690477"
+    },
+    {
+      "label": "clone-Hexalith.Builds",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.Builds",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.Builds"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.Builds.log",
+      "sha256": "5f9c5275ee1fd7c4121802494d1f7999b1b9df68ffe54e96a0c5f9abeee395fc"
+    },
+    {
+      "label": "origin-Hexalith.Builds",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Builds.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.Builds.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.Builds",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "e2bbbd0893f586e4d447ef8358ff747ea3d34435"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.Builds.log",
+      "sha256": "4f59fc13d834a9e633e79e6ad284b79649fba6027f4ec5b4763b237c1016357d"
+    },
+    {
+      "label": "clone-Hexalith.Commons",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.Commons",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.Commons"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.Commons.log",
+      "sha256": "9f7e86a0d55d4914b4c41897fee67c17bb502754ef4237d6b6bb6c74815dd0e7"
+    },
+    {
+      "label": "origin-Hexalith.Commons",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Commons.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.Commons.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.Commons",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "fbf4e94233821f6ca336af91a06feaaeb7a16855"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.Commons.log",
+      "sha256": "ca537cfc310d8baa7e8732d57bc9be32b953709eb1114184fa2911e8a1400cee"
+    },
+    {
+      "label": "clone-Hexalith.FrontComposer",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.FrontComposer",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.FrontComposer"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.FrontComposer.log",
+      "sha256": "7c49d2a914617d0a486cca2b285d3ff9160b2803239e990482a7995d7c9eca95"
+    },
+    {
+      "label": "origin-Hexalith.FrontComposer",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.FrontComposer.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.FrontComposer.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.FrontComposer",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "0d065fceb2bfca9999307cb864a3f93392fb3400"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.FrontComposer.log",
+      "sha256": "32c9ceb6545d2675d39f3ccf54874edb33a55a2e5065c728ac617f3efafd51f4"
+    },
+    {
+      "label": "clone-Hexalith.McpCli",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.McpCli",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.McpCli"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.McpCli.log",
+      "sha256": "57e367bf573c3df9b163dcf9af6338f379d51f981f51a2a91a0664b24fd7e272"
+    },
+    {
+      "label": "origin-Hexalith.McpCli",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.McpCli.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.McpCli.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.McpCli",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "32a3e65989136f28b34500a4d9db8f04cf601885"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.McpCli.log",
+      "sha256": "d719df3824b154c5e0b1655493707fd551e1b8ac625e739057509a462c807e06"
+    },
+    {
+      "label": "clone-Hexalith.Memories",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.Memories",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.Memories"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.Memories.log",
+      "sha256": "7bbb3d96f62d4a9147cba57525114edf351178480a882b77aefc01c10eef7221"
+    },
+    {
+      "label": "origin-Hexalith.Memories",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Memories.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.Memories.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.Memories",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "7a5c892508700b2e5c71c921cdaeedf68de5f03d"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.Memories.log",
+      "sha256": "c08723a547d595c6cb98eb84785a7840106846f4dc0a11dbafc09597ab289f76"
+    },
+    {
+      "label": "clone-Hexalith.Platform",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.Platform",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.Platform"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.Platform.log",
+      "sha256": "fe72644ac01b50d8ae4c59a06d5cc68621ca7f8d2aa8c1836abaf0b914a5f90f"
+    },
+    {
+      "label": "origin-Hexalith.Platform",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Platform.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.Platform.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.Platform",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "00ed06074f5b67522eff81dc8dae6ebd28161c36"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.Platform.log",
+      "sha256": "5673d33a5830696568809683f6d6cac3b2efad74dad6445d7cdee3d6a2969b81"
+    },
+    {
+      "label": "clone-Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/cicd/references/Hexalith.PolymorphicSerializations",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.PolymorphicSerializations"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.PolymorphicSerializations.log",
+      "sha256": "532a57d0c71e135fa3b7df16b0706212e02323c4249b92aec8a46bcd19d9119c"
+    },
+    {
+      "label": "origin-Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.PolymorphicSerializations.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.PolymorphicSerializations.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.PolymorphicSerializations",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "e97b56930e213f674b64c157551f499b0473ec43"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.PolymorphicSerializations.log",
+      "sha256": "1283cfa17a9c97dc6b38a2e87955b1679a3de843b8ec1c5262756051a948d706"
+    },
+    {
+      "label": "clone-Hexalith.Tenants",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/projects/references/Hexalith.Tenants",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/references/Hexalith.Tenants"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "clone-Hexalith.Tenants.log",
+      "sha256": "84a165b2c65f6ee9124bb70a99038f1bf28b0452a4f50ca9694e58c0c0f49fdc"
+    },
+    {
+      "label": "origin-Hexalith.Tenants",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Tenants.git"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "origin-Hexalith.Tenants.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "checkout-Hexalith.Tenants",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "checkout-Hexalith.Tenants.log",
+      "sha256": "3be1afbd5c26ee2176823bda2c4fc820ec900322d6b2177931c12a612f293c6a"
+    },
+    {
+      "label": "contracts-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:Version=5.3.0",
+        "-m:1",
+        "--disable-build-servers",
+        "-warnaserror"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "contracts-build.log",
+      "sha256": "676de3cb6cc35470715a259be2f813526718833670a32f507f71033418706b1e"
+    },
+    {
+      "label": "full-local-release-inventory",
+      "command": [
+        "python3",
+        "tools/pack-release-packages.py",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/qualification-packages",
+        "5.3.0"
+      ],
+      "exit": 0,
+      "required": true,
+      "log": "full-local-release-inventory.log",
+      "sha256": "5ca74748576d5bae24f509adc79dba52b6169f23999a6efd6db4ddeee6faf6a2"
+    },
+    {
+      "label": "full-contracts-tests",
+      "command": [
+        "dotnet",
+        "/tmp/hexalith-job.ogcFEZ5j/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/bin/Release/net11.0/Hexalith.EventStore.Contracts.Tests.dll",
+        "-xml",
+        "/home/administrator/projects/hexalith/projects/_bmad-output/implementation-artifacts/evidence/projects-package-compatibility-20261116/approved-resume-20261117/eventstore/full-contracts-tests.xml"
+      ],
+      "exit": 0,
+      "required": false,
+      "log": "full-contracts-tests.log",
+      "sha256": "dabca864b6b3d3e766e943c2fec5206d65b9825874be0564356665a70b8f4359"
+    }
+  ],
+  "direct_dependencies": {
+    "references/Hexalith.AI.Tools": {
+      "source": "17a37d83db193f0b7494c1b931fd1e82a67c1424",
+      "actual_source": "17a37d83db193f0b7494c1b931fd1e82a67c1424",
+      "origin": "https://github.com/Hexalith/Hexalith.AI.Tools.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.Builds": {
+      "source": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+      "actual_source": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+      "origin": "https://github.com/Hexalith/Hexalith.Builds.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.Commons": {
+      "source": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+      "actual_source": "fbf4e94233821f6ca336af91a06feaaeb7a16855",
+      "origin": "https://github.com/Hexalith/Hexalith.Commons.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.FrontComposer": {
+      "source": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "actual_source": "0d065fceb2bfca9999307cb864a3f93392fb3400",
+      "origin": "https://github.com/Hexalith/Hexalith.FrontComposer.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.McpCli": {
+      "source": "32a3e65989136f28b34500a4d9db8f04cf601885",
+      "actual_source": "32a3e65989136f28b34500a4d9db8f04cf601885",
+      "origin": "https://github.com/Hexalith/Hexalith.McpCli.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.Memories": {
+      "source": "7a5c892508700b2e5c71c921cdaeedf68de5f03d",
+      "actual_source": "7a5c892508700b2e5c71c921cdaeedf68de5f03d",
+      "origin": "https://github.com/Hexalith/Hexalith.Memories.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.Platform": {
+      "source": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "actual_source": "00ed06074f5b67522eff81dc8dae6ebd28161c36",
+      "origin": "https://github.com/Hexalith/Hexalith.Platform.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.PolymorphicSerializations": {
+      "source": "e97b56930e213f674b64c157551f499b0473ec43",
+      "actual_source": "e97b56930e213f674b64c157551f499b0473ec43",
+      "origin": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations.git",
+      "nested_initialized": false
+    },
+    "references/Hexalith.Tenants": {
+      "source": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "actual_source": "7c1747f93fbe988ca8aaa87d636bb6a39563e6b8",
+      "origin": "https://github.com/Hexalith/Hexalith.Tenants.git",
+      "nested_initialized": false
+    }
+  },
+  "publication_performed": false,
+  "nested_submodule_initialization": false,
+  "source_tree": "535f115648022f0eab6be19eacf2b76f6d9f6329",
+  "source_status_before": "",
+  "live_query_difference": "",
+  "live_owner_difference": "M\t.github/workflows/publication-authority.yml\nM\t_bmad-output/implementation-artifacts/deferred-work.md\nM\t_bmad-output/implementation-artifacts/epic-9-context.md\nM\t_bmad-output/implementation-artifacts/spec-3-19-production-profile-v2-infrastructure-scope.md\nA\t_bmad-output/implementation-artifacts/spec-9-2-story-5-3-guarded-concurrent-write-proof.md\nA\tdocs/architecture/production-profile-v2.md\nM\tdocs/architecture/publication-authority-v1.md\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileCanonicalJson.cs\nM\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileCodec.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileV2.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileV2Codec.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileV2Component.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileV2Dapr.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileV2Scope.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileV2Validator.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileValidationComponent.cs\nA\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileValidationDocument.cs\nM\tsrc/Hexalith.EventStore.Contracts/Deployment/ProductionProfileValidator.cs\nA\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/Fixtures/GenerateSyntheticProfileV2.py\nA\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/Fixtures/SyntheticDigests.v2.json\nA\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/Fixtures/SyntheticInfrastructurePreimage.v2.json\nA\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/Fixtures/SyntheticProfile.v2.json\nM\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/Fixtures/verify-golden.py\nM\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/ProductionProfileTests.cs\nA\ttests/Hexalith.EventStore.Contracts.Tests/Deployment/ProductionProfileV2Tests.cs\nM\ttools/production-profile.cs\nM\ttools/publication_authority.py\nA\ttools/tests/check_phase_4_story_5_3_guarded_write.py\nM\ttools/tests/check_production_profile_bridge.py\nM\ttools/tests/phase_4_transport_fixture.py\nM\ttools/tests/test_phase_4_story_5_3.py\nM\ttools/tests/test_publication_authority.py",
+  "inventory": {
+    "package_count": 14,
+    "packages": [
+      "Hexalith.EventStore.Admin.Abstractions.5.3.0.nupkg",
+      "Hexalith.EventStore.Admin.Cli.5.3.0.nupkg",
+      "Hexalith.EventStore.Admin.Server.5.3.0.nupkg",
+      "Hexalith.EventStore.Aspire.5.3.0.nupkg",
+      "Hexalith.EventStore.Client.5.3.0.nupkg",
+      "Hexalith.EventStore.Contracts.5.3.0.nupkg",
+      "Hexalith.EventStore.DomainService.5.3.0.nupkg",
+      "Hexalith.EventStore.Gateway.5.3.0.nupkg",
+      "Hexalith.EventStore.RestApi.Generators.5.3.0.nupkg",
+      "Hexalith.EventStore.Server.5.3.0.nupkg",
+      "Hexalith.EventStore.ServiceDefaults.5.3.0.nupkg",
+      "Hexalith.EventStore.SignalR.5.3.0.nupkg",
+      "Hexalith.EventStore.Testing.5.3.0.nupkg",
+      "Hexalith.EventStore.Testing.Integration.5.3.0.nupkg"
+    ],
+    "scope": "disposable qualification inputs only; no family publication"
+  },
+  "full_contracts_tests": {
+    "total": 1704,
+    "passed": 1704,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0,
+    "not-run": 0,
+    "failures": []
+  },
+  "source_status_after": "",
+  "ended_at": "2026-11-16T23:49:20.363823+00:00"
+}
