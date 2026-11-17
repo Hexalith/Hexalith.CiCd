@@ -670,6 +670,40 @@ class RuntimeTests(unittest.TestCase):
                     api.pages("/repos/Hexalith/Hexalith.Alpha/actions/runs/9/artifacts", "inert", field="artifacts")
                 self.assertNotIsInstance(failure.exception, rt.InventoryChanged)
 
+    def test_fixture_artifact_bytes_survive_wall_clock_timestamp_boundary(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Workspace(Path(temporary) / "workspace", ("Hexalith.Alpha",))
+            workspace.ready("Hexalith.Alpha")
+            clock = Clock()
+            api = fixture_transport(rt, workspace.config)(
+                rt.Budget(clock(), token_epoch=clock(), clock=clock)).api
+            before = time.struct_time((2026, 11, 17, 1, 0, 0, 1, 321, 0))
+            after = time.struct_time((2026, 11, 17, 1, 0, 2, 1, 321, 0))
+            with mock.patch.object(nightly_support.zipfile.time, "localtime", return_value=before):
+                info, = api.pages("/repos/Hexalith/Hexalith.Alpha/actions/runs/1001/artifacts",
+                                  "inert-poll-token", field="artifacts")
+            payloads = []
+            original = api.opener.open
+            def capture(*args, **kwargs):
+                response = original(*args, **kwargs)
+                payloads.append(response.getvalue())
+                return response
+            with mock.patch.object(nightly_support.zipfile.time, "localtime", return_value=after), \
+                    mock.patch.object(api.opener, "open", side_effect=capture):
+                value = api.artifact_member("Hexalith.Alpha", info, "outcome.json", "inert-poll-token")
+            self.assertEqual(value, workspace.config["outcomes"]["Hexalith.Alpha"])
+            self.assertEqual(info["digest"], "sha256:" + hashlib.sha256(payloads[0]).hexdigest())
+            self.assertEqual(info["size_in_bytes"], len(payloads[0]))
+            with zipfile.ZipFile(io.BytesIO(payloads[0])) as archive:
+                member, = archive.infolist()
+                self.assertEqual(member.filename, "outcome.json")
+                self.assertEqual(member.compress_type, zipfile.ZIP_DEFLATED)
+                self.assertEqual(member.external_attr, 0o600 << 16)
+                self.assertFalse(member.is_dir())
+            with self.assertRaisesRegex(rt.NightlyError, "digest mismatch"):
+                api.artifact_member("Hexalith.Alpha", info | {"digest": "sha256:" + "0" * 64},
+                                    "outcome.json", "inert-poll-token")
+
     def test_fixture_artifact_identity_survives_listing_download_clock_boundary(self):
         value = {"schema": "hexalith.release-outcome.v1", "sha": "a" * 40, "outcome": "ready",
                  "version": "1.0.0", "draftId": 880, "lastTag": ""}

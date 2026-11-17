@@ -30,6 +30,7 @@ def zip_document(member, document):
         # time must not change its ZIP header and authenticated digest.
         entry = zipfile.ZipInfo(member, date_time=(1980, 1, 1, 0, 0, 0))
         entry.compress_type = zipfile.ZIP_DEFLATED
+        entry.external_attr = (0o40775 << 16) | 0x10 if entry.is_dir() else 0o600 << 16
         archive.writestr(entry, document if isinstance(document, bytes) else json.dumps(document).encode())
     return stream.getvalue()
 
