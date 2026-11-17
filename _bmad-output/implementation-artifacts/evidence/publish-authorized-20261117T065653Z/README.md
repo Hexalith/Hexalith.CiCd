@@ -34,3 +34,9 @@ commit/publication records, `root-reconciliation.json` and
 `published-module-gitlinks.json`. The parent commit records these outcomes and
 the remaining authorized evidence/source changes. Its identity is available
 from Git history; final push verification is retained outside this checkout.
+
+CiCd commit `714a61d5e934ec38043d91793ad3eda4da791fc1` was pushed and verified
+on remote main. A concurrent local Tenants qualification finished during that
+push; its final failed result and sanitized support reports are retained in the
+publication-verification follow-up. That result remains failed and does not
+change the confirmed qualification exception.
