@@ -1,0 +1,54 @@
+{
+  "run": 44035997829,
+  "source": "96363934c6fd1da4d50c2078b13929c473ecab7f",
+  "remoteMutations": false,
+  "rawLogsPersisted": false,
+  "jobs": [
+    {
+      "job": 133879019689,
+      "source": "Connected GitHub independent read; not a gh-profile permission conclusion",
+      "context": [
+        "2026-11-17T07:06:38.6083990Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path [redacted-opaque].config",
+        "2026-11-17T07:06:38.6110350Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path",
+        "2026-11-17T07:06:38.6128534Z [redacted-opaque].config",
+        "2026-11-17T07:06:38.6135890Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path [redacted-opaque].config",
+        "2026-11-17T07:06:38.6167532Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url",
+        "2026-11-17T07:06:38.6391427Z Removing credentials config '[redacted-opaque].config'",
+        "2026-11-17T07:06:38.6402637Z ##[endgroup]",
+        "2026-11-17T07:06:38.6592736Z ##[group]Run bash scripts/run-with-temp.sh python3 -B -m unittest discover -s tools/tests -p 'test_run_with_temp.py' -v",
+        "2026-11-17T07:06:38.6593608Z \u001b[36;1mbash scripts/run-with-temp.sh python3 -B -m unittest discover -s tools/tests -p 'test_run_with_temp.py' -v\u001b[0m",
+        "2026-11-17T07:06:38.6631050Z shell: /usr/bin/bash -e {0}",
+        "2026-11-17T07:06:38.6631537Z ##[endgroup]",
+        "2026-11-17T07:06:38.7515057Z ",
+        "2026-11-17T07:06:38.7516449Z [redacted-opaque]",
+        "2026-11-17T07:06:38.7517550Z Ran 0 tests in 0.000s",
+        "2026-11-17T07:06:38.7517927Z ",
+        "2026-11-17T07:06:38.7518209Z NO TESTS RAN",
+        "2026-11-17T07:06:38.7615120Z ##[error]Process completed with exit code 5."
+      ]
+    },
+    {
+      "job": 133879019764,
+      "source": "Connected GitHub independent read; not a gh-profile permission conclusion",
+      "context": [
+        "2026-11-17T07:06:55.5748765Z [redacted-opaque].config",
+        "2026-11-17T07:06:55.5755496Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.[redacted-opaque].git/worktrees/*.path \\/github\\/runner_temp\\/git\\-credentials\\-d96c53bd\\-e498\\-4e44\\-9816\\-04aaf42c38c2\\.config",
+        "2026-11-17T07:06:55.5783141Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url",
+        "2026-11-17T07:06:55.5989623Z Removing credentials config '[redacted-opaque].config'",
+        "2026-11-17T07:06:55.5998876Z ##[endgroup]",
+        "2026-11-17T07:06:55.6121088Z ##[group]Run python3 -m unittest discover -s tools/tests -p '[redacted-opaque].py'",
+        "2026-11-17T07:06:55.6121770Z \u001b[36;1mpython3 -m unittest discover -s tools/tests -p '[redacted-opaque].py'\u001b[0m",
+        "2026-11-17T07:06:55.6151252Z shell: /usr/bin/bash -e {0}",
+        "2026-11-17T07:06:55.6151515Z env:",
+        "2026-11-17T07:06:55.6151982Z   HEXALITH_BUILDS_SOURCE: /home/runner/work/Hexalith.EventStore/Hexalith.EventStore/.[redacted-opaque]",
+        "2026-11-17T07:06:55.6152498Z ##[endgroup]",
+        "2026-11-17T07:06:55.6997826Z ",
+        "2026-11-17T07:06:55.6999332Z [redacted-opaque]",
+        "2026-11-17T07:06:55.7000550Z Ran 0 tests in 0.000s",
+        "2026-11-17T07:06:55.7000776Z ",
+        "2026-11-17T07:06:55.7000897Z NO TESTS RAN",
+        "2026-11-17T07:06:55.7083787Z ##[error]Process completed with exit code 5."
+      ]
+    }
+  ]
+}
