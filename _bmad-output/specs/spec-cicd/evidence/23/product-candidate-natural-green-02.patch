@@ -1,0 +1,176 @@
+diff --git a/scripts/run-product-integration.py b/scripts/run-product-integration.py
+index 6860863d..a08addeb 100644
+--- a/scripts/run-product-integration.py
++++ b/scripts/run-product-integration.py
+@@ -15,6 +15,7 @@ import time
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ PROJECT = "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj"
++NATURAL_EXIT_TIMEOUT_SECONDS = 60
+ # The ordinary tier excludes exactly these five classes and Performance. Each
+ # cold profile uses one distinct nonzero database; DB0 remains the ordinary tier.
+ PROFILES = (
+@@ -62,6 +63,16 @@ def stop_private_consumers(private):
+         raise ValueError("Private topology container cleanup is incomplete.")
+ 
+ 
++def wait_for_private_consumers(private):
++    """Await natural exit under one deadline while retaining private custody."""
++    deadline = time.monotonic() + NATURAL_EXIT_TIMEOUT_SECONDS
++    while PROFILE.active_processes(private):
++        remaining = deadline - time.monotonic()
++        if remaining <= 0:
++            raise ValueError("Private topology consumers did not exit before the shutdown deadline.")
++        time.sleep(min(0.1, remaining))
++
++
+ def run_profile(profile, class_name, database, minimum, workers, sample, *, temporary, output, producer, source):
+     receipt = output / (profile + ".json")
+     env_path = temporary / ("tenants-profile-environment-" + profile)
+@@ -105,6 +116,9 @@ def run_profile(profile, class_name, database, minimum, workers, sample, *, temp
+         for index, result in enumerate(sorted(private.glob("tenants-live-routes-*/result.json"))):
+             if result.is_file() and not result.is_symlink():
+                 PROFILE.write_exclusive(output / (profile + "-browser-" + str(index) + ".json"), json.loads(result.read_text()))
++        # The awaited fixture has requested native shutdown. Keep its custody
++        # until detached consumers exit, then apply every original finish guard.
++        wait_for_private_consumers(private)
+         PROFILE.finish(receipt, temporary, PROFILE.job_identity())
+         private = None
+         if status:
+diff --git a/scripts/tests/test_product_integration.py b/scripts/tests/test_product_integration.py
+index 05b37f08..2ec8564f 100644
+--- a/scripts/tests/test_product_integration.py
++++ b/scripts/tests/test_product_integration.py
+@@ -6,6 +6,7 @@ from pathlib import Path
+ import subprocess
+ import sys
+ import tempfile
++import time
+ import unittest
+ from unittest import mock
+ 
+@@ -73,4 +74,124 @@ class PrivateTopologyCleanupTests(unittest.TestCase):
+                     self.assertEqual(marker.read_bytes(), b"foreign material")
+ 
+ 
++class NaturalExitSynchronizationTests(unittest.TestCase):
++    def exercise(self, scenario):
++        """Use real children around the hook and the original finish acceptance guard."""
++        with tempfile.TemporaryDirectory(prefix="tenants-natural-exit-test-") as directory:
++            temporary = Path(directory)
++            private = temporary / "tenants-source-catalog-owned"
++            private.mkdir(mode=0o700)
++            components = private / "components"
++            components.mkdir(mode=0o700)
++            component = components / "statestore.yaml"
++            component.write_bytes(b"original private component")
++            expected_hash = PRODUCT.PROFILE.digest(component)
++            output = temporary / "results"
++            output.mkdir()
++            receipt = output / "rest.json"
++            active = temporary / "tenants-catalog-active.json"
++            ready = temporary / "ready"
++            natural = temporary / "natural-exit"
++            foreign = temporary / "foreign"
++            foreign.mkdir()
++            identity = {"repository": "Hexalith/Hexalith.Tenants", "runId": "42", "runAttempt": "1", "job": "integration"}
++            original_popen = subprocess.Popen
++            original_finish = PRODUCT.PROFILE.finish
++            processes = []
++            observations = []
++            started = time.monotonic()
++
++            def provision(*args, **kwargs):
++                PRODUCT.PROFILE.write_exclusive(receipt, {
++                    "schema": "tenants.catalog-profile.v1", "identity": identity,
++                    "privateDirectory": str(private), "components": {component.name: expected_hash}})
++                PRODUCT.PROFILE.write_exclusive(active, {"receipt": str(receipt), "sha256": PRODUCT.PROFILE.digest(receipt)})
++                if scenario != "missing-proof":
++                    PRODUCT.PROFILE.write_exclusive(private / "shutdown.json", {
++                        "provisioningSha256": PRODUCT.PROFILE.digest(receipt), "disposed": True})
++                Path(kwargs["env"]["GITHUB_ENV"]).write_text("TENANTS_TEST_PROFILE=true\n")
++                # This consumer exits on its own after the test process has completed.
++                # Removing custody early prevents it from writing its natural-exit proof.
++                code = ("import os,pathlib,sys,time; pathlib.Path(sys.argv[1]).write_text('ready'); "
++                        "time.sleep(float(sys.argv[2])); "
++                        "sys.exit(41) if not pathlib.Path(os.environ['TMPDIR']).is_dir() else None; "
++                        "pathlib.Path(sys.argv[3]).write_text('changed') if sys.argv[3] != '-' else None; "
++                        "pathlib.Path(sys.argv[4]).write_text('natural')")
++                processes.append(original_popen([sys.executable, "-c", code, str(ready),
++                    "60" if scenario == "persistent" else "0.35",
++                    str(component) if scenario == "changed-component" else "-", str(natural)],
++                    env={**os.environ, "TMPDIR": str(private)}, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
++                deadline = time.monotonic() + 5
++                while not ready.exists():
++                    if time.monotonic() >= deadline:
++                        self.fail("The controlled private consumer did not become ready.")
++                    time.sleep(0.01)
++
++            def completed_test(arguments, **kwargs):
++                self.assertEqual(arguments[:2], ["dotnet", "test"])
++                return original_popen([sys.executable, "-c", "pass"], **kwargs)
++
++            def finish(*args):
++                observations.append({"active": PRODUCT.PROFILE.active_processes(private), "natural": natural.exists(),
++                    "custody": private.is_dir(), "proof": (private / "shutdown.json").exists()})
++                return original_finish(*args)
++
++            try:
++                processes.append(original_popen([sys.executable, "-c", "import time; time.sleep(60)"],
++                    env={**os.environ, "TMPDIR": str(foreign)}, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
++                with mock.patch.object(PRODUCT.subprocess, "run", side_effect=provision), \
++                        mock.patch.object(PRODUCT.subprocess, "Popen", side_effect=completed_test), \
++                        mock.patch.object(PRODUCT.PROFILE, "job_identity", return_value=identity), \
++                        mock.patch.object(PRODUCT.PROFILE, "private_containers", return_value=[]), \
++                        mock.patch.object(PRODUCT.PROFILE, "finish", side_effect=finish) as final_guard, \
++                        mock.patch.object(PRODUCT, "stop_private_consumers", wraps=PRODUCT.stop_private_consumers) as emergency, \
++                        mock.patch.object(PRODUCT, "NATURAL_EXIT_TIMEOUT_SECONDS", 0.2 if scenario == "persistent" else 3, create=True):
++                    arguments = ("rest", "example", 1, 1, False, False)
++                    options = {"temporary": temporary, "output": output, "producer": "5.1.1", "source": "a" * 40}
++                    if scenario == "persistent":
++                        with self.assertRaisesRegex(ValueError, "^Private topology consumers did not exit before the shutdown deadline\\.$"):
++                            PRODUCT.run_profile(*arguments, **options)
++                        self.assertGreaterEqual(time.monotonic() - started, 0.2)
++                        self.assertLess(time.monotonic() - started, 5)
++                        final_guard.assert_not_called()
++                        emergency.assert_called_once_with(private)
++                        self.assertFalse(natural.exists())
++                        self.assertIsNotNone(processes[1].wait(timeout=5))
++                    else:
++                        if scenario == "changed-component":
++                            with self.assertRaisesRegex(ValueError, "^The private component set changed during qualification\\.$"):
++                                PRODUCT.run_profile(*arguments, **options)
++                        elif scenario == "missing-proof":
++                            with self.assertRaises(FileNotFoundError): PRODUCT.run_profile(*arguments, **options)
++                        else:
++                            PRODUCT.run_profile(*arguments, **options)
++                            emergency.assert_not_called()
++                        final_guard.assert_called_once_with(receipt, temporary, identity)
++                        self.assertEqual(processes[1].wait(timeout=5), 0)
++                        self.assertEqual(natural.read_text(), "natural")
++                        self.assertEqual(observations, [{"active": [], "natural": True, "custody": True,
++                            "proof": scenario != "missing-proof"}])
++                    self.assertIsNone(processes[0].poll())
++                    self.assertFalse(private.exists())
++                    self.assertEqual(active.exists(), scenario != "delayed")
++                    self.assertTrue(receipt.is_file())
++            finally:
++                for process in processes:
++                    if process.poll() is None:
++                        process.terminate()
++                    process.wait(timeout=5)
++
++    def test_delayed_natural_exit_is_awaited_before_original_finish_releases_custody(self):
++        self.exercise("delayed")
++
++    def test_persistent_private_consumers_fail_at_deadline_then_use_only_emergency_cleanup(self):
++        self.exercise("persistent")
++
++    def test_original_component_hash_guard_still_runs_after_natural_exit(self):
++        self.exercise("changed-component")
++
++    def test_wait_does_not_create_a_missing_shutdown_proof(self):
++        self.exercise("missing-proof")
++
++
+ if __name__ == "__main__": unittest.main()

@@ -1,0 +1,4248 @@
+{
+  "started_utc": "2026-11-17T01:59:20.901689+00:00",
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "helper_sha256": "6e86fbacaf17dc3b7d48fba2077bb4827b46b9adad633293bfe5403b2bafe2de",
+  "supporting_sha256": {
+    "verification_core.py": "27efbe4654aee67055841234c23eb6d948fdab2dccc54592cada66dced2120db",
+    "query_package_probe.py": "b8a8f7c2043ce353e30edb887abd7e2dbb8fbde887a507ca967af1de5ee0ffac",
+    "frozen-suite-inventories.json": "9aa2bdb50e4991e2d9af11459ae5abfdd9e013b871cfbbf56dae37ce1ca2e948"
+  },
+  "effective_inputs": {
+    "quarantined_selector_names": [],
+    "package_contract_directory": null,
+    "credential_profile_selection_preserved": true,
+    "GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "token_override_present": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    }
+  },
+  "scratch": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+  "commands": [
+    {
+      "name": "git-read-0",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+        "cat-file",
+        "-t",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:20.902291+00:00",
+      "log": "git-read-0.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2235673
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2235672,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.094,
+      "finished_utc": "2026-11-17T01:59:20.996456+00:00",
+      "log_sha256": "50836eee574ecff79dea3b4fd40673d7d000f7a5f177d8a6a3000b59c78383b8"
+    },
+    {
+      "name": "clone-Hexalith.EventStore",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:20.996824+00:00",
+      "log": "clone-Hexalith.EventStore.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2235708,
+        2235713,
+        2235716
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2235707,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.448,
+      "finished_utc": "2026-11-17T01:59:21.445441+00:00",
+      "log_sha256": "90b85a4bb1caa16ef0bb666473c134477676966b5ce906cbac11e91c0f96dc63"
+    },
+    {
+      "name": "checkout-Hexalith.EventStore",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:21.445837+00:00",
+      "log": "checkout-Hexalith.EventStore.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2236168
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2236166,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.841,
+      "finished_utc": "2026-11-17T01:59:22.287005+00:00",
+      "log_sha256": "8ed606a8b372a3c86e066fbefa910a8482c93dcec0e5ba21af99bb0628f17124"
+    },
+    {
+      "name": "origin-Hexalith.EventStore",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.EventStore.git"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:22.287384+00:00",
+      "log": "origin-Hexalith.EventStore.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2236946
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2236945,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.143,
+      "finished_utc": "2026-11-17T01:59:22.430797+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-4",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:22.431205+00:00",
+      "log": "git-read-4.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237139
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237138,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.094,
+      "finished_utc": "2026-11-17T01:59:22.525437+00:00",
+      "log_sha256": "a2c87d5e42f5a5f163286d4ef13a2993e2ee524cab98e9507d500e9dbc398635"
+    },
+    {
+      "name": "git-read-5",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:22.525800+00:00",
+      "log": "git-read-5.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237199
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237198,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.166,
+      "finished_utc": "2026-11-17T01:59:22.692129+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-6",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:22.692526+00:00",
+      "log": "git-read-6.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237280
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237278,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.126,
+      "finished_utc": "2026-11-17T01:59:22.818546+00:00",
+      "log_sha256": "6b5647bca8d79fd61445f9da1f20fe8d7958adb98df60d986be8b2e1dd52ad8a"
+    },
+    {
+      "name": "git-read-7",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "ls-tree",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f",
+        "references/Hexalith.Builds"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:22.820188+00:00",
+      "log": "git-read-7.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237360
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237358,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.063,
+      "finished_utc": "2026-11-17T01:59:22.884381+00:00",
+      "log_sha256": "5b1c867b00291b2733fcc17c85bb9fb404c62c16e179c59e3f04ebf79eac7a6d"
+    },
+    {
+      "name": "git-read-8",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.Builds",
+        "cat-file",
+        "-t",
+        "16cf0db6f843eb4defdc87105804d42eded634d6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:22.884834+00:00",
+      "log": "git-read-8.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237408
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237406,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.063,
+      "finished_utc": "2026-11-17T01:59:22.947752+00:00",
+      "log_sha256": "50836eee574ecff79dea3b4fd40673d7d000f7a5f177d8a6a3000b59c78383b8"
+    },
+    {
+      "name": "clone-Hexalith.Builds",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.Builds",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:22.948132+00:00",
+      "log": "clone-Hexalith.Builds.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237452,
+        2237456,
+        2237457
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237451,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.121,
+      "finished_utc": "2026-11-17T01:59:23.069751+00:00",
+      "log_sha256": "c9ce474f14c10d2d4c1471f08a79633d4a693776bd8a42fed891f7249fafdcc1"
+    },
+    {
+      "name": "checkout-Hexalith.Builds",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "16cf0db6f843eb4defdc87105804d42eded634d6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+      "started_utc": "2026-11-17T01:59:23.070168+00:00",
+      "log": "checkout-Hexalith.Builds.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237541
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237539,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.412,
+      "finished_utc": "2026-11-17T01:59:23.482179+00:00",
+      "log_sha256": "bd2d7d582e1d96257801f3bbc34c0e9775ef3160dce2bacdc681c99dbd32e716"
+    },
+    {
+      "name": "origin-Hexalith.Builds",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Builds.git"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+      "started_utc": "2026-11-17T01:59:23.482614+00:00",
+      "log": "origin-Hexalith.Builds.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2237983
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2237982,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:23.555316+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-12",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:23.555721+00:00",
+      "log": "git-read-12.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238049
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238048,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.069,
+      "finished_utc": "2026-11-17T01:59:23.624981+00:00",
+      "log_sha256": "cf34c4e01bcee4a69e9cb044295d9f92762ca1c17361697440720cc9e771994b"
+    },
+    {
+      "name": "git-read-13",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:23.625424+00:00",
+      "log": "git-read-13.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238119
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238118,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.211,
+      "finished_utc": "2026-11-17T01:59:23.837070+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-14",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:23.837533+00:00",
+      "log": "git-read-14.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238152
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238151,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.06,
+      "finished_utc": "2026-11-17T01:59:23.898022+00:00",
+      "log_sha256": "5f70530d889ffecd51c24486870abf3aa5f2fdda1d9dc252085ee294605f6131"
+    },
+    {
+      "name": "git-read-15",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "ls-tree",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f",
+        "references/Hexalith.AI.Tools"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:23.898751+00:00",
+      "log": "git-read-15.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238155
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238154,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.064,
+      "finished_utc": "2026-11-17T01:59:23.963289+00:00",
+      "log_sha256": "2132403103903a5ff70389500edf471206e93acd6aedd85aaf61523776a8e750"
+    },
+    {
+      "name": "git-read-16",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.AI.Tools",
+        "cat-file",
+        "-t",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:23.963769+00:00",
+      "log": "git-read-16.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238227
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238226,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.068,
+      "finished_utc": "2026-11-17T01:59:24.032056+00:00",
+      "log_sha256": "50836eee574ecff79dea3b4fd40673d7d000f7a5f177d8a6a3000b59c78383b8"
+    },
+    {
+      "name": "clone-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.AI.Tools",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.032402+00:00",
+      "log": "clone-Hexalith.AI.Tools.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238237
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238236,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.068,
+      "finished_utc": "2026-11-17T01:59:24.100842+00:00",
+      "log_sha256": "33ce3c135c6e5f018dda9af45b8c727d1dd71737da34e8301024b315d016de14"
+    },
+    {
+      "name": "checkout-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+      "started_utc": "2026-11-17T01:59:24.101205+00:00",
+      "log": "checkout-Hexalith.AI.Tools.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238263
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238262,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.06,
+      "finished_utc": "2026-11-17T01:59:24.161105+00:00",
+      "log_sha256": "57a26fa4f0a53c3361fac4980ce5b3b12bd007a8775d911467a820e47f09c83f"
+    },
+    {
+      "name": "origin-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.AI.Tools.git"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+      "started_utc": "2026-11-17T01:59:24.161474+00:00",
+      "log": "origin-Hexalith.AI.Tools.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238301
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238300,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.066,
+      "finished_utc": "2026-11-17T01:59:24.228056+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-20",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.228576+00:00",
+      "log": "git-read-20.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238434
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238433,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:24.295410+00:00",
+      "log_sha256": "ad0d961c623863661051da6c28dde2a06eb32791ca7e9b1b663bcce00231bff7"
+    },
+    {
+      "name": "git-read-21",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.295925+00:00",
+      "log": "git-read-21.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238494
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238493,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:24.363248+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-22",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.363700+00:00",
+      "log": "git-read-22.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238533
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238531,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.064,
+      "finished_utc": "2026-11-17T01:59:24.428236+00:00",
+      "log_sha256": "4fc25b6b8aec9740dfa0ee1a10c6d011bbea6a496e1f7feef5ddc764217c585d"
+    },
+    {
+      "name": "git-read-23",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "ls-tree",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f",
+        "references/Hexalith.Tenants"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.429787+00:00",
+      "log": "git-read-23.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238623
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238622,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.074,
+      "finished_utc": "2026-11-17T01:59:24.507333+00:00",
+      "log_sha256": "5f7c0794f50d868e9a82f1ac803e4d63e0b02a561f09da0f0fa4286884f67de4"
+    },
+    {
+      "name": "git-read-24",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.Tenants",
+        "cat-file",
+        "-t",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.507959+00:00",
+      "log": "git-read-24.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238777
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238776,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.062,
+      "finished_utc": "2026-11-17T01:59:24.570539+00:00",
+      "log_sha256": "50836eee574ecff79dea3b4fd40673d7d000f7a5f177d8a6a3000b59c78383b8"
+    },
+    {
+      "name": "clone-Hexalith.Tenants",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "clone",
+        "--no-checkout",
+        "--no-hardlinks",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.Tenants",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:24.571121+00:00",
+      "log": "clone-Hexalith.Tenants.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238785,
+        2238786,
+        2238787
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238784,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.124,
+      "finished_utc": "2026-11-17T01:59:24.695332+00:00",
+      "log_sha256": "53fd74e75edd5e8f886aeae9653cf1046ac5400507fabf0da22e01f997435c55"
+    },
+    {
+      "name": "checkout-Hexalith.Tenants",
+      "command": [
+        "git",
+        "-c",
+        "submodule.recurse=false",
+        "checkout",
+        "--detach",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+      "started_utc": "2026-11-17T01:59:24.695840+00:00",
+      "log": "checkout-Hexalith.Tenants.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2238803
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2238799,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 1.158,
+      "finished_utc": "2026-11-17T01:59:25.853568+00:00",
+      "log_sha256": "be5d833e512e4e401acc8fce8450b008426abe76cdffc46b39ce9a9388e5ef61"
+    },
+    {
+      "name": "origin-Hexalith.Tenants",
+      "command": [
+        "git",
+        "remote",
+        "set-url",
+        "origin",
+        "https://github.com/Hexalith/Hexalith.Tenants.git"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+      "started_utc": "2026-11-17T01:59:25.854101+00:00",
+      "log": "origin-Hexalith.Tenants.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2239445
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2239444,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.072,
+      "finished_utc": "2026-11-17T01:59:25.926992+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-28",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:25.927461+00:00",
+      "log": "git-read-28.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2239493
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2239492,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:25.994743+00:00",
+      "log_sha256": "3cf1405e4460975a530cf4ce4e707f8e5f6a9cac489da0907e588d535995f4fc"
+    },
+    {
+      "name": "git-read-29",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:25.995199+00:00",
+      "log": "git-read-29.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2239533
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2239532,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 1.07,
+      "finished_utc": "2026-11-17T01:59:27.066005+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-30",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:27.066499+00:00",
+      "log": "git-read-30.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2240681
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2240679,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.072,
+      "finished_utc": "2026-11-17T01:59:27.138399+00:00",
+      "log_sha256": "6a574e3468848625b1e738e078bb5a6508994365cf92f8d8bab2d92910f5f01c"
+    },
+    {
+      "name": "git-read-31",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:27.139277+00:00",
+      "log": "git-read-31.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2240838
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2240837,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:27.212608+00:00",
+      "log_sha256": "b3d9aa779d92068817d6f3772ceec0ffdefc79c854ac9a6d3d53bbe1af7b0be9"
+    },
+    {
+      "name": "git-read-32",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "16cf0db6f843eb4defdc87105804d42eded634d6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.043328+00:00",
+      "log": "git-read-32.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2241948
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2241946,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.071,
+      "finished_utc": "2026-11-17T01:59:28.114151+00:00",
+      "log_sha256": "b3d8b3705cf2153ad1151cb96fb421ccb30459115a6936e0159a1531df57d603"
+    },
+    {
+      "name": "git-read-33",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.171551+00:00",
+      "log": "git-read-33.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242057
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242055,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.074,
+      "finished_utc": "2026-11-17T01:59:28.246190+00:00",
+      "log_sha256": "14b57762e03acb97c35b6940ff5ecc3fdf14041ac13cc594983add98b2709bc2"
+    },
+    {
+      "name": "git-read-34",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.248541+00:00",
+      "log": "git-read-34.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242085
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242084,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.07,
+      "finished_utc": "2026-11-17T01:59:28.318353+00:00",
+      "log_sha256": "9cff0c751bf535920d575ba80be14cd37aaf94ad110c50dab03ea1be4be0fc9f"
+    },
+    {
+      "name": "input-0",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:AGENTS.md"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.467174+00:00",
+      "log": "input-0.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242221
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242218,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.075,
+      "finished_utc": "2026-11-17T01:59:28.542925+00:00",
+      "log_sha256": "d46133d3b08b30a1b6b36ea4465c90e045a2a264be518a9e7fa1a73ba8afa92b"
+    },
+    {
+      "name": "git-read-36",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:AGENTS.md"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.543855+00:00",
+      "log": "git-read-36.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242263
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242261,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.072,
+      "finished_utc": "2026-11-17T01:59:28.616542+00:00",
+      "log_sha256": "92ddb32d2c79a5faf4cf5e8ac04a2a408d28a5c0944cb2e226185fe532b4b8e0"
+    },
+    {
+      "name": "input-1",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:Directory.Build.props"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.617279+00:00",
+      "log": "input-1.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242357
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242356,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:28.684786+00:00",
+      "log_sha256": "0010f094df7f40bf9cecaaea4d47493737f9e9409d914c206d0396a64a406b81"
+    },
+    {
+      "name": "git-read-38",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:Directory.Build.props"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.685443+00:00",
+      "log": "git-read-38.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242446
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242438,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.066,
+      "finished_utc": "2026-11-17T01:59:28.753815+00:00",
+      "log_sha256": "788a442ddc3385bd1a8c78cdcd54cb7940c2b4f817c8c92b38f0a43499b0d872"
+    },
+    {
+      "name": "input-2",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:Directory.Build.targets"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.754440+00:00",
+      "log": "input-2.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242482
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242476,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:28.827772+00:00",
+      "log_sha256": "d95dd40a0f6676bbcb46eca3e1a4d7a0a8c94fa64e13c908be7cdeb4beada3ff"
+    },
+    {
+      "name": "git-read-40",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:Directory.Build.targets"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.828418+00:00",
+      "log": "git-read-40.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242576
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242575,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.07,
+      "finished_utc": "2026-11-17T01:59:28.898729+00:00",
+      "log_sha256": "9e728620a9cc8b36f330cb583195d1003e53e518b992f8531d6ccda43fd10a8d"
+    },
+    {
+      "name": "input-3",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:Directory.Packages.props"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.899434+00:00",
+      "log": "input-3.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242692
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242688,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.072,
+      "finished_utc": "2026-11-17T01:59:28.971756+00:00",
+      "log_sha256": "4fe25096ceefd11e8ffffe1ab6a1854e18ac36c853a6805fa72285433b03b638"
+    },
+    {
+      "name": "git-read-42",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:Directory.Packages.props"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:28.972444+00:00",
+      "log": "git-read-42.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242753
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242751,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:29.045694+00:00",
+      "log_sha256": "5d13db73b1f69c83d58f69ab56f5c09fd4bc873fe3ee69f8802cb4dcf5c8f2fd"
+    },
+    {
+      "name": "input-4",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.editorconfig"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.046319+00:00",
+      "log": "input-4.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242876
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242871,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.071,
+      "finished_utc": "2026-11-17T01:59:29.117394+00:00",
+      "log_sha256": "c9a43ea4f0ecac612713588347871ab1d91a15c145a705f328220bdf7e1db09d"
+    },
+    {
+      "name": "git-read-44",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.editorconfig"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.118027+00:00",
+      "log": "git-read-44.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2242955
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2242954,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:29.191318+00:00",
+      "log_sha256": "d9ed9807bc313eb27ed1763ae16eeaca2b4b6be9f79c50531aaebb8b8f451d1c"
+    },
+    {
+      "name": "input-5",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.gitattributes"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.192114+00:00",
+      "log": "input-5.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243011
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243009,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:29.265427+00:00",
+      "log_sha256": "21e89425541c773c841d2ff924cbf446e00844f6fc15dd55da98e0c1044b4abb"
+    },
+    {
+      "name": "git-read-46",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.gitattributes"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.266188+00:00",
+      "log": "git-read-46.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243024
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243023,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.075,
+      "finished_utc": "2026-11-17T01:59:29.346887+00:00",
+      "log_sha256": "46dc5649ff3bd9781fd2150359a2caa753df8af7fea51338d32add5407797ba7"
+    },
+    {
+      "name": "input-6",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:global.json"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.347584+00:00",
+      "log": "input-6.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243039
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243038,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:29.415205+00:00",
+      "log_sha256": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05"
+    },
+    {
+      "name": "git-read-48",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:global.json"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.415976+00:00",
+      "log": "git-read-48.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243043
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243042,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:29.483087+00:00",
+      "log_sha256": "1766554aecb51620a7f03843127fcaf8bf65534ba0c1d49e542696f8625b33e3"
+    },
+    {
+      "name": "input-7",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.gitmodules"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.483794+00:00",
+      "log": "input-7.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243046
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243045,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.07,
+      "finished_utc": "2026-11-17T01:59:29.554276+00:00",
+      "log_sha256": "b449c9b1f825b01d56f8273948765b20229c1faecb2f9ae358490dcf5a6828d4"
+    },
+    {
+      "name": "git-read-50",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.gitmodules"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.555090+00:00",
+      "log": "git-read-50.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243051
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243050,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.065,
+      "finished_utc": "2026-11-17T01:59:29.620470+00:00",
+      "log_sha256": "2f9a6c97b8dc5eaf64adb9b4a5570852e0f00441472f7340f04b3e88e5874345"
+    },
+    {
+      "name": "input-8",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.github/workflows/ci.yml"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.621210+00:00",
+      "log": "input-8.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243114
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243113,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.077,
+      "finished_utc": "2026-11-17T01:59:29.698758+00:00",
+      "log_sha256": "5ac3b3bef0f22a2eb0d692e3c4ec174056e745a3affb26743c8805d0bde35667"
+    },
+    {
+      "name": "git-read-52",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.github/workflows/ci.yml"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.700007+00:00",
+      "log": "git-read-52.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243118
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243117,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.074,
+      "finished_utc": "2026-11-17T01:59:29.774537+00:00",
+      "log_sha256": "572f14e8f207008cfd3a972b9dd9e5b99ba985d17820dfd4ee8ab835c149afc0"
+    },
+    {
+      "name": "input-9",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.github/workflows/release.yml"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.775191+00:00",
+      "log": "input-9.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243181
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243180,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.068,
+      "finished_utc": "2026-11-17T01:59:29.843511+00:00",
+      "log_sha256": "55e43d3f4be8f8dc92a25b80b19e172b6226d1e6344d77b349986f72d7fcd24b"
+    },
+    {
+      "name": "git-read-54",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:.github/workflows/release.yml"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.844249+00:00",
+      "log": "git-read-54.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243209
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243208,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.07,
+      "finished_utc": "2026-11-17T01:59:29.914636+00:00",
+      "log_sha256": "6c9e85fa90d8e06a15232c02643a8d6ee484e0e7a934b709008cafbeda6e23a8"
+    },
+    {
+      "name": "input-10",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Directory.Build.props"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.915420+00:00",
+      "log": "input-10.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243267
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243266,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.069,
+      "finished_utc": "2026-11-17T01:59:29.985192+00:00",
+      "log_sha256": "66778cfb669b1db4d60acfabe502e1e4be39c120d931add0f0cd04dbc01d16ed"
+    },
+    {
+      "name": "git-read-56",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Directory.Build.props"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:29.986152+00:00",
+      "log": "git-read-56.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243286
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243285,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.065,
+      "finished_utc": "2026-11-17T01:59:30.051635+00:00",
+      "log_sha256": "5d61b46b92f633f8d8c0d9026e82be7471617afbcbc4e15e25572412690c549b"
+    },
+    {
+      "name": "input-11",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:scripts/verify-release-source.sh"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.052318+00:00",
+      "log": "input-11.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243290
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243288,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.071,
+      "finished_utc": "2026-11-17T01:59:30.123857+00:00",
+      "log_sha256": "e0f896d333cd903642730190109f3c4e3338da51d590b7781cb15bb23d73a0fe"
+    },
+    {
+      "name": "git-read-58",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:scripts/verify-release-source.sh"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.124984+00:00",
+      "log": "git-read-58.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243383
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243382,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.07,
+      "finished_utc": "2026-11-17T01:59:30.195234+00:00",
+      "log_sha256": "59e592dd74c75fa2b2d7c5a47dc8a0f8835dfe1db25985a6fe77366b800b33bf"
+    },
+    {
+      "name": "input-12",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tools/release-packages.json"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.196101+00:00",
+      "log": "input-12.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243511
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243510,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.062,
+      "finished_utc": "2026-11-17T01:59:30.259349+00:00",
+      "log_sha256": "6b0b70b856839d4117bcd969f6a2de0093c477c109cb79f3f2882b1f05effcae"
+    },
+    {
+      "name": "git-read-60",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tools/release-packages.json"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.260409+00:00",
+      "log": "git-read-60.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243514
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243513,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.078,
+      "finished_utc": "2026-11-17T01:59:30.339029+00:00",
+      "log_sha256": "b71ee88878f9561d81b8c4fc2bd241fa7b515e16f0a4801cb72bcc4ca09bd859"
+    },
+    {
+      "name": "input-13",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tools/pack-release-packages.py"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.339786+00:00",
+      "log": "input-13.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243580
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243577,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.077,
+      "finished_utc": "2026-11-17T01:59:30.417168+00:00",
+      "log_sha256": "97c0ff7ac4fddd219f4a1e66d0b0cd808e3e54d09eb5bf347e434025d87be62b"
+    },
+    {
+      "name": "git-read-62",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tools/pack-release-packages.py"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.417995+00:00",
+      "log": "git-read-62.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243618
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243617,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.076,
+      "finished_utc": "2026-11-17T01:59:30.494268+00:00",
+      "log_sha256": "885108dd442a2e0df8799383cca757abdf3f96a4cc480d94630e7ec98dc1740d"
+    },
+    {
+      "name": "input-14",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tools/release_package_contract.py"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.494973+00:00",
+      "log": "input-14.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243667
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243665,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.059,
+      "finished_utc": "2026-11-17T01:59:30.553872+00:00",
+      "log_sha256": "cab95e223e8a83055ff888433206728b6fc0f62b67b6338057543395f618663a"
+    },
+    {
+      "name": "git-read-64",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tools/release_package_contract.py"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.554763+00:00",
+      "log": "git-read-64.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243716
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243715,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.077,
+      "finished_utc": "2026-11-17T01:59:30.631840+00:00",
+      "log_sha256": "6ee9db89e971945f3d0eeaffc1fc9918c895e4b436fac22976bc2420ee401cc5"
+    },
+    {
+      "name": "input-15",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:scripts/validate-consumer-package-references.py"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.632639+00:00",
+      "log": "input-15.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243757
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243755,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.071,
+      "finished_utc": "2026-11-17T01:59:30.704206+00:00",
+      "log_sha256": "79bcab68cd6ad6a14d6c38df616b7209377b5c3a1c8c922d8af79586493ca49c"
+    },
+    {
+      "name": "git-read-66",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:scripts/validate-consumer-package-references.py"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.705033+00:00",
+      "log": "git-read-66.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243785
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243784,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.087,
+      "finished_utc": "2026-11-17T01:59:30.791996+00:00",
+      "log_sha256": "35712e0d7e8af219a99f5bc4b65dd214e7334d5943f91552681cc1f8679584c0"
+    },
+    {
+      "name": "input-16",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:scripts/validate-eventstore-package-authority.ps1"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.792791+00:00",
+      "log": "input-16.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243795
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243793,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.064,
+      "finished_utc": "2026-11-17T01:59:30.857496+00:00",
+      "log_sha256": "1d49e9e88f330f9c8610c004894da2fa51a6bfb7307dd37ae83038d2b96dab75"
+    },
+    {
+      "name": "git-read-68",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:scripts/validate-eventstore-package-authority.ps1"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.858432+00:00",
+      "log": "git-read-68.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243843
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243842,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.083,
+      "finished_utc": "2026-11-17T01:59:30.946043+00:00",
+      "log_sha256": "19705433462fbcfb0e42e0b54ba2845b54736b5c80c326df0247741929fd5b1c"
+    },
+    {
+      "name": "input-17",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Contracts/Queries/QueryResultContractAttribute.cs"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:30.946946+00:00",
+      "log": "input-17.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243903
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243902,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.084,
+      "finished_utc": "2026-11-17T01:59:31.031316+00:00",
+      "log_sha256": "a2a2b24289ee5a38819dd664f44ec3903495d0d93071d2dc804558ed2b384403"
+    },
+    {
+      "name": "git-read-70",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Contracts/Queries/QueryResultContractAttribute.cs"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.032574+00:00",
+      "log": "git-read-70.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243928
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243927,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.089,
+      "finished_utc": "2026-11-17T01:59:31.122415+00:00",
+      "log_sha256": "9ce3b9943cd3d810134db5d7d051824ba0bee7234ec0407c7f3c08017e9f3ef8"
+    },
+    {
+      "name": "input-18",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Hexalith.EventStore.RestApi.Generators.Tests/TypedGatewayQueryGenerationTests.cs"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.123226+00:00",
+      "log": "input-18.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2243987
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2243986,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.088,
+      "finished_utc": "2026-11-17T01:59:31.211181+00:00",
+      "log_sha256": "94fa7b39dadeb7a5f21e18b32f7bd27dc52a0700ebef82c48ea8fff85580dd8d"
+    },
+    {
+      "name": "git-read-72",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Hexalith.EventStore.RestApi.Generators.Tests/TypedGatewayQueryGenerationTests.cs"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.212413+00:00",
+      "log": "git-read-72.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244048
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244047,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.084,
+      "finished_utc": "2026-11-17T01:59:31.296840+00:00",
+      "log_sha256": "bd4a9d0bca7bb936692862f8f47db7bb8befd54d286057637e35b5012fe098f0"
+    },
+    {
+      "name": "input-19",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Hexalith.EventStore.RestApi.Generators.Tests/Hexalith.EventStore.RestApi.Generators.Tests.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.297955+00:00",
+      "log": "input-19.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244097
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244096,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.072,
+      "finished_utc": "2026-11-17T01:59:31.370784+00:00",
+      "log_sha256": "c2156a84962870c14f59c26937e68b3231547cd944eb9d4376c3fe9cea1952e7"
+    },
+    {
+      "name": "git-read-74",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Hexalith.EventStore.RestApi.Generators.Tests/Hexalith.EventStore.RestApi.Generators.Tests.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.372618+00:00",
+      "log": "git-read-74.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244121
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244120,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:31.445892+00:00",
+      "log_sha256": "6b84adde01af895b797ce098bd3248d82bc724742601e780ed75b8a41aae5adb"
+    },
+    {
+      "name": "input-20",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.446762+00:00",
+      "log": "input-20.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244146
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244145,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.077,
+      "finished_utc": "2026-11-17T01:59:31.523862+00:00",
+      "log_sha256": "d63323504d6c1b9c0bf1ed4b006b893b0eaddcb80c684be8e5395f51bccd93f1"
+    },
+    {
+      "name": "git-read-76",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.525030+00:00",
+      "log": "git-read-76.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244203
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244201,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.074,
+      "finished_utc": "2026-11-17T01:59:31.600025+00:00",
+      "log_sha256": "2e773ffc08b01e76a1239ef9c348fcaff74e4f3710f1ad66887a73a028c13678"
+    },
+    {
+      "name": "input-21",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.601365+00:00",
+      "log": "input-21.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244253
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244252,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.099,
+      "finished_utc": "2026-11-17T01:59:31.700654+00:00",
+      "log_sha256": "b8a89ddb4337da6b2b9a3244fb03f0d817902ac503ce904d64811b17369f4039"
+    },
+    {
+      "name": "git-read-78",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.701769+00:00",
+      "log": "git-read-78.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244294
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244293,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.067,
+      "finished_utc": "2026-11-17T01:59:31.768707+00:00",
+      "log_sha256": "5fbbd20ef642ee8a97e48cc77f391dd0553f24f08722983907ad863c51117ec1"
+    },
+    {
+      "name": "input-22",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.770094+00:00",
+      "log": "input-22.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244319
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244318,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.078,
+      "finished_utc": "2026-11-17T01:59:31.852822+00:00",
+      "log_sha256": "eef1c736683565cc9c4bbce020e6ba74745af6b1f277aca1a8dcfe0c3ee9cb27"
+    },
+    {
+      "name": "git-read-80",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.853736+00:00",
+      "log": "git-read-80.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244324
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244323,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.078,
+      "finished_utc": "2026-11-17T01:59:31.931797+00:00",
+      "log_sha256": "d67a264b5130a78ddbd5d73bf197ba3f3dd5838628e320ac510b6a9bf11f195e"
+    },
+    {
+      "name": "input-23",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:31.932772+00:00",
+      "log": "input-23.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244330
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244328,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.073,
+      "finished_utc": "2026-11-17T01:59:32.006695+00:00",
+      "log_sha256": "e58cc305d2309bb29d2790fe52b4c145933002b53f2af43c2cc719eb3a3b8988"
+    },
+    {
+      "name": "git-read-82",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:32.007984+00:00",
+      "log": "git-read-82.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244392
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244391,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.094,
+      "finished_utc": "2026-11-17T01:59:32.102039+00:00",
+      "log_sha256": "2fdf2d349c1339d1069517df4d371d5564f1556cacd9040ca302f14ca725e57b"
+    },
+    {
+      "name": "input-24",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "show",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:32.102920+00:00",
+      "log": "input-24.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244453
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244452,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.06,
+      "finished_utc": "2026-11-17T01:59:32.163187+00:00",
+      "log_sha256": "308ab719481a566a3db915f530118987bafe4cffbb8666fc5ab55b08c5a53ea7"
+    },
+    {
+      "name": "git-read-84",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f:src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:32.164906+00:00",
+      "log": "git-read-84.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244457
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244456,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.076,
+      "finished_utc": "2026-11-17T01:59:32.242391+00:00",
+      "log_sha256": "a00c0d52ae9625ac7fb094372fc348ff62beddc85a714ba430219f5d061fbbaf"
+    },
+    {
+      "name": "dotnet-info",
+      "command": [
+        "dotnet",
+        "--info"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:32.243408+00:00",
+      "log": "dotnet-info.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244465
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244463,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.107,
+      "finished_utc": "2026-11-17T01:59:32.351270+00:00",
+      "log_sha256": "ad428dfd055a4733e29a9f4e1554d903376e76697dde080be6b243fa94ea2f3e"
+    },
+    {
+      "name": "query-producer-Contracts-properties",
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:Version=5.2.1-local-readiness.3b2350e7",
+        "-p:GeneratePackageOnBuild=false",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors,ProjectAssetsFile,MSBuildProjectFullPath,BaseIntermediateOutputPath,OutputPath"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:32.360464+00:00",
+      "log": "query-producer-Contracts-properties.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244600
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244597,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.511,
+      "finished_utc": "2026-11-17T01:59:32.876091+00:00",
+      "log_sha256": "9d6cb9ad01a4a32f0a09aac11efc22c419c8e5c210477f0c0404316b26327684"
+    },
+    {
+      "name": "query-pack-Contracts",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj",
+        "--configuration",
+        "Release",
+        "--output",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/query-api-feed",
+        "-warnaserror",
+        "-m:1",
+        "-p:Version=5.2.1-local-readiness.3b2350e7",
+        "-p:GeneratePackageOnBuild=false",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:32.878400+00:00",
+      "log": "query-pack-Contracts.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2244910
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2244909,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 4.427,
+      "finished_utc": "2026-11-17T01:59:37.306182+00:00",
+      "log_sha256": "65b58df6e16d61d0f0401e4bb206948029ec882e40ffcd04daf8d17632f7d58d"
+    },
+    {
+      "name": "query-producer-Client-properties",
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:Version=5.2.1-local-readiness.3b2350e7",
+        "-p:GeneratePackageOnBuild=false",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors,ProjectAssetsFile,MSBuildProjectFullPath,BaseIntermediateOutputPath,OutputPath"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:37.310010+00:00",
+      "log": "query-producer-Client-properties.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2250583
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2250581,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.476,
+      "finished_utc": "2026-11-17T01:59:37.786726+00:00",
+      "log_sha256": "bc8629788e5fcba481bac6fc2f14fb6601739b433a19f3c71ea7a731615fa7e4"
+    },
+    {
+      "name": "query-pack-Client",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj",
+        "--configuration",
+        "Release",
+        "--output",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/query-api-feed",
+        "-warnaserror",
+        "-m:1",
+        "-p:Version=5.2.1-local-readiness.3b2350e7",
+        "-p:GeneratePackageOnBuild=false",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:37.789375+00:00",
+      "log": "query-pack-Client.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2251282
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2251281,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 4.243,
+      "finished_utc": "2026-11-17T01:59:42.032834+00:00",
+      "log_sha256": "8a7fd183459e30f842e7632442c7f5821bd6c8e1bae9aa0c8d1cd140ba5c1010"
+    },
+    {
+      "name": "query-producer-RestApi.Generators-properties",
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:Version=5.2.1-local-readiness.3b2350e7",
+        "-p:GeneratePackageOnBuild=false",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors,ProjectAssetsFile,MSBuildProjectFullPath,BaseIntermediateOutputPath,OutputPath"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:42.035583+00:00",
+      "log": "query-producer-RestApi.Generators-properties.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2253905
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2253904,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.476,
+      "finished_utc": "2026-11-17T01:59:42.512299+00:00",
+      "log_sha256": "02fbe3e268983154bd53dddf18d2b79fa0ffbf00459d0ea0325ebe25418375c0"
+    },
+    {
+      "name": "query-pack-RestApi.Generators",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj",
+        "--configuration",
+        "Release",
+        "--output",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/query-api-feed",
+        "-warnaserror",
+        "-m:1",
+        "-p:Version=5.2.1-local-readiness.3b2350e7",
+        "-p:GeneratePackageOnBuild=false",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:42.514134+00:00",
+      "log": "query-pack-RestApi.Generators.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2254289
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2254288,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 3.173,
+      "finished_utc": "2026-11-17T01:59:45.687760+00:00",
+      "log_sha256": "bd0f23120921a732ff1c03388dcdf5d294b90c5f26b70422260168ccf1eeb2ec"
+    },
+    {
+      "name": "query-synthetic-Owner.Contracts-properties",
+      "command": [
+        "dotnet",
+        "msbuild",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/Owner.Contracts.csproj",
+        "-p:Configuration=Release",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors,ProjectAssetsFile,MSBuildProjectFullPath,BaseIntermediateOutputPath,OutputPath"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api",
+      "started_utc": "2026-11-17T01:59:45.693222+00:00",
+      "log": "query-synthetic-Owner.Contracts-properties.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2256232
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2256231,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.459,
+      "finished_utc": "2026-11-17T01:59:46.152704+00:00",
+      "log_sha256": "6452ca6c1a5220f30b3f722b0d0a270174cd697c42946a4cdc1549dc3b61ba9c"
+    },
+    {
+      "name": "query-synthetic-Probe.Consumer-properties",
+      "command": [
+        "dotnet",
+        "msbuild",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/Probe.Consumer.csproj",
+        "-p:Configuration=Release",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors,ProjectAssetsFile,MSBuildProjectFullPath,BaseIntermediateOutputPath,OutputPath"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api",
+      "started_utc": "2026-11-17T01:59:46.154733+00:00",
+      "log": "query-synthetic-Probe.Consumer-properties.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2256555
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2256554,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.476,
+      "finished_utc": "2026-11-17T01:59:46.631013+00:00",
+      "log_sha256": "93568720e734bc1b699a954c5fda53bcc8a8728e6c7c8cdb87631055af64946e"
+    },
+    {
+      "name": "query-consumer-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/Probe.Consumer.csproj",
+        "--configfile",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/NuGet.Config",
+        "-p:Configuration=Release"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api",
+      "started_utc": "2026-11-17T01:59:46.632943+00:00",
+      "log": "query-consumer-restore.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2257167
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2257166,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 1.03,
+      "finished_utc": "2026-11-17T01:59:47.663574+00:00",
+      "log_sha256": "c2043540ed734e6a9b604fd4334339d7dc22164f05b0e980cf06e33961782419"
+    },
+    {
+      "name": "query-consumer-build",
+      "command": [
+        "dotnet",
+        "build",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/Probe.Consumer.csproj",
+        "--no-restore",
+        "--configuration",
+        "Release",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api",
+      "started_utc": "2026-11-17T01:59:47.664566+00:00",
+      "log": "query-consumer-build.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2258139
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2258129,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.888,
+      "finished_utc": "2026-11-17T01:59:48.553501+00:00",
+      "log_sha256": "83960ea8d39012057acb084860f7a0db71c2ee2ba7f88ee82d16177c39a7125b"
+    },
+    {
+      "name": "git-read-96",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:48.560261+00:00",
+      "log": "git-read-96.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2258443
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2258442,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.074,
+      "finished_utc": "2026-11-17T01:59:48.634832+00:00",
+      "log_sha256": "b3d9aa779d92068817d6f3772ceec0ffdefc79c854ac9a6d3d53bbe1af7b0be9"
+    },
+    {
+      "name": "git-read-97",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:50.843431+00:00",
+      "log": "git-read-97.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2259910
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2259909,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.091,
+      "finished_utc": "2026-11-17T01:59:50.935883+00:00",
+      "log_sha256": "a2c87d5e42f5a5f163286d4ef13a2993e2ee524cab98e9507d500e9dbc398635"
+    },
+    {
+      "name": "final-source-Hexalith.EventStore",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:50.937488+00:00",
+      "log": "final-source-Hexalith.EventStore.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2259957,
+        2259979
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2259956,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.36,
+      "finished_utc": "2026-11-17T01:59:51.300599+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-99",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+        "ls-tree",
+        "-r",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:51.302259+00:00",
+      "log": "git-read-99.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260248
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260247,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.081,
+      "finished_utc": "2026-11-17T01:59:51.384299+00:00",
+      "log_sha256": "d3bec03e7b730c19169ece7c28254178871d6de20bf3fe2b60a2d504d2f84a53"
+    },
+    {
+      "name": "git-read-100",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "16cf0db6f843eb4defdc87105804d42eded634d6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:51.390824+00:00",
+      "log": "git-read-100.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260331
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260330,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.089,
+      "finished_utc": "2026-11-17T01:59:51.481186+00:00",
+      "log_sha256": "b3d8b3705cf2153ad1151cb96fb421ccb30459115a6936e0159a1531df57d603"
+    },
+    {
+      "name": "git-read-101",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:51.552047+00:00",
+      "log": "git-read-101.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260429
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260428,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.081,
+      "finished_utc": "2026-11-17T01:59:51.634026+00:00",
+      "log_sha256": "cf34c4e01bcee4a69e9cb044295d9f92762ca1c17361697440720cc9e771994b"
+    },
+    {
+      "name": "final-source-Hexalith.Builds",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "16cf0db6f843eb4defdc87105804d42eded634d6",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+      "started_utc": "2026-11-17T01:59:51.635567+00:00",
+      "log": "final-source-Hexalith.Builds.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260519
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260508,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.103,
+      "finished_utc": "2026-11-17T01:59:51.739526+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-103",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Builds",
+        "ls-tree",
+        "-r",
+        "16cf0db6f843eb4defdc87105804d42eded634d6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:51.742174+00:00",
+      "log": "git-read-103.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260622
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260621,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.095,
+      "finished_utc": "2026-11-17T01:59:51.838133+00:00",
+      "log_sha256": "bffb52cc83b4ac22bc2a95a03b439868341bf23c9902dd4dd6dc13b4c399d6b3"
+    },
+    {
+      "name": "git-read-104",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:51.840764+00:00",
+      "log": "git-read-104.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260647
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260646,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.056,
+      "finished_utc": "2026-11-17T01:59:51.897936+00:00",
+      "log_sha256": "14b57762e03acb97c35b6940ff5ecc3fdf14041ac13cc594983add98b2709bc2"
+    },
+    {
+      "name": "git-read-105",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:51.903228+00:00",
+      "log": "git-read-105.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260657
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260655,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.116,
+      "finished_utc": "2026-11-17T01:59:52.020447+00:00",
+      "log_sha256": "ad0d961c623863661051da6c28dde2a06eb32791ca7e9b1b663bcce00231bff7"
+    },
+    {
+      "name": "final-source-Hexalith.AI.Tools",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+      "started_utc": "2026-11-17T01:59:52.022195+00:00",
+      "log": "final-source-Hexalith.AI.Tools.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260742
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260740,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.085,
+      "finished_utc": "2026-11-17T01:59:52.132296+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-107",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.AI.Tools",
+        "ls-tree",
+        "-r",
+        "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:52.135153+00:00",
+      "log": "git-read-107.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260794
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260793,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.093,
+      "finished_utc": "2026-11-17T01:59:52.228394+00:00",
+      "log_sha256": "90412eb2e6c090a53af3316afc37589d19ccab5f5c5910f05c8eeb869ac33b30"
+    },
+    {
+      "name": "git-read-108",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:52.229511+00:00",
+      "log": "git-read-108.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2260873
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2260871,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.118,
+      "finished_utc": "2026-11-17T01:59:52.348118+00:00",
+      "log_sha256": "9cff0c751bf535920d575ba80be14cd37aaf94ad110c50dab03ea1be4be0fc9f"
+    },
+    {
+      "name": "git-read-109",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:52.557752+00:00",
+      "log": "git-read-109.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2261079
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2261078,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.091,
+      "finished_utc": "2026-11-17T01:59:52.649630+00:00",
+      "log_sha256": "3cf1405e4460975a530cf4ce4e707f8e5f6a9cac489da0907e588d535995f4fc"
+    },
+    {
+      "name": "final-source-Hexalith.Tenants",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066",
+        "--"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+      "started_utc": "2026-11-17T01:59:52.650772+00:00",
+      "log": "final-source-Hexalith.Tenants.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2261088
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2261087,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.068,
+      "finished_utc": "2026-11-17T01:59:52.718831+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "git-read-111",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/references/Hexalith.Tenants",
+        "ls-tree",
+        "-r",
+        "0e0e85fd646da904c5528854e271b71a2b0b9066"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8",
+      "started_utc": "2026-11-17T01:59:52.719907+00:00",
+      "log": "git-read-111.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2261153
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2261151,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.074,
+      "finished_utc": "2026-11-17T01:59:52.795170+00:00",
+      "log_sha256": "4ea27200ea80387bed3aec294dc365328c4d03e1ae9a64ea609b55d4e722497e"
+    },
+    {
+      "name": "later-observed-main",
+      "command": [
+        "git",
+        "ls-remote",
+        "--refs",
+        "origin",
+        "refs/heads/main"
+      ],
+      "cwd": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore",
+      "started_utc": "2026-11-17T01:59:52.799454+00:00",
+      "log": "later-observed-main.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        2261200,
+        2261201,
+        2261202
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 2261199,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "elapsed_seconds": 0.482,
+      "finished_utc": "2026-11-17T01:59:53.282523+00:00",
+      "log_sha256": "d4a94a0d717a58523418f23c6d843d68daec2309413c1cc9e87aa05f2fee3a28"
+    }
+  ],
+  "inputs": {
+    "AGENTS.md": {
+      "blob": "bb866a2bda4d7d45044ec884c09a167c74daa34f",
+      "sha256": "d46133d3b08b30a1b6b36ea4465c90e045a2a264be518a9e7fa1a73ba8afa92b"
+    },
+    "Directory.Build.props": {
+      "blob": "22114fc070b668a021234ccef5660b543b8dd8ae",
+      "sha256": "0010f094df7f40bf9cecaaea4d47493737f9e9409d914c206d0396a64a406b81"
+    },
+    "Directory.Build.targets": {
+      "blob": "2e3ea766a356d125bbbc248c19048dec6a890544",
+      "sha256": "d95dd40a0f6676bbcb46eca3e1a4d7a0a8c94fa64e13c908be7cdeb4beada3ff"
+    },
+    "Directory.Packages.props": {
+      "blob": "9b8b14f99ab70052c4c13e5dfdbc4304305e82ee",
+      "sha256": "4fe25096ceefd11e8ffffe1ab6a1854e18ac36c853a6805fa72285433b03b638"
+    },
+    ".editorconfig": {
+      "blob": "91afd5c462fc3b08a39efbc6ec4fb4aca61f4b28",
+      "sha256": "c9a43ea4f0ecac612713588347871ab1d91a15c145a705f328220bdf7e1db09d"
+    },
+    ".gitattributes": {
+      "blob": "9d3776b4371207e10575286229305717e125268a",
+      "sha256": "21e89425541c773c841d2ff924cbf446e00844f6fc15dd55da98e0c1044b4abb"
+    },
+    "global.json": {
+      "blob": "701104b3d54283ad578b7e1e71aca01d1a59d523",
+      "sha256": "5feaf50426a6c5554654e326bedd2f6c6273f13b948b1ec6e11e12cae68f9f05"
+    },
+    ".gitmodules": {
+      "blob": "c62b48798894bb3576f02fdf4ebb8c552756e35b",
+      "sha256": "b449c9b1f825b01d56f8273948765b20229c1faecb2f9ae358490dcf5a6828d4"
+    },
+    ".github/workflows/ci.yml": {
+      "blob": "784896cd8e561439b986cc95c6691d7b22be5ab5",
+      "sha256": "5ac3b3bef0f22a2eb0d692e3c4ec174056e745a3affb26743c8805d0bde35667"
+    },
+    ".github/workflows/release.yml": {
+      "blob": "0ff025fd5aed2c74df66e119c87a6ecaecee4722",
+      "sha256": "55e43d3f4be8f8dc92a25b80b19e172b6226d1e6344d77b349986f72d7fcd24b"
+    },
+    "tests/Directory.Build.props": {
+      "blob": "17921e9274ba1fcc8f8b564a7c8344a609151a1c",
+      "sha256": "66778cfb669b1db4d60acfabe502e1e4be39c120d931add0f0cd04dbc01d16ed"
+    },
+    "scripts/verify-release-source.sh": {
+      "blob": "e8c315b4dd03bef5818507d643e251c924720e87",
+      "sha256": "e0f896d333cd903642730190109f3c4e3338da51d590b7781cb15bb23d73a0fe"
+    },
+    "tools/release-packages.json": {
+      "blob": "ce6f8f252b548efaee5999eb0107268a6a950279",
+      "sha256": "6b0b70b856839d4117bcd969f6a2de0093c477c109cb79f3f2882b1f05effcae"
+    },
+    "tools/pack-release-packages.py": {
+      "blob": "6a7277645d3b7ee80df2c0e5bc4e59c8f247f546",
+      "sha256": "97c0ff7ac4fddd219f4a1e66d0b0cd808e3e54d09eb5bf347e434025d87be62b"
+    },
+    "tools/release_package_contract.py": {
+      "blob": "8593a7b2ffe5a6e7e1ddaad6148e783e27547c8f",
+      "sha256": "cab95e223e8a83055ff888433206728b6fc0f62b67b6338057543395f618663a"
+    },
+    "scripts/validate-consumer-package-references.py": {
+      "blob": "20b71af30276fe66fc3c008e23a8bc26c107f2cc",
+      "sha256": "79bcab68cd6ad6a14d6c38df616b7209377b5c3a1c8c922d8af79586493ca49c"
+    },
+    "scripts/validate-eventstore-package-authority.ps1": {
+      "blob": "ac95bd2530aed52a8ea2501008af57fd41adc77f",
+      "sha256": "1d49e9e88f330f9c8610c004894da2fa51a6bfb7307dd37ae83038d2b96dab75"
+    },
+    "src/Hexalith.EventStore.Contracts/Queries/QueryResultContractAttribute.cs": {
+      "blob": "eb9064725344e6c3404ab453a3fa8fcd0c3747ca",
+      "sha256": "a2a2b24289ee5a38819dd664f44ec3903495d0d93071d2dc804558ed2b384403"
+    },
+    "tests/Hexalith.EventStore.RestApi.Generators.Tests/TypedGatewayQueryGenerationTests.cs": {
+      "blob": "735ab6a34a1557e6cd695838cad34773234ff11b",
+      "sha256": "94fa7b39dadeb7a5f21e18b32f7bd27dc52a0700ebef82c48ea8fff85580dd8d"
+    },
+    "tests/Hexalith.EventStore.RestApi.Generators.Tests/Hexalith.EventStore.RestApi.Generators.Tests.csproj": {
+      "blob": "f02f9065c3ede2ce19a7b06f7d581900d5b2e76e",
+      "sha256": "c2156a84962870c14f59c26937e68b3231547cd944eb9d4376c3fe9cea1952e7"
+    },
+    "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj": {
+      "blob": "1421d2e70690cff60b3bdef4e91421feda1c7b1e",
+      "sha256": "d63323504d6c1b9c0bf1ed4b006b893b0eaddcb80c684be8e5395f51bccd93f1"
+    },
+    "src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj": {
+      "blob": "086446f81a8678b18568f6d2f55b279f6b03955d",
+      "sha256": "b8a89ddb4337da6b2b9a3244fb03f0d817902ac503ce904d64811b17369f4039"
+    },
+    "src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj": {
+      "blob": "3d07367c8049ed88a2133a47c40f2e8fc7d5a3e2",
+      "sha256": "eef1c736683565cc9c4bbce020e6ba74745af6b1f277aca1a8dcfe0c3ee9cb27"
+    },
+    "src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj": {
+      "blob": "2ab694e54a3794fa39f7e4e2f1391eaa51fced81",
+      "sha256": "e58cc305d2309bb29d2790fe52b4c145933002b53f2af43c2cc719eb3a3b8988"
+    },
+    "src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj": {
+      "blob": "c9c6c05e1fd1000ecf622881ab7019019684b997",
+      "sha256": "308ab719481a566a3db915f530118987bafe4cffbb8666fc5ab55b08c5a53ea7"
+    }
+  },
+  "dependencies": {
+    "Hexalith.EventStore": {
+      "commit": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+      "tree": "43b99652e373f66d24cceaf9a7a42237d3d3092e",
+      "object_store": "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+      "nested_submodules_initialized": false,
+      "unexpected_inputs_initial": [],
+      "unexpected_inputs_final": [],
+      "final_head": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+      "final_head_matches_recorded_commit": true,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    },
+    "Hexalith.Builds": {
+      "commit": "16cf0db6f843eb4defdc87105804d42eded634d6",
+      "tree": "32876c80d661c34940c268644348b0a26817ecac",
+      "object_store": "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.Builds",
+      "nested_submodules_initialized": false,
+      "unexpected_inputs_initial": [],
+      "unexpected_inputs_final": [],
+      "final_head": "16cf0db6f843eb4defdc87105804d42eded634d6",
+      "final_head_matches_recorded_commit": true,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    },
+    "Hexalith.AI.Tools": {
+      "commit": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+      "tree": "660ea16a129113d510b931cf91a6472955820989",
+      "object_store": "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.AI.Tools",
+      "nested_submodules_initialized": false,
+      "unexpected_inputs_initial": [],
+      "unexpected_inputs_final": [],
+      "final_head": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+      "final_head_matches_recorded_commit": true,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    },
+    "Hexalith.Tenants": {
+      "commit": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+      "tree": "1b9f4f0b8d61f1b32b1cb2de93684ca9f6817605",
+      "object_store": "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.Tenants",
+      "nested_submodules_initialized": false,
+      "unexpected_inputs_initial": [],
+      "unexpected_inputs_final": [],
+      "final_head": "0e0e85fd646da904c5528854e271b71a2b0b9066",
+      "final_head_matches_recorded_commit": true,
+      "tracked_source_unchanged": true,
+      "unexpected_initialized_dependencies": []
+    }
+  },
+  "test_results": {},
+  "checks": {
+    "query-api-package-probe": 0
+  },
+  "complete_release_acceptance": false,
+  "filters": [],
+  "source_changes_authorized_only_on_demonstrated_product_failure": true,
+  "scope": "query-api-package-probe",
+  "builds_catalog_sha256": "58739467f142c54d5afc95bb59b2ad19bf60338883988e9f4a7c8089f4559307",
+  "release_package_inventory": {
+    "packages": [
+      {
+        "id": "Hexalith.EventStore.Contracts",
+        "project": "src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Client",
+        "project": "src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Server",
+        "project": "src/Hexalith.EventStore.Server/Hexalith.EventStore.Server.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.SignalR",
+        "project": "src/Hexalith.EventStore.SignalR/Hexalith.EventStore.SignalR.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Testing",
+        "project": "src/Hexalith.EventStore.Testing/Hexalith.EventStore.Testing.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Testing.Integration",
+        "project": "src/Hexalith.EventStore.Testing.Integration/Hexalith.EventStore.Testing.Integration.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Aspire",
+        "project": "src/Hexalith.EventStore.Aspire/Hexalith.EventStore.Aspire.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.ServiceDefaults",
+        "project": "src/Hexalith.EventStore.ServiceDefaults/Hexalith.EventStore.ServiceDefaults.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.DomainService",
+        "project": "src/Hexalith.EventStore.DomainService/Hexalith.EventStore.DomainService.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.RestApi.Generators",
+        "project": "src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Gateway",
+        "project": "src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Admin.Abstractions",
+        "project": "src/Hexalith.EventStore.Admin.Abstractions/Hexalith.EventStore.Admin.Abstractions.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Admin.Cli",
+        "project": "src/Hexalith.EventStore.Admin.Cli/Hexalith.EventStore.Admin.Cli.csproj"
+      },
+      {
+        "id": "Hexalith.EventStore.Admin.Server",
+        "project": "src/Hexalith.EventStore.Admin.Server/Hexalith.EventStore.Admin.Server.csproj"
+      }
+    ]
+  },
+  "query_api_package_probe": {
+    "passed": true,
+    "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "version": "5.2.1-local-readiness.3b2350e7",
+    "published": false,
+    "archives": [
+      {
+        "name": "Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "8e398dde7927ca151ca1799be8ebb0349b1485371196381fc08d60d107eb6688",
+        "id": "Hexalith.EventStore.Contracts",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false,
+        "nuspec": {
+          "path": "package-metadata/Hexalith.EventStore.Contracts.nuspec",
+          "sha256": "5436c7d514bd3734fc0408fb834239df87e78c1b049059492aa3c735b2bdaa15"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "38f9d429c4b4893b84083204b9469ba532e571899d9ba99883eb9c023b2d5ece",
+        "id": "Hexalith.EventStore.Client",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false,
+        "nuspec": {
+          "path": "package-metadata/Hexalith.EventStore.Client.nuspec",
+          "sha256": "526495f6a3834354e7dea4a279199aa244dd8f5f3a9086769477b2c180dc00ef"
+        }
+      },
+      {
+        "name": "Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "4ec23f3752ae803ee1069cf99ca4d270103c61fd414e7fa41115605e4f8f907b",
+        "id": "Hexalith.EventStore.RestApi.Generators",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false,
+        "nuspec": {
+          "path": "package-metadata/Hexalith.EventStore.RestApi.Generators.nuspec",
+          "sha256": "75f1328ca0f87d7242a6fcdab9858397927d6e778c9810e2e97855b32b7ebf73"
+        }
+      }
+    ],
+    "synthetic_input_manifest": {
+      "NuGet.Config": "8c63a750781fa4c8aa6b9917e0c8d0deab7793d16c2a5e6ef504c03d8c9848d9",
+      "Owner.Contracts/Owner.Contracts.csproj": "2fc01cbdea91cc75ea35ca57f12eecdc0ce58e292d37adc428df0cfa0a73a9fb",
+      "Owner.Contracts/Query.cs": "fc8559fb2db73f4796f4a28b11096a0c49ebd3396cd9c0a8de09691af250a0ce",
+      "Owner.Contracts/Result.cs": "b5279d742afb720f79ac0df1e1dc07e7ff74759d603a605dbbc03cf94313fd2a",
+      "Probe.Consumer/Probe.Consumer.csproj": "a0f0555751aeafb33498b3450805a85d87455b1afd601717a848f62c04d90e10",
+      "Probe.Consumer/RequireGeneratedQuery.cs": "7b1702653249885dc5538ca2dff0ad327a11785d753a22fcd0262482ffb2f1a6",
+      "global.json": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f"
+    },
+    "pre_execution_manifest": {
+      "synthetic-consumer-inputs/NuGet.Config": "8c63a750781fa4c8aa6b9917e0c8d0deab7793d16c2a5e6ef504c03d8c9848d9",
+      "synthetic-consumer-inputs/Owner.Contracts/Owner.Contracts.csproj": "2fc01cbdea91cc75ea35ca57f12eecdc0ce58e292d37adc428df0cfa0a73a9fb",
+      "synthetic-consumer-inputs/Owner.Contracts/Query.cs": "fc8559fb2db73f4796f4a28b11096a0c49ebd3396cd9c0a8de09691af250a0ce",
+      "synthetic-consumer-inputs/Owner.Contracts/Result.cs": "b5279d742afb720f79ac0df1e1dc07e7ff74759d603a605dbbc03cf94313fd2a",
+      "synthetic-consumer-inputs/Probe.Consumer/Probe.Consumer.csproj": "a0f0555751aeafb33498b3450805a85d87455b1afd601717a848f62c04d90e10",
+      "synthetic-consumer-inputs/Probe.Consumer/RequireGeneratedQuery.cs": "7b1702653249885dc5538ca2dff0ad327a11785d753a22fcd0262482ffb2f1a6",
+      "synthetic-consumer-inputs/global.json": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f",
+      "package-metadata/Hexalith.EventStore.Client.nuspec": "526495f6a3834354e7dea4a279199aa244dd8f5f3a9086769477b2c180dc00ef",
+      "package-metadata/Hexalith.EventStore.Contracts.nuspec": "5436c7d514bd3734fc0408fb834239df87e78c1b049059492aa3c735b2bdaa15",
+      "package-metadata/Hexalith.EventStore.RestApi.Generators.nuspec": "75f1328ca0f87d7242a6fcdab9858397927d6e778c9810e2e97855b32b7ebf73",
+      "candidate-packages/Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg": "38f9d429c4b4893b84083204b9469ba532e571899d9ba99883eb9c023b2d5ece",
+      "candidate-packages/Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg": "8e398dde7927ca151ca1799be8ebb0349b1485371196381fc08d60d107eb6688",
+      "candidate-packages/Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg": "4ec23f3752ae803ee1069cf99ca4d270103c61fd414e7fa41115605e4f8f907b"
+    },
+    "resolved_libraries": {
+      "Owner.Contracts": [
+        "ByteAether.Ulid/1.4.2",
+        "Hexalith.Commons.UniqueIds/3.0.0",
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7"
+      ],
+      "Probe.Consumer": [
+        "ByteAether.Ulid/1.4.2",
+        "Dapr.Client/1.19.1",
+        "Dapr.Common/1.19.1",
+        "Dapr.Protos/1.19.1",
+        "Google.Api.CommonProtos/2.17.0",
+        "Google.Protobuf/3.35.0",
+        "Grpc.Core.Api/2.80.0",
+        "Grpc.Net.Client/2.80.0",
+        "Grpc.Net.Common/2.80.0",
+        "Grpc.Reflection/2.80.0",
+        "Hexalith.Commons.UniqueIds/3.0.0",
+        "Hexalith.EventStore.Client/5.2.1-local-readiness.3b2350e7",
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7",
+        "Hexalith.EventStore.RestApi.Generators/5.2.1-local-readiness.3b2350e7",
+        "Microsoft.AspNetCore.DataProtection.Abstractions/11.0.0",
+        "Microsoft.Extensions.Configuration.Binder/11.0.0",
+        "Microsoft.Extensions.Configuration/11.0.0",
+        "Microsoft.Extensions.DependencyInjection/11.0.0",
+        "Microsoft.Extensions.Diagnostics/11.0.0",
+        "Microsoft.Extensions.Http/11.0.0",
+        "Microsoft.Extensions.Logging/11.0.0",
+        "Microsoft.Extensions.Options.ConfigurationExtensions/11.0.0",
+        "Owner.Contracts/1.0.0"
+      ]
+    },
+    "generated_binding": {
+      "path": "TypedGatewayQueries.g.cs",
+      "sha256": "d7f5671f9e3a055c24e8b99feae3ea32938c5cad92cb5922436bc8c3e8e8d001"
+    },
+    "boundary": "synthetic attributed owner assembly plus consumer compiled with packaged analyzer",
+    "projects_consumer_retested": false,
+    "producer_source_changed": false,
+    "retained_manifest": {
+      "synthetic-consumer-inputs/NuGet.Config": "8c63a750781fa4c8aa6b9917e0c8d0deab7793d16c2a5e6ef504c03d8c9848d9",
+      "synthetic-consumer-inputs/Owner.Contracts/Owner.Contracts.csproj": "2fc01cbdea91cc75ea35ca57f12eecdc0ce58e292d37adc428df0cfa0a73a9fb",
+      "synthetic-consumer-inputs/Owner.Contracts/Query.cs": "fc8559fb2db73f4796f4a28b11096a0c49ebd3396cd9c0a8de09691af250a0ce",
+      "synthetic-consumer-inputs/Owner.Contracts/Result.cs": "b5279d742afb720f79ac0df1e1dc07e7ff74759d603a605dbbc03cf94313fd2a",
+      "synthetic-consumer-inputs/Probe.Consumer/Probe.Consumer.csproj": "a0f0555751aeafb33498b3450805a85d87455b1afd601717a848f62c04d90e10",
+      "synthetic-consumer-inputs/Probe.Consumer/RequireGeneratedQuery.cs": "7b1702653249885dc5538ca2dff0ad327a11785d753a22fcd0262482ffb2f1a6",
+      "synthetic-consumer-inputs/global.json": "4caed62d38fabb1d7e0bff4c5f8c84085173eef22c8ef5ed5fdfa740a1e9c87f",
+      "package-metadata/Hexalith.EventStore.Client.nuspec": "526495f6a3834354e7dea4a279199aa244dd8f5f3a9086769477b2c180dc00ef",
+      "package-metadata/Hexalith.EventStore.Contracts.nuspec": "5436c7d514bd3734fc0408fb834239df87e78c1b049059492aa3c735b2bdaa15",
+      "package-metadata/Hexalith.EventStore.RestApi.Generators.nuspec": "75f1328ca0f87d7242a6fcdab9858397927d6e778c9810e2e97855b32b7ebf73",
+      "candidate-packages/Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg": "38f9d429c4b4893b84083204b9469ba532e571899d9ba99883eb9c023b2d5ece",
+      "candidate-packages/Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg": "8e398dde7927ca151ca1799be8ebb0349b1485371196381fc08d60d107eb6688",
+      "candidate-packages/Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg": "4ec23f3752ae803ee1069cf99ca4d270103c61fd414e7fa41115605e4f8f907b",
+      "TypedGatewayQueries.g.cs": "d7f5671f9e3a055c24e8b99feae3ea32938c5cad92cb5922436bc8c3e8e8d001"
+    }
+  },
+  "evaluated_properties": {
+    "query-producer-Contracts": {
+      "values": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": ";IDE0028",
+        "WarningsNotAsErrors": ";NU1901;NU1902",
+        "ProjectAssetsFile": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Contracts/obj/project.assets.json",
+        "MSBuildProjectFullPath": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj",
+        "BaseIntermediateOutputPath": "obj\\",
+        "OutputPath": "bin\\Release/net11.0/"
+      },
+      "validation_errors": [],
+      "command": "query-producer-Contracts-properties",
+      "permitted_security_exceptions": {
+        "NoWarn": [],
+        "WarningsNotAsErrors": [
+          "NU1901",
+          "NU1902"
+        ]
+      }
+    },
+    "query-producer-Client": {
+      "values": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": ";IDE0028",
+        "WarningsNotAsErrors": ";NU1901;NU1902",
+        "ProjectAssetsFile": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Client/obj/project.assets.json",
+        "MSBuildProjectFullPath": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj",
+        "BaseIntermediateOutputPath": "obj\\",
+        "OutputPath": "bin\\Release/net11.0/"
+      },
+      "validation_errors": [],
+      "command": "query-producer-Client-properties",
+      "permitted_security_exceptions": {
+        "NoWarn": [],
+        "WarningsNotAsErrors": [
+          "NU1901",
+          "NU1902"
+        ]
+      }
+    },
+    "query-producer-RestApi.Generators": {
+      "values": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": ";IDE0028",
+        "WarningsNotAsErrors": ";NU1901;NU1902",
+        "ProjectAssetsFile": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.RestApi.Generators/obj/project.assets.json",
+        "MSBuildProjectFullPath": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj",
+        "BaseIntermediateOutputPath": "obj\\",
+        "OutputPath": "bin\\Release/netstandard2.0/"
+      },
+      "validation_errors": [],
+      "command": "query-producer-RestApi.Generators-properties",
+      "permitted_security_exceptions": {
+        "NoWarn": [],
+        "WarningsNotAsErrors": [
+          "NU1901",
+          "NU1902"
+        ]
+      }
+    },
+    "query-synthetic-Owner.Contracts": {
+      "values": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": "1701;1702",
+        "WarningsNotAsErrors": "",
+        "ProjectAssetsFile": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/obj/project.assets.json",
+        "MSBuildProjectFullPath": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/Owner.Contracts.csproj",
+        "BaseIntermediateOutputPath": "obj\\",
+        "OutputPath": "bin\\Release/net11.0/"
+      },
+      "validation_errors": [],
+      "command": "query-synthetic-Owner.Contracts-properties",
+      "permitted_security_exceptions": {
+        "NoWarn": [],
+        "WarningsNotAsErrors": []
+      }
+    },
+    "query-synthetic-Probe.Consumer": {
+      "values": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": "1701;1702",
+        "WarningsNotAsErrors": "",
+        "ProjectAssetsFile": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/obj/project.assets.json",
+        "MSBuildProjectFullPath": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/Probe.Consumer.csproj",
+        "BaseIntermediateOutputPath": "obj\\",
+        "OutputPath": "bin\\Release/net11.0/"
+      },
+      "validation_errors": [],
+      "command": "query-synthetic-Probe.Consumer-properties",
+      "permitted_security_exceptions": {
+        "NoWarn": [],
+        "WarningsNotAsErrors": []
+      }
+    }
+  },
+  "active_assets": [
+    {
+      "assets_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Contracts/obj/project.assets.json",
+      "project_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Contracts/Hexalith.EventStore.Contracts.csproj",
+      "evaluation_command": "query-producer-Contracts-properties"
+    },
+    {
+      "assets_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Client/obj/project.assets.json",
+      "project_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Client/Hexalith.EventStore.Client.csproj",
+      "evaluation_command": "query-producer-Client-properties"
+    },
+    {
+      "assets_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.RestApi.Generators/obj/project.assets.json",
+      "project_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.RestApi.Generators/Hexalith.EventStore.RestApi.Generators.csproj",
+      "evaluation_command": "query-producer-RestApi.Generators-properties"
+    },
+    {
+      "assets_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/obj/project.assets.json",
+      "project_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/Owner.Contracts.csproj",
+      "evaluation_command": "query-synthetic-Owner.Contracts-properties"
+    },
+    {
+      "assets_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/obj/project.assets.json",
+      "project_path": "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/Probe.Consumer.csproj",
+      "evaluation_command": "query-synthetic-Probe.Consumer-properties"
+    }
+  ],
+  "designated_build_outputs": {
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Contracts/obj": "query-producer-Contracts-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Contracts/bin/Release/net11.0": "query-producer-Contracts-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Client/obj": "query-producer-Client-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.Client/bin/Release/net11.0": "query-producer-Client-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.RestApi.Generators/obj": "query-producer-RestApi.Generators-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/Hexalith.EventStore/src/Hexalith.EventStore.RestApi.Generators/bin/Release/netstandard2.0": "query-producer-RestApi.Generators-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/obj": "query-synthetic-Owner.Contracts-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Owner.Contracts/bin/Release/net11.0": "query-synthetic-Owner.Contracts-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/obj": "query-synthetic-Probe.Consumer-properties",
+    "/tmp/hexalith-job.jd7MSlcj/eventstore-readiness-60rmr9w8/synthetic-query-api/Probe.Consumer/bin/Release/net11.0": "query-synthetic-Probe.Consumer-properties"
+  },
+  "resolved_package_graphs": {
+    "path": "resolved-package-graphs.json",
+    "sha256": "2b0664669b0edf4bf7b1c49d288b6ad8a75be4f99ec769f4307d2b707b5bd21a",
+    "project_count": 5,
+    "selection": "explicit evaluated active ProjectAssetsFile paths only"
+  },
+  "suite_inventories_complete": false,
+  "focused_checks_passed": false,
+  "package_probes_passed": false,
+  "authority_probe_passed": false,
+  "completed_utc": "2026-11-17T01:59:53.284472+00:00"
+}

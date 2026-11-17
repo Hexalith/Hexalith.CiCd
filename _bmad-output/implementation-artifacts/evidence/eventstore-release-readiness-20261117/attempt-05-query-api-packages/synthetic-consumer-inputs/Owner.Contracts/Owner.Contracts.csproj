@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net11.0</TargetFramework>
+<Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
+<TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableNETAnalyzers>true</EnableNETAnalyzers>
+<NuGetAudit>true</NuGetAudit><NuGetAuditMode>all</NuGetAuditMode><NuGetAuditLevel>low</NuGetAuditLevel>
+<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)generated</CompilerGeneratedFilesOutputPath>
+</PropertyGroup>
+<ItemGroup><PackageReference Include="Hexalith.EventStore.Contracts" Version="[5.2.1-local-readiness.3b2350e7]" /></ItemGroup>
+</Project>

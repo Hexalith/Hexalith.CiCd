@@ -1,0 +1,286 @@
+{
+  "started_utc": "2026-11-17T03:04:20.063498+00:00",
+  "commands": [
+    {
+      "name": "install-pinned-inspector",
+      "command": [
+        "dotnet",
+        "tool",
+        "install",
+        "dotnet-inspect",
+        "--version",
+        "0.28.0",
+        "--tool-path",
+        "/tmp/hexalith-job.vE4oJf44/inspector",
+        "--configfile",
+        "/tmp/hexalith-job.vE4oJf44/NuGet.Config"
+      ],
+      "log": "install-pinned-inspector.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4096429
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4096428,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "f0c22c5fb51e9ef0d4dbeb4d48a2d52cafd4518a5bcaf8df7ee1b72186df7d45"
+    },
+    {
+      "name": "inspector-version",
+      "command": [
+        "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+        "--version"
+      ],
+      "log": "inspector-version.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4097119
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4097118,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "aba20f5e8622a5fcabf96a116a30b61ff594f70b555e34337654730e5e62632b"
+    },
+    {
+      "name": "contracts-5.1.1-missing-query-result",
+      "command": [
+        "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "--package",
+        "/tmp/hexalith-job.vE4oJf44/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.1.1-missing-query-result.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 1,
+      "process_started": true,
+      "owned_pids": [
+        4097144
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4097143,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "fe27edf6af5fa1a1772066ce92636d439642744bcece1a96f179aa0cc0812ffe"
+    },
+    {
+      "name": "contracts-5.1.1-known-present-submit-query",
+      "command": [
+        "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "--package",
+        "/tmp/hexalith-job.vE4oJf44/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.1.1-known-present-submit-query.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4097228
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4097223,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "c0bd7d465dca037ac95aecd272fd0809f9d7d01e3c16dec1e6e5c01db32075d9"
+    },
+    {
+      "name": "contracts-5.2.0-missing-query-result",
+      "command": [
+        "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "--package",
+        "/tmp/hexalith-job.vE4oJf44/hexalith.eventstore.contracts.5.2.0.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.2.0-missing-query-result.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 1,
+      "process_started": true,
+      "owned_pids": [
+        4097273
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4097272,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "fe27edf6af5fa1a1772066ce92636d439642744bcece1a96f179aa0cc0812ffe"
+    },
+    {
+      "name": "contracts-5.2.0-known-present-submit-query",
+      "command": [
+        "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "--package",
+        "/tmp/hexalith-job.vE4oJf44/hexalith.eventstore.contracts.5.2.0.nupkg",
+        "--plaintext"
+      ],
+      "log": "contracts-5.2.0-known-present-submit-query.log",
+      "custody": "dedicated per-job subreaper; isolated descendant adoption",
+      "timeout_seconds": null,
+      "native_exit": 0,
+      "process_started": true,
+      "owned_pids": [
+        4097348
+      ],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true,
+      "timed_out": false,
+      "custodian_pid": 4097347,
+      "cancelled": false,
+      "cancellation_signal": null,
+      "remaining_owned_before_cleanup": [],
+      "custodian_waited": true,
+      "log_sha256": "ec67ce88bc1a3a830146a04da96e6363a45c0b3fc725dd7fb15995b0ec874d1a"
+    }
+  ],
+  "tool": {
+    "id": "dotnet-inspect",
+    "version": "0.28.0",
+    "runtime_archive": {
+      "id": "dotnet-inspect.linux-x64",
+      "version": "0.28.0",
+      "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect.linux-x64/0.28.0/dotnet-inspect.linux-x64.0.28.0.nupkg",
+      "path": "dotnet-inspect.linux-x64.0.28.0.nupkg",
+      "sha256": "f72e538944c654759c5db922ef8749d897dd3a0af3072d9ac5d43c3b8319cfa3",
+      "artifact": {
+        "filename": "dotnet-inspect.linux-x64.0.28.0.nupkg",
+        "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect.linux-x64/0.28.0/dotnet-inspect.linux-x64.0.28.0.nupkg",
+        "sha256": "f72e538944c654759c5db922ef8749d897dd3a0af3072d9ac5d43c3b8319cfa3",
+        "local_path": "/home/administrator/verification/eventstore-release-readiness-20261117/dotnet-inspect.linux-x64.0.28.0.nupkg"
+      }
+    },
+    "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+    "nupkg_sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+    "archive": "dotnet-inspect.0.28.0.nupkg",
+    "archive_artifact": {
+      "filename": "dotnet-inspect.0.28.0.nupkg",
+      "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+      "sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+      "local_path": "/home/administrator/verification/eventstore-release-readiness-20261117/dotnet-inspect.0.28.0.nupkg"
+    },
+    "installation_source": "captured archive in isolated local-only feed",
+    "installed_payload": {
+      "tools/any/linux-x64/DotnetToolSettings.xml": {
+        "sha256": "795ffe51d7c1de603360c726b653928d2e302e0ff04e5c13d8fab639fe96879f",
+        "installed_relative_path": ".store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/DotnetToolSettings.xml"
+      },
+      "tools/any/linux-x64/dotnet-inspect": {
+        "sha256": "c25653a8968c46dfdf059073447692556d8553208737d48bd3d09cfb58072c1d",
+        "installed_relative_path": ".store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect"
+      }
+    },
+    "executed_payload": {
+      "relative_path": ".store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect",
+      "sha256": "c25653a8968c46dfdf059073447692556d8553208737d48bd3d09cfb58072c1d"
+    },
+    "command_prefix": [
+      "/tmp/hexalith-job.vE4oJf44/inspector/.store/dotnet-inspect/0.28.0/dotnet-inspect.linux-x64/0.28.0/tools/any/linux-x64/dotnet-inspect"
+    ],
+    "reported_version": "0.28.0+3dbe19e"
+  },
+  "packages": [
+    {
+      "version": "5.1.1",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.1.1/hexalith.eventstore.contracts.5.1.1.nupkg",
+      "sha256": "38d1e13eea64437584f2718f3aceb1345e76e2ae16dd048f94a392d7dc63f357",
+      "source_commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+      "missing_type": {
+        "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "native_exit": 1,
+        "absent": true
+      },
+      "known_present_control": {
+        "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "native_exit": 0,
+        "present": true
+      }
+    },
+    {
+      "version": "5.2.0",
+      "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.2.0/hexalith.eventstore.contracts.5.2.0.nupkg",
+      "sha256": "2b0ca2eebe215ec7dcc98163a61b575199b1f0354deac0da88a6ad7f1d84a324",
+      "source_commit": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+      "missing_type": {
+        "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "native_exit": 1,
+        "absent": true
+      },
+      "known_present_control": {
+        "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "native_exit": 0,
+        "present": true
+      }
+    }
+  ],
+  "quarantined_selector_names": [],
+  "scratch": "/tmp/hexalith-job.vE4oJf44",
+  "helper_sha256": "9d28279d1a3ee0b5fba4530d8e1ebcf96a7625062b50e9d74d2629c0626f3f03",
+  "original_inspection_logs_unchanged": true,
+  "complete_release_acceptance": false,
+  "passed": true,
+  "restore_policy": [
+    {
+      "source_path": "/tmp/hexalith-job.vE4oJf44/NuGet.Config",
+      "path": "restore-policy/inspector-install/0.config",
+      "sanitized_sha256": "7e4bf29069fede0e051aee4b6b5e89fc4f3dfcd71e777a932311965f48120727",
+      "omitted_secret_sections": []
+    }
+  ],
+  "supporting_sha256": {
+    "verification_core.py": "877ca7328e86f5be86efafa3362151b5a902c955c68d0d830f3cd655f4911600",
+    "artifact_resolver.py": "0f488077d6cdd2aa64e445d338b7fbe91e19bd6e35983a102688bf6eb422667b"
+  },
+  "retained_manifest": {
+    "inspector-version.log": "aba20f5e8622a5fcabf96a116a30b61ff594f70b555e34337654730e5e62632b",
+    "contracts-5.1.1.nuspec": "518e3cc184cde077f79735d8aa33c6d9cf99101893529d9bffedd62bade8cfc7",
+    "artifact_resolver.py": "0f488077d6cdd2aa64e445d338b7fbe91e19bd6e35983a102688bf6eb422667b",
+    "install-pinned-inspector.log": "f0c22c5fb51e9ef0d4dbeb4d48a2d52cafd4518a5bcaf8df7ee1b72186df7d45",
+    "contracts-5.2.0-missing-query-result.log": "fe27edf6af5fa1a1772066ce92636d439642744bcece1a96f179aa0cc0812ffe",
+    "verification_core.py": "877ca7328e86f5be86efafa3362151b5a902c955c68d0d830f3cd655f4911600",
+    "inspector-NuGet.Config": "f9a7cb5cabd1dc4aa257ecac4ce4bb3c816dc7dca6e00bdb74e028808167bdcb",
+    "contracts-5.1.1-known-present-submit-query.log": "c0bd7d465dca037ac95aecd272fd0809f9d7d01e3c16dec1e6e5c01db32075d9",
+    "contracts-5.2.0.nuspec": "6e010ecff291757fdcd85fe1f34345d7b90e909f0d155f563a9f7265689a08ba",
+    "contracts-5.2.0-known-present-submit-query.log": "ec67ce88bc1a3a830146a04da96e6363a45c0b3fc725dd7fb15995b0ec874d1a",
+    "contracts-5.1.1-missing-query-result.log": "fe27edf6af5fa1a1772066ce92636d439642744bcece1a96f179aa0cc0812ffe",
+    "inspect_public_api.py": "9d28279d1a3ee0b5fba4530d8e1ebcf96a7625062b50e9d74d2629c0626f3f03",
+    "restore-policy/inspector-install/0.config": "7e4bf29069fede0e051aee4b6b5e89fc4f3dfcd71e777a932311965f48120727"
+  },
+  "completed_utc": "2026-11-17T03:04:23.326220+00:00"
+}

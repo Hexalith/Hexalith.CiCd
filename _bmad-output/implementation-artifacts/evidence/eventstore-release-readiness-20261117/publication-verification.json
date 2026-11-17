@@ -1,0 +1,44 @@
+{
+  "recorded_utc": "2026-11-17T03:10:57.063423+00:00",
+  "independent_parent_verification": [
+    {
+      "job": "parent-controls-01",
+      "result": "/home/administrator/verification/eventstore-release-readiness-publication-20261117/parent-controls-01/result.json",
+      "sha256": "8d64eb1079561f52170a73b2fb2597f8bc104b501941592402c5a44e4149c0d6",
+      "passed": true,
+      "checks": 71,
+      "wrapper_scratch_removed": true,
+      "source_sha256": {
+        "iteration2_controls.py": "a4eeaf7db61d3b2f4ba950c1de30f9ed802774ec04293ca1b1add595e2c4946b",
+        "verification_core.py": "877ca7328e86f5be86efafa3362151b5a902c955c68d0d830f3cd655f4911600",
+        "verify.py": "712d5308e7c94e7f4f9e3f7dc8b5251193bcff0b909b4a7224ac17b51db6f223",
+        "query_package_probe.py": "aa2654c4b7cefba9801bf2368e1e1cc21eab5f868bf0266aa2c9bf705e5bac44",
+        "inspect_public_api.py": "9d28279d1a3ee0b5fba4530d8e1ebcf96a7625062b50e9d74d2629c0626f3f03",
+        "audit_evidence.py": "2821060f5bb465f321c053e9132273742528e589b347c6384c6ceeb347c05487",
+        "artifact_resolver.py": "0f488077d6cdd2aa64e445d338b7fbe91e19bd6e35983a102688bf6eb422667b",
+        "control-inventory.json": "d14d5585c7bb709d51253965a5ba5c9e29e655da5e29f7b3f7e3779b50defa67"
+      }
+    },
+    {
+      "job": "parent-audit-01",
+      "result": "/home/administrator/verification/eventstore-release-readiness-publication-20261117/parent-audit-01/result.json",
+      "sha256": "e3d6983e55ef674d3d845bbc89eccc09c62b49d10391a5ca7228faf751558e24",
+      "passed": true,
+      "checks": 773,
+      "wrapper_scratch_removed": true,
+      "source_sha256": {
+        "audit_evidence.py": "2821060f5bb465f321c053e9132273742528e589b347c6384c6ceeb347c05487",
+        "verify.py": "712d5308e7c94e7f4f9e3f7dc8b5251193bcff0b909b4a7224ac17b51db6f223",
+        "verification_core.py": "877ca7328e86f5be86efafa3362151b5a902c955c68d0d830f3cd655f4911600",
+        "query_package_probe.py": "aa2654c4b7cefba9801bf2368e1e1cc21eab5f868bf0266aa2c9bf705e5bac44",
+        "inspect_public_api.py": "9d28279d1a3ee0b5fba4530d8e1ebcf96a7625062b50e9d74d2629c0626f3f03",
+        "iteration2_controls.py": "a4eeaf7db61d3b2f4ba950c1de30f9ed802774ec04293ca1b1add595e2c4946b",
+        "frozen-suite-inventories.json": "9aa2bdb50e4991e2d9af11459ae5abfdd9e013b871cfbbf56dae37ce1ca2e948",
+        "artifact_resolver.py": "0f488077d6cdd2aa64e445d338b7fbe91e19bd6e35983a102688bf6eb422667b",
+        "control-inventory.json": "d14d5585c7bb709d51253965a5ba5c9e29e655da5e29f7b3f7e3779b50defa67"
+      }
+    }
+  ],
+  "complete_release_acceptance": false,
+  "broad_producer_suites_repeated": false
+}

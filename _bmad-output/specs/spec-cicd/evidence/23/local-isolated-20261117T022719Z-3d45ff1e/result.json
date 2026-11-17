@@ -1,0 +1,216 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "3d45ff1ef74449898ddd00b623522768",
+  "source": "3228045930709d57f6f1ddf0afff9c57ff60cd00",
+  "tree": "0960ebfe76e4e0a43038869052a201fb1b805b9c",
+  "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "publishedContract": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "c5461e0dec0457269fdc3d01c83a84d817ed161623e10cc851a3b40cd6b7344c"
+    },
+    {
+      "kind": "worker",
+      "id": "f0b1df7cce086aca43453f5501fc65ca21c93e4b7b376479a766ac9a7fd051f1"
+    }
+  ],
+  "startedAt": 1794882439.925128,
+  "events": [
+    {
+      "at": 1794882446.4996192,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794882447.324813,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794882448.2337909,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794882458.2371962,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794882462.238267,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794882560.255449,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794882724.2782495,
+      "message": "Worker phase: selected-cold-rest-profile/running"
+    },
+    {
+      "at": 1794882904.5224566,
+      "message": "Worker phase: selected-cold-rest-profile/passed"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "f0b1df7cce086aca43453f5501fc65ca21c93e4b7b376479a766ac9a7fd051f1"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "c5461e0dec0457269fdc3d01c83a84d817ed161623e10cc851a3b40cd6b7344c"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.DLIPqNRw",
+  "scope": "cold-rest",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+  },
+  "workerSha256": "7ddf0ed57db731953496021f873f43a6dc4465afa97f61b6a5988adcff9ce130",
+  "orchestratorSha256": "394ee72ccbd36a69f29da063067e0a41708a60d14a9e148e9c39622db14f5c8d",
+  "innerDaemonId": "\"13b7f159-7623-45fb-8bd1-1b1594e0fae8\"",
+  "executedDcp": [
+    {
+      "processName": "dcp",
+      "pid": 6161,
+      "binarySha256": "1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8",
+      "packagePath": "dcp",
+      "versions": [
+        "0.26.6"
+      ],
+      "versionCommandExecuted": false,
+      "versionSource": "prior-native-query-matching-binary-sha256",
+      "priorVersionReceipt": "local-isolated-20261117T003405Z-a33aa406/result.json"
+    }
+  ],
+  "workerContainerExit": 0,
+  "maskValuesDiscarded": 2,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "3228045930709d57f6f1ddf0afff9c57ff60cd00",
+    "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794882457.1358607,
+        "elapsedSeconds": 3.413195848464966
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794882460.5493906,
+        "elapsedSeconds": 99.17281222343445
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794882559.7225132,
+        "elapsedSeconds": 164.03414130210876
+      },
+      {
+        "name": "selected-cold-rest-profile",
+        "status": "passed",
+        "startedAt": 1794882723.7573013,
+        "elapsedSeconds": 180.71683406829834
+      }
+    ],
+    "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+    "scope": "cold-rest",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "publishedContract": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794882457.087597,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "shared-unit-projects",
+      "after-unit-tests-hook",
+      "shared-integration-projects",
+      "coverage-gate",
+      "Dapr-retry-controls",
+      "nightly-workload",
+      "ordinary-integration-tier",
+      "other-four-cold-profiles"
+    ],
+    "naturalExitWait": {
+      "elapsedSeconds": 2.0150747270090505,
+      "completed": true,
+      "forcedTermination": false
+    },
+    "status": "passed",
+    "finishedAt": 1794882904.4743495,
+    "elapsedSeconds": 447.38675260543823
+  },
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json",
+    "tenants-product-profiles-rest.json"
+  ],
+  "trxSummaries": [
+    {
+      "path": "Hexalith.Tenants/TestResults/authenticated-routes/rest/rest.trx",
+      "counters": {
+        "total": "9",
+        "executed": "9",
+        "passed": "9",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    }
+  ],
+  "status": "passed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794882907.1147943,
+  "elapsedSeconds": 467.1896662712097,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

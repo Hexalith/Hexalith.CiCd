@@ -1,0 +1,49 @@
+{
+  "recorded_at": "2026-11-17T01:30:40.015357+00:00",
+  "commands": [
+    {
+      "arguments": [
+        "dnx",
+        "dotnet-inspect",
+        "-y",
+        "--",
+        "member",
+        "AspireTopologyFixtureBase<TAppHost>",
+        "--package",
+        "Hexalith.EventStore.Testing.Integration@3.128.4",
+        "-m",
+        "DisposeAsync",
+        "--all",
+        "-v:d",
+        "-n",
+        "140"
+      ],
+      "exit": 0,
+      "stdout": "# Hexalith.EventStore.Testing.Integration.AspireTopologyFixtureBase&lt;TAppHost&gt;\n\nPackage: Hexalith.EventStore.Testing.Integration | Version: 3.128.4 | TFM: net10.0 | Library: lib/net10.0/Hexalith.EventStore.Testing.Integration.dll | Source: NuGet\n\n## Methods\n\n| Name | Digest | Signature |\n| ---- | ------ | --------- |\n| DisposeAsync | `7ec15804a9` | `public virtual System.Threading.Tasks.ValueTask DisposeAsync()` |\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "dnx",
+        "dotnet-inspect",
+        "-y",
+        "--",
+        "member",
+        "AspireTopologyFixtureBase<TAppHost>",
+        "--package",
+        "Hexalith.EventStore.Testing.Integration@3.128.4",
+        "-m",
+        "DisposeAsync",
+        "--source-parts",
+        "--print",
+        "--part",
+        "body",
+        "-n",
+        "120"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Warning: Package Portable PDB settlement failed: ExternalProviderFailed\nError: The selected member has no PDB source location.\n"
+    }
+  ]
+}

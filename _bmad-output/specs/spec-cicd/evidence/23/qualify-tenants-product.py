@@ -15,7 +15,7 @@ import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--source', type=Path, default=Path('/home/administrator/projects/hexalith/tenants-story-23-product'))
-parser.add_argument('--phase', choices=('build', 'contracts', 'unit', 'python', 'audit', 'metadata', 'released', 'focused'), default='build')
+parser.add_argument('--phase', choices=('build', 'contracts', 'unit', 'python', 'audit', 'metadata', 'released', 'focused', 'diagnostics', 'backend', 'lifecycle'), default='build')
 parser.add_argument('--attempt', default=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
 args = parser.parse_args()
 if not args.attempt.replace('-', '').isalnum(): raise ValueError('An immutable attempt identifier is required.')
@@ -148,7 +148,7 @@ try:
             print('RELEASED API run_integration_tests v6.0.6 (model/server projects)', flush=True)
             ci_pipeline.run_integration_tests(prepared, repository='Hexalith/Hexalith.Tenants')
             record['releasedIntegrationProjects'] = 'passed'
-            result = run(['dotnet', 'test', '--project', 'tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj', '--configuration', 'Release', '--no-build', '--no-restore', '--filter-class', 'Hexalith.Tenants.IntegrationTests.CatalogRedisBackendTests', '--minimum-expected-tests', '13', '--fail-skips', 'on'])
+            result = run(['dotnet', 'test', '--project', 'tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj', '--configuration', 'Release', '--no-build', '--no-restore', '--filter-class', 'Hexalith.Tenants.IntegrationTests.CatalogRedisBackendTests', '--minimum-expected-tests', '15', '--fail-skips', 'on'])
             record['databaseReaderChecks'] = 'passed' if not result else 'failed'
             coverage = run(['python3', 'scripts/validate-coverage.py', '--coverage-root', 'TestResults', '--minimum-line-coverage', '80', '--required-branch-coverage', '100',
                 '--line-scope', 'src/Hexalith.Tenants.Contracts/', '--line-scope', 'src/Hexalith.Tenants.Client/',
@@ -166,7 +166,7 @@ try:
         audit = run(['dotnet', 'package', 'list', '--project', 'Hexalith.Tenants.slnx', '--vulnerable', '--include-transitive', '--format', 'json', '--no-restore'])
         record['auditCommandExitCode'] = audit
         result = result or audit
-    elif args.phase == 'focused':
+    elif args.phase in ('focused', 'diagnostics', 'backend', 'lifecycle'):
         target = 'tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj'
         result = run(['dotnet', 'restore', target, '--disable-build-servers', *flags])
         if not result:
@@ -181,9 +181,15 @@ try:
                     for name, package in resolved['libraries'].items() if name.lower().startswith(('aspire.', 'microsoft.developercontrolplane.'))}
         record['nativeAspireCliInvoked'] = False
         if not result:
-            result = run(['dotnet', 'test', '--project', target, '--no-build', '--no-restore', '--configuration', 'Release',
-                          '--filter-class', 'Hexalith.Tenants.IntegrationTests.CatalogRedisBackendTests', '--minimum-expected-tests', '13', '--fail-skips', 'on'])
-        if not result:
+            if args.phase in ('diagnostics', 'lifecycle'):
+                suites = (('FrozenAspireLifecycleTests', '5'), ('AspireTopologyBootstrapTests', '73')) if args.phase == 'lifecycle' else (('BootstrapResourceFailureDiagnosticsTests', '6'), ('AspireTopologyBootstrapTests', '72'))
+                for name, minimum in suites:
+                    result = run(['dotnet', 'test', '--project', target, '--no-build', '--no-restore', '--configuration', 'Release',
+                                  '--filter-class', 'Hexalith.Tenants.IntegrationTests.' + name, '--minimum-expected-tests', minimum, '--fail-skips', 'on']) or result
+            else:
+                result = run(['dotnet', 'test', '--project', target, '--no-build', '--no-restore', '--configuration', 'Release',
+                              '--filter-class', 'Hexalith.Tenants.IntegrationTests.CatalogRedisBackendTests', '--minimum-expected-tests', '15' if args.phase == 'backend' else '13', '--fail-skips', 'on'])
+        if not result and args.phase == 'focused':
             record['liveClassDiscovery'] = {}
             for class_name in ('AuthenticatedTenantsRouteTests', 'AspireTopologyTests', 'TenantsUiRouteSmokeTests',
                                'AuthenticatedTenantsUiRouteTests', 'SourceCatalogOwnerProfileTests'):
@@ -197,12 +203,13 @@ try:
                 result = result or discovered.returncode
             record['ownerCohortDiscovered'] = 'ActualOwnerCohortCommitsCompleteV2AndPreservesOwnedBootstrapAndRestEffects' in record['liveClassDiscovery']['SourceCatalogOwnerProfileTests']['output']
             if not record['ownerCohortDiscovered']: result = 1
-        for name in ('test_source_catalog_profile.py', 'test_product_integration.py'):
+        for name in (('test_source_catalog_profile.py', 'test_product_integration.py') if args.phase == 'focused' else ()):
             result = run([sys.executable, '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', name, '-v']) or result
         patch = subprocess.check_output(['git', '-C', str(root), 'diff', '--cached', '--binary', '--no-ext-diff', 'HEAD'])
         patch_path = evidence / ('product-candidate-' + args.attempt + '.patch')
         patch_path.open('xb').write(patch)
         record['candidatePatch'] = {'path': patch_path.name, 'sha256': hashlib.sha256(patch).hexdigest()}
+        record['changesAfterParentCommit'] = git(root, 'diff', '--cached', '--name-only', 'HEAD').splitlines()
         final_inputs = {row.split('\t', 1)[1]: row.split()[1] for row in git(root, 'ls-files', '--stage').splitlines()}
         prior_inputs = json.loads((evidence / 'product-normalized-inputs-released-03.json').read_text())
         record['changesAfterReleased03'] = [entry['path'] for entry in prior_inputs['checks']
@@ -240,7 +247,7 @@ try:
                         'src/Hexalith.Tenants.UI/Hexalith.Tenants.UI.csproj',
                         'tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj'):
             code = run(['dotnet', 'msbuild', project, '-nologo', *flags,
-                        '-getProperty:HexalithFrontComposerFromSource,HexalithMemoriesFromSource,HexalithEventStoreFromSource,HexalithEventStoreVersion',
+                        '-getProperty:HexalithFrontComposerFromSource,HexalithMemoriesFromSource,HexalithEventStoreFromSource,HexalithEventStoreVersion,DefineConstants',
                         '-getItem:ProjectReference,PackageReference'])
             result = result or code
 except Exception as error:

@@ -1,0 +1,76 @@
+{
+  "started_utc": "2026-11-17T03:03:58.471142+00:00",
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "helper_sha256": "712d5308e7c94e7f4f9e3f7dc8b5251193bcff0b909b4a7224ac17b51db6f223",
+  "supporting_sha256": {
+    "verification_core.py": "877ca7328e86f5be86efafa3362151b5a902c955c68d0d830f3cd655f4911600",
+    "query_package_probe.py": "aa2654c4b7cefba9801bf2368e1e1cc21eab5f868bf0266aa2c9bf705e5bac44",
+    "frozen-suite-inventories.json": "9aa2bdb50e4991e2d9af11459ae5abfdd9e013b871cfbbf56dae37ce1ca2e948"
+  },
+  "effective_inputs": {
+    "quarantined_selector_names": [],
+    "package_contract_directory": null,
+    "credential_profile_selection_preserved": true,
+    "GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "token_override_present": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    }
+  },
+  "scratch": "/tmp/hexalith-job.Q9EX74M3/eventstore-readiness-s1fyo5lv",
+  "commands": [
+    {
+      "name": "git-read-0",
+      "command": [
+        "git",
+        "--no-replace-objects",
+        "-C",
+        "/home/administrator/projects/hexalith/cicd-eventstore-readiness-20261117T004913Z/references/Hexalith.EventStore",
+        "cat-file",
+        "-t",
+        "3b2350e7c1fff640131f8101596c78a59e31a03f"
+      ],
+      "cwd": "/tmp/hexalith-job.Q9EX74M3/eventstore-readiness-s1fyo5lv",
+      "started_utc": "2026-11-17T03:03:58.471488+00:00",
+      "log": "git-read-0.log",
+      "native_exit": -9,
+      "cancelled": false,
+      "process_tree_fully_waited": false,
+      "custodian_waited": true,
+      "remaining_owned_after_cleanup": [
+        999999999
+      ],
+      "owned_pids": [],
+      "elapsed_seconds": 0.0,
+      "finished_utc": "2026-11-17T03:03:58.471636+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "inputs": {},
+  "dependencies": {},
+  "test_results": {},
+  "checks": {},
+  "complete_release_acceptance": false,
+  "filters": [],
+  "source_changes_authorized_only_on_demonstrated_product_failure": true,
+  "scope": "baseline",
+  "fatal_error": "Owned descendant cleanup failed: {'native_exit': -9, 'cancelled': False, 'process_tree_fully_waited': False, 'custodian_waited': True, 'remaining_owned_after_cleanup': [999999999], 'owned_pids': []}",
+  "primary_error_type": "JobCleanupError",
+  "completed_utc": "2026-11-17T03:03:58.471713+00:00",
+  "resolved_package_graphs": {
+    "path": "resolved-package-graphs.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "project_count": 0,
+    "selection": "explicit evaluated active ProjectAssetsFile paths only",
+    "retained_sections": [
+      "libraries",
+      "targets",
+      "project_frameworks",
+      "restore_frameworks",
+      "projectFileDependencyGroups",
+      "analyzer_files",
+      "restore_policy"
+    ]
+  }
+}

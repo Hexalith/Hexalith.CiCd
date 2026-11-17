@@ -1,0 +1,57 @@
+{
+  "at": "2026-11-17T04:27:09.675626+00:00",
+  "readOnly": true,
+  "artifact": 14298249342,
+  "exit": 0,
+  "archiveSha256": "2bc9213b1882ba317488bd01bcf6870f5a431b3fe7712ae777d628fad7bdde55",
+  "files": {
+    "delivery.json": {
+      "candidate_sha": "f56dcbfb167b4701de5b1fc0a130971e6bca8e30",
+      "event": "push",
+      "failed": true,
+      "failures": [],
+      "freshness": {
+        "status": "not-scheduled"
+      },
+      "global": true,
+      "modules": [
+        {
+          "accepted_sha": null,
+          "advancement": "skipped",
+          "application": "no-ref",
+          "processed": true,
+          "pushed_sha": null,
+          "reasons": [
+            "App precondition check failed: AD-21 main/v* rulesets check failed"
+          ],
+          "repository": "Hexalith.AI.Tools",
+          "retries": 0
+        },
+        {
+          "accepted_sha": "f56dcbfb167b4701de5b1fc0a130971e6bca8e30",
+          "advancement": "advanced",
+          "application": "pushed",
+          "processed": true,
+          "pushed_sha": "cab344372536be4b5125bc144547fc78bca913f9",
+          "reasons": [],
+          "repository": "Hexalith.Commons",
+          "retries": 0
+        },
+        {
+          "accepted_sha": "f56dcbfb167b4701de5b1fc0a130971e6bca8e30",
+          "advancement": "advanced",
+          "application": "pushed",
+          "processed": true,
+          "pushed_sha": "1f451a1ac5174b340f56763160f810d4a8364bb6",
+          "reasons": [],
+          "repository": "Hexalith.PolymorphicSerializations",
+          "retries": 0
+        }
+      ],
+      "run_attempt": "1",
+      "run_id": "44014830679",
+      "schema": "hexalith.delivery.v1",
+      "tools_source_sha": "f56dcbfb167b4701de5b1fc0a130971e6bca8e30"
+    }
+  }
+}

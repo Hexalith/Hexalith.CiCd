@@ -1,0 +1,63 @@
+{
+  "recorded_at": "2026-11-16T23:59:52.395605+00:00",
+  "task": "Story 1.17 Projects G-6 catalog acquisition correction",
+  "prior_implementation_and_delivery_reverified": true,
+  "new_production_changes": false,
+  "local_qualification": {
+    "status": "passed",
+    "owner_source": "4db3776e444f0ec6e5f97d1ff089a0d83f990082",
+    "tests": 62,
+    "command": "run-with-temp python3 -B recheck.py",
+    "receipt": "local-qualification.json"
+  },
+  "actual_delivery": {
+    "status": "delivered",
+    "owner_source": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+    "owner_run": 43939511545,
+    "source": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+    "tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+    "exactly_three_reviewed_paths": true,
+    "all_other_entries_preserved": true,
+    "receipt": "projects-g6-delivery.json"
+  },
+  "completed_hosted_evidence": {
+    "run": 43967083172,
+    "source": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37",
+    "catalog_acquisition": "prepared",
+    "acquired": true,
+    "mapper": "prepared",
+    "catalog_commit": "e2bbbd0893f586e4d447ef8358ff747ea3d34435",
+    "catalog_sha256": "d098dab50977041a536508f6df7e934f95678a4a0abedd80b28e9bae19ee0637",
+    "overall_CI": "failure",
+    "runtime_acceptance": false
+  },
+  "current_source": {
+    "source": "3361f2e3b5655fa1ad50a2d12c640bbd5edcbb4b",
+    "correction_payload_unchanged": true,
+    "run": 43982007709,
+    "build": "failure",
+    "G6": "queued",
+    "runtime_acceptance": false
+  },
+  "subsequent_failures": [
+    {
+      "source": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37",
+      "job": 133650654907,
+      "step": "Restore effective G-6 package graphs",
+      "command": "env -u CI dotnet restore references/Hexalith.McpCli/src/Hexalith.McpCli/Hexalith.McpCli.csproj -p:UseHexalithProjectReferences=true -p:HexalithConversationsFromSource=false",
+      "error": "NU1102: Hexalith.Projects.Contracts >= 2.0.0-story66.3 unavailable from nuget.org; nearest 1.2.4",
+      "missing_prerequisite": "The required Projects.Contracts artifact on an approved feed, or an explicit owner-approved dependency/catalog alignment. Publication and pin changes remain outside this task."
+    },
+    {
+      "source": "3361f2e3b5655fa1ad50a2d12c640bbd5edcbb4b",
+      "job": 133703826928,
+      "step": "Build",
+      "command": "dotnet build Hexalith.Projects.CI.slnx --no-restore --configuration Release -warnaserror",
+      "error": "CS0234: QueryResultContractAttribute/QueryResultContract missing from pinned Hexalith.EventStore.Contracts.Queries API",
+      "pinned_EventStore_version": "5.1.1",
+      "missing_prerequisite": "Owner-provided compatible package/API artifacts or an explicit owner-approved source/package alignment."
+    }
+  ],
+  "delivery_permission_blocker": null,
+  "preservation": "This recheck writes only to this new evidence directory. Concurrent owner/workspace commits and index changes are observed in preservation-recheck.json; Story 1.17 tracking hashes are unchanged. No module-owned workflow edits, new delivery/push, dependency change, nested initialization, publication/audit/A8, deployment or v2 activation was performed."
+}

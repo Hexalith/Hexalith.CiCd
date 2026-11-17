@@ -1,0 +1,181 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "af22c31a0d64460b875601c04e5aaff1",
+  "source": "de67f6d42ded4709722f7e237cab81daf76ce14f",
+  "tree": "32429b6b35a09909fc77d1ccd37796169c7d794a",
+  "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "sharedPublicationReceipt": "shared-v610-publication-verification.json",
+  "deliveredBaselineVerified": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "43618557cdf70441a33c4fee5cd42307916f07ec597b43d2a7fa48b81306bded"
+    },
+    {
+      "kind": "worker",
+      "id": "542fab904ef3ec532f878da349b152a3bb109665f4b62f23d456b78e50adba08"
+    }
+  ],
+  "startedAt": 1794889606.4113078,
+  "events": [
+    {
+      "at": 1794889613.0184195,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794889614.0037272,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794889614.8623207,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794889622.8652802,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794889626.8662572,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794889728.8908088,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794889908.9176946,
+      "message": "Worker phase: after-unit-tests-hook/running"
+    },
+    {
+      "at": 1794890136.9615033,
+      "message": "Worker phase: after-unit-tests-hook/failed"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "542fab904ef3ec532f878da349b152a3bb109665f4b62f23d456b78e50adba08"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "43618557cdf70441a33c4fee5cd42307916f07ec597b43d2a7fa48b81306bded"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.37GVpNpF",
+  "scope": "unit-hook",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+  },
+  "workerSha256": "38e477ada288ef7125ee8019f4e53f1b0ae193f20c554638a5d89183df59c4dc",
+  "orchestratorSha256": "3af00e51f6fdc27a027c0193a6e6117fa8a6d912c6063eba4b98bdf3fc3fd557",
+  "innerDaemonId": "\"4427def7-3ea4-4229-96ba-a9ec94967a42\"",
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "de67f6d42ded4709722f7e237cab81daf76ce14f",
+    "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794889622.4428678,
+        "elapsedSeconds": 3.4319231510162354
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794889625.8751633,
+        "elapsedSeconds": 101.39719891548157
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794889727.2726061,
+        "elapsedSeconds": 181.09020233154297
+      },
+      {
+        "name": "after-unit-tests-hook",
+        "status": "failed",
+        "startedAt": 1794889908.3631432,
+        "exceptionType": "CalledProcessError",
+        "exitCode": 1,
+        "elapsedSeconds": 228.3532474040985
+      }
+    ],
+    "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+    "scope": "unit-hook",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "deliveredBaselineVerified": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794889622.3937557,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "diagnosticOmittedStages": [
+      "unit-projects",
+      "released-commit-policy",
+      "shared-integration-projects",
+      "cold-profiles",
+      "coverage-gate",
+      "Dapr-retry-controls",
+      "nightly-workload",
+      "NuGet-audit"
+    ],
+    "status": "failed",
+    "exceptionType": "CalledProcessError",
+    "releasedRoutineBootstrapQualified": false,
+    "finishedAt": 1794890136.7167785,
+    "elapsedSeconds": 514.3230228424072
+  },
+  "toolFailureHeaders": [],
+  "toolFailureDiagnostic": "tool-failure-redacted.log",
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json"
+  ],
+  "trxSummaries": [],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794890139.7154083,
+  "elapsedSeconds": 533.3041005134583,
+  "releasedRoutineBootstrapQualified": false,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

@@ -1,0 +1,81 @@
+{
+  "completedAt": "2026-11-17T00:37:31.945345+00:00",
+  "createdContainers": [
+    {
+      "Created": "2026-11-17T00:37:22.830249362Z",
+      "Id": "58f95b79396713dacf3e9fc3d7fc12e1ccf15e0b4d018f8cf79d3a7408c73d86",
+      "Image": "docker.io/redis:6",
+      "Mounts": [
+        {
+          "Destination": "/data",
+          "Name": "38a9d4502d28a142f59fa9568f8e8cf71ddc2a03ec13899cea6bcb846d52d792",
+          "RW": true,
+          "Source": "/work/s23/daemon-data/volumes/38a9d4502d28a142f59fa9568f8e8cf71ddc2a03ec13899cea6bcb846d52d792/_data",
+          "Type": "volume"
+        }
+      ],
+      "Name": "/dapr_redis",
+      "Running": true
+    },
+    {
+      "Created": "2026-11-17T00:37:27.871875824Z",
+      "Id": "92a82880255736c755ebdbcbf6d78fc4548e64fda616792e650384e5d592216b",
+      "Image": "docker.io/daprio/dapr:1.19.1",
+      "Mounts": [],
+      "Name": "/dapr_placement",
+      "Running": true
+    },
+    {
+      "Created": "2026-11-17T00:37:27.879295936Z",
+      "Id": "b3c27df1618e147a6b148f75a623e771c3d04c26091fa7d30126b39103d48ade",
+      "Image": "docker.io/daprio/dapr:1.19.1",
+      "Mounts": [
+        {
+          "Destination": "/var/lock",
+          "Name": "dapr_scheduler",
+          "RW": true,
+          "Source": "/work/s23/daemon-data/volumes/dapr_scheduler/_data",
+          "Type": "volume"
+        }
+      ],
+      "Name": "/dapr_scheduler",
+      "Running": true
+    },
+    {
+      "Created": "2026-11-17T00:37:24.755177304Z",
+      "Id": "e7e6a866caf776b8f308a512fb768fa6a01b52e98b955bddaa026c0da4c71db1",
+      "Image": "docker.io/openzipkin/zipkin",
+      "Mounts": [],
+      "Name": "/dapr_zipkin",
+      "Running": true
+    }
+  ],
+  "identity": {
+    "job": "local_s23_qualification",
+    "repository": "Hexalith/Hexalith.Tenants",
+    "runAttempt": "1",
+    "runId": "1794875672418474590"
+  },
+  "mountedVolumes": [
+    {
+      "CreatedAt": "2026-11-17T00:37:23Z",
+      "Driver": "local",
+      "Mountpoint": "/work/s23/daemon-data/volumes/38a9d4502d28a142f59fa9568f8e8cf71ddc2a03ec13899cea6bcb846d52d792/_data",
+      "Name": "38a9d4502d28a142f59fa9568f8e8cf71ddc2a03ec13899cea6bcb846d52d792",
+      "Scope": "local"
+    },
+    {
+      "CreatedAt": "2026-11-17T00:37:27Z",
+      "Driver": "local",
+      "Mountpoint": "/work/s23/daemon-data/volumes/dapr_scheduler/_data",
+      "Name": "dapr_scheduler",
+      "Scope": "local"
+    }
+  ],
+  "preexistingContainerIds": [],
+  "preexistingVolumes": [],
+  "runtimeVersion": "1.19.1",
+  "schema": "hexalith.dapr-initialization.v1",
+  "startedAt": "2026-11-17T00:37:13.523600+00:00",
+  "status": "complete"
+}

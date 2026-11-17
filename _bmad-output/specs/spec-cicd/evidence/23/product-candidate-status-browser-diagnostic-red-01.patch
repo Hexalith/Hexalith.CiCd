@@ -1,0 +1,17 @@
+diff --git a/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs b/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs
+index 72098d4d..7090b802 100644
+--- a/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs
++++ b/tests/Hexalith.Tenants.UI.Tests/Browser/validate-status-filter-label-browser.mjs
+@@ -154,7 +154,11 @@ try {
+                 const stale = culture === 'fr' ? 'Statut sur la page actuelle' : 'Status on current page';
+                 await evaluate(`document.querySelector('fluent-dropdown [slot=control]').setAttribute('aria-label', ${JSON.stringify(stale)})`);
+                 const mutation = (await cdp('Accessibility.getFullAXTree')).nodes.find(node => !node.ignored && node.role?.value === 'combobox');
+-                assert.equal(mutation?.name?.value, stale, 'Control must set a stale name on the actual combobox');
++                const native = await cdp('DOM.describeNode', { backendNodeId: mutation.backendDOMNodeId });
++                const nameFacts = { culture, tag: native.node.nodeName, attributes: native.node.attributes,
++                    name: mutation.name };
++                assert.equal(mutation?.name?.value, stale,
++                    `Control must set a stale name on the actual combobox: ${JSON.stringify(nameFacts)}`);
+                 assert.notEqual(mutation.name.value, expected, 'Stale-name control must fail the naming contract');
+             }
+         }

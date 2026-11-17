@@ -1,0 +1,407 @@
+{
+  "schema": "tenants.local-isolated-job.v1",
+  "nonce": "4eec4f7b5fab4408b3f5b5b077c6c0e0",
+  "source": "de67f6d42ded4709722f7e237cab81daf76ce14f",
+  "tree": "32429b6b35a09909fc77d1ccd37796169c7d794a",
+  "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+  "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+  "sdkImage": "mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea",
+  "daemonImage": "docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654",
+  "sharedPublicationReceipt": "shared-v610-publication-verification.json",
+  "deliveredBaselineVerified": false,
+  "hostedCi": false,
+  "scheduledNightly": false,
+  "remoteRepositoryMutations": false,
+  "containers": [
+    {
+      "kind": "daemon",
+      "id": "70d455bbb68051d28a21a3a67ddae329be164e0121410a300a4dec0f31ad6603"
+    },
+    {
+      "kind": "worker",
+      "id": "d93b2f2a5d82a3a1ea38247c15fbaf32ef222f119a02c72a778e4771404e82e1"
+    }
+  ],
+  "startedAt": 1794888388.0637891,
+  "events": [
+    {
+      "at": 1794888394.8623493,
+      "message": "Exact source projections ready; no nested submodules initialized"
+    },
+    {
+      "at": 1794888395.852506,
+      "message": "Exact official DinD image available"
+    },
+    {
+      "at": 1794888397.070056,
+      "message": "Fresh private daemon ready with no preexisting containers or volumes"
+    },
+    {
+      "at": 1794888407.0729299,
+      "message": "Worker phase: exact-node-runtime/running"
+    },
+    {
+      "at": 1794888411.0738428,
+      "message": "Worker phase: released-custom-actions-and-actual-commit-policy/running"
+    },
+    {
+      "at": 1794888417.0745568,
+      "message": "Worker phase: one-release-package-build/running"
+    },
+    {
+      "at": 1794888525.0975585,
+      "message": "Worker phase: one-release-package-build/passed"
+    },
+    {
+      "at": 1794888527.0980878,
+      "message": "Worker phase: released-complete-unit-projects/running"
+    },
+    {
+      "at": 1794888983.2417321,
+      "message": "Worker phase: one-shared-environment/running"
+    },
+    {
+      "at": 1794889133.2683928,
+      "message": "Worker phase: after-unit-tests-hook/running"
+    },
+    {
+      "at": 1794889375.3467836,
+      "message": "Worker phase: after-unit-tests-hook/failed"
+    }
+  ],
+  "cleanup": [
+    {
+      "container": {
+        "kind": "worker",
+        "id": "d93b2f2a5d82a3a1ea38247c15fbaf32ef222f119a02c72a778e4771404e82e1"
+      },
+      "state": "already-removed"
+    },
+    {
+      "container": {
+        "kind": "daemon",
+        "id": "70d455bbb68051d28a21a3a67ddae329be164e0121410a300a4dec0f31ad6603"
+      },
+      "state": "removed"
+    }
+  ],
+  "privateScratchPath": "/tmp/hexalith-job.NWO3EPDo",
+  "scope": "full",
+  "containerScratchPath": "/work/s23",
+  "limits": {
+    "workerCpus": 4,
+    "workerMemory": "24g",
+    "daemonCpus": 2,
+    "daemonMemory": "8g"
+  },
+  "hostBackendBefore": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "outerDaemonId": "\"afcd365d-1578-410b-af0b-98550207ef1c\"",
+  "directPins": {
+    "Hexalith.Builds": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Platform": "8ccb479e391564ce982309f106504cf8329c0a43",
+    "Hexalith.Memories": "68a78d475c7ae8b77193e308dfb8c8f5e4cc0826"
+  },
+  "workerSha256": "91958354c79784f695e54e2ea8233c3d01681e8fe34d6538a74f8dd735bcea22",
+  "orchestratorSha256": "2dc29e79c19abb8e9082f904cd2cf28f9035d1976c272790db98781c960d970e",
+  "innerDaemonId": "\"15d32956-149d-4998-99b2-e33a0458f3e2\"",
+  "workerContainerExit": 1,
+  "maskValuesDiscarded": 0,
+  "worker": {
+    "schema": "tenants.local-workload.v1",
+    "source": "de67f6d42ded4709722f7e237cab81daf76ce14f",
+    "sharedSource": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+    "phases": [
+      {
+        "name": "exact-node-runtime",
+        "status": "passed",
+        "startedAt": 1794888406.6035697,
+        "elapsedSeconds": 3.3377604484558105
+      },
+      {
+        "name": "released-custom-actions-and-actual-commit-policy",
+        "status": "passed",
+        "startedAt": 1794888409.9422054,
+        "elapsedSeconds": 6.635862350463867
+      },
+      {
+        "name": "one-release-package-build",
+        "status": "passed",
+        "startedAt": 1794888416.578312,
+        "elapsedSeconds": 106.57826399803162
+      },
+      {
+        "name": "released-complete-unit-projects",
+        "status": "passed",
+        "startedAt": 1794888526.698687,
+        "elapsedSeconds": 456.2558879852295
+      },
+      {
+        "name": "one-shared-environment",
+        "status": "passed",
+        "startedAt": 1794888983.0706196,
+        "elapsedSeconds": 149.41007208824158
+      },
+      {
+        "name": "after-unit-tests-hook",
+        "status": "failed",
+        "startedAt": 1794889132.4811022,
+        "exceptionType": "CalledProcessError",
+        "exitCode": 1,
+        "elapsedSeconds": 242.44556784629822
+      }
+    ],
+    "productBase": "ac7b6ba9edd88c197701fa1d1503cf2743ee022a",
+    "scope": "full",
+    "localSyntheticIdentity": true,
+    "hostedCi": false,
+    "scheduledNightly": false,
+    "deliveredBaselineVerified": false,
+    "deliveredConfigurationCreated": false,
+    "startedAt": 1794888406.5591362,
+    "node": {
+      "versions": [
+        "v24.22.3",
+        "11.19.1"
+      ],
+      "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+    },
+    "releasedContract": {
+      "tag": "v6.1.0",
+      "revision": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+      "inMemoryTestRoutingOnly": {
+        "solution": "Hexalith.Tenants.slnx",
+        "dapr": true,
+        "browsers": true,
+        "registry": false,
+        "ciTimeoutMinutes": 360,
+        "nightlyTimeoutMinutes": 60,
+        "prerequisites": {
+          "nodeVersion": "24.22.3",
+          "npmVersion": "11.19.1",
+          "apt": true,
+          "tlsTrust": true,
+          "daprProfile": "catalog"
+        },
+        "npmWorkspaces": [
+          "tests/performance/tenant-audit"
+        ],
+        "tests": {
+          "integration": [
+            "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+          ],
+          "exclude": {
+            "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj": "after-integration-tests"
+          },
+          "failSkips": true,
+          "minimumExpectedTests": {
+            "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj": 40,
+            "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj": 103,
+            "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj": 761,
+            "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj": 198,
+            "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj": 8085,
+            "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj": 66,
+            "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj": 1911
+          },
+          "reports": {
+            "trx": true
+          }
+        },
+        "hooks": [
+          "after-unit-tests",
+          "after-integration-tests",
+          "nightly"
+        ],
+        "submodules": [
+          "references/Hexalith.EventStore",
+          "references/Hexalith.Platform",
+          "references/Hexalith.Memories"
+        ],
+        "schema": "hexalith.ci.v1",
+        "buildsTag": "v6.1.0",
+        "codeql": [
+          "csharp"
+        ],
+        "jobs": {},
+        "dotnetTools": false
+      },
+      "deliveredStateFabricated": false,
+      "publicationReceipt": "shared-v610-publication-verification.json"
+    },
+    "releasedPolicy": {
+      "customActions": "passed",
+      "actualCommitMessages": [
+        "de67f6d42ded4709722f7e237cab81daf76ce14f",
+        "3228045930709d57f6f1ddf0afff9c57ff60cd00"
+      ],
+      "commitlintVersion": "21.2.4",
+      "centralPolicy": "passed",
+      "modulePolicy": "passed",
+      "lockedInstallAndSignatures": "passed"
+    },
+    "testProjects": {
+      "unit": [
+        "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj",
+        "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj",
+        "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj",
+        "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj",
+        "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj"
+      ],
+      "integration": [
+        "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj",
+        "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+      ],
+      "hookOwned": "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj"
+    },
+    "releasedClassification": {
+      "unit": [
+        "samples/Hexalith.Tenants.Sample.Tests/Hexalith.Tenants.Sample.Tests.csproj",
+        "tests/Hexalith.Tenants.Client.Tests/Hexalith.Tenants.Client.Tests.csproj",
+        "tests/Hexalith.Tenants.Contracts.Tests/Hexalith.Tenants.Contracts.Tests.csproj",
+        "tests/Hexalith.Tenants.Testing.Tests/Hexalith.Tenants.Testing.Tests.csproj",
+        "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj"
+      ],
+      "integration": [
+        "tests/Hexalith.Tenants.AppHost.Tests/Hexalith.Tenants.AppHost.Tests.csproj",
+        "tests/Hexalith.Tenants.Server.Tests/Hexalith.Tenants.Server.Tests.csproj"
+      ],
+      "excluded": [
+        "tests/Hexalith.Tenants.IntegrationTests/Hexalith.Tenants.IntegrationTests.csproj"
+      ]
+    },
+    "status": "failed",
+    "exceptionType": "CalledProcessError",
+    "releasedRoutineBootstrapQualified": false,
+    "finishedAt": 1794889374.9272912,
+    "elapsedSeconds": 968.368155002594
+  },
+  "supportSafeArtifacts": [
+    "runner-hexalith-dapr-initialization.json"
+  ],
+  "trxSummaries": [
+    {
+      "path": "Hexalith.Tenants/TestResults/shared-ci/unit-uhvpiwho/b1d9502b2cfe9fae3030618923594d2fdb92a028a161513929ba2b3e12b98826/results.trx",
+      "counters": {
+        "total": "40",
+        "executed": "40",
+        "passed": "40",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    },
+    {
+      "path": "Hexalith.Tenants/TestResults/shared-ci/unit-uhvpiwho/37cdb90d7c73e2f9b50e86b874f68787d2802eaee8f918b55bfadee701e4f348/results.trx",
+      "counters": {
+        "total": "8085",
+        "executed": "8085",
+        "passed": "8085",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    },
+    {
+      "path": "Hexalith.Tenants/TestResults/shared-ci/unit-uhvpiwho/531228fa21e343b7c3a6cf447f334d7cc1e731ca74c8c6d245802cb1a42cf8ce/results.trx",
+      "counters": {
+        "total": "198",
+        "executed": "198",
+        "passed": "198",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    },
+    {
+      "path": "Hexalith.Tenants/TestResults/shared-ci/unit-uhvpiwho/beea1a2b643e3d6977abd9e695a8520c8574d4592388c802ddd06e2a67100019/results.trx",
+      "counters": {
+        "total": "761",
+        "executed": "761",
+        "passed": "761",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    },
+    {
+      "path": "Hexalith.Tenants/TestResults/shared-ci/unit-uhvpiwho/ab393d67b18b6ed053a9e9544ab3e27ded83145af6dbf15ebdca3ffc44198c7f/results.trx",
+      "counters": {
+        "total": "103",
+        "executed": "103",
+        "passed": "103",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassingMethods": []
+    }
+  ],
+  "status": "failed",
+  "hostBackendAfter": {
+    "exit": 0,
+    "metadata": "\"8d0788f8322fdb91a51f3960cb9a0ceab4a7b892f27bacf2147e97fc4d471922\" \"2026-09-18T15:42:19.737261025Z\" \"2026-11-15T08:12:22.399041599Z\" true"
+  },
+  "hostBackendUnchanged": true,
+  "sourceStillExact": true,
+  "finishedAt": 1794889378.3287523,
+  "elapsedSeconds": 990.2649631500244,
+  "releasedRoutineBootstrapQualified": false,
+  "scratchCleanupOwnership": "restored to wrapper user"
+}

@@ -1,0 +1,50 @@
+Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest
+
+Package: hexalith.eventstore.contracts | Version: 5.1.1 | TFM: net11.0 | Library: lib/net11.0/Hexalith.EventStore.Contracts.dll | Source: NuGet
+
+Constructors
+
+Name
+-----
+.ctor
+
+Interfaces
+
+Interface
+---------------------------------------------------------------------------
+System.IEquatable<Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest>
+
+Method Groups
+
+Name         Return Type  Overloads
+-----------  -----------  ---------
+Deconstruct  void         1
+Equals       bool         2
+GetHashCode  int          1
+ToString     string       1
+
+Operators
+
+Name         Digest      Signature
+-----------  ----------  ----------------------------------------------------------------------------------------------------------------------------------------------------
+operator ==  e694a18daa  public static bool operator ==(Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest?, Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest?)
+operator !=  310f52167b  public static bool operator !=(Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest?, Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest?)
+
+Properties
+
+Name                  Return Type                                                                                   Accessors
+--------------------  --------------------------------------------------------------------------------------------  ---------
+AdditionalProperties  System.Collections.Generic.IDictionary<string, System.Text.Json.JsonElement>?                 get, init
+AggregateId           string                                                                                        get, init
+Domain                string                                                                                        get, init
+EntityId              string?                                                                                       get, init
+Filters               System.Collections.Generic.IReadOnlyList<Hexalith.EventStore.Contracts.Queries.QueryFilter>?  get, init
+Freshness             Hexalith.EventStore.Contracts.Queries.QueryFreshnessPolicy?                                   get, init
+OrderBy               System.Collections.Generic.IReadOnlyList<Hexalith.EventStore.Contracts.Queries.QuerySort>?    get, init
+Paging                Hexalith.EventStore.Contracts.Queries.QueryPagingOptions?                                     get, init
+Payload               System.Nullable<System.Text.Json.JsonElement>                                                 get, init
+ProjectionActorType   string?                                                                                       get, init
+ProjectionType        string?                                                                                       get, init
+QueryType             string                                                                                        get, init
+Search                string?                                                                                       get, init
+Tenant                string                                                                                        get, init

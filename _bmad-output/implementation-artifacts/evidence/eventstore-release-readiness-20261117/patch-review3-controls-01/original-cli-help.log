@@ -1,0 +1,20 @@
+usage: verify.py [-h] [--workspace WORKSPACE] --output OUTPUT
+                 [--local-package-probes | --authority-probe |
+                 --query-api-package-probe]
+
+Verify the frozen EventStore producer; run only through run-with-temp. No
+publication, submodule initialization, or shared checkout mutation occurs.
+Every invocation requires a new output directory so failures remain preserved.
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+  --output OUTPUT
+  --local-package-probes
+                        Supplement the baseline with real unpublished manifest
+                        packages and the skipped package probe bodies.
+  --authority-probe     Reproduce the package-authority scan once with its
+                        original eight-minute bound.
+  --query-api-package-probe
+                        Pack only the real Contracts/Client/generator archives
+                        and compile a synthetic query consumer.

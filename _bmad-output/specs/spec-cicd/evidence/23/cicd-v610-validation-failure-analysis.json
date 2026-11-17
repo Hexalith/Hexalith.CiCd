@@ -1,0 +1,35 @@
+{
+  "candidate": "d37a20a3318daba15066faa28f651730a7e9939e",
+  "verdict": {
+    "global": false,
+    "modules": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Commons",
+      "Hexalith.PolymorphicSerializations"
+    ]
+  },
+  "passedGlobalChecks": [
+    "committed render inputs",
+    "committed render",
+    "immutable delivery bootstrap",
+    "render reproducibility",
+    "schemas and caller interfaces",
+    "workflow lints"
+  ],
+  "rendererFailures": [
+    "test_additive_windows_outputs_require_a_contract_that_defines_the_fields (__main__.RenderTests.test_additive_windows_outputs_require_a_contract_that_defines_the_fields)",
+    "test_callers_match_pinned_workflow_and_composite_interfaces (__main__.RenderTests.test_callers_match_pinned_workflow_and_composite_interfaces)",
+    "test_dependabot_exact_solution_policy (__main__.RenderTests.test_dependabot_exact_solution_policy)",
+    "test_explicit_native_timeout_override_keeps_precedence (__main__.RenderTests.test_explicit_native_timeout_override_keeps_precedence)",
+    "test_invalid_setup_matrix_does_not_mutate_output (__main__.RenderTests.test_invalid_setup_matrix_does_not_mutate_output) (label='runner')",
+    "test_minimal_complete_defaults_and_exact_output_tree (__main__.RenderTests.test_minimal_complete_defaults_and_exact_output_tree)",
+    "test_nested_defaults_and_explicit_values_survive (__main__.RenderTests.test_nested_defaults_and_explicit_values_survive)",
+    "test_old_release_rejects_manual_shape_without_replacing_accepted_render (__main__.RenderTests.test_old_release_rejects_manual_shape_without_replacing_accepted_render)",
+    "test_timeout_materializes_and_forwards_only_from_the_selected_complete_contract (__main__.RenderTests.test_timeout_materializes_and_forwards_only_from_the_selected_complete_contract)",
+    "test_timeout_requires_the_pinned_numeric_workflow_input (__main__.RenderTests.test_timeout_requires_the_pinned_numeric_workflow_input)",
+    "test_valid_quotes_spaces_unicode_are_data (__main__.RenderTests.test_valid_quotes_spaces_unicode_are_data)"
+  ],
+  "failureCount": 11,
+  "candidatePreserved": true,
+  "noWaiversOrSkippedChecks": true
+}

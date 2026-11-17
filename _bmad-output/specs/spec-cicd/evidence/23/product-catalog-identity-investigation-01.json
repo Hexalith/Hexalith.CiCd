@@ -1,0 +1,52 @@
+{
+  "productBaseline": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "failedRuntimeEvidence": "local-isolated-20261116T235925Z-e4ab135a/result.json",
+  "packageAspireVersion": "5.1.1",
+  "packageProducer": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+  "executablePin": "70bf20dceaafd37229236e11d279a5d6ea434759",
+  "identicalEnrollmentSources": [
+    {
+      "path": "src/Hexalith.EventStore.Aspire/DevelopmentRouteCatalogAspireExtensions.cs",
+      "packageProducerBlob": "86dbaab095a514200770dbac32dbdac8b7ab53a4",
+      "pinnedBlob": "86dbaab095a514200770dbac32dbdac8b7ab53a4",
+      "equal": true
+    },
+    {
+      "path": "src/Hexalith.EventStore.ServiceDefaults/Routing/DevelopmentRouteCatalogBootstrap.cs",
+      "packageProducerBlob": "9ff3987df8243152819749be0f5e262b9ad6361e",
+      "pinnedBlob": "9ff3987df8243152819749be0f5e262b9ad6361e",
+      "equal": true
+    },
+    {
+      "path": "src/Hexalith.EventStore.Server/Routing/RunScopedRouteCatalogGateway.cs",
+      "packageProducerBlob": "7264dbcba1e479fd4fcd94da45eb828ba0e4b615",
+      "pinnedBlob": "7264dbcba1e479fd4fcd94da45eb828ba0e4b615",
+      "equal": true
+    },
+    {
+      "path": "src/Hexalith.EventStore/Program.cs",
+      "packageProducerBlob": "d124b2b368c6aacd9b0aa56c5dc7f1e7898ed00b",
+      "pinnedBlob": "d124b2b368c6aacd9b0aa56c5dc7f1e7898ed00b",
+      "equal": true
+    }
+  ],
+  "actualReleaseAppHostCohortDefined": true,
+  "evaluatedPropertyEvidence": "product-metadata-identity-01.log",
+  "apiInspectionEvidence": [
+    "product-authority-api-inspection-02.log",
+    "product-aspire-snapshot-api-inspection-01.log",
+    "product-aspire-snapshot-api-signatures-01.log",
+    "product-aspire-snapshot-docs-01.log"
+  ],
+  "failureMeaning": "RequireLocalIdentity refuses when local Identity is null or Profile is blank. Bootstrap registers Profile and only assigns Identity after actual receiver/input capture. The retained failure does not establish whether gateway enrollment is absent or capture is blocked.",
+  "rootCauseEstablished": false,
+  "behavioralFixClaimed": false,
+  "nextProbe": "Support-safe resource snapshots and private catalog coordination-file presence, before cleanup; no environment callback evaluation or raw values/file contents retained.",
+  "omittedRunnerContextInspection": {
+    "productStartup": "No GITHUB_WORKSPACE or Actions OIDC variable references in inspected product startup paths.",
+    "sdkStartup": "No GITHUB_WORKSPACE, Actions OIDC or GITHUB_ACTIONS references in published producer Aspire/ServiceDefaults/Server/command Program paths.",
+    "platformHelpers": "No GITHUB_WORKSPACE, Actions OIDC or GITHUB_ACTIONS references in exact Platform helper files.",
+    "buildsRuntime": "GITHUB_ACTIONS only appears in two noninteractive-selection expressions; no GITHUB_WORKSPACE or Actions OIDC reference.",
+    "scope": "Static inspected paths only; no claim that every transitive dependency is qualified."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "observedAtUtc": "2026-11-17T07:07:05.352077+00:00",
+  "status": "parent publication blocked by required Platform policy check",
+  "command": "run-with-temp python3 -B _bmad-output/implementation-artifacts/evidence/push-main-20261117T065641Z/prepare-publication.py",
+  "qualificationExitCode": 1,
+  "policyTag": "v6.2.0",
+  "policyCommit": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+  "policyToolLockSha256": "e1cee6ebc2ce6f5bb679d3739a7d957052c4fc1d19aebcbb834794f78d232835",
+  "runnerSha256": "311b834b3e5fecd77cddbe8f728dfd3c837bd434322903e64c33b85a0b16b13e",
+  "modules": [
+    {
+      "repository": "Hexalith.Platform",
+      "head": "647c0dd0a18c995c12d2e23db532cf836fcc092a",
+      "tree": "15ceb00f33a77bac1ad06a867813162d6d0a54ca",
+      "authenticatedRemoteMain": "647c0dd0a18c995c12d2e23db532cf836fcc092a",
+      "headAvailableOnRemoteMain": true,
+      "workingTreeClean": true,
+      "matchesVerifiedCandidateTree": true
+    },
+    {
+      "repository": "Hexalith.Folders",
+      "head": "438b8a0b9e3416669ac05152633301bc1bae76fb",
+      "tree": "fa412e732f7d16ba49221bbb15127e67548355a1",
+      "authenticatedRemoteMain": "438b8a0b9e3416669ac05152633301bc1bae76fb",
+      "headAvailableOnRemoteMain": true,
+      "workingTreeClean": true,
+      "matchesVerifiedCandidateTree": false
+    }
+  ],
+  "rootHead": "ba4cc3cafed953ee41bbe1dd597370ff249198c5",
+  "createdCommitsByThisAttempt": [],
+  "pushedCommitsByThisAttempt": [],
+  "concurrentPublicationObserved": true,
+  "blocker": "guard: _bmad-output/implementation-artifacts/evidence/3-2/release-adoption-20261109/shared-restore-import-closure/graph-export-imports.xml: audit-lint: forbidden MSBuildWarningsAsMessages declaration\nguard: _bmad-output/implementation-artifacts/evidence/3-2/release-adoption-20261109/shared-restore-import-closure/graph-export-imports.xml: audit-lint: forbidden NuGetAuditSuppress declaration\nguard: _bmad-output/implementation-artifacts/evidence/3-2/release-adoption-20261109/shared-restore-import-closure/graph-export-imports.xml: audit-lint: forbidden VSTestTestCaseFilter declaration\nCI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline.",
+  "remainingQualification": "Full approved package/product checks are not claimed; the required policy refusal stops dependent publication.",
+  "ownedContentChangedByThisAttempt": false,
+  "sharedIndexesOrRefsChangedByThisAttempt": false,
+  "verificationChildrenFinished": true,
+  "disposableWorkspaceCleaned": true
+}

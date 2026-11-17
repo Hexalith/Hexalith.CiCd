@@ -1,0 +1,84 @@
+{
+  "recorded_at": "2026-11-16T23:57:46.514087+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "GH_TOKEN_present": false,
+  "GITHUB_TOKEN_present": false,
+  "reads": [
+    {
+      "route": "user",
+      "exit": 0,
+      "permission_headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: allows_permissionless_access=true"
+      ],
+      "error": "",
+      "data": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "route": "repos/Hexalith/Hexalith.Builds",
+      "exit": 0,
+      "permission_headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: metadata=read"
+      ],
+      "error": "",
+      "data": {
+        "full_name": "Hexalith/Hexalith.Builds",
+        "id": 952945989,
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "route": "repos/Hexalith/Hexalith.Builds/pulls?head=Hexalith:story/23-fresh-tls&state=all",
+      "exit": 0,
+      "permission_headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: pull_requests=read"
+      ],
+      "error": "",
+      "data": []
+    },
+    {
+      "route": "repos/Hexalith/Hexalith.Builds/actions/workflows/builds-ci.yml",
+      "exit": 0,
+      "permission_headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: actions=read"
+      ],
+      "error": "",
+      "data": {
+        "id": 411848291,
+        "name": "CI",
+        "path": ".github/workflows/builds-ci.yml",
+        "state": "active",
+        "message": null
+      }
+    },
+    {
+      "route": "repos/Hexalith/Hexalith.Builds/git/ref/heads/story/23-fresh-tls",
+      "exit": 0,
+      "permission_headers": [
+        "HTTP/2.0 200 OK",
+        "X-Accepted-Github-Permissions: contents=read"
+      ],
+      "error": "",
+      "data": {
+        "ref": "refs/heads/story/23-fresh-tls",
+        "object": {
+          "sha": "d84e0e334211e058e68ebc3b087b34520441a3fd",
+          "type": "commit",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Builds/git/commits/d84e0e334211e058e68ebc3b087b34520441a3fd"
+        }
+      }
+    }
+  ]
+}

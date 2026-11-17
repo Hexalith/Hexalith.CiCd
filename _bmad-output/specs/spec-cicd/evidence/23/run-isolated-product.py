@@ -1,7 +1,7 @@
 """Run one disposable Docker-isolated product workload, never the host backend.
 
-Invoke with run-with-temp. Raw logs/credentials remain scratch. This is local
-candidate-source qualification, not released-contract or hosted acceptance.
+Invoke with run-with-temp. Raw logs/credentials remain scratch. Full mode
+qualifies released routines locally; no delivered baseline or hosted result is created.
 """
 import datetime
 import hashlib
@@ -19,27 +19,29 @@ import xml.etree.ElementTree as ET
 
 
 HERE = Path(__file__).resolve().parent
-SOURCE = Path('/home/administrator/projects/hexalith/tenants-story-23-product')
+SOURCE = Path('/home/administrator/projects/hexalith/tenants-story-23-current')
 OBJECTS = Path('/home/administrator/projects/hexalith/tenants/references')
 SCRATCH = Path(os.environ['TMPDIR']).resolve(strict=True)
 if (SCRATCH.parent != Path('/tmp') or not SCRATCH.name.startswith('hexalith-job.')
         or SCRATCH.stat().st_uid != os.getuid() or stat.S_IMODE(SCRATCH.stat().st_mode) != 0o700):
     raise ValueError('Use the current private run-with-temp workspace')
-REVISION = 'c54c4489299220ffa3a1ae28caf957f01feadb12'
-TREE = '8eaac0721f78ba456613a534fdbb41e6bc3a3b37'
-BUILDS = 'd84e0e334211e058e68ebc3b087b34520441a3fd'
+REVISION = 'cca7ad07211967e604b8f7f33aa21dbbb853ec10'
+TREE = '9472f47e23de188363699be3c5e3c074fb3de68e'
+PRODUCT_BASE = 'ac7b6ba9edd88c197701fa1d1503cf2743ee022a'
+BUILDS = 'a1e0c310b1f1a50d78e6132890fae6bcba769f6d'
 SDK = 'mcr.microsoft.com/dotnet/sdk@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea'
 DIND = 'docker.io/library/docker@sha256:9d337aaf171682751be04d67c15d880d6a95c6fd44cb8e12043f605012e5e654'
 NONCE = uuid.uuid4().hex
 MODE = os.environ.get('S23_MODE', 'full')
-if MODE not in ('full', 'unit-ui', 'prerequisites'):
+if MODE not in ('full', 'unit-ui', 'prerequisites', 'cold-integration', 'cold-rest', 'tool-tests', 'unit-hook'):
     raise ValueError('Unsupported local workload scope')
 CONTAINER_ROOT = Path('/work/s23')
 PACKET = HERE / ('local-isolated-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + NONCE[:8])
 PACKET.mkdir(mode=0o700)
 record = {'schema': 'tenants.local-isolated-job.v1', 'nonce': NONCE, 'source': REVISION,
-          'tree': TREE, 'sharedSource': BUILDS, 'sdkImage': SDK, 'daemonImage': DIND,
-          'publishedContract': False, 'hostedCi': False, 'scheduledNightly': False,
+          'tree': TREE, 'productBase': PRODUCT_BASE, 'sharedSource': BUILDS, 'sdkImage': SDK, 'daemonImage': DIND,
+          'sharedPublicationReceipt': 'shared-v610-publication-verification.json',
+          'deliveredBaselineVerified': False, 'hostedCi': False, 'scheduledNightly': False,
           'remoteRepositoryMutations': False, 'containers': [], 'startedAt': time.time(),
           'events': [], 'cleanup': [], 'privateScratchPath': str(SCRATCH), 'scope': MODE,
           'containerScratchPath': str(CONTAINER_ROOT),
@@ -92,6 +94,55 @@ def host_backend():
     return {'exit': process.returncode, 'metadata': process.stdout.strip() if not process.returncode else None}
 
 
+DCP_PROBE = r'''import hashlib,json,os
+from pathlib import Path
+found=[]
+for process in Path('/proc').glob('[0-9]*'):
+    try:
+        name=(process/'comm').read_text().strip()
+        if name not in ('dcp','dcpctrl'):
+            continue
+        executable=(process/'exe').resolve(strict=True)
+        found.append((name!='dcp',int(process.name),name,executable,process/'exe'))
+    except (OSError,ValueError):
+        continue
+rows=[]
+for _,pid,name,executable,handle in sorted(found)[:1]:
+    with handle.open('rb') as stream:
+        digest=hashlib.file_digest(stream,'sha256').hexdigest()
+    # Observe the running binary without executing a second native DCP process.
+    # This exact hash was queried successfully in the earlier retained packet.
+    known=digest=='1fb8f6c741b89fe39f73f491f5b06729dd187515bbfe37cf46d7bdefd7bd67f8'
+    relative=str(executable)
+    prefix='/work/s23/home/.nuget/packages/'
+    rows.append({'processName':name,'pid':pid,'binarySha256':digest,
+        'packagePath':relative.removeprefix(prefix) if relative.startswith(prefix) else executable.name,
+        'versions':['0.26.6'] if known else [],'versionCommandExecuted':False,
+        'versionSource':'prior-native-query-matching-binary-sha256' if known else 'unknown',
+        'priorVersionReceipt':'local-isolated-20261117T003405Z-a33aa406/result.json' if known else None})
+print(json.dumps(rows))
+'''
+
+
+def observe_dcp(worker):
+    if record.get('executedDcp') or record.get('dcpObservationError') or worker is None:
+        return
+    try:
+        probe=command(['docker','exec','--user','1000:1000',
+            '--env','HOME=/work/s23/home','--env','TMPDIR=/work/s23/runner',
+            '--env','TMP=/work/s23/runner','--env','TEMP=/work/s23/runner',
+            worker,'python3','-B','-c',DCP_PROBE],timeout=15,check=False)
+        if probe.returncode==0:
+            rows=json.loads(probe.stdout)
+            if rows:
+                record['executedDcp']=rows
+                save()
+    except (OSError,ValueError,subprocess.TimeoutExpired) as error:
+        # Optional metadata must never interrupt the product's complete tests.
+        record['dcpObservationError']=type(error).__name__
+        save()
+
+
 def register_container(kind, cidfile, *, lookup=False):
     identifier = cidfile.read_text().strip() if cidfile.is_file() else ''
     if lookup and re.fullmatch(r'[0-9a-f]{64}', identifier) is None:
@@ -135,6 +186,11 @@ def safe_results(raw):
     masks = {line.partition('::add-mask::')[2].strip() for line in raw.splitlines() if '::add-mask::' in line}
     masks.discard('')
     record['maskValuesDiscarded'] = len(masks)
+    clean = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', raw)
+    record['toolSuiteCounters'] = {
+        'python': re.findall(r'^Ran (\d+) tests? in ([0-9.]+)s$', clean, re.MULTILINE),
+        'node': re.findall(r'^(?:#|ℹ️?) (?:tests|pass|fail|skipped) \d+$', clean, re.MULTILINE),
+        'pythonFailures': re.findall(r'^FAILED \([a-z0-9=, ]+\)$', clean, re.MULTILINE)}
 
     def scrub(value):
         if isinstance(value, dict):
@@ -160,6 +216,25 @@ def safe_results(raw):
     result = SCRATCH / 'worker-result.json'
     if result.is_file() and not result.is_symlink():
         record['worker'] = scrub(json.loads(result.read_text()))
+    failed = [row['name'] for row in record.get('worker', {}).get('phases', []) if row['status'] == 'failed']
+    if failed and failed[-1] in ('after-unit-tests-hook', 'focused-product-script-tools'):
+        # These stages run before the native owner profiles and have no mounted
+        # publishing credentials. Retain bounded failure context, still redacting
+        # masks, PEM material, credential assignments and long opaque values.
+        section = raw.rsplit('[S23] START ' + failed[-1], 1)[-1]
+        record['toolFailureHeaders'] = re.findall(
+            r'^(?:FAIL|ERROR): ([A-Za-z_][A-Za-z0-9_]*) \(([A-Za-z0-9_.]+)\)', section, re.MULTILINE)
+        diagnostic = scrub('\n'.join(section.splitlines()[-240:]))
+        diagnostic = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', diagnostic)
+        diagnostic = re.sub(r'-----BEGIN [^-]*PRIVATE KEY-----.*?-----END [^-]*PRIVATE KEY-----',
+                            '[redacted-private-key]', diagnostic, flags=re.DOTALL)
+        diagnostic = re.sub(r'(?im)\b(password|token|secret|api[_-]?key)\s*[:=]\s*[^\n,}]+',
+                            r'\1=[redacted]', diagnostic)
+        diagnostic = re.sub(r'[A-Za-z0-9+/=_-]{24,}', '[redacted-opaque]', diagnostic)
+        target = PACKET / 'tool-failure-redacted.log'
+        target.write_text(diagnostic[-24000:] + '\n')
+        target.chmod(0o600)
+        record['toolFailureDiagnostic'] = target.name
     outputs = []
     runtime = SCRATCH / 'runner'
     patterns = ('hexalith-dapr-initialization.json', 'tenants-product-profiles/*.json',
@@ -195,8 +270,9 @@ def safe_results(raw):
                              'messageSha256': hashlib.sha256(message.encode()).hexdigest(),
                              'testFrames': scrub([line.strip() for line in stack.splitlines()
                                                   if 'Hexalith.Tenants.' in line and ('.cs:line' in line or line.strip().startswith('at '))])})
-            if MODE == 'unit-ui':
-                # Focused unit diagnostics run before any cold owner material.
+            relative_report = path.relative_to(SCRATCH / 'Hexalith.Tenants/TestResults').as_posix()
+            if MODE == 'unit-ui' or MODE == 'full' and relative_report.startswith('shared-ci/unit-'):
+                # Unit reports are produced before any cold owner material.
                 # Strip token/PEM/opaque key-like values while retaining numeric
                 # assertions and static UI markup needed to explain a failure.
                 summary = scrub(message)
@@ -224,6 +300,7 @@ try:
     assert git(SOURCE, 'rev-parse', 'HEAD') == REVISION
     assert git(SOURCE, 'rev-parse', 'HEAD^{tree}') == TREE
     assert not git(SOURCE, 'status', '--porcelain')
+    command(['git', '-C', str(SOURCE), 'merge-base', '--is-ancestor', PRODUCT_BASE, REVISION])
     record['hostBackendBefore'] = host_backend()
     record['outerDaemonId'] = command(['docker', 'info', '--format', '{{json .ID}}']).stdout.strip()
     project(SOURCE, SCRATCH / 'Hexalith.Tenants', REVISION)
@@ -301,6 +378,7 @@ exec python3 -B "$1"
                  '--mount', 'type=bind,src=/usr/bin/docker,dst=/usr/local/bin/docker,readonly',
                  '--workdir', str(CONTAINER_ROOT / 'Hexalith.Tenants')]
     environment = {'S23_SCRATCH': str(CONTAINER_ROOT), 'S23_BUILDS_REVISION': BUILDS, 'S23_MODE': MODE,
+                   'S23_PRODUCT_BASE': PRODUCT_BASE,
                    'DOCKER_HOST': 'unix://' + str(CONTAINER_ROOT / 'daemon-socket/docker.sock'),
                    'GITHUB_ACTIONS': 'true', 'GITHUB_REPOSITORY': 'Hexalith/Hexalith.Tenants',
                    'GITHUB_RUN_ID': run_id, 'GITHUB_RUN_ATTEMPT': '1', 'GITHUB_JOB': 'local_s23_qualification',
@@ -314,7 +392,7 @@ exec python3 -B "$1"
         started_at = time.monotonic()
         last_phase = None
         while active_process.poll() is None:
-            register_container('worker', worker_cid)
+            worker_identifier = register_container('worker', worker_cid)
             result = SCRATCH / 'worker-result.json'
             if result.is_file():
                 status = json.loads(result.read_text())
@@ -323,6 +401,8 @@ exec python3 -B "$1"
                     if current != last_phase:
                         note('Worker phase: ' + '/'.join(current))
                         last_phase = current
+                    if current[0] in ('selected-cold-rest-profile', 'complete-hook-owned-integration-project', 'after-integration-step-2') and current[1] == 'running':
+                        observe_dcp(worker_identifier)
             if time.monotonic() - started_at > 21600:
                 raise TimeoutError('Local workload exceeded the provisional 360-minute bound')
             time.sleep(2)
@@ -361,11 +441,15 @@ finally:
         record['hostBackendAfter'] = host_backend()
         record['hostBackendUnchanged'] = record.get('hostBackendBefore') == record['hostBackendAfter']
         record['sourceStillExact'] = git(SOURCE, 'rev-parse', 'HEAD') == REVISION and not git(SOURCE, 'status', '--porcelain')
+        if not record['hostBackendUnchanged'] or not record['sourceStillExact']:
+            raise ValueError('Final host backend or source preservation check failed')
     except Exception as verification_error:
         record['finalVerificationError'] = type(verification_error).__name__
         record['status'] = 'failed'
     record['finishedAt'] = time.time()
     record['elapsedSeconds'] = record['finishedAt'] - record['startedAt']
+    record['releasedRoutineBootstrapQualified'] = (MODE == 'full' and record['status'] == 'passed'
+        and record.get('worker', {}).get('releasedRoutineBootstrapQualified') is True)
     save()
     # Docker's private data files can be root-owned. Restrict cleanup to this
     # wrapper's canonical scratch tree; never follow links out of it.
@@ -376,6 +460,7 @@ finally:
     except Exception as ownership_error:
         record['scratchCleanupOwnership'] = type(ownership_error).__name__
         record['status'] = 'failed'
+        record['releasedRoutineBootstrapQualified'] = False
     save()
     print(json.dumps({'packet': str(PACKET), 'scope': MODE, 'status': record['status'],
                       'worker': record.get('worker', {}).get('status'),

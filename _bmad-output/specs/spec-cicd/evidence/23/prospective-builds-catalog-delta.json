@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-17T04:41:47.968952+00:00",
+  "readOnly": true,
+  "pins": {
+    "currentProduct": "66fc4855a6d3746fbfc8ad02db27d4ecd44dd8c9",
+    "publishedRelease": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d"
+  },
+  "catalogs": {
+    "currentProduct": {
+      "blob": "7ff7b4ed1f9729c46825805be071e70398123faf",
+      "defaultOpenApiVersion": "3.11.0"
+    },
+    "publishedRelease": {
+      "blob": "db85d885ae1b7478ee2d053a5b54b9a43bff9ae7",
+      "defaultOpenApiVersion": "3.11.1"
+    }
+  },
+  "prospectiveDeliveredStateFabricated": false,
+  "requiredPostAdoption": "Actual adopted revision must pass the standard checker and hosted CI; current bootstrap does not certify changed owned pins.",
+  "diff": "diff --git a/Props/Directory.Packages.props b/Props/Directory.Packages.props\nindex 7ff7b4ed..db85d885 100644\n--- a/Props/Directory.Packages.props\n+++ b/Props/Directory.Packages.props\n@@ -177,7 +177,7 @@\n     <!-- Story 1.17: published 5.1.1 supplies the native source scanner APIs used by Folders and Projects. -->\n     <HexalithEventStoreVersion Condition=\"'$(HexalithEventStoreVersion)' == ''\">5.2.0</HexalithEventStoreVersion>\n     <HexalithAspNetCoreOpenApiVersion>11.0.0</HexalithAspNetCoreOpenApiVersion>\n-    <HexalithOpenApiVersion>3.11.0</HexalithOpenApiVersion>\n+    <HexalithOpenApiVersion>3.11.1</HexalithOpenApiVersion>\n     <!-- Packaged SDK4.2 uses OpenApi2; current source projects consume the .NET11 OpenAPI ABI. -->\n     <HexalithAspNetCoreOpenApiVersion Condition=\"('$(UseHexalithProjectReferences)' != 'true' or '$(HexalithEventStoreFromSource)' == 'false') and '$(HexalithEventStoreVersion)' == '4.2.0' and ('$(HexalithPartiesSdk42CatalogView)' == 'true' or '$(HexalithPlatformSdk42CatalogView)' == 'true' or '$(HexalithBuildsPackagedHostSdk42CatalogView)' == 'true' or '$(HexalithTimesheetsNet10CatalogView)' == 'true')\">10.0.15</HexalithAspNetCoreOpenApiVersion>\n     <HexalithOpenApiVersion Condition=\"('$(UseHexalithProjectReferences)' != 'true' or '$(HexalithEventStoreFromSource)' == 'false') and '$(HexalithEventStoreVersion)' == '4.2.0' and ('$(HexalithPartiesSdk42CatalogView)' == 'true' or '$(HexalithPlatformSdk42CatalogView)' == 'true' or '$(HexalithBuildsPackagedHostSdk42CatalogView)' == 'true' or '$(HexalithTimesheetsNet10CatalogView)' == 'true')\">2.13.0</HexalithOpenApiVersion>\n"
+}

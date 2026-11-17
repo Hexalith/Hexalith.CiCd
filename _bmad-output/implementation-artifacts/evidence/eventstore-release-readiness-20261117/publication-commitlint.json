@@ -1,0 +1,44 @@
+{
+  "release_commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+  "release_tag": "v6.0.6",
+  "tool_lock_sha256": "f243c4248fc4b43a00bd63f8492c5ae3e37bb7a211c14cc3c13fd8e9a9fd89e0",
+  "message_sha256": "96cdc5e58ea371023e0692a0646594adb4b6fc0cf92e90c53f6ec865785dd26d",
+  "checks": [
+    {
+      "operation": "npm locked installation",
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "native_exit": 0,
+      "log": "publication-lint-1.log",
+      "stdin_sha256": null
+    },
+    {
+      "operation": "npm signature verification",
+      "command": [
+        "npm",
+        "audit",
+        "signatures"
+      ],
+      "native_exit": 0,
+      "log": "publication-lint-2.log",
+      "stdin_sha256": null
+    },
+    {
+      "operation": "commitlint",
+      "command": [
+        "node",
+        "/tmp/hexalith-job.EAcLgsyl/tools/node_modules/@commitlint/cli/cli.js",
+        "--config",
+        "/tmp/hexalith-job.EAcLgsyl/released/Github/guard/commitlint.config.mjs",
+        "--color=false"
+      ],
+      "native_exit": 0,
+      "log": "publication-lint-3.log",
+      "stdin_sha256": "96cdc5e58ea371023e0692a0646594adb4b6fc0cf92e90c53f6ec865785dd26d"
+    }
+  ],
+  "passed": true
+}

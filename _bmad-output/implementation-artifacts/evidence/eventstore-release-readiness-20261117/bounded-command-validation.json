@@ -1,0 +1,54 @@
+{
+  "completed_utc": "2026-11-17T00:14:15.456244+00:00",
+  "helper_sha256": "5164063dd21ce8a541ec244be5c42b5b2c5f1248d0b4e092ee16e236807078e7",
+  "python_optimization": 1,
+  "results": {
+    "success": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(0)"
+      ],
+      "native_exit": 0,
+      "timeout_seconds": 5,
+      "timed_out": false,
+      "remaining_group_before_cleanup": [],
+      "remaining_group_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "native_failure": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "raise SystemExit(7)"
+      ],
+      "native_exit": 7,
+      "timeout_seconds": 5,
+      "timed_out": false,
+      "remaining_group_before_cleanup": [],
+      "remaining_group_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    "timeout_tree": {
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import subprocess,sys,time;subprocess.Popen([sys.executable,\"-c\",\"import time;time.sleep(30)\"]);time.sleep(30)"
+      ],
+      "native_exit": -15,
+      "timeout_seconds": 0.2,
+      "timed_out": true,
+      "remaining_group_before_cleanup": [
+        1376749
+      ],
+      "remaining_group_after_cleanup": [],
+      "process_tree_fully_waited": true
+    }
+  },
+  "checks": {
+    "success_native_zero": true,
+    "nonzero_native_preserved": true,
+    "timeout_tree_stopped_and_reaped": true
+  },
+  "passed": true
+}

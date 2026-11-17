@@ -1,0 +1,7 @@
+{
+  "package": "Microsoft.FluentUI.AspNetCore.Components@5.1.0",
+  "moduleSha256": "04a54d4308671d136d6f9428afd000f03f479677574690a90b2eb020f7d7ff69",
+  "labelAssociationExcerpts": [
+    "disconnectedCallback()}focusinHandler(e){return this.matches(\":focus-within:has(> :focus-visible)\")&&K(this.elementInternals,\"focus-visible\",!0),!0}focusoutHandler(e){return K(this.elementInternals,\"focus-visible\",!1),!0}invalidHandler(e){this.messageSlot.length&&e.preventDefault(),this.setValidationStates()}async setLabelProperties(){let e=await this.getLabelableInput();e&&(e.id||=ft(\"input\"),this.labelSlot?.forEach(o=>{o instanceof HTMLLabelElement&&(o.htmlFor||=e.id,o.id||=`${e.id}--label`,e.setAttribute(\"aria-labelledby\",o.id))}))}getLabelableInput(){return new Promise(e=>{if(!this.input)return e(null);if(this.input.constructor.elementIdentity!==\"dropdown\")return e(this.input);if(this.input.control)return e(this.input.control);new MutationObserver((o,r)=>{this.input.control&&(e(this.input.control),r.disconnect())}).observe(this.input,{childList:!0})})}setStates(){this.elementInternals&&this.input&&(K(this.elementInternals,\"disabled\""
+  ]
+}

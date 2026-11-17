@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Hexalith.EventStore.Contracts</id>
+    <version>5.1.1</version>
+    <authors>Hexalith Contributors</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/Hexalith/Hexalith.EventStore</projectUrl>
+    <description>CQRS and DDD contract types for the Hexalith event store — commands, events, results, and aggregate identities for .NET event sourcing</description>
+    <tags>eventsourcing dapr cqrs eventstore dotnet</tags>
+    <repository type="git" url="https://github.com/Hexalith/Hexalith.EventStore" commit="f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331" />
+    <dependencies>
+      <group targetFramework="net11.0">
+        <dependency id="Hexalith.Commons.UniqueIds" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="ByteAether.Ulid" version="1.4.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

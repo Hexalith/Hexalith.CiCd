@@ -1,0 +1,366 @@
+{
+  "jobs": [
+    {
+      "id": 133700566251,
+      "name": "Validate workflow policy",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Validate production-authority scheduling guard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Validate BMAD Loop hook relay",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Validate shared skill renderer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Validate Git whitespace policy",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Validate Build Auto workspace ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Validate BMAD legacy cleanup atomicity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Validate BMAD merge atomicity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Validate release package tool fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Validate release workflow shell behavior",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Validate G-6 packet gitlink check fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Validate status-aware G-6 gate fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Initialize Builds for current G-6 policy fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Validate current G-6 change selection",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Validate workflow policy regression fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Validate CI/CD invariants",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 34
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 35
+        }
+      ]
+    },
+    {
+      "id": 133703826746,
+      "name": "G-6 current runtime qualification",
+      "status": "queued",
+      "conclusion": null,
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 133703826845,
+      "name": "P1R candidate evidence replay",
+      "status": "queued",
+      "conclusion": null,
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 133703826928,
+      "name": "ci / build-and-test",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Validate governed CI contract",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Checkout approved Builds actions",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Evaluate governed workflow provenance",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Initialize root-declared submodules (governed)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Initialize root-declared submodules",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Initialize .NET",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Checkout workflow-owned Builds preparation",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Prepare module build",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Cache NuGet packages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Validate test platform input",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Prepare package dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Restore",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Build",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 15
+        },
+        {
+          "name": "Validate package consumer references",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Unit tests (Tier 1, VSTest)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Unit tests (Tier 1, Microsoft.Testing.Platform)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Install and initialize Dapr (governed)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Install and initialize Dapr",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Integration tests (Tier 2, VSTest)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Integration tests (Tier 2, Microsoft.Testing.Platform)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Validate coverage gates",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23
+        },
+        {
+          "name": "Fail on blocking test failures",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 24
+        },
+        {
+          "name": "Upload test and coverage evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25
+        },
+        {
+          "name": "Post Cache NuGet packages",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 48
+        },
+        {
+          "name": "Post Initialize .NET",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 49
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 50
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 51
+        }
+      ]
+    },
+    {
+      "id": 133706666273,
+      "name": "ci / aspire-tests",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 133706666640,
+      "name": "ci / performance-tests",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 133706666901,
+      "name": "Projects generated-artifact gates",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 133706667515,
+      "name": "Scheduled managed AppHost E2E",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 43982007709,
+      "logs_url": null,
+      "steps": null
+    }
+  ]
+}

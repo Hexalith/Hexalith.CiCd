@@ -1,0 +1,107 @@
+{
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "kind": "additive policy validation of attempt-01 exact source, after strengthening helper; does not replace baseline logs",
+  "validation_helper_sha256": "f8e679df921321ec643d995f25611f77144a76b15d542dc56730966d77de52ec",
+  "started_utc": "2026-11-17T00:04:33.254424+00:00",
+  "projects": {
+    "generators": {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.EventStore.RestApi.Generators.Tests/Hexalith.EventStore.RestApi.Generators.Tests.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors"
+      ],
+      "cwd": "/tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore",
+      "native_exit": 0,
+      "log": "attempt-01-supplemental-generators-properties.log",
+      "properties": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": ";IDE0028;CA2007;xUnit1051;CS0618;CS8602;CS8604;CS8600;",
+        "WarningsNotAsErrors": ";NU1901;NU1902"
+      },
+      "validation_errors": []
+    },
+    "contracts": {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.EventStore.Contracts.Tests/Hexalith.EventStore.Contracts.Tests.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors"
+      ],
+      "cwd": "/tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore",
+      "native_exit": 0,
+      "log": "attempt-01-supplemental-contracts-properties.log",
+      "properties": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": ";IDE0028;CA2007;xUnit1051;CS0618;CS8602;CS8604;CS8600;",
+        "WarningsNotAsErrors": ";NU1901;NU1902"
+      },
+      "validation_errors": []
+    },
+    "gateway": {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.EventStore.Gateway/Hexalith.EventStore.Gateway.csproj",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-target:_ComputeSkipAnalyzers",
+        "-getProperty:Configuration,UseHexalithProjectReferences,UseNuGetDeps,NuGetAudit,NuGetAuditMode,NuGetAuditLevel,TreatWarningsAsErrors,RunAnalyzers,RunAnalyzersDuringBuild,EnableNETAnalyzers,_SkipAnalyzers,_ImplicitlySkipAnalyzers,NoWarn,WarningsNotAsErrors"
+      ],
+      "cwd": "/tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore",
+      "native_exit": 0,
+      "log": "attempt-01-supplemental-gateway-properties.log",
+      "properties": {
+        "Configuration": "Release",
+        "UseHexalithProjectReferences": "false",
+        "UseNuGetDeps": "true",
+        "NuGetAudit": "true",
+        "NuGetAuditMode": "all",
+        "NuGetAuditLevel": "low",
+        "TreatWarningsAsErrors": "true",
+        "RunAnalyzers": "",
+        "RunAnalyzersDuringBuild": "",
+        "EnableNETAnalyzers": "true",
+        "_SkipAnalyzers": "",
+        "_ImplicitlySkipAnalyzers": "",
+        "NoWarn": ";IDE0028",
+        "WarningsNotAsErrors": ";NU1901;NU1902"
+      },
+      "validation_errors": []
+    }
+  },
+  "passed": true,
+  "completed_utc": "2026-11-17T00:04:39.231088+00:00"
+}

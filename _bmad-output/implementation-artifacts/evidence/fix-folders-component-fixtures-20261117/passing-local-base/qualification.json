@@ -1,0 +1,128 @@
+{
+  "scope": "local implementation qualification; no protected enrollment or publication",
+  "repositories": {
+    "Hexalith.Folders": {
+      "head": "e5760ca105652f4d89c4f240e0ca455723c9a473",
+      "patchSha256": "da740e4c9a7d997eafa2cae5f578165637dabca5f53c92b82bed67106bca0183",
+      "files": {
+        "docs/ci.md": "fbf94133cf803067fe0fd3b2c6bb366c6718ea80e31a2ab85a1c1abadc816a5c",
+        "scripts/prepare-ci-topology-projects.sh": "aec91d1b9d432e3d3076d18407446045f382b6cd7d7a097c11d2d5dcda805cef",
+        "tests/Hexalith.Folders.Server.Tests/EnrolledWorkloadSourceBoundaryTests.cs": "95b4531570a09abbf0e192c12c241ceabaed96c903ff8a72788c21c42f2a32c7",
+        "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj": "9a22c237d4a6d5f6637eedb107f51e9013c25cd77d81a243b114ee3010151b12",
+        "tests/Hexalith.Folders.Server.Tests/PackageSdkRuntimeBinding.cs": "c7b3c96107d3d5bd475a111976ba1952b3f05c643b3b7b445d2add010165b9af",
+        "tests/Hexalith.Folders.Server.Tests/PackageSdkRuntimeBindingTests.cs": "48ecc9de0623c706a2d189b30fa5748d2fd2f5fce56f449882aa10d4873e9db5",
+        "tests/tools/run-complete-project-tests.ps1": "ec73a5593bed26f5ed7f7fb67400f374c7ee14fdd04ac701df7a7e5c8a94c192"
+      }
+    },
+    "Hexalith.Platform": {
+      "head": "8ccb479e391564ce982309f106504cf8329c0a43",
+      "patchSha256": "4a602b0ed47fb39a00ee4bc7150e20f3ccdf554be85b3bb295d6854708f6c021",
+      "files": {
+        "docs/security/workload-binding-enrollment.md": "200544825a6eee08e4cee727042cad86697c589a7de3aafacea64880aef511ec",
+        "infrastructure/keycloak-workload-binding/component_fixture.py": "537b2fb96cc69482f72c048d60a823278fa37b0f23ca9d59baa4309b6344df26",
+        "infrastructure/keycloak-workload-binding/test_component_fixture.py": "f5c6c423a4ffd8547958992f6c35613d706730a01d717022048b1c885d28f94b",
+        "infrastructure/keycloak-workload-binding/verify_component.py": "1d176383ab22e50be6017f314c752d01d37314ba67ac96d10e7c6a3d3b578ff9"
+      }
+    }
+  },
+  "commands": [
+    {
+      "label": "release-build",
+      "argv": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--disable-build-servers",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1",
+        "-p:UseSharedCompilation=false",
+        "-nr:false"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "provider-build",
+      "argv": [
+        "mvn",
+        "--batch-mode",
+        "--no-transfer-progress",
+        "package"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "platform-fixture-tests",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/tmp/hexalith-job.4tT0powl/Hexalith.Folders/references/Hexalith.Platform/infrastructure/keycloak-workload-binding",
+        "-p",
+        "test_component_fixture.py",
+        "-v"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "complete-server",
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-complete-project-tests.ps1",
+        "-ProjectName",
+        "Hexalith.Folders.Server.Tests",
+        "-ComponentEvidenceFile",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/fix-folders-component-fixtures-20261117/complete-server-results.xml"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "debug-source-build",
+      "argv": [
+        "dotnet",
+        "build",
+        "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+        "--configuration",
+        "Debug",
+        "--disable-build-servers",
+        "-p:UseHexalithProjectReferences=true",
+        "-p:UseNuGetDeps=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1",
+        "-p:UseSharedCompilation=false",
+        "-nr:false"
+      ],
+      "exitCode": 0
+    },
+    {
+      "label": "source-component",
+      "argv": [
+        "python3",
+        "-B",
+        "/tmp/hexalith-job.4tT0powl/Hexalith.Folders/references/Hexalith.Platform/infrastructure/keycloak-workload-binding/verify_component.py",
+        "--sdk-assembly",
+        "/tmp/hexalith-job.4tT0powl/Hexalith.Folders/tests/Hexalith.Folders.Server.Tests/bin/Debug/net11.0/Hexalith.Folders.Server.Tests.dll",
+        "--evidence-file",
+        "/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/evidence/fix-folders-component-fixtures-20261117/source-component-results.xml"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "releaseExitCode": 0,
+  "sourceExitCode": 0,
+  "exitCode": 0
+}

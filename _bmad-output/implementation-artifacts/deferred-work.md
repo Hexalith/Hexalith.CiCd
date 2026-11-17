@@ -394,3 +394,11 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-20-migrate-eventstore.md`
   summary: Resolve the existing CiCd source-discovery capability gap before activating EventStore.
   evidence: Latest candidate discovery selects 22 files but reports 58 unresolved source-coverage diagnostics; see evidence/20/scan-source-coverage-review.json. This remains a blocking activation prerequisite, with no exclusions or audit bypass.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-fix-folders-component-fixtures.md`
+  summary: Harden the existing component verifier against outer SIGTERM cancellation so private files, containers and child processes are observed and cleaned.
+  evidence: BH2 verified the default SIGTERM path bypasses context cleanup; the baseline verifier already had no signal handlers around its temporary fixture and child launch.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-fix-folders-component-fixtures.md`
+  summary: Bound component-child output capture during execution to prevent disk or memory exhaustion before diagnostic truncation.
+  evidence: BH3 and EC1 identify the same pre-existing capture limit gap: baseline capture_output=True accumulated without a cap; the refactor spools to disk and then reads the full output.

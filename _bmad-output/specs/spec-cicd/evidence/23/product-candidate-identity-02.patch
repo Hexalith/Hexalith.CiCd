@@ -1,0 +1,302 @@
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/BootstrapResourceFailureDiagnosticsTests.cs b/tests/Hexalith.Tenants.IntegrationTests/BootstrapResourceFailureDiagnosticsTests.cs
+index 0fee6f70..06980f1d 100644
+--- a/tests/Hexalith.Tenants.IntegrationTests/BootstrapResourceFailureDiagnosticsTests.cs
++++ b/tests/Hexalith.Tenants.IntegrationTests/BootstrapResourceFailureDiagnosticsTests.cs
+@@ -49,4 +49,128 @@ public sealed class BootstrapResourceFailureDiagnosticsTests
+         await bound.CancelAsync();
+         await Should.ThrowAsync<OperationCanceledException>(() => BootstrapResourceFailureDiagnostics.ReadAsync(logger.WatchAsync, bound.Token));
+     }
++
++    [Fact]
++    public void RenderedEnrollmentRetainsOnlyPresenceAndProgressWithoutEnvironmentOrFileContents()
++    {
++        string root = Directory.CreateTempSubdirectory("tenants-enrollment-test-").FullName;
++        string directory = Path.Combine(root, "hexalith-route-catalog-owned");
++        Directory.CreateDirectory(directory);
++        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
++        string credential = Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(32));
++        try
++        {
++            foreach (string name in new[] { "catalog.json", "authority.backend.json", "eventstore.configuration.json",
++                "eventstore.observation.json", "tenants.observation.json", "tenants-api.observation.json", "eventstore-admin.observation.json",
++                "eventstore.ready.json", "activation.json", "tenants.bootstrap.json" })
++                File.WriteAllText(Path.Combine(directory, name), "Bearer " + credential);
++            CustomResourceSnapshot snapshot = EnrollmentSnapshot(directory, credential);
++            var observation = BootstrapResourceFailureDiagnostics.ClassifyEnrollment(snapshot, "eventstore", root);
++            observation.SnapshotObserved.ShouldBeTrue();
++            observation.EnvironmentObserved.ShouldBeTrue();
++            observation.DevelopmentEnvironment.ShouldBeTrue();
++            observation.DirectoryConfigured.ShouldBeTrue();
++            observation.CatalogConfigured.ShouldBeTrue();
++            observation.ComponentConfigured.ShouldBeTrue();
++            observation.AccessControlConfigured.ShouldBeTrue();
++            observation.TechnicalBindingV2.ShouldBeTrue();
++            observation.HostIdentityMatches.ShouldBeTrue();
++            observation.PrivateDirectoryObserved.ShouldBeTrue();
++            observation.CatalogFilePresent.ShouldBeTrue();
++            observation.ComponentFilePresent.ShouldBeTrue();
++            observation.AccessControlFilePresent.ShouldBeTrue();
++            observation.OwnObservationPresent.ShouldBeTrue();
++            observation.ObservedHostCount.ShouldBe(4);
++            observation.ReadyHostCount.ShouldBe(1);
++            observation.CommittedHostCount.ShouldBe(0);
++            observation.ActivationPresent.ShouldBeTrue();
++            observation.BootstrapReceiptPresent.ShouldBeTrue();
++            string json = JsonSerializer.Serialize(observation);
++            json.ShouldNotContain(credential);
++            json.ShouldNotContain(root);
++            json.ShouldNotContain("ACTIONS_ID_TOKEN_REQUEST_TOKEN");
++            json.ShouldNotContain("Bearer");
++        }
++        finally { Directory.Delete(root, recursive: true); }
++    }
++
++    [Fact]
++    public void EnrollmentNeverCountsFilesFromAnotherDirectoryOrLinkedInputs()
++    {
++        string root = Directory.CreateTempSubdirectory("tenants-enrollment-boundary-").FullName;
++        string privateRoot = Path.Combine(root, "profile");
++        string directory = Path.Combine(privateRoot, "hexalith-route-catalog-owned");
++        string foreign = Path.Combine(root, "hexalith-route-catalog-foreign");
++        Directory.CreateDirectory(directory);
++        Directory.CreateDirectory(foreign);
++        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
++        try
++        {
++            File.WriteAllText(Path.Combine(foreign, "eventstore.observation.json"), "foreign credential");
++            File.CreateSymbolicLink(Path.Combine(directory, "eventstore.observation.json"), Path.Combine(foreign, "eventstore.observation.json"));
++            string link = Path.Combine(privateRoot, "hexalith-route-catalog-link");
++            Directory.CreateSymbolicLink(link, foreign);
++            foreach (string selected in new[] { directory, foreign, link })
++            {
++                var observation = BootstrapResourceFailureDiagnostics.ClassifyEnrollment(EnrollmentSnapshot(selected, "sentinel"), "eventstore", privateRoot);
++                observation.OwnObservationPresent.ShouldBeFalse();
++                observation.ObservedHostCount.ShouldBe(0);
++                observation.ReadyHostCount.ShouldBe(0);
++                observation.CommittedHostCount.ShouldBe(0);
++                observation.PrivateDirectoryObserved.ShouldBe(selected == directory);
++            }
++            File.ReadAllText(Path.Combine(foreign, "eventstore.observation.json")).ShouldBe("foreign credential");
++        }
++        finally { Directory.Delete(root, recursive: true); }
++    }
++
++    [Fact]
++    public async Task SnapshotReaderUsesAllocatedInstancesAndMarksBoundedPartialObservationExplicitly()
++    {
++        async IAsyncEnumerable<ResourceEvent> Complete()
++        {
++            yield return new(new ContainerResource("unrelated"), "private-allocated-name", EnrollmentSnapshot("/private", "credential"));
++            yield return new(new ContainerResource("eventstore"), "eventstore", new() { ResourceType = "project", Properties = [] });
++            foreach (string name in new[] { "eventstore", "tenants", "tenants-api" })
++            {
++                await Task.Yield();
++                yield return new(new ContainerResource(name), name + "-private-instance", EnrollmentSnapshot("/private", "credential"));
++            }
++        }
++        using CancellationTokenSource bound = new(TimeSpan.FromSeconds(2));
++        var complete = await BootstrapResourceFailureDiagnostics.ReadEnrollmentAsync(Complete(), Path.GetTempPath(), bound.Token);
++        complete.Count.ShouldBe(3);
++        complete.Values.ShouldAllBe(value => value.SnapshotObserved && value.EnvironmentObserved && !value.PrivateDirectoryObserved);
++        JsonSerializer.Serialize(complete).ShouldNotContain("private-instance");
++        JsonSerializer.Serialize(complete).ShouldNotContain("credential");
++
++        using CancellationTokenSource partialBound = new(TimeSpan.FromMilliseconds(100));
++        async IAsyncEnumerable<ResourceEvent> Partial()
++        {
++            yield return new(new ContainerResource("eventstore"), "allocated", EnrollmentSnapshot("/private", "credential"));
++            await Task.Delay(Timeout.Infinite, partialBound.Token);
++        }
++        var partial = await BootstrapResourceFailureDiagnostics.ReadEnrollmentAsync(Partial(), Path.GetTempPath(), partialBound.Token);
++        partial["eventstore"].EnvironmentObserved.ShouldBeTrue();
++        partial["tenants"].SnapshotObserved.ShouldBeFalse();
++        partial["tenants-api"].EnvironmentObserved.ShouldBeFalse();
++        await Should.ThrowAsync<OperationCanceledException>(() => BootstrapResourceFailureDiagnostics.ReadEnrollmentAsync(Complete(), Path.GetTempPath(), partialBound.Token));
++    }
++
++    private static CustomResourceSnapshot EnrollmentSnapshot(string directory, string credential)
++        => new()
++        {
++            ResourceType = "project", Properties = [],
++            EnvironmentVariables = [
++                new("DOTNET_ENVIRONMENT", "Development", true),
++                new("EventStore__RouteCatalog__DevelopmentBootstrap__Directory", directory, true),
++                new("EventStore__RouteCatalog__DevelopmentBootstrap__CatalogPath", Path.Combine(directory, "catalog.json"), true),
++                new("EventStore__RouteCatalog__DevelopmentBootstrap__ComponentPath", Path.Combine(directory, "authority.backend.json"), true),
++                new("EventStore__RouteCatalog__DevelopmentBootstrap__AccessControlPath", Path.Combine(directory, "eventstore.configuration.json"), true),
++                new("EventStore__RouteCatalog__DevelopmentBootstrap__BindingVersion", "2", true),
++                new("EventStore__RouteCatalog__DevelopmentBootstrap__HostId", "eventstore", true),
++                new("ACTIONS_ID_TOKEN_REQUEST_TOKEN", credential, false),
++                new("Authentication__SigningKey", credential, true),
++            ],
++        };
+ }
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapCatalogEnrollmentObservation.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapCatalogEnrollmentObservation.cs
+new file mode 100644
+index 00000000..0741635e
+--- /dev/null
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapCatalogEnrollmentObservation.cs
+@@ -0,0 +1,42 @@
++namespace Hexalith.Tenants.IntegrationTests.Fixtures;
++
++/// <summary>Support-safe facts from an actual resource snapshot and its private catalog coordination files.</summary>
++/// <param name="SnapshotObserved">Whether Aspire supplied a snapshot for this logical resource or an allocated instance.</param>
++/// <param name="EnvironmentObserved">Whether that snapshot contains rendered environment entries.</param>
++/// <param name="DevelopmentEnvironment">Whether the resource selects the Development environment.</param>
++/// <param name="DirectoryConfigured">Whether the bootstrap directory setting is present.</param>
++/// <param name="CatalogConfigured">Whether the catalog path setting is present.</param>
++/// <param name="ComponentConfigured">Whether the authority component path setting is present.</param>
++/// <param name="AccessControlConfigured">Whether the receiver ACL path setting is present.</param>
++/// <param name="TechnicalBindingV2">Whether the resource selects binding version two.</param>
++/// <param name="HostIdentityMatches">Whether the configured physical host id matches its known resource name.</param>
++/// <param name="PrivateDirectoryObserved">Whether the directory is a real private catalog child of this profile's temporary root.</param>
++/// <param name="CatalogFilePresent">Whether that directory contains the configured regular catalog file.</param>
++/// <param name="ComponentFilePresent">Whether the configured component is a regular file in that directory.</param>
++/// <param name="AccessControlFilePresent">Whether the configured ACL is a regular file in that directory.</param>
++/// <param name="OwnObservationPresent">Whether the host has written its independent observation.</param>
++/// <param name="ObservedHostCount">How many of the four known required hosts have written observations.</param>
++/// <param name="ReadyHostCount">How many of those hosts have written ready attestations.</param>
++/// <param name="CommittedHostCount">How many of those hosts have written committed readbacks.</param>
++/// <param name="ActivationPresent">Whether the coordinator has written an activation proposal.</param>
++/// <param name="BootstrapReceiptPresent">Whether the owned business bootstrap has written its receipt.</param>
++internal sealed record BootstrapCatalogEnrollmentObservation(
++    bool SnapshotObserved,
++    bool EnvironmentObserved,
++    bool DevelopmentEnvironment,
++    bool DirectoryConfigured,
++    bool CatalogConfigured,
++    bool ComponentConfigured,
++    bool AccessControlConfigured,
++    bool TechnicalBindingV2,
++    bool HostIdentityMatches,
++    bool PrivateDirectoryObserved,
++    bool CatalogFilePresent,
++    bool ComponentFilePresent,
++    bool AccessControlFilePresent,
++    bool OwnObservationPresent,
++    int ObservedHostCount,
++    int ReadyHostCount,
++    int CommittedHostCount,
++    bool ActivationPresent,
++    bool BootstrapReceiptPresent);
+diff --git a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapResourceFailureDiagnostics.cs b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapResourceFailureDiagnostics.cs
+index b9b0a6cb..45698728 100644
+--- a/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapResourceFailureDiagnostics.cs
++++ b/tests/Hexalith.Tenants.IntegrationTests/Fixtures/BootstrapResourceFailureDiagnostics.cs
+@@ -12,6 +12,8 @@ namespace Hexalith.Tenants.IntegrationTests.Fixtures;
+ /// <summary>Classifies owned bootstrap failures before cleanup, without retaining resource log text or credentials.</summary>
+ internal static class BootstrapResourceFailureDiagnostics
+ {
++    private static readonly string[] Resources = ["eventstore", "tenants", "tenants-api"];
++    private static readonly string[] CatalogHosts = ["eventstore", "tenants", "tenants-api", "eventstore-admin"];
+     private static readonly string[] Reasons = ["configuration-missing", "owner-trust-refused", "topology-disagreement", "installed-inventory-disagreement", "store-or-transport-unavailable", "catalog-disagreement", "catalog-invalid", "host-validation-unavailable"];
+     private static readonly string[] SensitiveMarkers = ["Bearer ", "Authorization:", "password", "privatekey", "signingkey", "apikey", "api_key", "token="];
+ 
+@@ -48,7 +50,7 @@ internal static class BootstrapResourceFailureDiagnostics
+     {
+         cancellationToken.ThrowIfCancellationRequested();
+         Dictionary<string, Observation> observations = new(StringComparer.Ordinal);
+-        foreach (string resource in new[] { "eventstore", "tenants", "tenants-api" })
++        foreach (string resource in Resources)
+         {
+             List<string> lines = [];
+             await foreach (IReadOnlyList<LogLine> batch in read(resource).WithCancellation(cancellationToken))
+@@ -61,6 +63,83 @@ internal static class BootstrapResourceFailureDiagnostics
+         return observations;
+     }
+ 
++    /// <summary>Reduces rendered environment and private file-presence facts to booleans and bounded counts only.</summary>
++    internal static BootstrapCatalogEnrollmentObservation ClassifyEnrollment(
++        CustomResourceSnapshot? snapshot, string resource, string privateRoot)
++    {
++        if (!Resources.Contains(resource, StringComparer.Ordinal)) throw new ArgumentException("Unknown diagnostic resource.", nameof(resource));
++        bool environmentObserved = snapshot is not null && !snapshot.EnvironmentVariables.IsDefaultOrEmpty;
++        string? Value(string name)
++        {
++            if (!environmentObserved) return null;
++            var entries = snapshot!.EnvironmentVariables.Where(entry => entry.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).ToArray();
++            return entries.Length == 1 ? entries[0].Value : null;
++        }
++        string? Setting(string name) => Value("EventStore__RouteCatalog__DevelopmentBootstrap__" + name);
++        string? directory = Setting("Directory");
++        bool privateDirectory = IsPrivateCatalogDirectory(directory, privateRoot);
++        bool FilePresent(string? path) => privateDirectory && IsRegularCatalogFile(path, directory!);
++        bool Present(string name) => FilePresent(Path.Combine(directory!, name));
++        int Count(string suffix) => privateDirectory ? CatalogHosts.Count(host => Present(host + suffix)) : 0;
++        return new(snapshot is not null, environmentObserved,
++            Value("DOTNET_ENVIRONMENT") == "Development" || Value("ASPNETCORE_ENVIRONMENT") == "Development",
++            !string.IsNullOrEmpty(directory), !string.IsNullOrEmpty(Setting("CatalogPath")),
++            !string.IsNullOrEmpty(Setting("ComponentPath")), !string.IsNullOrEmpty(Setting("AccessControlPath")),
++            Setting("BindingVersion") == "2", Setting("HostId") == resource, privateDirectory,
++            privateDirectory && Setting("CatalogPath") == Path.Combine(directory!, "catalog.json") && Present("catalog.json"),
++            FilePresent(Setting("ComponentPath")), FilePresent(Setting("AccessControlPath")),
++            privateDirectory && Present(resource + ".observation.json"),
++            Count(".observation.json"), Count(".ready.json"), Count(".committed.json"),
++            privateDirectory && Present("activation.json"), privateDirectory && Present("tenants.bootstrap.json"));
++    }
++
++    /// <summary>Reads current allocated-instance snapshots without evaluating model environment callbacks or retaining their values.</summary>
++    internal static async Task<IReadOnlyDictionary<string, BootstrapCatalogEnrollmentObservation>> ReadEnrollmentAsync(
++        IAsyncEnumerable<ResourceEvent> snapshots, string privateRoot, CancellationToken cancellationToken)
++    {
++        cancellationToken.ThrowIfCancellationRequested();
++        var observations = Resources.ToDictionary(name => name, name => ClassifyEnrollment(null, name, privateRoot), StringComparer.Ordinal);
++        int count = 0;
++        try
++        {
++            await foreach (ResourceEvent resource in snapshots.WithCancellation(cancellationToken))
++            {
++                if (++count > 512) break;
++                if (!observations.TryGetValue(resource.Resource.Name, out var previous)) continue;
++                var current = ClassifyEnrollment(resource.Snapshot, resource.Resource.Name, privateRoot);
++                if (!previous.EnvironmentObserved || current.EnvironmentObserved) observations[resource.Resource.Name] = current;
++                if (observations.Values.All(value => value.EnvironmentObserved)) break;
++            }
++        }
++        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
++        {
++            // A bounded partial snapshot is explicitly marked unobserved; it never proves absence.
++        }
++        return observations;
++    }
++
++    private static bool IsPrivateCatalogDirectory(string? path, string privateRoot)
++    {
++        if (string.IsNullOrEmpty(path) || !Path.IsPathFullyQualified(path) || !Path.IsPathFullyQualified(privateRoot)) return false;
++        string root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(privateRoot));
++        if (Path.GetFullPath(path) != path || Path.GetDirectoryName(path) != root
++            || !Path.GetFileName(path).StartsWith("hexalith-route-catalog-", StringComparison.Ordinal)) return false;
++        var directory = new DirectoryInfo(path);
++        var parent = new DirectoryInfo(root);
++        return directory.Exists && parent.Exists && directory.LinkTarget is null && parent.LinkTarget is null
++            && (directory.Attributes & FileAttributes.ReparsePoint) == 0 && (parent.Attributes & FileAttributes.ReparsePoint) == 0
++            && (OperatingSystem.IsWindows() || (File.GetUnixFileMode(path) & (UnixFileMode.GroupRead | UnixFileMode.GroupWrite
++                | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute)) == 0);
++    }
++
++    private static bool IsRegularCatalogFile(string? path, string directory)
++    {
++        if (string.IsNullOrEmpty(path) || !Path.IsPathFullyQualified(path) || Path.GetFullPath(path) != path
++            || Path.GetDirectoryName(path) != directory) return false;
++        var file = new FileInfo(path);
++        return file.Exists && file.LinkTarget is null && (file.Attributes & (FileAttributes.ReparsePoint | FileAttributes.Directory)) == 0;
++    }
++
+     internal static async Task CaptureAsync(AspireTopologyFixture fixture)
+     {
+         // The frozen legacy 3.128.4 fixture exposes no public application handle. Read its
+@@ -79,10 +158,14 @@ internal static class BootstrapResourceFailureDiagnostics
+             // resource overload; a project replica does not write to the logical-name stream.
+             IReadOnlyDictionary<string, Observation> resources = await ReadAsync(
+                 name => logger.GetAllAsync(model.Resources.Single(resource => resource.Name == name)), bound.Token);
++            using CancellationTokenSource snapshotBound = new(TimeSpan.FromSeconds(1));
++            ResourceNotificationService notifications = app.Services.GetRequiredService<ResourceNotificationService>();
++            var enrollment = await ReadEnrollmentAsync(notifications.WatchAsync(snapshotBound.Token), Path.GetTempPath(), snapshotBound.Token);
+             string json = JsonSerializer.Serialize(new
+             {
+                 kind = "owned-bootstrap-failure-categories", source = "Aspire.GetAllAsync(IResource)",
+                 fixtureVersion = typeof(AspireTopologyFixtureBase<>).Assembly.GetName().Version?.ToString(), resources,
++                enrollmentSource = "Aspire.ResourceNotificationService.WatchAsync", enrollment,
+             });
+             string directory = Path.Combine(temporary, "tenants-bootstrap-diagnostics");
+             Directory.CreateDirectory(directory);

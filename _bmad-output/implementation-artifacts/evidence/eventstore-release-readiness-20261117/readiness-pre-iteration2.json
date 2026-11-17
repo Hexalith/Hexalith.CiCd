@@ -1,0 +1,411 @@
+{
+  "recorded_utc": "2026-11-17T00:56:25.655528+00:00",
+  "status": "re-derived helper and synthetic package query API verified; original whole Contracts remains failed; publication blocked",
+  "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+  "source_tree": "43b99652e373f66d24cceaf9a7a42237d3d3092e",
+  "builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+  "dependencies": {
+    "Hexalith.EventStore": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "Hexalith.Builds": "16cf0db6f843eb4defdc87105804d42eded634d6",
+    "Hexalith.AI.Tools": "cfd1ebea92587cdea41b9aa2cff47358bf2f32f6",
+    "Hexalith.Tenants": "0e0e85fd646da904c5528854e271b71a2b0b9066"
+  },
+  "verified_query_contract_api_in_frozen_source": true,
+  "product_source_correction": null,
+  "baseline_whole_suite_green": false,
+  "whole_test_projects": {
+    "generators": {
+      "native_exit": 0,
+      "counters": {
+        "total": "203",
+        "executed": "203",
+        "passed": "203",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassing": []
+    },
+    "contracts": {
+      "native_exit": 2,
+      "counters": {
+        "total": "1809",
+        "executed": "1807",
+        "passed": "1805",
+        "failed": "2",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "2",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      },
+      "nonpassing": [
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions",
+          "outcome": "Failed",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "34657cc5-1eb2-42f2-9195-dbbe9d78c51e",
+          "executionId": "34657cc5-1eb2-42f2-9195-dbbe9d78c51e",
+          "computerName": "unknown",
+          "duration": "00:00:00.3910000",
+          "startTime": "2026-11-16T23:57:49.0833327+00:00",
+          "endTime": "2026-11-16T23:57:49.5042307+00:00",
+          "detail": "Shouldly.ShouldAssertException : sharedGitInstructions\n    should contain (case insensitive comparison)\n\\\"validate it with commitlint\\\"\n    but was actually\n\\\"# Hexalith Git Instructions\n\nThese rules apply before creating Git commits in a Hexalith repositor...\\\"   at Hexalith.EventStore.Contracts.Tests.Packaging.CommitMessagePolicyTests.CopilotInstructionsDelegateCommitlintContractToSharedInstructions() in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/CommitMessagePolicyTests.cs:line 80\n   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)\n   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)"
+        },
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.PackagedReminderApiTests.PackagedReminderApiRunsWithoutWorksTypes",
+          "outcome": "NotExecuted",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "e0a4e463-32f2-4700-9a49-cd1e27700a72",
+          "executionId": "e0a4e463-32f2-4700-9a49-cd1e27700a72",
+          "computerName": "unknown",
+          "duration": "00:00:00.0000000",
+          "startTime": "2026-11-16T23:57:49.5411846+00:00",
+          "endTime": "2026-11-16T23:57:49.5848020+00:00",
+          "detail": "EVENTSTORE_PACKAGE_CONTRACT_DIR is not set; no release package inventory was supplied."
+        },
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.TrustedEffectPackageContractTests.NamedPackagesExposeTrustedEffectContracts",
+          "outcome": "NotExecuted",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "8d1c5c4a-784a-49f2-a694-a7dcea931d03",
+          "executionId": "8d1c5c4a-784a-49f2-a694-a7dcea931d03",
+          "computerName": "unknown",
+          "duration": "00:00:00.0000000",
+          "startTime": "2026-11-16T23:57:49.7457116+00:00",
+          "endTime": "2026-11-16T23:57:49.7468123+00:00",
+          "detail": "EVENTSTORE_PACKAGE_CONTRACT_DIR is not set; no release package inventory was supplied."
+        },
+        {
+          "testName": "Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.SharedConsumerAuthorityValidatorPassesForEveryTrackedMsBuildSurfaceAsync",
+          "outcome": "Failed",
+          "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+          "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+          "testId": "cde1b7a6-226e-4b73-83c1-94f73354670e",
+          "executionId": "cde1b7a6-226e-4b73-83c1-94f73354670e",
+          "computerName": "unknown",
+          "duration": "00:08:01.0790000",
+          "startTime": "2026-11-16T23:58:59.5914592+00:00",
+          "endTime": "2026-11-17T00:07:00.6453860+00:00",
+          "detail": "System.TimeoutException : Consumer package authority validation timed out after 00:08:00.\n---- System.Threading.Tasks.TaskCanceledException : A task was canceled.   at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.RunConsumerAuthorityValidatorAsync(String repositoryRoot, String root, String catalogPath, Boolean useApprovedException) in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:line 291\n   at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.SharedConsumerAuthorityValidatorPassesForEveryTrackedMsBuildSurfaceAsync() in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:line 147\n--- End of stack trace from previous location ---\n----- Inner Stack Trace -----\n   at System.Diagnostics.Process.WaitForExitAsync(CancellationToken cancellationToken)\n   at Hexalith.EventStore.Contracts.Tests.Packaging.ContractsPackageDependencyTests.RunConsumerAuthorityValidatorAsync(String repositoryRoot, String root, String catalogPath, Boolean useApprovedException) in /tmp/hexalith-job.EhJDKl6Z/eventstore-readiness-1pvxz76c/Hexalith.EventStore/tests/Hexalith.EventStore.Contracts.Tests/Packaging/ContractsPackageDependencyTests.cs:line 286"
+        }
+      ]
+    }
+  },
+  "ordinary_release_package_checks": {
+    "generators-properties": 0,
+    "generators-restore": 0,
+    "generators-build": 0,
+    "contracts-properties": 0,
+    "contracts-restore": 0,
+    "contracts-build": 0,
+    "gateway-properties": 0,
+    "gateway-restore": 0,
+    "gateway-build": 0,
+    "generators-test": 0,
+    "contracts-test": 2
+  },
+  "evaluated_policy_supplement": "attempt-01-policy-validation.json",
+  "existing_audit_warning_exceptions": [
+    "NU1901",
+    "NU1902"
+  ],
+  "explicit_original_package_skips": 2,
+  "projection_package_probe_returned_early_in_original_suite": true,
+  "original_local_package_setup_failure": {
+    "attempt": "attempt-02-local-packages",
+    "full_validator_native_exit": 1,
+    "cause": "Local-only 0.0.0 candidate label violated the real Tenants.Contracts -> EventStore.Contracts >=5.1.1 minimum (NU1605). Original failure retained."
+  },
+  "unpublished_local_packages": {
+    "attempt": "attempt-03-local-packages",
+    "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "version": "5.2.1-local-readiness.3b2350e7",
+    "published": false,
+    "archive_count": 14,
+    "archive_hashes": [
+      {
+        "name": "Hexalith.EventStore.Admin.Abstractions.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "53a2c654369104b0727544ea9d3dbdfa8300ef61bdd7dcb2bfaaf71c711f6e97"
+      },
+      {
+        "name": "Hexalith.EventStore.Admin.Cli.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "d4bf8ecef133d3b8b55b12862b44c186786d50872ee0e88c803743fba4b0b617"
+      },
+      {
+        "name": "Hexalith.EventStore.Admin.Server.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "06a4d8a262be39adf62b342a8f1f1dd1d4300edfd2d3a8d4e2f8a666c431cd63"
+      },
+      {
+        "name": "Hexalith.EventStore.Aspire.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "5bcacf980faf8d0147b82623cb5f6dadd898e71161eed714d5b89b817893e0fc"
+      },
+      {
+        "name": "Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ba981628cebadca109ea5ce34372b0fc7955170dbe216e382e3960eb1eb5b442"
+      },
+      {
+        "name": "Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "dd9a0af426cf252d7252be92912ea084534b59e1cc74f3aa7ca5cbb4ae0a9e4d"
+      },
+      {
+        "name": "Hexalith.EventStore.DomainService.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "52fd6441aaab0ecd4df02da263e03facf21f069cb37a81bd0f089ed02bc04228"
+      },
+      {
+        "name": "Hexalith.EventStore.Gateway.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "c0a215d83ea9fa6b15d0172e9e876384ea43252961bba010c96066f7b14a4274"
+      },
+      {
+        "name": "Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ebb0d5c8634f65713076d04d1bb52170199bccaeb49dabdae2aef3af7941aaa5"
+      },
+      {
+        "name": "Hexalith.EventStore.Server.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "e00ea0f2d93db487a3ba756274f2ffa397ac0c01a92d894e778d83295e845fc5"
+      },
+      {
+        "name": "Hexalith.EventStore.ServiceDefaults.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "ca95e86a86b4a31aea02f2ee0624320fc1d8dd58b096cfacf6df8b5b8b5fda5e"
+      },
+      {
+        "name": "Hexalith.EventStore.SignalR.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "524387e3358761d780b34f7f07a03de32e53e760437aeb41a1165ee957879af9"
+      },
+      {
+        "name": "Hexalith.EventStore.Testing.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "5fb605b5d888e7933cf8e18c53c6b1263404a3993f57abc7ef910176db650bfb"
+      },
+      {
+        "name": "Hexalith.EventStore.Testing.Integration.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "924fb5cd7d5f531bbc58480fae43be18a9e3c66715c9ca5357142af0c9652854"
+      }
+    ],
+    "checks": {
+      "pack-manifest-local-candidate": 0,
+      "all-package-consumer-probes": 0,
+      "reminder-package-consumer-probes": 0,
+      "reminder-three-consumer-summary": 0
+    },
+    "full_validator_library_consumers": 13,
+    "full_validator_tool_consumers": 1,
+    "reminder_subset_consumers": 3,
+    "passed": true
+  },
+  "package_authority_reproduction": {
+    "attempt": "attempt-04-authority",
+    "native_exit": 0,
+    "timeout_seconds": 480,
+    "timed_out": false,
+    "elapsed_seconds": 364.903,
+    "projects": 73,
+    "exclusions": [],
+    "process_tree_fully_waited": null,
+    "original_whole_suite_timeout_preserved": true,
+    "original_group_receipt_claimed_fully_waited": true,
+    "custody_limit": "Historical process-group receipt; session-escape custody was not established for this original attempt."
+  },
+  "later_observed_remote_main": {
+    "observed_utc": "2026-11-17T00:49:04.790948+00:00",
+    "value": "3b2350e7c1fff640131f8101596c78a59e31a03f\trefs/heads/main"
+  },
+  "complete_release_acceptance": false,
+  "publication_authorized_by_packet": false,
+  "actions_not_performed": [
+    "product source or owned policy edit",
+    "module push",
+    "release or tag",
+    "dispatch",
+    "adoption or setup registration",
+    "parent gitlink edit",
+    "credential change",
+    "Projects consumer retest or source/package fallback"
+  ],
+  "remaining_gates": [
+    "Exact-current-main green hosted push CI and commitlint; the original local Contracts suite remains failed.",
+    "Complete retained product, security, published compatibility, container and fourteen-package real-release acceptance.",
+    "Released shared infrastructure and EventStore ordered-adoption preparation/qualification, including browsers/live/private/Azure workloads.",
+    "EventStore setup registration, complete delivery/adoption state and standalone Builds checker; no approved pre-adoption push substitute exists.",
+    "Verified production publication permissions, account/OIDC/publication prerequisites and successful central nightly publication.",
+    "Actual published query-contract API availability before Projects consumer acceptance; frozen spec records published SDK 5.2.0 as missing it."
+  ],
+  "integrity_report": "revision-controls-04/result.json",
+  "integrity_passed": true,
+  "all_disposable_jobs_completed_and_cleaned": null,
+  "original_report_snapshot": "readiness-pre-revision.json",
+  "verified_query_contract_api_in_synthetic_package_consumer": true,
+  "query_api_package_probe": {
+    "attempt": "attempt-05-query-api-packages",
+    "passed": true,
+    "source": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+    "version": "5.2.1-local-readiness.3b2350e7",
+    "published": false,
+    "archives": [
+      {
+        "name": "Hexalith.EventStore.Contracts.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "6f6e62a4346a656367183843f2b8489a0852a9db134cd893900db5787ce09b25",
+        "id": "Hexalith.EventStore.Contracts",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false
+      },
+      {
+        "name": "Hexalith.EventStore.Client.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "61cae549f91a0ef4bb712c783eb83fb5ccee6f3cd52aca28f06c83456ad4673e",
+        "id": "Hexalith.EventStore.Client",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false
+      },
+      {
+        "name": "Hexalith.EventStore.RestApi.Generators.5.2.1-local-readiness.3b2350e7.nupkg",
+        "sha256": "778b921cd162421dd7a56d99fe76b2f2028e9f944f6c68d737a1376ffe5e9fac",
+        "id": "Hexalith.EventStore.RestApi.Generators",
+        "version": "5.2.1-local-readiness.3b2350e7",
+        "published": false
+      }
+    ],
+    "resolved_libraries": {
+      "Owner.Contracts": [
+        "ByteAether.Ulid/1.4.2",
+        "Hexalith.Commons.UniqueIds/3.0.0",
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7"
+      ],
+      "Probe.Consumer": [
+        "ByteAether.Ulid/1.4.2",
+        "Dapr.Client/1.19.1",
+        "Dapr.Common/1.19.1",
+        "Dapr.Protos/1.19.1",
+        "Google.Api.CommonProtos/2.17.0",
+        "Google.Protobuf/3.35.0",
+        "Grpc.Core.Api/2.80.0",
+        "Grpc.Net.Client/2.80.0",
+        "Grpc.Net.Common/2.80.0",
+        "Grpc.Reflection/2.80.0",
+        "Hexalith.Commons.UniqueIds/3.0.0",
+        "Hexalith.EventStore.Client/5.2.1-local-readiness.3b2350e7",
+        "Hexalith.EventStore.Contracts/5.2.1-local-readiness.3b2350e7",
+        "Hexalith.EventStore.RestApi.Generators/5.2.1-local-readiness.3b2350e7",
+        "Microsoft.AspNetCore.DataProtection.Abstractions/11.0.0",
+        "Microsoft.Extensions.Configuration.Binder/11.0.0",
+        "Microsoft.Extensions.Configuration/11.0.0",
+        "Microsoft.Extensions.DependencyInjection/11.0.0",
+        "Microsoft.Extensions.Diagnostics/11.0.0",
+        "Microsoft.Extensions.Http/11.0.0",
+        "Microsoft.Extensions.Logging/11.0.0",
+        "Microsoft.Extensions.Options.ConfigurationExtensions/11.0.0",
+        "Owner.Contracts/1.0.0"
+      ]
+    },
+    "generated_binding": {
+      "path": "TypedGatewayQueries.g.cs",
+      "sha256": "d7f5671f9e3a055c24e8b99feae3ea32938c5cad92cb5922436bc8c3e8e8d001"
+    },
+    "boundary": "synthetic attributed owner assembly plus consumer compiled with packaged analyzer",
+    "projects_consumer_retested": false,
+    "producer_source_changed": false,
+    "resolved_package_graphs": {
+      "path": "resolved-package-graphs.json",
+      "sha256": "6844d0e9909288bf7510172d91c63e7d8cbbe45e2d73fc3505f7e004b22451fd",
+      "project_count": 11
+    }
+  },
+  "public_api_inspection": {
+    "attempt": "public-api-recheck-02",
+    "helper": "inspect_public_api.py",
+    "tool": {
+      "id": "dotnet-inspect",
+      "version": "0.28.0",
+      "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+      "nupkg_sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+      "reported_version": "0.28.0+3dbe19e"
+    },
+    "packages": [
+      {
+        "version": "5.1.1",
+        "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.1.1/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "sha256": "38d1e13eea64437584f2718f3aceb1345e76e2ae16dd048f94a392d7dc63f357",
+        "source_commit": "f792bba6c0564d3c36dda6ad1c2fc55b0b0a6331",
+        "missing_type": {
+          "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+          "native_exit": 1,
+          "absent": true
+        },
+        "known_present_control": {
+          "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+          "native_exit": 0,
+          "present": true
+        }
+      },
+      {
+        "version": "5.2.0",
+        "url": "https://api.nuget.org/v3-flatcontainer/hexalith.eventstore.contracts/5.2.0/hexalith.eventstore.contracts.5.2.0.nupkg",
+        "sha256": "2b0ca2eebe215ec7dcc98163a61b575199b1f0354deac0da88a6ad7f1d84a324",
+        "source_commit": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+        "missing_type": {
+          "name": "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+          "native_exit": 1,
+          "absent": true
+        },
+        "known_present_control": {
+          "name": "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+          "native_exit": 0,
+          "present": true
+        }
+      }
+    ],
+    "passed": true,
+    "original_logs_unchanged": true
+  },
+  "rederived_helper_validation": {
+    "verifier": "audit_evidence.py",
+    "result": "revision-controls-04/result.json",
+    "checks": 450,
+    "python_optimization": 1,
+    "passed": true,
+    "scope": "retained-report replay and executable controls; no producer suites rerun",
+    "applies_to": "Recorded revision-controls-04 helper snapshot; not the later ancestry/adoption implementation."
+  },
+  "resolved_dependency_graph_provenance": {
+    "original_attempts": "unavailable: original disposable graphs were removed; no reconstruction claimed",
+    "new_query_probe": "compact actual library/content hashes and sanitized effective sources retained for 11 resolved projects"
+  },
+  "historical_custody_limit": "Original group-based receipts lack session-escape/cancellation coverage. Nonce-based attempt-05, public-api-recheck and revision-controls-01..04 receipts do not cover descendants clearing their environments. Each original receipt and valid package/API result is preserved; no retroactive full-tree custody claim.",
+  "original_disposable_scratch_removed": true,
+  "new_revision_jobs_fully_waited_and_scratch_removed": null,
+  "nonce_based_query_and_inspection_scratch_removed": true,
+  "nonce_based_query_and_inspection_complete_descendant_custody_established": false,
+  "review_fix_validation": {
+    "result": "review-fix-controls-01/result.json",
+    "verifier": "verify_review_fixes.py",
+    "checks": 18,
+    "python_optimization": 1,
+    "passed": true,
+    "source_sha256": {
+      "verification_core.py": "786b991d893a7bffd554c6b0deb37b6919ea9d5fd174dc822709f79376426592",
+      "query_package_probe.py": "ffbfe80bec5525c18ed07afa0b1e7603b438807fbcdf154e2155fbb783ace33e",
+      "verify_review_fixes.py": "68c2dd93ec1ac114d8f9eec2ba9f57bb54b4bb791e0aba389396c4405cd060f4"
+    },
+    "scope": "owned-job lifecycle and C# source layout only; no producer/package runs",
+    "scratch_removed": true,
+    "cleared_environment_double_fork_and_startup_cancellation_covered": true
+  }
+}

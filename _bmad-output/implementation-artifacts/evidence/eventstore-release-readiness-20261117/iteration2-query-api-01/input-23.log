@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Multi-tenant client SDK for the Hexalith event store — domain processor registration, assembly scanning, and fluent configuration for .NET event sourcing with DAPR</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Hexalith.EventStore.Client.Tests" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.CatalogConstruction" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.DomainService" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Server" />
+    <InternalsVisibleTo Include="Hexalith.Conversations.Server" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Server.Tests" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Server.LiveSidecar.Tests" />
+    <InternalsVisibleTo Include="Hexalith.EventStore.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hexalith.EventStore.Contracts\Hexalith.EventStore.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapr.Client" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+  </ItemGroup>
+
+</Project>

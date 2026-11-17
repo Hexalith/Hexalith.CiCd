@@ -1,0 +1,51 @@
+{
+  "recorded_at": "2026-11-16T23:52:58.497286+00:00",
+  "owner_source": "4db3776e444f0ec6e5f97d1ff089a0d83f990082",
+  "checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/tests/test_prepare_g6_catalog.py"
+      ],
+      "exit_code": 0,
+      "log": "test_prepare_g6_catalog.py.log",
+      "log_sha256": "01b3ed82a6f1e471af70cee8ff80ddca88c0f53d3bca2b6d8f65779c9ea285e0"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/tests/test_deliver_g6_catalog.py"
+      ],
+      "exit_code": 0,
+      "log": "test_deliver_g6_catalog.py.log",
+      "log_sha256": "8d74914e12117e7cca261f1ad6ce14b1d268871b3594f2a2879e24400d107198"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/tests/test_delivery_workflow.py"
+      ],
+      "exit_code": 0,
+      "log": "test_delivery_workflow.py.log",
+      "log_sha256": "c55e9bf9080ea461b664ecdb7b819dcefe446cd4cf490a189147c955740a4add"
+    }
+  ],
+  "scope": "local behavioral qualification only",
+  "fixture_release": "9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4",
+  "status": "passed"
+}

@@ -1,0 +1,102 @@
+{
+  "attempt": "identity-01",
+  "phase": "metadata",
+  "source": "/home/administrator/projects/hexalith/tenants-story-23-product",
+  "startedAt": 1794874854.2042878,
+  "commands": [
+    {
+      "arguments": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.Tenants.AppHost/Hexalith.Tenants.AppHost.csproj",
+        "-nologo",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:HexalithFrontComposerFromSource=false",
+        "-p:HexalithMemoriesFromSource=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.4ybvYryN/Hexalith.Tenants/references/Hexalith.Builds/NuGet.ci.Config",
+        "-getProperty:HexalithFrontComposerFromSource,HexalithMemoriesFromSource,HexalithEventStoreFromSource,HexalithEventStoreVersion,DefineConstants",
+        "-getItem:ProjectReference,PackageReference"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.1960950779903214
+    },
+    {
+      "arguments": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.Tenants.UI/Hexalith.Tenants.UI.csproj",
+        "-nologo",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:HexalithFrontComposerFromSource=false",
+        "-p:HexalithMemoriesFromSource=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.4ybvYryN/Hexalith.Tenants/references/Hexalith.Builds/NuGet.ci.Config",
+        "-getProperty:HexalithFrontComposerFromSource,HexalithMemoriesFromSource,HexalithEventStoreFromSource,HexalithEventStoreVersion,DefineConstants",
+        "-getItem:ProjectReference,PackageReference"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.2728486410051119
+    },
+    {
+      "arguments": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.Tenants.UI.Tests/Hexalith.Tenants.UI.Tests.csproj",
+        "-nologo",
+        "-noAutoResponse",
+        "-p:Configuration=Release",
+        "-warnaserror",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:UseNuGetDeps=true",
+        "-p:HexalithFrontComposerFromSource=false",
+        "-p:HexalithMemoriesFromSource=false",
+        "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+        "-p:EnableNETAnalyzers=true",
+        "-p:RunAnalyzers=true",
+        "-p:RunAnalyzersDuringBuild=true",
+        "-p:UseSharedCompilation=false",
+        "-nr:false",
+        "-m:1",
+        "-p:RestoreConfigFile=/tmp/hexalith-job.4ybvYryN/Hexalith.Tenants/references/Hexalith.Builds/NuGet.ci.Config",
+        "-getProperty:HexalithFrontComposerFromSource,HexalithMemoriesFromSource,HexalithEventStoreFromSource,HexalithEventStoreVersion,DefineConstants",
+        "-getItem:ProjectReference,PackageReference"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.836813506000908
+    }
+  ],
+  "directPins": {
+    "Hexalith.Builds": "d258f3a1bb39f54d3ec0fd23942ac434237d5d71",
+    "Hexalith.EventStore": "70bf20dceaafd37229236e11d279a5d6ea434759",
+    "Hexalith.Platform": "ac272053bbc05bbdf2be236608c939787aec58c5",
+    "Hexalith.Memories": "262232e498511b51b5d01e769725ecc299519238"
+  },
+  "baseline": "c54c4489299220ffa3a1ae28caf957f01feadb12",
+  "candidateTree": "8eaac0721f78ba456613a534fdbb41e6bc3a3b37",
+  "materialization": "normalized Git index/tree, preserving explicit tracked eol attributes",
+  "candidateManifestSha256": "ab0f0297e6ade83335308b32fd161cfe32397459ab24304a5fadc474c82c8835",
+  "nestedSubmodulesInitialized": false,
+  "finishedAt": 1794874877.8352215,
+  "exitCode": 0
+}

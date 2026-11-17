@@ -1,0 +1,20 @@
+{
+  "commands": [
+    {
+      "name": "inspection-cancellation",
+      "command": [
+        "inspector",
+        "type",
+        "Control"
+      ],
+      "log": "inspection-cancellation.log",
+      "native_exit": -2,
+      "cancelled": true,
+      "process_tree_fully_waited": true,
+      "custodian_waited": true,
+      "remaining_owned_after_cleanup": [],
+      "lifecycle_exception": "JobInterrupted('Owned job interrupted after cleanup')",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "started_utc": "2026-11-17T00:51:46.197430+00:00",
+  "commands": [
+    {
+      "name": "install-pinned-inspector",
+      "command": [
+        "dotnet",
+        "tool",
+        "install",
+        "dotnet-inspect",
+        "--version",
+        "0.28.0",
+        "--tool-path",
+        "/tmp/hexalith-job.e9N0or2f/inspector",
+        "--configfile",
+        "/tmp/hexalith-job.e9N0or2f/NuGet.Config"
+      ],
+      "log": "install-pinned-inspector.log",
+      "log_sha256": "f0c22c5fb51e9ef0d4dbeb4d48a2d52cafd4518a5bcaf8df7ee1b72186df7d45",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 0,
+      "owned_pids": [
+        3517516,
+        3518049,
+        3518078,
+        3519207,
+        3519272
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "inspector-version",
+      "command": [
+        "/tmp/hexalith-job.e9N0or2f/inspector/dotnet-inspect",
+        "--version"
+      ],
+      "log": "inspector-version.log",
+      "log_sha256": "aba20f5e8622a5fcabf96a116a30b61ff594f70b555e34337654730e5e62632b",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 0,
+      "owned_pids": [
+        3520060
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "contracts-5.1.1-missing-query-result",
+      "command": [
+        "/tmp/hexalith-job.e9N0or2f/inspector/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.QueryResultContractAttribute",
+        "--package",
+        "/tmp/hexalith-job.e9N0or2f/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "--oneline"
+      ],
+      "log": "contracts-5.1.1-missing-query-result.log",
+      "log_sha256": "805c1f0ce4e7416b355e5a06a4276116e7828a3291d464173ef53399ce8f9c05",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 1,
+      "owned_pids": [
+        3520355
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    },
+    {
+      "name": "contracts-5.1.1-known-present-submit-query",
+      "command": [
+        "/tmp/hexalith-job.e9N0or2f/inspector/dotnet-inspect",
+        "type",
+        "Hexalith.EventStore.Contracts.Queries.SubmitQueryRequest",
+        "--package",
+        "/tmp/hexalith-job.e9N0or2f/hexalith.eventstore.contracts.5.1.1.nupkg",
+        "--oneline"
+      ],
+      "log": "contracts-5.1.1-known-present-submit-query.log",
+      "log_sha256": "805c1f0ce4e7416b355e5a06a4276116e7828a3291d464173ef53399ce8f9c05",
+      "timeout_seconds": null,
+      "timed_out": false,
+      "cancelled": false,
+      "custody": "subreaper, ancestry, inherited nonce and PID start ticks",
+      "native_exit": 1,
+      "owned_pids": [
+        3520448
+      ],
+      "remaining_owned_before_cleanup": [],
+      "remaining_owned_after_cleanup": [],
+      "process_tree_fully_waited": true
+    }
+  ],
+  "tool": {
+    "id": "dotnet-inspect",
+    "version": "0.28.0",
+    "url": "https://api.nuget.org/v3-flatcontainer/dotnet-inspect/0.28.0/dotnet-inspect.0.28.0.nupkg",
+    "nupkg_sha256": "5614b4e044974ca002b883274a5dc29d569fe16c0ef356f6ad41025b3e4ab650",
+    "reported_version": "0.28.0+3dbe19e"
+  },
+  "packages": [],
+  "quarantined_selector_names": [],
+  "scratch": "/tmp/hexalith-job.e9N0or2f",
+  "helper_sha256": "3901db44af3a64a892d8e6040f007a11b33f494ddc1e845eeacb5f792b5e70ed",
+  "original_inspection_logs_unchanged": true,
+  "complete_release_acceptance": false,
+  "passed": false,
+  "completed_utc": "2026-11-17T00:51:49.696769+00:00"
+}

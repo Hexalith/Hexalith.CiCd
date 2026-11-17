@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-11-17T01:35:01.194062+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "tokenOverridesPresent": false,
+  "release": {
+    "repository": "Hexalith/Hexalith.Builds",
+    "tag": "v6.0.6",
+    "commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+    "releaseId": 446824101,
+    "immutable": true,
+    "publishedAt": "2026-11-16T09:34:49Z",
+    "authenticatedReadSucceeded": true
+  },
+  "repositories": {
+    "Folders": {
+      "freshMain": "3ff01eeab6f6dfe7cff83e4ef3e1ff403c50c245",
+      "sharedHead": "e5760ca105652f4d89c4f240e0ca455723c9a473",
+      "committedAdoptionConfiguration": false,
+      "freshMainFetched": true
+    },
+    "Platform": {
+      "freshMain": "3f14b712ab24ca6008e718979e944eef26b695e3",
+      "sharedHead": "8ccb479e391564ce982309f106504cf8329c0a43",
+      "committedAdoptionConfiguration": false,
+      "freshMainFetched": true
+    }
+  },
+  "publicationAttempted": false,
+  "result": "incomplete; complete approved preparation checks remain required",
+  "requiredBeforePublication": [
+    "Platform exact-revision package builds/tests, compatibility/package qualification, policy/commit checks and owned preservation",
+    "Folders released policy/exact commit checks, owned preservation, complete package-mode Release build and every retained test/product hook",
+    "Dependency publication and authenticated consuming pointers before parent publication"
+  ],
+  "independentRequirements": [
+    "AppHost multiple-cohort lifecycle",
+    "held FR58 work",
+    "migration acceptance"
+  ],
+  "finalQualifierSha256": "8a43206c7b11a2256c72b724089f4723bef3d9f431e8b2aed724f414f022e5f3"
+}

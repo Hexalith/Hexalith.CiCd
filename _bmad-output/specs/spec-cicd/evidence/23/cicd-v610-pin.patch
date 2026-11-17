@@ -1,0 +1,265 @@
+diff --git a/builds-version b/builds-version
+index bac39b8..ed15bef 100644
+--- a/builds-version
++++ b/builds-version
+@@ -1 +1 @@
+-v6.0.6
++v6.1.0
+diff --git a/rendered/Hexalith.AI.Tools.perimeter.json b/rendered/Hexalith.AI.Tools.perimeter.json
+index e361c3d..4f57668 100644
+--- a/rendered/Hexalith.AI.Tools.perimeter.json
++++ b/rendered/Hexalith.AI.Tools.perimeter.json
+@@ -4,7 +4,7 @@
+     {"kind": "whole-dir", "path": ".github/workflows"},
+     {"kind": "whole", "path": ".github/hexalith-ci.json"},
+     {"kind": "whole", "path": ".github/dependabot.yml"},
+-    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": "v6.0.6"},
++    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": "v6.1.0"},
+     {"kind": "gitmodules-section", "path": ".gitmodules", "submodulePath": "references/Hexalith.Builds", "url": "https://github.com/Hexalith/Hexalith.Builds.git"},
+     {"kind": "json-superset", "path": ".claude/settings.json", "pointer": "/permissions/deny", "values": ["Edit(/.github/workflows/**)", "Edit(/.github/hexalith-ci.json)", "Edit(/.github/dependabot.yml)", "Edit(/references/Hexalith.Builds/**)"]},
+     {"kind": "marker-block", "path": "AGENTS.md", "text": "CI/CD is owned by Hexalith.CiCd.\n\nHexalith.CiCd owns `.github/workflows/**`, `.github/hexalith-ci.json`,\n`.github/dependabot.yml`, the `references/Hexalith.Builds` gitlink and its\n`.gitmodules` section, the delivered CI/CD instruction blocks in `AGENTS.md`,\n`CLAUDE.md` and `.github/copilot-instructions.md`, and the required\n`permissions.deny` entries in `.claude/settings.json`. Do not edit those owned\nfiles or portions from a module. Propose policy changes in Hexalith.CiCd.\nPreserve instructions, settings and submodule sections outside those portions.\n\nWhen CI fails, fix the product code, tests or dependencies. If the pipeline is\ndefective, report the failure and run link to Hexalith.CiCd without working\naround it. Before every push, run `python3 references/Hexalith.Builds/check.py`\nfrom the module root and require success. Do not disable or suppress dependency\naudits, skip or filter out test projects, weaken checks, or add CI skip markers\n(including `[skip ci]` variants) or `skip-checks` commit trailers. Do not write\ntests that assert workflow YAML text.\n\nKeep product gates: compilation, tests, security and dependency scans, commit\nformat and package publishing. Module-specific product checks belong in custom\nactions enabled through Hexalith.CiCd. Checks of CI itself, agent tooling, story\nevidence or workflow YAML do not belong in module CI. Releases follow the\ncentrally scheduled nightly process.\n\nStart each product branch from current `main`: fetch `origin main` immediately\nbefore creating the branch from `origin/main`. Do not reuse an older base that\npredates delivered CI/CD changes. Use the restricted module credential. Report\npermission refusals without switching credentials or broadening access.\nGitHub permits PR Update branch with the restricted module credential even\nwhen it imports changed workflows. Do not use it to import owned CI/CD changes.\nFetch current `main`, create a new product branch, and reapply only product\nchanges instead.\n\nLaunch Claude Code from the module root. The project-local `Edit` deny rules\nprotect the whole-owned workflow/config files and Builds subtree while keeping\nreads available. File rules cannot target JSON keys or instruction marker\nranges: these instructions and the shared guard protect the owned portions of\nsettings, instruction files and `.gitmodules`. Never install these denies in\nmachine-wide settings or work around them through another tool.\n"},
+diff --git a/rendered/Hexalith.AI.Tools/.github/hexalith-ci.json b/rendered/Hexalith.AI.Tools/.github/hexalith-ci.json
+index 0e9623b..f1d70fd 100644
+--- a/rendered/Hexalith.AI.Tools/.github/hexalith-ci.json
++++ b/rendered/Hexalith.AI.Tools/.github/hexalith-ci.json
+@@ -1,16 +1,25 @@
+ {
+   "browsers": false,
+-  "buildsTag": "v6.0.6",
++  "buildProjects": [],
++  "buildsTag": "v6.1.0",
++  "ciTimeoutMinutes": 30,
+   "codeql": [],
+   "dapr": false,
++  "dotnetTools": false,
+   "hooks": [],
+   "jobs": {},
++  "moduleManifest": null,
++  "npmWorkspaces": [],
++  "publishedBuilds": null,
+   "registry": false,
+   "schema": "hexalith.ci.v1",
+   "solution": "none",
+   "submodules": [],
+   "tests": {
+     "exclude": {},
+-    "integration": []
+-  }
++    "failSkips": false,
++    "integration": [],
++    "minimumExpectedTests": {}
++  },
++  "windowsCheckout": null
+ }
+diff --git a/rendered/Hexalith.AI.Tools/.github/workflows/ci.yml b/rendered/Hexalith.AI.Tools/.github/workflows/ci.yml
+index d6fa984..25d74fc 100644
+--- a/rendered/Hexalith.AI.Tools/.github/workflows/ci.yml
++++ b/rendered/Hexalith.AI.Tools/.github/workflows/ci.yml
+@@ -11,8 +11,10 @@ concurrency:
+   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+ jobs:
+   ci:
+-    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.0.6"
++    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.1.0"
+     permissions: {"actions": "write", "contents": "write"}
++    with:
++      job-timeout-minutes: 30
+     secrets:
+       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
+       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
+diff --git a/rendered/Hexalith.AI.Tools/.github/workflows/release.yml b/rendered/Hexalith.AI.Tools/.github/workflows/release.yml
+index f55e8b1..6d6f06d 100644
+--- a/rendered/Hexalith.AI.Tools/.github/workflows/release.yml
++++ b/rendered/Hexalith.AI.Tools/.github/workflows/release.yml
+@@ -14,7 +14,7 @@ concurrency:
+   cancel-in-progress: false
+ jobs:
+   release:
+-    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.0.6"
++    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.1.0"
+     permissions:
+       contents: write
+       actions: read
+@@ -34,7 +34,7 @@ jobs:
+       actions: read
+       id-token: write
+     steps:
+-      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.0.6"
++      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.1.0"
+         with:
+           publish: ${{ needs.release.outputs.publish }}
+           version: ${{ needs.release.outputs.version }}
+diff --git a/rendered/Hexalith.Commons.perimeter.json b/rendered/Hexalith.Commons.perimeter.json
+index e361c3d..4f57668 100644
+--- a/rendered/Hexalith.Commons.perimeter.json
++++ b/rendered/Hexalith.Commons.perimeter.json
+@@ -4,7 +4,7 @@
+     {"kind": "whole-dir", "path": ".github/workflows"},
+     {"kind": "whole", "path": ".github/hexalith-ci.json"},
+     {"kind": "whole", "path": ".github/dependabot.yml"},
+-    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": "v6.0.6"},
++    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": "v6.1.0"},
+     {"kind": "gitmodules-section", "path": ".gitmodules", "submodulePath": "references/Hexalith.Builds", "url": "https://github.com/Hexalith/Hexalith.Builds.git"},
+     {"kind": "json-superset", "path": ".claude/settings.json", "pointer": "/permissions/deny", "values": ["Edit(/.github/workflows/**)", "Edit(/.github/hexalith-ci.json)", "Edit(/.github/dependabot.yml)", "Edit(/references/Hexalith.Builds/**)"]},
+     {"kind": "marker-block", "path": "AGENTS.md", "text": "CI/CD is owned by Hexalith.CiCd.\n\nHexalith.CiCd owns `.github/workflows/**`, `.github/hexalith-ci.json`,\n`.github/dependabot.yml`, the `references/Hexalith.Builds` gitlink and its\n`.gitmodules` section, the delivered CI/CD instruction blocks in `AGENTS.md`,\n`CLAUDE.md` and `.github/copilot-instructions.md`, and the required\n`permissions.deny` entries in `.claude/settings.json`. Do not edit those owned\nfiles or portions from a module. Propose policy changes in Hexalith.CiCd.\nPreserve instructions, settings and submodule sections outside those portions.\n\nWhen CI fails, fix the product code, tests or dependencies. If the pipeline is\ndefective, report the failure and run link to Hexalith.CiCd without working\naround it. Before every push, run `python3 references/Hexalith.Builds/check.py`\nfrom the module root and require success. Do not disable or suppress dependency\naudits, skip or filter out test projects, weaken checks, or add CI skip markers\n(including `[skip ci]` variants) or `skip-checks` commit trailers. Do not write\ntests that assert workflow YAML text.\n\nKeep product gates: compilation, tests, security and dependency scans, commit\nformat and package publishing. Module-specific product checks belong in custom\nactions enabled through Hexalith.CiCd. Checks of CI itself, agent tooling, story\nevidence or workflow YAML do not belong in module CI. Releases follow the\ncentrally scheduled nightly process.\n\nStart each product branch from current `main`: fetch `origin main` immediately\nbefore creating the branch from `origin/main`. Do not reuse an older base that\npredates delivered CI/CD changes. Use the restricted module credential. Report\npermission refusals without switching credentials or broadening access.\nGitHub permits PR Update branch with the restricted module credential even\nwhen it imports changed workflows. Do not use it to import owned CI/CD changes.\nFetch current `main`, create a new product branch, and reapply only product\nchanges instead.\n\nLaunch Claude Code from the module root. The project-local `Edit` deny rules\nprotect the whole-owned workflow/config files and Builds subtree while keeping\nreads available. File rules cannot target JSON keys or instruction marker\nranges: these instructions and the shared guard protect the owned portions of\nsettings, instruction files and `.gitmodules`. Never install these denies in\nmachine-wide settings or work around them through another tool.\n"},
+diff --git a/rendered/Hexalith.Commons/.github/hexalith-ci.json b/rendered/Hexalith.Commons/.github/hexalith-ci.json
+index 3fb8062..ea99372 100644
+--- a/rendered/Hexalith.Commons/.github/hexalith-ci.json
++++ b/rendered/Hexalith.Commons/.github/hexalith-ci.json
+@@ -1,20 +1,29 @@
+ {
+   "browsers": false,
+-  "buildsTag": "v6.0.6",
++  "buildProjects": [],
++  "buildsTag": "v6.1.0",
++  "ciTimeoutMinutes": 30,
+   "codeql": [
+     "csharp"
+   ],
+   "dapr": false,
++  "dotnetTools": false,
+   "hooks": [
+     "after-unit-tests"
+   ],
+   "jobs": {},
++  "moduleManifest": null,
++  "npmWorkspaces": [],
++  "publishedBuilds": null,
+   "registry": false,
+   "schema": "hexalith.ci.v1",
+   "solution": "Hexalith.Commons.slnx",
+   "submodules": [],
+   "tests": {
+     "exclude": {},
+-    "integration": []
+-  }
++    "failSkips": false,
++    "integration": [],
++    "minimumExpectedTests": {}
++  },
++  "windowsCheckout": null
+ }
+diff --git a/rendered/Hexalith.Commons/.github/workflows/ci.yml b/rendered/Hexalith.Commons/.github/workflows/ci.yml
+index d6fa984..25d74fc 100644
+--- a/rendered/Hexalith.Commons/.github/workflows/ci.yml
++++ b/rendered/Hexalith.Commons/.github/workflows/ci.yml
+@@ -11,8 +11,10 @@ concurrency:
+   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+ jobs:
+   ci:
+-    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.0.6"
++    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.1.0"
+     permissions: {"actions": "write", "contents": "write"}
++    with:
++      job-timeout-minutes: 30
+     secrets:
+       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
+       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
+diff --git a/rendered/Hexalith.Commons/.github/workflows/release.yml b/rendered/Hexalith.Commons/.github/workflows/release.yml
+index f55e8b1..6d6f06d 100644
+--- a/rendered/Hexalith.Commons/.github/workflows/release.yml
++++ b/rendered/Hexalith.Commons/.github/workflows/release.yml
+@@ -14,7 +14,7 @@ concurrency:
+   cancel-in-progress: false
+ jobs:
+   release:
+-    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.0.6"
++    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.1.0"
+     permissions:
+       contents: write
+       actions: read
+@@ -34,7 +34,7 @@ jobs:
+       actions: read
+       id-token: write
+     steps:
+-      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.0.6"
++      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.1.0"
+         with:
+           publish: ${{ needs.release.outputs.publish }}
+           version: ${{ needs.release.outputs.version }}
+diff --git a/rendered/Hexalith.PolymorphicSerializations.perimeter.json b/rendered/Hexalith.PolymorphicSerializations.perimeter.json
+index e361c3d..4f57668 100644
+--- a/rendered/Hexalith.PolymorphicSerializations.perimeter.json
++++ b/rendered/Hexalith.PolymorphicSerializations.perimeter.json
+@@ -4,7 +4,7 @@
+     {"kind": "whole-dir", "path": ".github/workflows"},
+     {"kind": "whole", "path": ".github/hexalith-ci.json"},
+     {"kind": "whole", "path": ".github/dependabot.yml"},
+-    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": "v6.0.6"},
++    {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": "v6.1.0"},
+     {"kind": "gitmodules-section", "path": ".gitmodules", "submodulePath": "references/Hexalith.Builds", "url": "https://github.com/Hexalith/Hexalith.Builds.git"},
+     {"kind": "json-superset", "path": ".claude/settings.json", "pointer": "/permissions/deny", "values": ["Edit(/.github/workflows/**)", "Edit(/.github/hexalith-ci.json)", "Edit(/.github/dependabot.yml)", "Edit(/references/Hexalith.Builds/**)"]},
+     {"kind": "marker-block", "path": "AGENTS.md", "text": "CI/CD is owned by Hexalith.CiCd.\n\nHexalith.CiCd owns `.github/workflows/**`, `.github/hexalith-ci.json`,\n`.github/dependabot.yml`, the `references/Hexalith.Builds` gitlink and its\n`.gitmodules` section, the delivered CI/CD instruction blocks in `AGENTS.md`,\n`CLAUDE.md` and `.github/copilot-instructions.md`, and the required\n`permissions.deny` entries in `.claude/settings.json`. Do not edit those owned\nfiles or portions from a module. Propose policy changes in Hexalith.CiCd.\nPreserve instructions, settings and submodule sections outside those portions.\n\nWhen CI fails, fix the product code, tests or dependencies. If the pipeline is\ndefective, report the failure and run link to Hexalith.CiCd without working\naround it. Before every push, run `python3 references/Hexalith.Builds/check.py`\nfrom the module root and require success. Do not disable or suppress dependency\naudits, skip or filter out test projects, weaken checks, or add CI skip markers\n(including `[skip ci]` variants) or `skip-checks` commit trailers. Do not write\ntests that assert workflow YAML text.\n\nKeep product gates: compilation, tests, security and dependency scans, commit\nformat and package publishing. Module-specific product checks belong in custom\nactions enabled through Hexalith.CiCd. Checks of CI itself, agent tooling, story\nevidence or workflow YAML do not belong in module CI. Releases follow the\ncentrally scheduled nightly process.\n\nStart each product branch from current `main`: fetch `origin main` immediately\nbefore creating the branch from `origin/main`. Do not reuse an older base that\npredates delivered CI/CD changes. Use the restricted module credential. Report\npermission refusals without switching credentials or broadening access.\nGitHub permits PR Update branch with the restricted module credential even\nwhen it imports changed workflows. Do not use it to import owned CI/CD changes.\nFetch current `main`, create a new product branch, and reapply only product\nchanges instead.\n\nLaunch Claude Code from the module root. The project-local `Edit` deny rules\nprotect the whole-owned workflow/config files and Builds subtree while keeping\nreads available. File rules cannot target JSON keys or instruction marker\nranges: these instructions and the shared guard protect the owned portions of\nsettings, instruction files and `.gitmodules`. Never install these denies in\nmachine-wide settings or work around them through another tool.\n"},
+diff --git a/rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json b/rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json
+index 4872e82..311f4b4 100644
+--- a/rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json
++++ b/rendered/Hexalith.PolymorphicSerializations/.github/hexalith-ci.json
+@@ -1,18 +1,27 @@
+ {
+   "browsers": false,
+-  "buildsTag": "v6.0.6",
++  "buildProjects": [],
++  "buildsTag": "v6.1.0",
++  "ciTimeoutMinutes": 30,
+   "codeql": [
+     "csharp"
+   ],
+   "dapr": false,
++  "dotnetTools": false,
+   "hooks": [],
+   "jobs": {},
++  "moduleManifest": null,
++  "npmWorkspaces": [],
++  "publishedBuilds": null,
+   "registry": false,
+   "schema": "hexalith.ci.v1",
+   "solution": "Hexalith.PolymorphicSerializations.slnx",
+   "submodules": [],
+   "tests": {
+     "exclude": {},
+-    "integration": []
+-  }
++    "failSkips": false,
++    "integration": [],
++    "minimumExpectedTests": {}
++  },
++  "windowsCheckout": null
+ }
+diff --git a/rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml b/rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml
+index d6fa984..25d74fc 100644
+--- a/rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml
++++ b/rendered/Hexalith.PolymorphicSerializations/.github/workflows/ci.yml
+@@ -11,8 +11,10 @@ concurrency:
+   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+ jobs:
+   ci:
+-    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.0.6"
++    uses: "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.1.0"
+     permissions: {"actions": "write", "contents": "write"}
++    with:
++      job-timeout-minutes: 30
+     secrets:
+       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
+       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
+diff --git a/rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml b/rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml
+index f55e8b1..6d6f06d 100644
+--- a/rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml
++++ b/rendered/Hexalith.PolymorphicSerializations/.github/workflows/release.yml
+@@ -14,7 +14,7 @@ concurrency:
+   cancel-in-progress: false
+ jobs:
+   release:
+-    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.0.6"
++    uses: "Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.1.0"
+     permissions:
+       contents: write
+       actions: read
+@@ -34,7 +34,7 @@ jobs:
+       actions: read
+       id-token: write
+     steps:
+-      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.0.6"
++      - uses: "Hexalith/Hexalith.Builds/Github/publish@v6.1.0"
+         with:
+           publish: ${{ needs.release.outputs.publish }}
+           version: ${{ needs.release.outputs.version }}
