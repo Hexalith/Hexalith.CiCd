@@ -98,19 +98,19 @@ Conversations' released-input qualification remains mandatory.
 - [x] Builds `schemas/`, `Github/lib/module_preparation.py`, producer/CLI,
   orchestration and `Github/prepare/` — implement companion contracts and tests
   for managed/candidate authority, one preparation lifetime and protected checkout.
-- [ ] Architecture spine, `setup/README.md`, `templates/.github/workflows/ci.yml.j2`
+- [x] Architecture spine, `setup/README.md`, `templates/.github/workflows/ci.yml.j2`
   — document/export validated inputs and active catalog authority. Qualify defaults,
   CI/local/Windows/release parity; publish an acceptable Builds/CLI release.
-- [ ] Module `.config/dotnet-tools.json`, Platform gitlink, inventory-listed tests,
+- [x] Module `.config/dotnet-tools.json`, Platform gitlink, inventory-listed tests,
   root npm files and `.githooks/commit-msg` — update released prerequisites,
   extract product assertions and retire forbidden tooling.
   Remove active waivers; externally clear fixture demotions while preserving its
   historical source. Justified waivers belong only in released Builds `Props/`.
-- [ ] Module `.github/actions/{after-unit-tests,testsupport-windows}/action.yml`,
+- [x] Module `.github/actions/{after-unit-tests,testsupport-windows}/action.yml`,
   `tests/compatibility/MinimalModule/`, package scripts and root `.slnx` — wire
   fixture adapter/seven tests, five-package payload/symbol/consumer checks and
   built Windows tests. Qualify package locks and protected product-preparation pushes.
-- [ ] `builds-version`, `setup/Hexalith.Conversations.yml`, `rendered/` and
+- [x] `builds-version`, `setup/Hexalith.Conversations.yml`, `rendered/` and
   Conversations gitlink — commit released prerequisites and registration/render
   together. Enable browsers, Dapr, Admin.Web.Tests in stage 4, the fixture hook,
   Windows job, C# analysis and the direct Platform identity dependency.
@@ -272,6 +272,17 @@ Conversations' released-input qualification remains mandatory.
   authenticated readback as `jpiquot` verifies policies 18928/27245 and cleanup
   readiness. See the [compact follow-up receipt](../specs/spec-cicd/evidence/16/resume-20261116/released-input-followup.json).
 
+- 2026-11-18 follow-up: hosted adopted CI failed at managed preparation because
+  later submodule updates moved Platform from released `v2.1.10`
+  `215ae18c972e6ea8ccb27032dfc11a57b098f047` to untagged
+  `4f88df0ec98885425db5ddb20a3a3bb34a93d046`. Product
+  `94f3d77e37c238f1eb148885951c6829c3d238d2` restores the released identity
+  without owned-file edits. Standalone `python3 references/Hexalith.Builds/check.py`
+  passed stages 1–3 on that commit. Immutable releases read back enabled.
+  Hosted Linux/Windows CI, legacy NuGet 18928 retirement, npm cleanup and the
+  next scheduled night remain. See
+  [adopted-platform-pin-20261118.json](../specs/spec-cicd/evidence/16/adopted-platform-pin-20261118.json).
+
 ## Spec Change Log
 
 - 2026-11-16 follow-up: the user requested "fix" after the publication report.
@@ -280,6 +291,10 @@ Conversations' released-input qualification remains mandatory.
   changes to main and merge remains in force as qualification gates permit.
   No owned-module edit, fabricated receipt, skipped test or audit weakening is
   authorized. Continue from the existing isolated worktree and full baseline.
+- 2026-11-18 follow-up: restore the released Platform pin after adopted CI
+  refused untagged Platform main during managed preparation. Immutable releases
+  are enabled. Hosted CI, legacy NuGet retirement and scheduled-night acceptance
+  remain required.
 
 
 ## Review Triage Log

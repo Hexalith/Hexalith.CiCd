@@ -1,0 +1,46 @@
+{
+  "kind": "story16 adopted Platform pin restoration",
+  "status": "in-progress",
+  "product": {
+    "base": "ab710143e5e9f61c8e49a4a2cca14d311ab90b57",
+    "head": "94f3d77e37c238f1eb148885951c6829c3d238d2",
+    "changed": ["references/Hexalith.Platform"],
+    "platform": {
+      "from": "4f88df0ec98885425db5ddb20a3a3bb34a93d046",
+      "to": "215ae18c972e6ea8ccb27032dfc11a57b098f047",
+      "tag": "v2.1.10"
+    },
+    "ownedFilesUnchanged": true,
+    "pushed": true,
+    "hostedCiRun": 44203538374
+  },
+  "hostedFailureBeforeFix": {
+    "run": 44145906865,
+    "job": "ci / Build and tests",
+    "step": "Validate and prepare module",
+    "message": "Platform identity has no local release tag; fetch its identity tags before checking"
+  },
+  "normalChecker": {
+    "result": "passed",
+    "command": "python3 references/Hexalith.Builds/check.py",
+    "seconds": 223.142,
+    "stages": [1, 2, 3],
+    "builds": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "platform": "215ae18c972e6ea8ccb27032dfc11a57b098f047",
+    "configSha256": "cdf4d6f5f9913ed97e516ffc64559b42174a8433d282f396a47a51375b52e281",
+    "dockerInit": true,
+    "hostDaprPreserved": true
+  },
+  "immutableReleases": {
+    "enabled": true,
+    "readback": true,
+    "principal": "jpiquot",
+    "repositoryId": 1231551514
+  },
+  "pending": [
+    "Hosted Linux/Windows CI conclusion for 94f3d77e",
+    "Legacy NuGet policy 18928 retirement with policy 27245 preserved",
+    "Post-adoption npm file cleanup after selector absence",
+    "Next genuine scheduled nightly CodeQL/publication or nothing-to-release outcome"
+  ]
+}
