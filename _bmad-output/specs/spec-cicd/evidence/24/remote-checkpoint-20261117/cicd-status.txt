@@ -1,0 +1,139 @@
+ M .github/workflows/nightly.yml
+ M _bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md
+ M _bmad-output/specs/spec-cicd/gate-classification.md
+ M docs/nightly.md
+ m references/Hexalith.Builds
+ m references/Hexalith.FrontComposer
+ M setup/README.md
+ M templates/.github/workflows/release.yml.j2
+ M tools/nightly.py
+ M tools/nightly_publish.py
+ M tools/nightly_runtime.py
+ M tools/tests/delivery_support.py
+ M tools/tests/nightly_publish_cases.py
+ M tools/tests/nightly_support.py
+ M tools/tests/test_delivery_bootstrap.py
+ M tools/tests/test_nightly_workflow.py
+ M tools/tests/test_render.py
+ M tools/tests/test_validate.py
+ M tools/validate.py
+?? .github/workflows/nightly-target.yml
+?? _bmad-output/implementation-artifacts/prerequisite-24-frontcomposer-shared-compatibility.md
+?? _bmad-output/implementation-artifacts/spec-24-migrate-frontcomposer.md
+?? _bmad-output/implementation-artifacts/spec-24-shared-runtime-compatibility.md
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-account-verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-dedicated-window.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-prepare-1.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-readback-1.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-readback-2.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-readback-3.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-reload-1.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-frontcomposer-submit-1.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-policy-ui.py
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/nuget-policy-verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/provision-registry.json
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/provision-registry.py
+?? _bmad-output/specs/spec-cicd/evidence/24/adoption-prerequisites/verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/auth-checks.json
+?? _bmad-output/specs/spec-cicd/evidence/24/code-investigation.md
+?? _bmad-output/specs/spec-cicd/evidence/24/implementation.md
+?? _bmad-output/specs/spec-cicd/evidence/24/local-preparation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/local-preservation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/local-verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/pre-adoption-check.json
+?? _bmad-output/specs/spec-cicd/evidence/24/preflight.json
+?? _bmad-output/specs/spec-cicd/evidence/24/preflight.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/README.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/check-container-layout.sh
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/corrected-candidate.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/corrected-hygiene.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/corrected-preservation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-candidate.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-check-results.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-final-audit.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-hygiene.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-package.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-preservation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-source-manifest.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-superseded-checks.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-verify.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-worker-caller.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-2-worker-caller.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-carried-builds-coverage.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-carried-controller-coverage.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded-2.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded-3.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded-4.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results-superseded.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-check-results.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-expected-jobs.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-hygiene.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-hygiene.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-implementation-report.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-preservation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-sdk-input-inventory.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-source-manifest.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-superseded-controller-checks.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-verify.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-worker-caller.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-3-worker-caller.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-check-results.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-expected-jobs.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-frontcomposer-patch-preservation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-hygiene.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-hygiene.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-implementation-report.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-failed-check-results.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-failed-source-manifest.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-targets-corrected-probe.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-targets-probe.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-initial-targets-probe.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-package-initial-inventory-failed.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-package-inventory-diagnostic.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-package.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-bootstrap-fix-check-results.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-bootstrap-fix-source-manifest.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-evaluation-fix/iteration-4-check-results.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-pre-evaluation-fix/iteration-4-source-manifest.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-preservation.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-source-manifest.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-verify.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-worker-caller.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-4-worker-caller.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-hygiene.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-rewrite-preflight.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-stopped-handoff.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-test-additions.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-verify.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/iteration-5-worker-caller.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-corrected-audit.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-2-audit.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-2-verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-3-audit.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-3-verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-4-audit.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-4-matrix-plan.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-iteration-4-verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-matrix-audit.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review3-probes.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review4-probes.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-code-reset.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-code-reset.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-probes.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/parent-review5-probes.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-1.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-2.md
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-3-reset.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/review-iteration-4-reset.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/session-stop-2026-11-17-checkpoint.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/session-stop-2026-11-17-checkpoint.py
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/session-stop-2026-11-17-resume-state.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-corrected.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-iteration-2.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-iteration-3.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-iteration-4.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification-review-iteration-2.json
+?? _bmad-output/specs/spec-cicd/evidence/24/shared-runtime/verification.json
+?? _bmad-output/specs/spec-cicd/evidence/24/source-composition-inventory.json
+?? tools/tests/test_nightly_horizon.py
+?? tools/tests/test_nightly_horizon.py.lock
