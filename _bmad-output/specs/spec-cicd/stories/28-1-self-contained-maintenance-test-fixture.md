@@ -2,7 +2,7 @@
 title: 'Self-contained maintenance test fixture'
 type: 'bugfix'
 created: '2026-11-18'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 baseline_commit: '300cb754036739457693c980ddeb355cf679d0c4'
 review_loop_iteration: 0
@@ -53,7 +53,8 @@ Every run used `run-with-temp`, and its scratch was removed afterwards. Digests 
 - **Enclosing origin:** the depth-1 checkout also passed with its `origin` set to a foreign fork (19 tests OK), so the enclosing checkout's remote does not select the owner.
 - **AC3, mutations:** each mutation replaced one `raise` in a committed scratch copy of `tools/maintenance.py` with `pass`. Each made exactly its own tests fail. Origin: both foreign-origin tests. Tool digest: `test_changed_executing_tool_refuses_before_any_write`. Policy hash: `test_changed_policy_hash_refuses_before_any_write`.
 - **Hermetic checks:** the suite passed with `GIT_DIR` set to a stand-in repository (its refs and config were unchanged), with `GIT_INDEX_FILE` set to a scratch path (nothing was written there), and with a global `init.defaultObjectFormat=sha256`. Pointed at an uninitialized directory, setup failed with "not a git repository".
-- **AC4, hosted:** pending. It needs the first nightly bump after this commit is pushed; the next schedule is 2026-11-19 02:17 UTC. Record its run link here, then set `status: 'done'`.
+- **AC4, hosted:** passed. The first nightly bump after the push was the scheduled run [44282863616](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616), whose 02:17 UTC cron GitHub started at 10:10 UTC. Its [bump job](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616/job/134745954419) succeeded on live-main base `0b873999bc34f527a055a915328bde4b5d7d1428`. `test_maintenance.py` ran 19 tests OK, including both new refusal tests, and `global tool suites: passed`. The report `bump.json` gave `result: candidate`, candidate `ebb3b3963924876ae26756d0fb24d3acbe6bd546`, tag `v6.3.1` (job log `41db9a0d0e3b896a52a8a956308806b6936b4f63ab96521877f17e9ab5869fc9`).
+- **Outside this story:** `bump-push` then refused with "CiCd main advanced beyond captured candidate parent", because `4bb7a2e1` and `8e96dc76` landed on `main` during the bump. This is the push guard failing closed, so v6.3.1 is not pinned yet. The same run's `dispatch`, `publish-ready` and `scan` failures are release and scan outcomes owned by other stories.
 
 ## Review Triage Log
 
