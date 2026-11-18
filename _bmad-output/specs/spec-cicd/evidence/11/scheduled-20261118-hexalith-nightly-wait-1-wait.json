@@ -1,0 +1,162 @@
+{
+  "builds": {
+    "sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "tag": "v6.2.0"
+  },
+  "errors": [],
+  "identity": {
+    "attempt": 1,
+    "runId": 44282863616,
+    "source": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+  },
+  "phase": "wait",
+  "registry": [
+    "Hexalith.AI.Tools",
+    "Hexalith.Commons",
+    "Hexalith.Conversations",
+    "Hexalith.McpCli",
+    "Hexalith.PolymorphicSerializations"
+  ],
+  "result": "pending",
+  "schema": "hexalith.nightly.v1",
+  "targets": [
+    {
+      "conclusion": "failure",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatch": "dispatched",
+      "dispatchHead": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+      "eligibility": "eligible",
+      "link": "https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/44282937129",
+      "outcome": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+        "version": "1.0.0"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "",
+      "repository": "Hexalith.AI.Tools",
+      "runAttempt": 1,
+      "runId": 44282937129,
+      "status": "completed",
+      "verdict": "pending",
+      "workflow": ".github/workflows/release.yml"
+    },
+    {
+      "conclusion": "success",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatch": "failed",
+      "dispatchHead": "d551e5f3b67653b8793f86afedab355c8a3821da",
+      "eligibility": "eligible",
+      "link": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/44282943596",
+      "outcome": {
+        "outcome": "nothing",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "d551e5f3b67653b8793f86afedab355c8a3821da"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "dispatch failed (not retried): GitHub API GET /repos/Hexalith/Hexalith.Commons/actions/runs/44282943596 failed: HTTP 404; {\"authentication\":\"scoped\",\"attempts\":1,\"body_status\":\"message\",\"x-github-request-id\":\"E3CF:206B62:3986A6:B87797:6AFD79B7\",\"x-ratelimit-limit\":\"5000\",\"x-ratelimit-remaining\":\"4993\",\"x-ratelimit-reset\":\"1795000250\",\"x-accepted-github-permissions\":\"actions=read\",\"message\":\"Not Found\"}",
+      "repository": "Hexalith.Commons",
+      "runAttempt": 1,
+      "runId": 44282943596,
+      "status": "completed",
+      "verdict": "pending",
+      "workflow": ".github/workflows/release.yml"
+    },
+    {
+      "conclusion": "failure",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatch": "dispatched",
+      "dispatchHead": "b315506300a9411c4f26bd9c7b3fe2b7e5759a33",
+      "eligibility": "eligible",
+      "link": "https://github.com/Hexalith/Hexalith.Conversations/actions/runs/44282952062",
+      "outcome": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "b315506300a9411c4f26bd9c7b3fe2b7e5759a33"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "",
+      "repository": "Hexalith.Conversations",
+      "runAttempt": 1,
+      "runId": 44282952062,
+      "status": "completed",
+      "verdict": "pending",
+      "workflow": ".github/workflows/release.yml"
+    },
+    {
+      "conclusion": "failure",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatch": "dispatched",
+      "dispatchHead": "c4046ab713f45c8619669adfef793aba7138279a",
+      "eligibility": "eligible",
+      "link": "https://github.com/Hexalith/Hexalith.McpCli/actions/runs/44282959436",
+      "outcome": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "c4046ab713f45c8619669adfef793aba7138279a"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "",
+      "repository": "Hexalith.McpCli",
+      "runAttempt": 1,
+      "runId": 44282959436,
+      "status": "completed",
+      "verdict": "pending",
+      "workflow": ".github/workflows/release.yml"
+    },
+    {
+      "conclusion": "success",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatch": "dispatched",
+      "dispatchHead": "f1e2b45b161627bc2d204e128ffeda086eb413b8",
+      "eligibility": "eligible",
+      "link": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/44282965814",
+      "outcome": {
+        "outcome": "nothing",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "f1e2b45b161627bc2d204e128ffeda086eb413b8"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "",
+      "repository": "Hexalith.PolymorphicSerializations",
+      "runAttempt": 1,
+      "runId": 44282965814,
+      "status": "completed",
+      "verdict": "pending",
+      "workflow": ".github/workflows/release.yml"
+    },
+    {
+      "conclusion": "success",
+      "deliveredSha": "",
+      "dispatch": "dispatched",
+      "dispatchHead": "db7bb7179244ce33483231687486381305c7c3db",
+      "eligibility": "eligible",
+      "link": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/44282974072",
+      "outcome": {
+        "outcome": "published",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "db7bb7179244ce33483231687486381305c7c3db",
+        "version": "6.3.1"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "",
+      "repository": "Hexalith.Builds",
+      "runAttempt": 1,
+      "runId": 44282974072,
+      "status": "completed",
+      "verdict": "pending",
+      "workflow": ".github/workflows/builds-release.yml"
+    }
+  ],
+  "wait": {
+    "deadline": 1795014692.0317745,
+    "started": 1794996692.0317745
+  }
+}

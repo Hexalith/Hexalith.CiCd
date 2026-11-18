@@ -8,15 +8,74 @@
   "profile": "/home/administrator/.config/gh-cicd-agent",
   "login": "jpiquot",
   "manual_dispatch_or_rerun": false,
-  "observations": [],
+  "observations": [
+    {
+      "observed_at": "2026-11-18T10:11:19.329583+00:00",
+      "id": 44282863616,
+      "event": "schedule",
+      "path": ".github/workflows/nightly.yml",
+      "head_branch": "main",
+      "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "created_at": "2026-11-18T10:10:32Z",
+      "updated_at": "2026-11-18T10:10:39Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616"
+    },
+    {
+      "observed_at": "2026-11-18T11:02:40.611440+00:00",
+      "id": 44282863616,
+      "event": "schedule",
+      "path": ".github/workflows/nightly.yml",
+      "head_branch": "main",
+      "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "created_at": "2026-11-18T10:10:32Z",
+      "updated_at": "2026-11-18T11:02:39Z",
+      "status": "queued",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616"
+    },
+    {
+      "observed_at": "2026-11-18T11:03:41.008827+00:00",
+      "id": 44282863616,
+      "event": "schedule",
+      "path": ".github/workflows/nightly.yml",
+      "head_branch": "main",
+      "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "created_at": "2026-11-18T10:10:32Z",
+      "updated_at": "2026-11-18T11:03:32Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616"
+    },
+    {
+      "observed_at": "2026-11-18T11:04:41.458515+00:00",
+      "id": 44282863616,
+      "event": "schedule",
+      "path": ".github/workflows/nightly.yml",
+      "head_branch": "main",
+      "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "created_at": "2026-11-18T10:10:32Z",
+      "updated_at": "2026-11-18T11:04:09Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616"
+    }
+  ],
   "errors": [
     {
       "observed_at": "2026-11-18T04:39:05.700723+00:00",
       "error": "{\"status\": \"HTTP/2.0 502 Bad Gateway\", \"headers\": {\"x-github-request-id\": \"CB4E:202AEB:6ED57BB:A7C6CB1:6AFD2BDF\", \"x-ratelimit-limit\": \"5000\", \"x-ratelimit-remaining\": \"4873\", \"x-ratelimit-reset\": \"1794979550\"}, \"message\": \"Server Error\"}"
     }
   ],
-  "result": "waiting; not accepted",
+  "result": "terminal parent observed; semantic acceptance not yet verified",
   "sleeping_until": "2026-11-18T02:16:00Z",
-  "heartbeat_at": "2026-11-18T07:47:19.772381+00:00",
-  "awake_at": "2026-11-18T02:20:00.451435+00:00"
+  "heartbeat_at": "2026-11-18T11:03:41.009158+00:00",
+  "awake_at": "2026-11-18T02:20:00.451435+00:00",
+  "selected_run_id": 44282863616,
+  "observation_completed_at": "2026-11-18T11:04:41.458891+00:00"
 }

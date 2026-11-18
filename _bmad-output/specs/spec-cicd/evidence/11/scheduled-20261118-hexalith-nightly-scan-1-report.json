@@ -1,0 +1,395 @@
+{
+  "controllerRevision": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+  "detector": {
+    "name": "jscpd",
+    "policySha256": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+    "signatures": "verified",
+    "version": "5.4.3"
+  },
+  "errors": [],
+  "findings": [],
+  "modules": [
+    {
+      "errors": [],
+      "files": [],
+      "module": "Hexalith.AI.Tools",
+      "result": "pass",
+      "revision": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba"
+    },
+    {
+      "errors": [],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "44a3bf56e3253edeb2a995ee604e9f0917fc59f6e9ffca3c19b72c65e25220bd"
+        },
+        {
+          "format": "python",
+          "path": "scripts/pack-release-packages.py",
+          "sha256": "f1983c2390b7fe7e3bbfa39daf39fcf2d1eefb82de7a5eda4b3d325ad660108e"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-consumer-package-references.py",
+          "sha256": "5ae690e1f3195fffce5220a799507a96066287c57b55ef741ef2e321b40209c7"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-nuget-packages.py",
+          "sha256": "4efd5dbce2a1f71c59c01992904d8c7118600e2e0958092cdc4806ec9ed9adc8"
+        }
+      ],
+      "module": "Hexalith.Commons",
+      "result": "pass",
+      "revision": "d551e5f3b67653b8793f86afedab355c8a3821da"
+    },
+    {
+      "errors": [
+        ".github/actions/after-unit-tests/action.yml:11: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        ".github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        "scripts/validate-built-packages.py:16: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-built-packages.py:27: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:198: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/validate-consumer-package-references.py:56: local-script discovery: unresolved computed subprocess cwd",
+        "tests/compatibility/MinimalModule/run_compatibility.py:75: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "0c6c61554715957db5fefaf19e3946e68fe5bec1bc58e75e42caab311622a9bf"
+        },
+        {
+          "format": "yaml",
+          "path": ".github/actions/testsupport-windows/action.yml",
+          "sha256": "f404aee8d190d034c8433f6e69168f20f4ce62db60f6f5c56555c266d652eb64"
+        },
+        {
+          "format": "python",
+          "path": "scripts/pack-release-packages.py",
+          "sha256": "b34b9d5933ba5cc346d66c5a5e47b043c3dbf9e81ad4afc20c80a13b3c8af2e7"
+        },
+        {
+          "format": "python",
+          "path": "scripts/release_contract.py",
+          "sha256": "f873d957ddd35449bcbdba54b50659ec90d1a57deaef80e92680ad9cd4373ecf"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-built-packages.py",
+          "sha256": "963104596d0c1735a36aa95b592145a8ce0ba716ed77e454c9d62f96533349e8"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-consumer-package-references.py",
+          "sha256": "55a6585a2ede23cbb61e2c1986327fb66c8b6fb3b7dbf702121d7ccbfe847c36"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-nuget-packages.py",
+          "sha256": "77d628b8d7842f62b955530f8daa9aa4b73d1bf870f9eb6c46a5192b4febab03"
+        },
+        {
+          "format": "python",
+          "path": "tests/compatibility/MinimalModule/run_compatibility.py",
+          "sha256": "987cd47a0402cab9640af01919e045ca7dfbf525e18a1191d0f15f915eb68937"
+        },
+        {
+          "format": "python",
+          "path": "tests/compatibility/MinimalModule/verify_results.py",
+          "sha256": "dd7ee1b5cfeb7f185dba1a0abbef353eb8a3d4ad58bc8b1004dfdd01a64e0c1b"
+        }
+      ],
+      "module": "Hexalith.Conversations",
+      "result": "fail",
+      "revision": "b315506300a9411c4f26bd9c7b3fe2b7e5759a33"
+    },
+    {
+      "errors": [
+        ".github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported shell wrapper options",
+        "scripts/product_ci.py:161: local-script discovery: unsupported Python environment mutation affecting resolution",
+        "scripts/product_packages.py:17: local-script discovery: unsupported Python process/import API: importlib.util.spec_from_file_location",
+        "scripts/product_packages.py:24: local-script discovery: unresolved subprocess positional/options expansion",
+        "scripts/product_process.py:170: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/run-paired-platform-tests.py:50: local-script discovery: unresolved computed subprocess env",
+        "scripts/smoke-bootstrap-consumer.sh:15: local-script discovery: unsupported shell command substitution",
+        "scripts/smoke-bootstrap-consumer.sh:20: local-script discovery: missing or unsafe regular script/action: =",
+        "scripts/smoke-bootstrap-consumer.sh:21: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:22: local-script discovery: unsupported stdin-fed interpreter; coverage unsupported",
+        "scripts/smoke-bootstrap-consumer.sh:23: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:24: local-script discovery: unsupported shell command substitution",
+        "scripts/smoke-bootstrap-consumer.sh:27: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:28: local-script discovery: unsupported stdin-fed interpreter; coverage unsupported",
+        "scripts/smoke-bootstrap-consumer.sh:29: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:31: local-script discovery: unresolved computed operand of unknown command: cp",
+        "scripts/smoke-bootstrap-consumer.sh:32: local-script discovery: unresolved computed command: $consumer_python",
+        "scripts/smoke-bootstrap-consumer.sh:44: local-script discovery: unsupported shell command substitution",
+        "scripts/smoke-bootstrap-consumer.sh:46: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:48: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:49: local-script discovery: unsupported stdin-fed interpreter; coverage unsupported",
+        "scripts/smoke-bootstrap-consumer.sh:4: local-script discovery: unsupported shell command substitution",
+        "scripts/smoke-bootstrap-consumer.sh:50: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:80: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:81: local-script discovery: unresolved computed command: -p:RestoreSources=$package_source",
+        "scripts/smoke-bootstrap-consumer.sh:84: local-script discovery: unsupported shell compound/subshell execution",
+        "scripts/smoke-bootstrap-consumer.sh:85: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "scripts/smoke-bootstrap-consumer.sh:88: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "scripts/smoke-bootstrap-consumer.sh:90: local-script discovery: unresolved computed operand of unknown command: grep",
+        "scripts/smoke-bootstrap-consumer.sh:94: local-script discovery: unresolved computed operand of unknown command: grep",
+        "scripts/smoke-bootstrap-consumer.sh:98: local-script discovery: unresolved computed operand of unknown command: grep",
+        "scripts/smoke-bootstrap-consumer.sh:9: local-script discovery: unresolved computed command: $consumer_python",
+        "scripts/smoke-paired-tool.py:168: local-script discovery: unresolved computed subprocess cwd",
+        "scripts/smoke-paired-tool.py:96: local-script discovery: unresolved computed subprocess env",
+        "tools/conformance-vectors/v1/check_enrolled.py:177: local-script discovery: unresolved computed subprocess cwd",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:11: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:13: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:19: local-script discovery: unsupported heredoc-fed interpreter; coverage unsupported",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:32: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:34: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:38: local-script discovery: unsupported shell compound/subshell execution",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:39: local-script discovery: unsupported local-script language: tools/conformance-vectors/v1/sample-query.json",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:40: local-script discovery: unsupported shell compound/subshell execution",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:4: local-script discovery: unsupported shell command substitution",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:5: local-script discovery: unsupported shell command substitution",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:6: local-script discovery: unresolved computed operand of unknown command: rm",
+        "tools/conformance-vectors/v1/run-sample-loopback.sh:7: local-script discovery: unresolved local-script target: $repo_root",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:10: local-script discovery: unsupported shell command substitution",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:11: local-script discovery: unsupported shell command substitution",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:12: local-script discovery: unresolved computed operand of unknown command: rm",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:13: local-script discovery: unresolved local-script target: $repo_root",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:16: local-script discovery: unresolved computed operand of unknown command: dotnet",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:20: local-script discovery: unsupported test runner with tracked module tests: unittest",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:29: local-script discovery: unsupported heredoc-fed interpreter; coverage unsupported",
+        "tools/conformance-vectors/v1/run-sample-validation.sh:5: local-script discovery: unsupported shell compound/subshell execution",
+        "tools/conformance-vectors/v1/run_loopback.py:272: local-script discovery: unresolved computed subprocess env",
+        "tools/conformance-vectors/v1/run_loopback.py:289: local-script discovery: unresolved computed subprocess env",
+        "tools/conformance-vectors/v1/run_loopback.py:672: local-script discovery: unresolved computed subprocess env",
+        "tools/conformance-vectors/v1/run_loopback.py:744: local-script discovery: unresolved computed subprocess env",
+        "tools/conformance-vectors/v1/run_loopback.py:791: local-script discovery: unresolved computed subprocess env",
+        "tools/conformance-vectors/v1/run_packaged_process_fixture.py:22: local-script discovery: unresolved computed subprocess cwd",
+        "tools/conformance-vectors/v1/verify_artifact.py:150: local-script discovery: unresolved computed subprocess cwd",
+        "tools/conformance-vectors/v1/verify_artifact.py:57: local-script discovery: unresolved computed Python script invocation",
+        "tools/live-topology/bootstrap-runtime.py:22: local-script discovery: unresolved computed Python script invocation",
+        "tools/live-topology/bootstrap-runtime.py:26: local-script discovery: unresolved computed Python script invocation",
+        "tools/live-topology/bootstrap-runtime.py:29: local-script discovery: unresolved computed Python script invocation",
+        "tools/live-topology/bootstrap-runtime.py:38: local-script discovery: unresolved computed Python script invocation",
+        "tools/live-topology/capture_heads.py:15: local-script discovery: unsupported Python search-path mutation",
+        "tools/live-topology/capture_heads.py:26: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:122: local-script discovery: unresolved computed Python script invocation",
+        "tools/live-topology/ci.py:141: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:25: local-script discovery: unsupported Python search-path mutation",
+        "tools/live-topology/ci.py:312: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:31: local-script discovery: unsupported Python search-path mutation",
+        "tools/live-topology/ci.py:358: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:360: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:361: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:488: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:489: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:490: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/ci.py:794: local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported",
+        "tools/live-topology/ci.py:795: local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported",
+        "tools/live-topology/live_plans.py:189: local-script discovery: unresolved computed subprocess env",
+        "tools/live-topology/live_plans.py:19: local-script discovery: unsupported Python search-path mutation",
+        "tools/live-topology/live_plans.py:21: local-script discovery: unsupported Python search-path mutation",
+        "tools/live-topology/live_plans.py:370: local-script discovery: unresolved computed subprocess env",
+        "tools/live-topology/live_plans.py:396: local-script discovery: unresolved computed subprocess env",
+        "tools/live-topology/native_sources.py:12: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/native_sources.py:44: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/native_sources.py:45: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/prepare-ci.sh:4: local-script discovery: unsupported shell command substitution",
+        "tools/live-topology/prepare-ci.sh:5: local-script discovery: unsupported shell wrapper options",
+        "tools/live-topology/run-ci.sh:3: local-script discovery: unsupported shell command substitution",
+        "tools/live-topology/run-ci.sh:4: local-script discovery: unsupported shell wrapper options",
+        "tools/live-topology/run-isolated.py:143: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/run-isolated.py:182: local-script discovery: unresolved computed subprocess env",
+        "tools/live-topology/run-isolated.py:198: local-script discovery: unresolved computed subprocess cwd",
+        "tools/live-topology/run-isolated.py:244: local-script discovery: unresolved computed Python script invocation; unsafe or unresolved forwarding",
+        "tools/live-topology/run-isolated.py:84: local-script discovery: unresolved computed Python script invocation; unsafe or unresolved forwarding",
+        "tools/live-topology/run-vectors.py:73: local-script discovery: unresolved computed subprocess cwd"
+      ],
+      "files": [
+        {
+          "format": "yaml",
+          "path": ".github/actions/after-unit-tests/action.yml",
+          "sha256": "a8a241db9bc24bff876a634662e177325962b801aff557b0025eaa1b5328a972"
+        },
+        {
+          "format": "yaml",
+          "path": ".github/actions/macos-product/action.yml",
+          "sha256": "882a74afe801ce5ef24580e89337730b70616d5ee1042ba101f9df7d3312cc9a"
+        },
+        {
+          "format": "yaml",
+          "path": ".github/actions/windows-product/action.yml",
+          "sha256": "afab7a74de0f02afa6b3e855418c17a700a464dec12c4b7c3731ec123501d2cb"
+        },
+        {
+          "format": "python",
+          "path": "scripts/evidence_redaction.py",
+          "sha256": "a8f9aaad4c7a24b2175704475daedf82a1d7b76b6b764d7a2810b597be6254b7"
+        },
+        {
+          "format": "python",
+          "path": "scripts/product_ci.py",
+          "sha256": "0ef43f370a5391c1550300cb1ff8d7c7656f479d82e7b8f038169efe1947196a"
+        },
+        {
+          "format": "python",
+          "path": "scripts/product_packages.py",
+          "sha256": "d1b7be676a3cddef441a91823147eb98119cb5eb64db4090a5e456c598c9ba14"
+        },
+        {
+          "format": "python",
+          "path": "scripts/product_process.py",
+          "sha256": "c96f2ce499003b480b1b141d25b3f4e9b5457d57cc6c101844dac2cfb7ec8b91"
+        },
+        {
+          "format": "python",
+          "path": "scripts/run-paired-platform-tests.py",
+          "sha256": "d209bed8a912d0daf3f605cb63fa8dc0031996a39526555d0619a8fbe9acf5d3"
+        },
+        {
+          "format": "bash",
+          "path": "scripts/smoke-bootstrap-consumer.sh",
+          "sha256": "cf530db728002fc30c670cc76424e99dcdc751bf7d9f5701978345d96034ee84"
+        },
+        {
+          "format": "python",
+          "path": "scripts/smoke-paired-tool.py",
+          "sha256": "dfe8fd9c2bb21e6a6bcadee251f518665e19cf7b16da0c5ffb227e9d6a079298"
+        },
+        {
+          "format": "python",
+          "path": "scripts/validate-release-packages.py",
+          "sha256": "63e430110238a60fb88f83aa385fa038836f141540f868d9de8a14814a987980"
+        },
+        {
+          "format": "python",
+          "path": "tools/conformance-vectors/v1/check_enrolled.py",
+          "sha256": "b6bf918d5d7fb6c37fc1642083113d2d245af029e8679b19bd9540836b3201ec"
+        },
+        {
+          "format": "bash",
+          "path": "tools/conformance-vectors/v1/run-sample-loopback.sh",
+          "sha256": "901e3722113d2776bdbe5540674f45c067083711a8474049473b2454cd8738bf"
+        },
+        {
+          "format": "bash",
+          "path": "tools/conformance-vectors/v1/run-sample-validation.sh",
+          "sha256": "0287114b6424a517047b94860bc3a5c06c00d3f01e7c13e02c869f96f648838c"
+        },
+        {
+          "format": "python",
+          "path": "tools/conformance-vectors/v1/run_loopback.py",
+          "sha256": "0a4c6cc2a917e6594ffba22f829e7c6284da8b84474899a92a3091510835fdf4"
+        },
+        {
+          "format": "python",
+          "path": "tools/conformance-vectors/v1/run_packaged_process_fixture.py",
+          "sha256": "aee0fd17d1ebf1c970fe5e67d62e1490b728b31b113e1476e111611fa6f70573"
+        },
+        {
+          "format": "python",
+          "path": "tools/conformance-vectors/v1/validate.py",
+          "sha256": "b8151ad57469b3ad1cab4d37faae19f27b3cfaf9b5dfa2575b2a4f08a4f3f394"
+        },
+        {
+          "format": "python",
+          "path": "tools/conformance-vectors/v1/verify_artifact.py",
+          "sha256": "6d81900b0bd125b420e6f9b37ff8985b7d6fbed2e6b0f654c0a637aede018261"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/bootstrap-runtime.py",
+          "sha256": "cfda913a97c376c05d0da100bed98c4abccd20af3ad82a49ead7a666f4473257"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/capture_heads.py",
+          "sha256": "973f6346f099b19b9c5158d1c06fcd5c06b34cc0e794ac43b07a09b6eede5718"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/ci.py",
+          "sha256": "ab0bbdf0391a82145113f634b825da26cc439f6c235ccfd10593de6bb27682cf"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/live_plans.py",
+          "sha256": "7ff9e0af565e8ffe1d69bbd8d80dde6d7f4da121f8370c537b8d7a5ddf00fe11"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/native_audit.py",
+          "sha256": "13d24bc124dbb5fa8024ffc1a4e2a40983a55194ac8191fadaa37a0dbb34098a"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/native_cohort.py",
+          "sha256": "106c6b6b87e0992dbf7a6c2e2edec91f1e4cecaec1e675983495cf85317d9255"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/native_sources.py",
+          "sha256": "e384c5ef5feb7d771cf4755b5683f410ec9ec133458fb75f2c2cc8ef1bb5c19f"
+        },
+        {
+          "format": "bash",
+          "path": "tools/live-topology/prepare-ci.sh",
+          "sha256": "33bbe3152a87aadd38b567336df1652cf837d5f140fe52215f26702a478d4f43"
+        },
+        {
+          "format": "bash",
+          "path": "tools/live-topology/run-ci.sh",
+          "sha256": "146cde1684a39fad4508024f37d1d93e4e8574e3a89bce118628b5a5148e2fae"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/run-isolated.py",
+          "sha256": "dfb04b46032180f5eb1179ffc5d26287ca39eaa28b57b19014757bc11d1f53c7"
+        },
+        {
+          "format": "python",
+          "path": "tools/live-topology/run-vectors.py",
+          "sha256": "06f1ffbbce7ed9aa6ebcb11250016d6eae76226755c395ef264f3d67574de669"
+        }
+      ],
+      "module": "Hexalith.McpCli",
+      "result": "fail",
+      "revision": "c4046ab713f45c8619669adfef793aba7138279a"
+    },
+    {
+      "errors": [],
+      "files": [],
+      "module": "Hexalith.PolymorphicSerializations",
+      "result": "pass",
+      "revision": "f1e2b45b161627bc2d204e128ffeda086eb413b8"
+    }
+  ],
+  "policy": {
+    "absolute": true,
+    "format": [
+      "yaml",
+      "bash",
+      "powershell",
+      "python",
+      "javascript",
+      "typescript"
+    ],
+    "maxLines": 2097152,
+    "maxSize": "2mb",
+    "minLines": 10,
+    "minTokens": 50,
+    "mode": "weak",
+    "noGitignore": true,
+    "reporters": [
+      "json"
+    ],
+    "silent": true,
+    "skipLocal": true,
+    "workers": 1
+  },
+  "result": "fail",
+  "schema": "hexalith.duplicate-scan.v1"
+}

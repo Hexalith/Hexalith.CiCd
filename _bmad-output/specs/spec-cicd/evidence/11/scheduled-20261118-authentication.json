@@ -1,0 +1,1966 @@
+{
+  "started_at": "2026-11-18T11:04:41.565734+00:00",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "manual_dispatch_or_rerun": false,
+  "credential_switch": false,
+  "result": "failed-or-incomplete",
+  "errors": [
+    {
+      "observed_at": "2026-11-18T11:04:51.757080+00:00",
+      "error": "Hexalith.Commons outcome artifact identity/expiry mismatch"
+    },
+    {
+      "observed_at": "2026-11-18T11:04:53.657750+00:00",
+      "error": "Hexalith.Commons CodeQL logs: File is not a zip file"
+    },
+    {
+      "observed_at": "2026-11-18T11:04:54.427489+00:00",
+      "error": "Hexalith.PolymorphicSerializations outcome artifact identity/expiry mismatch"
+    },
+    {
+      "observed_at": "2026-11-18T11:04:56.252827+00:00",
+      "error": "Hexalith.PolymorphicSerializations CodeQL logs: File is not a zip file"
+    },
+    {
+      "observed_at": "2026-11-18T11:04:59.193467+00:00",
+      "error": "Hexalith.Commons immutable-releases: {\"endpoint\": \"repos/Hexalith/Hexalith.Commons/immutable-releases\", \"status\": \"HTTP/2.0 403 Forbidden\", \"headers\": {\"content-type\": \"application/json; charset=utf-8\", \"x-accepted-github-permissions\": \"administration=read\", \"x-github-request-id\": \"CB83:3574F4:15B1639:20178A1:6AFD865B\", \"x-ratelimit-limit\": \"5000\", \"x-ratelimit-remaining\": \"4999\", \"x-ratelimit-reset\": \"1795003499\"}, \"message\": \"Resource not accessible by personal access token\"}"
+    },
+    {
+      "observed_at": "2026-11-18T11:04:59.483649+00:00",
+      "error": "Hexalith.PolymorphicSerializations immutable-releases: {\"endpoint\": \"repos/Hexalith/Hexalith.PolymorphicSerializations/immutable-releases\", \"status\": \"HTTP/2.0 403 Forbidden\", \"headers\": {\"content-type\": \"application/json; charset=utf-8\", \"x-accepted-github-permissions\": \"administration=read\", \"x-github-request-id\": \"CB85:D3424:80B61:D336A:6AFD865B\", \"x-ratelimit-limit\": \"5000\", \"x-ratelimit-remaining\": \"4998\", \"x-ratelimit-reset\": \"1795003499\"}, \"message\": \"Resource not accessible by personal access token\"}"
+    },
+    {
+      "observed_at": "2026-11-18T11:05:01.184655+00:00",
+      "error": "parent job log dispatch: File is not a zip file"
+    },
+    {
+      "observed_at": "2026-11-18T11:05:02.003132+00:00",
+      "error": "parent job log publish-ready: File is not a zip file"
+    },
+    {
+      "observed_at": "2026-11-18T11:05:02.921289+00:00",
+      "error": "parent job log scan: File is not a zip file"
+    },
+    {
+      "observed_at": "2026-11-18T11:05:03.771656+00:00",
+      "error": "parent job log bump-push: File is not a zip file"
+    }
+  ],
+  "criteria": {
+    "genuine_schedule_event": true,
+    "attempt_1": true,
+    "source_descends_from_fix_and_policy": true,
+    "parent_conclusion": "failure",
+    "both_pilots_present": true,
+    "both_pilot_outcomes_validated": false,
+    "both_pilot_codeql_jobs_success": true,
+    "both_pilot_codeql_gate_proved": false,
+    "scan_covers_both_pilots": true,
+    "scan_result": "fail",
+    "builds_outcome_validated": true,
+    "bump_present": true,
+    "bump_result": "candidate",
+    "keepalive_result": "pass",
+    "direct_codeql_inventory": "unverified",
+    "no_later_run_substituted": true
+  },
+  "authentication_context": {
+    "GH_CONFIG_DIR": "/home/administrator/.config/gh-cicd-agent",
+    "GH_TOKEN_present": false,
+    "GITHUB_TOKEN_present": false,
+    "user": {
+      "id": 6775094,
+      "login": "jpiquot"
+    },
+    "identity_headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-accepted-github-permissions": "allows_permissionless_access=true",
+      "x-github-request-id": "CB43:1A884E:163AEA3:20EB76E:6AFD864A",
+      "x-ratelimit-limit": "5000",
+      "x-ratelimit-remaining": "3996",
+      "x-ratelimit-reset": "1795001284"
+    }
+  },
+  "run": {
+    "id": 44282863616,
+    "event": "schedule",
+    "path": ".github/workflows/nightly.yml",
+    "head_branch": "main",
+    "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+    "created_at": "2026-11-18T10:10:32Z",
+    "updated_at": "2026-11-18T11:04:09Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "run_attempt": 1,
+    "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616",
+    "display_title": "Nightly releases",
+    "run_number": 12,
+    "inventory_headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "CB67:14BFCF:15EEB79:20776CC:6AFD864A",
+      "x-ratelimit-limit": "5000",
+      "x-ratelimit-remaining": "3995",
+      "x-ratelimit-reset": "1795001284"
+    },
+    "run_headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-accepted-github-permissions": "actions=read",
+      "x-github-request-id": "ECD9:C833A:80269:D341D:6AFD864A",
+      "x-ratelimit-limit": "5000",
+      "x-ratelimit-remaining": "3994",
+      "x-ratelimit-reset": "1795001284"
+    },
+    "later_same_day_schedule_runs": []
+  },
+  "ancestry": {
+    "required_fix": "d04c9ab7a8fa43dc6dac1f15d34135aba8e79551",
+    "required_policy": "3427f041c5f686c460c1fa027cf6f835791209c1",
+    "source": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+    "fix_ancestor": true,
+    "policy_ancestor": true
+  },
+  "jobs": [
+    {
+      "id": 134727860902,
+      "name": "dispatch",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-18T10:10:38Z",
+      "completed_at": "2026-11-18T10:11:19Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative state before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Initialize conservative dispatch state",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record delivery barrier mint boundary",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Mint barrier_token App token",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Wait for hourly delivery barrier",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Select adopted undrifted targets",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Record target 01 mint boundary",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Mint target_01_token App token",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Dispatch target slot 01",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Record target 02 mint boundary",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Mint target_02_token App token",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Dispatch target slot 02",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Record target 03 mint boundary",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Mint target_03_token App token",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Dispatch target slot 03",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Record target 04 mint boundary",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Mint target_04_token App token",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Dispatch target slot 04",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Record target 05 mint boundary",
+          "conclusion": "success",
+          "number": 21
+        },
+        {
+          "name": "Mint target_05_token App token",
+          "conclusion": "success",
+          "number": 22
+        },
+        {
+          "name": "Dispatch target slot 05",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Record target 06 mint boundary",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Mint target_06_token App token",
+          "conclusion": "success",
+          "number": 25
+        },
+        {
+          "name": "Dispatch target slot 06",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Record target 07 mint boundary",
+          "conclusion": "skipped",
+          "number": 27
+        },
+        {
+          "name": "Mint target_07_token App token",
+          "conclusion": "skipped",
+          "number": 28
+        },
+        {
+          "name": "Dispatch target slot 07",
+          "conclusion": "skipped",
+          "number": 29
+        },
+        {
+          "name": "Record target 08 mint boundary",
+          "conclusion": "skipped",
+          "number": 30
+        },
+        {
+          "name": "Mint target_08_token App token",
+          "conclusion": "skipped",
+          "number": 31
+        },
+        {
+          "name": "Dispatch target slot 08",
+          "conclusion": "skipped",
+          "number": 32
+        },
+        {
+          "name": "Record target 09 mint boundary",
+          "conclusion": "skipped",
+          "number": 33
+        },
+        {
+          "name": "Mint target_09_token App token",
+          "conclusion": "skipped",
+          "number": 34
+        },
+        {
+          "name": "Dispatch target slot 09",
+          "conclusion": "skipped",
+          "number": 35
+        },
+        {
+          "name": "Record target 10 mint boundary",
+          "conclusion": "skipped",
+          "number": 36
+        },
+        {
+          "name": "Mint target_10_token App token",
+          "conclusion": "skipped",
+          "number": 37
+        },
+        {
+          "name": "Dispatch target slot 10",
+          "conclusion": "skipped",
+          "number": 38
+        },
+        {
+          "name": "Record target 11 mint boundary",
+          "conclusion": "skipped",
+          "number": 39
+        },
+        {
+          "name": "Mint target_11_token App token",
+          "conclusion": "skipped",
+          "number": 40
+        },
+        {
+          "name": "Dispatch target slot 11",
+          "conclusion": "skipped",
+          "number": 41
+        },
+        {
+          "name": "Record target 12 mint boundary",
+          "conclusion": "skipped",
+          "number": 42
+        },
+        {
+          "name": "Mint target_12_token App token",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Dispatch target slot 12",
+          "conclusion": "skipped",
+          "number": 44
+        },
+        {
+          "name": "Record target 13 mint boundary",
+          "conclusion": "skipped",
+          "number": 45
+        },
+        {
+          "name": "Mint target_13_token App token",
+          "conclusion": "skipped",
+          "number": 46
+        },
+        {
+          "name": "Dispatch target slot 13",
+          "conclusion": "skipped",
+          "number": 47
+        },
+        {
+          "name": "Record target 14 mint boundary",
+          "conclusion": "skipped",
+          "number": 48
+        },
+        {
+          "name": "Mint target_14_token App token",
+          "conclusion": "skipped",
+          "number": 49
+        },
+        {
+          "name": "Dispatch target slot 14",
+          "conclusion": "skipped",
+          "number": 50
+        },
+        {
+          "name": "Record target 15 mint boundary",
+          "conclusion": "skipped",
+          "number": 51
+        },
+        {
+          "name": "Mint target_15_token App token",
+          "conclusion": "skipped",
+          "number": 52
+        },
+        {
+          "name": "Dispatch target slot 15",
+          "conclusion": "skipped",
+          "number": 53
+        },
+        {
+          "name": "Record target 16 mint boundary",
+          "conclusion": "skipped",
+          "number": 54
+        },
+        {
+          "name": "Mint target_16_token App token",
+          "conclusion": "skipped",
+          "number": 55
+        },
+        {
+          "name": "Dispatch target slot 16",
+          "conclusion": "skipped",
+          "number": 56
+        },
+        {
+          "name": "Record target 17 mint boundary",
+          "conclusion": "skipped",
+          "number": 57
+        },
+        {
+          "name": "Mint target_17_token App token",
+          "conclusion": "skipped",
+          "number": 58
+        },
+        {
+          "name": "Dispatch target slot 17",
+          "conclusion": "skipped",
+          "number": 59
+        },
+        {
+          "name": "Record target 18 mint boundary",
+          "conclusion": "skipped",
+          "number": 60
+        },
+        {
+          "name": "Mint target_18_token App token",
+          "conclusion": "skipped",
+          "number": 61
+        },
+        {
+          "name": "Dispatch target slot 18",
+          "conclusion": "skipped",
+          "number": 62
+        },
+        {
+          "name": "Finalize dispatch state and verdicts",
+          "conclusion": "failure",
+          "number": 63
+        },
+        {
+          "name": "Report unavailable checkout",
+          "conclusion": "skipped",
+          "number": 64
+        },
+        {
+          "name": "Upload token-free dispatch state",
+          "conclusion": "success",
+          "number": 65
+        },
+        {
+          "name": "Post Mint target_06_token App token",
+          "conclusion": "success",
+          "number": 123
+        },
+        {
+          "name": "Post Mint target_05_token App token",
+          "conclusion": "success",
+          "number": 124
+        },
+        {
+          "name": "Post Mint target_04_token App token",
+          "conclusion": "success",
+          "number": 125
+        },
+        {
+          "name": "Post Mint target_03_token App token",
+          "conclusion": "success",
+          "number": 126
+        },
+        {
+          "name": "Post Mint target_02_token App token",
+          "conclusion": "success",
+          "number": 127
+        },
+        {
+          "name": "Post Mint target_01_token App token",
+          "conclusion": "success",
+          "number": 128
+        },
+        {
+          "name": "Post Mint barrier_token App token",
+          "conclusion": "success",
+          "number": 129
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 130
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 131
+        }
+      ]
+    },
+    {
+      "id": 134728287678,
+      "name": "wait",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-18T10:11:24Z",
+      "completed_at": "2026-11-18T10:42:43Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative state before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Initialize conservative wait state",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record poll slice 01 mint boundary",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Mint poll_01_token App token",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Poll release slice 01",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Record poll slice 02 mint boundary",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Mint poll_02_token App token",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Poll release slice 02",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Record poll slice 03 mint boundary",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Mint poll_03_token App token",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Poll release slice 03",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Record poll slice 04 mint boundary",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Mint poll_04_token App token",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Poll release slice 04",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record poll slice 05 mint boundary",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Mint poll_05_token App token",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Poll release slice 05",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Record poll slice 06 mint boundary",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Mint poll_06_token App token",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Poll release slice 06",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Record poll slice 07 mint boundary",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Mint poll_07_token App token",
+          "conclusion": "skipped",
+          "number": 24
+        },
+        {
+          "name": "Poll release slice 07",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Record poll slice 08 mint boundary",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Mint poll_08_token App token",
+          "conclusion": "skipped",
+          "number": 27
+        },
+        {
+          "name": "Poll release slice 08",
+          "conclusion": "skipped",
+          "number": 28
+        },
+        {
+          "name": "Record poll slice 09 mint boundary",
+          "conclusion": "success",
+          "number": 29
+        },
+        {
+          "name": "Mint poll_09_token App token",
+          "conclusion": "skipped",
+          "number": 30
+        },
+        {
+          "name": "Poll release slice 09",
+          "conclusion": "skipped",
+          "number": 31
+        },
+        {
+          "name": "Finalize wait state and verdicts",
+          "conclusion": "success",
+          "number": 32
+        },
+        {
+          "name": "Report unavailable checkout",
+          "conclusion": "skipped",
+          "number": 33
+        },
+        {
+          "name": "Upload token-free wait state",
+          "conclusion": "success",
+          "number": 34
+        },
+        {
+          "name": "Post Mint poll_01_token App token",
+          "conclusion": "success",
+          "number": 67
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 68
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 69
+        }
+      ]
+    },
+    {
+      "id": 134745429191,
+      "name": "publish-ready",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-18T10:42:49Z",
+      "completed_at": "2026-11-18T10:43:03Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative state before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Initialize conservative publish-ready state",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record target 01 mint boundary",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Mint target_01_token App token",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Publish target slot 01",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Record target 02 mint boundary",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Mint target_02_token App token",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Publish target slot 02",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Record target 03 mint boundary",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Mint target_03_token App token",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Publish target slot 03",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Record target 04 mint boundary",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Mint target_04_token App token",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Publish target slot 04",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record target 05 mint boundary",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Mint target_05_token App token",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Publish target slot 05",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Record target 06 mint boundary",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Mint target_06_token App token",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Publish target slot 06",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Record target 07 mint boundary",
+          "conclusion": "skipped",
+          "number": 23
+        },
+        {
+          "name": "Mint target_07_token App token",
+          "conclusion": "skipped",
+          "number": 24
+        },
+        {
+          "name": "Publish target slot 07",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Record target 08 mint boundary",
+          "conclusion": "skipped",
+          "number": 26
+        },
+        {
+          "name": "Mint target_08_token App token",
+          "conclusion": "skipped",
+          "number": 27
+        },
+        {
+          "name": "Publish target slot 08",
+          "conclusion": "skipped",
+          "number": 28
+        },
+        {
+          "name": "Record target 09 mint boundary",
+          "conclusion": "skipped",
+          "number": 29
+        },
+        {
+          "name": "Mint target_09_token App token",
+          "conclusion": "skipped",
+          "number": 30
+        },
+        {
+          "name": "Publish target slot 09",
+          "conclusion": "skipped",
+          "number": 31
+        },
+        {
+          "name": "Record target 10 mint boundary",
+          "conclusion": "skipped",
+          "number": 32
+        },
+        {
+          "name": "Mint target_10_token App token",
+          "conclusion": "skipped",
+          "number": 33
+        },
+        {
+          "name": "Publish target slot 10",
+          "conclusion": "skipped",
+          "number": 34
+        },
+        {
+          "name": "Record target 11 mint boundary",
+          "conclusion": "skipped",
+          "number": 35
+        },
+        {
+          "name": "Mint target_11_token App token",
+          "conclusion": "skipped",
+          "number": 36
+        },
+        {
+          "name": "Publish target slot 11",
+          "conclusion": "skipped",
+          "number": 37
+        },
+        {
+          "name": "Record target 12 mint boundary",
+          "conclusion": "skipped",
+          "number": 38
+        },
+        {
+          "name": "Mint target_12_token App token",
+          "conclusion": "skipped",
+          "number": 39
+        },
+        {
+          "name": "Publish target slot 12",
+          "conclusion": "skipped",
+          "number": 40
+        },
+        {
+          "name": "Record target 13 mint boundary",
+          "conclusion": "skipped",
+          "number": 41
+        },
+        {
+          "name": "Mint target_13_token App token",
+          "conclusion": "skipped",
+          "number": 42
+        },
+        {
+          "name": "Publish target slot 13",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Record target 14 mint boundary",
+          "conclusion": "skipped",
+          "number": 44
+        },
+        {
+          "name": "Mint target_14_token App token",
+          "conclusion": "skipped",
+          "number": 45
+        },
+        {
+          "name": "Publish target slot 14",
+          "conclusion": "skipped",
+          "number": 46
+        },
+        {
+          "name": "Record target 15 mint boundary",
+          "conclusion": "skipped",
+          "number": 47
+        },
+        {
+          "name": "Mint target_15_token App token",
+          "conclusion": "skipped",
+          "number": 48
+        },
+        {
+          "name": "Publish target slot 15",
+          "conclusion": "skipped",
+          "number": 49
+        },
+        {
+          "name": "Record target 16 mint boundary",
+          "conclusion": "skipped",
+          "number": 50
+        },
+        {
+          "name": "Mint target_16_token App token",
+          "conclusion": "skipped",
+          "number": 51
+        },
+        {
+          "name": "Publish target slot 16",
+          "conclusion": "skipped",
+          "number": 52
+        },
+        {
+          "name": "Record target 17 mint boundary",
+          "conclusion": "skipped",
+          "number": 53
+        },
+        {
+          "name": "Mint target_17_token App token",
+          "conclusion": "skipped",
+          "number": 54
+        },
+        {
+          "name": "Publish target slot 17",
+          "conclusion": "skipped",
+          "number": 55
+        },
+        {
+          "name": "Record target 18 mint boundary",
+          "conclusion": "skipped",
+          "number": 56
+        },
+        {
+          "name": "Mint target_18_token App token",
+          "conclusion": "skipped",
+          "number": 57
+        },
+        {
+          "name": "Publish target slot 18",
+          "conclusion": "skipped",
+          "number": 58
+        },
+        {
+          "name": "Finalize publish-ready state and verdicts",
+          "conclusion": "failure",
+          "number": 59
+        },
+        {
+          "name": "Report unavailable checkout",
+          "conclusion": "skipped",
+          "number": 60
+        },
+        {
+          "name": "Upload token-free publish-ready state",
+          "conclusion": "success",
+          "number": 61
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 122
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 123
+        }
+      ]
+    },
+    {
+      "id": 134745605388,
+      "name": "scan",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-18T10:43:06Z",
+      "completed_at": "2026-11-18T10:43:43Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative scan report and summary before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd scan controller and policy",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup detector Node runtime",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Setup locked scan environment",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Scan registered modules at anonymous live main",
+          "conclusion": "failure",
+          "number": 6
+        },
+        {
+          "name": "Preserve scan summary and reject incomplete coverage",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Upload token-free duplicate scan report and summary",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Setup locked scan environment",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Post Setup detector Node runtime",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Post Checkout CiCd scan controller and policy",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 134745954419,
+      "name": "bump",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-18T10:43:46Z",
+      "completed_at": "2026-11-18T11:02:39Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative bump report before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup locked producer environment",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Setup detector Node runtime for the shared global gate",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Produce and globally validate the live-main bump",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Reject missing or invalid producer outcome",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Upload the exact validated candidate",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Report unavailable bump producer",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Upload token-free bump report",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Post Setup detector Node runtime for the shared global gate",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Post Setup locked producer environment",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Checkout CiCd controllers",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 21
+        }
+      ]
+    },
+    {
+      "id": 134755923856,
+      "name": "bump-push",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-18T11:03:32Z",
+      "completed_at": "2026-11-18T11:03:47Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative push report before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd verification controller",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Record job-token operation boundary",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Qualify the nested rendered workflow path in isolation",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Independently verify, push and dispatch delivery",
+          "conclusion": "failure",
+          "number": 6
+        },
+        {
+          "name": "Reject missing push confirmation",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Upload bump push or qualification observations",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Checkout CiCd verification controller",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 134756536337,
+      "name": "keepalive",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-18T11:03:50Z",
+      "completed_at": "2026-11-18T11:04:09Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Seed conservative keepalive report before checkout",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Checkout CiCd keepalive controller",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Enable both schedules and maintain an idle main",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Upload token-free keepalive observations",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Post Checkout CiCd keepalive controller",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 11
+        }
+      ]
+    },
+    {
+      "id": 134756537788,
+      "name": "delivery-wait",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-11-18T11:03:47Z",
+      "completed_at": "2026-11-18T11:03:47Z",
+      "steps": []
+    }
+  ],
+  "jobs_headers": {
+    "content-type": "application/json; charset=utf-8",
+    "x-accepted-github-permissions": "actions=read",
+    "x-github-request-id": "C867:A8EFA:15EA145:2073408:6AFD864B",
+    "x-ratelimit-limit": "5000",
+    "x-ratelimit-remaining": "3993",
+    "x-ratelimit-reset": "1795001284"
+  },
+  "artifacts": [
+    {
+      "id": 14422305067,
+      "name": "hexalith-nightly-bump-report-1",
+      "size_in_bytes": 382,
+      "digest": "sha256:e22b07b4beac0233698cf2320731c2a4d41df4df99458357ae7dd0f6ed2a3bf6",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T11:02:37Z",
+      "updated_at": "2026-11-18T11:02:37Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14421746349,
+      "name": "hexalith-nightly-bump-1",
+      "size_in_bytes": 11224,
+      "digest": "sha256:d642bf65a46db1419c26f1c41e82a22721407075aa35222ad8548419eb91b24a",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T11:02:35Z",
+      "updated_at": "2026-11-18T11:02:35Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14421642196,
+      "name": "hexalith-nightly-bump-push-1",
+      "size_in_bytes": 412,
+      "digest": "sha256:02d1ec27a365302192e3ec0debb068473da1fe82f7f9f6cdf61bea238a4ab9f8",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T11:03:45Z",
+      "updated_at": "2026-11-18T11:03:45Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14421431376,
+      "name": "hexalith-nightly-keepalive-1",
+      "size_in_bytes": 327,
+      "digest": "sha256:527c2aa96e37e081fdbd764b55c05dd1783c78a5818dfc77aa46210bd1ba65ba",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T11:04:06Z",
+      "updated_at": "2026-11-18T11:04:06Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14420242185,
+      "name": "hexalith-nightly-wait-1",
+      "size_in_bytes": 1265,
+      "digest": "sha256:ed3ad99d91c2fff05a0ade1662ee6306ac980ff59ce49fcf4b9d413a54d976a0",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T10:42:40Z",
+      "updated_at": "2026-11-18T10:42:40Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14419862151,
+      "name": "hexalith-nightly-nightly-1",
+      "size_in_bytes": 1301,
+      "digest": "sha256:c42a5b6ecb06116a39fdcdc7632f387db355d9e1b7d31effac62d8317a06fd6f",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T10:43:01Z",
+      "updated_at": "2026-11-18T10:43:01Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14419393863,
+      "name": "hexalith-nightly-scan-1",
+      "size_in_bytes": 6036,
+      "digest": "sha256:e5bdac76318bdabc15d5cf63801c07e4ed4c55d7bfd737abb91edca6d26e6329",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T10:43:41Z",
+      "updated_at": "2026-11-18T10:43:41Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    },
+    {
+      "id": 14417452272,
+      "name": "hexalith-nightly-dispatch-1",
+      "size_in_bytes": 1154,
+      "digest": "sha256:c5c5b375c8678cc22b39a2911296378b5ab34228d4e61bbc106492570759c036",
+      "expired": false,
+      "expires_at": "2027-02-16T10:10:33Z",
+      "created_at": "2026-11-18T10:11:16Z",
+      "updated_at": "2026-11-18T10:11:16Z",
+      "workflow_run": {
+        "id": 44282863616,
+        "repository_id": 1379430755,
+        "head_repository_id": 1379430755,
+        "head_branch": "main",
+        "head_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+      }
+    }
+  ],
+  "artifacts_headers": {
+    "content-type": "application/json; charset=utf-8",
+    "x-accepted-github-permissions": "actions=read",
+    "x-github-request-id": "C869:116DE4:9D4EA:101927:6AFD864C",
+    "x-ratelimit-limit": "5000",
+    "x-ratelimit-remaining": "3992",
+    "x-ratelimit-reset": "1795001284"
+  },
+  "trusted_production_parser_source_sha256": {
+    "tools/nightly_runtime.py": {
+      "source_sha256": "0429f4fdc492e796785f97f693590352623909ff14f8bcdfffe52c375f645ed0",
+      "working_tree_sha256": "0429f4fdc492e796785f97f693590352623909ff14f8bcdfffe52c375f645ed0",
+      "working_tree_matches_source": true
+    },
+    "tools/delivery_runtime.py": {
+      "source_sha256": "2e76ad8a0d89ce2fb351f5c726ca8d73e9177171425f0dc4217f3dacf1bc828b",
+      "working_tree_sha256": "2e76ad8a0d89ce2fb351f5c726ca8d73e9177171425f0dc4217f3dacf1bc828b",
+      "working_tree_matches_source": true
+    },
+    "tools/scan.py": {
+      "source_sha256": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+      "working_tree_sha256": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+      "working_tree_matches_source": true
+    }
+  },
+  "builds_pin": {
+    "tag": "v6.2.0",
+    "sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+    "release_outcome_sha256": "71821b5ff99c9ea33652a1fa1c80f6e011748094ba9e4f3690179d224702d168"
+  },
+  "extracted": {
+    "hexalith-nightly-bump-report-1": {
+      "id": 14422305067,
+      "digest": "sha256:e22b07b4beac0233698cf2320731c2a4d41df4df99458357ae7dd0f6ed2a3bf6",
+      "size_in_bytes": 382,
+      "member_names": [
+        "bump.json"
+      ]
+    },
+    "hexalith-nightly-bump-1": {
+      "id": 14421746349,
+      "digest": "sha256:d642bf65a46db1419c26f1c41e82a22721407075aa35222ad8548419eb91b24a",
+      "size_in_bytes": 11224,
+      "member_names": [
+        "candidate.json"
+      ]
+    },
+    "hexalith-nightly-bump-push-1": {
+      "id": 14421642196,
+      "digest": "sha256:02d1ec27a365302192e3ec0debb068473da1fe82f7f9f6cdf61bea238a4ab9f8",
+      "size_in_bytes": 412,
+      "member_names": [
+        "bump-push.json"
+      ]
+    },
+    "hexalith-nightly-keepalive-1": {
+      "id": 14421431376,
+      "digest": "sha256:527c2aa96e37e081fdbd764b55c05dd1783c78a5818dfc77aa46210bd1ba65ba",
+      "size_in_bytes": 327,
+      "member_names": [
+        "keepalive.json"
+      ]
+    },
+    "hexalith-nightly-wait-1": {
+      "id": 14420242185,
+      "digest": "sha256:ed3ad99d91c2fff05a0ade1662ee6306ac980ff59ce49fcf4b9d413a54d976a0",
+      "size_in_bytes": 1265,
+      "member_names": [
+        "wait.json"
+      ]
+    },
+    "hexalith-nightly-nightly-1": {
+      "id": 14419862151,
+      "digest": "sha256:c42a5b6ecb06116a39fdcdc7632f387db355d9e1b7d31effac62d8317a06fd6f",
+      "size_in_bytes": 1301,
+      "member_names": [
+        "nightly.json"
+      ]
+    },
+    "hexalith-nightly-scan-1": {
+      "id": 14419393863,
+      "digest": "sha256:e5bdac76318bdabc15d5cf63801c07e4ed4c55d7bfd737abb91edca6d26e6329",
+      "size_in_bytes": 6036,
+      "member_names": [
+        "report.json",
+        "summary.md"
+      ]
+    },
+    "hexalith-nightly-dispatch-1": {
+      "id": 14417452272,
+      "digest": "sha256:c5c5b375c8678cc22b39a2911296378b5ab34228d4e61bbc106492570759c036",
+      "size_in_bytes": 1154,
+      "member_names": [
+        "dispatch.json"
+      ]
+    }
+  },
+  "nightly_document": {
+    "schema": "hexalith.nightly.v1",
+    "phase": "nightly",
+    "result": "fail",
+    "errors": [],
+    "identity": {
+      "attempt": 1,
+      "runId": 44282863616,
+      "source": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+    },
+    "builds": {
+      "sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+      "tag": "v6.2.0"
+    },
+    "registry": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Commons",
+      "Hexalith.Conversations",
+      "Hexalith.McpCli",
+      "Hexalith.PolymorphicSerializations"
+    ]
+  },
+  "pilots": {
+    "Hexalith.Commons": {
+      "present": true,
+      "eligibility": "eligible",
+      "dispatch": "failed",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatchHead": "d551e5f3b67653b8793f86afedab355c8a3821da",
+      "runId": 44282943596,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "outcome": {
+        "outcome": "nothing",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "d551e5f3b67653b8793f86afedab355c8a3821da"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "dispatch failed (not retried): GitHub API GET /repos/Hexalith/Hexalith.Commons/actions/runs/44282943596 failed: HTTP 404; {\"authentication\":\"scoped\",\"attempts\":1,\"body_status\":\"message\",\"x-github-request-id\":\"E3CF:206B62:3986A6:B87797:6AFD79B7\",\"x-ratelimit-limit\":\"5000\",\"x-ratelimit-remaining\":\"4993\",\"x-ratelimit-reset\":\"1795000250\",\"x-accepted-github-permissions\":\"actions=read\",\"message\":\"Not Found\"}",
+      "verdict": "fail",
+      "workflow": ".github/workflows/release.yml",
+      "link": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/44282943596",
+      "remote_run": {
+        "id": 44282943596,
+        "event": "workflow_dispatch",
+        "path": ".github/workflows/release.yml",
+        "head_branch": "main",
+        "head_sha": "d551e5f3b67653b8793f86afedab355c8a3821da",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "html_url": "https://github.com/Hexalith/Hexalith.Commons/actions/runs/44282943596",
+        "created_at": "2026-11-18T10:11:02Z"
+      },
+      "remote_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-accepted-github-permissions": "actions=read",
+        "x-github-request-id": "C89D:5BD87:161EA2A:20C46AE:6AFD8653",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "3983",
+        "x-ratelimit-reset": "1795001284"
+      },
+      "outcome_artifact_count": 1,
+      "codeql_jobs": [
+        {
+          "id": 134728267026,
+          "name": "release / Release CodeQL (csharp)",
+          "conclusion": "success",
+          "status": "completed",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout dispatch source",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize release analysis",
+              "conclusion": "success"
+            },
+            {
+              "name": "Analyze and wait for processing",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check processed release security findings",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Analyze and wait for processing",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Initialize release analysis",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout dispatch source",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ],
+          "log_error": "File is not a zip file"
+        }
+      ]
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "present": true,
+      "eligibility": "eligible",
+      "dispatch": "dispatched",
+      "deliveredSha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+      "dispatchHead": "f1e2b45b161627bc2d204e128ffeda086eb413b8",
+      "runId": 44282965814,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "outcome": {
+        "outcome": "nothing",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "f1e2b45b161627bc2d204e128ffeda086eb413b8"
+      },
+      "outcomeError": "",
+      "publication": "pending",
+      "reason": "release workflow succeeded",
+      "verdict": "pass",
+      "workflow": ".github/workflows/release.yml",
+      "link": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/44282965814",
+      "remote_run": {
+        "id": 44282965814,
+        "event": "workflow_dispatch",
+        "path": ".github/workflows/release.yml",
+        "head_branch": "main",
+        "head_sha": "f1e2b45b161627bc2d204e128ffeda086eb413b8",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/44282965814",
+        "created_at": "2026-11-18T10:11:11Z"
+      },
+      "remote_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-accepted-github-permissions": "actions=read",
+        "x-github-request-id": "ED72:1C9EAA:151B7F3:1F680B3:6AFD8656",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "3979",
+        "x-ratelimit-reset": "1795001284"
+      },
+      "outcome_artifact_count": 1,
+      "codeql_jobs": [
+        {
+          "id": 134728325382,
+          "name": "release / Release CodeQL (csharp)",
+          "conclusion": "success",
+          "status": "completed",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout dispatch source",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize release analysis",
+              "conclusion": "success"
+            },
+            {
+              "name": "Analyze and wait for processing",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check processed release security findings",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Analyze and wait for processing",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Initialize release analysis",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout dispatch source",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ],
+          "log_error": "File is not a zip file"
+        }
+      ]
+    }
+  },
+  "builds_target": {
+    "eligibility": "eligible",
+    "dispatch": "dispatched",
+    "dispatchHead": "db7bb7179244ce33483231687486381305c7c3db",
+    "runId": 44282974072,
+    "status": "completed",
+    "conclusion": "success",
+    "outcome": {
+      "outcome": "published",
+      "schema": "hexalith.release-outcome.v1",
+      "sha": "db7bb7179244ce33483231687486381305c7c3db",
+      "version": "6.3.1"
+    },
+    "outcomeError": "",
+    "publication": "pending",
+    "reason": "release workflow succeeded",
+    "verdict": "pass",
+    "workflow": ".github/workflows/builds-release.yml",
+    "link": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/44282974072",
+    "remote_run": {
+      "id": 44282974072,
+      "event": "workflow_dispatch",
+      "path": ".github/workflows/builds-release.yml",
+      "head_branch": "main",
+      "head_sha": "db7bb7179244ce33483231687486381305c7c3db",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/44282974072"
+    },
+    "validated_outcome": {
+      "outcome": "published",
+      "schema": "hexalith.release-outcome.v1",
+      "sha": "db7bb7179244ce33483231687486381305c7c3db",
+      "version": "6.3.1"
+    }
+  },
+  "scan": {
+    "present": true,
+    "schema": "hexalith.duplicate-scan.v1",
+    "result": "fail",
+    "errors": [],
+    "findings": [],
+    "detector": {
+      "name": "jscpd",
+      "policySha256": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+      "signatures": "verified",
+      "version": "5.4.3"
+    },
+    "controllerRevision": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+    "modules": {
+      "Hexalith.Commons": {
+        "errors": [],
+        "files": [
+          {
+            "format": "yaml",
+            "path": ".github/actions/after-unit-tests/action.yml",
+            "sha256": "44a3bf56e3253edeb2a995ee604e9f0917fc59f6e9ffca3c19b72c65e25220bd"
+          },
+          {
+            "format": "python",
+            "path": "scripts/pack-release-packages.py",
+            "sha256": "f1983c2390b7fe7e3bbfa39daf39fcf2d1eefb82de7a5eda4b3d325ad660108e"
+          },
+          {
+            "format": "python",
+            "path": "scripts/validate-consumer-package-references.py",
+            "sha256": "5ae690e1f3195fffce5220a799507a96066287c57b55ef741ef2e321b40209c7"
+          },
+          {
+            "format": "python",
+            "path": "scripts/validate-nuget-packages.py",
+            "sha256": "4efd5dbce2a1f71c59c01992904d8c7118600e2e0958092cdc4806ec9ed9adc8"
+          }
+        ],
+        "module": "Hexalith.Commons",
+        "result": "pass",
+        "revision": "d551e5f3b67653b8793f86afedab355c8a3821da"
+      },
+      "Hexalith.PolymorphicSerializations": {
+        "errors": [],
+        "files": [],
+        "module": "Hexalith.PolymorphicSerializations",
+        "result": "pass",
+        "revision": "f1e2b45b161627bc2d204e128ffeda086eb413b8"
+      }
+    },
+    "other_modules": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Conversations",
+      "Hexalith.McpCli"
+    ],
+    "unresolved_findings": false,
+    "covers_both_pilots": true
+  },
+  "bump": {
+    "present": true,
+    "base": "0b873999bc34f527a055a915328bde4b5d7d1428",
+    "candidate": "ebb3b3963924876ae26756d0fb24d3acbe6bd546",
+    "identity": {
+      "attempt": 1,
+      "night": "2026-11-18",
+      "runId": 44282863616,
+      "source": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c"
+    },
+    "reason": "shared global checks passed",
+    "result": "candidate",
+    "schema": "hexalith.nightly-bump-report.v1",
+    "tag": "v6.3.1"
+  },
+  "keepalive": {
+    "present": true,
+    "schema": "hexalith.nightly-keepalive.v1",
+    "result": "pass",
+    "enabled": {
+      "deliver.yml": "enabled",
+      "nightly.yml": "enabled"
+    },
+    "errors": [],
+    "commit": "not-needed",
+    "ageSeconds": 242.6225070953369
+  },
+  "direct_codeql_inventory": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/code-scanning/analyses?ref=refs/heads/main&per_page=100",
+      "status": "HTTP/2.0 403 Forbidden",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-accepted-github-permissions": "security_events=read",
+        "x-github-request-id": "ED86:2B76BA:8E4B2:E7F9D:6AFD865A",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "3972",
+        "x-ratelimit-reset": "1795001284"
+      },
+      "message": "Resource not accessible by personal access token"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/code-scanning/analyses?ref=refs/heads/main&per_page=100",
+      "status": "HTTP/2.0 403 Forbidden",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-accepted-github-permissions": "security_events=read",
+        "x-github-request-id": "CB7F:28B03B:77529:C56A1:6AFD865B",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "3971",
+        "x-ratelimit-reset": "1795001284"
+      },
+      "message": "Resource not accessible by personal access token"
+    }
+  ],
+  "immutable_releases": {
+    "Hexalith.Commons": {
+      "error": "{\"endpoint\": \"repos/Hexalith/Hexalith.Commons/immutable-releases\", \"status\": \"HTTP/2.0 403 Forbidden\", \"headers\": {\"content-type\": \"application/json; charset=utf-8\", \"x-accepted-github-permissions\": \"administration=read\", \"x-github-request-id\": \"CB83:3574F4:15B1639:20178A1:6AFD865B\", \"x-ratelimit-limit\": \"5000\", \"x-ratelimit-remaining\": \"4999\", \"x-ratelimit-reset\": \"1795003499\"}, \"message\": \"Resource not accessible by personal access token\"}"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "error": "{\"endpoint\": \"repos/Hexalith/Hexalith.PolymorphicSerializations/immutable-releases\", \"status\": \"HTTP/2.0 403 Forbidden\", \"headers\": {\"content-type\": \"application/json; charset=utf-8\", \"x-accepted-github-permissions\": \"administration=read\", \"x-github-request-id\": \"CB85:D3424:80B61:D336A:6AFD865B\", \"x-ratelimit-limit\": \"5000\", \"x-ratelimit-remaining\": \"4998\", \"x-ratelimit-reset\": \"1795003499\"}, \"message\": \"Resource not accessible by personal access token\"}"
+    }
+  },
+  "diagnostic_delivery": {
+    "skipped": "already authenticated for 2026-11-17"
+  },
+  "hourly_delivery_after_night": [
+    {
+      "id": 44288535491,
+      "event": "schedule",
+      "path": ".github/workflows/deliver.yml",
+      "head_sha": "0b873999bc34f527a055a915328bde4b5d7d1428",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_attempt": 1,
+      "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44288535491",
+      "created_at": "2026-11-18T10:46:24Z"
+    }
+  ],
+  "failed_parent_jobs": [
+    "dispatch",
+    "publish-ready",
+    "scan",
+    "bump-push"
+  ],
+  "sibling_targets": {
+    "Hexalith.AI.Tools": {
+      "eligibility": "eligible",
+      "dispatch": "dispatched",
+      "verdict": "fail",
+      "reason": "release run concluded failure",
+      "runId": 44282937129,
+      "conclusion": "failure",
+      "outcome": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+        "version": "1.0.0"
+      }
+    },
+    "Hexalith.Conversations": {
+      "eligibility": "eligible",
+      "dispatch": "dispatched",
+      "verdict": "fail",
+      "reason": "release run concluded failure",
+      "runId": 44282952062,
+      "conclusion": "failure",
+      "outcome": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "b315506300a9411c4f26bd9c7b3fe2b7e5759a33"
+      }
+    },
+    "Hexalith.McpCli": {
+      "eligibility": "eligible",
+      "dispatch": "dispatched",
+      "verdict": "fail",
+      "reason": "release run concluded failure",
+      "runId": 44282959436,
+      "conclusion": "failure",
+      "outcome": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "c4046ab713f45c8619669adfef793aba7138279a"
+      }
+    }
+  },
+  "blocking": [
+    "scheduled parent conclusion is failure",
+    "pilot publication outcomes are incomplete",
+    "CodeQL processed-findings gate is unproved",
+    "duplicate scan did not pass covering both pilots"
+  ],
+  "acceptance": "not accepted",
+  "completed_at": "2026-11-18T11:05:03.772117+00:00"
+}

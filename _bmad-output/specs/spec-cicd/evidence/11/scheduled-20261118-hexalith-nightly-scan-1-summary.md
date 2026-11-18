@@ -1,0 +1,118 @@
+# Nightly cross-module duplicate scan: FAIL
+
+Detector: jscpd 5.4.3. Cross-module copies belong in Builds.
+
+- Hexalith.AI.Tools: pass; main `3a4a78d91b36849c4700e8bc9aae74a1b91f2fba`; 0 selected files
+- Hexalith.Commons: pass; main `d551e5f3b67653b8793f86afedab355c8a3821da`; 4 selected files
+- Hexalith.Conversations: fail; main `b315506300a9411c4f26bd9c7b3fe2b7e5759a33`; 9 selected files
+  - .github/actions/after-unit-tests/action.yml:11: local-script discovery: unsupported test runner with tracked module tests: unittest
+  - .github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported test runner with tracked module tests: unittest
+  - scripts/validate-built-packages.py:16: local-script discovery: unresolved computed subprocess cwd
+  - scripts/validate-built-packages.py:27: local-script discovery: unresolved computed subprocess cwd
+  - scripts/validate-consumer-package-references.py:198: local-script discovery: unresolved computed subprocess cwd
+  - scripts/validate-consumer-package-references.py:56: local-script discovery: unresolved computed subprocess cwd
+  - tests/compatibility/MinimalModule/run_compatibility.py:75: local-script discovery: unresolved computed subprocess cwd
+- Hexalith.McpCli: fail; main `c4046ab713f45c8619669adfef793aba7138279a`; 29 selected files
+  - .github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported shell wrapper options
+  - scripts/product_ci.py:161: local-script discovery: unsupported Python environment mutation affecting resolution
+  - scripts/product_packages.py:17: local-script discovery: unsupported Python process/import API: importlib.util.spec_from_file_location
+  - scripts/product_packages.py:24: local-script discovery: unresolved subprocess positional/options expansion
+  - scripts/product_process.py:170: local-script discovery: unresolved computed subprocess cwd
+  - scripts/run-paired-platform-tests.py:50: local-script discovery: unresolved computed subprocess env
+  - scripts/smoke-bootstrap-consumer.sh:15: local-script discovery: unsupported shell command substitution
+  - scripts/smoke-bootstrap-consumer.sh:20: local-script discovery: missing or unsafe regular script/action: =
+  - scripts/smoke-bootstrap-consumer.sh:21: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:22: local-script discovery: unsupported stdin-fed interpreter; coverage unsupported
+  - scripts/smoke-bootstrap-consumer.sh:23: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:24: local-script discovery: unsupported shell command substitution
+  - scripts/smoke-bootstrap-consumer.sh:27: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:28: local-script discovery: unsupported stdin-fed interpreter; coverage unsupported
+  - scripts/smoke-bootstrap-consumer.sh:29: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:31: local-script discovery: unresolved computed operand of unknown command: cp
+  - scripts/smoke-bootstrap-consumer.sh:32: local-script discovery: unresolved computed command: $consumer_python
+  - scripts/smoke-bootstrap-consumer.sh:44: local-script discovery: unsupported shell command substitution
+  - scripts/smoke-bootstrap-consumer.sh:46: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:48: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:49: local-script discovery: unsupported stdin-fed interpreter; coverage unsupported
+  - scripts/smoke-bootstrap-consumer.sh:4: local-script discovery: unsupported shell command substitution
+  - scripts/smoke-bootstrap-consumer.sh:50: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:80: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:81: local-script discovery: unresolved computed command: -p:RestoreSources=$package_source
+  - scripts/smoke-bootstrap-consumer.sh:84: local-script discovery: unsupported shell compound/subshell execution
+  - scripts/smoke-bootstrap-consumer.sh:85: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - scripts/smoke-bootstrap-consumer.sh:88: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - scripts/smoke-bootstrap-consumer.sh:90: local-script discovery: unresolved computed operand of unknown command: grep
+  - scripts/smoke-bootstrap-consumer.sh:94: local-script discovery: unresolved computed operand of unknown command: grep
+  - scripts/smoke-bootstrap-consumer.sh:98: local-script discovery: unresolved computed operand of unknown command: grep
+  - scripts/smoke-bootstrap-consumer.sh:9: local-script discovery: unresolved computed command: $consumer_python
+  - scripts/smoke-paired-tool.py:168: local-script discovery: unresolved computed subprocess cwd
+  - scripts/smoke-paired-tool.py:96: local-script discovery: unresolved computed subprocess env
+  - tools/conformance-vectors/v1/check_enrolled.py:177: local-script discovery: unresolved computed subprocess cwd
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:11: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:13: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:19: local-script discovery: unsupported heredoc-fed interpreter; coverage unsupported
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:32: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:34: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:38: local-script discovery: unsupported shell compound/subshell execution
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:39: local-script discovery: unsupported local-script language: tools/conformance-vectors/v1/sample-query.json
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:40: local-script discovery: unsupported shell compound/subshell execution
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:4: local-script discovery: unsupported shell command substitution
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:5: local-script discovery: unsupported shell command substitution
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:6: local-script discovery: unresolved computed operand of unknown command: rm
+  - tools/conformance-vectors/v1/run-sample-loopback.sh:7: local-script discovery: unresolved local-script target: $repo_root
+  - tools/conformance-vectors/v1/run-sample-validation.sh:10: local-script discovery: unsupported shell command substitution
+  - tools/conformance-vectors/v1/run-sample-validation.sh:11: local-script discovery: unsupported shell command substitution
+  - tools/conformance-vectors/v1/run-sample-validation.sh:12: local-script discovery: unresolved computed operand of unknown command: rm
+  - tools/conformance-vectors/v1/run-sample-validation.sh:13: local-script discovery: unresolved local-script target: $repo_root
+  - tools/conformance-vectors/v1/run-sample-validation.sh:16: local-script discovery: unresolved computed operand of unknown command: dotnet
+  - tools/conformance-vectors/v1/run-sample-validation.sh:20: local-script discovery: unsupported test runner with tracked module tests: unittest
+  - tools/conformance-vectors/v1/run-sample-validation.sh:29: local-script discovery: unsupported heredoc-fed interpreter; coverage unsupported
+  - tools/conformance-vectors/v1/run-sample-validation.sh:5: local-script discovery: unsupported shell compound/subshell execution
+  - tools/conformance-vectors/v1/run_loopback.py:272: local-script discovery: unresolved computed subprocess env
+  - tools/conformance-vectors/v1/run_loopback.py:289: local-script discovery: unresolved computed subprocess env
+  - tools/conformance-vectors/v1/run_loopback.py:672: local-script discovery: unresolved computed subprocess env
+  - tools/conformance-vectors/v1/run_loopback.py:744: local-script discovery: unresolved computed subprocess env
+  - tools/conformance-vectors/v1/run_loopback.py:791: local-script discovery: unresolved computed subprocess env
+  - tools/conformance-vectors/v1/run_packaged_process_fixture.py:22: local-script discovery: unresolved computed subprocess cwd
+  - tools/conformance-vectors/v1/verify_artifact.py:150: local-script discovery: unresolved computed subprocess cwd
+  - tools/conformance-vectors/v1/verify_artifact.py:57: local-script discovery: unresolved computed Python script invocation
+  - tools/live-topology/bootstrap-runtime.py:22: local-script discovery: unresolved computed Python script invocation
+  - tools/live-topology/bootstrap-runtime.py:26: local-script discovery: unresolved computed Python script invocation
+  - tools/live-topology/bootstrap-runtime.py:29: local-script discovery: unresolved computed Python script invocation
+  - tools/live-topology/bootstrap-runtime.py:38: local-script discovery: unresolved computed Python script invocation
+  - tools/live-topology/capture_heads.py:15: local-script discovery: unsupported Python search-path mutation
+  - tools/live-topology/capture_heads.py:26: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:122: local-script discovery: unresolved computed Python script invocation
+  - tools/live-topology/ci.py:141: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:25: local-script discovery: unsupported Python search-path mutation
+  - tools/live-topology/ci.py:312: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:31: local-script discovery: unsupported Python search-path mutation
+  - tools/live-topology/ci.py:358: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:360: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:361: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:488: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:489: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:490: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/ci.py:794: local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported
+  - tools/live-topology/ci.py:795: local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported
+  - tools/live-topology/live_plans.py:189: local-script discovery: unresolved computed subprocess env
+  - tools/live-topology/live_plans.py:19: local-script discovery: unsupported Python search-path mutation
+  - tools/live-topology/live_plans.py:21: local-script discovery: unsupported Python search-path mutation
+  - tools/live-topology/live_plans.py:370: local-script discovery: unresolved computed subprocess env
+  - tools/live-topology/live_plans.py:396: local-script discovery: unresolved computed subprocess env
+  - tools/live-topology/native_sources.py:12: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/native_sources.py:44: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/native_sources.py:45: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/prepare-ci.sh:4: local-script discovery: unsupported shell command substitution
+  - tools/live-topology/prepare-ci.sh:5: local-script discovery: unsupported shell wrapper options
+  - tools/live-topology/run-ci.sh:3: local-script discovery: unsupported shell command substitution
+  - tools/live-topology/run-ci.sh:4: local-script discovery: unsupported shell wrapper options
+  - tools/live-topology/run-isolated.py:143: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/run-isolated.py:182: local-script discovery: unresolved computed subprocess env
+  - tools/live-topology/run-isolated.py:198: local-script discovery: unresolved computed subprocess cwd
+  - tools/live-topology/run-isolated.py:244: local-script discovery: unresolved computed Python script invocation; unsafe or unresolved forwarding
+  - tools/live-topology/run-isolated.py:84: local-script discovery: unresolved computed Python script invocation; unsafe or unresolved forwarding
+  - tools/live-topology/run-vectors.py:73: local-script discovery: unresolved computed subprocess cwd
+- Hexalith.PolymorphicSerializations: pass; main `f1e2b45b161627bc2d204e128ffeda086eb413b8`; 0 selected files
+
+Coverage is incomplete; this result does not establish a clean scan.
