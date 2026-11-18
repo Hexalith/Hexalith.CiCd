@@ -449,7 +449,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Binds:** CAP-6, CAP-9, CAP-13, CAP-14, CAP-15
 - **Prevents:** a bump moving heads under queued releases; one failure blocking the bump; silent nightly failures; a disabled or dropped scheduler; legacy workflows dispatched by mistake; a drifted caller released; stale CodeQL alerts blocking releases; tokens expiring mid-run; a bad Builds minor halting all delivery or surfacing a day late
 - **Rule:**
-  - `nightly.yml` runs at 02:17 UTC as the jobs below. A job that uses the App runs in `cicd-app` and mints its own tokens (AD-7). Every job stays under the 6-hour job limit.
+  - `nightly.yml` runs at 02:17 UTC, or when dispatched on `main`, as the jobs below. Both triggers run the same jobs and steps: the controllers only check that the event is one of the two, and only the `qualify-bump` input changes which jobs run. A job that uses the App runs in `cicd-app` and mints its own tokens (AD-7). Every job stays under the 6-hour job limit.
     1. **`dispatch`** (App).
        - It first waits, for at most 30 minutes, until no `deliver.yml` run on `main` is in progress or pending.
        - A module is **adopted** when `delivered/<Repo>` exists and its live `main` has `.github/hexalith-ci.json`. A module with the ref and no file has a failed adoption push, and fails the night. An adopted module with immutable releases off fails the night.

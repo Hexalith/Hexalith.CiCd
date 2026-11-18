@@ -382,7 +382,8 @@
   description: >-
     Adopt both repos through the AD-21 sequence and apply the gate rule
     (CAP-10, CAP-16). The pause after this story is for watching one real
-    night: CodeQL, release, Builds bump, and delivery. At this existing pilot
+    nightly run, scheduled or dispatched (CAP-13): the pilots' CodeQL and
+    releases, the Builds bump, and delivery. At this existing pilot
     checkpoint, confirm 10-1's branch findings and test its deferred Update
     branch operation after real CiCd delivery. Create a product-only probe
     head/PR before delivery, then update it afterward. Confirm or correct
@@ -504,6 +505,20 @@
     Requires its own maintainer approval before starting. Acceptance
     criteria: story 28-8 in section 4.1 of the approved sprint change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "29-1"
+  title: "On-demand nightly acceptance"
+  description: >-
+    A read-only tool judges one nightly.yml run on main, scheduled or
+    dispatched, and reports each module's own verdict, so stories accept a
+    nightly outcome without waiting for 02:17 UTC (CAP-13, CAP-16; AD-18).
+  invoke_dev_with: >-
+    Work in this repo: tools/nightly_acceptance.py (stdlib plus the caller's
+    gh), its tests, test_nightly_workflow.py and docs/nightly.md. Generalize
+    the checks of evidence/11/authenticate-scheduled-20261118.py without
+    importing it. Read-only: no dispatch, rerun, mint or credential switch.
+    Acceptance criteria: story 29-1 in section 4.1 of the approved sprint
+    change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md).
 - id: "12"
   title: "Migrate AI.Tools"
   description: >-
@@ -685,8 +700,8 @@
     registration; require live-main actions, one committed setup/pin/render
     candidate and successful locked validation. Immediately after adoption,
     enable immutable releases and retire legacy grants/policies. Record actual
-    normal-checker, CI, qualification prerequisites/outcome and scheduled-night
-    publication or valid no-release result before closing the story.
+    normal-checker, CI, qualification prerequisites/outcome and nightly-run
+    (CAP-13) publication or valid no-release result before closing the story.
 - id: "21"
   title: "Migrate Parties"
   description: >-

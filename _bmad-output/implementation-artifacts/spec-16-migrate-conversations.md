@@ -23,7 +23,7 @@ and protected Windows checkout.
 
 **Approach:** Follow AD-21 to preserve product coverage, prepare module actions,
 register/render the module and let App delivery adopt it. Completion requires
-green Linux/Windows CI and the next genuine scheduled nightly outcome.
+green Linux/Windows CI and its nightly outcome (CAP-13).
 
 **Human decisions, 2026-11-16:** Include generic shared producer preparation,
 protected Windows checkout, qualification and a Builds release in story 16.
@@ -116,7 +116,7 @@ Conversations' released-input qualification remains mandatory.
   Windows job, C# analysis and the direct Platform identity dependency.
 - [ ] `evidence/16/` — authenticate adoption/preservation; immediately enable
   immutable releases and retire verified legacy access. Observe green CI,
-  normal checker and scheduled night.
+  normal checker and nightly run.
 
 **Acceptance Criteria:**
 
@@ -130,7 +130,7 @@ Conversations' released-input qualification remains mandatory.
   Linux-specific tests also remain covered.
 - Given the selected catalog, when the adapter builds, then isolated locks and
   all seven assertions pass; frozen fixture projects stay outside root .slnx.
-- Given green adopted CI, when its next scheduled nightly completes, then CodeQL
+- Given green adopted CI, when a nightly run (CAP-13) after adoption completes, then CodeQL
   and publication or a valid nothing-to-release outcome establish CAP-16.
 
 ## Implementation Notes
@@ -330,6 +330,7 @@ Conversations' released-input qualification remains mandatory.
   scheduled nightly had not appeared by the aborted 04:41 UTC poll. Legacy
   NuGet retirement and scheduled-night acceptance remain required.
 
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
 
 ## Review Triage Log
 

@@ -17,7 +17,7 @@ context:
 
 **Problem:** Projects runs legacy workflows, workflow-policy and historical evidence gates, and lacks Dependabot.
 
-**Approach:** Migrate through AD-21 delivery, retaining genuine product coverage as shared stages or enabled custom actions; accept only green adopted CI and a successful next scheduled nightly.
+**Approach:** Migrate through AD-21 delivery, retaining genuine product coverage as shared stages or enabled custom actions; accept only green adopted CI and a successful nightly run (CAP-13) after adoption.
 
 ## Boundaries & Constraints
 
@@ -62,7 +62,7 @@ context:
 
 - Given accepted pilots and verified prerequisites, when delivery adopts Projects, then rendered shared workflows replace legacy gates and add Dependabot without losing product coverage or foreign content.
 - Given qualified package-mode hooks, when shared CI/checker run, then build/unit stages and enabled product checks succeed without repeated generic setup, source-mode substitution or workflow assertions.
-- Given adopted green main, when its next scheduled nightly finishes, then authentic successful release or nothing-to-release, scan and delivery outcomes establish CAP-16 completion.
+- Given adopted green main, when a nightly run (CAP-13) after adoption finishes, then authentic successful release or nothing-to-release, scan and delivery outcomes establish CAP-16 completion.
 
 ## Implementation Notes
 
@@ -93,6 +93,8 @@ context:
   `in-progress`; no completion or CAP-16 acceptance is claimed.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
 
 ## Review Triage Log
 

@@ -65,7 +65,7 @@ database. These additions require a published compatible pin before adoption.
 
 ## Nightly run
 
-`nightly.yml` in this repository runs at 02:17 UTC as a chain of jobs (AD-18). Jobs that use the App run in `cicd-app` and mint their own tokens.
+`nightly.yml` in this repository runs at 02:17 UTC, or when dispatched on `main` (CAP-13), as a chain of jobs (AD-18). Jobs that use the App run in `cicd-app` and mint their own tokens.
 
 1. **Dispatch.** It first waits, for at most 30 minutes, until no delivery run on `main` is in progress. A module is adopted when its `delivered/<Repo>` branch exists and its live `main` has `.github/hexalith-ci.json`. Each adopted module whose live `ci.yml` and `release.yml` equal those on its branch gets its `release.yml` dispatched, along with the branch's commit. A drifted module is not dispatched, and fails the night. So do a branch without the file (a failed adoption push) and an adopted module with immutable releases off. Builds' `builds-release.yml` is dispatched too. Anything beyond the Free plan's 20 concurrent jobs waits in GitHub's queue.
 2. **Each release run** (AD-16, AD-17). It runs on `main` only:

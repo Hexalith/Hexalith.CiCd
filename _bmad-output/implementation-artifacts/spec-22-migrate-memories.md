@@ -16,7 +16,7 @@ context:
 
 **Problem:** Memories has legacy pipelines and CI/story gates alongside genuine source, browser, rollout and telemetry checks. Adopting the shared pipelines must preserve product coverage.
 
-**Approach:** Follow AD-21: establish prerequisites, prepare product changes with module-agent, register/render in CiCd, and let App delivery adopt Memories. Finish only after green adopted CI and the next scheduled nightly succeeds or reports nothing to release.
+**Approach:** Follow AD-21: establish prerequisites, prepare product changes with module-agent, register/render in CiCd, and let App delivery adopt Memories. Finish only after green adopted CI and a nightly run (CAP-13) after adoption succeeds or reports nothing to release.
 
 ## Boundaries & Constraints
 
@@ -37,7 +37,7 @@ context:
 | Prerequisites and checks pass | Register/render and authenticate App adoption |
 | Missing or unreadable prerequisite | Block adoption; distinguish absence from access refusal |
 | Product failure | Fix product while retaining assertions |
-| No releasable commit | Accept authenticated scheduled nightly nothing-to-release |
+| No releasable commit | Accept an authenticated nightly-run nothing-to-release |
 
 </frozen-after-approval>
 
@@ -56,7 +56,7 @@ context:
 - [x] Memories `Directory.Build.props`, root `package.json`, `package-lock.json`, `.githooks/`, `.releaserc.json`, `commitlint.config.mjs`, installed `bmad-testarch-ci` — remove audit bypasses and obsolete tooling. Preserve browser workspace dependencies. Centralize only justified remaining waivers in Builds `Props/`, awaiting their release.
 - [ ] Memories integration projects, browser `playwright.config.ts`, `.github/actions/{after-unit-tests,after-integration-tests,nightly}/action.yml` — retain complete project execution and fast/slow cadence through project separation; route benchmarks nightly. Reuse prepared Release outputs/environment for browser, SQL and disposable rollout checks. Qualify combined runtime without truncation.
 - [ ] `setup/Hexalith.Memories.yml`, `references/Hexalith.Memories`, `rendered/Hexalith.Memories*` — register the remotely available product revision, solution, environment flags and verified direct dependencies; commit registration with render after prerequisite releases.
-- [ ] `evidence/22/` — authenticate validation, App adoption and foreign-content preservation; immediately enable immutable releases and remove only Memories' obsolete NuGet policies/key scope, legacy org grants and Zot push access; require green CI and next scheduled nightly.
+- [ ] `evidence/22/` — authenticate validation, App adoption and foreign-content preservation; immediately enable immutable releases and remove only Memories' obsolete NuGet policies/key scope, legacy org grants and Zot push access; require green CI and a nightly run (CAP-13).
 
 **Acceptance Criteria:**
 - Given adopted Memories, when shared CI executes, then all retained product checks pass without CI/story/YAML gates or lost coverage.
@@ -79,6 +79,8 @@ context:
 - Repeated local implementation checks from isolated CiCd revision `61c558fc4a9b02fbfef262bebce76c2c15370194`: repaired the evidence verifier's checkout-relative object assumptions by allowing explicit existing publication/Builds repositories and retaining their paths/invocation. Bundle, all 253 published paths, all 17 preservation groups and the offline committed-source renderer pass. No product code changed; no remote or runtime qualification was added.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
 
 ## Review Triage Log
 

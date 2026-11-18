@@ -86,4 +86,4 @@ the parent gitlinks, and authenticate that each recorded module commit is
 available remotely. A failed module check, push or remote verification stops
 the superproject commit under the existing
 Git instructions. Preparation publication never claims adoption, green hosted
-CI or the scheduled nightly acceptance outcome.
+CI or the nightly acceptance outcome (CAP-13).

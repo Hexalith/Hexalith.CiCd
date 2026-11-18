@@ -63,7 +63,7 @@ context: []
 **Acceptance Criteria:**
 - Given adopted Parties, when shared CI runs, then every retained product suite executes successfully without CI/story/YAML gates or repeated hook builds.
 - Given a releasable revision, when central nightly publishes, then packages and all three images retain exact source/version and the approved common timestamp.
-- Given adoption, when cleanup and the next scheduled night finish, then scoped publishing and green CI satisfy CAP-16.
+- Given adoption, when cleanup and a nightly run (CAP-13) after adoption finish, then scoped publishing and green CI satisfy CAP-16.
 
 ## Implementation Notes
 
@@ -75,6 +75,8 @@ context: []
 - Completion remains blocked on shared native test/model reuse, owner composition package routing, released frozen-created support and the live AD-21/adoption/nightly prerequisites. All execution checkboxes remain open because their full obligations are unsatisfied. Keep status `in-progress`; implementation has not reached the workflow review checkpoint.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 
 ## Review Triage Log
 

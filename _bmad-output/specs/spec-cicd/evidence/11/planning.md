@@ -201,6 +201,6 @@ After real delivery, repeat the two branch operations using only the protected
 module credential. Record delivery and current base revisions, successful
 product-only push and meaningful workflow-different PR Update branch outcome,
 then close/delete every probe without merging. Confirm or correct the 10-2
-restrictions. Wait for a real scheduled nightly and its CodeQL, release,
-Builds bump/no-bump and delivery outcomes; manual dispatch or fixtures cannot
-substitute for the story's real-night checkpoint.
+restrictions. Use one real nightly run, scheduled or dispatched on `main` (CAP-13),
+judged with `tools/nightly_acceptance.py --checkpoint pilot`; fixtures cannot
+substitute for it.

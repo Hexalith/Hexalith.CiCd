@@ -57,14 +57,14 @@ context:
 - [x] Agents server product tests and neutral EventStore-floor script — preserve whole-repository package authority and dependency rejection without rebuilding; retire YAML/story/tooling assertions, redundant runners and tool-only npm files. Keep original floors 529/6/787/549/1073.
 - [x] Agents `.github/actions/after-unit-tests/action.yml`, package/consumer scripts and product regressions — reuse built output with no-build packing; preserve six-package/UI/consumer checks, clean scratch and satisfy unchanged discovery/duplication policy. Never call Builds from the hook.
 - [ ] `gate-classification.md`, architecture spine AD-13/21, `builds-version`, `setup/Hexalith.Agents.yml`, `rendered/` and Agents gitlink — record decisions, configure both C#/JavaScript CodeQL and the hook/floors, commit cause/output, validate and allow App delivery after pilot acceptance.
-- [ ] `evidence/14/` — authenticate adoption and immediately enable immutable releases/remove other NuGet policies and legacy grants; verify green CI and the next genuine scheduled nightly outcome before completion.
+- [ ] `evidence/14/` — authenticate adoption and immediately enable immutable releases/remove other NuGet policies and legacy grants; verify green CI and its nightly outcome (CAP-13) before completion.
 
 **Acceptance Criteria:**
 
 - Given satisfied prerequisites, when App delivery adopts Agents, then its owned perimeter matches the accepted render and product/foreign content is preserved.
 - Given the five product suites, when CI or local checking runs, then original floors and fail-skips apply once per suite with existing failure ordering.
 - Given built Release output, when the enabled product hook runs, then all six package/consumer checks pass without rebuilding Agents or writing retained evidence.
-- Given adopted green main, when its next scheduled nightly runs, then both CodeQL languages and release success or authentic nothing-to-release are evidenced, with immediate credential cleanup verified.
+- Given adopted green main, when a nightly run (CAP-13) after adoption finishes, then both CodeQL languages and release success or authentic nothing-to-release are evidenced, with immediate credential cleanup verified.
 
 ## Implementation Notes
 
@@ -81,6 +81,8 @@ context:
 - 2026-11-16 — Human approved the spec and Agents-only preparation proof with "approve and stop". Re-read and preserved the expanded on-disk task list. Status is ready-for-dev; no implementation, product push or adoption was performed.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 
 ## Review Triage Log
 

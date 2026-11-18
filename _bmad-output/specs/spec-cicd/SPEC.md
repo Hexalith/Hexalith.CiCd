@@ -115,8 +115,10 @@ The architecture spine (first companion) decides how each capability is built, i
     - A failure shows as a failed run in that repository and turns this repository's nightly run red.
     - An adopted module whose live callers differ from its delivered state, whose adoption push failed, or whose immutable releases are off is not released, and turns the nightly run red.
     - `HEXALITH_RELEASE_PUBLISH_ENABLED` set to `false` stops that module from publishing.
+    - A `workflow_dispatch` of `nightly.yml` on `main` with `qualify-bump` false runs the same jobs as the 02:17 UTC schedule. Anything that needs a nightly outcome may start one instead of waiting for the night. The maintainer or an interactive CiCd session starts it, never a module agent.
+    - A module's nightly outcome is its own row: its eligibility, its release run's CodeQL and release-or-nothing result, its scan row and, after a bump, its delivery. Other rows don't change it. The night still fails when any row fails.
 - **CAP-14** Nightly security analysis
-  - **intent:** CodeQL analyzes each module once a night, inside its release run, and never on a push or PR. High and critical findings block that night's release.
+  - **intent:** CodeQL analyzes each module once per nightly run (CAP-13), inside its release run, and never on a push or PR. High and critical findings block that night's release.
   - **success:**
     - No module runs CodeQL on a push or PR.
     - An open high or critical CodeQL alert from the release analysis blocks that module's release.
@@ -131,7 +133,7 @@ The architecture spine (first companion) decides how each capability is built, i
 - **CAP-16** Migration
   - **intent:** All 17 modules move onto the shared pipelines, simplest first, and the legacy CI/CD in Builds is deleted.
   - **success:**
-    - Each module is adopted by one delivery commit. It is done when its CI is green and its next nightly release succeeds or reports nothing to release.
+    - Each module is adopted by one delivery commit. It is done when its CI is green and its own outcome in a nightly run started after its adoption (CAP-13), scheduled or dispatched, passes: CodeQL passes and the release succeeds or reports nothing to release.
     - All 17 modules are managed from here.
     - Builds then holds only the AD-20 end state:
       - `.github/workflows/` holds only `ci.yml`, `release.yml`, `builds-ci.yml`, `builds-release.yml`, and `ci-cd-standards.md`;
@@ -176,7 +178,7 @@ The architecture spine (first companion) decides how each capability is built, i
 - Builds is referenced by exact release tag, and its `v*` tags can't be moved or deleted (the AD-21 tag ruleset, applied to Builds by AD-19). The callers, `hexalith-ci.json`, and the submodule move together. Adopting a new major or rolling back is a commit in this repository, at any time (AD-10).
   - Modules take only an acceptable tag: its GitHub release is published, immutable, and authored by `github-actions[bot]`, and its commit is an ancestor of Builds' `main`. This repository's global checks reject any other.
   - Immutable releases are turned on in Builds before its first rewritten release, and in each module right after its adoption (AD-19, AD-21).
-  - The automatic bump runs at most once a night. It takes the newest acceptable tag within the current major, skipping the tags in `builds-skip`.
+  - The scheduled bump runs once a night; a dispatched nightly (CAP-13) may bump again the same day. It takes the newest acceptable tag within the current major, skipping the tags in `builds-skip`.
 - Builds releases on every commit type except `docs`, `test`, and `style`, with no prerelease channel, so a central package change in `Props/Directory.Packages.props` always reaches the modules through the next bump.
 - Release publication consumes the authenticated original artifact without checkout, source execution or rebuilding: uncompressed OCI `containers/*.tar` preserve their complete platform index and child/config/layer bytes. Official Skopeo 1.22.3 uses `copy --all --preserve-digests`, pinned by image digest and reported source commit in Builds `Tools/spikes/publish-tools.json`; a conflicting version root fails before any publication write and the complete remote graph is verified afterward (AD-11, AD-17; story 3-1).
 - SHA-pinned NuGet/login v1.2.0 runs inside the remote `publish` composite in the caller-owned `hexalith-release` job. Nested login and same-context caller login both passed; no caller-key fallback input is added. Signed build provenance and `attestations: write` are excluded: a later publisher's default attestation identifies its own source/run, not the original package/image build. OCI labels are not signed attestations (AD-17; story 3-1).

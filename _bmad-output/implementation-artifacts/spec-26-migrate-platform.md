@@ -116,7 +116,7 @@ security upgrades. After adoption require the standard checker before pushes.
 - Given a releasable Platform revision, when central nightly publishes, then
   only intended packages use qualified original artifacts and public signatures
   are verified; normal pushes do not publish.
-- Given successful App adoption, when cleanup and the next scheduled nightly
+- Given successful App adoption, when cleanup and a nightly run (CAP-13) after adoption
   finish, then the owned perimeter is correct, CI is green and CAP-16 is met.
 
 ## Implementation Notes
@@ -145,6 +145,8 @@ genuine Platform qualification. Its seven migration tasks remain open; no
 Platform product change, registration, adoption or CAP-16 claim was made here.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 
 ## Review Triage Log
 

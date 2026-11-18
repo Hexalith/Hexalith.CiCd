@@ -57,7 +57,7 @@ For McpCli product-preparation pushes before actual App adoption only, authorize
 - [ ] McpCli `.github/actions/{after-unit-tests,windows-product,macos-product}/action.yml` and the mapped product scripts — preserve payload, consumer, conformance and platform checks. Delegate Integration.Tests to its real isolated launcher. Remove retired release/agent gate tests and tool-only npm manifests; preserve manual historical evidence.
 - [ ] McpCli `src/Hexalith.McpCli.Core/Hexalith.McpCli.Core.csproj` — correct packability and verify the complete evaluated release set remains exactly the approved pair.
 - [ ] `builds-version`, `setup/Hexalith.McpCli.yml`, `rendered/`, `references/Hexalith.McpCli` — after qualified product preparation and shared publication, commit registration/render/pins, validate the committed candidate and publish through normal delivery. Add required direct test-source submodules to setup, never nested initialization.
-- [ ] `_bmad-output/specs/spec-cicd/evidence/15/acceptance.json` — authenticate App delivery, immediately enable immutable releases and retire legacy publication grants/policies; record green CI, real platform/live results and the next genuine nightly outcome before accepting done.
+- [ ] `_bmad-output/specs/spec-cicd/evidence/15/acceptance.json` — authenticate App delivery, immediately enable immutable releases and retire legacy publication grants/policies; record green CI, real platform/live results and its nightly outcome (CAP-13) before accepting done.
 
 **Acceptance Criteria:**
 
@@ -84,6 +84,8 @@ For McpCli product-preparation pushes before actual App adoption only, authorize
   session is continuing ordered provisioning; all task checkboxes remain open.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 
 ## Review Triage Log
 

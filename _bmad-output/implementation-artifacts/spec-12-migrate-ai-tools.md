@@ -21,9 +21,9 @@ context:
 
 ## Boundaries & Constraints
 
-**Always:** Wait for story 11's genuine scheduled-night checkpoint and acceptance before adoption. Preserve concurrent work; establish a clean branch from freshly fetched main. Use module-agent for product writes, CiCd-agent for CiCd, command-local maintainer for administration. Require successful Builds checking before module pushes except for the approved preparation proof below. Use `run-with-temp` and standalone module clones; save evidence outside scratch.
+**Always:** Wait for story 11's nightly checkpoint acceptance before adoption. Preserve concurrent work; establish a clean branch from freshly fetched main. Use module-agent for product writes, CiCd-agent for CiCd, command-local maintainer for administration. Require successful Builds checking before module pushes except for the approved preparation proof below. Use `run-with-temp` and standalone module clones; save evidence outside scratch.
 
-**Never:** Edit owned module portions, initialize nested submodules, weaken checks, invent packages/tests/baselines, obtain the App key, manually dispatch the acceptance night, or revoke legacy access before authenticated adoption. Do not extend the pilots' exception implicitly.
+**Never:** Edit owned module portions, initialize nested submodules, weaken checks, invent packages/tests/baselines, obtain the App key, count a `qualify-bump` run or another module's row as its nightly outcome, or revoke legacy access before authenticated adoption. Do not extend the pilots' exception implicitly.
 
 **Human decisions, 2026-11-16 ("do recommended"):** For package-free AI.Tools, retain the main-only release environment and normal GitHub release behavior, omit unused NuGet/Zot publishing credentials and policy, and require them before adding any package/container target. For AI.Tools product preparation before adoption only, replace the unavailable checker with released commitlint/audit checks, exact owned-byte/mode/gitlink preservation, documentation/removal consistency and synchronized entrypoint checks; save exact base/head revisions and results before any push. After delivery, require the normal checker in a standalone clone with Builds as a direct dependency. No owned bootstrap, nested initialization or weakened check is authorized.
 
@@ -59,7 +59,7 @@ context:
 
 - Given accepted pilots and verified prerequisites, when delivery adopts AI.Tools, then one authenticated adoption commit establishes the expected perimeter and preserves product/foreign content.
 - Given adopted main, when CI and the normal local checker run, then both succeed without requiring .NET work or module workflow assertions.
-- Given adopted green main, when its next genuine nightly finishes, then an authenticated successful release or nothing-to-release outcome and central scan/delivery results establish CAP-16 completion; disabled publishing alone does not.
+- Given adopted green main, when a nightly run (CAP-13) after adoption finishes, then an authenticated successful release or nothing-to-release outcome and central scan/delivery results establish CAP-16 completion; disabled publishing alone does not.
 
 ## Implementation Notes
 
@@ -160,6 +160,8 @@ context:
   enablement, legacy no-ops, hosted CI, and the authenticated standalone checker
   are recorded under `evidence/12/`. Product-preparation and registration/gitlink
   tasks are complete. Story 11 acceptance and the next genuine night remain open.
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed. The manual-dispatch prohibition became a ban on counting `qualify-bump` runs or another module's row.
 
 ## Review Triage Log
 

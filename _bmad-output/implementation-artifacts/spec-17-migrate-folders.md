@@ -22,7 +22,7 @@ context:
 
 **Always:** Preserve concurrent work in the approved isolated branch. Respect migration order and predecessor checkpoints before adoption. Use module-agent for product writes, CiCd-agent for CiCd/Builds, command-local maintainer for administration. Preserve SDK11 and published targets, product checks and foreign content. Keep waivers only in released Builds Props. Use `run-with-temp`; record full revisions and actual failures.
 
-**Never:** Edit owned module portions, initialize nested submodules, obtain the App key, weaken audits/tests, inherit the pilots' exception, invent live-provider evidence, duplicate test execution, revoke legacy access before adoption, or substitute manual dispatch for the acceptance night.
+**Never:** Edit owned module portions, initialize nested submodules, obtain the App key, weaken audits/tests, inherit the pilots' exception, invent live-provider evidence, duplicate test execution, revoke legacy access before adoption, or count a `qualify-bump` run or another module's row as its nightly outcome.
 
 **Human decision, 2026-11-16:** Approved a Folders-only pre-adoption checker substitute: released policy/commit checks, exact owned-tree preservation, package-mode Release build and every retained test/product hook with saved revisions/results. This applies only to exact product-preparation commits before real adoption. The normal checker resumes after adoption; no owned-file edits, nested initialization, credential broadening or audit/test bypasses are authorized.
 
@@ -63,7 +63,7 @@ context:
 - Given verified prerequisites and predecessor checkpoints, when delivery adopts Folders, then one authenticated commit establishes its perimeter and preserves product/foreign content.
 - Given a retained suite failure, when its shared stage or hook executes, then CI fails without lost coverage, duplicate runs or an allow-not-runnable exemption.
 - Given generated artifacts and provider checks, when the SDK11 package build and nightly hook execute, then artifact identity and actual provider behavior pass with compatible runtimes.
-- Given adopted green main, when the next genuine nightly completes, then successful publication or nothing-to-release and immediate credential retirement establish CAP-16 completion.
+- Given adopted green main, when a nightly run (CAP-13) after adoption completes, then successful publication or nothing-to-release and immediate credential retirement establish CAP-16 completion.
 
 ## Implementation Notes
 
@@ -96,6 +96,8 @@ context:
   registration, owned module content and gitlinks were not changed.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed. The manual-dispatch prohibition became a ban on counting `qualify-bump` runs or another module's row.
 
 ## Review Triage Log
 

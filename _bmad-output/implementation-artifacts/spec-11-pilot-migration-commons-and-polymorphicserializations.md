@@ -62,18 +62,26 @@ context:
 - [x] Both module `tools/` and root `package.json`/lockfile — after shared coverage exists, retire duplicated legacy verification code/tests/manifests and tool-only npm files using the module token. Let delivery remove owned legacy configuration/workflows.
 - [x] Commons `.github/actions/after-unit-tests/action.yml` and its three package scripts — retain payload/symbol and isolated-consumer checks without another module build/restore; fix consumer SDK/cache isolation and CI audit-off/package flags. Test real package consumption; preserve all C# suites.
 - [x] `builds-version`, `setup/Hexalith.{Commons,PolymorphicSerializations}.yml`, `rendered/`, direct gitlinks — pin released shared behavior, use each `.slnx`, enable Commons' hook and default C# analysis. Before adoption, create the disposable product-only probe branch/PR from current module main and record base/head. Render and validate one committed candidate before pushing; hooks must already exist on live main.
-- [ ] `evidence/11/` — authenticate both delivery commits/refs/reports; immediately enable immutable releases and remove other NuGet policies and legacy secret/key/Zot access. Record green CI, the scheduled night and post-delivery branch/Update-branch outcomes; clean probes and confirm/correct 10-2 restrictions.
+- [ ] `evidence/11/` — authenticate both delivery commits/refs/reports; immediately enable immutable releases and remove other NuGet policies and legacy secret/key/Zot access. Record green CI, one nightly run (CAP-13) and post-delivery branch/Update-branch outcomes; clean probes and confirm/correct 10-2 restrictions.
 
 **Acceptance Criteria:**
 
 - Given satisfied prerequisites, when delivery adopts the pilots, then both owned trees match accepted perimeters and product files/tests remain intact.
 - Given missing or wrong-source published packages, when shared publication verifies the feed, then it cannot report successful GitHub publication.
 - Given adopted main revisions, when restricted-token branch probes run, then actual server outcomes and complete cleanup are recorded without owned-file edits or probe merges.
-- Given green pilot CI, when one real scheduled nightly finishes, then CodeQL, releases or valid no-release outcomes, scan, Builds bump/no-bump and delivery are evidenced before checkpoint acceptance.
+- Given green pilot CI, when one real nightly run finishes, scheduled or dispatched on `main` (CAP-13), then the pilots' CodeQL, releases or valid no-release outcomes and scan rows pass, and the bump's no-change or pushed-and-delivered result and `keepalive` are evidenced before checkpoint acceptance; other modules' rows are recorded, not decisive.
 
 ## Implementation Notes
 
-- Current resume checkpoint, 2026-11-17 13:18 UTC: a read-only CiCd-agent
+- Current resume checkpoint, 2026-11-18 10:10 UTC: the approved on-demand nightly change supersedes the
+  manual-dispatch prohibition in the checkpoints below. Resume after stories 28-1 (bump fixture) and
+  29-1 (`tools/nightly_acceptance.py`) land: dispatch one `nightly.yml` run on `main` per CAP-13, judge it
+  with `--checkpoint pilot`, record the receipt, then disable the `hexalith-cicd-story11-20261118` timer.
+  Dispatched run `44264031228` (source `81e10620d4b4442b741d5c4a7420d1c8eb33ff4c`) already shows both pilot
+  rows passing: Commons published `3.0.1`, Poly nothing to release, Release CodeQL and scan rows green; its
+  `v6.3.0` bump failed in shared global checks (story 28-1), so it cannot accept the checkpoint. The 18 Nov
+  observer still runs; a passing scheduled run before then also satisfies the reworded criterion.
+- Prior resume checkpoint, 2026-11-17 13:18 UTC: a read-only CiCd-agent
   observer is sleeping until `2026-11-18T02:16:00Z`, then will bind the
   earliest genuine `nightly.yml` schedule event on main at/after
   `2026-11-18T02:17:00Z` attempt 1. Manual dispatch/rerun remains forbidden.
@@ -423,6 +431,8 @@ context:
 ## Spec Change Log
 
 - 2026-11-16 — Human approved the documented pre-adoption verification path for the two pilots' product-preparation pushes. Recorded the limited exception in the frozen constraints; all ownership, product checks, credential boundaries and post-adoption checker requirements remain in force.
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed. The pilot checkpoint also requires a valid bump result and `keepalive`; Builds' own release row is recorded, not decisive.
 
 ## Review Triage Log
 

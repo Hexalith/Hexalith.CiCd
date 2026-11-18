@@ -111,7 +111,7 @@ exception expires at App adoption; normal `check.py` is then mandatory.
 - Given a compatible released Builds API and satisfied preconditions, when
   delivery adopts EventStore, then its perimeter matches the accepted render
   and retained product checks stay enabled.
-- Given adopted green main, when the next scheduled night completes, then
+- Given adopted green main, when a nightly run (CAP-13) after adoption completes, then
   successful publication or a valid no-release result is recorded before done.
 
 ## Implementation Notes
@@ -138,6 +138,8 @@ exception expires at App adoption; normal `check.py` is then mandatory.
   report pending provisioning/release/adoption evidence for publication.
 
 ## Spec Change Log
+
+- 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 
 ## Review Triage Log
 
