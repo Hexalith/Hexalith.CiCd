@@ -1,0 +1,38 @@
+{
+  "kind": "story16 hosted Windows protected fetch follow-up",
+  "status": "in-progress",
+  "product": {
+    "head": "ef7bc4c9a277ece7dbe68aedf9c5ba7f0945c8be",
+    "hostedCiRun": 44208370747,
+    "linux": {
+      "job": "ci / Build and tests",
+      "conclusion": "success",
+      "seconds": 1140,
+      "stage4Integration": "success"
+    },
+    "windows": {
+      "job": "windows-testsupport-windows",
+      "conclusion": "failure",
+      "step": "Run Hexalith/Hexalith.Builds/Github/prepare@v6.2.0",
+      "message": "protected Git fetch failed (128)",
+      "prepareTag": "v6.2.0"
+    }
+  },
+  "buildsFollowUp": {
+    "base": "7afc4981e21bc2fcce687199a3fd2c61fe87336e",
+    "head": "07336980170b2e0cbf28f861b33451b7784b5436",
+    "pushed": true,
+    "hostedCiRun": 44211694609,
+    "change": "command-local GitHub job-token extraHeader plus portable /dev/null Git config for protected Windows fetch",
+    "releaseRequired": true,
+    "conversationsStillPinnedTo": "v6.2.0"
+  },
+  "pending": [
+    "Green Builds CI for 07336980 and a genuine nightly Builds release",
+    "Adopt the released prepare tag on Conversations after App delivery",
+    "Green hosted Windows TestSupport on the released pin",
+    "Legacy NuGet policy 18928 retirement with policy 27245 preserved",
+    "Post-adoption npm file cleanup after selector absence",
+    "Next genuine scheduled nightly CodeQL/publication or nothing-to-release outcome for Conversations"
+  ]
+}

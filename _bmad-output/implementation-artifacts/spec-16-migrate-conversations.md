@@ -289,9 +289,17 @@ Conversations' released-input qualification remains mandatory.
   `ef7bc4c9a277ece7dbe68aedf9c5ba7f0945c8be` drops that foreign section and
   gitlink without changing the Builds `.gitmodules` section or other owned
   files. Standalone `python3 references/Hexalith.Builds/check.py` passed stages
-  1–3 on that commit. Hosted Linux/Windows CI, legacy NuGet 18928 retirement,
-  npm cleanup and the next scheduled night remain. See
-  [adopted-cicd-gitlink-drop-20261118.json](../specs/spec-cicd/evidence/16/adopted-cicd-gitlink-drop-20261118.json).
+  1–3 on that commit. Hosted Linux CI, including stage-4 integration, passed
+  on run `44208370747`. Hosted Windows prepare still fails at
+  `protected Git fetch failed (128)` on pinned `prepare@v6.2.0`. Builds
+  `07336980170b2e0cbf28f861b33451b7784b5436` sends the hosted job token as a
+  command-local HTTPS header and uses portable `/dev/null` Git config; a
+  genuine nightly Builds release and Conversations pin/delivery are required
+  before Windows can use it. Legacy NuGet 18928 retirement, npm cleanup and
+  the next Conversations scheduled night remain. See
+  [adopted-cicd-gitlink-drop-20261118.json](../specs/spec-cicd/evidence/16/adopted-cicd-gitlink-drop-20261118.json)
+  and
+  [hosted-windows-fetch-20261118.json](../specs/spec-cicd/evidence/16/hosted-windows-fetch-20261118.json).
 
 ## Spec Change Log
 
@@ -306,8 +314,11 @@ Conversations' released-input qualification remains mandatory.
   are enabled. Hosted CI, legacy NuGet retirement and scheduled-night acceptance
   remain required.
 - 2026-11-18 follow-up: drop the unregistered Hexalith.CiCd gitlink so the
-  scaffold smoke test matches the qualified twelve-path inventory. Hosted CI,
-  legacy NuGet retirement and scheduled-night acceptance remain required.
+  scaffold smoke test matches the qualified twelve-path inventory. Hosted Linux
+  integration passed; hosted Windows prepare still fails Git fetch 128 on
+  v6.2.0. A Builds follow-up is on main and still needs a genuine release
+  before Conversations can consume it. Legacy NuGet retirement and scheduled-
+  night acceptance remain required.
 
 
 ## Review Triage Log
