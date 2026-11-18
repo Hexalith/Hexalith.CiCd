@@ -282,6 +282,16 @@ Conversations' released-input qualification remains mandatory.
   Hosted Linux/Windows CI, legacy NuGet 18928 retirement, npm cleanup and the
   next scheduled night remain. See
   [adopted-platform-pin-20261118.json](../specs/spec-cicd/evidence/16/adopted-platform-pin-20261118.json).
+- 2026-11-18 follow-up: hosted Linux CI then failed
+  `ScaffoldSmokeTest.SubmodulePathsShouldLiveUnderReferences` because an
+  unregistered `references/Hexalith.CiCd` gitlink made `.gitmodules` count 13
+  paths against the qualified inventory of 12. Product
+  `ef7bc4c9a277ece7dbe68aedf9c5ba7f0945c8be` drops that foreign section and
+  gitlink without changing the Builds `.gitmodules` section or other owned
+  files. Standalone `python3 references/Hexalith.Builds/check.py` passed stages
+  1–3 on that commit. Hosted Linux/Windows CI, legacy NuGet 18928 retirement,
+  npm cleanup and the next scheduled night remain. See
+  [adopted-cicd-gitlink-drop-20261118.json](../specs/spec-cicd/evidence/16/adopted-cicd-gitlink-drop-20261118.json).
 
 ## Spec Change Log
 
@@ -295,6 +305,9 @@ Conversations' released-input qualification remains mandatory.
   refused untagged Platform main during managed preparation. Immutable releases
   are enabled. Hosted CI, legacy NuGet retirement and scheduled-night acceptance
   remain required.
+- 2026-11-18 follow-up: drop the unregistered Hexalith.CiCd gitlink so the
+  scaffold smoke test matches the qualified twelve-path inventory. Hosted CI,
+  legacy NuGet retirement and scheduled-night acceptance remain required.
 
 
 ## Review Triage Log
