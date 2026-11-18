@@ -402,3 +402,11 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-fix-folders-component-fixtures.md`
   summary: Bound component-child output capture during execution to prevent disk or memory exhaustion before diagnostic truncation.
   evidence: BH3 and EC1 identify the same pre-existing capture limit gap: baseline capture_output=True accumulated without a cap; the refactor spools to disk and then reads the full output.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/28-1-self-contained-maintenance-test-fixture.md`
+  summary: Make test_maintenance.py independent of a developer's global Git config, such as a `url.<ssh>.insteadOf https://github.com/` rule or `core.autocrlf=true`.
+  evidence: Blind Hunter reproduced this with GIT_CONFIG_GLOBAL: `git remote get-url` in tools/maintenance.py:51 expands insteadOf, so both origins look foreign, and autocrlf rewrites the checked-out workflow. The behavior predates 28-1, which used the same tool call and checkout. It does not occur in Actions or the bump scratch. A fix must keep tools/maintenance.py unchanged and must not drop the safe.directory entries that runners may rely on.
+
+- source_spec: `_bmad-output/specs/spec-cicd/stories/28-1-self-contained-maintenance-test-fixture.md`
+  summary: Add refusal tests for the maintenance render guards that still have none.
+  evidence: The guards without tests are abbreviated revisions, a target HEAD other than the selected revision, a registration render not at origin/main, a changed incoming owned workflow (baseSha256), an uncommitted target workflow, an unrelated preparation output or receipt, and a policy path outside .github/workflows/*.yml. Each is a refusal in tools/maintenance.py:118-186. 28-1's fixture now reaches them for their own reasons, but the gap predates this story and is outside its acceptance criteria.
