@@ -295,8 +295,9 @@ Conversations' released-input qualification remains mandatory.
   `07336980170b2e0cbf28f861b33451b7784b5436` sends the hosted job token as a
   command-local HTTPS header and uses portable `/dev/null` Git config; a
   genuine nightly Builds release and Conversations pin/delivery are required
-  before Windows can use it. Legacy NuGet 18928 retirement, npm cleanup and
-  the next Conversations scheduled night remain. See
+  before Windows can use it. Builds hosted CI run `44211694609` passed.
+  Legacy NuGet 18928 retirement, npm cleanup and the next Conversations
+  scheduled night remain. See
   [adopted-cicd-gitlink-drop-20261118.json](../specs/spec-cicd/evidence/16/adopted-cicd-gitlink-drop-20261118.json)
   and
   [hosted-windows-fetch-20261118.json](../specs/spec-cicd/evidence/16/hosted-windows-fetch-20261118.json).
@@ -316,9 +317,9 @@ Conversations' released-input qualification remains mandatory.
 - 2026-11-18 follow-up: drop the unregistered Hexalith.CiCd gitlink so the
   scaffold smoke test matches the qualified twelve-path inventory. Hosted Linux
   integration passed; hosted Windows prepare still fails Git fetch 128 on
-  v6.2.0. A Builds follow-up is on main and still needs a genuine release
-  before Conversations can consume it. Legacy NuGet retirement and scheduled-
-  night acceptance remain required.
+  v6.2.0. A Builds follow-up is on main with green hosted CI and still needs
+  a genuine release before Conversations can consume it. Legacy NuGet
+  retirement and scheduled-night acceptance remain required.
 
 
 ## Review Triage Log
