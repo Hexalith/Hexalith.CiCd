@@ -1,0 +1,22 @@
+{
+  "command": [
+    "dotnet",
+    "msbuild",
+    "src/Hexalith.Tenants/Hexalith.Tenants.csproj",
+    "-getProperty:HexalithEventStoreVersion",
+    "-p:NuGetAudit=true",
+    "-p:NuGetAuditMode=all",
+    "-p:NuGetAuditLevel=low",
+    "-p:TreatWarningsAsErrors=true",
+    "-p:WarningsNotAsErrors=",
+    "-p:UseHexalithProjectReferences=false",
+    "-p:UseNuGetDeps=true",
+    "-p:HexalithEventStoreFromSource=false",
+    "-p:HexalithEventStoreVersion=5.1.0",
+    "-p:HexalithMcpCliVersion=2.0.1",
+    "-p:HexalithBuildPackageVersions1=/home/runner/work/_temp/mcpcli-live-ci-_yku0bet/source-runtime-packages.props"
+  ],
+  "cwd": "/home/runner/work/_temp/mcpcli-live-ci-_yku0bet/source-fixtures/Hexalith.Tenants",
+  "timeoutSeconds": 30,
+  "exitCode": 1
+}

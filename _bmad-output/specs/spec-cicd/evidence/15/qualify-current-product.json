@@ -1,0 +1,723 @@
+{
+  "started_at": "2026-11-17T19:33:06.770717+00:00",
+  "module": "/home/administrator/projects/hexalith/mcpcli-story-15-product",
+  "approval": "Story 15 frozen human decision, 2026-11-16; pre-adoption package-mode substitute",
+  "nested_submodules_initialized": false,
+  "operations": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "--shared",
+        "--no-checkout",
+        "/home/administrator/projects/hexalith/mcpcli-story-15-product",
+        "/tmp/hexalith-job.Xv42WpSQ/module"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ",
+      "exit": 0,
+      "seconds_timeout": 1800,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "-B",
+        "candidate",
+        "97511d77aeb8fd7759bc5f14a32d2550ec5c0cb5"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 1800,
+      "stdout_tail": "",
+      "stderr_tail": "Switched to a new branch 'candidate'\n"
+    },
+    {
+      "command": [
+        "dotnet",
+        "restore",
+        "Hexalith.McpCli.slnx",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "  Determining projects to restore...\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Abstractions/Hexalith.McpCli.Abstractions.csproj (in 159 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Topology.DaprStub/Topology.DaprStub.csproj (in 167 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Manifest.Unmarked.Contracts/Manifest.Unmarked.Contracts.csproj (in 2 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Manifest.MarkedEmpty.Contracts/Manifest.MarkedEmpty.Contracts.csproj (in 27 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Table.Contracts/Catalog.Table.Contracts.csproj (in 2 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.String.Contracts/Catalog.String.Contracts.csproj (in 1 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Routing.Contracts/Catalog.Routing.Contracts.csproj (in 967 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Lint.Contracts/Catalog.Lint.Contracts.csproj (in 3 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.InvalidProvider.Contracts/Catalog.InvalidProvider.Contracts.csproj (in 2 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Invalid.Contracts/Catalog.Invalid.Contracts.csproj (in 2 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Explicit.Contracts/Catalog.Explicit.Contracts.csproj (in 1 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Sample.Contracts/Hexalith.McpCli.Sample.Contracts.csproj (in 1 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Mcp/Hexalith.McpCli.Mcp.csproj (in 1.76 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.ConformanceHost/Hexalith.McpCli.ConformanceHost.csproj (in 1.77 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli/Hexalith.McpCli.csproj (in 1.77 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/StdioHost/Hexalith.McpCli.StdioHost.csproj (in 1.57 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Core/Hexalith.McpCli.Core.csproj (in 7 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Analyzers/Hexalith.McpCli.Analyzers.csproj (in 1.95 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Abstractions.Tests/Hexalith.McpCli.Abstractions.Tests.csproj (in 1.95 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Analyzers.Tests/Hexalith.McpCli.Analyzers.Tests.csproj (in 1.95 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Mcp.Tests/Hexalith.McpCli.Mcp.Tests.csproj (in 697 ms).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj (in 1.95 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Cli.Tests/Hexalith.McpCli.Cli.Tests.csproj (in 1.95 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.EventStoreGateway.TestHost/Hexalith.McpCli.EventStoreGateway.TestHost.csproj (in 2.88 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.AppHost/Hexalith.McpCli.AppHost.csproj (in 6.49 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Integration.Tests/Hexalith.McpCli.Integration.Tests.csproj (in 6.49 sec).\n  Restored /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Manifest.Tests/Hexalith.McpCli.Manifest.Tests.csproj (in 6.49 sec).\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "build",
+        "Hexalith.McpCli.slnx",
+        "--no-restore",
+        "--configuration",
+        "Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-warnaserror"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "lith.McpCli.Analyzers/bin/Release/netstandard2.0/Hexalith.McpCli.Analyzers.dll\n  Topology.DaprStub -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Topology.DaprStub/bin/Release/net11.0/dapr.dll\n  Hexalith.McpCli.EventStoreGateway.TestHost -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.EventStoreGateway.TestHost/bin/Release/net11.0/Hexalith.McpCli.EventStoreGateway.TestHost.dll\n  Hexalith.McpCli.AppHost -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.AppHost/bin/Release/net11.0/Hexalith.McpCli.AppHost.dll\n  Hexalith.McpCli.Abstractions -> /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Abstractions/bin/Release/net11.0/Hexalith.McpCli.Abstractions.dll\n  Catalog.InvalidProvider.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.InvalidProvider.Contracts/bin/Release/net11.0/Catalog.InvalidProvider.Contracts.dll\n  Hexalith.McpCli.Sample.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Sample.Contracts/bin/Release/net11.0/Hexalith.McpCli.Sample.Contracts.dll\n  Catalog.String.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.String.Contracts/bin/Release/net11.0/Catalog.String.Contracts.dll\n  Catalog.Routing.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Routing.Contracts/bin/Release/net11.0/Catalog.Routing.Contracts.dll\n  Manifest.MarkedEmpty.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Manifest.MarkedEmpty.Contracts/bin/Release/net11.0/Manifest.MarkedEmpty.Contracts.dll\n  Catalog.Table.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Table.Contracts/bin/Release/net11.0/Catalog.Table.Contracts.dll\n  Catalog.Lint.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Lint.Contracts/bin/Release/net11.0/Catalog.Lint.Contracts.dll\n  Catalog.Invalid.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Invalid.Contracts/bin/Release/net11.0/Catalog.Invalid.Contracts.dll\n  Catalog.Explicit.Contracts -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/Catalog.Explicit.Contracts/bin/Release/net11.0/Catalog.Explicit.Contracts.dll\n  Hexalith.McpCli.Core -> /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Core/bin/Release/net11.0/Hexalith.McpCli.Core.dll\n  Hexalith.McpCli.Abstractions.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Abstractions.Tests/bin/Release/net11.0/Hexalith.McpCli.Abstractions.Tests.dll\n  Hexalith.McpCli.Analyzers.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Analyzers.Tests/bin/Release/net11.0/Hexalith.McpCli.Analyzers.Tests.dll\n  Hexalith.McpCli.Mcp -> /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli.Mcp/bin/Release/net11.0/Hexalith.McpCli.Mcp.dll\n  Hexalith.McpCli.Mcp.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Mcp.Tests/bin/Release/net11.0/Hexalith.McpCli.Mcp.Tests.dll\n  Hexalith.McpCli -> /tmp/hexalith-job.Xv42WpSQ/module/src/Hexalith.McpCli/bin/Release/net11.0/Hexalith.McpCli.dll\n  Hexalith.McpCli.StdioHost -> /tmp/hexalith-job.Xv42WpSQ/module/tests/fixtures/StdioHost/bin/Release/net11.0/Hexalith.McpCli.StdioHost.dll\n  Hexalith.McpCli.Core.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll\n  Hexalith.McpCli.ConformanceHost -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.ConformanceHost/bin/Release/net11.0/Hexalith.McpCli.ConformanceHost.dll\n  Hexalith.McpCli.Cli.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Cli.Tests/bin/Release/net11.0/Hexalith.McpCli.Cli.Tests.dll\n  Hexalith.McpCli.Integration.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Integration.Tests/bin/Release/net11.0/Hexalith.McpCli.Integration.Tests.dll\n  Hexalith.McpCli.Manifest.Tests -> /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Manifest.Tests/bin/Release/net11.0/Hexalith.McpCli.Manifest.Tests.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:05.68\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "tests/Hexalith.McpCli.Abstractions.Tests/Hexalith.McpCli.Abstractions.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "Running tests from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Abstractions.Tests/bin/Release/net11.0/Hexalith.McpCli.Abstractions.Tests.dll (net11.0|x64)\n/tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Abstractions.Tests/bin/Release/net11.0/Hexalith.McpCli.Abstractions.Tests.dll (net11.0|x64) passed [+20/x0/?0] (310ms)\n\nTest run summary: Passed!\n  total: 20\n  failed: 0\n  succeeded: 20\n  skipped: 0\n  duration: 435ms\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "tests/Hexalith.McpCli.Analyzers.Tests/Hexalith.McpCli.Analyzers.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "Running tests from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Analyzers.Tests/bin/Release/net11.0/Hexalith.McpCli.Analyzers.Tests.dll (net11.0|x64)\n/tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Analyzers.Tests/bin/Release/net11.0/Hexalith.McpCli.Analyzers.Tests.dll (net11.0|x64) passed [+19/x0/?0] (2s 459ms)\n\nTest run summary: Passed!\n  total: 19\n  failed: 0\n  succeeded: 19\n  skipped: 0\n  duration: 2s 581ms\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "Running tests from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll (net11.0|x64)\nskipped Hexalith.McpCli.Core.Tests.ProfileStoreTests.WindowsTemporaryFileHasPrivateAclBeforeTokenBytesAreWritten\n  Windows ACLs are exercised only on Windows.\n  from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll (net11.0|x64)\nskipped Hexalith.McpCli.Core.Tests.ProfileStoreTests.WindowsRestrictionPreservesInheritedExistingFiles\n  Windows ACL inheritance is exercised only on Windows.\n  from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll (net11.0|x64)\nskipped Hexalith.McpCli.Core.Tests.ProfileStoreTests.WindowsProfileFilesHavePrivateAcls\n  Windows ACLs are exercised only on Windows.\n  from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll (net11.0|x64)\nskipped Hexalith.McpCli.Core.Tests.CatalogPerformanceTests.MeasureFirstConstruction\n  Runs only in the fresh benchmark child process.\n  from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll (net11.0|x64)\n/tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Core.Tests/bin/Release/net11.0/Hexalith.McpCli.Core.Tests.dll (net11.0|x64) passed [+917/x0/?4] (1s 745ms)\n\nTest run summary: Passed!\n  total: 921\n  failed: 0\n  succeeded: 917\n  skipped: 4\n  duration: 1s 866ms\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "tests/Hexalith.McpCli.Manifest.Tests/Hexalith.McpCli.Manifest.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nrestore.log: \n\nrestore.log: \n\nrestore.log: \n\nbuild.log: \n\nrestore.log: \n\nrestore.log: \n\nbuild.log: \n\ngeneration.log: \n\nrestore.log: \n\nbuild.log: \ncontrolled-reader-build-stop\n\nrestore.log: \n\nrestore.log: \n\nbuild.log: \n\ngeneration.log: \n\nrestore.log: \n\nbuild.log: \n\ngeneration.log: \n\nrestore.log: \n\nbuild.log: \n\nrestore.log: \n\nrestore.log: \n\n/tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Manifest.Tests/bin/Release/net11.0/Hexalith.McpCli.Manifest.Tests.dll (net11.0|x64) passed [+373/x0/?0] (2m 10s 549ms)\n\nTest run summary: Passed!\n  total: 373\n  failed: 0\n  succeeded: 373\n  skipped: 0\n  duration: 2m 10s 667ms\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "tests/Hexalith.McpCli.Cli.Tests/Hexalith.McpCli.Cli.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "Running tests from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Cli.Tests/bin/Release/net11.0/Hexalith.McpCli.Cli.Tests.dll (net11.0|x64)\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.LogicalHandler[100]\n      Start processing HTTP request POST http://127.0.0.1:43909/api/v1/queries\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.ClientHandler[100]\n      Sending HTTP request POST http://127.0.0.1:43909/api/v1/queries\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.ClientHandler[101]\n      Received HTTP response headers after 7.8622ms - 200\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.LogicalHandler[101]\n      End processing HTTP request after 10.9377ms - 200\nskipped Hexalith.McpCli.Cli.Tests.CliOutputContractTests.WindowsInaccessibleExistingOutputPreventsProfileMutationAsync\n  Windows ACLs are required for this fixture.\n  from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Cli.Tests/bin/Release/net11.0/Hexalith.McpCli.Cli.Tests.dll (net11.0|x64)\nskipped Hexalith.McpCli.Cli.Tests.CliOutputContractTests.WindowsReadOnlyExistingOutputPreventsProfileMutationAsync\n  Windows file attributes are required for this fixture.\n  from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Cli.Tests/bin/Release/net11.0/Hexalith.McpCli.Cli.Tests.dll (net11.0|x64)\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.LogicalHandler[100]\n      Start processing HTTP request POST http://127.0.0.1:41473/api/v1/commands\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.ClientHandler[100]\n      Sending HTTP request POST http://127.0.0.1:41473/api/v1/commands\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.ClientHandler[101]\n      Received HTTP response headers after 1.8108ms - 202\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.LogicalHandler[101]\n      End processing HTTP request after 1.882ms - 202\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.LogicalHandler[100]\n      Start processing HTTP request POST http://127.0.0.1:38393/api/v1/commands\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.ClientHandler[100]\n      Sending HTTP request POST http://127.0.0.1:38393/api/v1/commands\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.ClientHandler[101]\n      Received HTTP response headers after 0.5833ms - 202\ninfo: System.Net.Http.HttpClient.IEventStoreGatewayClient.LogicalHandler[101]\n      End processing HTTP request after 0.6439ms - 202\n/tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Cli.Tests/bin/Release/net11.0/Hexalith.McpCli.Cli.Tests.dll (net11.0|x64) passed [+623/x0/?2] (43s 739ms)\n\nTest run summary: Passed!\n  total: 625\n  failed: 0\n  succeeded: 623\n  skipped: 2\n  duration: 43s 889ms\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "test",
+        "tests/Hexalith.McpCli.Mcp.Tests/Hexalith.McpCli.Mcp.Tests.csproj",
+        "--no-build",
+        "--configuration",
+        "Release"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "Running tests from /tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Mcp.Tests/bin/Release/net11.0/Hexalith.McpCli.Mcp.Tests.dll (net11.0|x64)\n/tmp/hexalith-job.Xv42WpSQ/module/tests/Hexalith.McpCli.Mcp.Tests/bin/Release/net11.0/Hexalith.McpCli.Mcp.Tests.dll (net11.0|x64) passed [+94/x0/?0] (1s 944ms)\n\nTest run summary: Passed!\n  total: 94\n  failed: 0\n  succeeded: 94\n  skipped: 0\n  duration: 2s 063ms\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.McpCli.Abstractions/Hexalith.McpCli.Abstractions.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"true\",\n    \"PackageId\": \"Hexalith.McpCli.Abstractions\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.McpCli.Analyzers/Hexalith.McpCli.Analyzers.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Analyzers\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.McpCli.Core/Hexalith.McpCli.Core.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Core\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.McpCli.Mcp/Hexalith.McpCli.Mcp.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Mcp\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "src/Hexalith.McpCli/Hexalith.McpCli.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"true\",\n    \"PackageId\": \"Hexalith.McpCli\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.EventStoreGateway.TestHost/Hexalith.McpCli.EventStoreGateway.TestHost.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.EventStoreGateway.TestHost\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.AppHost/Hexalith.McpCli.AppHost.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.AppHost\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Integration.Tests/Hexalith.McpCli.Integration.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Integration.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.ConformanceHost/Hexalith.McpCli.ConformanceHost.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.ConformanceHost\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Topology.DaprStub/Topology.DaprStub.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"dapr\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Sample.Contracts/Hexalith.McpCli.Sample.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Sample.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Abstractions.Tests/Hexalith.McpCli.Abstractions.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Abstractions.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Analyzers.Tests/Hexalith.McpCli.Analyzers.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Analyzers.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Core.Tests/Hexalith.McpCli.Core.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Core.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Cli.Tests/Hexalith.McpCli.Cli.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Cli.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Manifest.Tests/Hexalith.McpCli.Manifest.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Manifest.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/Hexalith.McpCli.Mcp.Tests/Hexalith.McpCli.Mcp.Tests.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.Mcp.Tests\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Manifest.MarkedEmpty.Contracts/Manifest.MarkedEmpty.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Manifest.MarkedEmpty.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Manifest.Unmarked.Contracts/Manifest.Unmarked.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"manifest.AUnmarked.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.String.Contracts/Catalog.String.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.String.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.InvalidProvider.Contracts/Catalog.InvalidProvider.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.InvalidProvider.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.Explicit.Contracts/Catalog.Explicit.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.Explicit.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.Routing.Contracts/Catalog.Routing.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.Routing.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.Table.Contracts/Catalog.Table.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.Table.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.Lint.Contracts/Catalog.Lint.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.Lint.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/Catalog.Invalid.Contracts/Catalog.Invalid.Contracts.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Catalog.Invalid.Contracts\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "dotnet",
+        "msbuild",
+        "tests/fixtures/StdioHost/Hexalith.McpCli.StdioHost.csproj",
+        "-nologo",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-getProperty:IsPackable,PackageId"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "{\n  \"Properties\": {\n    \"IsPackable\": \"false\",\n    \"PackageId\": \"Hexalith.McpCli.StdioHost\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "/home/administrator/.local/bin/python3.12",
+        "-m",
+        "venv",
+        "/tmp/hexalith-job.Xv42WpSQ/py"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 120,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "/tmp/hexalith-job.Xv42WpSQ/py/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "pip"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 180,
+      "stdout_tail": "Requirement already satisfied: pip in /tmp/hexalith-job.Xv42WpSQ/py/lib/python3.12/site-packages (25.0.1)\nCollecting pip\n  Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)\nDownloading pip-26.3-py3-none-any.whl (2.0 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 2.0/2.0 MB 20.2 MB/s eta 0:00:00\nInstalling collected packages: pip\n  Attempting uninstall: pip\n    Found existing installation: pip 25.0.1\n    Uninstalling pip-25.0.1:\n      Successfully uninstalled pip-25.0.1\nSuccessfully installed pip-26.3\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "/tmp/hexalith-job.Xv42WpSQ/py/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "tools/conformance-vectors/v1/requirements.txt"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 180,
+      "stdout_tail": "Collecting jsonschema==4.26.0 (from -r tools/conformance-vectors/v1/requirements.txt (line 1))\n  Using cached jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)\nCollecting attrs>=22.2.0 (from jsonschema==4.26.0->-r tools/conformance-vectors/v1/requirements.txt (line 1))\n  Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)\nCollecting jsonschema-specifications>=2023.03.6 (from jsonschema==4.26.0->-r tools/conformance-vectors/v1/requirements.txt (line 1))\n  Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)\nCollecting referencing>=0.28.4 (from jsonschema==4.26.0->-r tools/conformance-vectors/v1/requirements.txt (line 1))\n  Using cached referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)\nCollecting rpds-py>=0.25.0 (from jsonschema==4.26.0->-r tools/conformance-vectors/v1/requirements.txt (line 1))\n  Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)\nCollecting typing-extensions>=4.4.0 (from referencing>=0.28.4->jsonschema==4.26.0->-r tools/conformance-vectors/v1/requirements.txt (line 1))\n  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)\nUsing cached jsonschema-4.26.0-py3-none-any.whl (90 kB)\nUsing cached attrs-26.1.0-py3-none-any.whl (67 kB)\nUsing cached jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)\nUsing cached referencing-0.37.0-py3-none-any.whl (26 kB)\nUsing cached rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)\nUsing cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)\nInstalling collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema\n\nSuccessfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "/tmp/hexalith-job.Xv42WpSQ/py/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 600,
+      "stdout_tail": "Staged CI fixture packages; real release publication remains the central release responsibility.\n",
+      "stderr_tail": "test_consumer_references_only_abstractions_at_the_exact_requested_version) ... ok\ntest_consumer_refuses_reusing_a_directory_before_dotnet (test_product_packages.ProductPackageTests.test_consumer_refuses_reusing_a_directory_before_dotnet) ... ok\ntest_consumer_resolves_relative_sources_from_the_calling_directory (test_product_packages.ProductPackageTests.test_consumer_resolves_relative_sources_from_the_calling_directory) ... ok\ntest_consumer_uses_fresh_cache_config_and_clears_fallback_folders (test_product_packages.ProductPackageTests.test_consumer_uses_fresh_cache_config_and_clears_fallback_folders) ... ok\ntest_duplicate_archive_entries_and_symlink_packages_are_rejected_by_product_validation (test_product_packages.ProductPackageTests.test_duplicate_archive_entries_and_symlink_packages_are_rejected_by_product_validation) ... ok\ntest_extra_artifacts_and_symbol_packages_are_rejected_by_product_validation (test_product_packages.ProductPackageTests.test_extra_artifacts_and_symbol_packages_are_rejected_by_product_validation) ... ok\ntest_invalid_package_matrix_is_rejected_by_product_validation (test_product_packages.ProductPackageTests.test_invalid_package_matrix_is_rejected_by_product_validation) ... ok\ntest_missing_package_and_malformed_archives_are_rejected_by_product_validation (test_product_packages.ProductPackageTests.test_missing_package_and_malformed_archives_are_rejected_by_product_validation) ... ok\ntest_paired_abstractions_refuses_historical_or_additional_compile_framework (test_product_packages.ProductPackageTests.test_paired_abstractions_refuses_historical_or_additional_compile_framework) ... ok\ntest_paired_abstractions_refuses_rid_specific_payload (test_product_packages.ProductPackageTests.test_paired_abstractions_refuses_rid_specific_payload) ... ok\ntest_paired_validation_keeps_existing_tool_structure_checks (test_product_packages.ProductPackageTests.test_paired_validation_keeps_existing_tool_structure_checks) ... ok\ntest_paired_validation_rejects_unsafe_archive_members (test_product_packages.ProductPackageTests.test_paired_validation_rejects_unsafe_archive_members) ... ok\ntest_paired_validator_binds_both_nuspec_commits_and_never_receipts_failure (test_product_packages.ProductPackageTests.test_paired_validator_binds_both_nuspec_commits_and_never_receipts_failure) ... ok\ntest_paired_validator_refuses_native_files_and_native_dependency_entries (test_product_packages.ProductPackageTests.test_paired_validator_refuses_native_files_and_native_dependency_entries) ... ok\ntest_paired_validator_rejects_runtime_and_enrollment_drift (test_product_packages.ProductPackageTests.test_paired_validator_rejects_runtime_and_enrollment_drift) ... ok\ntest_product_receipt_rejects_package_mutation_during_consumer_build_and_symlink_receipts (test_product_packages.ProductPackageTests.test_product_receipt_rejects_package_mutation_during_consumer_build_and_symlink_receipts) ... ok\ntest_validator_rejects_changed_package_manifest_unknown_phase_and_invalid_version (test_product_packages.ProductPackageTests.test_validator_rejects_changed_package_manifest_unknown_phase_and_invalid_version) ... ok\ntest_failure_is_propagated_with_both_sanitized_channels_and_outcome (test_product_process.ProductProcessTests.test_failure_is_propagated_with_both_sanitized_channels_and_outcome) ... ok\ntest_missing_executable_records_failure_and_restores_supervision_state (test_product_process.ProductProcessTests.test_missing_executable_records_failure_and_restores_supervision_state) ... ok\ntest_reaped_root_identity_is_not_treated_as_a_live_owned_process (test_product_process.ProductProcessTests.test_reaped_root_identity_is_not_treated_as_a_live_owned_process) ... ok\ntest_timeout_stops_and_reaps_detached_grandchild_while_preserving_foreign_process (test_product_process.ProductProcessTests.test_timeout_stops_and_reaps_detached_grandchild_while_preserving_foreign_process) ... ok\n\n----------------------------------------------------------------------\nRan 70 tests in 15.491s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/tmp/hexalith-job.Xv42WpSQ/py/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/conformance-vectors/v1",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 900,
+      "stdout_tail": "PASS sample.rename-item: discovery, 1 reset Gateway step(s), documents, requests, validation/Gateway error parity\nPASS sample.rename-item: discovery, 1 reset Gateway step(s), documents, requests, validation/Gateway error parity\n",
+      "stderr_tail": "sor_and_offset) ... ok\ntest_query_payload_wire_presence_matches_nullness_at_every_call_position (test_validate.VectorContractTests.test_query_payload_wire_presence_matches_nullness_at_every_call_position) ... ok\ntest_query_projection_type_uses_runtime_slug_grammar_at_every_call_position (test_validate.VectorContractTests.test_query_projection_type_uses_runtime_slug_grammar_at_every_call_position) ... ok\ntest_query_response_cannot_echo_request_identifiers_at_every_call_position (test_validate.VectorContractTests.test_query_response_cannot_echo_request_identifiers_at_every_call_position) ... ok\ntest_shapes_are_scoped_per_module (test_validate.VectorContractTests.test_shapes_are_scoped_per_module) ... ok\ntest_submitted_payload_may_include_envelope_owned_values (test_validate.VectorContractTests.test_submitted_payload_may_include_envelope_owned_values) ... ok\ntest_supplied_entity_id_is_valid_at_every_call_position (test_validate.VectorContractTests.test_supplied_entity_id_is_valid_at_every_call_position) ... ok\ntest_supplied_extensions_cannot_be_empty_at_every_call_position (test_validate.VectorContractTests.test_supplied_extensions_cannot_be_empty_at_every_call_position) ... ok\ntest_supplied_extensions_must_match_expected_request_at_every_call_position (test_validate.VectorContractTests.test_supplied_extensions_must_match_expected_request_at_every_call_position) ... ok\ntest_synthetic_command_and_query_are_compatible_with_release_and_catalog (test_validate.VectorContractTests.test_synthetic_command_and_query_are_compatible_with_release_and_catalog) ... ok\ntest_tenant_runtime_slug_grammar_and_agreement_apply_at_every_call_position (test_validate.VectorContractTests.test_tenant_runtime_slug_grammar_and_agreement_apply_at_every_call_position) ... ok\ntest_ulid_and_paging_boundaries_are_valid (test_validate.VectorContractTests.test_ulid_and_paging_boundaries_are_valid) ... ok\ntest_ulids_reject_invalid_alphabet_overflow_and_trailing_newlines (test_validate.VectorContractTests.test_ulids_reject_invalid_alphabet_overflow_and_trailing_newlines) ... ok\ntest_uncovered_shape_names_its_module_key_and_operations (test_validate.VectorContractTests.test_uncovered_shape_names_its_module_key_and_operations) ... ok\ntest_unknown_nested_field_is_located (test_validate.VectorContractTests.test_unknown_nested_field_is_located) ... ok\ntest_unreadable_or_invalid_artifact_is_reported_without_loading_assemblies (test_validate.VectorContractTests.test_unreadable_or_invalid_artifact_is_reported_without_loading_assemblies) ... ok\ntest_unsent_known_request_fields_at_every_call_position (test_validate.VectorContractTests.test_unsent_known_request_fields_at_every_call_position) ... ok\ntest_unsupported_format_values_and_missing_version_are_rejected (test_validate.VectorContractTests.test_unsupported_format_values_and_missing_version_are_rejected) ... ok\ntest_unsupported_format_version_is_located (test_validate.VectorContractTests.test_unsupported_format_version_is_located) ... ok\ntest_valid_assertion_boundaries (test_validate.VectorContractTests.test_valid_assertion_boundaries) ... ok\ntest_vector_and_restored_version_differences_are_reported_not_failed (test_validate.VectorContractTests.test_vector_and_restored_version_differences_are_reported_not_failed) ... ok\ntest_vector_for_an_operation_absent_from_the_restored_catalog_is_stale (test_validate.VectorContractTests.test_vector_for_an_operation_absent_from_the_restored_catalog_is_stale) ... ok\ntest_vector_header_must_match_invocation (test_validate.VectorContractTests.test_vector_header_must_match_invocation) ... ok\ntest_wrong_kind_expected_request_fields_at_every_call_position (test_validate.VectorContractTests.test_wrong_kind_expected_request_fields_at_every_call_position) ... ok\ntest_wrong_kind_inputs_at_every_call_position (test_validate.VectorContractTests.test_wrong_kind_inputs_at_every_call_position) ... ok\n\n----------------------------------------------------------------------\nRan 188 tests in 20.770s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/tmp/hexalith-job.Xv42WpSQ/py/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/live-topology",
+        "-p",
+        "test_native_*.py"
+      ],
+      "cwd": "/tmp/hexalith-job.Xv42WpSQ/module",
+      "exit": 0,
+      "seconds_timeout": 600,
+      "stdout_tail": "",
+      "stderr_tail": "test_audit_policy_refuses_feed_failure_suppressions_and_weakened_severity (test_native_audit.NativeAuditTests.test_audit_policy_refuses_feed_failure_suppressions_and_weakened_severity) ... ok\ntest_complete_transitive_graph_and_actual_archive_bytes_are_bound (test_native_audit.NativeAuditTests.test_complete_transitive_graph_and_actual_archive_bytes_are_bound) ... ok\ntest_every_advisory_page_must_match_independent_online_200_response (test_native_audit.NativeAuditTests.test_every_advisory_page_must_match_independent_online_200_response) ... ok\ntest_missing_hash_or_archive_is_not_accepted (test_native_audit.NativeAuditTests.test_missing_hash_or_archive_is_not_accepted) ... ok\ntest_output_snapshot_includes_existing_build_and_assets (test_native_audit.NativeAuditTests.test_output_snapshot_includes_existing_build_and_assets) ... ok\ntest_reuse_rechecks_module_outputs_fixture_graph_and_advisory_bytes (test_native_audit.NativeAuditTests.test_reuse_rechecks_module_outputs_fixture_graph_and_advisory_bytes) ... ok\ntest_any_dirty_source_refuses_before_any_selection (test_native_cohort.NativeCohortTests.test_any_dirty_source_refuses_before_any_selection) ... ok\ntest_archive_bytes_and_embedded_repository_must_both_match (test_native_cohort.NativeCohortTests.test_archive_bytes_and_embedded_repository_must_both_match) ... ok\ntest_competing_nested_catalog_refuses_before_selection_without_touching_it (test_native_cohort.NativeCohortTests.test_competing_nested_catalog_refuses_before_selection_without_touching_it) ... ok\ntest_disposable_ci_selects_only_exact_qualified_revision_without_recursion (test_native_cohort.NativeCohortTests.test_disposable_ci_selects_only_exact_qualified_revision_without_recursion) ... ok\ntest_exact_clean_sources_preserve_local_checkouts (test_native_cohort.NativeCohortTests.test_exact_clean_sources_preserve_local_checkouts) ... ok\ntest_local_revision_mismatch_never_fetches_or_updates_nested_inputs (test_native_cohort.NativeCohortTests.test_local_revision_mismatch_never_fetches_or_updates_nested_inputs) ... ok\ntest_manifest_rejects_missing_wrong_repository_and_unpublished_candidate_inputs (test_native_cohort.NativeCohortTests.test_manifest_rejects_missing_wrong_repository_and_unpublished_candidate_inputs) ... ok\ntest_missing_and_linked_sources_refuse (test_native_cohort.NativeCohortTests.test_missing_and_linked_sources_refuse) ... ok\ntest_missing_qualified_commit_refuses_before_any_checkout (test_native_cohort.NativeCohortTests.test_missing_qualified_commit_refuses_before_any_checkout) ... ok\ntest_wrong_repository_refuses_before_mutation (test_native_cohort.NativeCohortTests.test_wrong_repository_refuses_before_mutation) ... ok\ntest_dirty_source_is_rejected_before_it_can_become_a_new_seal (test_native_sources.NativeSourceTests.test_dirty_source_is_rejected_before_it_can_become_a_new_seal) ... ok\ntest_nested_builds_and_in_place_source_fixtures_are_rejected (test_native_sources.NativeSourceTests.test_nested_builds_and_in_place_source_fixtures_are_rejected) ... ok\ntest_private_fixtures_preserve_source_identity_and_seal_source_assets_and_outputs (test_native_sources.NativeSourceTests.test_private_fixtures_preserve_source_identity_and_seal_source_assets_and_outputs) ... ok\n\n----------------------------------------------------------------------\nRan 19 tests in 0.190s\n\nOK\n"
+    }
+  ],
+  "base": "97511d77aeb8fd7759bc5f14a32d2550ec5c0cb5",
+  "github_main": "97511d77aeb8fd7759bc5f14a32d2550ec5c0cb5",
+  "owned_content_diff": "",
+  "builds_pin": "a327bc5cf0eb2bd715deed6f1ea278a8f6946a2f",
+  "candidate_diff_sha256": "0de980670389c8ac07de265650992a1b97901aaea3860fa29b672e945831197f",
+  "builds_release_tag": "v6.2.0",
+  "builds_release_sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+  "released_audit_lint": "pass",
+  "shared_commitlint": "pass",
+  "owning_commitlint": "pass",
+  "commit_message": "ci: migrate product checks onto registered actions\n\nPreserve payload, consumer, conformance and native launcher coverage while\nremoving YAML and semantic-release orchestration tests.\n",
+  "commit_message_sha256": "dc9e75c391cedbbc3ddf09d0055dcde95ee9040b56bafa4e9d666af3379bc874",
+  "owning_commitlint_output": "\u29d7   --- input ---\nci: migrate product checks onto registered actions\n\nPreserve payload, consumer, conformance and native launcher coverage while\nremoving YAML and semantic-release orchestration tests.\n\u2714   found 0 problems, 0 warnings\n",
+  "ordinary_tests": "pass",
+  "evaluated_pack_set": [
+    "Hexalith.McpCli",
+    "Hexalith.McpCli.Abstractions"
+  ],
+  "product_script_tests": {
+    "exit": 0,
+    "tail": "ive_members (test_product_packages.ProductPackageTests.test_paired_validation_rejects_unsafe_archive_members) ... ok\ntest_paired_validator_binds_both_nuspec_commits_and_never_receipts_failure (test_product_packages.ProductPackageTests.test_paired_validator_binds_both_nuspec_commits_and_never_receipts_failure) ... ok\ntest_paired_validator_refuses_native_files_and_native_dependency_entries (test_product_packages.ProductPackageTests.test_paired_validator_refuses_native_files_and_native_dependency_entries) ... ok\ntest_paired_validator_rejects_runtime_and_enrollment_drift (test_product_packages.ProductPackageTests.test_paired_validator_rejects_runtime_and_enrollment_drift) ... ok\ntest_product_receipt_rejects_package_mutation_during_consumer_build_and_symlink_receipts (test_product_packages.ProductPackageTests.test_product_receipt_rejects_package_mutation_during_consumer_build_and_symlink_receipts) ... ok\ntest_validator_rejects_changed_package_manifest_unknown_phase_and_invalid_version (test_product_packages.ProductPackageTests.test_validator_rejects_changed_package_manifest_unknown_phase_and_invalid_version) ... ok\ntest_failure_is_propagated_with_both_sanitized_channels_and_outcome (test_product_process.ProductProcessTests.test_failure_is_propagated_with_both_sanitized_channels_and_outcome) ... ok\ntest_missing_executable_records_failure_and_restores_supervision_state (test_product_process.ProductProcessTests.test_missing_executable_records_failure_and_restores_supervision_state) ... ok\ntest_reaped_root_identity_is_not_treated_as_a_live_owned_process (test_product_process.ProductProcessTests.test_reaped_root_identity_is_not_treated_as_a_live_owned_process) ... ok\ntest_timeout_stops_and_reaps_detached_grandchild_while_preserving_foreign_process (test_product_process.ProductProcessTests.test_timeout_stops_and_reaps_detached_grandchild_while_preserving_foreign_process) ... ok\n\n----------------------------------------------------------------------\nRan 70 tests in 15.491s\n\nOK\n"
+  },
+  "conformance_tests": {
+    "exit": 0,
+    "tail": ".test_ulids_reject_invalid_alphabet_overflow_and_trailing_newlines) ... ok\ntest_uncovered_shape_names_its_module_key_and_operations (test_validate.VectorContractTests.test_uncovered_shape_names_its_module_key_and_operations) ... ok\ntest_unknown_nested_field_is_located (test_validate.VectorContractTests.test_unknown_nested_field_is_located) ... ok\ntest_unreadable_or_invalid_artifact_is_reported_without_loading_assemblies (test_validate.VectorContractTests.test_unreadable_or_invalid_artifact_is_reported_without_loading_assemblies) ... ok\ntest_unsent_known_request_fields_at_every_call_position (test_validate.VectorContractTests.test_unsent_known_request_fields_at_every_call_position) ... ok\ntest_unsupported_format_values_and_missing_version_are_rejected (test_validate.VectorContractTests.test_unsupported_format_values_and_missing_version_are_rejected) ... ok\ntest_unsupported_format_version_is_located (test_validate.VectorContractTests.test_unsupported_format_version_is_located) ... ok\ntest_valid_assertion_boundaries (test_validate.VectorContractTests.test_valid_assertion_boundaries) ... ok\ntest_vector_and_restored_version_differences_are_reported_not_failed (test_validate.VectorContractTests.test_vector_and_restored_version_differences_are_reported_not_failed) ... ok\ntest_vector_for_an_operation_absent_from_the_restored_catalog_is_stale (test_validate.VectorContractTests.test_vector_for_an_operation_absent_from_the_restored_catalog_is_stale) ... ok\ntest_vector_header_must_match_invocation (test_validate.VectorContractTests.test_vector_header_must_match_invocation) ... ok\ntest_wrong_kind_expected_request_fields_at_every_call_position (test_validate.VectorContractTests.test_wrong_kind_expected_request_fields_at_every_call_position) ... ok\ntest_wrong_kind_inputs_at_every_call_position (test_validate.VectorContractTests.test_wrong_kind_inputs_at_every_call_position) ... ok\n\n----------------------------------------------------------------------\nRan 188 tests in 20.770s\n\nOK\n"
+  },
+  "native_helper_tests": {
+    "exit": 0,
+    "tail": "test_competing_nested_catalog_refuses_before_selection_without_touching_it (test_native_cohort.NativeCohortTests.test_competing_nested_catalog_refuses_before_selection_without_touching_it) ... ok\ntest_disposable_ci_selects_only_exact_qualified_revision_without_recursion (test_native_cohort.NativeCohortTests.test_disposable_ci_selects_only_exact_qualified_revision_without_recursion) ... ok\ntest_exact_clean_sources_preserve_local_checkouts (test_native_cohort.NativeCohortTests.test_exact_clean_sources_preserve_local_checkouts) ... ok\ntest_local_revision_mismatch_never_fetches_or_updates_nested_inputs (test_native_cohort.NativeCohortTests.test_local_revision_mismatch_never_fetches_or_updates_nested_inputs) ... ok\ntest_manifest_rejects_missing_wrong_repository_and_unpublished_candidate_inputs (test_native_cohort.NativeCohortTests.test_manifest_rejects_missing_wrong_repository_and_unpublished_candidate_inputs) ... ok\ntest_missing_and_linked_sources_refuse (test_native_cohort.NativeCohortTests.test_missing_and_linked_sources_refuse) ... ok\ntest_missing_qualified_commit_refuses_before_any_checkout (test_native_cohort.NativeCohortTests.test_missing_qualified_commit_refuses_before_any_checkout) ... ok\ntest_wrong_repository_refuses_before_mutation (test_native_cohort.NativeCohortTests.test_wrong_repository_refuses_before_mutation) ... ok\ntest_dirty_source_is_rejected_before_it_can_become_a_new_seal (test_native_sources.NativeSourceTests.test_dirty_source_is_rejected_before_it_can_become_a_new_seal) ... ok\ntest_nested_builds_and_in_place_source_fixtures_are_rejected (test_native_sources.NativeSourceTests.test_nested_builds_and_in_place_source_fixtures_are_rejected) ... ok\ntest_private_fixtures_preserve_source_identity_and_seal_source_assets_and_outputs (test_native_sources.NativeSourceTests.test_private_fixtures_preserve_source_identity_and_seal_source_assets_and_outputs) ... ok\n\n----------------------------------------------------------------------\nRan 19 tests in 0.190s\n\nOK\n"
+  },
+  "result": "pass",
+  "completed_at": "2026-11-17T19:37:37.006024+00:00"
+}

@@ -1,0 +1,48 @@
+{
+  "kind": "story16 genuine scheduled nightly poll",
+  "status": "aborted",
+  "forcedDispatch": false,
+  "forcedRelease": false,
+  "poll": {
+    "startedAt": "2026-11-18T03:03:27.263955+00:00",
+    "lastCheckAt": "2026-11-18T04:40:06.559383+00:00",
+    "endedAt": "2026-11-18T04:41:45.644Z",
+    "deadlineUtc": "2026-11-18T12:00:00Z",
+    "expectedCronUtc": "17 2 * * *",
+    "matchCreatedAtFrom": "2026-11-18T02:17:00Z",
+    "matching": []
+  },
+  "nightlyWorkflow": {
+    "path": ".github/workflows/nightly.yml",
+    "state": "active",
+    "latestSchedule": {
+      "run": 44067556763,
+      "event": "schedule",
+      "createdAt": "2026-11-17T10:44:09Z",
+      "conclusion": "failure",
+      "headSha": "639d8a7032108bbc7eb1f0e054c4ee55b6f87f90",
+      "url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44067556763"
+    }
+  },
+  "observedAtAbort": {
+    "utc": "2026-11-18T04:41:58Z",
+    "buildsMain": "07336980170b2e0cbf28f861b33451b7784b5436",
+    "latestReleasedBuildsTag": "v6.3.0",
+    "v6_3_0": "7afc4981e21bc2fcce687199a3fd2c61fe87336e",
+    "windowsFetchFixReleased": false,
+    "hourlyDelivery": {
+      "run": 44224648934,
+      "event": "schedule",
+      "createdAt": "2026-11-18T02:37:39Z",
+      "conclusion": "success"
+    }
+  },
+  "pending": [
+    "Genuine scheduled nightly that releases Builds containing 07336980",
+    "Conversations pin/delivery of that prepare tag",
+    "Green hosted Windows TestSupport on the released pin",
+    "Legacy NuGet policy 18928 retirement with policy 27245 preserved",
+    "Post-adoption npm file cleanup after selector absence",
+    "Next genuine scheduled nightly CodeQL/publication or nothing-to-release outcome for Conversations"
+  ]
+}

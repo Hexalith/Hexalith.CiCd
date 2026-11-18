@@ -301,6 +301,14 @@ Conversations' released-input qualification remains mandatory.
   [adopted-cicd-gitlink-drop-20261118.json](../specs/spec-cicd/evidence/16/adopted-cicd-gitlink-drop-20261118.json)
   and
   [hosted-windows-fetch-20261118.json](../specs/spec-cicd/evidence/16/hosted-windows-fetch-20261118.json).
+- 2026-11-18 follow-up: the genuine scheduled-nightly poll was aborted at
+  04:41 UTC, before its 12:00 UTC deadline. No `nightly.yml` `schedule` run
+  created at or after 02:17 UTC existed; the latest schedule remains failed
+  run `44067556763` from 2026-11-17T10:44:09Z. The workflow is active. Hourly
+  delivery run `44224648934` succeeded. Builds main is still unreleased
+  `07336980` on top of published `v6.3.0`. No dispatch or forced release was
+  issued. See
+  [nightly-poll-aborted-20261118.json](../specs/spec-cicd/evidence/16/nightly-poll-aborted-20261118.json).
 
 ## Spec Change Log
 
@@ -318,8 +326,9 @@ Conversations' released-input qualification remains mandatory.
   scaffold smoke test matches the qualified twelve-path inventory. Hosted Linux
   integration passed; hosted Windows prepare still fails Git fetch 128 on
   v6.2.0. A Builds follow-up is on main with green hosted CI and still needs
-  a genuine release before Conversations can consume it. Legacy NuGet
-  retirement and scheduled-night acceptance remain required.
+  a genuine release before Conversations can consume it. The 02:17 UTC
+  scheduled nightly had not appeared by the aborted 04:41 UTC poll. Legacy
+  NuGet retirement and scheduled-night acceptance remain required.
 
 
 ## Review Triage Log
