@@ -22,7 +22,20 @@ continuation needed for the complete release. Do not add another scheduler,
 retain tokens past their limits, raise every module's hook timeout, reduce
 product scenarios or silently skip failed/due recovery runs.
 
-## Current evidence
+## Status, 2026-11-18
+
+Items 1–3 below have shipped. Builds commit
+`42625e511967a65cec8df045352fdfe027f0ac5f`, first released in `v6.1.0`, adds
+`nightlyTimeoutMinutes` (1–360, default 45) and carries it into the hook job.
+CiCd renders it at `tools/render.py:619-620` and pins Builds `v6.3.1`. Items 4–5
+remain. `tools/nightly.py:140` still sets one 300-minute wait deadline, and
+`.github/workflows/nightly.yml:597` still limits the wait job to 330 minutes, with
+no continuation. The prerequisite is therefore not shipped. The human chose
+to build items 4–5 only after deciding ChatBot's product scope, because
+ChatBot's required release cases cannot pass yet. See
+[story 19 blockers](../specs/spec-cicd/evidence/19/blockers-20261118.json).
+
+## Current evidence (2026-11-16)
 
 - Builds `v6.0.6` resolves to `fdda17c0a4538b0f7c99f813c20ca24b49006530`.
   Its `.github/workflows/release.yml:nightly-hook` has a fixed 45-minute job.

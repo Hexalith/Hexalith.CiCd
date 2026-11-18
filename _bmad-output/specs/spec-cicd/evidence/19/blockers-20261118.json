@@ -1,0 +1,70 @@
+{
+  "recorded_at": "2026-11-18",
+  "decision": "Story 19 is parked. The human approved the recommendation to park it and open a ChatBot product scope decision; the CiCd half of the long-running nightly prerequisite is built only after that decision. No push, remote operation, administration, registration or adoption occurred in this readback.",
+  "method": "Local read-only inspection of committed CiCd, Builds, ChatBot and EventStore objects; no hosted state was re-read.",
+  "cicd": {
+    "commit": "736fcd48c2e1123b705e55879349671b48c9532a",
+    "tree": "f6f22791ed81e3a8f4f87698dee12b6aeef6c1bd",
+    "builds_version": "v6.3.1",
+    "builds_version_blob": "bb83eeea26189457370416d0bd94439ef0ba9076",
+    "chatbot_gitlink": "ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3"
+  },
+  "blockers": [
+    {
+      "id": "nightly-prerequisite-cicd-half",
+      "status": "open",
+      "summary": "Builds carries a 1-360 minute nightlyTimeoutMinutes and CiCd renders it, but the central nightly still waits one 300-minute deadline inside one 330-minute job, with no continuation, so a 360-minute ChatBot hook cannot finish within the wait.",
+      "shipped": {
+        "builds_change_commit": "42625e511967a65cec8df045352fdfe027f0ac5f",
+        "first_release": "v6.1.0",
+        "first_release_commit": "a1e0c310b1f1a50d78e6132890fae6bcba769f6d",
+        "pinned_release_commit": "db7bb7179244ce33483231687486381305c7c3db",
+        "render_blob": "137f42e1de667853d313c4057dc16065a29b8ced",
+        "render_lines": "tools/render.py:619-620"
+      },
+      "missing": {
+        "nightly_py_blob": "f57070b344f8371a2702fe97f0dc83397a65ab03",
+        "wait_deadline": "tools/nightly.py:140 sets started + 300 minutes",
+        "nightly_yml_blob": "03e4599a0409d86ea10733cbd2bb17ea02a68391",
+        "wait_job_limit": ".github/workflows/nightly.yml:597 timeout-minutes 330",
+        "docs": "docs/nightly.md has no long-hook allowance or continuation"
+      }
+    },
+    {
+      "id": "chatbot-owner-loader",
+      "status": "open; needs a human product-scope decision",
+      "summary": "The five required live/release cases fail in the pinned EventStore.Aspire owner loader with the System.Text.Json snapshot refusal recorded in product-json-loader-blocker.json. ChatBot still pins that EventStore revision and targets net10.0.",
+      "chatbot_tree": "cd5f6c4c991342a8346067ec6399f204b9a606ab",
+      "chatbot_eventstore_gitlink": "77a2dafdf2e6aab7382afab7ab50e22144361d42",
+      "pinned_loader_blob": "3cefec5e125e915152811f7b6ecf0ae83d508658",
+      "candidate_upstream_change": {
+        "commit": "d5589b53ff04b6d7dc4c52ef8160afab5ac094ba",
+        "first_release": "v5.0.0",
+        "first_release_commit": "76f743ba0a62c254a66973aa707a701d95a6ce43",
+        "loader_blob": "bc47bf4a70b6f5d84045239f5cc25439a181de1c",
+        "constraint": "BREAKING: EventStore 5 applications must target net11.0; net10.0 applications must remain on EventStore 4.",
+        "verified_to_fix_chatbot": false
+      }
+    },
+    {
+      "id": "chatbot-atomic-participation",
+      "status": "open; needs a human product-scope decision",
+      "summary": "ChatBotAdmissionEvidenceValidator.ValidateAtomicParticipationAsync unconditionally returns CanonicalExecutionUnavailable, so the two retained positive M2/origin release cases cannot pass even after the loader passes; every nightly ChatBot release would fail.",
+      "path": "src/Hexalith.ChatBot.Server/Gateway/Admission/ChatBotAdmissionEvidenceValidator.cs:372-379",
+      "blob": "ed45bc97c943e24b7f8b4a113830ed88bf023bfd"
+    },
+    {
+      "id": "ad21-administration",
+      "status": "open; last read 2026-11-16, not re-read",
+      "summary": "Rulesets, the hexalith-release environment and the publish switch were missing; App repository selection was refused with 403 and needs an Organization Owner; the scoped NuGet policy is unverified.",
+      "evidence": "fix-progress.json",
+      "prepared_scripts": ["fix-github-baseline.py", "fix-registry.py", "fix-nuget-policy-ui.py"]
+    }
+  ],
+  "resume_order": [
+    "Human decides the ChatBot product scope (EventStore 5 net11.0 retarget and atomic participation).",
+    "Implement the CiCd half of prerequisite-19-long-running-nightly-hooks.md.",
+    "Organization Owner adds ChatBot to the App selection; maintainer applies the remaining AD-21 settings.",
+    "Resume story 19 registration, adoption and hosted acceptance."
+  ]
+}
