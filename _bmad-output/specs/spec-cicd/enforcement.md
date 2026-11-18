@@ -50,12 +50,24 @@ Known effects:
 
 ## Layer 3: delivery
 
-- `deliver.yml` in this repository is the only writer of owned files into modules (AD-6). It runs on every push to `main` here and hourly at minute 47. It can also be started by hand. Its runs on `main` are never cancelled.
+- `deliver.yml` in this repository is the only writer of owned files into modules (AD-6). Its validation runs on every PR and every push to `main` here, and hourly at minute 47. It can also be started by hand. Its runs on `main` are never cancelled. A push that changes only prose and receipts starts no delivery (below).
 - Each run first advances `delivered/<Repo>` for every module that passes all its checks. A branch only moves forward. A module whose branch would move backwards is reported as "superseded by `<sha>`".
 - It then re-applies the render at `delivered/<Repo>` to every module that has the branch, passing or not, so it also repairs drift that the restore job skips. When the global checks fail, it advances nothing but still re-applies.
-- Before using Builds at a branch's `builds-version`, it confirms that the tag is acceptable (SPEC Constraints).
+- Before using Builds at a branch's `builds-version`, it confirms that the tag is acceptable (SPEC Constraints). It verifies each distinct tag once per run, with an App token it already holds.
 - It pushes with a token minted from the org GitHub App, whose key never leaves this repository's `cicd-app` environment.
 - Nightly's pre-dispatch check adds one more repair point. A module whose live `ci.yml` or `release.yml` differs from `delivered/<Repo>` is not released, and the nightly run fails.
+
+### What a change runs
+
+Validation compares the candidate with the PR base, or, for a push or a scheduled run, with each distinct accepted `delivered/*` commit, and takes the narrowest result. It reads only this repository to do so. A delivered ref advances only to a commit whose every input that differs from an accepted commit was covered by that run's checks.
+
+| Class | Paths | Runs |
+|---|---|---|
+| Prose/receipt | `_bmad-output/**`; top-level `docs/*.md`; `README.md`, `AGENTS.md`, `limits.md`, `LICENSE`, `setup/README.md`; agent tooling (`.claude/`, `.agents/`, `.agent/`, `.codex/`, `.cursor/`, `.github/agents/`, `_bmad/`, `.bmad-loop/`); value changes to an existing `references/*` gitlink when `.gitmodules` is unchanged | On a PR or push, only the classification; a push starts no delivery. On a scheduled run, every global check except the tool suites, the per-module checks, and delivery. |
+| Module `<Repo>` | `setup/<Repo>.yml`, `rendered/<Repo>/**`, `rendered/<Repo>-execution/**`, `rendered/<Repo>.perimeter.json` | Every global check except the tool suites, the per-module checks, and delivery |
+| Shared | Everything else, including `docs/proposals/**`, `docs/contracts-prerequisites/**`, tool fixtures, `builds-version`, `.gitmodules`, added or removed submodules, and any unknown path; also every manual dispatch and every unreadable baseline | Every check |
+
+No tool, test or workflow reads a prose/receipt path, and no tool suite reads `setup/` or `rendered/` at the repository root; a tool test keeps both true. CI fills `references/Hexalith.Builds` from Builds `main` and its tags, never from the gitlink value.
 
 ## Not used
 
@@ -79,10 +91,10 @@ Custom actions must not contain any of these:
 
 The list is maintained by hand, and occasional false positives are accepted.
 
-## Nightly duplicate scan (this repository)
+## Daily duplicate scan (this repository)
 
 - A copy-paste detector, `jscpd`, scans every module's custom actions and the scripts they call. It covers YAML, shell, PowerShell, and Python. It reads each module's current `main`, never this repository's submodule checkouts. It uses this repository's committed config, never one from the scanned module.
-- It runs inside `nightly.yml`. A fragment found in two or more modules fails the nightly run and names the code to move. It never blocks the Builds bump.
+- It runs in its own workflow, `scan.yml`, on a daily schedule and by hand. A fragment found in two or more modules, or a construct its discovery can't follow, fails that run and names the code to move. It never blocks a release or the Builds bump.
 - The detection threshold needs tuning. Expect early noise from the Python tooling in Memories and Tenants until the gate rule removes it.
 - The scan misses the same logic written differently. Agent review covers that, but runs only when a new custom action is enabled or the scan flags something.
 

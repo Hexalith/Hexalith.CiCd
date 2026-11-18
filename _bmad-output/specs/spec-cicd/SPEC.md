@@ -48,6 +48,7 @@ The architecture spine (first companion) decides how each capability is built, i
     - Enabling a custom action needs only a setup-file change here.
     - Owned files reach a module only through delivery, as one `build(cicd): …` commit, and only when there is a diff. The restore job (CAP-8) is the one exception.
     - A module that fails its own checks is skipped and reported, and the other modules are still delivered. The skipped module's guard, restore and release keep enforcing its last accepted render, so the rejected render never turns it red. Every delivery run re-applies that render, even while this repository's global checks fail. A module with no accepted render yet gets nothing.
+    - Validation covers what changed (`enforcement.md`). A prose or receipt change completes without reading Builds or any module. A change to one module's setup checks that module and the shared checks it reads. Any other or ambiguous change runs every check. A push whose changes against an accepted commit are only prose and receipts starts no delivery. Scheduled delivery still re-applies every accepted render.
     - A repository is onboarded when the maintainer preconditions are met (AD-21) and it is added here as a submodule with its setup file. It then comes under delivery, the guard, the scheduler, and the duplicate scan.
 - **CAP-5** Custom actions at hook points
   - **intent:** A module's custom actions in `.github/actions/**` run at named hook points inside the shared CI job and reuse its build and environment. Independently prepared hosted jobs and explicit private-service qualifications use the selected Builds contract's generic job model.
@@ -81,7 +82,7 @@ The architecture spine (first companion) decides how each capability is built, i
   - **intent:** Custom actions contain no generic building blocks and no code shared with another module. Shared code moves to Builds.
   - **success:**
     - The guard rejects a custom action that uses any deny-listed building block.
-    - The nightly scan fails, and names the code, when a fragment appears in the custom actions of two or more modules.
+    - The daily scan, which runs in its own workflow, fails and names the code when a fragment appears in the custom actions of two or more modules.
     - Zero such fragments remain.
 - **CAP-10** Product-only gates
   - **intent:** Every gate that remains checks the product.
@@ -167,9 +168,11 @@ The architecture spine (first companion) decides how each capability is built, i
   - Optional `npmWorkspaces` and `dotnetTools` preparation is default-disabled, strict, contained and performed once before hooks; it never makes hooks rebuild shared outputs (`pipeline-stages.md`, story 18).
   - Commitlint runs inside the guard.
   - The release trusts green CI for the same SHA, skips the tests, and packs once.
+  - Tool suites run when their inputs change; the nightly bump runs only the checks that read the Builds pin.
   - Dependency review is dropped. NuGet audit runs only in the release build.
   - Known exceptions: a module with a `nightly` hook compiles twice a night; a separately requested private qualification builds once on its designated runner because no cross-run binary transfer exists.
 - A gate exists only if it checks the product: compilation, tests, security and dependency scans, commit format, or package publishing (`gate-classification.md`).
+- Evidence in this repository keeps decisions and identities: revisions, tree and blob ids, digests, and run and artifact links. Raw logs, tree dumps, generated patches, packages, test results and earlier attempts stay in Actions or `$TMPDIR`, and executed code lives under `tools/` (`AGENTS.md`). A check outside the delivery verdict rejects new raw, executable or over-256-KiB files under `_bmad-output/`. History is never rewritten.
 - Builds is referenced by exact release tag, and its `v*` tags can't be moved or deleted (the AD-21 tag ruleset, applied to Builds by AD-19). The callers, `hexalith-ci.json`, and the submodule move together. Adopting a new major or rolling back is a commit in this repository, at any time (AD-10).
   - Modules take only an acceptable tag: its GitHub release is published, immutable, and authored by `github-actions[bot]`, and its commit is an ancestor of Builds' `main`. This repository's global checks reject any other.
   - Immutable releases are turned on in Builds before its first rewritten release, and in each module right after its adoption (AD-19, AD-21).

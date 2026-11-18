@@ -7,7 +7,7 @@ paradigm: 'hub-and-spoke desired-state reconciliation (GitOps-style control loop
 scope: 'CI/CD for the 18 managed Hexalith repos (17 modules + the Builds runtime): generator, delivery, guard, shared CI and release pipelines in Builds, nightly scheduler, duplicate scan, migration'
 status: final
 created: '2026-11-07'
-updated: '2026-11-08'
+updated: '2026-11-18'
 binds: [CAP-1, CAP-2, CAP-3, CAP-4, CAP-5, CAP-6, CAP-7, CAP-8, CAP-9, CAP-10, CAP-11, CAP-12, CAP-13, CAP-14, CAP-15, CAP-16]
 sources:
   - ../../../specs/spec-cicd/SPEC.md
@@ -127,7 +127,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
     - `codeql`: languages, never `actions`. The default is `[csharp]`, or `[]` with `solution: none`. `[]` skips analysis.
     - `tests.integration`, `tests.exclude`, `hooks`, `jobs`.
   - Adding an optional knob with a schema default is a minor Builds release (AD-10).
-  - **Global checks**, which gate every ref advance: render with no diff; schemas; tool tests; actionlint and zizmor over CiCd's workflows and, passed by path, `rendered/*/.github/workflows/*.yml`; `builds-version` names an acceptable tag (AD-10). They are one CiCd script, which `validate` and the nightly `bump` run identically, with no secret other than the job's read-only `GITHUB_TOKEN`.
+  - **Global checks**, which gate every ref advance: render with no diff; schemas; tool tests; actionlint and zizmor over CiCd's workflows and, passed by path, `rendered/*/.github/workflows/*.yml`; `builds-version` names an acceptable tag (AD-10). They are one CiCd script with no secret other than the job's read-only `GITHUB_TOKEN`. Tool tests run only when the candidate differs from every accepted commit outside the prose/receipt and module-input sets (`enforcement.md`, "What a change runs"); the nightly `bump` runs every global check except the tool suites, plus the suites that read `builds-version`. A ref advances only to a commit whose every differing input was covered by its run's checks.
   - **Per-module checks**, which gate only that module's `delivered/<Repo>` ref:
     - with anonymous reads, in every run: the repo is a submodule; every action named by `hooks`, `jobs` or `tests.exclude` exists on the module's live `main`; no job name equals a hook name; every `tests.exclude` target is an enabled hook or job;
     - with the App, in `main` runs only (AD-6), exactly these: the repo is in the App installation; its rulesets' targets, conditions and rules are exactly the AD-21 ones; code-scanning default setup and Dependabot security updates are off; its artifact and log retention is 90 days.
@@ -193,14 +193,14 @@ These arrows are the allowed dependencies. Builds never names a module, module f
   - CiCd `deliver.yml` is the only writer of owned files into modules. The one exception is the AD-8 restore job.
   - Opt-in managed producer preparation takes active catalog authority from the exact accepted delivered Builds release. The actual released Platform identity, its tool range and its historical catalog pin remain separately verified provenance. A caller-authored receipt grants no acceptance: the existing fixed anonymous delivered-state transport and successful perimeter comparison authenticate it. Candidate qualification is a distinct local-only authority and is rejected by production entry points.
   - `deliver.yml` is a top-level workflow with two jobs:
-    - `validate`, with no secrets: the global checks and the anonymous per-module checks (AD-3). It outputs one JSON object: the global-check verdict and the names of the modules that passed.
-    - `deliver`, on `main` only, after `validate` whatever its result, in environment `cicd-app` (AD-7). It treats a missing `validate` output as a failed global check, and accepts only module names in `setup/*.yml`.
+    - `validate`, with no secrets: it first classifies the change against the PR base or the accepted `delivered/*` commits, reading only CiCd. It then runs the global checks and the anonymous per-module checks that class requires (AD-3). It outputs one JSON object: the global-check verdict and the names of the modules that passed. It outputs the scope separately, because the immutable bootstrap accepts only those two keys.
+    - `deliver`, on `main` only, after `validate` whatever its result, except on a push whose scope is `none`, in environment `cicd-app` (AD-7). A missing scope counts as full. It treats a missing `validate` output as a failed global check, and accepts only module names in `setup/*.yml`.
   - **Triggers:** push to `main`, `pull_request`, hourly at minute 47, manual dispatch.
   - **Concurrency:** runs on `main` use the group `deliver` and are never cancelled. Other runs use `deliver-validate-<ref>` and cancel in progress.
   - **The `deliver` job:**
     1. Run the App per-module checks (AD-3).
     2. If the global checks passed, then for each module that passes all its checks, advance CiCd branch `delivered/<Repo>` to the validated commit with an App token holding Contents and Workflows write on CiCd, provided that commit equals or descends from the ref. Otherwise report "superseded by `<sha>`". A ref never moves backwards, and a module that fails its checks keeps its ref.
-    3. For every module that has a `delivered/<Repo>` ref, passing or not, take a shallow sparse clone of the module's live `main` and apply the render at that ref (perimeter and files) with Builds' perimeter library. Before cloning Builds at that ref's `builds-version`, confirm with stdlib API reads that it is an acceptable tag (AD-10), and check the clone's commit against the tag.
+    3. For every module that has a `delivered/<Repo>` ref, passing or not, take a shallow sparse clone of the module's live `main` and apply the render at that ref (perimeter and files) with Builds' perimeter library. Before cloning Builds at that ref's `builds-version`, confirm once per tag per run, with authenticated stdlib API reads that use an App token the job already holds, that it is an acceptable tag (AD-10), and check the clone's commit against the tag.
     4. If there is no diff, push nothing. Otherwise push one `build(cicd): …` commit with an App token.
     5. If the push is not a fast-forward, re-fetch and re-apply (at most 3 times). Never rebase, never force-push.
   - When the run's global checks failed, steps 1 and 2 are skipped, and steps 3–5 run with `tools/` taken from the newest commit that a `delivered/*` ref on `main` points to, never from the run's commit.
@@ -459,8 +459,8 @@ These arrows are the allowed dependencies. Builds never names a module, module f
     3. **`publish-ready`** (App, stdlib only), after `wait` whatever its result.
        - For each run whose conclusion is `success` and outcome `ready`, it reads the draft by the outcome's `draftId` and checks that it is still marked, against the outcome's `lastTag`. It checks that the API digest of the artifact named by `hexalith-release-artifact:`, in the run named by `hexalith-release-run:`, equals the trailer, and that no tag `v<version>` exists or that it points at `sha`. It then sends `publish` step 5's publishing request, without its tree comparison, and checks the returned release and that `v<version>` resolves to `sha`. Its tokens hold Contents and Workflows write and Actions read on that repo.
        - It then writes the summary and the verdict per run: a conclusion other than `success` is failed, whatever the outcome; `success` with `published`, `nothing` or `disabled` passes; `ready` passes only if this job published that draft; no readable outcome, or still running after 5 hours, is failed. It fails if any verdict is failed.
-    4. **`scan`** (no secrets), after `publish-ready` whatever its result: the duplicate scan, running jscpd with CiCd's committed config and never a config from the scanned module.
-    5. **`bump`** (no secrets other than a read-only `GITHUB_TOKEN`), after `publish-ready` and `scan` whatever their results. It fetches the current tip of CiCd `main`, never the run's `github.sha`. On that tip it moves `builds-version` (AD-10), re-renders, and runs the AD-3 global checks. If they fail, nothing is pushed and the night fails, naming the tag. If nothing changes, the later bump jobs do nothing. It outputs the commit as an artifact ID.
+    4. *(retired: the duplicate scan moved to `scan.yml`, below.)*
+    5. **`bump`** (no secrets other than a read-only `GITHUB_TOKEN`), after `publish-ready` whatever its result. It fetches the current tip of CiCd `main`, never the run's `github.sha`. On that tip it moves `builds-version` (AD-10), re-renders, and runs the AD-3 pin checks: a bump changes only `builds-version` and `rendered/**`, so suites that don't read the pin can't be affected by it. If they fail, nothing is pushed and the night fails, naming the tag. If nothing changes, the later bump jobs do nothing. It outputs the commit as an artifact ID.
     6. **`bump-push`** (stdlib only, `GITHUB_TOKEN` with `contents: write` and `actions: write`). It takes the commit by that artifact ID and pushes it as `build(cicd): bump Builds to vX.Y.Z`, only if:
        - its parent is the tip `bump` used, and that tip is still `main`;
        - its own API reads confirm that the new `builds-version` is the newest acceptable tag in the current major, not in `builds-skip`;
@@ -472,8 +472,9 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        - then, from that run's `delivery.json`, for each module it pushed to, the first completed, non-cancelled `ci.yml` run on `main` whose head is that commit or a descendant.
 
        Any of them that is not green fails the night.
-    8. **`keepalive`** (`GITHUB_TOKEN`): calls the enable API for `nightly.yml` and `deliver.yml`. When CiCd's last commit is more than 50 days old, it commits `build(cicd): keepalive`.
+    8. **`keepalive`** (`GITHUB_TOKEN`): calls the enable API for `nightly.yml`, `deliver.yml` and `scan.yml`. When CiCd's last commit is more than 50 days old, it commits `build(cicd): keepalive`.
   - The night fails when any job fails.
+  - **`scan.yml`** (no secrets) runs daily on its own schedule and by hand. It runs the duplicate scan with jscpd and CiCd's committed config, never a config from the scanned module. It fails its own run, never the night.
   - **Reusable `release.yml` jobs:**
     - `codeql`: when the `codeql` list is not empty, a matrix over its languages, with `build-mode: none` and category `hexalith-release/<language>`; otherwise skipped. It fails on open high or critical alerts whose most recent instance carries a `hexalith-release/` category.
     - `nightly-hook`: when enabled, Builds `prepare` (which sets up the environment on Linux, AD-12), then `./.github/actions/nightly`.
@@ -494,8 +495,7 @@ sequenceDiagram
   M-->>N: outcome
   N->>N: wait: verdicts and summary
   N->>M: publish-ready: App publishes drafts left ready
-  N->>N: duplicate scan
-  N->>N: bump: acceptable tag, re-render on the tip, global checks
+  N->>N: bump: acceptable tag, re-render on the tip, pin checks
   N->>D: bump-push: substitution check, push, dispatch deliver.yml
   D->>M: validate, deliver: build(cicd) commit, module CI runs
   D-->>N: delivery-wait: delivery.json and module CI results
@@ -765,7 +765,7 @@ Hexalith.<Module>/
 | CAP-6 One Builds version | CiCd `builds-version`, `deliver.yml`, `nightly.yml` | AD-5, AD-6, AD-9, AD-10, AD-18, AD-19 |
 | CAP-7 Token-level block | GitHub tokens, the App, environments `cicd-app` and `hexalith-release` | AD-7, AD-8, AD-21 |
 | CAP-8 Guard | Builds guard, restore, perimeter library; CiCd `delivered/<Repo>` | AD-4, AD-6, AD-7, AD-8, AD-9 |
-| CAP-9 Module-specific custom actions | guard deny list; CiCd `tools/scan.py` in `nightly.yml` | AD-3, AD-8, AD-14, AD-18 |
+| CAP-9 Module-specific custom actions | guard deny list; CiCd `tools/scan.py` in `scan.yml` | AD-3, AD-8, AD-14, AD-18 |
 | CAP-10 Product-only gates | gate rule applied at each module onboarding; custom actions | AD-12, AD-13, AD-14, AD-21 |
 | CAP-11 Agent rules | delivered instruction blocks; `.claude/settings.json` deny; `bmad-testarch-ci` absent | AD-4, AD-6, AD-8 |
 | CAP-12 Shared release pipeline | Builds `release.yml` + `publish`; module `release.yml` and its `hexalith-release` publish job | AD-1, AD-7, AD-16, AD-17, AD-21 |

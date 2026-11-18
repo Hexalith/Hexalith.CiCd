@@ -414,6 +414,96 @@
     disposable refs/PRs, change no owned file or main ref, do not merge, and
     clean up. Confirm or correct 10-2's instruction restrictions if findings
     differ, before accepting this existing pilot checkpoint.
+- id: "28-1"
+  title: "Self-contained maintenance test fixture"
+  description: >-
+    test_maintenance.py builds its owner repository and target clone in its
+    own temporary directory, so it passes from actions/checkout and from the
+    bump's remote-less scratch checkout (CAP-6; AD-18).
+  invoke_dev_with: >-
+    Work in this repo. Keep every refusal in tools/maintenance.py unchanged.
+    Acceptance criteria: story 28-1 in section 4.1 of
+    _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md
+    (approved 2026-11-18); write them into this story's file at plan time.
+- id: "28-2"
+  title: "One authenticated Builds lookup per delivery run"
+  description: >-
+    The deliver controller verifies each distinct Builds tag once per run with
+    an App token it already holds, and reuses the result for preflight and
+    application of every module (CAP-4; AD-6, AD-10).
+  invoke_dev_with: >-
+    Work in this repo: tools/deliver.py and tools/delivery_runtime.py only;
+    the immutable bootstrap and its pin stay unchanged. Acceptance criteria:
+    story 28-2 in section 4.1 of the approved sprint change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "28-3"
+  title: "Executable fixtures out of evidence"
+  description: >-
+    Move every executable with a live consumer out of evidence directories
+    into tools/qualification/, and add a test that no tracked file outside the
+    prose/receipt set references _bmad-output/ (CAP-4; AGENTS.md).
+  invoke_dev_with: >-
+    Work in this repo. Keep runner logic unchanged apart from paths; update
+    docs/pre-adoption-publication.md, story 20's invoke note and the
+    AGENTS.md Evidence section's transitional sentence. Acceptance criteria:
+    story 28-3 in section 4.1 of the approved sprint change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "28-4"
+  title: "Change-scoped validation and delivery"
+  description: >-
+    Classify each candidate against the PR base or the accepted delivered
+    commits as none, module or full; run only the checks a class can affect;
+    start no delivery for a prose/receipt push (CAP-4; AD-3, AD-6).
+  invoke_dev_with: >-
+    Work in this repo: tools/change_scope.py (stdlib), validate.py,
+    check_global.py, deliver.yml, test_validate.py. A missing or unknown scope
+    is full. Record hosted run links in the story file, not in a new bundle.
+    Classes and baseline: enforcement.md "What a change runs". Acceptance
+    criteria: story 28-4 in section 4.1 of the approved sprint change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "28-5"
+  title: "Pin-scoped bump checks"
+  description: >-
+    The nightly bump runs the global checks and suites that read the Builds
+    pin; validation of the bump commit stays full (CAP-6; AD-3, AD-18).
+  invoke_dev_with: >-
+    Work in this repo: check_global.py suite selection, bump.py. Acceptance
+    criteria: story 28-5 in section 4.1 of the approved sprint change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "28-6"
+  title: "Evidence policy and growth stop"
+  description: >-
+    Add a non-verdict evidence job to deliver.yml that rejects new raw,
+    executable or over-256-KiB files under _bmad-output/, and make
+    docs/pre-adoption-publication.md ask for one receipt instead of a new
+    evidence directory (SPEC Constraints; AGENTS.md).
+  invoke_dev_with: >-
+    Work in this repo. The job holds no secret and is not a need of deliver.
+    The AGENTS.md Evidence section already landed with the spec update.
+    Acceptance criteria: story 28-6 in section 4.1 of the approved sprint
+    change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "28-7"
+  title: "Independent duplicate scan"
+  description: >-
+    Move the nightly scan job into scan.yml on its own daily schedule and
+    manual dispatch; the bump needs only publish-ready (CAP-9; AD-18).
+  invoke_dev_with: >-
+    Work in this repo. Same tool, config and report schema; keepalive enables
+    scan.yml. Acceptance criteria: story 28-7 in section 4.1 of the approved
+    sprint change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+- id: "28-8"
+  title: "Remove raw evidence from the tree"
+  description: >-
+    After 28-3 and 28-6, delete from HEAD the raw evidence kinds that no
+    tracked file outside evidence references; no history rewrite.
+  spec_checkpoint: true
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Requires its own maintainer approval before starting. Acceptance
+    criteria: story 28-8 in section 4.1 of the approved sprint change proposal
+    (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
 - id: "12"
   title: "Migrate AI.Tools"
   description: >-
@@ -582,9 +672,11 @@
   invoke_dev_with: >-
     Follow the approved spec-20-migrate-eventstore.md and AD-21 ordering.
     Provision the private runner and approval environment without manufacturing
-    Azure authority or running faults. Use the EventStore-only evidence/20
-    pre-adoption verifier before preparation pushes, with exact source/Builds
-    identities, unchanged owned portions and immediate freshness checks. This
+    Azure authority or running faults. Use the EventStore-only pre-adoption
+    verifier (evidence/20 until story 28-3 moves it to
+    tools/qualification/pre-adoption/eventstore/) before preparation pushes,
+    with exact source/Builds identities, unchanged owned portions and
+    immediate freshness checks. This
     exception expires at accepted adoption; normal check.py then becomes
     mandatory. Product writes use module-agent, shared changes use CiCd-agent,
     and approved administration uses command-local maintainer access. Preserve

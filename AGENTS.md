@@ -47,5 +47,18 @@ verification jobs that create disposable workspaces. It supplies a private
 
 Create temporary repository copies, package feeds, and build outputs beneath
 `$TMPDIR`; explicitly named `/tmp/...` paths bypass the wrapper. Save requested
-results and useful logs outside that directory. Wait for child work to finish
-before returning. Commands with their own reliable scratch cleanup can keep it.
+results outside that directory; for a useful log, record its result and digest
+as the Evidence section says. Wait for child work to finish before returning.
+Commands with their own reliable scratch cleanup can keep it.
+
+# Evidence
+
+Git keeps decisions and identities, not raw output. A story record keeps the
+decision, exact source revisions (commit, tree and blob ids), digests, and run
+and artifact links. Raw logs, tree dumps, generated patches, packages, test
+results and earlier attempts stay in the producing Actions run or under
+`$TMPDIR`; record their digest and a one-line result instead. Code that tests
+or procedures execute lives under `tools/`, never under `_bmad-output/`. Files
+added under `_bmad-output/` stay under 256 KiB. Until story 28-3 moves them,
+the approved pre-adoption runners named in
+[pre-adoption publication](docs/pre-adoption-publication.md) stay where they are.
