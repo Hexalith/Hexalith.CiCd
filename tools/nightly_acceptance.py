@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import contextlib
 from datetime import datetime
 import hashlib
 import io
@@ -35,6 +36,7 @@ import sys
 import time
 from urllib.parse import quote
 import zipfile
+import zlib
 
 OWNER = "Hexalith"
 CICD = "Hexalith.CiCd"
@@ -281,7 +283,8 @@ def download(github, metadata, run, members, clock):
                 if len(data) != item.file_size:
                     raise Rejected(f"artifact {name} member {member} size mismatch")
                 documents[member] = data
-    except (zipfile.BadZipFile, zipfile.LargeZipFile, OSError, EOFError, RuntimeError, ValueError) as error:
+    except (zipfile.BadZipFile, zipfile.LargeZipFile, zlib.error, OSError, EOFError, RuntimeError,
+            ValueError) as error:
         raise Rejected(f"artifact {name} is not a readable ZIP: " + clean(error)) from None
     return documents
 
@@ -343,6 +346,9 @@ def validate_nightly(value, run):
     if not same(value["identity"], {"runId": run["id"], "attempt": run["run_attempt"], "source": run["head_sha"]}):
         raise Rejected("nightly.json identity does not match run, attempt and head")
     registry = value["registry"]
+    if registry == [] and isinstance(value["errors"], list) and value["errors"]:
+        # publish-ready's conservative seed: the controller never produced a state.
+        raise Rejected("nightly.json is publish-ready's seed: " + clean(value["errors"][0]))
     if (not isinstance(registry, list) or not all(isinstance(item, str) and REPOSITORY.fullmatch(item)
                                                   and item.casefold() != BUILDS.casefold() for item in registry)
             or registry != sorted(set(registry))):
@@ -545,20 +551,29 @@ class ScanSource:
                 return ["the attempt's scan artifact is missing"], None
             problems = scan_report_problems(report, self.run) or scan_row_problems(report, name, head)
             return problems, {"source": "scan job", "runId": self.run["id"]}
+        skipped = []
         try:
             for producer in self.scan_runs():
+                # Only a run whose row covers the dispatched head decides; a run
+                # without a readable, well-formed report has no row to decide.
                 report = self.report(producer)
                 if report is None:
                     continue
+                if isinstance(report, Unproven):
+                    skipped.append(str(report))
+                    continue
                 problems = scan_report_problems(report, producer)
                 if problems:
-                    return [f"scan.yml run {producer['id']}: " + problems[0]], {"source": "scan.yml",
-                                                                               "runId": producer["id"]}
+                    skipped.append(f"scan.yml run {producer['id']}: " + problems[0])
+                    continue
                 if any(row["module"] == name and row.get("revision") == head for row in report["modules"]):
                     return scan_row_problems(report, name, head), {"source": "scan.yml", "runId": producer["id"]}
         except Unproven as error:
             return ["scan.yml " + str(error)], None
-        return ["no completed scan.yml run on main after the nightly covers the dispatched head"], None
+        notes = ["skipped " + note for note in skipped[:3]]
+        if len(skipped) > 3:
+            notes.append(f"skipped {len(skipped) - 3} more unreadable scan.yml runs")
+        return ["no completed scan.yml run on main after the nightly covers the dispatched head", *notes], None
 
     def scan_runs(self):
         if self.runs is None:
@@ -570,6 +585,7 @@ class ScanSource:
                 try:
                     return (positive(item.get("id")) and positive(item.get("run_attempt"))
                             and item.get("path") == SCAN_WORKFLOW and item.get("head_branch") == "main"
+                            and item.get("event") in EVENTS
                             and item.get("status") == "completed" and SHA.fullmatch(str(item.get("head_sha")))
                             and isinstance(item.get("repository"), dict)
                             and item["repository"].get("full_name") == OWNER + "/" + CICD
@@ -580,10 +596,15 @@ class ScanSource:
         return self.runs
 
     def report(self, producer):
+        """The run's report, None without one, or the Unproven naming the run; read once."""
         if producer["id"] not in self.reports:
             artifacts = Artifacts(self.github, producer, self.clock)
-            self.reports[producer["id"]] = artifacts.document("scan", "report.json")
-            self.artifacts.used.extend(artifacts.used)
+            try:
+                self.reports[producer["id"]] = artifacts.document("scan", "report.json")
+            except Unproven as error:
+                self.reports[producer["id"]] = Unproven(f"scan.yml run {producer['id']}: {error}")
+            finally:
+                self.artifacts.used.extend(artifacts.used)
         return self.reports[producer["id"]]
 
 
@@ -595,7 +616,9 @@ def bump_identity(run):
 def push_state(run, jobs, artifacts):
     """Whether this attempt pushed a Builds bump, as bump-push.json says."""
     job = jobs.get("bump-push")
-    if job is None or job.get("conclusion") == "skipped":
+    if job is None:
+        return {"state": "unknown", "reason": "the attempt has no bump-push job"}
+    if job.get("conclusion") == "skipped":
         return {"state": "not-run"}
     report = document_or_error(artifacts, "bump-push", "bump-push.json")
     if isinstance(report, Unproven):
@@ -604,8 +627,10 @@ def push_state(run, jobs, artifacts):
         return {"state": "unknown", "reason": "bump-push ran but its report is missing"}
     if not isinstance(report, dict) or report.get("schema") != PUSH_SCHEMA or not isinstance(report.get("result"), str):
         return {"state": "unknown", "reason": "bump-push report is malformed"}
+    if report["result"] == "failed":
+        return {"state": "failed"}
     if report["result"] != "pushed":
-        return {"state": clean(report["result"], 20)}
+        return {"state": "unknown", "reason": "bump-push result is " + clean(report["result"], 20)}
     if not same(report.get("identity"), bump_identity(run)) or not SHA.fullmatch(str(report.get("candidate"))):
         return {"state": "unknown", "reason": "pushed bump report identity or candidate is malformed"}
     return {"state": "pushed", "candidate": report["candidate"]}
@@ -792,8 +817,13 @@ def receipt(report):
 def write_receipt(path, data):
     path = Path(path)
     temporary = path.with_name(path.name + ".writing")
-    temporary.write_bytes(data)
-    os.replace(temporary, path)
+    try:
+        temporary.write_bytes(data)
+        os.replace(temporary, path)
+    except OSError:
+        with contextlib.suppress(OSError):
+            temporary.unlink(missing_ok=True)
+        raise
 
 
 def arguments(argv):

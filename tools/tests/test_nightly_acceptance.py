@@ -4,6 +4,7 @@
 # dependencies = []
 # ///
 """Fixture runs for the read-only per-module nightly acceptance tool."""
+import ast
 import base64
 import copy
 from datetime import datetime, timezone
@@ -42,6 +43,21 @@ def zip_bytes(members):
             entry.external_attr = 0o100600 << 16
             archive.writestr(entry, document if isinstance(document, bytes) else json.dumps(document).encode())
     return stream.getvalue()
+
+
+def replaced(data):
+    """A tamper that serves ``data`` with matching API size and digest."""
+    def change(metadata, payload):
+        metadata.update(size_in_bytes=len(data), digest="sha256:" + hashlib.sha256(data).hexdigest())
+        return data
+    return change
+
+
+def corrupt_deflate(members):
+    """A ZIP whose central directory is intact but whose first deflate block type is invalid."""
+    payload = bytearray(zip_bytes(members))
+    payload[30 + len(next(iter(members)))] = 0xFF
+    return bytes(payload)
 
 
 def head(module):
@@ -102,7 +118,7 @@ class World:
                           "candidate": None, "ageSeconds": 1, "commit": "not-needed", "errors": []}
         self.nightly_result = "fail"
         self.nightly_overrides = {}
-        self.omit, self.tamper = set(), {}
+        self.omit, self.tamper, self.duplicate = set(), {}, set()
         self.scan_runs = []
         self.extra_routes = {}
 
@@ -165,6 +181,8 @@ class World:
             if kind in self.tamper and run["id"] == RUN:
                 payload = self.tamper[kind](metadata, payload) or payload
             listed.append(metadata)
+            if kind in self.duplicate and run["id"] == RUN:
+                listed.append(dict(metadata, id=metadata["id"] + 1000))
             blobs[API + f"actions/artifacts/{metadata['id']}/zip"] = payload
         routes[API + f"actions/runs/{run['id']}/artifacts?per_page=100"] = {"total_count": len(listed),
                                                                             "artifacts": listed}
@@ -195,10 +213,11 @@ class World:
                     "content": "\n".join(encoded[i:i + 60] for i in range(0, len(encoded), 60)) + "\n"}
         if self.scan_runs:
             listed = []
-            for index, (created, report) in enumerate(self.scan_runs, 1):
+            for index, (created, report, *event) in enumerate(self.scan_runs, 1):
                 run = {"id": 60000 + index, "path": ".github/workflows/scan.yml", "head_branch": "main",
                        "head_sha": SOURCE, "status": "completed", "conclusion": "success", "run_attempt": 1,
-                       "event": "schedule", "created_at": created, "repository": {"full_name": "Hexalith/Hexalith.CiCd"}}
+                       "event": (event or ["schedule"])[0], "created_at": created,
+                       "repository": {"full_name": "Hexalith/Hexalith.CiCd"}}
                 listed.append(run)
                 documents = {} if report is None else {"scan": {"report.json": report, "summary.md": b"# scan\n"}}
                 self.add_artifacts(routes, blobs, run, documents, 15000000000 + index)
@@ -289,6 +308,25 @@ class RunAuthenticationTests(Harness):
             "jobs over one page": (lambda world: world.jobs.update(
                 {f"extra-{index}": {"name": f"extra-{index}", "status": "completed", "conclusion": "success"}
                  for index in range(100)}), "over one page"),
+            "unexpected member": (artifact(replaced(zip_bytes({"nightly.json": b"{}", "extra.txt": b"x"}))),
+                                  "members ['extra.txt', 'nightly.json'] are not ['nightly.json']"),
+            "missing member": (artifact(replaced(zip_bytes({"state.json": b"{}"}))),
+                               "members ['state.json'] are not ['nightly.json']"),
+            "not a ZIP": (artifact(replaced(b"digest-matching bytes that are not a ZIP")), "is not a readable ZIP"),
+            "corrupt deflate": (artifact(replaced(corrupt_deflate({"nightly.json": b"{}" * 64}))),
+                                "is not a readable ZIP"),
+            "listed twice": (lambda world: world.duplicate.add("nightly"), "listed more than once"),
+            "registry order": (lambda world: world.nightly_overrides.update(registry=list(reversed(MODULES))),
+                               "registry is malformed"),
+            "targets order": (lambda world: world.nightly_overrides.update(
+                targets=list(reversed(World.nightly(world)["targets"]))), "targets do not follow"),
+            "publish-ready seed": (lambda world: world.nightly_overrides.update(
+                registry=[], targets=[dict(world.builds, eligibility="pending", dispatch="pending", runId=0,
+                                           runAttempt=0, link="", dispatchHead="", status="", conclusion="",
+                                           outcome=None, verdict="fail",
+                                           reason="checkout or initialization did not complete")],
+                builds={"tag": "", "sha": ""}, wait=None, errors=["checkout or initialization did not complete"]),
+                "seed: checkout or initialization did not complete"),
         }
         for name, (change, message) in cases.items():
             with self.subTest(case=name), tempfile.TemporaryDirectory() as directory:
@@ -596,6 +634,30 @@ class ScanTests(Harness):
         self.assertEqual(self.verdicts(report), {MODULES[0]: "fail"})
         self.assertIn("no completed scan.yml run", self.reasons(report, MODULES[0]))
 
+    def test_scan_yml_fallback_skips_unreadable_runs_until_a_covering_run_decides(self):
+        world = World()
+        del world.jobs["scan"]
+        world.omit.add("scan")
+        seed = dict(world.scan_report(), controllerRevision="", modules=[], errors=["checkout unavailable"])
+        failing = world.scan_report(**{module: (head(module), "fail", ["pull request row"]) for module in MODULES})
+        world.scan_runs = [("2026-11-18T09:00:00Z", seed), ("2026-11-18T09:10:00Z", b"{not json"),
+                           ("2026-11-18T09:20:00Z", failing, "pull_request"),
+                           ("2026-11-18T10:00:00Z", world.scan_report())]
+        code, report = self.judge(world)
+        self.assertEqual(code, 0)
+        self.assertEqual({item["scan"]["runId"] for item in report["modules"].values()}, {60004})
+        # The pull_request run is never read; each other report is downloaded and recorded once.
+        self.assertFalse([call for call in self.github_calls if "runs/60003/" in call])
+        self.assertEqual([item["id"] for item in report["artifacts"] if item["name"] == "hexalith-nightly-scan-1"],
+                         [15000000001, 15000000002, 15000000004])
+        self.assertEqual(len([call for call in self.github_calls if call.endswith("artifacts/15000000002/zip")]), 1)
+        world.scan_runs = world.scan_runs[:3]
+        _, report = self.judge(world, MODULES[0])
+        reason = self.reasons(report, MODULES[0])
+        self.assertIn("no completed scan.yml run", reason)
+        self.assertIn("skipped scan.yml run 60001: scan report controller revision", reason)
+        self.assertIn("skipped scan.yml run 60002: hexalith-nightly-scan-1 report.json is not JSON", reason)
+
     def test_scan_yml_digest_mismatch_rejects(self):
         world = World()
         del world.jobs["scan"]
@@ -627,7 +689,11 @@ class DeliveryAndCheckpointTests(Harness):
                                                     "identity, candidate or rows are malformed"),
                  "push identity": (lambda world: world.push["identity"].update(night="2026-11-17"),
                                    "bump push result unproven"),
-                 "push not JSON": (lambda world: setattr(world, "push", b"nope"), "bump-push.json is not JSON")}
+                 "push not JSON": (lambda world: setattr(world, "push", b"nope"), "bump-push.json is not JSON"),
+                 "no bump-push job": (lambda world: world.jobs.pop("bump-push"), "the attempt has no bump-push job"),
+                 "seeded push result": (lambda world: world.push.update(result="fail"), "bump-push result is fail"),
+                 "qualification result": (lambda world: world.push.update(result="qualified"),
+                                          "bump-push result is qualified")}
         for name, (change, message) in cases.items():
             with self.subTest(case=name):
                 world = World()
@@ -737,6 +803,15 @@ class ReceiptAndTransportTests(Harness):
         self.assertEqual(len(reasons[0]), 200)
         self.assertTrue(reasons[0].endswith("..."))
 
+    def test_unwritable_receipt_leaves_no_temporary_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            receipt = Path(directory) / "receipt.json"
+            receipt.mkdir()
+            code, _ = self.judge(World(), receipt=receipt)
+            self.assertEqual(code, 2)
+            self.assertIn("receipt not written", self.stderr)
+            self.assertEqual([path.name for path in Path(directory).iterdir()], ["receipt.json"])
+
     def test_receipt_over_16_kib_is_not_written(self):
         modules = tuple(f"Hexalith.Module{index:02d}" for index in range(1, 18))
         world = World(modules)
@@ -810,6 +885,53 @@ class ReceiptAndTransportTests(Harness):
         code, _ = self.judge(github, *MODULES)
         self.assertEqual(code, 2)
         self.assertIn("incomplete", self.stderr)
+
+
+class ProducerContractTests(unittest.TestCase):
+    """The tool mirrors, never imports, the contracts its producers write."""
+
+    @staticmethod
+    def source_schemas(path):
+        """Every literal "schema" value written in a dict display of a producer without a constant."""
+        found = set()
+        for node in ast.walk(ast.parse((ROOT / path).read_bytes())):
+            if isinstance(node, ast.Dict):
+                for key, value in zip(node.keys, node.values):
+                    if isinstance(key, ast.Constant) and key.value == "schema" and isinstance(value, ast.Constant):
+                        found.add(value.value)
+        return found
+
+    @staticmethod
+    def source_constant(path, name):
+        for node in ast.parse((ROOT / path).read_bytes()).body:
+            if isinstance(node, ast.Assign) and [target.id for target in node.targets
+                                                 if isinstance(target, ast.Name)] == [name]:
+                return ast.literal_eval(node.value)
+        raise AssertionError(f"{path} has no {name}")
+
+    def test_mirrored_contracts_equal_their_producers(self):
+        runtime = load(ROOT / "tools/nightly_runtime.py", "_nightly_acceptance_runtime")
+        delivery_wait = load(ROOT / "tools/nightly_delivery_wait.py", "_nightly_acceptance_delivery_wait")
+        self.assertEqual(tool.ROW_KEYS, runtime.ROW_KEYS)
+        self.assertEqual(tool.STATE_KEYS, runtime.STATE_KEYS)
+        self.assertEqual(tool.DIGEST.pattern, runtime.DIGEST.pattern)
+        self.assertEqual(tool.NIGHTLY_SCHEMA, runtime.SCHEMA)
+        self.assertEqual(tool.DELIVERY_SCHEMA, delivery_wait.SCHEMA)
+        # scan.py's constant is read from source: importing it needs PyYAML,
+        # which this stdlib-only suite does not carry.
+        self.assertEqual(tool.SCAN_SCHEMA, self.source_constant("tools/scan.py", "SCHEMA"))
+        # These producers write their schema inline and expose no constant.
+        self.assertEqual(self.source_schemas("tools/bump.py"), {tool.BUMP_SCHEMA})
+        self.assertEqual(self.source_schemas("tools/bump_push.py") - {"hexalith.nightly-bump-qualification.v1"},
+                         {tool.PUSH_SCHEMA})
+        self.assertEqual(self.source_schemas("tools/nightly_keepalive.py"), {tool.KEEPALIVE_SCHEMA})
+
+    def test_fixture_nightly_state_passes_the_runtime_contract(self):
+        runtime = load(ROOT / "tools/nightly_runtime.py", "_nightly_acceptance_runtime")
+        world = World()
+        value = runtime.validate_state(world.nightly(), MODULES, identity={"runId": RUN, "attempt": 1,
+                                                                          "source": SOURCE}, phase="nightly")
+        self.assertEqual(tool.validate_nightly(value, world.run), {row["repository"]: row for row in value["targets"]})
 
 
 if __name__ == "__main__":

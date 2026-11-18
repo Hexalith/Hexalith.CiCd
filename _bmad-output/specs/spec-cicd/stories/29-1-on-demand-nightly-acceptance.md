@@ -2,7 +2,7 @@
 title: 'On-demand nightly acceptance'
 type: 'feature'
 created: '2026-11-18'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '0b873999bc34f527a055a915328bde4b5d7d1428'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -117,3 +117,46 @@ Every run used `run-with-temp`, and its scratch was removed afterwards. Digests 
 ## Spec Change Log
 
 ## Review Triage Log
+
+Pass 1 (2026-11-18), layers: Blind Hunter (BH), Edge Case Hunter (EC), Verification Gap (VG). No intent_gap or bad_spec entries, so no loopback.
+
+| # | Finding | Verdict | Evidence | Route |
+|---|---|---|---|---|
+| BH1 | A missing `bump-push` job reads as "not-run", so a pushed bump stops requiring delivery rows; jobs are keyed by display name | low | `push_state` returns `not-run` for `jobs.get("bump-push") is None`; nightly.yml always defines the job, so absence only follows a rename or a `name:`, which is fail-open | patch |
+| BH2 | A non-JSON module API body exits 2 instead of failing that module, unlike the Implementation Notes | low | `GitHub.json` maps parse errors to `TransportError`; Design Notes classify transport errors as exit 2, so the code is as designed and only the notes overstate; the fix edits this spec | reject |
+| BH3 | Receipt lacks `createdAt`, per-module release ids and the scan producer run | low | AC 6 lists the receipt fields and the tool writes exactly those; the digest-pinned nightly artifact id binds every row's `runId`/`dispatchHead`, and run and artifact ids resolve the rest; adding fields is a schema change | reject |
+| BH4 | Release outcome and delivery rows are not re-authenticated against module artifacts or CI runs | false | `nightly.json` comes from the trusted publish-ready controller, which validated each `hexalith-release-outcome` (`tools/nightly.py:344-357`); the tool authenticates that artifact's digest and each linked run's identity, as D3 asks | reject |
+| BH5 | scan.yml fallback does not pin the trigger event | low | `eligible()` checks path, branch and repository but not `event`; the nightly run check pins `schedule`/`workflow_dispatch`, and the one-line pin keeps a future PR-triggered scan.yml run out | patch |
+| BH6 | scan.yml fallback fails a module on the first malformed run instead of skipping to the first covering run | medium | `ScanSource.problems` returns on any `scan_report_problems`; scan.yml's seeded report (`controllerRevision: ''`, nightly.yml:1456-1458 pattern) would then fail every module for that nightly, against Design Notes' "first whose row … decides" | patch |
+| BH7 | AC 8 model does not follow GitHub's null-vs-false coercion; the notes' `== false` mutation claim is overstated | low | `lookup` gives `""` for missing inputs and Python `==` is strict; for every nightly.yml condition (`!= true`, `== true`) the model and GitHub agree, so it errs only toward false alarms; the fix edits this spec's notes | reject |
+| BH8 | AC 8 compares only job-level `if:` | low | AC 8 scopes job selection; grep finds no `github.event`/`event_name` anywhere in nightly.yml, and step conditions read only `inputs.qualify-bump`/`steps.*`; extending to steps is new machinery | reject |
+| BH9 | AC 8 coverage floor `> 500` is far below the 15,796 evaluated | low | A shrinking harvest stays green; asserting that every job is evaluated is a direct correction | patch |
+| BH10 | Rejection branches have no tests (ZIP members, unreadable ZIP, duplicate artifact name, registry/targets order) | medium | grep of `test_nightly_acceptance.py` finds none of these cases; a mutation removing them survives | patch |
+| BH11 | Mirrored constants and schema strings have no drift check | medium | same root cause as VG2 | patch (VG2) |
+| BH12 | `ENDPOINT` accepts `..` segments | false | every interpolated value is an int, a 40-hex SHA, a quoted path or a `Hexalith.`-prefixed name, so no caller can form a `..` segment; reads are GET only | reject |
+| BH13 | Only the latest attempt can be judged; partial reruns give a misleading rejection | low | true, but it is fail-closed (exit 2); on-demand testing dispatches, never reruns (D1), and an `--attempt` option adds surface | reject |
+| BH14 | API version not pinned | false | an unpinned version can only drop or rename fields, which the exact checks turn into rejection or module failure, never a wrong pass; today's responses carry every field (AC 10 reproduces) | reject |
+| BH15 | Doc section omits `--receipt`, exit codes and `-I` | low | §4.4 says "Record the receipt" without the flag; one following sentence keeps §4.4 verbatim (AC 9) | patch |
+| BH16 | Story record names two bases (`0b873999` frontmatter, `4bb7a2e1` record) | low | both are true (workflow baseline vs implementation parent after 28-1's commit); the fix edits this spec | reject |
+| BH17 | `write_receipt` leaves `<name>.writing` on failure; no fsync; receipt written before stdout | low | `os.replace` onto a directory leaves the temporary file; the cleanup is a direct correction (patch). fsync and print ordering are negligible and rejected | patch (cleanup only) |
+| VG1 | AC 8 does not vary `github.event`, so `!github.event.schedule` goes undetected | medium | pre-verified: 0 differences over 15,796 situations with that mutation | patch |
+| VG2 | Mirrored `ROW_KEYS`/`STATE_KEYS`/`DIGEST`/schema strings never checked against producers | medium | pre-verified: fixtures hard-code the same literals; a producer change passes the suite and fails every real run | patch |
+| VG3 | Scan artifact members are checked against the workflow model, not `tools/scan.py` | low | pre-verified: `test_scan.py` never asserts the output directory's file set; the tool rejects any extra member | patch |
+| VG4 | AC 8 null-vs-false note overstated | low | same as BH7 | reject |
+| EC1 | A corrupt deflate stream raises `zlib.error`, which escapes as "internal error" | low | `zlib.error` is not in the caught tuple; exit 2 either way, the message misleads; adding it is direct | patch |
+| EC2 | `codeql: []` ignores a failed Release CodeQL job | false | D2 exempts modules that declare no languages ("unless M declares no CodeQL languages"); a failed CodeQL job also fails the release run itself | reject |
+| EC3 | A `bump-push.json` result of `unknown` raises `KeyError`; `not-run` is fail-open | low | `push_state` returns `{"state": result}` for any non-`pushed` string; restricting to `failed` is direct | patch |
+| EC4 | The publish-ready seed (`registry: []`, Builds row, errors) fails modules as "not a target" | low | confirmed at nightly.yml:898-901: `validate_nightly` accepts it; rejecting the seed with its error is direct | patch |
+| EC5 | A non-JSON scan.yml report skips the receipt, re-downloads per module and loses the producer run | low | `report()` raises before `used.extend` and before caching | patch |
+| EC6 | Partial rerun misleads | low | same as BH13 | reject |
+| EC7 | A `--module` differing only by case fails as "not a target" | low | fail-closed with a visible reason; a typo the user corrects; fix adds a branch | reject |
+| EC8 | `.writing` leftover | low | same as BH17 | patch (BH17) |
+| EC9 | The artifact test fails once 28-7 moves the scan job to scan.yml | low | the subtest requires nightly.yml's scan job; checking scan.yml when that job is gone is a direct correction | patch |
+| EC10 | scan.yml fallback fails on the first malformed run | medium | same as BH6 | patch (BH6) |
+| EC11 | Another module's malformed scan or delivery row fails the selected module | false | a structurally invalid report is integrity failure, not another module's result; `scan.py` and `nightly_delivery_wait.finalize` always write dict rows, so this is unreachable fail-closed behavior | reject |
+| EC12 | Receipt failure suppresses the stdout verdict | low | consistent with the recorded exit-2 contract (no stdout, no receipt); 16 KiB is never approached (1,326 bytes); changing it alters the contract | reject |
+
+Pass 1 patches applied by the step-03 implementation agent (no defers). Re-verified under `run-with-temp`:
+- **Blobs:** `tools/nightly_acceptance.py` `afa017ecb81c78fd3bb6437c72c69fdcb0be57f7`, `tools/tests/test_nightly_acceptance.py` `39debec45661aaea8d6349eb903476c05dd3bc14`, `tools/tests/test_nightly_workflow.py` `8c99d61e95aa6da4634f90b9dd54a23ffae8dedd`, `tools/tests/test_scan.py` `e1e6f5e42ae343e8589dc6bbf3c75d4e30706d02`, `docs/nightly.md` `d0e354cf53cd3013756ba3254cb18e28bf978652`.
+- **Suites:** `test_nightly_acceptance.py` 41 tests OK; `test_nightly_workflow.py` 30 tests OK (110 s); `test_scan.py` 131 tests OK (367 s).
+- **AC 10, hosted:** both commands on [44264031228](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44264031228) reproduce byte-identically: pilots-only stdout `139b41c43a3f5f6984693315b15cb184d61d02b78679f247cd16576dca0a2e02` (exit 0), checkpoint stdout `410f67c9d228be1939f8fce84443758922b8843aa11b038d756f7a483b5d13f3` (exit 1, names `v6.3.0`), receipt 1,326 bytes `ce8ab158e53994ce0ba773b83f5b568fd51185dcadc7bba0a9592bbd0618c4b9`, no `.writing` file left.

@@ -978,19 +978,21 @@ class OnDemandNightlyTests(unittest.TestCase):
 
     def selected(self, phase, job, event, inputs, ref, cancelled, needs):
         workflow = self.workflow
-        workflow.context["github"].update(event_name=event, ref=ref)
+        # The event payload, as GitHub sets it: a schedule carries its cron, a dispatch its inputs.
+        payload = {"schedule": "17 2 * * *"} if event == "schedule" else {"inputs": inputs}
+        workflow.context["github"].update(event_name=event, event=payload, ref=ref)
         workflow.context["inputs"] = inputs
         workflow.context["needs"] = needs
         workflow.cancelled = cancelled
         return bool(workflow.job_condition(phase, job))
 
     def differences(self, document):
-        differences, evaluated = [], 0
+        differences, evaluated = [], dict.fromkeys(document["jobs"], 0)
         for phase, job in document["jobs"].items():
             for ref, cancelled, needs in self.situations(phase, job):
                 selection = {event: self.selected(phase, job, event, inputs, ref, cancelled, needs)
                              for event, inputs in self.EVENTS.items()}
-                evaluated += 1
+                evaluated[phase] += 1
                 if len(set(selection.values())) != 1:
                     differences.append((phase, ref, cancelled, selection))
         return differences, evaluated
@@ -1006,7 +1008,9 @@ class OnDemandNightlyTests(unittest.TestCase):
                          {"pushed", "", None})
         differences, evaluated = self.differences(document)
         self.assertEqual(differences, [])
-        self.assertGreater(evaluated, 500)
+        # Every job in nightly.yml was compared, not only a large enough total.
+        self.assertEqual([phase for phase, count in evaluated.items() if count < 1], [])
+        self.assertEqual(set(evaluated), set(document["jobs"]))
         # Both events select a real nightly on main; only qualify-bump changes it.
         main = {"result": "success", "outputs": {}}
         for event, inputs in self.EVENTS.items():
@@ -1018,12 +1022,14 @@ class OnDemandNightlyTests(unittest.TestCase):
                                       {"qualify-bump": True}, "refs/heads/main", False, {"bump": main}))
 
     def test_comparison_detects_a_job_that_reads_the_event(self):
-        for phase in ("dispatch", "bump-push", "keepalive"):
-            with self.subTest(phase=phase):
+        readings = ("github.event_name == 'schedule'", "!github.event.schedule")
+        for phase, reading in ((phase, reading) for phase in ("dispatch", "bump-push", "keepalive")
+                               for reading in readings):
+            with self.subTest(phase=phase, reading=reading):
                 document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
                 condition = document["jobs"][phase]["if"]
                 document["jobs"][phase]["if"] = condition.replace("github.ref == 'refs/heads/main'",
-                    "github.ref == 'refs/heads/main' && github.event_name == 'schedule'")
+                    "github.ref == 'refs/heads/main' && " + reading)
                 self.assertNotEqual(document["jobs"][phase]["if"], condition)
                 self.workflow.document = document
                 try:
@@ -1043,6 +1049,13 @@ class OnDemandNightlyTests(unittest.TestCase):
                         found.setdefault(step["with"]["name"], []).append((phase, step["with"]["path"]))
             return found
         nightly = uploads(ROOT / ".github/workflows/nightly.yml")
+        jobs = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())["jobs"]
+        scan = ROOT / ".github/workflows/scan.yml"
+        # The tool finds these jobs by API display name, which is the job id only without `name:`.
+        self.assertTrue({"dispatch", "bump-push"} <= set(jobs))
+        for phase in ("dispatch", "scan", "bump-push"):
+            if phase in jobs:
+                self.assertNotIn("name", jobs[phase])
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         workflow = PostReleaseWorkflow(Workspace(Path(temporary.name) / "workspace", ("Hexalith.Alpha",)))
@@ -1050,6 +1063,11 @@ class OnDemandNightlyTests(unittest.TestCase):
         for kind, (phase, template, members) in acceptance.ARTIFACTS.items():
             with self.subTest(artifact=kind):
                 name = template.format(attempt="${{ github.run_attempt }}")
+                if kind == "scan" and phase not in jobs:
+                    # After 28-7 the scan runs only in scan.yml, under the same artifact name.
+                    self.assertTrue(scan.exists())
+                    self.assertIn(name, uploads(scan))
+                    continue
                 self.assertEqual([item[0] for item in nightly.get(name, [])], [phase])
                 path = nightly[name][0][1]
                 if len(members) == 1:
@@ -1060,7 +1078,6 @@ class OnDemandNightlyTests(unittest.TestCase):
                     self.assertIsNotNone(variable)
                     directory = Path(workflow.expand(workflow.document["jobs"][phase]["env"][variable.group(1)]))
                     self.assertEqual(sorted(item.name for item in directory.iterdir()), sorted(members))
-        scan = ROOT / ".github/workflows/scan.yml"
         if scan.exists():
             self.assertIn(acceptance.ARTIFACTS["scan"][1].format(attempt="${{ github.run_attempt }}"), uploads(scan))
 

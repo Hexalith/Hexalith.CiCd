@@ -1660,6 +1660,8 @@ class ScanTests(unittest.TestCase):
             w.commit(w.cicd)
             self.assertEqual(sc.main(["--project-root", str(w.cicd), "--output", str(w.output)]), 1)
         self.assertEqual(json.loads((w.output / "report.json").read_bytes())["result"], "fail")
+        # The scan artifact carries exactly these files; nightly_acceptance.py rejects any other set.
+        self.assertEqual(sorted(path.name for path in w.output.iterdir()), ["report.json", "summary.md"])
         # An empty SCAN_DIRECTORY is missing output, never the current directory.
         with mock.patch.dict(os.environ, {"SCAN_DIRECTORY": ""}), mock.patch("sys.stderr", new_callable=io.StringIO):
             with self.assertRaises(SystemExit) as raised:

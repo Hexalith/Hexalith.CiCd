@@ -150,6 +150,10 @@ verdict depends only on its own rows. Story 11 adds `--checkpoint pilot`. Record
 the receipt, not logs. Dispatching again without a fix only reports nothing to
 release.
 
+`--receipt <path>` writes the identity-only receipt, and the tool exits 0 when
+every named module passes, 1 when any fails, and 2 when the run is rejected or
+unreadable.
+
 ## Builds bumps and rollback
 
 The producer fetches current CiCd `main`, independently of the scheduler SHA,
