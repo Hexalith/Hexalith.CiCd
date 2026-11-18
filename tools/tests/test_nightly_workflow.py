@@ -924,5 +924,146 @@ class PostReleaseWorkflowTests(unittest.TestCase):
                 self.assertNotIn("uv run", step["run"])
 
 
+class OnDemandNightlyTests(unittest.TestCase):
+    """A dispatch on main with qualify-bump false is the scheduled nightly (story 29-1)."""
+
+    RESULTS = ("success", "failure", "skipped")
+    EVENTS = {"schedule": {}, "workflow_dispatch": {"qualify-bump": False}}
+
+    @classmethod
+    def setUpClass(cls):
+        # Harvest every needs-output shape the post-release model produces, so
+        # the selection comparison spans exactly the combinations it executes.
+        temporary = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(temporary.cleanup)
+        configurations = [{"producer": producer} for producer in ("candidate", "no-change", "failure", "missing")]
+        configurations += [{"push": push} for push in ("failure", "dispatch-failure")]
+        configurations += [{"propagation": "failure"}, {"publication": "failure", "scan": "failure"},
+                           {"qualify": True}]
+        cls.outputs = {}
+        for index, configuration in enumerate(configurations):
+            workspace = Workspace(Path(temporary.name) / f"workspace-{index}", ("Hexalith.Alpha", "Hexalith.Beta"))
+            workflow = PostReleaseWorkflow(workspace, **configuration)
+            workflow.execute()
+            for phase, need in workflow.context["needs"].items():
+                cls.outputs.setdefault(phase, {})[json.dumps(need["outputs"], sort_keys=True)] = need["outputs"]
+        cls.workflow = PostReleaseWorkflow(Workspace(Path(temporary.name) / "workspace", ()))
+
+    def situations(self, phase, job):
+        """Results and modeled outputs of every need the job's condition can observe."""
+        text = job.get("if", "")
+        direct = job.get("needs", [])
+        relevant = set([direct] if isinstance(direct, str) else direct)
+        relevant |= set(re.findall(r"needs\.([A-Za-z0-9_-]+)\.", text))
+        if not re.search(r"\bcancelled\s*\(|\balways\s*\(", text) or re.search(r"\b(?:success|failure)\s*\(", text):
+            # Status functions observe every transitive need's result.
+            pending = list(relevant)
+            while pending:
+                needed = self.workflow.document["jobs"][pending.pop()].get("needs", [])
+                for name in [needed] if isinstance(needed, str) else needed:
+                    if name not in relevant:
+                        relevant.add(name)
+                        pending.append(name)
+        names = sorted(relevant)
+        choices = [[(result, outputs) for result in self.RESULTS
+                    for outputs in (self.outputs.get(name) or {"{}": {}}).values()] for name in names]
+        combinations = [[]]
+        for options in choices:
+            combinations = [prefix + [option] for prefix in combinations for option in options]
+        for combination in combinations:
+            for cancelled in (False, True):
+                for ref in ("refs/heads/main", "refs/heads/other"):
+                    yield ref, cancelled, {name: {"result": result, "outputs": outputs}
+                                           for name, (result, outputs) in zip(names, combination)}
+
+    def selected(self, phase, job, event, inputs, ref, cancelled, needs):
+        workflow = self.workflow
+        workflow.context["github"].update(event_name=event, ref=ref)
+        workflow.context["inputs"] = inputs
+        workflow.context["needs"] = needs
+        workflow.cancelled = cancelled
+        return bool(workflow.job_condition(phase, job))
+
+    def differences(self, document):
+        differences, evaluated = [], 0
+        for phase, job in document["jobs"].items():
+            for ref, cancelled, needs in self.situations(phase, job):
+                selection = {event: self.selected(phase, job, event, inputs, ref, cancelled, needs)
+                             for event, inputs in self.EVENTS.items()}
+                evaluated += 1
+                if len(set(selection.values())) != 1:
+                    differences.append((phase, ref, cancelled, selection))
+        return differences, evaluated
+
+    def test_every_job_selects_identically_for_schedule_and_dispatch_without_qualify_bump(self):
+        document = self.workflow.document
+        self.assertEqual(set(document.get("on", document.get(True))), set(self.EVENTS))
+        # The model exercised every post-release output shape it defines.
+        # None is a skipped job's empty outputs.
+        self.assertEqual({outputs.get("result") for outputs in self.outputs["bump"].values()},
+                         {"candidate", "no-change", "", None})
+        self.assertEqual({outputs.get("result") for outputs in self.outputs["bump-push"].values()},
+                         {"pushed", "", None})
+        differences, evaluated = self.differences(document)
+        self.assertEqual(differences, [])
+        self.assertGreater(evaluated, 500)
+        # Both events select a real nightly on main; only qualify-bump changes it.
+        main = {"result": "success", "outputs": {}}
+        for event, inputs in self.EVENTS.items():
+            self.assertTrue(self.selected("dispatch", document["jobs"]["dispatch"], event, inputs,
+                                          "refs/heads/main", False, {}))
+        self.assertFalse(self.selected("dispatch", document["jobs"]["dispatch"], "workflow_dispatch",
+                                       {"qualify-bump": True}, "refs/heads/main", False, {}))
+        self.assertTrue(self.selected("bump-push", document["jobs"]["bump-push"], "workflow_dispatch",
+                                      {"qualify-bump": True}, "refs/heads/main", False, {"bump": main}))
+
+    def test_comparison_detects_a_job_that_reads_the_event(self):
+        for phase in ("dispatch", "bump-push", "keepalive"):
+            with self.subTest(phase=phase):
+                document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
+                condition = document["jobs"][phase]["if"]
+                document["jobs"][phase]["if"] = condition.replace("github.ref == 'refs/heads/main'",
+                    "github.ref == 'refs/heads/main' && github.event_name == 'schedule'")
+                self.assertNotEqual(document["jobs"][phase]["if"], condition)
+                self.workflow.document = document
+                try:
+                    differences, _ = self.differences(document)
+                finally:
+                    self.workflow.document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
+                self.assertTrue(differences)
+                self.assertEqual({item[0] for item in differences}, {phase})
+
+    def test_acceptance_tool_reads_the_artifacts_nightly_and_scan_upload(self):
+        acceptance = load(ROOT / "tools/nightly_acceptance.py", "_nightly_workflow_acceptance")
+        def uploads(path):
+            found = {}
+            for phase, job in yaml.safe_load(path.read_bytes())["jobs"].items():
+                for step in job.get("steps", []):
+                    if step.get("uses", "").startswith("actions/upload-artifact@"):
+                        found.setdefault(step["with"]["name"], []).append((phase, step["with"]["path"]))
+            return found
+        nightly = uploads(ROOT / ".github/workflows/nightly.yml")
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        workflow = PostReleaseWorkflow(Workspace(Path(temporary.name) / "workspace", ("Hexalith.Alpha",)))
+        self.assertEqual(workflow.execute(), "success")
+        for kind, (phase, template, members) in acceptance.ARTIFACTS.items():
+            with self.subTest(artifact=kind):
+                name = template.format(attempt="${{ github.run_attempt }}")
+                self.assertEqual([item[0] for item in nightly.get(name, [])], [phase])
+                path = nightly[name][0][1]
+                if len(members) == 1:
+                    self.assertEqual(path.rsplit("/", 1)[-1], members[0])
+                else:
+                    # A directory upload: its members are what the executed job left there.
+                    variable = re.fullmatch(r"\$\{\{ env\.([A-Z_]+) \}\}", path)
+                    self.assertIsNotNone(variable)
+                    directory = Path(workflow.expand(workflow.document["jobs"][phase]["env"][variable.group(1)]))
+                    self.assertEqual(sorted(item.name for item in directory.iterdir()), sorted(members))
+        scan = ROOT / ".github/workflows/scan.yml"
+        if scan.exists():
+            self.assertIn(acceptance.ARTIFACTS["scan"][1].format(attempt="${{ github.run_attempt }}"), uploads(scan))
+
+
 if __name__ == "__main__":
     unittest.main()

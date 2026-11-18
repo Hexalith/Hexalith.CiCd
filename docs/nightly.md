@@ -137,6 +137,19 @@ checkout, so unavailable checkout or tooling cannot become a clean result.
 The summary is copied to the Actions job summary even after an ordinary failure.
 See [duplicate scan scope, reports and retuning](duplicate-scan.md).
 
+## Testing on demand
+
+Dispatch `nightly.yml` on `main` to test the nightly without waiting for 02:17
+UTC; it runs the same jobs and really releases, publishes and bumps. First
+confirm that no `nightly.yml` run is queued or in progress, and plan no CiCd
+push for 30 minutes, which is the dispatch barrier. Only the maintainer or an
+interactive CiCd session dispatches; a module agent cannot. A run takes about an
+hour. Judge it with
+`python3 tools/nightly_acceptance.py --run <id> --module <Repo>`: each module's
+verdict depends only on its own rows. Story 11 adds `--checkpoint pilot`. Record
+the receipt, not logs. Dispatching again without a fix only reports nothing to
+release.
+
 ## Builds bumps and rollback
 
 The producer fetches current CiCd `main`, independently of the scheduler SHA,
