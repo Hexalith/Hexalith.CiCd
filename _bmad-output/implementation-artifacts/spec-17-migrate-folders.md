@@ -67,6 +67,25 @@ context:
 
 ## Implementation Notes
 
+- The 2026-11-18 resume used CiCd `dc931eafa9f50c68f847650ea0d7aa60c8bfce0e`
+  and two locally available Folders snapshots. An explicit, versionless
+  `Aspire.Hosting.AppHost` reference fixes `NU1009`. Audited Release restore
+  and build plus the complete Contracts, Client, UI.E2E and prepared Server
+  suites passed against the umbrella dependency pins. The later cached main
+  restore fails with `NU1506` because Tenants and Builds both declare
+  `Aspire.Hosting.Dotnet`. The exact AppHost edit is available in the detached
+  worktree `/home/administrator/projects/hexalith/folders-story-17-candidate`
+  based on `a53fcb940fa1114fe3ead0af2775af388e39432c`. Publication requires a
+  fresh fetch and [exact-input qualification](../../docs/pre-adoption-publication.md).
+- The [2026-11-18 qualification](../specs/spec-cicd/evidence/17/local-resume-20261118.md)
+  supersedes earlier results where it retested the same gate. Released audit,
+  action and candidate commit checks passed, and local script discovery still
+  failed. The complete core run rejected two provider skips and AppHost timed
+  out. The Server hook needs shared preparation of its Keycloak fixture, and
+  the selected delivery release still needs a compatible Aspire catalog.
+  Predecessor checkpoints, publication, AD-21 adoption and the nightly outcome
+  remain open.
+
 - Resume, 2026-11-16: implementation checkout is `/home/administrator/projects/hexalith/cicd-story-17-resume`, branch `story/17-migrate-folders-resume`, created from freshly fetched CiCd main `b836159cea272e5211333296936106cf82833a27`. Resolve `{project-root}` context paths to this checkout. Preserve the original baseline and frozen intent. The prior published Folders candidate and source evidence are available in the clean sibling checkout `/home/administrator/projects/hexalith/cicd-story-17`; use its Git objects read-only to populate local direct checkouts if needed. Continue local implementation and verification sequentially; no pushes, remote Git operations, provisioning, adoption, or credential changes in step 03. Preserve both earlier workspaces.
 
 - Implementation follows the rendered step-03 local-only boundary: no pushes, remote Git operations or external provisioning in this handoff. Prepare the concrete local candidate and verification; leave live rollout tasks unchecked until that boundary is explicitly resolved. This does not narrow final story acceptance. Read source dependencies from existing local Git objects rather than changing the original workspace.
