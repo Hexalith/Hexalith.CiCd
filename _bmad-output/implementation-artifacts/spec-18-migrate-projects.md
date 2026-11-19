@@ -114,11 +114,22 @@ context:
   Projects branch `story/18-eventstore-query-contracts`
   (`038f2f4088415c6371b4ac0aad8cff7fd9438d62`) unpushed in its separate
   worktree until the Projects-only pre-adoption checks pass on it.
+- 2026-11-19: Human decision: the Projects product push no longer waits for story 11. Story 11 still gates adoption, as the Always rule says.
+  - **Trigger:** a published Conversations package contains the five symbols.
+  - **Steps:**
+    1. Rebase `038f2f40` onto freshly fetched Projects main.
+    2. Select that Conversations version. The Builds catalog still defaults to 2.0.0, so set `HexalithConversationsVersion` as a dependency minimum until the catalog moves.
+    3. Pass the Projects-only pre-adoption checks with exact inputs, then push with module-agent.
+  - **Why:** the ChatBot latest-dependencies story needs a Projects main that builds in package mode.
+  - **Conversations status:** its release is blocked because main CI is red. On `298eb57e8c3580e81d50bfc5fc7579cb6a0fa789`, the Windows prepare job fails in Builds v6.3.1 with "hosted Windows checkout requires the job token". The 2026-11-19 release reported "main is red, nothing released".
+  - **Fix path:** Builds `73acaceb` and `a8e2ae292a45070e95646bf6db8a7f7a8704c1d3` fix it after v6.3.3. The fix reaches Conversations through the next Builds release, the nightly bump and delivery.
+  - **Evidence:** [main readback](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
 
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
 - 2026-11-18 — Human chose how to clear the scanner refusal at `.github/actions/prepare-g6-catalog/prepare.py:47`: delete that legacy G-6 action in a module-agent Projects commit after adoption, before the first post-adoption nightly scan, instead of extending the scanner to prove the computed call. The legacy `ci.yml` uses it until adoption. Added this to the last execution task. The scanner stays fail-closed and no exclusion is added. No other constraint changed.
+- 2026-11-19 — Human split the 2026-11-18 resume condition. The Projects product push waits only for a Conversations release with the five symbols; story 11 acceptance still gates adoption. No other constraint changed.
 
 ## Review Triage Log
 

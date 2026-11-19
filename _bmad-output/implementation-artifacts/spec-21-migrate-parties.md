@@ -54,7 +54,7 @@ context: []
 **Execution:**
 - [ ] `evidence/21/` — verify/provision AD-21 App selection, stale CodeQL/release state, exact rulesets, main-only release environment, Parties-only Zot identity, scoped NuGet policy and org grants. Keep exact-true switch/90-day retention; assess unmatched `v1.2.0` before cleanup. Resolve unreadable installation selection through maintainer UI/readback.
 - [ ] Parties `tests/Hexalith.Parties.Ci.Tests/`, `tests/ci-lifecycle/`, obsolete controller scripts, root `package.json`/lock and active docs — remove CI/agent/story/YAML gates and tool-only manifests; preserve mixed product assertions and `tests/e2e` tooling. Delivery alone replaces all eight legacy workflows. Record both owner-gate dispositions; historical eleven-test count is stale.
-- [ ] Parties standalone solution, native test projects, Admin UI test host and `scripts/{prepare-aspire-runtime-hosts,prepare-ci-package-dependencies,verify-catalog-runtime,verify-public-package-integration}.*` — implement approved graph boundary; build declared runtime owners once, reuse outputs, preserve native/authentication/persistence/cleanup and compatibility cohorts. Include published Aspire assets in the graph. Qualify EventStore 5.1.1; remove obsolete build exclusions and old CI receipts.
+- [ ] Parties standalone solution, native test projects, Admin UI test host and `scripts/{prepare-aspire-runtime-hosts,prepare-ci-package-dependencies,verify-catalog-runtime,verify-public-package-integration}.*` — implement approved graph boundary; build declared runtime owners once, reuse outputs, preserve native/authentication/persistence/cleanup and compatibility cohorts. Include published Aspire assets in the graph. Qualify EventStore 5.1.1, 5.3.0 and 5.3.1, shipping 5.3.x early (see the 2026-11-19 note); remove obsolete build exclusions and old CI receipts.
 - [ ] Parties `.github/actions/{after-unit-tests,after-integration-tests}/action.yml` and retained test projects — route all product suites exactly once; explicitly classify lifecycle tests as integration and separate environment-sensitive general tests. Preserve browser/accessibility, declaration, package and native checks with shared Dapr/browser/registry setup.
 - [ ] Parties `Directory.Build.targets`, `src/Hexalith.Parties{,.Mcp,.UI}/*.csproj` — enroll all existing container identities and adapt shared source/version/created metadata with strict provenance. Require `prerequisite-21-frozen-release-timestamp.md` to ship separately before adoption. No audit waiver was found; transfer none without evidence.
 - [ ] `setup/Hexalith.Parties.yml`, `references/Hexalith.Parties`, `rendered/Hexalith.Parties/`, `rendered/Hexalith.Parties.perimeter.json` — register the verified remote product revision, standalone solution, hooks, environment and direct dependencies; commit registration/render together only after prerequisites.
@@ -72,11 +72,25 @@ context: []
 - 2026-11-16: The human approved the complete spec and requested stopping before implementation. The approved intent is frozen; shared timestamp support remains a separate adoption prerequisite.
 - 2026-11-16: Resumed in `/home/administrator/projects/hexalith/cicd-build-21` from freshly fetched main. The implementation phase permits local edits and verification only, with no pushes or remote operations. Complete independent product preparation while keeping prerequisite, delivery and nightly acceptance explicitly pending. Parties is on `build/21-product-preparation` at freshly fetched `a575021fc97a8eda664711089270b60f5e570ded`; only direct CiCd submodules are initialized.
 - 2026-11-16: Local preparation removes obsolete gates, retains product observation checks, declares runtime artifacts, separates five live-runtime classes, and adapts container source/version identity. The complete Release build and thirteen prebuilt preparation records pass. Complete retained Ci.Tests passes 421 cases serially; complete general unit tests pass 2,800 cases; both report zero errors/failures/skips. Exact inputs, layered verification and earlier failures are preserved in the linked handoff. No commit, push, registration or adoption occurred.
+- 2026-11-19: Human decision: qualify EventStore 5.3.0 and 5.3.1 now, as an early standalone preparation push.
+  - **Why:** ChatBot runs all owner children on one EventStore version, and Tenants requires 5.3.0 or 5.3.1. Parties `Directory.Build.targets` enables its catalog API, query selectors, catalog hosts and cancellable projections only through 5.1.1. The lists are at lines 6, 11, 15 and 35 of main `e88937fb6bc6d6ceaf66996abcf1f753102abf71`, blob `3b8f26b17d9f0d14b34c8b03978b957e246de3aa`. On 5.3.x, Parties compiles without owner declarations, and ChatBot's loader refuses it.
+  - **How:**
+    - Start from freshly fetched Parties main.
+    - Add 5.3.0 and 5.3.1 to those four lists.
+    - Run the retained suites in package mode on 5.3.1.
+    - Push only this change with module-agent, under the approved Parties pre-adoption substitute and with exact-input evidence.
+    - It does not wait for the other story-21 prerequisites.
+    - Leave Parties' own default selection unchanged, including Builds' `HexalithPartiesSdk42CatalogView`.
+  - **Compile probe, 2026-11-19, tests not run:**
+    - Owner project: 0 warnings and 0 errors, with all catalog constants enabled.
+    - Standalone solution: 38 projects built with no C# errors. The one failure was the native Admin UI prebuild prerequisite, which the probe skipped.
+    - Evidence: [main readback](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
 - Completion remains blocked on shared native test/model reuse, owner composition package routing, released frozen-created support and the live AD-21/adoption/nightly prerequisites. All execution checkboxes remain open because their full obligations are unsatisfied. Keep status `in-progress`; implementation has not reached the workflow review checkpoint.
 
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
+- 2026-11-19 — Human approved qualifying EventStore 5.3.0 and 5.3.1 in this story and shipping it as an early standalone preparation push, so that ChatBot can host the Parties owner beside Tenants. Extended the EventStore task and added an implementation note. No other constraint changed.
 
 ## Review Triage Log
 

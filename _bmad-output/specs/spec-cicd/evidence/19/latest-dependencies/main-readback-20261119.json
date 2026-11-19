@@ -1,0 +1,176 @@
+{
+  "recorded_at": "2026-11-19",
+  "spec": "_bmad-output/implementation-artifacts/spec-19-chatbot-latest-dependencies.md",
+  "decision": "Human, 2026-11-19 ('1 c; 2 b; 3 b; use latest submodules main version'): (1c) this story makes no Parties change and waits for Parties story 21 to qualify EventStore 5.3.x; (2b) no older Projects pin, wait for a Conversations release and a Projects main that builds in package mode; (3b) keep Aspire 17 by moving Builds forward; every gitlink, Builds included, pins its submodule's latest main commit. The story stays parked until (1c) and (2b) land.",
+  "method": "git ls-remote refs/heads/main for ChatBot and its 16 submodules; local objects from the umbrella module repositories, which already held each main commit; Tenants main from a scratch partial clone. No build, push, commit or ChatBot worktree change.",
+  "chatbot_main": "ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3",
+  "latest_main": [
+    {
+      "repo": "Builds",
+      "commit": "a8e2ae292a45070e95646bf6db8a7f7a8704c1d3",
+      "describe": "v6.3.3-2",
+      "note": "v6.3.3 is f9f0c76e0680d7c5d7f66090517efbe41c2ebd60; the 2 later commits touch only the Windows checkout action and its test"
+    },
+    {
+      "repo": "EventStore",
+      "commit": "82657b3d3b9f3ede3e711ab72dc67fea836e3029",
+      "describe": "v5.3.1-5",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Tenants",
+      "commit": "648c4debae8939107fcc501cc9b2306c4407844d",
+      "describe": "v8.0.2-3",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Platform",
+      "commit": "5bfac7abfe2e4c3b74d56cc142a3087308f93360",
+      "describe": "v2.2.1",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Memories",
+      "commit": "0856785c7c764a0dc305af058227d6485b65c697",
+      "describe": "v4.1.0",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Parties",
+      "commit": "b30e751073b48d498883534463dca0c3bbf4330e",
+      "describe": "v4.0.0-4",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Projects",
+      "commit": "69697a088f1e407a59a2cbf2b21c0a2206aa72c8",
+      "describe": "v1.2.4-62",
+      "tfm": "net11.0",
+      "note": "unchanged since the 2026-11-18 plan"
+    },
+    {
+      "repo": "Folders",
+      "commit": "4d371566dff0f1fc0ac1dbaf606a1eaf6c92c9fc",
+      "describe": "v2.0.1",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "FrontComposer",
+      "commit": "76195272d07a0dd8c73ac3d8ffeb7a6b9a60d825",
+      "describe": "v6.0.0-114"
+    },
+    {
+      "repo": "Commons",
+      "commit": "cb53158b77707794560d4589844fd18189d5b8b4",
+      "describe": "v3.0.1-3"
+    },
+    {
+      "repo": "Conversations",
+      "commit": "298eb57e8c3580e81d50bfc5fc7579cb6a0fa789",
+      "describe": "v2.0.0-54",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "PolymorphicSerializations",
+      "commit": "df1a0e5c21ac97d3519fd5acd3059aa3f63f656a",
+      "describe": "v2.0.0-9"
+    },
+    {
+      "repo": "McpCli",
+      "commit": "a8f674b2553fb8bb870b5ca82146417c60f26d42",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Timesheets",
+      "commit": "b72eff51895982cec2de7746e8f06c9da3c5f401",
+      "describe": "v2.1.1",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "Works",
+      "commit": "4053907d5764bc8833c95dd79ea337bc8faba159",
+      "describe": "v1.0.2-224",
+      "tfm": "net11.0"
+    },
+    {
+      "repo": "AI.Tools",
+      "commit": "2a1784bec7d249d815cbd166e01b29fd9ad1f451"
+    }
+  ],
+  "builds_main_catalog": {
+    "blob": "f63e6503d99647d12c84cb7ee3f69944374b8b76",
+    "EventStore": "5.3.1 (Props/Directory.Packages.props:181)",
+    "AspireAppHostSdk": "17.0.0 (:205)",
+    "Tenants": "8.0.2 (:198)",
+    "Conversations": "2.0.0 (:39)",
+    "Parties": "3.1.1 (:199)",
+    "Projects": "1.2.4 (:201)",
+    "Memories": "4.0.0 (:195)"
+  },
+  "blockers": [
+    {
+      "id": "parties-catalog-api-eventstore-5.3",
+      "status": "open; waits for Parties story 21 (decision 1c)",
+      "summary": "Parties main and v4.0.0 (7639a5d20c36ce3e2ec5139685f3b08dbf2ab1f9) share Directory.Build.targets blob 3b8f26b17d9f0d14b34c8b03978b957e246de3aa, whose lines 6, 11, 15 and 35 enable the catalog API, hosts and compiled owner declarations only for EventStore up to 5.1.1 or from source. Tenants main keeps blob 1389f838849715383a8f5cda33e8678281d2a3ec, whose line 45 requires EventStore 5.3.0 or 5.3.1 for current packages, and the Builds main catalog defaults to 5.3.1. No package-mode EventStore version satisfies both owner children.",
+      "story_21_scope": "spec-21-migrate-parties.md:57 currently says 'Qualify EventStore 5.1.1'; qualifying 5.3.x is not yet in story 21's tasks."
+    },
+    {
+      "id": "projects-main-unbuildable",
+      "status": "open; waits for a Conversations release and a Projects fix (decision 2b)",
+      "summary": "Projects main is still 69697a088f1e407a59a2cbf2b21c0a2206aa72c8. Its Directory.Packages.props blob f56d16dfc2e951732ff1c7644f86da4ce951e9f8 still defaults EventStore to 5.1.1, and Projects.Server uses Conversations query APIs that no release provides. Conversations' latest release is still v2.0.0, which is the Builds main catalog default."
+    },
+    {
+      "id": "aspire-17-vs-builds-v6.3.1",
+      "status": "resolved by decision 3b",
+      "summary": "Builds main pins Aspire.AppHost.Sdk 17.0.0, so ChatBot keeps its base AppHost SDK 17.0.0. The proof's temporary 13.6.5 downgrade is rejected."
+    }
+  ],
+  "resume": [
+    "Parties main qualifies EventStore 5.3.x in package mode (story 21 or a later Parties change).",
+    "A Conversations release provides the Projects.Server query APIs, the Builds catalog carries it, and Projects main builds in package mode.",
+    "Then read every submodule's main again, pin those commits, and rerun the loader proof from fresh ChatBot main. The Builds main catalog defaults EventStore to 5.3.1, which may remove the proof's byte-identity override for the Tenants child; verify rather than assume."
+  ],
+  "chatbot_worktree": "Unchanged and uncommitted: /home/administrator/projects/hexalith/chatbot-story-19-latest at ddd385ec with the proof inputs (tree bd05c98f217f95d6388f48d041a9576a1e7348f1), including the now-rejected AppHost SDK 13.6.5 downgrade and the 2026-11-18 gitlink targets. Treat it as disposable proof state.",
+  "followup_decision": "Human, 2026-11-19 ('apply recommended'): story 21 qualifies EventStore 5.3.0/5.3.1 as an early standalone Parties preparation push; story 18 pushes the Projects product fix once Conversations releases, without waiting for story 11 (which still gates adoption).",
+  "parties_main_recheck": {
+    "commit": "e88937fb6bc6d6ceaf66996abcf1f753102abf71",
+    "since_readback": "one /pushall sync commit after b30e7510",
+    "targets_blob": "3b8f26b17d9f0d14b34c8b03978b957e246de3aa",
+    "builds_gitlink": "a8e2ae292a45070e95646bf6db8a7f7a8704c1d3"
+  },
+  "parties_5_3_compile_probe": {
+    "method": "run-with-temp disposable copy of Parties e88937fb with its pinned submodule sources (CiCd gitlink absent), Builds a8e2ae29; '5.3.1' added beside '5.1.1' in Directory.Build.targets lines 6, 11, 15 and 35; dotnet build -c Release -p:HexalithEventStoreVersion=5.3.1 -p:UseHexalithProjectReferences=false -p:HexalithSourceMappingMode=package. Tests not run.",
+    "gate_diff_sha256": "55cd873efb1967cb7041e4c773f59b52d2c29823a00ffd934d5fb1b77362b9a5",
+    "owner_project": {
+      "project": "src/Hexalith.Parties/Hexalith.Parties.csproj",
+      "result": "0 warnings, 0 errors; DefineConstants include HEXALITH_EVENTSTORE_CATALOG_API, HEXALITH_EVENTSTORE_QUERY_SELECTOR_BINDINGS, HEXALITH_EVENTSTORE_CATALOG_HOSTS",
+      "log_sha256": "9b24243c3ac369d23d0ca40e96b9b9633b6b412f0dcd534e250b15ae5c3407bc"
+    },
+    "standalone_solution": {
+      "result": "38 project outputs, 0 warnings, no C# errors; 1 error: tests/Hexalith.Parties.EventStoreAdminUI.TestHost requires the native Admin UI prebuild output, which the probe did not prepare",
+      "log_sha256": "0002e1dbd1b56247af82144fc675f072b55aeaf7a94d2da6d2a2d8f3f3018a09"
+    }
+  },
+  "conversations_release_chain": {
+    "required_symbols_source": "f1a2b3da468760d4188f604045deb098af8ead52 (on main, unreleased; published latest 2.0.0)",
+    "release_run": {
+      "id": 44485044907,
+      "head": "298eb57e8c3580e81d50bfc5fc7579cb6a0fa789",
+      "result": "Resolve release identity failed: 'main is red, nothing released'",
+      "log_sha256": "5b6d81eeef1f8c1c5911bc775e743743ce52faff1888067711e4074ee58f69a7"
+    },
+    "red_ci_run": {
+      "id": 44410090791,
+      "head": "298eb57e8c3580e81d50bfc5fc7579cb6a0fa789",
+      "failed_job": "windows-testsupport-windows at Hexalith.Builds/Github/prepare@v6.3.1",
+      "message": "hosted Windows checkout requires the job token",
+      "log_sha256": "e605cc09a62d8e4f9a292deb578840839ca7bef8774ff1d3d29730faecb01b0f"
+    },
+    "builds_fix": [
+      "73acaceb fix(ci): authenticate protected Windows checkout",
+      "a8e2ae292a45070e95646bf6db8a7f7a8704c1d3 fix(ci): preserve SystemRoot for Windows Git"
+    ],
+    "builds_release": "Builds Release run for a8e2ae29 in progress at readback; latest tag v6.3.3",
+    "cicd_bump": "builds-version v6.3.1 (bot commit d01a9c8d, 2026-11-18); nightly 44397561726 bump report 'automatic bump already reachable for UTC night 2026-11-18' (no-change); nightly 44484967336 in progress"
+  }
+}

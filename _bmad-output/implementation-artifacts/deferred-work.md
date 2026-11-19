@@ -414,3 +414,12 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-19-migrate-chatbot.md`
   summary: Human scope decision needed: a ChatBot product story to make the required live/release cases passable (EventStore 5 with a `net11.0` retarget, and atomic participation in `ChatBotAdmissionEvidenceValidator`) before story 19 resumes.
   evidence: On 2026-11-18 the human parked story 19. ChatBot `ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3` still pins EventStore `77a2dafdf2e6aab7382afab7ab50e22144361d42`, whose owner loader refuses the System.Text.Json snapshot. EventStore v5.0.0 changed that loader but requires `net11.0`; whether it fixes ChatBot is unverified. Separately, `ValidateAtomicParticipationAsync` always returns `CanonicalExecutionUnavailable`, so every ChatBot nightly release would fail. The CiCd half of `prerequisite-19-long-running-nightly-hooks.md` waits for this decision. See `_bmad-output/specs/spec-cicd/evidence/19/blockers-20261118.json`.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-19-chatbot-latest-dependencies.md`
+  summary: Two sibling fixes are needed before the ChatBot latest-dependencies story can resume. Story 21 must push the Parties EventStore 5.3.x qualification as an early preparation push. Story 18 must push the Projects product fix once Conversations releases the query APIs.
+  evidence: On 2026-11-19 the human pinned every ChatBot gitlink to its submodule's latest `main` and waited for both sibling fixes.
+    - Parties: main `e88937fb6bc6d6ceaf66996abcf1f753102abf71` and v4.0.0 have `Directory.Build.targets` blob `3b8f26b17d9f0d14b34c8b03978b957e246de3aa`, which enables compiled owner declarations only through EventStore 5.1.1. Tenants main requires 5.3.0 or 5.3.1.
+    - Projects: main `69697a088f1e407a59a2cbf2b21c0a2206aa72c8` does not compile against Conversations v2.0.0.
+    - Decision: the human then approved two changes. Story 21 qualifies 5.3.x early, and story 18 pushes Projects without waiting for story 11.
+    - Conversations: the release waits for its red main CI. Builds v6.3.1's Windows checkout fails, and the fix in Builds `a8e2ae292a45070e95646bf6db8a7f7a8704c1d3` must arrive through a Builds release and the nightly bump.
+    - See `_bmad-output/specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json`.
