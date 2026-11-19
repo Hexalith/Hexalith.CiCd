@@ -1,0 +1,88 @@
+{
+  "recorded_at": "2026-11-19",
+  "spec": "_bmad-output/implementation-artifacts/spec-21-frozen-release-timestamp.md",
+  "decision": "Builds now stamps one publisher-owned ContainerProvenanceCreated instant per build_release, read once and validated before any SDK command. Every image's image.created label carries it, and payload inspection verifies it. The local implementation was later pushed to the Builds feature branch at the user's request. Story 21 consumes it after the central Builds release and the CiCd pin bump.",
+  "builds": {
+    "branch": "feat/frozen-release-created",
+    "baseline_commit": "a8e2ae292a45070e95646bf6db8a7f7a8704c1d3",
+    "baseline_tree": "ba22f8c1be51050fcabbac08795e8b1ff121d5b9",
+    "candidate_tree": "2361676dbc28f589cc0922303427c9a693a38467",
+    "published_commit": "7f085bad76da517d85b835f45facd649dfc7bc36",
+    "published_ref": "https://github.com/Hexalith/Hexalith.Builds/tree/feat/frozen-release-created",
+    "commitlint_result": "Pinned CLI 21.2.4 accepted the exact commit message with zero problems and zero warnings.",
+    "commitlint_log_sha256": "sha256:b709585a213ceb613f2243a50cbef84c1dbe5f36a7e297ac788fc5ba48573be0",
+    "candidate_tree_method": "private GIT_INDEX_FILE: read-tree HEAD, add -A, write-tree; the repository index is untouched",
+    "candidate_patch_sha256": "sha256:6f5cad56c52e03069ab6534fbe182e7e70a57daa17a6579c9668ede3d2fd842c",
+    "files": [
+      {"path": "Github/lib/release_build.py", "baseline_blob": "be12663b782935adea0c4c72c83f45fca290e32a", "candidate_blob": "be0556519e15038966db14fcd8fb63b9e445a82c"},
+      {"path": "Github/lib/oci_archive.py", "baseline_blob": "441e44af743cd408bf71423c2b20eb8335f5911a", "candidate_blob": "0c7beab830fb65dfac13ccd016266c469c1e1054"},
+      {"path": "Github/release-build/release.targets", "baseline_blob": "c77e59d9a7e90317c5b6cdd81687cbe812680165", "candidate_blob": "ff7968e047cca0bea622949bcedfff83599a916f"},
+      {"path": "Github/release-build/README.md", "baseline_blob": null, "candidate_blob": "081129174d546eda9618f7e8417f1aeb376d3b1b"},
+      {"path": "README.md", "baseline_blob": "9c165a92793f99c743d340879dadf2d629c3a871", "candidate_blob": "45c2863bfafde45dfaeeb8d8a53f3a136d84c4bd"},
+      {"path": "Github/lib/tests/test_release_build.py", "baseline_blob": "d355fe604824325d194d2fc7d243cf5a30805eab", "candidate_blob": "1c6284c863ec364c34adbf14b695eec94a77faf0"},
+      {"path": "Github/lib/tests/test_release_oci.py", "baseline_blob": "dda19c65c147a2a3854f9b8c5e48b2239a5807bc", "candidate_blob": "cd9918214d7c3c4e0d8b733d9a594be19d4a83bb"},
+      {"path": "Github/lib/tests/test_release_complete.py", "baseline_blob": "0a1f0c83325bd7e61f27a2ada77b52222a9c10b7", "candidate_blob": "ff531085327c9c715d39c8db79af64da2833664c"}
+    ]
+  },
+  "cicd": {
+    "path": "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md",
+    "change": "AD-17 build bullet: publisher-created rule",
+    "baseline_blob": "55c2f88e6a0a6e39dff09aa89916c879ee4d515b",
+    "candidate_blob": "9d6195e26cdfe4eff749d05c073161166843d318"
+  },
+  "matrix_coverage": {
+    "multi_rid_containers": "test_release_build: test_real_multi_project_multi_rid_images_share_one_publisher_instant (real SDK, Release.slnx plus a second container, linux/amd64 and linux/arm64, the clock advances on every read and is read once)",
+    "package_only_or_none": "test_release_build: test_real_multitarget_import_discovery_and_pack_stamp, test_none_payload_does_not_execute_sdk_or_submodules",
+    "plain_consumer": "test_real_multi_project_multi_rid_images_share_one_publisher_instant: the unchanged fixture container carries image.created and has no artifact.created",
+    "product_requiring_property": "same test: the fixture requires ContainerProvenanceCreated with no default and declares artifact.created; both labels equal the instant, and publication without it fails",
+    "invalid_instant": "test_release_build: test_publisher_instant_is_one_exact_real_utc_second, test_invalid_publisher_instant_fails_before_any_sdk_command_or_payload",
+    "label_mismatch": "test_release_build: test_created_label_mismatch_fails_inspection_and_writes_no_manifest; test_release_oci: test_created_label_mismatch_fails_before_the_archive_is_written, test_publisher_created_labels_verified_on_every_child_without_rewriting_bytes",
+    "complete_mode": "test_release_complete: test_original_publisher_created_labels_complete_without_rebuild_or_new_instant"
+  },
+  "verification": [
+    {
+      "command": "run-with-temp python3 -m unittest discover -s Github/lib/tests -p 'test_release_*.py'",
+      "where": "shared Builds checkout, Python 3.14.4, SDK 10.0.403",
+      "result": "218 tests OK, no skips",
+      "log_sha256": "sha256:f72f78491cff2d2a60175bccff4a8054a4f947d4c927596e9ac5388b6ddad30c"
+    },
+    {
+      "command": "run-with-temp uv run --no-cache --locked --script --python 3.12 Tools/ci/run_python_tests.py",
+      "where": "shared Builds checkout",
+      "result": "14/16 groups; environmental only: untracked node_modules holds js-yaml 4.3.2 instead of the locked 5.5.0 (20 test_guard_actions setUp failures), and lint tools were not installed (test_lint_workflows.RealPolicyTests setUpClass)",
+      "log_sha256": "sha256:6e49fa2dbb65e911ebf03590fbb1559f7e38134aec723ed2669cac76886236c9"
+    },
+    {
+      "command": "run-with-temp bash isolated-suite.sh (local clone at baseline + candidate patch; tree verified 2361676d; npm ci --ignore-scripts; lint_workflows.py --install-only; the same uv suite command)",
+      "where": "disposable clone under the private TMPDIR, node v26.4.0 (CI pins 26.13.1)",
+      "result": "15/16 groups. Github/lib/tests: 783 OK. The one failure is Tools/ci/tests test_real_zizmor_enforces_committed_third_party_pinning_policy_online, which requires a GitHub token: CI supplies GH_TOKEN, and this session was refused one. No skips.",
+      "script_sha256": "sha256:3126423f89a44b943b7802af4be304a6d2232da3fda7cfcb423fb9e2ef6636ad",
+      "log_sha256": "sha256:6a1c7e15298907b6e12e5af169f59faa6cafb74291d90075bad4154bfa98c056"
+    },
+    {
+      "command": "GITHUB_PATH=<scratch> python3 Tools/ci/lint_workflows.py --export-path",
+      "where": "shared Builds checkout",
+      "result": "actionlint passed; zizmor stopped with 'Online zizmor audits require GH_TOKEN, GITHUB_TOKEN or ZIZMOR_GITHUB_TOKEN' (token use refused in this session). No workflow or action YAML changed.",
+      "log_sha256": "sha256:0b73c645cae9bb90ecacc574c58ed3307678bd57f8f662c25d276688a11af6d9"
+    },
+    {
+      "command": "mutation: drop the release.targets image.created Remove/Include and rerun the real multi-RID test",
+      "result": "the test fails with OciError 'OCI created label mismatch'; release.targets was restored"
+    },
+    {
+      "command": "run-with-temp python3 Tools/ci/lint_workflows.py --cache <private tool cache>",
+      "where": "Builds commit 7f085bad76da517d85b835f45facd649dfc7bc36 with authenticated online audits",
+      "result": "Actionlint passed. Zizmor reported eight exact frozen findings and zero new findings.",
+      "log_sha256": "sha256:0044ff3594a11ee55a81cc55139dab44bedbd8a1d3fb3380141508035c80584d"
+    },
+    {
+      "command": "run-with-temp python3 -m unittest discover -s Tools/ci/tests -p test_lint_workflows.py",
+      "where": "Builds commit 7f085bad76da517d85b835f45facd649dfc7bc36 with the verified tool cache and authenticated online audits",
+      "result": "All 14 workflow policy tests passed, including the previously blocked online zizmor test.",
+      "log_sha256": "sha256:930cb7876fcc3dd8a2bfa046a2a55bc8035ccab419a8711ac855b6239400459b"
+    }
+  ],
+  "open": [
+    "Hosted Builds CI, central Builds release and CiCd builds-version bump with committed-candidate validation (prerequisite steps 4 and 5)."
+  ]
+}

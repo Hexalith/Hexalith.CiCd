@@ -124,6 +124,25 @@ context:
   - **Conversations status:** its release is blocked because main CI is red. On `298eb57e8c3580e81d50bfc5fc7579cb6a0fa789`, the Windows prepare job fails in Builds v6.3.1 with "hosted Windows checkout requires the job token". The 2026-11-19 release reported "main is red, nothing released".
   - **Fix path:** Builds `73acaceb` and `a8e2ae292a45070e95646bf6db8a7f7a8704c1d3` fix it after v6.3.3. The fix reaches Conversations through the next Builds release, the nightly bump and delivery.
   - **Evidence:** [main readback](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
+- 2026-11-19 08:53 UTC: The [public NuGet index](https://api.nuget.org/v3-flatcontainer/hexalith.conversations.contracts/index.json)
+  still ends at 2.0.0 (index SHA-256
+  `43506685628fa6a300cbcd145fd5b36fb6a28abe0074652b403e094dc3d3cbea`). The published
+  package SHA-256 is `bba5483dbaea023b08f66c163516cd142086eb93c2306d79979dbb9de10e74bd`.
+  Assembly inspection confirmed that `GetConversationQuery` lacks `AdvisoryMetadataOnly`,
+  `NativeMembershipOnly`, `QueryType` and `NativeMembershipPurpose`, and
+  `ConversationDetailResult` lacks `ReadPurpose` (inspection output SHA-256
+  `92ef06d85b9fea329684de6546ea6e5893ae9f8dee594e4ce60d0e851199439c`).
+  Projects preparation remains at commit `038f2f4088415c6371b4ac0aad8cff7fd9438d62`,
+  tree `c6b30c0eb626c2f7c0ad9c351ed6e381131372ec`, with a clean worktree. The
+  package prerequisite still blocks the rebase, qualification and push. The
+  [story 11 record](spec-11-pilot-migration-commons-and-polymorphicserializations.md)
+  still shows `in-progress`, so adoption remains gated separately.
+- 2026-11-19: [Local Folders owner qualification](../specs/spec-cicd/evidence/18/folder-owner-local-20261119.json)
+  on cached main `4d371566dff0f1fc0ac1dbaf606a1eaf6c92c9fc` passed the audited
+  Release build, both adapter controls covering 18 declarations and 36 canonical
+  intent cases, all 124 gateway tests, and 1,451 Server tests. Eleven explicit
+  Keycloak component cases and authenticated remote and hosted check evidence
+  remain outstanding for the owner prerequisite.
 
 ## Spec Change Log
 

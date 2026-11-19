@@ -1,0 +1,102 @@
+{
+  "observed_at": "2026-11-19T09:00:45Z",
+  "source": {
+    "repository": "Hexalith.Folders",
+    "selection": "locally cached origin/main",
+    "commit": "4d371566dff0f1fc0ac1dbaf606a1eaf6c92c9fc",
+    "tree": "6f998c5f1616ff84b21ebab8a9bc13ccff458df6",
+    "owner_repair_commit": "e5760ca105652f4d89c4f240e0ca455723c9a473",
+    "blobs": {
+      "src/Hexalith.Folders.Server/FolderServerCatalogAdapterSource.cs": "f15284c769d4a0659751512d12876ded99b5abd1",
+      "src/Hexalith.Folders.Server/Hexalith.Folders.Server.csproj": "1198829602e612e8c0a07b825a240a41ee384a51",
+      "src/Hexalith.Folders.EventStore/FoldersCatalogAdapterSource.cs": "27d7ca33e5293319eb7df90420e4790c34f994b0",
+      "src/Hexalith.Folders.EventStore/FoldersCatalogAdapters.cs": "87a1fc14285a7764a79fb2e087ca7ff208be4d60",
+      "tests/Hexalith.Folders.Server.Tests/FolderServerCatalogAdapterSourceTests.cs": "c2cd7c82028104df168088129efa74d8cb1f172e",
+      "tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj": "0186c936d6e30eed68441fbcca423b5136a2f132",
+      "tests/Hexalith.Folders.EventStore.Tests/Fixtures/legacy-canonical-intents.json": "4f3030f2b5d9fe25b51c997736274da9a9a64dac"
+    }
+  },
+  "builds": {
+    "selection": "Folders recorded direct gitlink, matching the local v6.3.2 tag",
+    "commit": "38e038d1179b1c829ba47a45bfa0a4683ea5e2a5",
+    "tree": "21f1f28c8cc760273861d4b4dc21e9340ff3c6b4",
+    "nuget_ci_config_blob": "a108818dd0ea54f7ec106645be07c55cfdbb9844"
+  },
+  "execution": {
+    "workspace": "Standalone local clones under run-with-temp, with only the recorded Builds dependency checked out",
+    "dotnet_sdk": "11.0.100",
+    "restore_and_build_flags": [
+      "--disable-build-servers",
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:NuGetAudit=true",
+      "-p:NuGetAuditMode=all",
+      "-p:NuGetAuditLevel=low",
+      "-p:RestoreConfigFile=<standalone Folders checkout>/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true",
+      "-p:UseSharedCompilation=false",
+      "-nr:false",
+      "-m:1"
+    ],
+    "results": [
+      {
+        "command": "dotnet restore tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj",
+        "exit_code": 0,
+        "seconds": 3,
+        "result": "Audited restore passed.",
+        "output_sha256": "5735dc4ddfbcae29a7a3a0f2df45b054c123e3c4c87a0b14726a77a78d8cb1ca"
+      },
+      {
+        "command": "dotnet build tests/Hexalith.Folders.Server.Tests/Hexalith.Folders.Server.Tests.csproj --no-restore",
+        "exit_code": 0,
+        "seconds": 20,
+        "result": "Owner and Server tests compiled with zero warnings or errors.",
+        "output_sha256": "2688880915e93ff4f66ba8f393c502b2f34a0b68f6d6154ed0246027a85fb8e7"
+      },
+      {
+        "command": "dotnet tests/Hexalith.Folders.Server.Tests/bin/Release/net11.0/Hexalith.Folders.Server.Tests.dll -class Hexalith.Folders.Server.Tests.FolderServerCatalogAdapterSourceTests -noColor -failSkips",
+        "exit_code": 0,
+        "seconds": 1,
+        "result": "Both controls passed, covering all 18 exact declarations and 36 canonical intent cases, with zero failures, skips, or unrun tests.",
+        "output_sha256": "19ee6544fe7787419ed8855a71e3248b16639ce6c2d1a4ec52dc7ea0c04fa55c"
+      },
+      {
+        "command": "dotnet restore tests/Hexalith.Folders.EventStore.Tests/Hexalith.Folders.EventStore.Tests.csproj",
+        "exit_code": 0,
+        "seconds": 1,
+        "result": "Audited restore passed.",
+        "output_sha256": "5e129c9da430fb8820da19776ab2470975fb41087a377b0e2a477def078c7525"
+      },
+      {
+        "command": "dotnet build tests/Hexalith.Folders.EventStore.Tests/Hexalith.Folders.EventStore.Tests.csproj --no-restore",
+        "exit_code": 0,
+        "seconds": 5,
+        "result": "Gateway tests compiled with zero warnings or errors.",
+        "output_sha256": "e97ee2a690293423fd6b775aaec0ff1387102e639eecb5802940afc4de21a3b4"
+      },
+      {
+        "command": "dotnet tests/Hexalith.Folders.EventStore.Tests/bin/Release/net11.0/Hexalith.Folders.EventStore.Tests.dll -noColor -failSkips",
+        "exit_code": 0,
+        "seconds": 4,
+        "result": "All 124 gateway tests passed with zero failures, skips, or unrun tests.",
+        "output_sha256": "675c5dee28a9ad8568b891e46cfac96e14261ab63684aa5f89ff5629baa44925"
+      },
+      {
+        "command": "dotnet tests/Hexalith.Folders.Server.Tests/bin/Release/net11.0/Hexalith.Folders.Server.Tests.dll -noColor",
+        "exit_code": 0,
+        "seconds": 193,
+        "result": "Of 1,462 tests discovered, 1,451 passed, 11 explicit component cases did not run, and zero failed or skipped.",
+        "output_sha256": "ee11c995d536f3e56a46cbbdaa0a8d444dbf50d04593a383ec3d0b5400bb54dd"
+      }
+    ]
+  },
+  "remaining": [
+    "The 11 explicit EnrolledWorkloadSourceBoundaryTests cases still need Platform's delegated real Keycloak and Debug/source verifier.",
+    "Authenticated remote availability and required hosted check results for the exact Folder owner commit remain unverified."
+  ]
+}
