@@ -17,11 +17,7 @@
   "hooks": [
     "after-unit-tests"
   ],
-  "jobs": {
-    "testsupport-windows": {
-      "runner": "windows-latest"
-    }
-  },
+  "jobs": {},
   "moduleManifest": "module/hexalith.module-manifest.v2.json",
   "npmWorkspaces": [],
   "publishedBuilds": null,
@@ -39,44 +35,5 @@
     ],
     "minimumExpectedTests": {}
   },
-  "windowsCheckout": {
-    "exclude": [
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-01/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-02/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-03/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-04/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261028-implementation-01/collection-05/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-code/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-source/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-final-verified/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      },
-      {
-        "path": "module/validation/epic-16-published-artifact-qualification/attempt-20261031-4383-03/collection-measured/isolated/http-cache",
-        "tree": "482386e46eca707fda8582051cbde288cdb77d0d"
-      }
-    ]
-  }
+  "windowsCheckout": null
 }

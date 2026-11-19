@@ -18,26 +18,3 @@ jobs:
     secrets:
       registry-pull-username: ${{ secrets.HEXALITH_REGISTRY_PULL_USERNAME }}
       registry-pull-password: ${{ secrets.HEXALITH_REGISTRY_PULL_PASSWORD }}
-  "windows-testsupport-windows":
-    needs:
-    - ci
-    permissions:
-      contents: read
-    runs-on: windows-latest
-    steps:
-    - uses: Hexalith/Hexalith.Builds/Github/prepare@v6.3.4
-      with:
-        global-json: ${{ needs.ci.outputs.global-json }}
-        module-authority: ${{ needs.ci.outputs.module-authority }}
-        module-manifest: ${{ needs.ci.outputs.module-manifest }}
-        solution: ${{ needs.ci.outputs.solution }}
-        source-revision: ${{ needs.ci.outputs.source-revision }}
-        submodules: ${{ needs.ci.outputs.submodules }}
-        windows-checkout: ${{ needs.ci.outputs.windows-checkout }}
-    - env:
-        HEXALITH_JOB_NAME: testsupport-windows
-        HEXALITH_JOB_NEEDS: ${{ toJSON(needs) }}
-        HEXALITH_JOB_PARAMETERS: '{}'
-        HEXALITH_QUALIFICATION_PARAMETERS: '{}'
-      uses: ./.github/actions/testsupport-windows
-    timeout-minutes: 30
