@@ -33,6 +33,7 @@ baseline_commit: '53857b9e4223e3a161ed0731cebbe415761f3576'
 - Gitlinks: every `references/*` gitlink, Builds included, pins its submodule's latest `main` commit, read again when work resumes. This replaces the release-tag targets and the v6.3.1 Builds pin. Builds main carries Aspire 17, so the AppHost keeps `Aspire.AppHost.Sdk` 17.0.0. The one-time Builds-gitlink exception to story 19's ownership check now applies to that Builds main commit.
 - Parties: this story makes no Parties change. It waits for Parties story 21 to qualify EventStore 5.3.x on Parties main.
 - Projects: no older Projects pin. It waits for a Conversations release and a Projects main that builds in package mode.
+- Builds tool (later the same day: "use latest builds packages version"): `.config/dotnet-tools.json` pins the latest published Builds packages (`hexalith.builds.module.cli`), read again at resume. The Builds gitlink follows unreleased `main`, so no release matches it exactly.
 
 ## I/O & Edge-Case Matrix
 
@@ -63,7 +64,7 @@ baseline_commit: '53857b9e4223e3a161ed0731cebbe415761f3576'
 **Execution:**
 - [x] ChatBot (standalone copy under `run-with-temp`) -- loader proof: retarget the test host and a Tenants v8.0.2 owner child to net11.0 on EventStore 5.3.x, then run `GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology` -- settles the unverified loader claim before the full move.
 - [ ] ChatBot `references/*` gitlinks -- move each one, Builds included, to its submodule's latest `main` commit, read at resume -- the latest net11 sources and catalog.
-- [ ] ChatBot `Directory.{Build.props,Build.targets,Packages.props}`, `eng/ChatBot.Composition.props`, `.config/dotnet-tools.json` -- net11.0, `aspnet:11.0` base image, the matching Builds tool, and catalog overrides only where required.
+- [ ] ChatBot `Directory.{Build.props,Build.targets,Packages.props}`, `eng/ChatBot.Composition.props`, `.config/dotnet-tools.json` -- net11.0, `aspnet:11.0` base image, the latest published Builds tool (6.3.4 on 2026-11-19), and catalog overrides only where required.
 - [ ] ChatBot `src/`, `tests/` -- adapt to the Aspire 17, Commons 3, Tenants 8, Memories 4 and FrontComposer 6 APIs and to the framework-encoding expectations, with zero warnings.
 - [ ] `_bmad-output/specs/spec-cicd/evidence/19/latest-dependencies/` -- record the exact revisions, the owned-content comparison and the results with digests. Raw logs stay under `$TMPDIR`.
 
