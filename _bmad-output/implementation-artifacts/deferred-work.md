@@ -421,5 +421,5 @@ status: open
     - Parties: main `e88937fb6bc6d6ceaf66996abcf1f753102abf71` and v4.0.0 have `Directory.Build.targets` blob `3b8f26b17d9f0d14b34c8b03978b957e246de3aa`, which enables compiled owner declarations only through EventStore 5.1.1. Tenants main requires 5.3.0 or 5.3.1.
     - Projects: main `69697a088f1e407a59a2cbf2b21c0a2206aa72c8` does not compile against Conversations v2.0.0.
     - Decision: the human then approved two changes. Story 21 qualifies 5.3.x early, and story 18 pushes Projects without waiting for story 11.
-    - Conversations: the release waits for its red main CI. Builds v6.3.1's Windows checkout fails, and the fix in Builds `a8e2ae292a45070e95646bf6db8a7f7a8704c1d3` must arrive through a Builds release and the nightly bump.
+    - Conversations: main CI is green on `734b92d1585d467ea7d8b686392c76135c036d5f`, but release run 44517857028 failed on Builds v6.3.4 with HXW006 on a retained fixture ProjectReference. The human then chose Builds v6.4.2 (`8ad2c2285e2d0cec0a173882b3a3a926d555fe48`) for ChatBot's Builds gitlink and tool.
     - See `_bmad-output/specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json`.

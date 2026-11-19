@@ -172,5 +172,37 @@
     ],
     "builds_release": "Builds Release run for a8e2ae29 in progress at readback; latest tag v6.3.3",
     "cicd_bump": "builds-version v6.3.1 (bot commit d01a9c8d, 2026-11-18); nightly 44397561726 bump report 'automatic bump already reachable for UTC night 2026-11-18' (no-change); nightly 44484967336 in progress"
+  },
+  "builds_6_4_2_readback": {
+    "read_at": "2026-11-19T14:00Z",
+    "decision": "use builds version 6.4.2: ChatBot Builds gitlink and Builds tool pin v6.4.2",
+    "release": {
+      "tag": "v6.4.2",
+      "commit": "8ad2c2285e2d0cec0a173882b3a3a926d555fe48",
+      "published_at": "2026-11-19T12:50:45Z",
+      "author": "github-actions[bot]",
+      "immutable": true,
+      "draft": false,
+      "prerelease": false,
+      "builds_main_at_readback": "8ad2c2285e2d0cec0a173882b3a3a926d555fe48",
+      "nuget_hexalith_builds_module_cli_latest": "6.4.2",
+      "contains_nu1009_fix": "758f2605 fix(catalog): let SDK AppHosts take the central Aspire.Hosting.AppHost pin",
+      "catalog": "Aspire.Hosting.AppHost 17.0.0; HexalithEventStoreVersion default 5.3.1; Props/AspireAppHost.Build.targets blob 3e7db5e6dafb8d72c56aa4a878c9c02aa7c1a677"
+    },
+    "cicd_promotion": "CiCd main f88bc37cfe21f82a2450a6b815be8c49dc12ae5f 'build(cicd): promote Builds v6.4.2' (builds-version v6.3.4 -> v6.4.2, another session); Delivery run 44537177196 success",
+    "conversations": {
+      "main": "734b92d1585d467ea7d8b686392c76135c036d5f",
+      "ci_run": {
+        "id": 44507990648,
+        "result": "success"
+      },
+      "release_run": {
+        "id": 44517857028,
+        "builds": "v6.3.4 (a8e2ae292a45070e95646bf6db8a7f7a8704c1d3)",
+        "result": "Build audited release payload failed: HXW006 retained ProjectReference to tests/fixtures Hexalith.Conversations.MinimalModule.Tests cannot override the mapped configuration because metadata 'AdditionalProperties' is set (tests/compatibility/MinimalModule)",
+        "job_log_sha256": "4fb9b5788bed79b8af55a22d21b570bb1c79033cef4bc1cbbc7b23dced63aebb"
+      },
+      "note": "no commit in v6.3.4..v6.4.2 adds or removes HXW006 code"
+    }
   }
 }
