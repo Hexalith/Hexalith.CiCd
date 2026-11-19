@@ -255,6 +255,7 @@ class RuntimeTests(unittest.TestCase):
         secret = "diagnostic-test-token"
         other_secret = "diagnostic-poll-token"
         rt.delivery._SECRETS.append(other_secret)
+        self.addCleanup(rt.delivery._SECRETS.remove, other_secret)
         error = HTTPError("https://api.github.com/?secret=" + secret, 403, secret,
             {"X-GitHub-Request-Id": secret + "\nrequest", "Location": "https://example.com/" + secret},
             io.BytesIO(json.dumps({"message": secret + " " + other_secret + " https://example.com/?sig=unfamiliar-secret\n" + "x" * 500,
