@@ -2,7 +2,7 @@
 title: '11 — Pilot migration: Commons and PolymorphicSerializations'
 type: 'chore'
 created: '2026-11-15'
-status: 'in-review'
+status: 'done'
 baseline_commit: '37e73a99dfe82c3b7741554d6f4ff2207711644b'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -62,7 +62,7 @@ context:
 - [x] Both module `tools/` and root `package.json`/lockfile — after shared coverage exists, retire duplicated legacy verification code/tests/manifests and tool-only npm files using the module token. Let delivery remove owned legacy configuration/workflows.
 - [x] Commons `.github/actions/after-unit-tests/action.yml` and its three package scripts — retain payload/symbol and isolated-consumer checks without another module build/restore; fix consumer SDK/cache isolation and CI audit-off/package flags. Test real package consumption; preserve all C# suites.
 - [x] `builds-version`, `setup/Hexalith.{Commons,PolymorphicSerializations}.yml`, `rendered/`, direct gitlinks — pin released shared behavior, use each `.slnx`, enable Commons' hook and default C# analysis. Before adoption, create the disposable product-only probe branch/PR from current module main and record base/head. Render and validate one committed candidate before pushing; hooks must already exist on live main.
-- [ ] `evidence/11/` — authenticate both delivery commits/refs/reports; immediately enable immutable releases and remove other NuGet policies and legacy secret/key/Zot access. Record green CI, one nightly run (CAP-13) and post-delivery branch/Update-branch outcomes; clean probes and confirm/correct 10-2 restrictions.
+- [x] `evidence/11/` — authenticate both delivery commits/refs/reports; immediately enable immutable releases and remove other NuGet policies and legacy secret/key/Zot access. Record green CI, one nightly run (CAP-13) and post-delivery branch/Update-branch outcomes; clean probes and confirm/correct 10-2 restrictions.
 
 **Acceptance Criteria:**
 
@@ -73,7 +73,28 @@ context:
 
 ## Implementation Notes
 
-- Current resume checkpoint, 2026-11-19 12:11 UTC: stories 28-1 and 29-1 are on
+- Pilot checkpoint accepted, 2026-11-19 16:57 UTC. The GET-404 retry
+  `2696124842e84b00df871195f9bf7cfa3e3e992c` is an ancestor of the run's source.
+  After push deliveries `44557294172` and `44559377731` finished successfully, no
+  `nightly.yml` or `deliver.yml` run was queued or in progress. CAP-13 dispatch
+  [44566082537](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44566082537)
+  then ran with source `6b413de903926c52a355472f018d3ebcdbc8e144`, `qualify-bump`
+  false and POST identity `F1F2:102263:2F827:4F2ED:6AFF2327`.
+  `--checkpoint pilot` judges it pass: bump `no-change` and keepalive pass.
+  Commons (release
+  [44566233481](https://github.com/Hexalith/Hexalith.Commons/actions/runs/44566233481),
+  head `77b534ebbceebe58a4582ad8840b8cc78f6c10a7`) and Poly (release
+  [44566277325](https://github.com/Hexalith/Hexalith.PolymorphicSerializations/actions/runs/44566277325),
+  head `ed8a6d3149b0675f18b5ff17b4b948192ec354e3`) both pass. Each has Release
+  CodeQL (csharp) success, outcome `nothing` and a passing scan-job row. Green CI
+  on those exact heads: Commons `44544170051`, Poly `44548948505`. These rows
+  failed and are recorded, not decisive: AI.Tools, McpCli and Builds releases,
+  and the night's `publish-ready` and `scan` jobs. Receipt:
+  `pilot-checkpoint-receipt-44566082537.json`. The local judgment output's
+  sha256 is `489ad21b380952c3334e4291e56ff03003e7e3ef4940dea24e66ba5b6d856eed`.
+  The user timer `hexalith-cicd-story11-20261118` is now disabled and inactive.
+  The 10-2 Update-branch correction (`3427f041`) stands unchanged.
+- Prior resume checkpoint, 2026-11-19 12:11 UTC: stories 28-1 and 29-1 are on
   live main. The genuine scheduled night
   [44504916824](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44504916824)
   (source `1c323979c4a8f9dc54b768e87783f4ad0678d368`) and the CAP-13 dispatch
@@ -490,6 +511,37 @@ context:
 
 - 2026-11-19 — [edge-case-hunter] Controller restart during 404 retry sleep (`tools/nightly.py:337-348`) — **false**: same as the killed-slot row. Persist-before-GET already existed; sleep does not add a second POST path in this workflow.
 
+Full-story review, 2026-11-19. The baseline diff spans 173 commits of other stories, so the layers reviewed a story-scoped diff instead. It covers CiCd `ba62ae71`, `f002539f`, `3427f041`, `a968a421` and `26961248`, Builds `65fd22f3` and `fdda17c0`, Commons `a8395983` and `d551e5f3`, and Poly `c547c763`, with evidence paths left out and the two deleted lockfile bodies condensed.
+
+- 2026-11-19 — [blind-hunter] Subjects `fix: story 11` (`a968a421`) and the unscoped Commons `d551e5f3` do not describe the work — **low**: true, but both are published history on protected mains and cannot be rewritten. Rejected.
+- 2026-11-19 — [blind-hunter] Story 11 runners under `evidence/11/` break the Evidence rule, and nothing plans to move them — **low**: the runners predate the 2026-11-18 rule, and `0117dcf6..HEAD` adds no executable there. Stories 28-3 and 28-8 own moving and removing such files. Rejected.
+- 2026-11-19 — [blind-hunter] Commons and Poly foreign AGENTS.md, CLAUDE.md and copilot text still require the deleted pinned commitlint CLI, its config and its hook — **medium**: confirmed on Commons `77b534eb` (lines 51-69) and Poly `ed8a6d31` (lines 52-56). The fix edits agent-context files, so it is deferred together with the next two rows.
+- 2026-11-19 — [edge-case-hunter] Same stale commitlint instructions after the `package.json` deletion — **medium**: same evidence and root cause; grouped and deferred.
+- 2026-11-19 — [edge-case-hunter] Poly `.slnx:5` and `README.md:145-146` still reference the deleted `package.json` and its semantic-release override — **low**: confirmed on Poly `ed8a6d31`. Same root cause (the npm toolchain was deleted but references to it were kept); grouped and deferred.
+- 2026-11-19 — [blind-hunter] The check that each module releases its expected package set is gone — **medium**: confirmed. Legacy Poly passed `expected-package-count: '2'` to the legacy Builds release, and the shared release verifies only the packages it built. Commons keeps a 12-package CI hook, but Poly has nothing. The shared release (stories 3-x) dropped this for every module, so it predates story 11. Deferred.
+- 2026-11-19 — [blind-hunter] `verify_packages` gives every download the whole 1800 s deadline, so a trickling read uses up the budget and reports "GitHub API deadline exceeded" — **low**: real in `release_publish.py`/`release_draft.py:bounded`, but every path still fails closed before finalization; only the message is wrong. The fix needs a new per-download bound and a Builds release. Rejected.
+- 2026-11-19 — [edge-case-hunter] The deadline can pass mid-attempt, and `bounded` then raises the misleading message — **low**: same root cause as the previous row. Rejected.
+- 2026-11-19 — [blind-hunter] `verify_packages` logs nothing while waiting, and the final error gives no per-package status — **low**: real, but release outcomes do not change. The fix needs per-package state and a Builds release. Rejected.
+- 2026-11-19 — [edge-case-hunter] Persistent 5xx/TLS errors are retried silently for up to 30 minutes — **low**: same root cause as the previous row. Rejected.
+- 2026-11-19 — [blind-hunter] The Commons hook's `-p:NuGetAudit=false` disables audits against the delivered policy — **false**: shared CI builds the same way (`ci_pipeline.py:66`). The release build enforces `NuGetAudit=true`, `NuGetAuditMode=all` and NU190x as errors (`release_build.py:59-60`). Approved planning prescribed the audit-off CI flags (`evidence/11/planning.md:154`).
+- 2026-11-19 — [blind-hunter] `d551e5f3` drops `cwd=root`, sets `os.environ`, and leaves a fixed `$RUNNER_TEMP` path behind — **low**: the only caller runs from the Commons root, whose `global.json` is the file the script copies, so the SDK is unchanged. The environment is local to the script process, and `RUNNER_TEMP` is per job. Restoring `cwd` would bring back the discovery error that `d551e5f3` removed. Rejected.
+- 2026-11-19 — [edge-case-hunter] The consumer restore and build run without `cwd=root` — **low**: same as the previous row. Rejected.
+- 2026-11-19 — [blind-hunter] `created_run_not_yet_visible` matches text the server controls — **low**: only GitHub's own 240-character `message` could add `HTTP 404` to a non-404 GET error. The effect is at most two budget-checked re-reads of an idempotent GET. Rejected.
+- 2026-11-19 — [edge-case-hunter] A non-404 GET error whose message contains `HTTP 404` gets extra retries — **low**: same as the previous row. Rejected.
+- 2026-11-19 — [blind-hunter] Failure records still say `not retried` and `attempts: 1` after the GET retries — carried **false** (the exhaustion and `attempts: 1` rows above). The code still reads as they describe.
+- 2026-11-19 — [blind-hunter] `docs/nightly.md` omits the created-run re-read, has an unclear diagnostics sentence and one long line — carried **false** for the re-read, from the docs row above. The wording and width remarks are **low**: line 86 is 89 characters. Rejected.
+- 2026-11-19 — [blind-hunter] Retry-budget and invalid-delay errors omit the method and path — **low**: real at `nightly_runtime.py:399,403`. The message had no path before `a968a421` either, so the gap predates the story. Deferred.
+- 2026-11-19 — [blind-hunter] One Dependabot error message covers both an enabled setting and a malformed response — **low**: real at `deliver.py:79`, but the message names both possibilities and both states are rare. Splitting it adds a branch. Rejected.
+- 2026-11-19 — [blind-hunter] The Update-branch rule gives no detection criterion or reason, and `AGENTS.md` words it differently — **low**: the template's preceding lines name the condition ("predates delivered CI/CD changes"), and both texts state the same rule. Changing it means re-rendering and redelivering every module. Rejected.
+- 2026-11-19 — [blind-hunter] The render permission test passes whether or not `restore` exists — **false**: `f002539f` deliberately qualifies whatever the pinned tag declares. The unconditional `permission_union` equality still fails on any mismatch.
+- 2026-11-19 — [blind-hunter] The local NuGet feed shim strips `-I` and runs scripts through `runpy` — **maybe-false**: confirming it would need a composite script that imports a sibling module without setting up its own path. Real releases ran these scripts under `-I`. If true it is only a test-fidelity issue (low). Rejected.
+- 2026-11-19 — [blind-hunter] The nightly runtime tests depend on wall-clock margins — **low**: all 39 passed on Python 3.12 and 3.14 here, and they pass in hosted CI. Reworking the timing harness is more than a direct correction. Rejected.
+- 2026-11-19 — [blind-hunter] A test adds to the module-wide `_SECRETS` list and never removes it — **low**: confirmed at `test_nightly_runtime.py:257`. Patched with `addCleanup`; 39/39 pass on Python 3.12 and 3.14.
+- 2026-11-19 — [edge-case-hunter] The same `_SECRETS` leak — **low**: grouped with the previous row and patched.
+- 2026-11-19 — [edge-case-hunter] URL redaction misses schemeless URLs that carry query credentials — **maybe-false**: `clean()` redacts every credential the controller holds, whatever the URL form (`delivery_runtime.py:39-43`). Confirming it would need a GitHub error message that carries a schemeless third-party signed URL. Low if true; rejected.
+- 2026-11-19 — [verification-gap] No test shows that a non-404 created-run GET failure is tried only once; mutating the predicate to `"GET " in text` survived all 45 tests — carried **false** from the 403-negative row above. The code still reads as described (403 text lacks `HTTP 404`); the mutation result is recorded here.
+- 2026-11-19 — [verification-gap] Per-response diagnostics defeat `fail()` deduplication, so repeated poll read failures fill the 99-error cap — **low**: real. `x-github-request-id` makes each failure's text unique, so `nightly.py:397-399` adds one global entry per failing cycle. It needs persistent HTTP failures on run reads; the first diagnostic and per-target reasons survive, and overflow is marked `SUPPRESSED`. The fix needs new deduplication logic. Rejected.
+
 ## Verification
 
 Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
@@ -648,8 +700,13 @@ Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
   when `--edit` commitlint was run outside the module worktree; no push
   occurred. Nested Builds paths stayed empty; temporary worktrees were removed.
 
-Remaining verification for checkpoint acceptance:
+- `pilot-checkpoint-dispatch-44566082537.json` and
+  `pilot-checkpoint-receipt-44566082537.json`: these hold the post-fix CAP-13
+  dispatch preflight and identity, and the receipt for the identity-only
+  `--checkpoint pilot` pass. Both pilots, the bump and keepalive pass.
+
+Checkpoint acceptance status (accepted 2026-11-19 with run `44566082537`):
 
 - Delivery compatibility, shared publication regressions, both full pre-adoption proof sets and both exact post-adoption normal checkers pass with saved logs. No module workflow-text assertions were added.
 - The initial committed/global/live-module gate, real adoption artifacts, immediate settings/credential cleanup, green adopted-main CI and all restricted-token outcomes/cleanup are complete. Candidate `3427f041` passed its full locked gate and actual redelivery, with authenticated tree/foreign-content and final green-main CI proof. Original module workspaces are intentionally synced and clean; CiCd's staged entries remain preserved.
-- Genuine 2026-11-19 scheduled parent `44504916824` and CAP-13 dispatch `44517757466` are judged: `--checkpoint pilot` pass, Commons pass, Poly fail (`release dispatch is failed` after GET 404 of the POST-created run). Sibling AI.Tools/Conversations/McpCli rows fail and are not decisive; Builds release rows pass. Land the dispatcher GET-404 retry on main, wait until `deliver.yml` is terminal, dispatch one more `nightly.yml` with `qualify-bump` false, judge `--checkpoint pilot`, then disable `hexalith-cicd-story11-20261118`. Direct analysis inventories remain 403 under CiCd-agent.
+- Genuine 2026-11-19 scheduled parent `44504916824` and CAP-13 dispatch `44517757466` are judged: `--checkpoint pilot` pass, Commons pass, Poly fail (`release dispatch is failed` after GET 404 of the POST-created run). Sibling AI.Tools/Conversations/McpCli rows fail and are not decisive; Builds release rows pass. The dispatcher GET-404 retry landed as `26961248`. Post-fix dispatch `44566082537` passes `--checkpoint pilot` with both pilots `pass`, and `hexalith-cicd-story11-20261118` is disabled. Direct analysis inventories remain 403 under CiCd-agent; the release runs' own CodeQL jobs give the CodeQL evidence.
