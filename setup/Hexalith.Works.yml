@@ -1,0 +1,17 @@
+solution: Hexalith.Works.slnx
+dapr: true
+additionalSdkVersion: '10.0.404'
+codeql:
+- csharp
+- python
+hooks:
+- after-unit-tests
+jobs:
+  platform-parity:
+    runner: ubuntu-latest
+    timeoutMinutes: 180
+    setup:
+      dapr: true
+submodules:
+- references/Hexalith.Platform
+- references/Hexalith.Parties
