@@ -308,7 +308,13 @@ def run_identity(run, item):
     return run
 
 
-def dispatch_target(state, item, transport, token, persist=lambda: None):
+def created_run_not_yet_visible(error):
+    """GitHub may 404 a just-created run id; that is a read lag, not an uncertain write."""
+    text = str(error)
+    return "HTTP 404" in text and "GET " in text
+
+
+def dispatch_target(state, item, transport, token, persist=lambda: None, sleep=time.sleep):
     if item["eligibility"] != "eligible" or item["dispatch"] != "pending":
         raise rt.NightlyError("target is not eligible for a new dispatch")
     if token and item["repository"] != rt.BUILDS:
@@ -330,7 +336,18 @@ def dispatch_target(state, item, transport, token, persist=lambda: None):
         # Persist exact identities even if their subsequent authenticated read fails.
         item.update(runId=created["runId"], link=created["link"])
         persist()
-        run = transport.api.get(f"/repos/Hexalith/{item['repository']}/actions/runs/{item['runId']}", token)
+        path = f"/repos/Hexalith/{item['repository']}/actions/runs/{item['runId']}"
+        for attempt in range(3):
+            try:
+                run = transport.api.get(path, token)
+                break
+            except Exception as error:
+                if not created_run_not_yet_visible(error) or attempt == 2:
+                    raise
+                delay = attempt + 1
+                if transport.budget.remaining(token=True) < delay + 2:
+                    raise
+                sleep(delay)
         run_identity(run, item)
         item.update(dispatch="dispatched", dispatchHead=run["head_sha"], runAttempt=run["run_attempt"],
                     status=run["status"], conclusion=run.get("conclusion") or "")
@@ -539,7 +556,7 @@ def main(argv=None, *, transport=None, clock=time.time, sleep=time.sleep):
         elif args.operation == "dispatch":
             # A failed target step is visible in Actions; continue-on-error keeps siblings running.
             code = int(not dispatch_target(state, state["targets"][args.slot - 1], transport,
-                                           tokens.get("TARGET_TOKEN", ""), persist))
+                                           tokens.get("TARGET_TOKEN", ""), persist, sleep))
         elif args.operation == "poll":
             code = poll(state, transport, tokens.get("POLL_TOKEN", ""), directory, persist, clock, sleep)
         elif args.operation == "publish":

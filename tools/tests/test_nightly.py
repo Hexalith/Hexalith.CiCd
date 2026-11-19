@@ -209,6 +209,69 @@ class NightlyControllerTests(unittest.TestCase):
         workspace.call("permit", phase="wait")
         self.assertIn("active=false", workspace.outputs.read_text().splitlines())
 
+    def test_dispatch_retries_created_run_get_404_without_rewriting(self):
+        workspace = self.fixture(("Hexalith.Alpha",))
+        workspace.config["run_get_404s"] = {"Hexalith.Alpha": 1}
+        workspace.call("barrier")
+        workspace.call("select")
+        started = workspace.clock()
+        self.assertEqual(workspace.call("dispatch", slot=1), 0)
+        self.assertEqual(workspace.call("dispatch", slot=2), 0)
+        item, builds = workspace.state()["targets"]
+        self.assertEqual(item["dispatch"], "dispatched")
+        self.assertEqual(item["runId"], 1001)
+        self.assertEqual(builds["dispatch"], "dispatched")
+        self.assertEqual(workspace.clock() - started, 1)
+        writes = [json.loads(line) for line in Path(workspace.config["dispatches"]).read_text().splitlines()]
+        self.assertEqual([row["repository"] for row in writes], ["Hexalith.Alpha", "Hexalith.Builds"])
+        gets = []
+        for line in Path(workspace.config["requests"]).read_text().splitlines():
+            row = json.loads(line)
+            if row["method"] == "GET" and row["path"].endswith("/actions/runs/1001"):
+                gets.append(row)
+        self.assertEqual(len(gets), 2)
+
+    def test_dispatch_get_404_exhaustion_keeps_the_created_run_and_does_not_rewrite(self):
+        workspace = self.fixture(("Hexalith.Alpha",))
+        workspace.config["run_get_404s"] = {"Hexalith.Alpha": 3}
+        workspace.call("barrier")
+        workspace.call("select")
+        started = workspace.clock()
+        self.assertEqual(workspace.call("dispatch", slot=1), 1)
+        self.assertEqual(workspace.call("dispatch", slot=2), 0)
+        item, builds = workspace.state()["targets"]
+        self.assertEqual(item["dispatch"], "failed")
+        self.assertEqual(item["runId"], 1001)
+        self.assertIn("HTTP 404", item["reason"])
+        self.assertIn("not retried", item["reason"])
+        self.assertEqual(builds["dispatch"], "dispatched")
+        self.assertEqual(workspace.clock() - started, 3)
+        writes = [json.loads(line) for line in Path(workspace.config["dispatches"]).read_text().splitlines()]
+        self.assertEqual([row["repository"] for row in writes], ["Hexalith.Alpha", "Hexalith.Builds"])
+
+    def test_dispatch_get_404_refuses_sleep_when_slot_budget_cannot_fit_retry(self):
+        workspace = self.fixture(("Hexalith.Alpha",))
+        workspace.config["run_get_404s"] = {"Hexalith.Alpha": 1}
+        workspace.config["delays"] = {"GET /repos/Hexalith/Hexalith.Alpha/actions/runs/1001": 90}
+        workspace.call("barrier")
+        workspace.call("select")
+        started = workspace.clock()
+        self.assertEqual(workspace.call("dispatch", slot=1), 1)
+        item = workspace.state()["targets"][0]
+        self.assertEqual(item["dispatch"], "failed")
+        self.assertEqual(item["runId"], 1001)
+        self.assertIn("HTTP 404", item["reason"])
+        self.assertIn("not retried", item["reason"])
+        self.assertEqual(workspace.clock() - started, 90)
+        gets = []
+        for line in Path(workspace.config["requests"]).read_text().splitlines():
+            row = json.loads(line)
+            if row["method"] == "GET" and row["path"].endswith("/actions/runs/1001"):
+                gets.append(row)
+        self.assertEqual(len(gets), 1)
+        writes = [json.loads(line) for line in Path(workspace.config["dispatches"]).read_text().splitlines()]
+        self.assertEqual([row["repository"] for row in writes], ["Hexalith.Alpha"])
+
     def test_barrier_observes_queued_to_running_transition_and_rejects_late_idle(self):
         workspace = self.fixture(())
         workspace.config["barrier_transition"] = True

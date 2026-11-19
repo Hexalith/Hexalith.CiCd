@@ -101,7 +101,7 @@ class Workspace(DeliveryWorkspace):
         self.accepted = self.sha
         self.directory = self.root / "nightly-dispatch"
         git(self.builds, "update-ref", "refs/heads/main", RELEASE)
-        self.config.update(responses={}, dispatch_fail=[], status_fail=[], pending=[], outcomes={},
+        self.config.update(responses={}, dispatch_fail=[], status_fail=[], run_get_404s={}, pending=[], outcomes={},
                            ready_releases={}, original_runs={}, original_artifacts={}, publication_fail=[],
                            publications=str(self.root / "publications.jsonl"),
                            handoffs={}, run_attempts={}, run_started={}, clock=NOW, cancelled=False,
@@ -310,6 +310,10 @@ def fixture_transport(rt, config):
                     "run_url": f"https://api.github.com/repos/Hexalith/{repository}/actions/runs/{identity}",
                     "html_url": rt.run_link(repository, identity)}
             if suffix == "actions/runs/" + str(identity):
+                remaining = config.get("run_get_404s", {}).get(repository, 0)
+                if remaining:
+                    config.setdefault("run_get_404s", {})[repository] = remaining - 1
+                    return 404, {}
                 if repository in config["status_fail"]:
                     return 403, {}
                 status = "in_progress" if repository in config["pending"] else "completed"

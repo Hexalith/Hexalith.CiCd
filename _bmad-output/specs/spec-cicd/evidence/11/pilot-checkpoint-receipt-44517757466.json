@@ -1,0 +1,48 @@
+{
+  "artifacts": [
+    {
+      "digest": "sha256:734d8ddbf60bb77851118372bb8566022cdc374620a118cd6313de8b600071a8",
+      "id": 14527533432,
+      "name": "hexalith-nightly-nightly-1"
+    },
+    {
+      "digest": "sha256:0acd09da8fab0530192582eab5e61607d2adb92a7dc6c56963a5c79fcd53993c",
+      "id": 14526719515,
+      "name": "hexalith-nightly-scan-1"
+    },
+    {
+      "digest": "sha256:c4d81f8d02c2395ef14342afe5098103a98c27336c7b20199de2bde5d25db06c",
+      "id": 14527673933,
+      "name": "hexalith-nightly-bump-report-1"
+    },
+    {
+      "digest": "sha256:9ffe8d14cd843a8575720f9e079978cab34686f350c61861b003753355bdfaf7",
+      "id": 14527034157,
+      "name": "hexalith-nightly-keepalive-1"
+    }
+  ],
+  "checkpoint": {
+    "name": "pilot",
+    "reasons": [],
+    "verdict": "pass"
+  },
+  "modules": {
+    "Hexalith.Commons": {
+      "reasons": [],
+      "verdict": "pass"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "reasons": [
+        "release dispatch is failed"
+      ],
+      "verdict": "fail"
+    }
+  },
+  "run": {
+    "attempt": 1,
+    "event": "workflow_dispatch",
+    "head": "1a7022fbd92e63fd5882e0827e2c4702054a828d",
+    "id": 44517757466
+  },
+  "schema": "hexalith.nightly-acceptance-receipt.v1"
+}

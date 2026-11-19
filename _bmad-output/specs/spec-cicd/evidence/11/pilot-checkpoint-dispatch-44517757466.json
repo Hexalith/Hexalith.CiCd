@@ -1,0 +1,43 @@
+{
+  "observed_at": "2026-11-19T11:46:11Z",
+  "profile": "/home/administrator/.config/gh-cicd-agent",
+  "user": {"id": 6775094, "login": "jpiquot"},
+  "preflight": {
+    "nightly_in_progress": [],
+    "nightly_queued": [],
+    "deliver_in_progress": [],
+    "deliver_queued": []
+  },
+  "request": {
+    "method": "POST",
+    "path": "repos/Hexalith/Hexalith.CiCd/actions/workflows/nightly.yml/dispatches",
+    "ref": "main",
+    "qualify_bump": false,
+    "return_run_details": true
+  },
+  "response": {
+    "status": 200,
+    "x_github_request_id": "CB48:135C34:437CB7:75BAAE:6AFEE182",
+    "workflow_run_id": 44517757466,
+    "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44517757466"
+  },
+  "run": {
+    "id": 44517757466,
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/nightly.yml",
+    "head_branch": "main",
+    "head_sha": "1a7022fbd92e63fd5882e0827e2c4702054a828d",
+    "run_attempt": 1,
+    "status": "queued",
+    "created_at": "2026-11-19T11:46:11Z"
+  },
+  "prior_scheduled_run": {
+    "id": 44504916824,
+    "event": "schedule",
+    "head_sha": "1c323979c4a8f9dc54b768e87783f4ad0678d368",
+    "pilot_checkpoint": "pass",
+    "Hexalith.Commons": "pass",
+    "Hexalith.PolymorphicSerializations": "fail: release dispatch is failed"
+  },
+  "no_cicd_push_planned": true
+}

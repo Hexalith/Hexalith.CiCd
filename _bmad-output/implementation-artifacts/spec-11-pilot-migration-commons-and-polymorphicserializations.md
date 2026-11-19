@@ -2,7 +2,7 @@
 title: '11 — Pilot migration: Commons and PolymorphicSerializations'
 type: 'chore'
 created: '2026-11-15'
-status: 'in-progress'
+status: 'in-review'
 baseline_commit: '37e73a99dfe82c3b7741554d6f4ff2207711644b'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -73,7 +73,26 @@ context:
 
 ## Implementation Notes
 
-- Current resume checkpoint, 2026-11-18 10:10 UTC: the approved on-demand nightly change supersedes the
+- Current resume checkpoint, 2026-11-19 12:11 UTC: stories 28-1 and 29-1 are on
+  live main. The genuine scheduled night
+  [44504916824](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44504916824)
+  (source `1c323979c4a8f9dc54b768e87783f4ad0678d368`) and the CAP-13 dispatch
+  [44517757466](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44517757466)
+  (source `1a7022fbd92e63fd5882e0827e2c4702054a828d`, `qualify-bump` false, exact
+  POST identity `CB48:135C34:437CB7:75BAAE:6AFEE182`) both judge `--checkpoint
+  pilot` pass (bump `no-change`, keepalive pass) with Commons pass (`nothing`,
+  Release CodeQL, scan row). Poly fails only `release dispatch is failed`: the
+  POST returned the run id and the release concluded success with `nothing`, but
+  the immediate GET of that id returned HTTP 404 (`attempts`: 1) so the row
+  stays `dispatch=failed`. Receipts:
+  `pilot-checkpoint-receipt-44504916824.json` and
+  `pilot-checkpoint-receipt-44517757466.json`. The dispatcher now retries that
+  GET twice (1s then 2s) without retrying the POST; 44 controller tests pass,
+  including the new 404 retry and exhaustion cases. The fix is not on live main,
+  so another dispatch would repeat the race. Do not disable
+  `hexalith-cicd-story11-20261118` until a night with both pilots `pass` is
+  judged. Other modules' rows remain recorded, not decisive.
+- Prior resume checkpoint, 2026-11-18 10:10 UTC: the approved on-demand nightly change supersedes the
   manual-dispatch prohibition in the checkpoints below. Resume after stories 28-1 (bump fixture) and
   29-1 (`tools/nightly_acceptance.py`) land: dispatch one `nightly.yml` run on `main` per CAP-13, judge it
   with `--checkpoint pilot`, record the receipt, then disable the `hexalith-cicd-story11-20261118` timer.
@@ -447,6 +466,30 @@ context:
   replace the remaining full-story review after genuine scheduled acceptance.
   See `nightly-diagnostics-bmad-review.json` in the evidence folder.
 
+- 2026-11-19 — [blind-hunter] Exhaustion still records `dispatch failed (not retried)` after GET retries — **false**: `fail()` appends `GitHub API GET … HTTP 404` from the confirmation error; POST skips have no `runId`. `not retried` is still the write policy.
+
+- 2026-11-19 — [blind-hunter] Receipts omit Poly release `runId`, GET URL, request id and attempts — **false**: identity-only receipts bind the judged parent runs; the nightly artifact already persists the created `runId` after POST. Independent authentication is those artifacts, not a second copy in the summary JSON.
+
+- 2026-11-19 — [blind-hunter] 1s+2s lag budget and wait never promoting `dispatch=failed` — **false**: the live misses were GET 404 with inner `attempts: 1`; wait's "can never pass either way" rule is the existing fail-closed policy, not a regression. No evidence of lag beyond three seconds.
+
+- 2026-11-19 — [blind-hunter] Missing two-404 success, exhaustion GET-count, 403-negative and helper unit tests — **false**: `test_dispatch_retries_created_run_get_404_without_rewriting` exercises the retry branch through real `api.get` errors; exhaustion drives three fixture 404s; 403 lacks `HTTP 404` so it cannot match. Verification-gap reported no gaps.
+
+- 2026-11-19 — [blind-hunter] `docs/nightly.md` and the Code Map omit the GET lag retry — **false**: docs still correctly forbid retrying an uncertain dispatch write; GET confirmation is a read. Code Map edits would be a spec change.
+
+- 2026-11-19 — [blind-hunter] Visibility scraped from `str(error)` so a wording change silently disables retries — **false**: the new controller tests go through `nightly_runtime` formatting (`GitHub API GET … failed: HTTP 404`). Dropping those tokens fails those tests. Inner `attempts: 1` is correct because `_request` does not retry 404.
+
+- 2026-11-19 — [blind-hunter] GET retry sleeps without checking remaining slot/token budget — **medium**: `target_budget` can give a 1s share (`max(1, (remaining-120)/(later+1))`). `sleep(attempt+1)` never calls `Budget.remaining`, unlike `_request`. A late 404 can spend the last second asleep and skip the lag retry this change exists to provide.
+
+- 2026-11-19 — [blind-hunter] Pending `runId` during sleep lets a killed/rerun slot POST a second release — **false**: the same process does not POST again; `finalize` converts leftover `pending` to `failed` (`tools/nightly.py:473-475`). A new `run_attempt` uses a new `NIGHTLY_DIRECTORY` and re-initializes. Job re-runs already dispatch a fresh set.
+
+- 2026-11-19 — [blind-hunter] `if run is None` is unreachable and the success retry test omits `dispatchHead`/`runAttempt` — **low**: `api.get` returns a document or raises; the None branch cannot run. Delete it.
+
+- 2026-11-19 — [blind-hunter] `in-review` with the last task open and `--checkpoint pilot` pass easy to misread as acceptance — **false**: Poly `fail` is in both receipts; remaining verification already forbids accepting or disabling the timer. Status is this review step. Spec-edit rejected.
+
+- 2026-11-19 — [edge-case-hunter] Created-run GET 404 when slot budget remaining is under 3s (`tools/nightly.py:341-348`) — **medium**: same defect as the budget-before-sleep row. `sleep(1)` can consume a 1s `target_budget` share and fail closed before a second GET.
+
+- 2026-11-19 — [edge-case-hunter] Controller restart during 404 retry sleep (`tools/nightly.py:337-348`) — **false**: same as the killed-slot row. Persist-before-GET already existed; sleep does not add a second POST path in this workflow.
+
 ## Verification
 
 Completed logs under [evidence/11](../specs/spec-cicd/evidence/11/):
@@ -609,5 +652,4 @@ Remaining verification for checkpoint acceptance:
 
 - Delivery compatibility, shared publication regressions, both full pre-adoption proof sets and both exact post-adoption normal checkers pass with saved logs. No module workflow-text assertions were added.
 - The initial committed/global/live-module gate, real adoption artifacts, immediate settings/credential cleanup, green adopted-main CI and all restricted-token outcomes/cleanup are complete. Candidate `3427f041` passed its full locked gate and actual redelivery, with authenticated tree/foreign-content and final green-main CI proof. Original module workspaces are intentionally synced and clean; CiCd's staged entries remain preserved.
-- Genuine 2026-11-17 scheduled parent `44067556763` is authenticated and failed: delivery barrier timeout, no pilot/Builds dispatch, Commons scan discovery errors, Conversations sibling scan errors. Builds bump no-change and keepalive passed. See `scheduled-20261117-{run,authentication,diagnosis,commons-scan-discovery}.json`. Manual dispatch cannot replace it.
-- The Commons hook/script discovery fix is landed and check.py-qualified on live main `d551e5f3`; GitHub CI `44089607938` passed. Leave Conversations to its owning story. Wait for the next genuine scheduled night (2026-11-18 02:17 UTC) that actually dispatches both pilots and Builds; prove CodeQL upload, SARIF processing and the processed-findings gate from those release jobs. Direct analysis inventories remain 403 under CiCd-agent. A sibling Conversations discovery failure would still fail the shared scan job. The 30-minute delivery barrier remains fail-closed if hourly `deliver.yml` overlaps that night.
+- Genuine 2026-11-19 scheduled parent `44504916824` and CAP-13 dispatch `44517757466` are judged: `--checkpoint pilot` pass, Commons pass, Poly fail (`release dispatch is failed` after GET 404 of the POST-created run). Sibling AI.Tools/Conversations/McpCli rows fail and are not decisive; Builds release rows pass. Land the dispatcher GET-404 retry on main, wait until `deliver.yml` is terminal, dispatch one more `nightly.yml` with `qualify-bump` false, judge `--checkpoint pilot`, then disable `hexalith-cicd-story11-20261118`. Direct analysis inventories remain 403 under CiCd-agent.
