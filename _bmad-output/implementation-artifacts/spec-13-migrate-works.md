@@ -72,6 +72,14 @@ context:
 
 ## Implementation Notes
 
+- Story 11 checkpoint is accepted. Works live `main` already carries product
+  prep at `4053907d5764bc8833c95dd79ea337bc8faba159`; the CiCd gitlink already
+  records that commit. Registration files are local: `setup/Hexalith.Works.yml`
+  plus `rendered/Hexalith.Works/**` and `rendered/Hexalith.Works.perimeter.json`.
+  See [registration-20261119.md](../specs/spec-cicd/evidence/13/registration-20261119.md).
+  App delivery, immutable-release/legacy-grant cleanup, hosted CI and CAP-13
+  remain unauthenticated.
+
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed. The story 11 night prohibition became a ban on counting `qualify-bump` runs or another module's row; human decision (2) now waits for story 11's nightly checkpoint.
