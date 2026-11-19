@@ -56,7 +56,7 @@ context:
 - [ ] Builds `schemas/hexalith.ci.v1.json`, `Github/lib/{ci_config,ci_environment,ci_pipeline}.py`, CI/environment/prepare composites and configurations — add default `npmWorkspaces: []`, `dotnetTools: false`; prepare locked tools/npm/browsers once. Cover defaults, strict readers, unsafe/missing inputs and install failures in existing contract/environment/prepare suites; qualify an acceptable release.
 - [ ] CiCd `tools/{scan,scan_discovery}.py`, `tools/jscpd/`, `.jscpd.json`, `tools/tests/`, `docs/duplicate-scan.md`, SPEC/spine — add static JS/TS/npm/import reachability and document additive contract; test complete scope and fail-closed indirection. Preserve thresholds and cross-module semantics.
 - [ ] `setup/Hexalith.Projects.yml`, `rendered/`, `references/Hexalith.Projects`, `builds-version` — register the CI solution, four direct dependencies from the design, Dapr/browsers, tools/npm and two hooks. Commit prepared remote main plus cause/render together; fully validate before push.
-- [ ] `evidence/18/` — authenticate accepted ref/report/App commit and tree preservation; immediately enable immutability and remove only Projects' legacy scopes. Verify normal checker, green CI and genuine next-night outcomes.
+- [ ] `evidence/18/` — authenticate accepted ref/report/App commit and tree preservation; immediately enable immutability and remove only Projects' legacy scopes. Before the first post-adoption nightly scan, delete `.github/actions/prepare-g6-catalog/` in a module-agent Projects commit that passes the normal checker (gate rule; no scanner exclusion). Verify normal checker, green CI and genuine next-night outcomes.
 
 **Acceptance Criteria:**
 
@@ -91,10 +91,34 @@ context:
   authenticated adoption, required owner/release prerequisites, normal checker,
   adopted CI and the genuine next scheduled night unperformed. Status remains
   `in-progress`; no completion or CAP-16 acceptance is claimed.
+- 2026-11-18: The public NuGet index now lists EventStore Contracts 5.3.0 and
+  5.3.1. Their tags (`05e4f6d40d4731f7acf435f3c678959efc672269`,
+  `3371f29fd7df1469a2c71f185292b2bd0592ae0e`) contain
+  `src/Hexalith.EventStore.Contracts/Queries/QueryResultContractAttribute.cs`;
+  v5.2.0 does not. Projects `Directory.Packages.props` still defaults
+  `HexalithEventStoreVersion` to 5.1.1. Confirm the published package, then
+  rerun the combined qualification on fresh inputs.
+- 2026-11-18 (later): The published 5.3.x packages were confirmed. The unpushed
+  Projects branch `story/18-eventstore-query-contracts` (`038f2f40`) adopts
+  EventStore 5.3.1, Tenants 8.0.2 and explicit AppHost package references.
+  Released v6.3.2 policy checks and the audited restore pass. The Release build
+  now stops on five Conversations query symbols that are absent from the
+  published 2.0.0 package. They come from unreleased Conversations main
+  `f1a2b3da`, and today's Conversations releases failed. Story 11 is still
+  unaccepted, the AD-21 state is unchanged and the G-6 action scanner refusal
+  remains. Nothing was pushed, provisioned or adopted. See
+  [the refresh evidence](../specs/spec-cicd/evidence/18/refresh-20261118.json).
+- 2026-11-18: Parked by human decision. Resume with a fresh-input rerun once
+  both hold: a published Conversations package contains the five symbols from
+  `f1a2b3da468760d4188f604045deb098af8ead52`, and story 11 is accepted. Keep
+  Projects branch `story/18-eventstore-query-contracts`
+  (`038f2f4088415c6371b4ac0aad8cff7fd9438d62`) unpushed in its separate
+  worktree until the Projects-only pre-adoption checks pass on it.
 
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
+- 2026-11-18 — Human chose how to clear the scanner refusal at `.github/actions/prepare-g6-catalog/prepare.py:47`: delete that legacy G-6 action in a module-agent Projects commit after adoption, before the first post-adoption nightly scan, instead of extending the scanner to prove the computed call. The legacy `ci.yml` uses it until adoption. Added this to the last execution task. The scanner stays fail-closed and no exclusion is added. No other constraint changed.
 
 ## Review Triage Log
 

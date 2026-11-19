@@ -1,0 +1,401 @@
+{
+  "observed_at": "2026-11-18T20:18:38Z",
+  "status": "incomplete-not-adopted",
+  "story_status": "in-progress",
+  "note": "Raw logs and the private runner stay outside Git; digests and one-line results only.",
+  "fresh_inputs": {
+    "Hexalith.CiCd": {
+      "head": "736fcd48c2e1123b705e55879349671b48c9532a",
+      "origin_main": "736fcd48c2e1123b705e55879349671b48c9532a"
+    },
+    "Hexalith.Projects": {
+      "origin_main": "69697a088f1e407a59a2cbf2b21c0a2206aa72c8",
+      "describe": "v1.2.4-62-g69697a08"
+    },
+    "Hexalith.Builds": {
+      "origin_main": "38e038d1179b1c829ba47a45bfa0a4683ea5e2a5",
+      "latest_tag": "v6.3.2",
+      "cicd_builds_version": "v6.3.1",
+      "schema_fields_since": "v6.1.0 (npmWorkspaces, dotnetTools)"
+    },
+    "Hexalith.EventStore": {
+      "origin_main": "7f1309df681d109211273d8287591e8beaf2c639",
+      "latest_tag": "v5.3.1"
+    },
+    "Hexalith.Tenants": {
+      "origin_main": "30b233026648488ca71fe5904fd218b7af934aed",
+      "latest_tag": "v8.0.2"
+    },
+    "Hexalith.Folders": {
+      "origin_main": "4d371566dff0f1fc0ac1dbaf606a1eaf6c92c9fc",
+      "latest_tag": "v2.0.1"
+    },
+    "Hexalith.Platform": {
+      "origin_main": "92c9005ba1af9d4f8d7f72b353ab671bc39dc48e",
+      "latest_tag": "v2.2.0"
+    },
+    "Hexalith.Conversations": {
+      "origin_main": "fd955c454c203ba1caa85c40569b023bce89b3c3",
+      "latest_tag": "v2.0.0"
+    }
+  },
+  "eventstore_published_prerequisite": {
+    "result": "satisfied",
+    "package": "Hexalith.EventStore.Contracts",
+    "index_latest": [
+      "5.0.1",
+      "5.1.0",
+      "5.1.1",
+      "5.2.0",
+      "5.3.0",
+      "5.3.1"
+    ],
+    "inspected": {
+      "5.2.0": {
+        "nupkg_sha256": "2b0ca2eebe215ec7dcc98163a61b575199b1f0354deac0da88a6ad7f1d84a324",
+        "nuspec_commit": "8b6d5bee5217b3f4bbd8fd689ad887aca863961b",
+        "QueryResultContractAttribute": false
+      },
+      "5.3.0": {
+        "nupkg_sha256": "1ce9561b4bfabcbdf1a544e4ab0cbfac986c5882096650c2024837ecb5a3b268",
+        "nuspec_commit": "05e4f6d40d4731f7acf435f3c678959efc672269",
+        "QueryResultContractAttribute": true
+      },
+      "5.3.1": {
+        "nupkg_sha256": "98d39bac1eb27a002b47c9e5276d25bec7627180083c831c4dd7230c41e96f54",
+        "nuspec_commit": "3371f29fd7df1469a2c71f185292b2bd0592ae0e",
+        "QueryResultContractAttribute": true
+      }
+    },
+    "method": "public flat-container download; string-heap presence in lib/net11.0/Hexalith.EventStore.Contracts.dll; no package code executed"
+  },
+  "projects_candidate": {
+    "worktree": "/home/administrator/projects/hexalith/projects-story-18-20261118",
+    "branch": "story/18-eventstore-query-contracts",
+    "base": "69697a088f1e407a59a2cbf2b21c0a2206aa72c8",
+    "head": "038f2f4088415c6371b4ac0aad8cff7fd9438d62",
+    "tree": "c6b30c0eb626c2f7c0ad9c351ed6e381131372ec",
+    "pushed": false,
+    "commits": [
+      {
+        "sha": "ece5594168bb9addff3270588adf18f3c4cafcb3",
+        "subject": "fix(deps): consume EventStore 5.3.1 query contracts",
+        "paths": [
+          "Directory.Packages.props",
+          "tools/release-packages.json"
+        ]
+      },
+      {
+        "sha": "ca4ea11a94445a2747b6367bfd979f210ca37246",
+        "subject": "build(deps): advance Tenants to 8.0.2 for the Aspire 17 catalog",
+        "paths": [
+          "references/Hexalith.Tenants"
+        ],
+        "gitlink": {
+          "from": "929bac5a9881213b05ddeefc0e2ebd5b0327d819",
+          "to": "30b233026648488ca71fe5904fd218b7af934aed"
+        }
+      },
+      {
+        "sha": "038f2f4088415c6371b4ac0aad8cff7fd9438d62",
+        "subject": "fix(apphost): reference Aspire.Hosting.AppHost explicitly under CPM",
+        "paths": [
+          "src/Hexalith.Projects.AppHost/Hexalith.Projects.AppHost.csproj",
+          "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj"
+        ]
+      }
+    ],
+    "dependencies_used": {
+      "Hexalith.EventStore": {
+        "commit": "8bfc4ca132e2eb4b0a5f207908f10ea870e8aa99",
+        "tree": "f43bc9ba81f003c9242c56ba49f8f1382e5e1a72",
+        "describe": "v5.3.0-8-g8bfc4ca13",
+        "source": "candidate recorded gitlink"
+      },
+      "Hexalith.Tenants": {
+        "commit": "30b233026648488ca71fe5904fd218b7af934aed",
+        "tree": "d9da72bfa3bef10d5a05967ae2bd75159c5925d1",
+        "describe": "v8.0.2",
+        "source": "candidate recorded gitlink"
+      },
+      "Hexalith.Folders": {
+        "commit": "97e04cafb4c2e11bbe4cfbd6d50856b940cd7376",
+        "tree": "aedda19b785641ee5030f8f14343625c592e02a3",
+        "describe": "v2.0.0-25-g97e04caf",
+        "source": "candidate recorded gitlink"
+      },
+      "Hexalith.Platform": {
+        "commit": "a8e7c867895c2f542bc2719a8e302f45621a4d25",
+        "tree": "a6d43ea8d42d7b6c7321bbf8b74deda8510289c2",
+        "describe": "v2.1.11-15-ga8e7c867",
+        "source": "candidate recorded gitlink"
+      },
+      "Hexalith.Builds": {
+        "commit": "38e038d1179b1c829ba47a45bfa0a4683ea5e2a5",
+        "tree": "21f1f28c8cc760273861d4b4dc21e9340ff3c6b4",
+        "describe": "v6.3.2",
+        "source": "released tag v6.3.2"
+      }
+    }
+  },
+  "runner": {
+    "sha256": "62db47669c098c8cd5423c716db102ecb046fe0a3f8ae7b02b9db95beab694b4",
+    "location": "session scratch (not retained in Git)",
+    "inputs": "standalone --shared clones in run-with-temp TMPDIR; candidate recorded gitlinks for EventStore/Tenants/Folders/Platform; Builds released tag v6.3.2; no nested submodule initialized",
+    "build_flags": [
+      "-noAutoResponse",
+      "-p:Configuration=Release",
+      "-warnaserror",
+      "-p:UseHexalithProjectReferences=false",
+      "-p:ShouldUnsetParentConfigurationAndPlatform=false",
+      "-p:NuGetAudit=false",
+      "-p:RestoreConfigFile=/tmp/hexalith-job.3aNNvIbS/Hexalith.Projects/references/Hexalith.Builds/NuGet.ci.Config",
+      "-p:EnableNETAnalyzers=true",
+      "-p:RunAnalyzers=true",
+      "-p:RunAnalyzersDuringBuild=true"
+    ],
+    "audited_restore_extra": [
+      "-warnaserror:NU1900;NU1903;NU1904;NU1905",
+      "-p:NuGetAudit=true",
+      "-p:NuGetAuditMode=all",
+      "-p:NuGetAuditLevel=low"
+    ]
+  },
+  "released_policy_checks": {
+    "builds": "v6.3.2 38e038d1179b1c829ba47a45bfa0a4683ea5e2a5",
+    "range": [
+      "ece5594168bb9addff3270588adf18f3c4cafcb3",
+      "ca4ea11a94445a2747b6367bfd979f210ca37246",
+      "038f2f4088415c6371b4ac0aad8cff7fd9438d62"
+    ],
+    "results": {
+      "owned_tree": {
+        "changed_paths": [
+          "Directory.Packages.props",
+          "references/Hexalith.Tenants",
+          "src/Hexalith.Projects.AppHost/Hexalith.Projects.AppHost.csproj",
+          "tests/Hexalith.Projects.PackageFixtures.AppHost/Hexalith.Projects.PackageFixtures.AppHost.csproj",
+          "tools/release-packages.json"
+        ],
+        "owned_entries_sha256": "43bda5977a78d7ae949a615b536b7433a33b1888d3478e301a6cec3eb1a268e7",
+        "owned_unchanged": true,
+        "changed_owned": []
+      },
+      "audit_lint": {
+        "exit": 0
+      },
+      "action_lint": {
+        "exit": 0
+      },
+      "commitlint": {
+        "exit": 0
+      }
+    }
+  },
+  "qualification_attempts": [
+    {
+      "candidate": "ece5594168bb9addff3270588adf18f3c4cafcb3",
+      "restore_audited": {
+        "exit": 1,
+        "seconds": 2.2,
+        "log_sha256": "b550e2cec3d759338af1ffdefdbd0533b2b715adcaa2360fd5591c620453695e",
+        "summary": {
+          "distinct_errors": [
+            "error NU1506"
+          ],
+          "error_lines": 3
+        }
+      },
+      "result": "NU1506: Tenants 929bac5a declares Aspire.Hosting.Dotnet beside the shared Aspire 17 catalog",
+      "superseded_by": "ca4ea11a"
+    },
+    {
+      "candidate": "ca4ea11a94445a2747b6367bfd979f210ca37246",
+      "restore_audited": {
+        "exit": 1,
+        "seconds": 5.5,
+        "log_sha256": "33eab5bcb6c22c22d5de320f76890ab3574c09f4fe046a121fe8ee8b36872583",
+        "summary": {
+          "distinct_errors": [
+            "error NU1009"
+          ],
+          "error_lines": 2
+        }
+      },
+      "result": "NU1009: both AppHosts used the SDK implicit Aspire.Hosting.AppHost reference rejected by CPM",
+      "superseded_by": "038f2f40"
+    },
+    {
+      "candidate": "038f2f4088415c6371b4ac0aad8cff7fd9438d62",
+      "runner_sha256": "62db47669c098c8cd5423c716db102ecb046fe0a3f8ae7b02b9db95beab694b4",
+      "restore_audited": {
+        "exit": 0,
+        "seconds": 2.7,
+        "log_sha256": "5f7d6c0024d7919f9feb8e3a58e515b0f73654ca50a2894d23c924eb8e7cd44f",
+        "summary": {}
+      },
+      "restore": {
+        "exit": 0,
+        "seconds": 1.9,
+        "log_sha256": "8ca85e2e9b556ab2f37bc52f1de54cff5dd901c6279d1a9f9e967ca2ad3a5832",
+        "summary": {}
+      },
+      "build": {
+        "exit": 1,
+        "seconds": 6.8,
+        "log_sha256": "f7382cdcc8bab10897594b3d51acbee67bc7c75b0484c49dc0fcda897a6de471",
+        "summary": {
+          "distinct_errors": [
+            "error CS0117",
+            "error CS1061"
+          ],
+          "error_lines": 6
+        }
+      },
+      "result": "six CS0117/CS1061 errors in Hexalith.Projects.Server Conversations directories; tests, hooks, integration and nightly did not start"
+    }
+  ],
+  "conversations_published_prerequisite": {
+    "result": "missing",
+    "required_symbols": [
+      "GetConversationQuery.AdvisoryMetadataOnly",
+      "GetConversationQuery.NativeMembershipOnly",
+      "GetConversationQuery.QueryType",
+      "GetConversationQuery.NativeMembershipPurpose",
+      "ConversationDetailResult.ReadPurpose"
+    ],
+    "consumer_files": [
+      "src/Hexalith.Projects.Server/Conversations/ConversationsProjectConversationResolutionDirectory.cs",
+      "src/Hexalith.Projects.Server/Conversations/ProjectConversationMembershipDirectory.cs"
+    ],
+    "selected_version": "2.0.0 (Builds catalog HexalithConversationsVersion default; Projects sets none)",
+    "published_latest": "2.0.0",
+    "published_2_0_0_contracts_nupkg_sha256": "bba5483dbaea023b08f66c163516cd142086eb93c2306d79979dbb9de10e74bd",
+    "published_2_0_0_has_symbols": false,
+    "source_introduced": "f1a2b3da468760d4188f604045deb098af8ead52 (fix(queries): enforce bounded original-actor reads), on main, untagged",
+    "release_runs": [
+      {
+        "id": 44282952062,
+        "created": "2026-11-18T10:11:05Z",
+        "conclusion": "failure",
+        "reason": "release identity guard: Builds gitlink eae4531a differs from delivered v6.2.0 0ccd12af"
+      },
+      {
+        "id": 44266712035,
+        "created": "2026-11-18T08:24:31Z",
+        "conclusion": "failure"
+      }
+    ],
+    "disposition": "Central nightly release owned by Conversations (story 16). No unpublished source, synthetic version, manual release or declaration removal was used."
+  },
+  "story_11_checkpoint": {
+    "result": "not accepted",
+    "spec_status": "in-progress",
+    "latest_nightly_runs": [
+      {
+        "id": 44291885113,
+        "event": "workflow_dispatch",
+        "conclusion": "failure"
+      },
+      {
+        "id": 44286842653,
+        "event": "workflow_dispatch",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 44282863616,
+        "event": "schedule",
+        "conclusion": "failure"
+      },
+      {
+        "id": 44264031228,
+        "event": "workflow_dispatch",
+        "conclusion": "failure"
+      }
+    ],
+    "effect": "adoption, registration, render, delivery and AD-21 writes remain blocked"
+  },
+  "ad21_read_only_refresh": {
+    "profile": "command-local /home/administrator/.config/gh (jpiquot 6775094)",
+    "mutations": 0,
+    "app_installation_repositories": "HTTP/2.0 403 Forbidden",
+    "rulesets": [],
+    "environments": [
+      "production"
+    ],
+    "publish_switch": "true",
+    "retention_days": 90,
+    "codeql_default_setup": "not-configured",
+    "automated_security_fixes": {
+      "enabled": false,
+      "paused": false
+    },
+    "immutable_releases": {
+      "enabled": false,
+      "enforced_by_owner": false
+    },
+    "security_and_analysis": {
+      "secret_scanning": {
+        "status": "enabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "enabled"
+      },
+      "dependabot_security_updates": {
+        "status": "disabled"
+      },
+      "secret_scanning_non_provider_patterns": {
+        "status": "disabled"
+      },
+      "secret_scanning_validity_checks": {
+        "status": "disabled"
+      }
+    },
+    "releases": [
+      "v1.2.4",
+      "v1.2.3",
+      "v1.2.2",
+      "v1.2.1",
+      "v1.2.0",
+      "v1.0.0"
+    ],
+    "tags": [
+      "v1.2.4",
+      "v1.2.3",
+      "v1.2.2",
+      "v1.2.1",
+      "v1.2.0",
+      "v1.1.0",
+      "v1.0.0"
+    ],
+    "legacy_ci_main": {
+      "run": 44307210927,
+      "source": "69697a088f1e407a59a2cbf2b21c0a2206aa72c8",
+      "conclusion": "failure",
+      "failed_step": "Validate workflow policy / Validate current G-6 change selection"
+    },
+    "result": "unchanged from planning; nothing provisioned"
+  },
+  "scanner_candidate_discovery": {
+    "cicd_sources": {
+      "tools/scan.py": "22887437e1cb03f78e77ea5b5cdec06605af1026a057e166009684a27bd25f0b",
+      "tools/scan_discovery.py": "df7bfe6c252a3c0b6678500e6e6e3910482ceefb49da4eaa8d7100193d816099",
+      "tools/jscpd/discover.cjs": "99ea8e1a180b75fb9adc03163b13883b58a9b463ef6e7756ed46a2f4e8404760",
+      ".jscpd.json": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8"
+    },
+    "projects_source": "ece5594168bb9addff3270588adf18f3c4cafcb3 working tree (differs from main 69697a08 only in Directory.Packages.props and tools/release-packages.json, outside the scanned formats)",
+    "result": "fail",
+    "files": 56,
+    "errors": [
+      ".github/actions/prepare-g6-catalog/prepare.py:47: local-script discovery: unresolved computed Python script invocation; unsafe or unresolved forwarding"
+    ],
+    "note": "Unchanged refusal. The action serves only the legacy ci.yml G-6 job. No exclusion or shortcut added."
+  },
+  "remaining": [
+    "Published Conversations package with the five symbols, through the central nightly release",
+    "Complete Release/package build, all preserved C# suites, after-unit hooks, integration and nightly browser/durable-state lanes on the combined source",
+    "Pre-adoption push of the qualified Projects candidate with the module-agent profile after fresh-main revalidation",
+    "Disposition of the prepare-g6-catalog scanner refusal without exclusion",
+    "Accepted story-11 pilot checkpoint, ordered AD-21 provisioning/readback, registration/render, App delivery, immutability and legacy cleanup, normal checker, green adopted CI and one post-adoption nightly (CAP-13/CAP-16)"
+  ]
+}

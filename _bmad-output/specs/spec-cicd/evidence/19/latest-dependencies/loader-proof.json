@@ -1,0 +1,105 @@
+{
+  "recorded_at": "2026-11-18",
+  "spec": "_bmad-output/implementation-artifacts/spec-19-chatbot-latest-dependencies.md",
+  "decision": "Loader proof did not pass. The EventStore 5.3.0 loader now admits net11 owner children (no System.Text.Json refusal), but owner preparation still refuses the Parties child, so the required live case never gets past owner preparation. Per the frozen I/O matrix the full move stopped here: no ChatBot commit, fetch, push, registration or adoption. Human decisions are needed (see blockers).",
+  "method": "Standalone package-mode Release copy under one run-with-temp job directory. Gitlink sources came from git archive of local objects (umbrella module stores; Parties from the standalone Parties clone). No fetch, no nested submodule initialization, no sibling edits.",
+  "chatbot": {
+    "worktree": "/home/administrator/projects/hexalith/chatbot-story-19-latest",
+    "branch": "story/19-chatbot-latest-dependencies",
+    "base_commit": "ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3",
+    "base_tree": "cd5f6c4c991342a8346067ec6399f204b9a606ab",
+    "head_unchanged": true,
+    "proof_inputs_uncommitted": {
+      "tree": "bd05c98f217f95d6388f48d041a9576a1e7348f1",
+      "diff_head_binary_sha256": "82cc7e9dd7d602917df7dcbb34b08ce4f523d99d39675b0a06c54019fb179403",
+      "files": 11,
+      "gitlinks_moved": 15
+    }
+  },
+  "gitlinks_used": {
+    "Hexalith.Builds": {"from": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b", "to": "db7bb7179244ce33483231687486381305c7c3db", "tag": "v6.3.1", "owned": true, "note": "human-approved one-time move"},
+    "Hexalith.EventStore": {"to": "3371f29fd7df1469a2c71f185292b2bd0592ae0e", "tag": "v5.3.1"},
+    "Hexalith.Tenants": {"to": "30b233026648488ca71fe5904fd218b7af934aed", "tag": "v8.0.2"},
+    "Hexalith.Platform": {"to": "c5f5eab3af4605daeed547d3519b194faf4f0845", "tag": "v2.2.0"},
+    "Hexalith.Memories": {"to": "c4ee997702ede948ada5f99eeae7b3782e92003b", "tag": "v4.0.0"},
+    "Hexalith.Parties": {"to": "5c293f096f9cf09e88a6b54815acc5f10307dc10", "ref": "plan main commit; local Parties clone origin/main is now e68f6e52b98fc1c496950631dc060daed5b37558 and keeps the same catalog-API cohort list"},
+    "Hexalith.Projects": {"to": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6", "plan_target": "69697a088f1e407a59a2cbf2b21c0a2206aa72c8", "deviation": "proof-only; the plan target does not compile in package mode (blocker projects-main-unbuildable). 146d0f7e is the newest first-parent net11 main commit before e8fe8141 introduced those APIs."},
+    "Hexalith.Folders": {"to": "4d371566dff0f1fc0ac1dbaf606a1eaf6c92c9fc", "tag": "v2.0.1"},
+    "Hexalith.FrontComposer": {"to": "d7e8f57808b610f7cddf95ecd06db178dfd7592f", "tag": "v6.0.0"},
+    "Hexalith.Commons": {"to": "d551e5f3b67653b8793f86afedab355c8a3821da", "tag": "v3.0.1"},
+    "Hexalith.Conversations": {"to": "bd6265afe8aee2e555b637bd973653331c284c66", "tag": "v2.0.0"},
+    "Hexalith.PolymorphicSerializations": {"to": "4d58b8bebe989a6895c610afe4084566b9b254ab", "tag": "v2.0.0"},
+    "Hexalith.McpCli": {"to": "63df6d2b1e96bda795d2a21fff7813b35b9da947", "tag": "v3.0.0"},
+    "Hexalith.Timesheets": {"to": "aafdae771e81f152671d18c506a0470ce0deee7f", "tag": "v2.1.0"},
+    "Hexalith.Works": {"to": "1ab960c76c12c726862a6a25616c2ce88a0f55a0", "tag": "v1.0.2"},
+    "Hexalith.AI.Tools": {"to": "1745b6663ad32bb1288167135ed0f979366c53a0", "unchanged": true}
+  },
+  "proof_changes": [
+    "Directory.Build.props, .github/actions/after-unit-tests/require-runtime.py, tests/.../MemoriesProbeCommandGateway.cs, tests/.../ScaffoldArchitectureTests.cs: net10.0 -> net11.0 (framework-encoding expectations only).",
+    "Directory.Build.targets: aspnet:10.0-alpine -> aspnet:11.0-alpine; eng/ChatBot.Composition.props: tools/net10.0/any -> tools/net11.0/any; .config/dotnet-tools.json: Builds tool 4.48.2 -> 6.3.1.",
+    "src/Hexalith.ChatBot.AppHost/Hexalith.ChatBot.AppHost.csproj: Aspire.AppHost.Sdk 17.0.0 -> 13.6.5 and the pre-Aspire-17 CLI-bundle-free settings (blocker aspire-17-vs-builds-v6.3.1).",
+    "Directory.Build.targets, eng/ChatBot.Composition.Restore.targets, Directory.Solution.props, require-runtime.py: forward the catalog-selected HexalithEventStoreVersion (5.3.0) to every composition build, restore walk and runtime owner rebuild (loader byte-identity override).",
+    "src/Hexalith.ChatBot.UI/Components/Governed/ChatBotStreamingStopControl.razor: guard the focus-return JS interop call for the net11 BL0016 analyzer."
+  ],
+  "owned_content_comparison": {
+    "against": "ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3",
+    "byte_and_mode_identical": [".claude/settings.json", ".github/copilot-instructions.md", ".github/workflows/ci.yml", ".github/workflows/release.yml", ".gitmodules", "AGENTS.md", "CLAUDE.md"],
+    "absent_in_base_and_proof": [".github/hexalith-ci.json", ".github/dependabot.yml"],
+    "only_owned_change": "references/Hexalith.Builds 6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b -> db7bb7179244ce33483231687486381305c7c3db"
+  },
+  "environment": {"sdk": "11.0.100", "runtime": "Microsoft.NETCore.App 11.0.0", "dapr": "1.19.1", "docker_server": "29.8.2", "playwright_chromium": "158.0.8127.18"},
+  "builds": [
+    {"command": "dotnet build tests/Hexalith.ChatBot.Live.IntegrationTests/... (base AppHost SDK 17.0.0)", "result": "NU1109: Aspire.Hosting 17.0.0 (implicit Aspire.Hosting.AppHost 17.0.0) downgraded to central 13.6.5", "log_sha256": "8ae80b5e5d2b58acceef4709a0fc978ab32793ec94a96178baffb7271303426d"},
+    {"command": "same, AppHost SDK 13.6.5, no EventStore forwarding, Projects 69697a08", "result": "BL0016 in ChatBotStreamingStopControl.razor:153; CS0234 QueryResultContract missing in Projects.Contracts (Projects pins EventStore 5.1.1)", "log_sha256": "b81300afa08cf8dcb7017665c65998d0f33d91b31296d35b4c573b373bfc4fc1"},
+    {"command": "same, EventStore 5.3.0 forwarded, Projects 69697a08", "result": "6 errors in Projects.Server: GetConversationQuery.AdvisoryMetadataOnly/QueryType/NativeMembershipOnly/NativeMembershipPurpose and ConversationDetailResult.ReadPurpose are absent from every released Conversations package (1.4.0-2.0.0)", "log_sha256": "a9ae02523e72126a807cc0b43d5462a82b6da1c194bd61d14182e26b023d9bab"},
+    {"command": "same, Projects 146d0f7e", "result": "0 warnings, 0 errors", "log_sha256": "2948d7326153a6a9aaa02495d14993132ad1b053cbbed59aa64242c9a7f0d75d"},
+    {"command": "dotnet build Hexalith.ChatBot.slnx --configuration Release -warnaserror -p:UseHexalithProjectReferences=false (proof inputs)", "result": "0 warnings, 0 errors", "log_sha256": "bd7d12cec3f29ce73dffc41d8475b0c3dda23e539d89045ed47023e99111cc1e"}
+  ],
+  "loader_proof_runs": [
+    {
+      "variant": "catalog-selected SDK forwarded to owners (proof inputs)",
+      "command": "dotnet Hexalith.ChatBot.Live.IntegrationTests.dll -method Hexalith.ChatBot.Live.IntegrationTests.RequiredTopologyTests.GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology, with the require-runtime.py environment",
+      "repetitions": 3,
+      "result": "Failed 1, skipped 0. tenants owner prepared; parties owner refused.",
+      "tenants_owner": {"prepared": true, "targetFramework": "net11.0", "sdk": "11.0.100", "declarations": 24, "operations": 24, "receipt_sha256": "aa5d4c22a0d1d20e6481188a51b360dc0c7793642edccc9068f9def49f367a4c"},
+      "host_loaded_sdk_sha256": {
+        "Hexalith.EventStore.Aspire 5.3.0": "ee4c84d978e9407f7a0b266ec5d8c7f81a39e7fe0b8a90fda2ee1c305adeb795",
+        "Hexalith.EventStore.Contracts 5.3.0": "d92871e854dbb5de7df623b5ca9b5fc179ecba4e6306ea0e5d75994f757c1a3b",
+        "Hexalith.EventStore.ServiceDefaults 5.3.0": "71800833ab1581f9bec4e208f3f9a7c8d875ba7f76d60fafc88509f029b22930",
+        "System.Text.Json 11.0.0 (shared runtime)": "404cb833bd044d4a41f067692ade2807470a27eb461f6efbc7f7e53413c340e6"
+      },
+      "parties_refusal": {
+        "exception": "InvalidOperationException: Selected child owner preparation refused ---- RouteCatalogUnavailableException: No compiled owner declaration source was enrolled.",
+        "stage": "CompiledRouteCatalogDeclarations.Read, after VerifySharedSdkIdentity and LoadFromAssemblyPath succeeded (EventStore v5.3.0 DevelopmentRouteCatalogOwnerPreparationExtensions.cs:129-133, blob f2ac8e058886cd3203ce09ccc48f618e3a5949b5)",
+        "child_sdk_bytes_match_host": ["Hexalith.EventStore.Contracts", "Hexalith.EventStore.ServiceDefaults", "System.Text.Json"],
+        "cause": "Parties.Contracts.dll was compiled without [assembly: RouteCatalogDeclarationSource]: Parties Directory.Build.targets:6-8 (blob 3b8f26b17d9f0d14b34c8b03978b957e246de3aa) defines HEXALITH_EVENTSTORE_CATALOG_API only from source or for package cohorts up to 5.1.1; PartiesCatalogDeclarations.cs:7-9 (blob 749ba8eb5739e00bc87b42773cbe7ba469124d10) guards the attribute with it.",
+        "diagnostics_sha256": {"metadata.sha256": "79d11733e3d0897b49ebc61a3bb4910b80340cbf1f02626a5c89505602610005", "runtime.stdout.log": "55809ef89e15e7946bab7ec164061a4553cf4b40da3464f7f805bfd5d424c2ae", "evaluation.stdout.log": "1a4d389214dc3581c36950b1d04ae06b1ad9c62ba4697c8683e901d8b6011f4b"}
+      },
+      "projects_owner": "not reached",
+      "log_sha256": ["1721af66911061c75d1d4532afabc4e2c0ea245fd30b005a0e0f9faca2e60c3e", "77af17bb0e85d159bf0be7674b3d8410b6d870dc62785da75e30d1a16feb39ab", "bbbf19287057b46bee8424d502d8af07421d0b72f324f5054676164c04efbe12"]
+    },
+    {
+      "variant": "catalog defaults without the byte-identity override (diagnostic)",
+      "owner_sdk_selection": {"host": "5.3.0 (catalog)", "tenants": "5.3.1 (Tenants Directory.Build.props:4, blob bc464cbc8a553912ff8c6dbf4c24e363a77d8017)", "parties": "4.2.0 (catalog HexalithPartiesSdk42CatalogView)", "projects_146d0f7e": "5.1.1 (Projects local pin)"},
+      "result": "Failed 1, skipped 0. tenants refused: Selected child SDK dependency 'Hexalith.EventStore.Contracts' differs from the actual AppHost SDK (child 27e270fd2dc66230b6277d08c242a779a56f9917421d8c6b5df94064f03b54b5 = 5.3.1, host d92871e854dbb5de7df623b5ca9b5fc179ecba4e6306ea0e5d75994f757c1a3b = 5.3.0).",
+      "build_log_sha256": "1fe619fde147e578b17e773441ab60927c6a882eb23730af1e31f652c0db7d15",
+      "log_sha256": "046310b2e15447143be219c7ebb9915571b57818ca544af983fccb954ab54a55"
+    }
+  ],
+  "cleanup": {"scoped_backend_containers_remaining": 0, "fixture_backends": "each run logged CHATBOT_LIVE_BACKEND_REMOVED", "workspace": "run-with-temp job directory removed at the end of this phase"},
+  "blockers": [
+    {
+      "id": "parties-catalog-api-eventstore-5.3",
+      "summary": "No single EventStore SDK satisfies both owner children: Tenants v8.0.2 accepts only 5.3.0 or 5.3.1 (Tenants Directory.Build.targets:45, blob 1389f838849715383a8f5cda33e8678281d2a3ec), while Parties main enables its compiled owner declarations only up to 5.1.1. Needs a Parties release that qualifies the 5.3.x catalog API; ChatBot cannot fix this without editing a sibling."
+    },
+    {
+      "id": "projects-main-unbuildable",
+      "summary": "Plan target Projects 69697a08 does not compile in package mode: Projects.Server uses Conversations query APIs that no released Conversations package provides, and its own Directory.Packages.props (blob f56d16dfc2e951732ff1c7644f86da4ce951e9f8) still pins EventStore 5.1.1 while its Contracts need QueryResultContract from 5.3.0. A Conversations release, a Projects release, or an approved older Projects pin is needed."
+    },
+    {
+      "id": "aspire-17-vs-builds-v6.3.1",
+      "summary": "Builds v6.3.1 (catalog blob 4ef88b0ab9cb71504521cb66c1baf66cd36c673e) pins Aspire 13.6.5, and its exception inventory (blob fa96cbf95edc79e4e88eb55bf2466c34cb674ebf) requires the ChatBot AppHost SDK to equal it. ChatBot base pins Aspire.AppHost.Sdk 17.0.0, which fails restore with NU1109. Aspire 17 first appears in Builds v6.3.2 (38e038d1179b1c829ba47a45bfa0a4683ea5e2a5), which is not CiCd's builds-version. The proof used SDK 13.6.5; keeping Aspire 17 needs a different Builds decision."
+    }
+  ],
+  "not_run": ["Full move commit", "unit, AppHost, integration, UI E2E, release and recovery suites", "package/consumer checks", "commitlint", "push"]
+}

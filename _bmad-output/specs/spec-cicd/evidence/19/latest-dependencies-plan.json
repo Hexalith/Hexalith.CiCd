@@ -1,0 +1,47 @@
+{
+  "recorded_at": "2026-11-18",
+  "purpose": "Planning inputs for spec-19-chatbot-latest-dependencies.md: read-only inspection of local git objects, git ls-remote tags and cached nuspecs. No build, fetch, push or checkout change.",
+  "chatbot_base": {
+    "commit": "ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3",
+    "tree": "cd5f6c4c991342a8346067ec6399f204b9a606ab",
+    "target_framework": "net10.0 (Directory.Build.props:24)",
+    "sdk": "11.0.100 (global.json, unchanged)"
+  },
+  "builds": {
+    "chatbot_gitlink": {"commit": "6ad5854aa14a9950e1fbfc32d7e27953a1c4b82b", "tag": "v4.48.2", "catalog_eventstore": "4.2.0", "catalog_aspire": "13.6.5"},
+    "cicd_builds_version": {"tag": "v6.3.1", "commit": "db7bb7179244ce33483231687486381305c7c3db"},
+    "catalog_defaults_at_v6.3.1": {"EventStore": "5.3.0", "Tenants": "8.0.1", "Memories": "4.0.0", "Commons": "3.0.1", "Conversations": "2.0.0", "PolymorphicSerializations": "2.0.0", "FrontComposer": "6.0.0", "Folders": "2.0.0", "Parties": "3.1.1"},
+    "owned": "references/Hexalith.Builds is a CiCd-owned gitlink (templates/partials/ownership-block.txt.j2:4)",
+    "precedent": "Unadopted Projects main 69697a088f1e407a59a2cbf2b21c0a2206aa72c8 already pins Builds 6b6eb4eec1b9c718e4d3581fdcbe77f8b09907f1 (v6.3.1-10)."
+  },
+  "gitlink_targets": [
+    {"repo": "EventStore", "pin": "77a2dafdf2e6aab7382afab7ab50e22144361d42", "role": "exe+lib", "target": "v5.3.1", "commit": "3371f29fd7df1469a2c71f185292b2bd0592ae0e", "tfm": "net11.0"},
+    {"repo": "Tenants", "pin": "6188ea48cab9fdf4207072135c66aab5a7b7fe32", "role": "exe+lib", "target": "v8.0.2", "commit": "30b233026648488ca71fe5904fd218b7af934aed", "tfm": "net11.0"},
+    {"repo": "Platform", "pin": "f99f51c3053fe0b0292acad461d78c833ec156cc", "role": "exe (composition)", "target": "v2.2.0", "commit": "c5f5eab3af4605daeed547d3519b194faf4f0845", "tfm": "net11.0"},
+    {"repo": "Memories", "pin": "ca3bcc981e8e3dd6be41f669587984225171f7ca", "role": "exe+lib", "target": "v4.0.0", "commit": "c4ee997702ede948ada5f99eeae7b3782e92003b", "tfm": "net11.0"},
+    {"repo": "Parties", "pin": "b6b4f8a5c83b77ab57a9b947436317162b4fb337", "role": "exe+lib", "target": "main (latest tag v3.1.1 is net10/EventStore 4)", "commit": "5c293f096f9cf09e88a6b54815acc5f10307dc10", "tfm": "net11.0"},
+    {"repo": "Projects", "pin": "c9fa1d67703d658189502687a8271986feba121e", "role": "exe+lib", "target": "main (latest tag v1.2.4 is net10/EventStore 4)", "commit": "69697a088f1e407a59a2cbf2b21c0a2206aa72c8", "tfm": "net11.0"},
+    {"repo": "Folders", "pin": "8063a0392789bd45a214c2c873298ef25d481bb9", "role": "lib", "target": "v2.0.1", "commit": "4d371566dff0f1fc0ac1dbaf606a1eaf6c92c9fc", "tfm": "net11.0"},
+    {"repo": "FrontComposer", "pin": "56c9206167b7f18c3a95f610f814dfa39d9dcd01", "role": "lib (UI)", "target": "v6.0.0", "commit": "d7e8f57808b610f7cddf95ecd06db178dfd7592f", "tfm": "net11.0"},
+    {"repo": "Commons", "pin": "1e292e3e99232a28462b2a35d5547a94dd612e57", "role": "debug source + forwarding", "target": "v3.0.1", "commit": "d551e5f3b67653b8793f86afedab355c8a3821da", "tfm": "net11.0"},
+    {"repo": "Conversations", "pin": "36cd13159f6c66d249942c6cfeca179adf3c4ec8", "role": "transitive", "target": "v2.0.0", "commit": "bd6265afe8aee2e555b637bd973653331c284c66", "tfm": "net11.0"},
+    {"repo": "PolymorphicSerializations", "pin": "bb6d45f3cce0a963d4453e457f47b335cf7b22e9", "role": "transitive", "target": "v2.0.0", "commit": "4d58b8bebe989a6895c610afe4084566b9b254ab", "tfm": "net11.0"},
+    {"repo": "McpCli", "pin": "1d423dae22e5f4e357889427a67406f47758e377", "role": "not referenced", "target": "v3.0.0", "commit": "63df6d2b1e96bda795d2a21fff7813b35b9da947", "tfm": "net11.0"},
+    {"repo": "Timesheets", "pin": "ae5f8171763a6207a70572cf45180b7adbe38d78", "role": "read by PackageCatalogAuthorityTests.cs:38", "target": "v2.1.0", "commit": "aafdae771e81f152671d18c506a0470ce0deee7f", "tfm": "net10.0"},
+    {"repo": "Works", "pin": "34c578dd12d50246d8a9513523ae909023a6fcd2", "role": "test package id only", "target": "v1.0.2", "commit": "1ab960c76c12c726862a6a25616c2ce88a0f55a0", "tfm": "net10.0"},
+    {"repo": "AI.Tools", "pin": "1745b6663ad32bb1288167135ed0f979366c53a0", "role": "instructions only", "target": "unchanged (no tags)", "commit": "1745b6663ad32bb1288167135ed0f979366c53a0", "tfm": null}
+  ],
+  "loader": {
+    "pinned_refusal": "DevelopmentRouteCatalogOwnerLoadContext.cs:70-73 at 77a2daf admits only Hexalith.EventStore.* as shared; app-local System.Text.Json 11.0.0 outside the shared runtime root is refused.",
+    "v5.3.1_mechanism": "CaptureLoadedSdkIdentity also freezes System.Text.Json, System.Text.Encodings.Web, System.IO.Pipelines and CoreLib (:16-19); Load falls back to sharedRuntimeContracts from DevelopmentRouteCatalogRuntimeSnapshot.SharedContracts (:62, :170-193), wired at DevelopmentRouteCatalogOwnerPreparationExtensions.cs:128; covered by DevelopmentRouteCatalogRuntimeSnapshotTests.cs:20.",
+    "conditions": "Host and owner child run the same .NET 11 runtime; the host must not keep an app-local System.Text.Json the child lacks (RuntimeSnapshot.cs:176-181); child Hexalith.EventStore.*.dll files byte-identical to the host's.",
+    "verified": false
+  },
+  "atomic_owner_transaction": {
+    "exists_up_to": "v5.3.1",
+    "result": "none",
+    "only_hook": "IDomainServiceAdmissionStage.EvaluateAsync -> DomainServiceAdmissionResult (accept or reject with events), unchanged since 37d1a31da2673f7d07aeea7ac5800cb0d352f622 (v3.16.0)",
+    "chatbot_backlog": "ChatBot Story 1.8 (backlog) owns atomic participation; production also refuses earlier because UnavailableChatBotAdmissionEvidenceSource returns null (CommandGatewayServiceCollectionExtensions.cs:78, ChatBotAdmissionEvidenceValidator.cs:97-104).",
+    "required_live_inversion": "Implementing it flips GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology (:597-615) and the Chrome-matrix refusal (Story132ProductionBrowserAspireE2ETests.cs:365, 419-425)."
+  }
+}

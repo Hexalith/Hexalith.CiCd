@@ -6,7 +6,51 @@ was performed by this implementation run. Necessary locked package acquisition
 and the existing read-only online security audit were authorized separately.
 Jobs ran sequentially in `run-with-temp` workspaces; their child work was awaited.
 
-## Current qualification boundary — 2026-11-17
+## Current qualification boundary — 2026-11-18
+
+Story 18 remains **in progress and unadopted**. `refresh-20261118.json` holds
+the exact identities, digests and one-line results; raw logs and the private
+runner stayed outside Git.
+
+The EventStore prerequisite is met. Published Contracts 5.3.0 and 5.3.1 contain
+`QueryResultContractAttribute`; 5.2.0 does not. Their nuspec commits match the
+tags recorded in the spec.
+
+Fresh Projects main `69697a08` was prepared on the unpushed local branch
+`story/18-eventstore-query-contracts` (worktree
+`/home/administrator/projects/hexalith/projects-story-18-20261118`). Three
+product commits fix the reachable restore failures:
+
+- the EventStore default and expected package inventory now use 5.3.1;
+- the Tenants gitlink moves to 8.0.2, because Tenants `929bac5a` duplicated
+  `Aspire.Hosting.Dotnet` beside the shared Aspire 17 catalog (NU1506);
+- both AppHosts reference `Aspire.Hosting.AppHost` explicitly, because the
+  SDK's implicit reference is rejected by central package management (NU1009).
+  EventStore, Tenants and Folders already use this pattern.
+
+Released Builds v6.3.2 policy checks pass on head `038f2f40`: audit lint, action
+lint, commitlint for all three commits, and unchanged owned entries. Audited and
+ordinary package-mode restores pass. The Release build then stops with six
+CS0117/CS1061 errors. `Hexalith.Projects.Server` uses
+`GetConversationQuery.{AdvisoryMetadataOnly,NativeMembershipOnly,QueryType,NativeMembershipPurpose}`
+and `ConversationDetailResult.ReadPurpose`, which were added on Conversations
+main by `f1a2b3da` but are absent from the latest published 2.0.0. Both of
+today's Conversations release dispatches failed; the latest stopped at its
+release-identity Builds gitlink guard. No dependent tests, hooks, integration
+tests or browser lanes ran. No source substitution, synthetic version, manual
+release or declaration change was used.
+
+Read-only AD-21 state is unchanged: no rulesets, only `production`, immutable
+releases off, publish switch `true`, 90-day retention, CodeQL not configured,
+security updates disabled, and the App installation API still returns 403.
+Story 11 is not accepted; the four latest CiCd nightly runs did not succeed.
+Current scanner discovery of Projects main still selects 56 files and refuses
+only `.github/actions/prepare-g6-catalog/prepare.py:47`. That action serves
+only the legacy `ci.yml` G-6 job. Human decision (2026-11-18): delete it in a
+module-agent Projects commit after adoption, before the first post-adoption
+nightly scan. No exclusion was added.
+
+## Earlier qualification boundary — 2026-11-17
 
 Story 18 remains **in progress and unadopted**. The combined reconciled source
 has not passed qualification. Earlier successful checks below apply only to
