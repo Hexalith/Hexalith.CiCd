@@ -1,0 +1,258 @@
+{
+  "recorded_at": "2026-11-19T10:03:33Z",
+  "decision": "Review 1 forward fix: release.targets now rebinds org.opencontainers.artifact.created with the publisher ContainerProvenanceCreated instant alongside image.created, so plain consumers keep both created labels. The release route of the platform cohort test now requires the instant on every declared-build evaluation and command, and the scope wording names only the evaluations and commands that receive it. The candidate is local, uncommitted and unpushed on the Builds fix branch with no upstream. verification.json stays unchanged as the record of the first implementation; the supersedes list names its entries that are now wrong.",
+  "release_blocker": {
+    "status": "fix on Builds main at 99baf1db; releasable once hosted Builds CI passes on it",
+    "history": "Builds main holds the 7f085bad artifact.created regression (plain consumers lose org.opencontainers.artifact.created). It is untagged so far: after git fetch --tags origin, git tag --contains 7f085bad76da517d85b835f45facd649dfc7bc36 is empty. No central Builds release may be cut from main until this fix lands."
+  },
+  "supersedes": [
+    {
+      "entry": "verification.json decision",
+      "reason": "it says every image's image.created label carries the instant; after the fix, both image.created and artifact.created carry it on every image"
+    },
+    {
+      "entry": "verification.json matrix_coverage.plain_consumer",
+      "reason": "it says the plain container has no artifact.created; that was the regression, and the real multi-RID test now requires both created labels on every child of both containers"
+    },
+    {
+      "entry": "verification.json open",
+      "reason": "the open list omits this forward fix and the release_blocker above, and hosted Builds CI for 7f085bad has since passed (hosted_ci below)"
+    },
+    {
+      "entry": "verification.json verification[0].where \"SDK 10.0.403\"",
+      "reason": "local runs resolved 10.0.404: the release fixture global.json pins 10.0.403 with rollForward latestPatch and 10.0.404 is installed. Microsoft.NET.Build.Containers.targets:152 is identical in both SDKs"
+    }
+  ],
+  "hosted_ci": {
+    "commit": "7f085bad76da517d85b835f45facd649dfc7bc36",
+    "run": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/44495264716",
+    "workflow": "CI",
+    "event": "push to main",
+    "conclusion": "success",
+    "read_command": "curl -sS https://api.github.com/repos/Hexalith/Hexalith.Builds/actions/runs/44495264716 (unauthenticated public read: head_sha 7f085bad76da517d85b835f45facd649dfc7bc36, status completed, conclusion success, run_attempt 1)"
+  },
+  "spec": {
+    "path": "_bmad-output/implementation-artifacts/spec-21-frozen-release-timestamp.md",
+    "input_blob": "9b4b027af863497ca7b901c0cb7a32b2190f1c6c",
+    "input_blob_note": "the review 1 amended spec as handed over, before this work ticked tasks and updated Implementation Notes",
+    "recorded_blob": "c3ad4411d60ea1828bb685a526216f21c66c3e32",
+    "blob_command": "git hash-object _bmad-output/implementation-artifacts/spec-21-frozen-release-timestamp.md"
+  },
+  "cicd": {
+    "baseline_commit": "2cf28729c534696f2f5a6ef85b177b4af90436f6",
+    "baseline_tree": "51c8f945b7529ae591c8ecd3ae79bfe05cfafaad",
+    "baseline_command": "git rev-parse HEAD HEAD^{tree}",
+    "builds_gitlink_at_baseline": "a8e2ae292a45070e95646bf6db8a7f7a8704c1d3",
+    "files": [
+      {
+        "path": "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md",
+        "change": "AD-17 build bullet: pending central Builds release, the build phase (release_build.py --phase build) reads the clock, the instant reaches every project-discovery and declared-build MSBuild evaluation, restore, build, declared build, pack and container publish of that phase, and both created labels are rebound; frontmatter updated 2026-11-19",
+        "baseline_blob": "9d6195e26cdfe4eff749d05c073161166843d318",
+        "candidate_blob": "23a06fbfc6f6025aae93aa159c5bff63336d9bf5"
+      }
+    ],
+    "blob_command": "git rev-parse HEAD:<path> (baseline); git hash-object <path> (candidate)"
+  },
+  "builds": {
+    "branch": "fix/frozen-release-artifact-created",
+    "upstream": "none (git rev-parse --abbrev-ref @{u}: no upstream configured)",
+    "fix_base_commit": "74e6e4b53cdccb228c46de8a50cee89b781d66cf",
+    "fix_base_tree": "8041ef8ad1af1f5bfec483233c09a2a22988afda",
+    "fix_base_source": "freshly fetched origin/main; the branch, first cut from 7f085bad76da517d85b835f45facd649dfc7bc36 (tree 2361676dbc28f589cc0922303427c9a693a38467), was fast-forwarded with git merge --ff-only origin/main, keeping the uncommitted fix. 74e6e4b5 adds only Tools/g6-current-policy-2026-11-12.json, which the fix does not touch.",
+    "base_command": "git rev-parse origin/main origin/main^{tree}",
+    "candidate_tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+    "candidate_tree_method": "private GIT_INDEX_FILE: read-tree HEAD, add -A, write-tree; the repository index is untouched",
+    "candidate_patch_sha256": "sha256:b6b0f69bbda9da08af13a4c84ebaf6534e59b3256112f96628564189948e10d9",
+    "candidate_patch_command": "git diff --full-index 74e6e4b53cdccb228c46de8a50cee89b781d66cf eae30aa4c9a93e449c97f585bdb3ff416881e45d | sha256sum",
+    "candidate_patch_note": "git diff --full-index 74e6e4b53cdccb228c46de8a50cee89b781d66cf on the working tree gives the same bytes",
+    "files": [
+      {
+        "path": "Github/release-build/release.targets",
+        "base_blob": "ff7968e047cca0bea622949bcedfff83599a916f",
+        "candidate_blob": "df5894b6756a619d48872c8a8bb271b8f9ec2f4f"
+      },
+      {
+        "path": "Github/lib/release_build.py",
+        "base_blob": "be0556519e15038966db14fcd8fb63b9e445a82c",
+        "candidate_blob": "2aaf0f0abdce031a22ace306da4d52dd9a558f21"
+      },
+      {
+        "path": "Github/lib/tests/test_release_build.py",
+        "base_blob": "1c6284c863ec364c34adbf14b695eec94a77faf0",
+        "candidate_blob": "05465cf8c9ee5c652441a3d26eeb4a07dd4b10a8"
+      },
+      {
+        "path": "Github/lib/tests/test_release_complete.py",
+        "base_blob": "ff531085327c9c715d39c8db79af64da2833664c",
+        "candidate_blob": "e5a2373c66b6531db232db87ddcc8edfc570bc50"
+      },
+      {
+        "path": "Github/lib/tests/test_platform_support.py",
+        "base_blob": "61e1a3f52a9acb311dcc4d6611c5cc9be2eb3660",
+        "candidate_blob": "0da786820bd97cc8692516c59d9acd8aa8519448"
+      },
+      {
+        "path": "Github/release-build/README.md",
+        "base_blob": "081129174d546eda9618f7e8417f1aeb376d3b1b",
+        "candidate_blob": "69e8bae4b8a50122002ca11570988a051a47fece"
+      }
+    ],
+    "blob_command": "git rev-parse <commit-or-tree>:<path>",
+    "unchanged_from_base": [
+      {
+        "path": "Github/lib/oci_archive.py",
+        "blob": "0c7beab830fb65dfac13ccd016266c469c1e1054"
+      },
+      {
+        "path": "Github/lib/tests/test_release_oci.py",
+        "blob": "cd9918214d7c3c4e0d8b733d9a594be19d4a83bb"
+      },
+      {
+        "path": "README.md",
+        "blob": "45c2863bfafde45dfaeeb8d8a53f3a136d84c4bd"
+      },
+      {
+        "path": "Github/release-build/action.yml",
+        "blob": "86e6bd85e73fefa2c04f164c31545149648ce5f8"
+      }
+    ],
+    "earlier_candidate": {
+      "base_commit": "7f085bad76da517d85b835f45facd649dfc7bc36",
+      "tree": "1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb",
+      "patch_sha256": "sha256:7609e9f5d23c5e95643173dd5142232f57a0f3d1a8050527818f5ad22201f3d1",
+      "patch_command": "git diff --full-index 7f085bad76da517d85b835f45facd649dfc7bc36 1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb | sha256sum",
+      "note": "the first forward-fix candidate, before the platform cohort assertion, the scope wording and the fast-forward; verification runs 1 to 4 below ran on it"
+    },
+    "commit": {
+      "id": "192d1a13d5f09b6b9569dbd977a09dc6da76e0e6",
+      "tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+      "parent": "74e6e4b53cdccb228c46de8a50cee89b781d66cf",
+      "branch": "fix/frozen-release-artifact-created (local, no upstream, not pushed)",
+      "tree_matches_verified_candidate": true,
+      "commitlint": {
+        "command": "run-with-temp node_modules/.bin/commitlint --config commitlint.config.mjs --verbose < message (Builds checkout; @commitlint/cli 21.2.4)",
+        "result": "found 0 problems, 0 warnings; the committed message text (git log -1 --format=%B) also passed (exit 0)",
+        "message_sha256": "sha256:fda4cd4d37ab13110ad34bbec0a23c8a5b2972f37a00dadce16cfd585c3afd4f",
+        "log_sha256": "sha256:1cc0b03c80035761d334e7a20446b5092409e9d01f3fcfe5b965e8a991f4070c"
+      }
+    },
+    "pushed": {
+      "main_commit": "99baf1dbf2dc2c098ea758f16e4e9bacc892ad7a",
+      "tree": "45868ad6b648a1378dc34b644367f140d08e9b8b",
+      "parent": "5a4de003253a86af72ce909aa12e5cd968946f0f",
+      "push": "git push origin 99baf1db:refs/heads/main (fast-forward 5a4de003..99baf1db)",
+      "rebase_chain": [
+        "192d1a13d5f09b6b9569dbd977a09dc6da76e0e6 (tree eae30aa4, verified candidate)",
+        "519304f87664f2fc975625b8f404a34c4023f3a7 (tree 68940027, onto 2f09cb0c)",
+        "99baf1dbf2dc2c098ea758f16e4e9bacc892ad7a (tree 45868ad6, onto 5a4de003)"
+      ],
+      "rebase_note": "main moved during push; the incoming commits touch Props, builds-ci.yml, Tools and Github/split-publication only, and all six fix blobs are identical across the chain",
+      "pre_push_tests": [
+        {
+          "tree": "68940027cafc0085d5130a4a264f9584e2dc2738",
+          "command": "run-with-temp python3 -m unittest discover -s Github/lib/tests -p 'test_release_*.py'",
+          "result": "218 tests OK",
+          "log_sha256": "sha256:16f968a428355a688f3569d532b743f89aea14c8b89772e8758b99bf3fe90a6d"
+        },
+        {
+          "tree": "68940027cafc0085d5130a4a264f9584e2dc2738",
+          "command": "run-with-temp python3 -m unittest test_platform_support.HistoricalTests.test_nonempty_cohorts_run_through_ci_local_and_release_and_stop_on_failure (from Github/lib/tests)",
+          "result": "1 test OK",
+          "log_sha256": "sha256:ceca462d60609f7eb741c043e1afea9f9e73f73c66b2f0c854a27a4b3c1a1b56"
+        }
+      ],
+      "hosted_ci": "pending for 99baf1db at record time"
+    }
+  },
+  "dotnet_version_method": "dotnet --version, run where each SDK command resolves global.json: the Builds root (and Github/lib/tests) pins 11.0.100 and resolves 11.0.100; the release fixture (test/fixtures/release, copied with its global.json by the tests) pins 10.0.403 with rollForward latestPatch and resolves 10.0.404. global.json blobs are identical in the 7f085bad, 74e6e4b5 and candidate trees.",
+  "verification": [
+    {
+      "command": "run-with-temp python3 -m unittest discover -s Github/lib/tests -p 'test_release_*.py'",
+      "tree": "1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb",
+      "where": "shared Builds checkout, Python 3.14.4",
+      "dotnet_version": "11.0.100 (Builds root); 10.0.404 (release fixture)",
+      "result": "218 tests OK, no skips",
+      "log_sha256": "sha256:233a3d79268be51af843757d70dcb4aa055f41579bef7d4b834bc5aa28418bd6",
+      "digest_command": "sha256sum <log>"
+    },
+    {
+      "command": "run-with-temp bash isolated-suite.sh <Builds checkout> 7f085bad76da517d85b835f45facd649dfc7bc36 <candidate patch> 1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb (clone, checkout base, git apply --index, verify write-tree, npm ci --ignore-scripts, python3 Tools/ci/lint_workflows.py --install-only, uv run --no-cache --locked --script --python 3.12 Tools/ci/run_python_tests.py)",
+      "tree": "1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb",
+      "where": "disposable clone under the private TMPDIR, Python 3.12.13, node v26.4.0 (package.json requires >=26.13; npm warned EBADENGINE)",
+      "dotnet_version": "11.0.100 (Builds root); 10.0.404 (release fixture), from the same installed SDKs and identical global.json blobs; not re-read inside the clone",
+      "result": "candidate tree verified; 15/16 groups. Github/lib/tests: 783 OK, no skips. The one failure is Tools/ci/tests test_real_zizmor_enforces_committed_third_party_pinning_policy_online: 'Real online policy tests require a read-only GitHub token'; no token was available in this session.",
+      "script_sha256": "sha256:dba9374c9b2163c29ee46e581c83a205cdbc612501afc163d098c778a7474d42",
+      "log_sha256": "sha256:1b63d5a12425fcc7bc9e1b81391064ca3e50e9a9d22a434e77d54f6971916826",
+      "digest_command": "sha256sum <script> <log>"
+    },
+    {
+      "command": "run-with-temp bash -c 'GITHUB_PATH=\"$TMPDIR/github-path\" python3 Tools/ci/lint_workflows.py --export-path'",
+      "tree": "1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb",
+      "where": "shared Builds checkout",
+      "dotnet_version": "not used",
+      "result": "actionlint passed; zizmor stopped with 'Online zizmor audits require GH_TOKEN, GITHUB_TOKEN or ZIZMOR_GITHUB_TOKEN'. No workflow or action YAML changed in either candidate.",
+      "log_note": "the log holds only the token refusal line (actionlint prints nothing when it passes), so its content does not depend on the tree; it has the same digest as the 7f085bad run in verification.json",
+      "log_sha256": "sha256:0b73c645cae9bb90ecacc574c58ed3307678bd57f8f662c25d276688a11af6d9",
+      "digest_command": "sha256sum <log>"
+    },
+    {
+      "command": "mutation: git show HEAD:Github/release-build/release.targets > Github/release-build/release.targets (the 7f085bad blob ff7968e0, which rebinds image.created only), then run-with-temp python3 -m unittest test_release_build.BuildTests.test_real_multi_project_multi_rid_images_share_one_publisher_instant from Github/lib/tests",
+      "tree": "1f81f3fc0d3e532c40c8b85dc4c0cd6f9952c3fb with release.targets mutated",
+      "dotnet_version": "10.0.404 (release fixture)",
+      "result": "the test fails: the plain container hexalith-release-create-disposable has artifact.created None on both children instead of 2026-11-19T23:59:59Z; release.targets was restored and git hash-object confirmed the candidate blob",
+      "log_sha256": "sha256:f8cbe67597705aa5b355f7a7d2bfa214bed0793d327778d12044bc43e95b42ad",
+      "digest_command": "sha256sum <log>"
+    },
+    {
+      "command": "run-with-temp python3 -m unittest -v test_platform_support.HistoricalTests.test_nonempty_cohorts_run_through_ci_local_and_release_and_stop_on_failure test_release_build.BuildTests.test_real_multi_project_multi_rid_images_share_one_publisher_instant (from Github/lib/tests)",
+      "tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+      "where": "shared Builds checkout, Python 3.14.4",
+      "dotnet_version": "11.0.100 (Github/lib/tests); 10.0.404 (release fixture)",
+      "result": "2 tests OK: the tests covering the files changed after the earlier candidate (test_platform_support.py, and release.targets whose comment changed). The full suite was not rerun on this tree.",
+      "log_sha256": "sha256:228013ac6d7c8439f3a1daaa682c63eade5f035506f1c285dbae6eee89ae478c",
+      "digest_command": "sha256sum <log>"
+    },
+    {
+      "command": "mutation: drop -p:ContainerGenerateLabelsImageCreated=false from build_release's flags in Github/lib/release_build.py, then run-with-temp python3 -m unittest test_platform_support.HistoricalTests.test_nonempty_cohorts_run_through_ci_local_and_release_and_stop_on_failure from Github/lib/tests",
+      "tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d with release_build.py mutated",
+      "dotnet_version": "not used (SDK calls are stubbed)",
+      "result": "the release route fails in the evaluate stub for both fail variants (failures=2): the declared-build evaluation lacks -p:ContainerGenerateLabelsImageCreated=false; release_build.py was restored and git hash-object confirmed blob 2aaf0f0abdce031a22ace306da4d52dd9a558f21",
+      "log_sha256": "sha256:6d9eaa80ab6df8b912d1b672be01f00855d4f978e4685b9df3604154c0f6b6d2",
+      "digest_command": "sha256sum <log>"
+    },
+    {
+      "tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+      "by": "orchestrator re-verification after review 2 patches",
+      "command": "run-with-temp python3 -m unittest discover -s Github/lib/tests -p 'test_release_*.py'",
+      "where": "shared Builds checkout at the candidate tree; dotnet --version 11.0.100 at the Builds root, 10.0.404 in test/fixtures/release",
+      "result": "218 tests OK, no skips",
+      "log_sha256": "sha256:6ca2b258ee67bd2f2af7743efa8b34c479fd942db535a9ed440523b36cfece76",
+      "digest_command": "sha256sum <log>"
+    },
+    {
+      "tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+      "by": "orchestrator re-verification after review 2 patches",
+      "command": "git diff --full-index --binary HEAD > candidate.patch; run-with-temp bash isolated-suite.sh <Builds checkout> 74e6e4b53cdccb228c46de8a50cee89b781d66cf candidate.patch eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+      "where": "disposable clone under the private TMPDIR; clone tree verified before npm ci --ignore-scripts, lint_workflows.py --install-only and the uv suite command",
+      "result": "candidate tree verified; 15/16 groups. Github/lib/tests: 783 OK, no skips, including test_platform_support HistoricalTests.test_nonempty_cohorts_run_through_ci_local_and_release_and_stop_on_failure. The one failing group fails only test_real_zizmor_enforces_committed_third_party_pinning_policy_online, which needs a GitHub token.",
+      "script_sha256": "sha256:dba9374c9b2163c29ee46e581c83a205cdbc612501afc163d098c778a7474d42",
+      "patch_sha256": "sha256:b6b0f69bbda9da08af13a4c84ebaf6534e59b3256112f96628564189948e10d9",
+      "log_sha256": "sha256:1f379fbb800b99272869cca5c89f00fc89d60295115c4405fff3c299243194b7",
+      "digest_command": "sha256sum <script> <patch> <log>"
+    },
+    {
+      "tree": "eae30aa4c9a93e449c97f585bdb3ff416881e45d",
+      "by": "orchestrator re-verification after review 2 patches",
+      "command": "run-with-temp bash -c 'GITHUB_PATH=\"$TMPDIR/github-path\" python3 Tools/ci/lint_workflows.py --export-path'",
+      "where": "shared Builds checkout at the candidate tree",
+      "result": "actionlint passed (it runs with check=True before the token check); zizmor stopped with 'Online zizmor audits require GH_TOKEN, GITHUB_TOKEN or ZIZMOR_GITHUB_TOKEN'.",
+      "log_note": "the log holds the token-refusal line and the appended exit status, so its content does not depend on the tree",
+      "log_sha256": "sha256:ebe4952774ca3ee40218156a0b04317aead9422959d9e8e3c908687e3384cb5a",
+      "digest_command": "sha256sum <log>"
+    }
+  ],
+  "open": [
+    "Do not stage the CiCd references/Hexalith.Builds gitlink: it moved only because the submodule checkout is on the fix branch, and recording it would be an unreviewed pin change.",
+    "Hosted Builds CI on main 99baf1db (covers the token-gated zizmor checks), the central Builds release (blocked until this fix lands, see release_blocker) and the CiCd builds-version bump with committed-candidate validation (prerequisite steps 4 and 5)."
+  ]
+}
