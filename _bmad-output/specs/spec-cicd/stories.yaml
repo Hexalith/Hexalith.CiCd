@@ -437,6 +437,31 @@
     the immutable bootstrap and its pin stay unchanged. Acceptance criteria:
     story 28-2 in section 4.1 of the approved sprint change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+    Qualify shared run state, object identity and bounded refusal diagnostics
+    as specified in _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md (28-2).
+- id: "30-1"
+  title: "Verify the CiCd App workflow inventory"
+  description: >-
+    Check every CiCd workflow that can reach the App key against AD-7 and
+    reconcile the declared jobs and token scopes with hosted environment
+    restrictions and installation grants.
+  invoke_dev_with: >-
+    Work in CiCd with the maintainer and the EventStore and Projects owners.
+    Test workflow discovery and job-level repository and permission bounds.
+    Record read-only hosted evidence and owner disposition for each migration
+    route. Acceptance criteria are in the 2026-11-19 sprint change proposal
+    under 30-1. Retirement requires the corresponding owner's confirmation.
+- id: "30-2"
+  title: "Document and reproduce validation from a fresh checkout"
+  description: >-
+    Give a new CiCd maintainer a tested Linux path from cloning the parent to
+    reproducing its render, running an offline suite and starting the online
+    checks with the documented prerequisites.
+  invoke_dev_with: >-
+    Work in README.md and docs/duplicate-scan.md. Use the live registration
+    directory and the six-language detector test. Record the clean-checkout
+    result and online prerequisites against 30-2 in the 2026-11-19 sprint
+    change proposal.
 - id: "28-3"
   title: "Executable fixtures out of evidence"
   description: >-
@@ -449,6 +474,8 @@
     AGENTS.md Evidence section's transitional sentence. Acceptance criteria:
     story 28-3 in section 4.1 of the approved sprint change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+    Record runner identities and exercise relocated consumers in a clean checkout
+    as specified in _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md (28-3).
 - id: "28-4"
   title: "Change-scoped validation and delivery"
   description: >-
@@ -462,6 +489,8 @@
     Classes and baseline: enforcement.md "What a change runs". Acceptance
     criteria: story 28-4 in section 4.1 of the approved sprint change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+    Qualify the hosted scope matrix and measure delivery and barrier time
+    as specified in _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md (28-4).
 - id: "28-5"
   title: "Pin-scoped bump checks"
   description: >-
@@ -471,6 +500,8 @@
     Work in this repo: check_global.py suite selection, bump.py. Acceptance
     criteria: story 28-5 in section 4.1 of the approved sprint change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+    Exercise a rejected pin and a pin-independent failure separately
+    as specified in _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md (28-5).
 - id: "28-6"
   title: "Evidence policy and growth stop"
   description: >-
@@ -484,6 +515,8 @@
     Acceptance criteria: story 28-6 in section 4.1 of the approved sprint
     change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+    Measure added evidence separately from the existing tree
+    as specified in _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md (28-6).
 - id: "28-7"
   title: "Independent duplicate scan"
   description: >-
@@ -494,6 +527,8 @@
     scan.yml. Acceptance criteria: story 28-7 in section 4.1 of the approved
     sprint change proposal
     (_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-18.md).
+    Qualify the existing exact-head scan reader with the independent producer
+    as specified in _bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md (28-7).
 - id: "28-8"
   title: "Remove raw evidence from the tree"
   description: >-

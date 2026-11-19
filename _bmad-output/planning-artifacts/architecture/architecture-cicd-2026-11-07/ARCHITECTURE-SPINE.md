@@ -48,6 +48,7 @@ flowchart LR
     DELIVER["deliver.yml"]
     DELIVERED["branches delivered/* (one per module)"]
     NIGHTLY["nightly.yml"]
+    SCAN["scan.yml (daily)"]
   end
   subgraph BUILDS["Hexalith.Builds (runtime)"]
     BCI["ci.yml (reusable)"]
@@ -73,7 +74,7 @@ flowchart LR
   NIGHTLY -- "bump commit" --> RENDERED
   NIGHTLY -- "bump-push: dispatch" --> DELIVER
   NIGHTLY -. "pre-dispatch check, delivered-sha" .-> DELIVERED
-  NIGHTLY -. "scan: anonymous clone" .-> ACT
+  SCAN -. "anonymous clone" .-> ACT
   CALLER -- "uses exact tag" --> BCI
   CALLER -- "uses exact tag" --> BREL
   CALLER -- "uses exact tag: prepare, publish" --> COMP
@@ -215,7 +216,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Prevents:** unattended paths dying on token expiry; module runs or agents holding cross-repo write power; agents bypassing CiCd through its own repos; the App key or the publish credentials being reachable from a branch or from third-party code
 - **Rule:**
   - **The App.** One org-owned GitHub App has Contents, Workflows and Actions read & write, and Administration and Code scanning alerts read. It is installed on selected repos: the 17 modules, Builds and CiCd. Preconditions it can't read are a manual checklist (AD-21).
-  - **The key.** It exists only as a secret of the CiCd environment `cicd-app`. Only `deliver.yml`'s `deliver` job and `nightly.yml`'s App jobs reference that environment.
+  - **The key.** It exists only as a secret of the CiCd environment `cicd-app`. The standing consumers are `deliver.yml` (`deliver`) and `nightly.yml` (`dispatch`, `wait`, `publish-ready` and `delivery-wait`). The delivery job also carries the manual Projects G-6 catalog route. Five additional manual migration workflows reference the key. The [migration inventory](../../sprint-change-proposal-2026-11-19.md#app-key-inventory) identifies each job, owner role, repository selection, requested permissions and retirement decision. Review changes to any of these jobs, token steps or target selections against this boundary.
     - A job in `cicd-app` runs only stdlib Python (`python3 -I`) from CiCd's `tools/` and from Builds at an acceptable tag, git, and SHA-pinned actions, and parses only JSON. Render, validation, tests, linting and the scan run in jobs with no secrets.
     - Each job mints its own tokens with `actions/create-github-app-token`, passing `owner`, `repositories` and `permission-*` for each use. No token is used more than 50 minutes after it was minted. A job re-mints by running that action again as its own step (no CiCd script signs the App JWT), so a long wait alternates mint and poll steps.
     - The key is reachable by every CiCd Contents writer and every creator of an acceptable Builds tag: the org owners, CiCd-agent sessions and the CiCd App. This is accepted under the careless-agent model. It never enters a module.
@@ -474,7 +475,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        Any of them that is not green fails the night.
     8. **`keepalive`** (`GITHUB_TOKEN`): calls the enable API for `nightly.yml`, `deliver.yml` and `scan.yml`. When CiCd's last commit is more than 50 days old, it commits `build(cicd): keepalive`.
   - The night fails when any job fails.
-  - **`scan.yml`** (no secrets) runs daily on its own schedule and by hand. It runs the duplicate scan with jscpd and CiCd's committed config, never a config from the scanned module. It fails its own run, never the night.
+  - **`scan.yml`** (no secrets) runs daily on its own schedule and by hand. It runs the duplicate scan with jscpd and CiCd's committed config, never a config from the scanned module. It fails its own run, never the night. For module acceptance after the split, the reader selects the first completed qualifying scan on `main` created at or after the nightly start whose authenticated report covers the module's dispatch commit. Missing coverage leaves module acceptance unproven. Historical nightly attempts with a scan job use that attempt's artifact.
   - **Reusable `release.yml` jobs:**
     - `codeql`: when the `codeql` list is not empty, a matrix over its languages, with `build-mode: none` and category `hexalith-release/<language>`; otherwise skipped. It fails on open high or critical alerts whose most recent instance carries a `hexalith-release/` category.
     - `nightly-hook`: when enabled, Builds `prepare` (which sets up the environment on Linux, AD-12), then `./.github/actions/nightly`.

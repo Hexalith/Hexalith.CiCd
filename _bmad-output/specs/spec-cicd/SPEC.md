@@ -116,7 +116,7 @@ The architecture spine (first companion) decides how each capability is built, i
     - An adopted module whose live callers differ from its delivered state, whose adoption push failed, or whose immutable releases are off is not released, and turns the nightly run red.
     - `HEXALITH_RELEASE_PUBLISH_ENABLED` set to `false` stops that module from publishing.
     - A `workflow_dispatch` of `nightly.yml` on `main` with `qualify-bump` false runs the same jobs as the 02:17 UTC schedule. Anything that needs a nightly outcome may start one instead of waiting for the night. The maintainer or an interactive CiCd session starts it, never a module agent.
-    - A module's nightly outcome is its own row: its eligibility, its release run's CodeQL and release-or-nothing result, its scan row and, after a bump, its delivery. Other rows don't change it. The night still fails when any row fails.
+    - Judge each module on its eligibility, its own release run's CodeQL and release-or-nothing result, and its delivery after a bump. For module acceptance, also require a passing scan row for that module's dispatch commit. Until the daily scan moves, use the nightly attempt's scan artifact. After the move, use the first qualifying daily scan covering that revision (AD-18). Failures in nightly jobs fail the night. The independent scan reports failures in its own workflow.
 - **CAP-14** Nightly security analysis
   - **intent:** CodeQL analyzes each module once per nightly run (CAP-13), inside its release run, and never on a push or PR. High and critical findings block that night's release.
   - **success:**
