@@ -2,6 +2,8 @@
 
 **19 November 2026 · Moderate scope · Product owner and CiCd developer handoff**
 
+The maintainer approved this proposal for implementation on 19 November 2026. Story 28-8 still requires a separate decision before historical evidence is deleted. [Approved revision](https://github.com/Hexalith/Hexalith.CiCd/commit/6b413de903926c52a355472f018d3ebcdbc8e144)
+
 Start with story 28-2. One failed Builds release lookup can interrupt repair for several modules that share the same tag. Next, verify the App key inventory and move the executable qualification inputs before narrowing validation. The existing migration sequence and fleet targets still apply. [Technical audit](https://chatgpt.com/space/page_b524c7bda89c8191b5cda7a8636012f9) · [Previous sprint decision](sprint-change-proposal-2026-11-18.md)
 
 ## Evidence at the refreshed baseline
