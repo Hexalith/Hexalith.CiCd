@@ -1,0 +1,359 @@
+{
+  "schema": "hexalith.story12.live-refresh.v1",
+  "observed_at": "2026-11-19T19:06:18Z",
+  "phase": "post-story-11-checkpoint refresh; read-only",
+  "token_overrides": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "local": {
+    "cicd_head": "9bd55584a2dd7fb76a1332f76a6144c76c79cf2c",
+    "origin_main": "1b2c441a665459c5f07d32e53c2628dd0981758f",
+    "ai_tools_gitlink": "160000 commit cf96f6905b5e8bf2bacd0573bc074ddcfc361a38\treferences/Hexalith.AI.Tools",
+    "builds_gitlink": "160000 commit 70ce9cb39a0871b7bc09d005780be9da18a6bc8f\treferences/Hexalith.Builds",
+    "builds_version": "v6.4.2",
+    "dirty": [
+      " M references/Hexalith.FrontComposer"
+    ]
+  },
+  "story11": {
+    "published_spec_status": "in-review at origin/main 1b2c441a665459c5f07d32e53c2628dd0981758f",
+    "local_acceptance_commit": "622c20865a474e89a6de73b3d5f301a59db16f5f",
+    "checkpoint_run": 44566082537,
+    "checkpoint_receipt": "pilot-checkpoint-receipt-44566082537.json"
+  },
+  "zero_history_baseline": "planning-preflight.json (2026-11-16): zero tags, releases, workflows and runs; metrics unavailable, not zero",
+  "compact": {
+    "user": [
+      "jpiquot",
+      6775094
+    ],
+    "ai_tools_main": "cf96f6905b5e8bf2bacd0573bc074ddcfc361a38",
+    "rulesets": [
+      {
+        "id": 27440691,
+        "name": "Protect main",
+        "target": "branch",
+        "enforcement": "active"
+      },
+      {
+        "id": 27440693,
+        "name": "v tags",
+        "target": "tag",
+        "enforcement": "active"
+      }
+    ],
+    "environments": {
+      "total": 1,
+      "names": [
+        "hexalith-release"
+      ]
+    },
+    "hexalith_release": {
+      "name": "hexalith-release",
+      "policy": {
+        "protected_branches": false,
+        "custom_branch_policies": true
+      }
+    },
+    "release_branches": {
+      "total": 1,
+      "names": [
+        "main"
+      ]
+    },
+    "release_secrets": {
+      "total": 0,
+      "names": []
+    },
+    "publish_enabled": {
+      "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "value": "true"
+    },
+    "retention": {
+      "days": 90,
+      "maximum_allowed_days": 90
+    },
+    "code_scanning_default": {
+      "state": "not-configured",
+      "languages": [
+        "actions"
+      ]
+    },
+    "dependabot_security": {
+      "enabled": false
+    },
+    "immutable_releases": {
+      "enabled": true,
+      "enforced_by_owner": false
+    },
+    "releases": [
+      {
+        "id": 449697813,
+        "tag_name": "v1.0.0",
+        "draft": true,
+        "immutable": false,
+        "target_commitish": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba"
+      }
+    ],
+    "version_tags": [],
+    "codeql_analyses": {
+      "message": "no analysis found",
+      "documentation_url": "https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository",
+      "status": "404"
+    },
+    "app_installation_repos": {
+      "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+      "total": null
+    },
+    "cicd_main": "1b2c441a665459c5f07d32e53c2628dd0981758f",
+    "delivered_ref": "6b413de903926c52a355472f018d3ebcdbc8e144",
+    "builds_v6_4_2": {
+      "id": 451329430,
+      "tag_name": "v6.4.2",
+      "immutable": true,
+      "target_commitish": "8ad2c2285e2d0cec0a173882b3a3a926d555fe48",
+      "draft": false
+    },
+    "protect_main": {
+      "id": 27440691,
+      "name": "Protect main",
+      "target": "branch",
+      "enforcement": "active",
+      "conditions": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/heads/main"
+          ]
+        }
+      },
+      "rules": [
+        {
+          "type": "deletion",
+          "parameters": null
+        },
+        {
+          "type": "non_fast_forward",
+          "parameters": null
+        }
+      ],
+      "bypass_actors": []
+    },
+    "v_tags": {
+      "id": 27440693,
+      "name": "v tags",
+      "target": "tag",
+      "enforcement": "active",
+      "conditions": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/tags/v*"
+          ]
+        }
+      },
+      "rules": [
+        {
+          "type": "update",
+          "parameters": null
+        },
+        {
+          "type": "deletion",
+          "parameters": null
+        }
+      ],
+      "bypass_actors": []
+    },
+    "grants": {
+      "actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME": {
+        "exit": 0,
+        "status": "HTTP/2.0 200 OK",
+        "total": 8,
+        "ai_tools_selected": true
+      },
+      "actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD": {
+        "exit": 0,
+        "status": "HTTP/2.0 200 OK",
+        "total": 8,
+        "ai_tools_selected": true
+      },
+      "dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME": {
+        "exit": 0,
+        "status": "HTTP/2.0 200 OK",
+        "total": 8,
+        "ai_tools_selected": true
+      },
+      "dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD": {
+        "exit": 0,
+        "status": "HTTP/2.0 200 OK",
+        "total": 8,
+        "ai_tools_selected": true
+      },
+      "actions/variables/HEXALITH_NUGET_USER": {
+        "exit": 0,
+        "status": "HTTP/2.0 200 OK",
+        "total": 8,
+        "ai_tools_selected": true
+      }
+    }
+  },
+  "requests": [
+    {
+      "endpoint": "user",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/git/ref/heads/main",
+      "profile": "/home/administrator/.config/gh-module-agent",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/rulesets?includes_parents=true",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/deployment-branch-policies",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/environments/hexalith-release/secrets",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/actions/permissions/artifact-and-log-retention",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/code-scanning/default-setup",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/automated-security-fixes",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/immutable-releases",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/releases?per_page=20",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/git/matching-refs/tags/v",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/code-scanning/analyses?tool_name=CodeQL&per_page=10",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 1,
+      "status": "HTTP/2.0 404 Not Found"
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 1,
+      "status": "HTTP/2.0 403 Forbidden"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/main",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/git/ref/heads/delivered/Hexalith.AI.Tools",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v6.4.2",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/rulesets/27440691",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.AI.Tools/rulesets/27440693",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "profile": "/home/administrator/.config/gh",
+      "exit": 0,
+      "status": "HTTP/2.0 200 OK"
+    }
+  ]
+}

@@ -49,7 +49,7 @@ context:
 
 **Execution:**
 
-- [ ] `evidence/12/` — refresh revisions and pilot acceptance; verify/provision AD-21 in order: App selection, stale state, exact rulesets, main-only release environment, resolved publishing prerequisites, disabled default scans, exact publish switch, retention and grants. Record zero-history baseline.
+- [x] `evidence/12/` — refresh revisions and pilot acceptance; verify/provision AD-21 in order: App selection, stale state, exact rulesets, main-only release environment, resolved publishing prerequisites, disabled default scans, exact publish switch, retention and grants. Record zero-history baseline.
 - [x] `ARCHITECTURE-SPINE.md` under the architecture planning folder — record the approved AI.Tools package-free applicability and preparation-check decisions beside AD-21 without extending either exception to other modules.
 - [x] AI.Tools `package.json`, `package-lock.json` and guidance above — retire tool-only npm package metadata, use shared validation and align stale Update branch wording with canonical policy; preserve foreign content and the exact owned `commitlint.config.mjs` blob/mode for delivery-owned deletion. Qualify every edge case through existing checks and actual readbacks; apply the approved preparation proof before any push.
 - [x] `setup/Hexalith.AI.Tools.yml`, `rendered/`, `references/Hexalith.AI.Tools` gitlink — register explicit `solution: none`, current prepared main and unchanged acceptable Builds pin; commit cause and render together, fully validate before pushing. Preserve other registrations.
@@ -122,6 +122,15 @@ context:
   Hosted CI `44071290863` succeeded on adopted main. Authenticated standalone
   `check.py` exits 0. The next genuine AI.Tools night is still pending. See
   [`../specs/spec-cicd/evidence/12/live-refresh-20261117.json`](../specs/spec-cicd/evidence/12/live-refresh-20261117.json).
+- 2026-11-19 live refresh: published CiCd main is `1b2c441a`; local HEAD
+  `9bd55584` also contains unpublished story 11 acceptance `622c2086`.
+  Authenticated AI.Tools main/gitlink is `cf96f690` against delivered
+  `6b413de` and Builds `v6.4.2`. AD-21 package-free settings still match.
+  Hosted CI `44544122187` and the standalone checker succeed. CAP-13
+  dispatch `44566082537` is a post-adoption nightly; AI.Tools' own row
+  fails (`44566222798`) on the empty first-release `last-tag` handoff.
+  CAP-16 is not complete. See
+  [`../specs/spec-cicd/evidence/12/live-20261119.md`](../specs/spec-cicd/evidence/12/live-20261119.md).
 
 ## Spec Change Log
 
@@ -162,6 +171,14 @@ context:
   tasks are complete. Story 11 acceptance and the next genuine night remain open.
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed. The manual-dispatch prohibition became a ban on counting `qualify-bump` runs or another module's row.
+- 2026-11-19 live refresh: story 11's local checkpoint receipt for dispatch
+  `44566082537` is pass; that acceptance commit is not on published
+  `origin/main` (`1b2c441a`, spec-11 still `in-review`). AD-21 package-free
+  settings, current gitlink `cf96f690`, delivered `6b413de` tree match,
+  hosted CI and the standalone checker are recorded. The post-adoption
+  nightly's AI.Tools row fails on a Builds first-release `last-tag` handoff
+  defect; CAP-16 remains open. See
+  [`../specs/spec-cicd/evidence/12/live-20261119.md`](../specs/spec-cicd/evidence/12/live-20261119.md).
 
 ## Review Triage Log
 
@@ -213,3 +230,24 @@ context:
 - `run-with-temp uv run --locked --script tools/validate.py` — complete committed/global/live-module verdict; supply intended read-only authentication privately.
 - `run-with-temp python3 references/Hexalith.Builds/check.py` — successful post-adoption standalone-module guard/checker.
 - Inspect authenticated App settings, delivery report/tree, immutable release setting and actual next scheduled run. Preserve exact failures; fixtures cannot establish live acceptance.
+- 2026-11-19 live refresh: `live-refresh-20261119.json` records published
+  CiCd `1b2c441a`, AI.Tools `cf96f690`, delivered `6b413de`, exact AD-21
+  rulesets, main-only `hexalith-release`, publish `true`, retention 90,
+  disabled default scans, grants, immutable releases enabled, and the
+  marked draft `v1.0.0`. Zero-history baseline remains
+  `planning-preflight.json`. `run-with-temp uv run --locked --script
+  tools/render.py --check` passed. Standalone
+  `python3 references/Hexalith.Builds/check.py` at `cf96f690` /
+  `v6.4.2` `8ad2c228` exits 0
+  (`standalone-checker-20261119.json`). Current tree matches delivered
+  `6b413de` (`adopted-tree-20261119.json`). Hosted CI `44544122187`
+  succeeded. `tools/nightly_acceptance.py --run 44566082537 --module
+  Hexalith.AI.Tools` exits 1; receipt
+  `nightly-receipt-44566082537.json`. First-release handoff diagnosis:
+  `first-release-handoff-20261119.json`. `run-with-temp uv run --locked
+  --script tools/validate.py` exits 1 (`validate-20261119.json`):
+  `global` is false because this session has no `GH_TOKEN`/`GITHUB_TOKEN`
+  for bootstrap/publication/zizmor reads; live modules
+  AI.Tools, Commons, Conversations, McpCli and PolymorphicSerializations
+  all passed. Matrix machinery coverage is unchanged from the 2026-11-17
+  suites; live first-release publication is the uncovered matrix row.

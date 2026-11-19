@@ -1,0 +1,55 @@
+{
+  "schema": "hexalith.story12.first-release-handoff.v1",
+  "observed_at": "2026-11-19T19:07:00Z",
+  "result": "pipeline-defect",
+  "module": "Hexalith.AI.Tools",
+  "create_run": {
+    "id": 44266698194,
+    "head": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+    "builds_tag": "v6.2.0",
+    "draft_job": "success",
+    "outcome_job": "failure",
+    "error": "release publisher handoff has an invalid artifact digest or last tag",
+    "release_artifact": {
+      "id": 14410252741,
+      "digest": "sha256:e34869ffcbfdcc701d16ea4e375d8a46d3b24bc9c9ea97d1c23f4fd28cfc9033"
+    },
+    "outcome_artifact": {
+      "id": 14410347631,
+      "digest": "sha256:d49339d8046f746d7c0a17d7f6594fcd1bbf3ff4af0faf6a15ae786ea4dd49fa",
+      "document": {
+        "outcome": "failed",
+        "schema": "hexalith.release-outcome.v1",
+        "sha": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "latest_complete_run": {
+    "id": 44566222798,
+    "head": "cf96f6905b5e8bf2bacd0573bc074ddcfc361a38",
+    "nightly_run": 44566082537,
+    "draft_outputs_present": [
+      "version",
+      "sha",
+      "draft-id",
+      "artifact-id",
+      "artifact-digest",
+      "artifact-run",
+      "publish"
+    ],
+    "draft_outputs_missing": ["last-tag"],
+    "draft_id": "449697813",
+    "artifact_digest": "sha256:e34869ffcbfdcc701d16ea4e375d8a46d3b24bc9c9ea97d1c23f4fd28cfc9033",
+    "error": "release publisher handoff has an invalid artifact digest or last tag"
+  },
+  "draft": {
+    "id": 449697813,
+    "tag_name": "v1.0.0",
+    "draft": true,
+    "immutable": false,
+    "target_commitish": "3a4a78d91b36849c4700e8bc9aae74a1b91f2fba",
+    "author": "github-actions[bot]"
+  },
+  "diagnosis": "First GitHub-only release has last-tag empty. GitHub toJSON(needs) omits that empty job output. Builds release_outcome.reduce_results requires last-tag to be a string, so the publisher handoff fails. Complete-mode retries resume the same marked draft and fail the same way. Empty last-tag is valid for a first release; missing is not distinguished from invalid. Not a product failure and not a disabled-publish result."
+}

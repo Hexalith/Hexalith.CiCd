@@ -1,0 +1,28 @@
+{
+  "schema": "hexalith.story12.validate.v1",
+  "observed_at": "2026-11-19T19:22:54Z",
+  "command": "run-with-temp uv run --locked --script tools/validate.py",
+  "exit": 1,
+  "elapsed_ms": 909116,
+  "verdict": {
+    "global": false,
+    "modules": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Commons",
+      "Hexalith.Conversations",
+      "Hexalith.McpCli",
+      "Hexalith.PolymorphicSerializations"
+    ]
+  },
+  "global_failures": [
+    "immutable delivery bootstrap: GitHub API verification requires a read-only GITHUB_TOKEN or GH_TOKEN",
+    "acceptable Builds publication: GitHub API verification requires a read-only GITHUB_TOKEN or GH_TOKEN",
+    "workflow lints: Online audits require a read-only GitHub token"
+  ],
+  "token_overrides": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "log_sha256": "sha256:1e6e44820a7591afafb10c5e5de15fe959142380bd2a3c8dbdc82e93901e6ffc",
+  "log_bytes": 32980
+}
