@@ -202,6 +202,7 @@ class RenderTests(unittest.TestCase):
         self.assertEqual({"submodules": False, "persist-credentials": False}, steps[0]["with"])
         self.assertIn("published_builds.prepare", steps[1]["run"])
         self.assertIn("HexalithBuildsPublishedToolRoot", steps[1]["run"])
+        self.assertNotIn("Configuration", steps[1]["run"])
         self.assertNotIn("${{", steps[1]["run"])
         self.assertEqual("Hexalith/Hexalith.Builds/Github/prepare@v9.8.7", steps[2]["uses"])
         self.assertEqual("./.github/actions/platform-parity", steps[3]["uses"])

@@ -453,16 +453,16 @@ workspace = temporary / "hexalith-published-builds"
 if workspace.exists():
     raise SystemExit("published Builds workspace already exists")
 values = published_builds.prepare(SimpleNamespace(root=root, document=document), workspace)
-tool = Path(values["HexalithBuildsPublishedToolRoot"])
-if not (tool / "Hexalith.Builds.Tooling.dll").is_file():
+tool_root = values["HexalithBuildsPublishedToolRoot"]
+if not (Path(tool_root) / "Hexalith.Builds.Tooling.dll").is_file():
     raise SystemExit("published Builds tooling assembly is missing")
+if any(ord(character) < 32 for character in tool_root):
+    raise SystemExit("invalid published Builds environment value")
+# Tagged restore_and_build already supplies Release. Only the published
+# tooling root is required for Platform's foreign-reference guard.
 with channel.open("a", encoding="utf-8", newline="\\n") as stream:
-    for key in ("HexalithBuildsPublishedToolRoot", "Configuration"):
-        value = values[key]
-        if any(ord(character) < 32 for character in value):
-            raise SystemExit("invalid published Builds environment value")
-        stream.write(key + "=" + value + "\\n")
-print(values["HexalithBuildsPublishedToolRoot"])
+    stream.write("HexalithBuildsPublishedToolRoot=" + tool_root + "\\n")
+print(tool_root)
 PY
 """
 
