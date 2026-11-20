@@ -191,6 +191,49 @@ class RenderTests(unittest.TestCase):
         self.assertEqual("${{ toJSON(matrix) }}", job["steps"][1]["env"]["HEXALITH_JOB_PARAMETERS"])
         self.assertEqual({"contents": "read"}, job["permissions"])
 
+    def test_linux_published_builds_custom_job_binds_tooling_before_prepare(self):
+        config = self.execution_config({"platform-parity": {"runner": "ubuntu-latest", "timeoutMinutes": 180,
+            "setup": {"dapr": True}}})
+        config["publishedBuilds"] = "eng/published-builds.json"
+        pin = "actions/checkout@" + "a" * 40
+        _, jobs, _ = renderer.execution_jobs(config, {}, published_builds_checkout=pin)
+        steps = jobs["custom-platform-parity"]["steps"]
+        self.assertEqual(pin, steps[0]["uses"])
+        self.assertEqual({"submodules": False, "persist-credentials": False}, steps[0]["with"])
+        self.assertIn("published_builds.prepare", steps[1]["run"])
+        self.assertIn("HexalithBuildsPublishedToolRoot", steps[1]["run"])
+        self.assertNotIn("${{", steps[1]["run"])
+        self.assertEqual("Hexalith/Hexalith.Builds/Github/prepare@v9.8.7", steps[2]["uses"])
+        self.assertEqual("./.github/actions/platform-parity", steps[3]["uses"])
+        _, jobs, _ = renderer.execution_jobs(config, {})
+        self.assertEqual(["uses", "with"], list(jobs["custom-platform-parity"]["steps"][0]))
+        self.assertEqual(2, len(jobs["custom-platform-parity"]["steps"]))
+        config["publishedBuilds"] = None
+        _, jobs, _ = renderer.execution_jobs(config, {}, published_builds_checkout=pin)
+        self.assertEqual(2, len(jobs["custom-platform-parity"]["steps"]))
+        windows = self.execution_config({"parity": {"runner": "windows-latest"}})
+        windows["publishedBuilds"] = "eng/published-builds.json"
+        legacy, jobs, _ = renderer.execution_jobs(windows, {}, published_builds_checkout=pin)
+        self.assertEqual({}, jobs)
+        self.assertEqual({"runner": "windows-latest"}, legacy["parity"])
+
+    def test_current_contract_binds_published_builds_before_linux_custom_prepare(self):
+        with workspace() as fixture, renderer.pinned_contract(fixture.root) as contract:
+            fixture.document({"solution": "Fixture.slnx", "publishedBuilds": "eng/tuple.json",
+                              "jobs": {"platform-parity": {"runner": "ubuntu-latest",
+                                                           "timeoutMinutes": 180, "setup": {"dapr": True}}}})
+            fixture.cli()
+            steps = fixture.yaml(".github/workflows/ci.yml")["jobs"]["custom-platform-parity"]["steps"]
+            if renderer.linux_prepare_binds_published_builds(contract.root):
+                self.assertEqual(2, len(steps))
+                self.assertTrue(steps[0]["uses"].endswith("/Github/prepare@" + contract.tag))
+            else:
+                self.assertEqual(4, len(steps))
+                self.assertEqual(renderer.prepare_checkout_pin(contract.root), steps[0]["uses"])
+                self.assertIn("published_builds.prepare", steps[1]["run"])
+                self.assertTrue(steps[2]["uses"].endswith("/Github/prepare@" + contract.tag))
+                self.assertEqual("./.github/actions/platform-parity", steps[3]["uses"])
+
     def test_mutation_uses_the_selected_contract_resource_bytes_and_dependency_results(self):
         config = self.execution_config({
             "workers": {"runner": "ubuntu-24.04", "trigger": "nightly", "timeoutMinutes": 360,

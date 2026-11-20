@@ -430,7 +430,68 @@ def shared_ci_call(config: dict, interfaces: dict | None = None) -> dict:
     return job
 
 
-def execution_jobs(config: dict, schema: dict, interfaces: dict | None = None) -> tuple[dict, dict, dict]:
+CHECKOUT_ACTION = re.compile(r"(?m)^\s+uses:\s+(actions/checkout@[0-9a-f]{40})\s*(?:#.*)?$")
+PUBLISHED_BUILDS_BIND = """set -euo pipefail
+git --literal-pathspecs -c protocol.file.allow=never -c submodule.recurse=false submodule update --init --checkout -- references/Hexalith.Builds
+python3 -I - <<'PY'
+from pathlib import Path
+from types import SimpleNamespace
+import os
+import sys
+root = Path(os.environ["GITHUB_WORKSPACE"])
+temporary = Path(os.environ["RUNNER_TEMP"])
+channel = Path(os.environ["GITHUB_ENV"])
+if not root.is_dir() or not temporary.is_dir():
+    raise SystemExit("published Builds bind requires GITHUB_WORKSPACE and RUNNER_TEMP")
+sys.path.insert(0, str(root / "references/Hexalith.Builds/Github/lib"))
+from ci_config import _read_json
+import published_builds
+document = _read_json(root / ".github/hexalith-ci.json")
+if not document.get("publishedBuilds"):
+    raise SystemExit("published Builds bind requires a committed tuple")
+workspace = temporary / "hexalith-published-builds"
+if workspace.exists():
+    raise SystemExit("published Builds workspace already exists")
+values = published_builds.prepare(SimpleNamespace(root=root, document=document), workspace)
+tool = Path(values["HexalithBuildsPublishedToolRoot"])
+if not (tool / "Hexalith.Builds.Tooling.dll").is_file():
+    raise SystemExit("published Builds tooling assembly is missing")
+with channel.open("a", encoding="utf-8", newline="\\n") as stream:
+    for key in ("HexalithBuildsPublishedToolRoot", "Configuration"):
+        value = values[key]
+        if any(ord(character) < 32 for character in value):
+            raise SystemExit("invalid published Builds environment value")
+        stream.write(key + "=" + value + "\\n")
+print(values["HexalithBuildsPublishedToolRoot"])
+PY
+"""
+
+
+def linux_prepare_binds_published_builds(root: Path) -> bool:
+    """True when tagged Linux prepare already authenticates publishedBuilds."""
+    path = root / "Github/prepare/prepare_linux.py"
+    return path.is_file() and 'document.get("publishedBuilds")' in path.read_text(encoding="utf-8")
+
+
+def prepare_checkout_pin(root: Path) -> str:
+    """Reuse the selected prepare composite's pinned checkout action."""
+    match = CHECKOUT_ACTION.search((root / "Github/prepare/action.yml").read_text(encoding="utf-8"))
+    if match is None:
+        raise RenderError("selected Builds prepare does not pin actions/checkout")
+    return match.group(1)
+
+
+def published_builds_bind_steps(checkout: str) -> list[dict]:
+    """Authenticate the committed tuple before tagged prepare restore_and_build."""
+    if "${{" in checkout or any(ord(character) < 32 for character in checkout):
+        raise RenderError("published Builds checkout pin is invalid")
+    return [{"uses": checkout, "with": {"submodules": False, "persist-credentials": False}},
+            {"name": "Bind verified published Builds tooling", "shell": "bash",
+             "run": PUBLISHED_BUILDS_BIND}]
+
+
+def execution_jobs(config: dict, schema: dict, interfaces: dict | None = None,
+                   published_builds_checkout: str | None = None) -> tuple[dict, dict, dict]:
     """Render fresh product jobs; private fixtures require green-source authority."""
     configured = config["jobs"]
     legacy, ci, qualification = {}, {}, {}
@@ -554,7 +615,10 @@ def execution_jobs(config: dict, schema: dict, interfaces: dict | None = None) -
         for variable, secret in (secrets.items() if isinstance(secrets, dict) else ((value, value) for value in secrets)):
             action_environment[variable] = "${{ secrets." + secret + " }}"
         action = {"uses": f"./.github/actions/{name}", "env": action_environment}
-        job["steps"] = [prepare, action]
+        bind = []
+        if (published_builds_checkout and linux and not private and config.get("publishedBuilds")):
+            bind = published_builds_bind_steps(published_builds_checkout)
+        job["steps"] = [*bind, prepare, action]
         (ci if trigger == "ci" else qualification)[identifiers[name]] = job
     if green_manual or green_nightly:
         if interfaces is not None and "source-sha" not in interfaces["ci_outputs"]:
@@ -609,7 +673,11 @@ def desired_tree(project: Path, registrations: list[tuple[str, Path]],
         if document["buildsTag"] != contract.tag:
             raise RenderError(f"{path} -> .github/hexalith-ci.json: buildsTag must equal builds-version")
         context["config"] = document
-        legacy, custom, qualification = execution_jobs(document, contract.schemas["ci"], interfaces)
+        checkout = None
+        if document.get("publishedBuilds") and not linux_prepare_binds_published_builds(contract.root):
+            checkout = prepare_checkout_pin(contract.root)
+        legacy, custom, qualification = execution_jobs(
+            document, contract.schemas["ci"], interfaces, published_builds_checkout=checkout)
         context.update(legacy_jobs=legacy, ci_custom_jobs=custom, qualification_jobs=qualification)
         context["ci_arguments"] = shared_ci_call(document, interfaces).get("with", {})
         context["qualification_choices"] = ["nightly", *sorted(name for name, options in document["jobs"].items()
