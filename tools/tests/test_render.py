@@ -224,6 +224,7 @@ class RenderTests(unittest.TestCase):
                               "jobs": {"platform-parity": {"runner": "ubuntu-latest",
                                                            "timeoutMinutes": 180, "setup": {"dapr": True}}}})
             fixture.cli()
+            self.assertIn("Github/prepare/prepare_linux.py", renderer.EXPORT_PATHS)
             steps = fixture.yaml(".github/workflows/ci.yml")["jobs"]["custom-platform-parity"]["steps"]
             if renderer.linux_prepare_binds_published_builds(contract.root):
                 self.assertEqual(2, len(steps))

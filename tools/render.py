@@ -50,7 +50,7 @@ QUALIFICATION = ".github/workflows/qualification.yml.j2"
 PARTIALS = ("partials/ownership-block.txt.j2", "partials/deny-entries.json.j2")
 EXPORT_PATHS = (
     "schemas", "Github/lib", ".github/workflows/ci.yml", ".github/workflows/release.yml",
-    "Github/prepare/action.yml", "Github/publish/action.yml",
+    "Github/prepare/action.yml", "Github/prepare/prepare_linux.py", "Github/publish/action.yml",
     "Tools/ci/lint_workflows.py", "Tools/ci/tools.json",
 )
 
