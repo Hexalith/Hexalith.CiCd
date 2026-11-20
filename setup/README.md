@@ -17,6 +17,21 @@ A solution uses the `.slnx` extension. With a solution, omitted CodeQL defaults 
 schema defaults. Explicit empty collections, `false` and `null` are preserved;
 invalid values, unknown fields and missing required fields without defaults fail.
 
+### README checks and the package pilots
+
+After the supporting Builds release is selected in `builds-version`, the schema
+materializes `docs: warn` during rendering. The shared prepare stage and local
+`check.py` report findings for the root and package README files. Set
+`docs: fail` in a module's setup once its maintainer accepts the migration.
+Existing published contracts that lack this field can still render their
+original configuration. Keep the default until the new contract is selected.
+
+The Commons and PolymorphicSerializations registrations use the product-owned
+`after-unit-tests` action to exercise their package examples. Land each module's
+action before delivery enables it. Use the normal CiCd render, validate, and
+delivery flow so the delivered configuration, workflow tag, Builds gitlink,
+and perimeter agree.
+
 For example (the actual accepted fields and constraints come from Builds' schema):
 
 ```yaml
