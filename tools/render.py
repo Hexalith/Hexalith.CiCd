@@ -188,6 +188,9 @@ class Contract:
 
     def validate(self, kind: str, data: bytes, source: str, repository: str = "") -> dict:
         document = json_document(data, source)
+        if kind == "ci" and isinstance(document, dict) and "additionalSdkVersion" in document:
+            if not re.fullmatch(r"11\.0\.[0-9]{3}", str(document["additionalSdkVersion"])):
+                raise RenderError(f"{source}: additionalSdkVersion must select an exact .NET 11 SDK")
         validator = schema_validator(self.schemas[kind])
         try:
             errors = sorted(validator.iter_errors(document), key=lambda error: str(list(error.absolute_path)))

@@ -302,7 +302,7 @@ class RenderTests(unittest.TestCase):
     def test_platform_authority_and_additional_sdk_use_only_the_selected_complete_interface(self):
         names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")
         config = self.execution_config({"windows": {"runner": "windows-latest"}})
-        config.update(moduleManifest="module.json", windowsCheckout={"exclude": []}, additionalSdkVersion="10.0.404")
+        config.update(moduleManifest="module.json", windowsCheckout={"exclude": []}, additionalSdkVersion="11.0.100")
         config["tests"]["additional"] = ["test/Outside.csproj"]
         interfaces = {"ci_outputs": {name: {} for name in (*names, "additional-test-projects")},
                       "prepare_inputs": {name: {} for name in (*names, "additional-test-projects", "additional-sdk-version")},
@@ -312,9 +312,9 @@ class RenderTests(unittest.TestCase):
         prepare = jobs["windows-windows"]["steps"][0]["with"]
         for name in names:
             self.assertEqual("${{ needs.ci.outputs." + name + " }}", prepare[name])
-        self.assertEqual("10.0.404", prepare["additional-sdk-version"])
+        self.assertEqual("11.0.100", prepare["additional-sdk-version"])
         self.assertEqual("${{ needs.ci.outputs.additional-test-projects }}", prepare["additional-test-projects"])
-        self.assertEqual({"additional-sdk-version": "10.0.404"}, renderer.shared_ci_call(config, interfaces)["with"])
+        self.assertEqual({"additional-sdk-version": "11.0.100"}, renderer.shared_ci_call(config, interfaces)["with"])
         del interfaces["prepare_inputs"]["module-authority"]
         with self.assertRaisesRegex(renderer.RenderError, "platform authority"):
             renderer.execution_jobs(config, {}, interfaces)
@@ -337,13 +337,13 @@ class RenderTests(unittest.TestCase):
                          workflow["jobs"]["custom-worker"]["steps"][1]["env"]["HEXALITH_QUALIFICATION_PARAMETERS"])
     def test_manual_qualification_preserves_secrets_runner_and_green_source(self):
         with workspace() as fixture:
-            fixture.document({"solution": "Fixture.slnx", "additionalSdkVersion": "10.0.404", "ciTimeoutMinutes": 180,
+            fixture.document({"solution": "Fixture.slnx", "additionalSdkVersion": "11.0.100", "ciTimeoutMinutes": 180,
                               "jobs": {"azure": MANUAL_JOB,
                                        "windows-tests": {"runner": "windows-latest"}}})
             fixture.cli()
             ci = fixture.yaml(".github/workflows/ci.yml")
             workflow = fixture.yaml(".github/workflows/qualification.yml")
-            expected_arguments = {"additional-sdk-version": "10.0.404", "job-timeout-minutes": 180}
+            expected_arguments = {"additional-sdk-version": "11.0.100", "job-timeout-minutes": 180}
             self.assertEqual(expected_arguments, ci["jobs"]["ci"]["with"])
             self.assertIsNone(ci["on"]["workflow_dispatch"])
             self.assertNotIn("custom-azure", ci["jobs"])

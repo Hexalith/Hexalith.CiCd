@@ -58,11 +58,8 @@ serialized workload.
 Contracts that also declare the explicit native `job-timeout-minutes` override
 retain that override's precedence over `ciTimeoutMinutes`.
 
-`additionalSdkVersion` optionally selects one exact stable SDK through shared
-CI's existing `additional-sdk-version` input. It also reaches independently
-prepared jobs. EventStore needs SDK 10.0.404 for its SDK10 generator-refusal and
-net10.0 reference-pack controls; module actions install no SDK. Use the field
-only after the selected published immutable Builds contract supports it.
+Modules use the .NET 11 SDK selected by their global.json. An optional
+`additionalSdkVersion` selects another exact .NET 11 SDK for prepared jobs.
 
 Hooks are `after-unit-tests`, `after-integration-tests` and `nightly`; their actions
 and custom job actions live at `.github/actions/<name>/action.yml` in the module.

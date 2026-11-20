@@ -261,13 +261,13 @@ class RenderTests(unittest.TestCase):
     def test_manual_qualification_preserves_secrets_runner_and_green_source(self):
         with workspace() as fixture:
             fixture.qualification_contract()
-            fixture.document({"solution": "Fixture.slnx", "additionalSdkVersion": "10.0.404", "ciTimeoutMinutes": 180,
+            fixture.document({"solution": "Fixture.slnx", "additionalSdkVersion": "11.0.100", "ciTimeoutMinutes": 180,
                               "jobs": {"azure": MANUAL_JOB,
                                        "windows-tests": {"runner": "windows-latest"}}})
             fixture.cli()
             ci = fixture.yaml(".github/workflows/ci.yml")
             workflow = fixture.yaml(".github/workflows/qualification.yml")
-            expected_arguments = {"additional-sdk-version": "10.0.404", "job-timeout-minutes": 180}
+            expected_arguments = {"additional-sdk-version": "11.0.100", "job-timeout-minutes": 180}
             self.assertEqual(expected_arguments, ci["jobs"]["ci"]["with"])
             self.assertIsNone(ci["on"]["workflow_dispatch"])
             self.assertNotIn("custom-azure", ci["jobs"])
