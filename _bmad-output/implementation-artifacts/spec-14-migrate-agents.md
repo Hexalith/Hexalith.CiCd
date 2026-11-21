@@ -2,7 +2,7 @@
 title: '14 — Migrate Agents'
 type: 'chore'
 created: '2026-11-16'
-status: 'in-review'
+status: 'done'
 baseline_commit: 'd04c9ab7a8fa43dc6dac1f15d34135aba8e79551'
 route: 'dispatch'
 review_loop_iteration: 1

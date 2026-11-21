@@ -442,3 +442,6 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
   summary: Agents' tests/tooling suite (hook-script failure paths, UI consumer assets, built-package hook) no longer runs in any CI after adoption; decide whether these hook-tooling tests stay local-only (with an owner) or move into a product gate.
   evidence: The delivered after-unit-tests action runs only scripts/check-built-packages.py, and the shared CI and check.py run only .NET projects (verification-gap review, story 14).
+- source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
+  summary: Confirm, by human readback on nuget.org, that the legacy API key behind NUGET_API_KEY is expired or no longer covers Hexalith.Agents* (story 14 review finding BH7).
+  evidence: Two attended probes of nuget.org/account/apikeys opened Trusted Publishing instead; only story 11's 2026-11-16 "expired" record supports the disposition. Agents' NUGET_API_KEY grant and legacy policy 26964 are already removed.
