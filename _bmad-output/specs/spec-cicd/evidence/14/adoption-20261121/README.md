@@ -46,5 +46,59 @@ legacy NuGet policy 26964 and the legacy Zot push.
   `tools/validate.py` on that commit passed with
   `{"global":true,"modules":[…,"Hexalith.Agents",…]}` (log SHA-256
   `fca59a9747d44e4d74bfe4476c7facad66e2675781c8a1e1ebadd6119700c6ff`).
-- Delivery, the post-delivery product fix, credential cleanup and the nightly
-  are pending; this section is updated as each completes.
+- The registration and the docs commit `62dc50b18888be88d9ce27415d22f612c55c50af`
+  were pushed to CiCd `main` with the CiCd-agent profile.
+- Hosted delivery [44886812692](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44886812692)
+  succeeded (validate and deliver green; `failed: false`). It adopted Agents
+  as `3406b3cb1f01e01d07bc71980ff15c24a99a29c5`
+  (`build(cicd): apply 62dc50b1… from Hexalith.CiCd`, parent `0d03363`). The
+  owned files are byte-identical to the render, the Builds gitlink is `v6.4.4`
+  and foreign content is preserved. See
+  [`authenticated-adoption.json`](authenticated-adoption.json).
+- AD-21 step 3 maintainer cleanup, done at once after adoption:
+  - immutable releases enabled ([`post-adoption-github-cleanup.json`](post-adoption-github-cleanup.json));
+    the first readback lagged the 204 PUT, and a delayed readback confirms it;
+  - Agents removed from legacy `NUGET_API_KEY`; it held no other legacy org
+    secret, and the pull grants are preserved
+    ([`legacy-org-secret-cleanup.json`](legacy-org-secret-cleanup.json));
+  - legacy nuget.org policy 26964 deleted, with 28307 and every other policy
+    preserved ([`nuget-legacy-cleanup.json`](nuget-legacy-cleanup.json)). The
+    second deletion dialog was confirmed in the attended browser rather than
+    by the runner; the readback shows the exact result;
+  - legacy Zot push is a bounded no-op, as for the pilots: Agents never had a
+    legacy Zot path or grant ([`zot-legacy-disposition.json`](zot-legacy-disposition.json));
+  - the legacy nuget.org API key's package scope was not observable this
+    session (the API Keys URL opened as Trusted Publishing). Story 11 recorded
+    that key as expired, and Agents can no longer read `NUGET_API_KEY`.
+- Adopted CI [44888639144](https://github.com/Hexalith/Hexalith.Agents/actions/runs/44888639144)
+  passed the guard, restore/build and the five floors, then failed only at the
+  hook, as the simulation predicted. The module-agent fix `6865c6e6` changes
+  only the 39 reviewed version fields. Standalone `check.py` and the hook pass;
+  see [`product-fix-6865c6e6.json`](product-fix-6865c6e6.json).
+- CI [44889942815](https://github.com/Hexalith/Hexalith.Agents/actions/runs/44889942815)
+  on `6865c6e6` is green.
+- The on-demand nightly [44890586692](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44890586692)
+  (dispatched on `main` with `qualify-bump` false, CiCd-agent profile) failed
+  overall on the scan, `publish-ready` and `bump` jobs and on AI.Tools'
+  release. None of these is an Agents row.
+  `tools/nightly_acceptance.py --module Hexalith.Agents` judges Agents
+  **`pass`** with no reasons ([`nightly-acceptance-44890586692.json`](nightly-acceptance-44890586692.json);
+  full output SHA-256 `0c13d1f75caee9b34c0e31ea29173d7598904e4793f5cd6a9e2090e2dc11ab69`):
+  - release [44890634855](https://github.com/Hexalith/Hexalith.Agents/actions/runs/44890634855)
+    succeeded at dispatch head `6865c6e6` with outcome `published` and version
+    `2.0.3`. The full output lists `publication: pending`, but the GitHub
+    release `v2.0.3` is published, immutable and bot-authored, and all six
+    packages list `2.0.3` on nuget.org;
+  - both release CodeQL jobs (C# and JavaScript/TypeScript) succeeded;
+  - Agents' row in the attempt's scan job passes.
+- Matrix audit: Builds `v6.4.4` (`fe68718b`) `test_ci_config`,
+  `test_ci_pipeline` and `test_local_check` ran 114 tests, all OK, with no
+  unittest skips (log SHA-256
+  `17b738f7552195c79c8b292989661be79ad0a21f60662774ed8a606947fb7002`). They
+  include the count-boundary, fail-skips, failure-order, unsupported-policy and
+  renderer-default tests. A first invocation from the wrong directory failed to
+  import a sibling test module (log `141b58be…`) and is not a test result.
+- Still open: Agents `main` keeps the tool-only `package.json`/lock that
+  `05ddee8` restored, together with the legacy semantic-release
+  planner/publisher, the publish/recover/verify scripts and their tooling
+  tests. Their removal awaits a human scope decision.

@@ -1,0 +1,31 @@
+{
+  "schema": "hexalith.story14.nuget-legacy-cleanup.v1",
+  "recorded_at": "2026-11-21T09:24:50.995266+00:00",
+  "result": "pass",
+  "removed_exact_legacy_policy_ids": [
+    26964
+  ],
+  "legacy_policy": {
+    "name": "Hexalith.Agents",
+    "environment": "production",
+    "glob": "*",
+    "workflow": "release.yml"
+  },
+  "preserved_scoped_policy_id": 28307,
+  "all_other_policy_ids_preserved": true,
+  "policy_count_after": 23,
+  "sequence": [
+    "readiness: both 26964 and 28307 present; segment identity verified (nuget-legacy-readiness.json)",
+    "attempt 1: Delete invoked next to Edit-26964; the native confirmation text was observed but the runner's OK lookup was too narrow; a reload dismissed the dialog; 26964 still present",
+    "attempt 2: Delete invoked again (nuget-legacy-begin-delete.json); the runner did not observe or confirm the dialog. The next read-only readback showed 26964 absent, so the dialog was confirmed outside the runner (attended browser)",
+    "verify after reload: 26964 absent, 28307 present, every other policy preserved (nuget-legacy-verify.json)"
+  ],
+  "attempt_records_sha256": {
+    "nuget-legacy-begin-delete-attempt1.json": "13703bb64a762ac8dbceddb7f4c3cdc7d46198e28fba3dae55a29a6a44b946d1",
+    "nuget-legacy-confirm-ok-attempt1.json": "303e7b88a855290b9eb58a709b3aaf4b74ca7f1e62fcd1a7a6035f9808ca9a5c",
+    "nuget-legacy-reload-attempt1.json": "fe18e2b4b94258e5b5d09e09cd6ca5ea090d7addd45b3f90c37d95d4ca3ab6c1",
+    "nuget-legacy-verify-attempt1.json": "dc3dca0781862c2446fb4a917a18b8d647b4903a3ba45ab1cbd5e636daebe081",
+    "nuget-legacy-confirm-ok-attempt2.json": "65b7b2099f23caefbde2a1db502ac6fed914d67978db73e773d0301de5ec5f03"
+  },
+  "credentials_read_or_entered": false
+}

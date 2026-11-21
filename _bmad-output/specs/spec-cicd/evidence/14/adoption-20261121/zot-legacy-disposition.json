@@ -1,0 +1,23 @@
+{
+  "schema": "hexalith.story14.zot-legacy-disposition.v1",
+  "recorded_at": "2026-11-21T09:24:50.995412+00:00",
+  "result": "bounded no-op",
+  "basis": "same disposition as the story 11 pilots (evidence/11/zot-pilot-legacy-disposition.md)",
+  "observations": {
+    "legacy_org_secrets_HEXALITH_ZOT_API_KEY_and_USERNAME_select_agents": false,
+    "agents_repository_action_secrets": [],
+    "agents_production_environment_secrets": [],
+    "agents_github_history_zot_or_registry_or_docker_push_references": "none in 33 commits touching .github",
+    "agents_container_inputs": "no Dockerfile or compose files",
+    "rendered_registry": false,
+    "write_capable_identities_on_agents_namespaces": [
+      "jpiquot",
+      "jpiquot@itaneo.com (human global admin; also adminPolicy)",
+      "hexalith-agents-publish (new, read/create/update)"
+    ]
+  },
+  "limits": [
+    "Global administrator accounts are not revoked by a namespace policy edit; they remain the maintainer's.",
+    "No administrator, key or other module's grant was changed."
+  ]
+}

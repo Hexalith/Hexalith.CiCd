@@ -1,0 +1,37 @@
+{
+  "schema": "hexalith.story14.post-delivery-product-fix.v1",
+  "recorded_at": "2026-11-21",
+  "result": "pass",
+  "credential_profile": "/home/administrator/.config/gh-module-agent",
+  "base": "3406b3cb1f01e01d07bc71980ff15c24a99a29c5",
+  "head": "6865c6e6e4aad374683a9461eac2ae5c112e471a",
+  "message": "fix(packaging): review consumer assets for EventStore 5.4.0",
+  "cause": "adopted CI run 44888639144 failed only in 'After unit tests hook': consumer executable asset baseline changed (log SHA-256 8dc5c24eda05469220c9a621b547584e0def294b2358157573e9ec3b906b13e1)",
+  "change": {
+    "path": "eng/consumer-executable-assets.json",
+    "blob_before": "e3f4f873aaca499a5ab611e1960de368f5ccd53e",
+    "blob_after": "22f6b75669c243dd1261a205ec4d6d88764a9b13",
+    "unique_rows": 11,
+    "occurrences": 39,
+    "versions": {"Hexalith.EventStore.*": "5.3.0 -> 5.4.0", "Hexalith.FrontComposer.Shell": "6.0.0 -> 6.0.1"},
+    "only_version_fields_changed": true,
+    "derived_from": "the hook's own added/removed diff; each pair asserted identical in kind, package, path and SHA-256"
+  },
+  "standalone_check": {
+    "clone": "fresh standalone clone of delivered main; only the direct references/Hexalith.Builds dependency initialized at v6.4.4 (fe68718b)",
+    "command": "python3 references/Hexalith.Builds/check.py (run-with-temp)",
+    "exit": 0,
+    "guard": "CI/CD owned content and enabled actions match; guard policy passed.",
+    "suites_passed_zero_failed_zero_skipped": {"Client": 7, "Contracts": 2005, "Server": 2121, "Domain": 1086, "UI": 1362},
+    "floors": {"Contracts": 529, "Client": 6, "Domain": 787, "Server": 549, "UI": 1073},
+    "log_sha256": "0ffef24ff7b136f1ad3a670c6c0557d2766ea6d1314cc33f09ff44b576600a59"
+  },
+  "hook": {
+    "command": "python3 scripts/check-built-packages.py (the after-unit-tests action's fixed command, on check.py's Release output)",
+    "exit": 0,
+    "result": "Validated six built packages and seven isolated package consumers.",
+    "log_sha256": "b1d54c163620ce1e9150b98657fb5e0ec226f70c28cbf78b0bfbb8f6c3a9aba6"
+  },
+  "worktree_clean_after": true,
+  "push": {"pre_push_main": "3406b3cb1f01e01d07bc71980ff15c24a99a29c5", "readback_main": "6865c6e6e4aad374683a9461eac2ae5c112e471a", "fast_forward": true}
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "hexalith.story14.authenticated-adoption.v1",
+  "result": "pass",
+  "candidate": "62dc50b18888be88d9ce27415d22f612c55c50af",
+  "delivery_run": 44886812692,
+  "delivery_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44886812692",
+  "delivery_report": {"failed": false, "global": true, "failures": []},
+  "modules": {
+    "Hexalith.Agents": {
+      "accepted_sha": "62dc50b18888be88d9ce27415d22f612c55c50af",
+      "advancement": "advanced",
+      "application": "pushed",
+      "adoption_sha": "3406b3cb1f01e01d07bc71980ff15c24a99a29c5",
+      "parent": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+      "message": "build(cicd): apply 62dc50b18888be88d9ce27415d22f612c55c50af from Hexalith.CiCd",
+      "author": "github-actions[bot]",
+      "workflows": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+      "owned_files_byte_identical_to_render": [".github/workflows/ci.yml", ".github/workflows/release.yml", ".github/hexalith-ci.json", ".github/dependabot.yml"],
+      "builds_gitlink": "fe68718b6c074a6b500a7191e3554a1d39e17688 (v6.4.4)",
+      "builds_gitmodules_section": "path references/Hexalith.Builds, url https://github.com/Hexalith/Hexalith.Builds.git; 12 foreign sections preserved",
+      "instruction_blocks": {"AGENTS.md": 1, "CLAUDE.md": 1, ".github/copilot-instructions.md": 1},
+      "deny_entries": ["Edit(/.github/workflows/**)", "Edit(/.github/hexalith-ci.json)", "Edit(/.github/dependabot.yml)", "Edit(/references/Hexalith.Builds/**)"],
+      "actions_preserved": [".github/actions/after-unit-tests/action.yml"],
+      "commitlint_config_removed": true,
+      "releaserc_removed": true,
+      "bmad_testarch_ci_removed": true,
+      "package_json": "tool-only stub remains (absent-json selectors satisfied); deletion is the module-agent product step",
+      "perimeter_match": true
+    }
+  }
+}
