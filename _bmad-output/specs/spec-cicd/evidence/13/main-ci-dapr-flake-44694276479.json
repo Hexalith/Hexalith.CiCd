@@ -1,0 +1,16 @@
+{
+  "schema": "hexalith.story13.hosted-ci.v1",
+  "run_id": 44694276479,
+  "head": "3b7705458eb4c21c5bfcb19fd37c8bc2022f45a5",
+  "event": "push",
+  "attempt_1": {
+    "result": "fail",
+    "failed_step": "Stage 4 environment setup",
+    "result_line": "dapr init --runtime-version 1.19.1 failed (1): host port 50006 already in use"
+  },
+  "rerun": {
+    "profile": "/home/administrator/.config/gh",
+    "command": "gh run rerun 44694276479 --failed",
+    "result_line": "queued maintainer rerun of failed jobs"
+  }
+}

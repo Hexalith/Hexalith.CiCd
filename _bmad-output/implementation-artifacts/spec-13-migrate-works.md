@@ -60,7 +60,7 @@ context:
 - [x] `_bmad-output/specs/spec-cicd/evidence/13/` — provision AD-21 in order for Hexalith.Works (App selection, stale drafts/tags/CodeQL, exact `main`/`v*` rulesets, main-only `hexalith-release` with this module's Zot identity, additive nuget.org policy for the five package IDs, scans off, exact publish switch, 90-day retention, org grants). Record live readbacks.
 - [x] `_bmad-output/specs/spec-cicd/gate-classification.md` — record the three Works verdicts: delete CI/YAML/story lint; keep source-identity and R1–R11 as product actions.
 - [x] Works product tree — add `.github/actions/` for source-identity and R1–R11; delete YAML/story/workflow-text tests and tool-only npm/releaserc; leave Explicit Platform-lane facts in `IntegrationTests`; do not edit owned files. Apply the approved preparation proof before any module-agent push.
-- [ ] `setup/Hexalith.Works.yml`, `rendered/Hexalith.Works/`, `rendered/Hexalith.Works.perimeter.json`, `references/Hexalith.Works` gitlink — after story 11 night acceptance, register `Hexalith.Works.slnx`, Platform/Parties submodules, dapr, extra SDK, CodeQL csharp/python, source-identity hook, and the 180-minute Linux R1–R11 job; validate; commit cause and render together; delivery adopts.
+- [x] `setup/Hexalith.Works.yml`, `rendered/Hexalith.Works/`, `rendered/Hexalith.Works.perimeter.json`, `references/Hexalith.Works` gitlink — after story 11 night acceptance, register `Hexalith.Works.slnx`, Platform/Parties submodules, dapr, extra SDK, CodeQL csharp/python, source-identity hook, and the 180-minute Linux R1–R11 job; validate; commit cause and render together; delivery adopts.
 - [ ] `evidence/13/` — authenticate adoption, enable immutable releases, remove other nuget.org policies and legacy secrets/NUGET_API_KEY/Zot; prove green adopted CI, standalone `check.py`, and a nightly run (CAP-13) after adoption (release or nothing-to-release).
 
 **Acceptance Criteria:**
@@ -72,13 +72,22 @@ context:
 
 ## Implementation Notes
 
-- Story 11 checkpoint is accepted. Works live `main` already carries product
-  prep at `4053907d5764bc8833c95dd79ea337bc8faba159`; the CiCd gitlink already
-  records that commit. Registration files are local: `setup/Hexalith.Works.yml`
-  plus `rendered/Hexalith.Works/**` and `rendered/Hexalith.Works.perimeter.json`.
-  See [registration-20261119.md](../specs/spec-cicd/evidence/13/registration-20261119.md).
-  App delivery, immutable-release/legacy-grant cleanup, hosted CI and CAP-13
-  remain unauthenticated.
+- Story 11 checkpoint is accepted. Registration landed on CiCd `main` in
+  `74ca332e839fb37d41354f932a28d3d5e98242b8`. Hosted delivery
+  [44616302631](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44616302631)
+  adopted Works as `3996de28eecf32972e8469cbcd7426eaa56f24ab`
+  (`build(cicd): apply a7aab9c52d382202d071fc2b208ab3f4303a26e0 from Hexalith.CiCd`).
+  Immutable releases are enabled. See
+  [authenticated-adoption.json](../specs/spec-cicd/evidence/13/authenticated-adoption.json)
+  and [post-adoption-github-cleanup.json](../specs/spec-cicd/evidence/13/post-adoption-github-cleanup.json).
+- Adopted CI [44621765615](https://github.com/Hexalith/Hexalith.Works/actions/runs/44621765615)
+  failed Stage 2 NU1109 (Tenants 8.0.2 vs EventStore pin 5.2.0). Product fix
+  branch `fix/eventstore-catalog-alignment` / PR
+  https://github.com/Hexalith/Hexalith.Works/pull/18 pins EventStore 5.3.1 and
+  rebinds source-identity to gitlinks `8bfc4ca…` / `df1a0e5…`. Isolated
+  `check.py` exit 0 on `d3a11121cbdee345d5f12151e5a2b91338aaae62`
+  ([product-restore-fix-20261119.md](../specs/spec-cicd/evidence/13/product-restore-fix-20261119.md)).
+  Hosted green CI, nuget.org/legacy-secret cleanup, and CAP-13 remain open.
 
 ## Spec Change Log
 

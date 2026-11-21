@@ -1,0 +1,37 @@
+{
+  "schema": "hexalith.story13.hosted-ci.v1",
+  "run_id": 44719604065,
+  "url": "https://github.com/Hexalith/Hexalith.Works/actions/runs/44719604065",
+  "head": "10fea9ad4bfa2acee17da44e8eb6c9b6321589d1",
+  "pr": 23,
+  "event": "pull_request",
+  "attempt": 2,
+  "result": "pass",
+  "result_line": "PR 23 green: stages 1-4, After unit tests hook, custom-platform-parity (attempt 2 after recovery WaitAsync flake)",
+  "jobs": {
+    "shared_ci": {
+      "name": "ci / Build and tests",
+      "id": 136254518851,
+      "conclusion": "success",
+      "stages": [
+        "Stage 1",
+        "Stage 2",
+        "Stage 3",
+        "Stage 4 environment setup",
+        "After unit tests hook",
+        "Stage 4 integration tests"
+      ]
+    },
+    "platform_parity": {
+      "name": "custom-platform-parity",
+      "id": 136254517120,
+      "conclusion": "success",
+      "started_at": "2026-11-20T11:18:04Z",
+      "completed_at": "2026-11-20T12:05:24Z",
+      "bind_published_builds": "success",
+      "prepare": "Hexalith.Builds/Github/prepare@v6.4.2 success",
+      "action": "./.github/actions/platform-parity success"
+    }
+  },
+  "observed_at": "2026-11-20T12:09:05Z"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "hexalith.story13.checkpy.v1",
+  "observed_at_start": "2026-11-19T21:52:59Z",
+  "observed_at_end": "2026-11-19T21:54:04Z",
+  "command": "run-with-temp python3 references/Hexalith.Builds/check.py",
+  "workdir": "/home/administrator/projects/hexalith/works-story-13",
+  "head": "d3a11121",
+  "exit": 1,
+  "stdout_sha256": "045654fd874bf8bc74f8f08d30ea327719ffd87f7a68e463223c207095be2782",
+  "stderr_sha256": "d0a303c46d0ae6e0a25ee31bab263500eaa69f013d44a1c8875f1d2ddf83cecb",
+  "stdout_bytes": 24709,
+  "stderr_bytes": 417,
+  "stdout_tail": "utedApplicationBuilder, string, string)' is obsolete: 'Use AddDotnetProject(name, path) from the Aspire.Hosting.Dotnet package instead.' [/home/administrator/projects/hexalith/works-story-13/tests/Hexalith.Works.IntegrationTests/Hexalith.Works.IntegrationTests.csproj]\n/home/administrator/projects/hexalith/works-story-13/tests/Hexalith.Works.IntegrationTests/WorksPlatformHaPipelineSmokeTests.cs(150,53): warning CS0618: 'ProjectResourceBuilderExtensions.AddProject(IDistributedApplicationBuilder, string, string)' is obsolete: 'Use AddDotnetProject(name, path) from the Aspire.Hosting.Dotnet package instead.' [/home/administrator/projects/hexalith/works-story-13/tests/Hexalith.Works.IntegrationTests/Hexalith.Works.IntegrationTests.csproj]\n/home/administrator/projects/hexalith/works-story-13/tests/Hexalith.Works.IntegrationTests/WorksPlatformCompositionGuardTests.cs(275,17): warning CS0618: 'ProjectResourceBuilderExtensions.AddProject(IDistributedApplicationBuilder, string, string)' is obsolete: 'Use AddDotnetProject(name, path) from the Aspire.Hosting.Dotnet package instead.' [/home/administrator/projects/hexalith/works-story-13/tests/Hexalith.Works.IntegrationTests/Hexalith.Works.IntegrationTests.csproj]\n/home/administrator/.dotnet/sdk/11.0.100/Microsoft.Common.CurrentVersion.targets(4934,5): error MSB3026: Could not copy \"obj/Release/net11.0/Hexalith.Builds.Tooling.dll\" to \"bin/Release/net11.0/Hexalith.Builds.Tooling.dll\". Beginning retry 1 in 1000ms. The process cannot access the file '/home/administrator/projects/hexalith/works-story-13/references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/obj/Release/net11.0/Hexalith.Builds.Tooling.dll' because it is being used by another process.  [/home/administrator/projects/hexalith/works-story-13/references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Hexalith.Builds.Tooling.csproj]\n    17 Warning(s)\n    1 Error(s)\n\nTime Elapsed 00:00:35.53\nCI/CD owned content and enabled actions match; guard policy passed.\n",
+  "stderr_tail": "dotnet build Hexalith.Works.slnx --no-restore -noAutoResponse -p:Configuration=Release -warnaserror -p:UseHexalithProjectReferences=false -p:ShouldUnsetParentConfigurationAndPlatform=false -p:NuGetAudit=false -p:RestoreConfigFile=/home/administrator/projects/hexalith/works-story-13/references/Hexalith.Builds/NuGet.ci.Config -p:EnableNETAnalyzers=true -p:RunAnalyzers=true -p:RunAnalyzersDuringBuild=true failed (1)\n"
+}

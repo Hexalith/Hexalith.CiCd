@@ -1,0 +1,26 @@
+{
+  "schema": "hexalith.story13.authenticated-adoption.v1",
+  "result": "pass",
+  "candidate": "a7aab9c52d382202d071fc2b208ab3f4303a26e0",
+  "delivery_run": 44616302631,
+  "delivery_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44616302631",
+  "modules": {
+    "Hexalith.Works": {
+      "accepted_sha": "a7aab9c52d382202d071fc2b208ab3f4303a26e0",
+      "advancement": "advanced",
+      "application": "pushed",
+      "adoption_sha": "3996de28eecf32972e8469cbcd7426eaa56f24ab",
+      "parent": "4053907d5764bc8833c95dd79ea337bc8faba159",
+      "message": "build(cicd): apply a7aab9c52d382202d071fc2b208ab3f4303a26e0 from Hexalith.CiCd",
+      "author": "github-actions[bot]",
+      "workflows": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+      "actions_preserved": [
+        ".github/actions/after-unit-tests/action.yml",
+        ".github/actions/platform-parity/action.yml"
+      ],
+      "commitlint_config_removed": true,
+      "bmad_testarch_ci_removed": true,
+      "perimeter_match": true
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "hexalith.story13.hosted-ci.v1",
+  "run_id": 44733401337,
+  "url": "https://github.com/Hexalith/Hexalith.Works/actions/runs/44733401337",
+  "head": "8c9df9bc8e04fd15a8b69fe0f01cb56cb1f82853",
+  "event": "push",
+  "attempt": 1,
+  "result": "fail",
+  "failed_step": "custom-platform-parity / Hexalith.Builds/Github/prepare@v6.4.4",
+  "result_line": "ambient producer import overrides are forbidden before preparation; bind step set HexalithBuildsPublishedToolRoot then v6.4.4 ensure_for_job refused it",
+  "jobs": {
+    "shared_ci": {
+      "name": "ci / Build and tests",
+      "id": 136278605638,
+      "conclusion": "success"
+    },
+    "platform_parity": {
+      "name": "custom-platform-parity",
+      "id": 136282511905,
+      "conclusion": "failure",
+      "started_at": "2026-11-20T12:21:36Z",
+      "completed_at": "2026-11-20T12:22:27Z"
+    }
+  }
+}

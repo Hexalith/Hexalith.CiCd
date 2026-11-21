@@ -1,0 +1,28 @@
+{
+  "schema": "hexalith.story13.ci-true.v1",
+  "observed_at_start": "2026-11-20T15:38:26Z",
+  "observed_at_end": "2026-11-20T15:40:42Z",
+  "product_head": "38c74370750ed8bdbb645165a763f7ee83cbc1c7",
+  "platform_gitlink": "a7c8e1c806d26b9a11919fbd6568366ab76f3ce7",
+  "eventstore_sdk": [
+    "Hexalith.EventStore.Aspire/5.4.0",
+    "Hexalith.EventStore.Client/5.4.0",
+    "Hexalith.EventStore.Contracts/5.4.0",
+    "Hexalith.EventStore.DomainService/5.4.0",
+    "Hexalith.EventStore.Server/5.4.0",
+    "Hexalith.EventStore.ServiceDefaults/5.4.0"
+  ],
+  "restore_exit": 0,
+  "build_exit": 0,
+  "solution_restore_exit": 0,
+  "apphost_restore_exit": 0,
+  "apphost_build_exit": 0,
+  "guard_fired": false,
+  "nu1605": false,
+  "nu1109": false,
+  "server_540": true,
+  "log_sha256": "fec12bec9650b48de70887e5293aea53775d2d1399252dc945c45a3b2aa59730",
+  "bytes": 17713,
+  "result": "pass",
+  "result_line": "CI=true Composition restore+build, Works slnx restore, and Platform apphost restore+build; EventStore.Server/5.4.0 in apphost assets; guard did not fire"
+}

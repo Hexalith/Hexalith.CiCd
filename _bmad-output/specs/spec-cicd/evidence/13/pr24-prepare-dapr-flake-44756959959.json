@@ -1,0 +1,26 @@
+{
+  "schema": "hexalith.story13.hosted-ci.v1",
+  "run_id": 44756959959,
+  "url": "https://github.com/Hexalith/Hexalith.Works/actions/runs/44756959959",
+  "head": "2b883135255b7c48066504be272ba2b6ad6f6e31",
+  "pr": 24,
+  "event": "pull_request",
+  "attempt": 1,
+  "result": "fail",
+  "failed_step": "custom-platform-parity / prepare@v6.4.4 / dapr init",
+  "result_line": "shared stages 1-4 and After unit tests hook succeeded; prepare Dapr flake: port 59090 already in use during dapr init --runtime-version 1.19.1",
+  "jobs": {
+    "shared_ci": {
+      "name": "ci / Build and tests",
+      "id": 136359097795,
+      "conclusion": "success"
+    },
+    "platform_parity": {
+      "name": "custom-platform-parity",
+      "id": 136363601959,
+      "conclusion": "failure",
+      "started_at": "2026-11-20T14:56:16Z",
+      "completed_at": "2026-11-20T14:59:24Z"
+    }
+  }
+}

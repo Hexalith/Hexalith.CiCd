@@ -1,0 +1,15 @@
+{
+  "schema": "hexalith.story13.hosted-ci.v1",
+  "run_id": 44740335940,
+  "url": "https://github.com/Hexalith/Hexalith.Works/actions/runs/44740335940",
+  "head": "80314acfdfef634eeca9c50ec7700f902f765a15",
+  "event": "push",
+  "result": "fail",
+  "failed_step": "custom-platform-parity / verify-works-host",
+  "result_line": "prepare@v6.4.4 succeeded; Works EventStore pin 5.3.1 differs from Builds catalog 5.4.0",
+  "jobs": {
+    "shared_ci": {"name": "ci / Build and tests", "id": 136302120232, "conclusion": "success"},
+    "platform_parity": {"name": "custom-platform-parity", "id": 136305987804, "conclusion": "failure"}
+  },
+  "artifact": {"name": "works-platform-parity", "id": 14631611143, "digest": "sha256:96662ac0325a9fd25bd7872ae589ec17902bd1f23d6147ec65ea968b94c2a718"}
+}

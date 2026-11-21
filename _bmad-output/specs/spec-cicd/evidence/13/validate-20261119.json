@@ -1,0 +1,22 @@
+{
+  "schema": "hexalith.story13.validate.v1",
+  "observed_at_start": "2026-11-19T21:11:27Z",
+  "observed_at_end": "2026-11-19T21:26:15Z",
+  "command": "run-with-temp uv run --locked --script tools/validate.py",
+  "exit": 0,
+  "elapsed_ms": 887753,
+  "verdict": {
+    "global": true,
+    "modules": [
+      "Hexalith.AI.Tools",
+      "Hexalith.Commons",
+      "Hexalith.Conversations",
+      "Hexalith.McpCli",
+      "Hexalith.PolymorphicSerializations",
+      "Hexalith.Works"
+    ]
+  },
+  "result": "global true; module Hexalith.Works passed; live-main after-unit-tests and platform-parity actions exist",
+  "stderr_sha256": "79a1999102d4a71f4afe0289f703aa4bb2d04cc74ed3a23e31ed80f51decf9d3",
+  "stderr_bytes": 33780
+}

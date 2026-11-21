@@ -22,4 +22,12 @@ is not given a skip list.
 writing `rendered/Hexalith.Works/**` and `rendered/Hexalith.Works.perimeter.json`.
 The CI caller forwards `additional-sdk-version` and hosts `custom-platform-parity`
 on `ubuntu-latest` with a 180-minute timeout and independent Dapr job setup.
-No `qualification.yml` (the extra job is CI-triggered).
+No `qualification.yml` (the extra job is CI-triggered). Local commit
+`74ca332e839fb37d41354f932a28d3d5e98242b8` holds setup plus render (not pushed).
+
+## Validate
+
+`run-with-temp uv run --locked --script tools/validate.py` exit 0:
+`{"global":true,"modules":[...,"Hexalith.Works"]}`. Receipt:
+[validate-20261119.json](validate-20261119.json). Delivery, hosted CI and the
+post-adoption nightly are not part of this local candidate.

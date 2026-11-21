@@ -1,0 +1,45 @@
+{
+  "schema": "hexalith.story13.hosted-ci.v1",
+  "run_id": 44744769834,
+  "url": "https://github.com/Hexalith/Hexalith.Works/actions/runs/44744769834",
+  "head": "878b51be8aa6eda31db7062597755250925d62bb",
+  "pr": 24,
+  "event": "pull_request",
+  "attempt": 1,
+  "result": "fail",
+  "failed_step": "custom-platform-parity / platform-file-host-release",
+  "result_line": "prepare@v6.4.4 succeeded; NU1605 CommunityToolkit.Aspire.Hosting.Dapr 17.0.0-beta.1078 (Composition/catalog) vs 17.0.0-beta.1052 (Platform 824a89f5 apphost)",
+  "jobs": {
+    "shared_ci": {
+      "name": "ci / Build and tests",
+      "id": 136317139323,
+      "conclusion": "success",
+      "stages": [
+        "Stage 1",
+        "Stage 2",
+        "Stage 3",
+        "Stage 4 environment setup",
+        "After unit tests hook",
+        "Stage 4 integration tests"
+      ]
+    },
+    "platform_parity": {
+      "name": "custom-platform-parity",
+      "id": 136321061355,
+      "conclusion": "failure",
+      "started_at": "2026-11-20T13:37:25Z",
+      "completed_at": "2026-11-20T13:46:48Z",
+      "prepare": "Hexalith.Builds/Github/prepare@v6.4.4 success"
+    }
+  },
+  "artifact": {
+    "name": "works-platform-parity",
+    "id": 14632908371,
+    "digest": "sha256:7cdcaf82ab1db802f9e20a140e3a7ed814dcadfc42ff91f0988a75a70591e72d",
+    "platform_file_host_release_log_sha256": "af8d314c7111837990912eb652bd44306b71b753c14f74a02e6ff2d739a5dc2e"
+  },
+  "platform_gitlink": "824a89f59af0d6139eb96c288423c804edfdd3d1",
+  "builds_gitlink": "fe68718b6c074a6b500a7191e3554a1d39e17688",
+  "catalog_dapr": "17.0.0-beta.1078",
+  "apphost_dapr": "17.0.0-beta.1052"
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "hexalith.story13.checkpy.v1",
+  "observed_at_start": "2026-11-19T21:45:03Z",
+  "observed_at_end": "2026-11-19T21:45:25Z",
+  "command": "run-with-temp clone Hexalith.Works@3996de28; submodule update --init references/Hexalith.Builds; python3 references/Hexalith.Builds/check.py",
+  "exit": 1,
+  "elapsed_ms": 21813,
+  "stdout_sha256": "d3c2e598d3752739643888d45910692d30d64ee3c6d6bb06337b8b51b3b8d032",
+  "stderr_sha256": "82fe607522aa53fdc0b577c5a7957db97fbcecbd799ef2140a87d5c706ec4303",
+  "stdout_bytes": 146,
+  "stderr_bytes": 397,
+  "stdout_tail": "head 3996de28eecf32972e8469cbcd7426eaa56f24ab\nSubmodule path 'references/Hexalith.Builds': checked out '8ad2c2285e2d0cec0a173882b3a3a926d555fe48'\n",
+  "stderr_tail": "Submodule 'Hexalith.Builds' (https://github.com/Hexalith/Hexalith.Builds.git) registered for path 'references/Hexalith.Builds'\nCloning into '/tmp/hexalith-job.zXCDajhW/Hexalith.Works/references/Hexalith.Builds'...\nguard: references/Hexalith.Platform: initialize the required separate submodule checkout at its committed pin\nCI/CD is owned by Hexalith.CiCd. Fix the product code, not the pipeline.\n"
+}
