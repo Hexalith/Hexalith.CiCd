@@ -1,0 +1,111 @@
+{
+  "schema": "hexalith.story14.removed-runners.v1",
+  "recorded_at": "2026-11-21",
+  "reason": "AGENTS.md Evidence rule: code that tests or procedures execute lives under tools/, never under _bmad-output/; docs/pre-adoption-publication.md names no Agents runners (review finding BH10)",
+  "last_present_in": "2fa79dd7add4944e16723faba58fc000cd784401",
+  "recover_with": "git show <last_present_in>:_bmad-output/specs/spec-cicd/evidence/14/<path>",
+  "runners": [
+    {
+      "path": "local-implementation/capture-final-candidates.py",
+      "git_blob": "e3c5f0672bf9f1f7b24bbf9f00600510de92343c",
+      "sha256": "e48d3626f51b3773d59a9c2d91a41ed54207f38fc1fc8ab799e1c840b29adf96",
+      "bytes": 1499
+    },
+    {
+      "path": "local-implementation/check-local-boundaries.py",
+      "git_blob": "a7ea6fb92642ce4364d984041ecc806f1c2fe697",
+      "sha256": "ecd18ce3200d0bf1051982abb5c7874fff1c5117f0d8c0d2bfaff45c89a0a09c",
+      "bytes": 2613
+    },
+    {
+      "path": "local-implementation/discover-local.py",
+      "git_blob": "88b28a5cbad06dae1789310fa18fc6409551669d",
+      "sha256": "90877681aa0ac475b124aaec93f20503d6c5a54bce12677251f1ff6ca0cca969",
+      "bytes": 1498
+    },
+    {
+      "path": "local-implementation/parent-verification/verify_broader.py",
+      "git_blob": "c32004d0821f24741b243aa74bcc390ba82b846d",
+      "sha256": "81b2d1c1df21b868c5f5c9455daa21491222852006fdc808c917d6ec569f475a",
+      "bytes": 2193
+    },
+    {
+      "path": "local-implementation/qualify-local.py",
+      "git_blob": "433e2c570125973e9a9a289719e6335d92058c9c",
+      "sha256": "c0f3812029e1fa8c30dcd2eb487bfe0659cbe8a7f2de3647168e73cc1858e1b4",
+      "bytes": 4124
+    },
+    {
+      "path": "local-readiness-20261116/qualify.py",
+      "git_blob": "e5d2202ca4a0d1f73fd12d9defd64b8409b955e9",
+      "sha256": "203d9210eb6a73557447c6b6928e2dbc592d6cfc9500d9d754c70bc0cbf86f64",
+      "bytes": 3087
+    },
+    {
+      "path": "local-readiness-20261116/record-readiness.py",
+      "git_blob": "a3d1f80875c61ebba93762ae89340abb90b3af77",
+      "sha256": "2abda1d64a4f9427779bbec470c43ed937ac11ff0a4c247c4561ff0389e6f25c",
+      "bytes": 4596
+    },
+    {
+      "path": "local-readiness-20261116/scan-local-snapshot.py",
+      "git_blob": "97b6b31656160541c58de9484197deb84eb615df",
+      "sha256": "d929afde563329603cc16f2d0abb34e02be2ce5afa7c850bd98ef4e354fcb491",
+      "bytes": 4863
+    },
+    {
+      "path": "local-resume-20261117/qualify.py",
+      "git_blob": "df21223755a40e0f88134461b0f3109a80c4face",
+      "sha256": "bb45e767df271a86508ff942ab61077de3f378282d7e9680293de5a8e5303851",
+      "bytes": 5251
+    },
+    {
+      "path": "local-resume-20261117/scan-local-snapshot.py",
+      "git_blob": "97b6b31656160541c58de9484197deb84eb615df",
+      "sha256": "d929afde563329603cc16f2d0abb34e02be2ce5afa7c850bd98ef4e354fcb491",
+      "bytes": 4863
+    },
+    {
+      "path": "planning-preflight.py",
+      "git_blob": "583a17ea135ec6ebc789e4f7c52e92ec08585f92",
+      "sha256": "02cf8e69c42f0066d1d8b9c00f0b52742bca25d693fef5c9be5d10e13babb309",
+      "bytes": 4574
+    },
+    {
+      "path": "prepare-push-20261117/qualify-prepare-push.py",
+      "git_blob": "6bb70a3d32237164e38bdaa437c39f46d66fbf3a",
+      "sha256": "0b369c34181abcc94ebc564a515349ea681bc845ace6b673dc00ca9391bb16a1",
+      "bytes": 10326
+    },
+    {
+      "path": "publication/push-qualified.py",
+      "git_blob": "9df5321ec16e14a2253699f56df729980c9106fa",
+      "sha256": "0d74c082503a7179c6a2cf02d7f5124b6bb6f1e518f4e72a511d640bf012c3a2",
+      "bytes": 4216
+    },
+    {
+      "path": "publication/qualify-final-root.py",
+      "git_blob": "292fcc00b10b31b0f083b29ba15b91731aa02b20",
+      "sha256": "172c5cf6c026b11e89e033ee27ad5019597dad732896effba32fe803d83ff7aa",
+      "bytes": 4347
+    },
+    {
+      "path": "publication/qualify-publication.py",
+      "git_blob": "49a15b9f485809649737c4105f585d5d28c44586",
+      "sha256": "d97454497e6a711c5c51919c7ff907fcd7fd649616ae5b30a5903e0dbd541831",
+      "bytes": 6658
+    },
+    {
+      "path": "publication/qualify-root.py",
+      "git_blob": "f5aee83605bdc3646cf50f15bf73471bae5f82d2",
+      "sha256": "43acc0ce2b6c2d6dfa6b0b9cea4996aaa42012ba04345aa338d821657a33c876",
+      "bytes": 2439
+    },
+    {
+      "path": "publication/validate-messages.py",
+      "git_blob": "cbdc510535cb040874fb4ada7ae2490b98f7cc98",
+      "sha256": "812087a701117eca087415c9845bc57ffae7ab9db76eb984b723d84970e7dbeb",
+      "bytes": 2955
+    }
+  ]
+}

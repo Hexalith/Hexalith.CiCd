@@ -2,10 +2,10 @@
 title: '14 — Migrate Agents'
 type: 'chore'
 created: '2026-11-16'
-status: 'in-progress'
+status: 'in-review'
 baseline_commit: 'd04c9ab7a8fa43dc6dac1f15d34135aba8e79551'
 route: 'dispatch'
-review_loop_iteration: 0
+review_loop_iteration: 1
 context:
   - '{project-root}/_bmad-output/specs/spec-cicd/evidence/14/planning.md'
 ---
@@ -68,6 +68,7 @@ context:
 
 ## Implementation Notes
 
+- 2026-11-21 — Human decision ("apply recommended") on review finding BH2+EC4 (intent_gap). Agents' consumer executable asset policy stops comparing versions of Builds-catalog (non-Agents) packages. They map to a placeholder, as Agents' own versions already map to `$produced`. Package, path, kind and SHA-256 are still compared, so any changed bytes or paths still fail. The baseline is regenerated once. The adoption is not reverted. The same decision approves applying the 13 review patches (Builds tests and fixtures, Agents product fixes, CiCd records); see the Review Triage Log.
 - 2026-11-21 — Task 4 completed. Module-agent commit `2b212567` (from fresh `main` `3bfd86a9`) removes the legacy semantic-release toolchain: root `package.json`/lock, the `eng/*.mjs` planner and publisher, the publish, recover, GitHub-release, release-source, pack and NuGet-publication scripts, and their eight tooling tests. CONTRIBUTING is updated, and three pack-only helpers are trimmed from `release_package_inventory.py`. Everything the hook and the .NET tests use is kept. `check.py` (2005/7/1086/2121/1362, zero skips), the hook and the Node tooling tests pass. The Python tooling suite's only failures are in `story_59_verifier_test.py`, identical on untouched `main` and outside hosted CI. CI 44899631836 is green. See [`../specs/spec-cicd/evidence/14/adoption-20261121/legacy-release-toolchain-removal-2b212567.json`](../specs/spec-cicd/evidence/14/adoption-20261121/legacy-release-toolchain-removal-2b212567.json).
 - 2026-11-21 — Human decision ("apply recommended") for reopened task 4: remove Agents' whole legacy release toolchain in one module-agent product commit from freshly fetched `main`. That covers the tool-only root `package.json`/`package-lock.json`, the semantic-release planner and publisher, the legacy publish/recover/GitHub-release verification scripts, their tooling tests and the contributor instructions for them. First map dependencies so that everything the `after-unit-tests` hook and product tests use stays. Verify with `check.py`, the hook and the remaining tooling tests before pushing. No owned-file edits, nested initialization or weakened product checks.
 - 2026-11-21 — Adoption completed under the "apply recommended" decision. AD-21 step 1 was provisioned in order with the maintainer profile: App selection verified; three unmarked legacy drafts, five package-less tags and every legacy CodeQL analysis deleted; exact `main`/`v*` rulesets; main-only `hexalith-release`; own Zot pair `hexalith-agents-publish`; scoped nuget.org policy 28307; grants. Registration `8e43d8c5` passed `validate.py` and was pushed with docs `62dc50b1` (CiCd-agent). Delivery run 44886812692 adopted Agents as `3406b3cb` with a byte-identical perimeter. At once: immutable releases enabled, legacy `NUGET_API_KEY` grant removed, legacy policy 26964 deleted (its second confirmation dialog was confirmed in the attended browser, not by the runner) and legacy Zot recorded as a bounded no-op. The legacy API key's package scope was not observable (story 11 recorded it expired). Adopted CI 44888639144 failed only at the hook (the predicted asset versions). Module-agent `6865c6e6` changes only the 39 reviewed version fields; standalone `check.py` (2005/7/1086/2121/1362, zero skips) and the hook pass, and CI 44889942815 is green. The on-demand nightly 44890586692 (`qualify-bump` false) failed overall: scan, publish-ready and bump, plus AI.Tools' release. `tools/nightly_acceptance.py` judges Agents `pass` with no reasons: release 44890634855 published immutable `v2.0.3` at `6865c6e6`, both CodeQL languages are green and its scan row passes. The receipt records `publication: pending`. The matrix audit reran Builds v6.4.4 `test_ci_config`/`test_ci_pipeline`/`test_local_check` (114 tests, OK). Task 4 is reopened: `05ddee8` restored the tool-only `package.json`/lock for the then-active legacy release. The remaining legacy semantic-release planner/publisher and publish/recover/verify scripts and their tooling tests depend on them, so their removal awaits a human scope decision. See [`../specs/spec-cicd/evidence/14/adoption-20261121/README.md`](../specs/spec-cicd/evidence/14/adoption-20261121/README.md).
@@ -88,9 +89,40 @@ context:
 
 ## Spec Change Log
 
+- 2026-11-21 — Review loop 1, intent_gap BH2+EC4 resolved by the human ("apply recommended", option A). Every Builds-catalog bump made Agents' asset baseline fail on version-only changes with identical SHA-256, which would fail each nightly's delivery-wait. Amended: third-party package versions are no longer compared; package, path, kind and SHA-256 still are. Known-bad state avoided: a red Agents `main` and a failed night on every catalog bump. KEEP: the adoption, original floors, fail-skips, the six-package/seven-consumer hook, exact six-path exclusions and the owned perimeter.
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 
 ## Review Triage Log
+
+| ID | Finding | Verdict | Evidence | Route |
+| --- | --- | --- | --- | --- |
+| BH2+EC4 | Consumer asset baseline pins Builds-catalog versions; every catalog bump turns Agents CI red | medium | Two version-only rewrites already (5.1.1→5.2.0; 5.3.0→5.4.0/6.0.0→6.0.1), with identical SHA-256. Nightly bump delivery pushes to every module and delivery-wait fails the night on a red module CI | intent_gap (human decision) |
+| BH7 | Legacy nuget.org API key package scope not verified (AC4 cleanup) | medium | Two attended probes of the API Keys URL opened Trusted Publishing; only story 11's "expired" record supports it | patch (maintainer readback) |
+| BH1+VG4 | Tooling tests no longer run after adoption; the approved six-path exclusion limit is unenforced | medium | The hook runs only `check-built-packages.py`; Builds CI and `check.py` have no unittest step; the C# authority test accepts any listed exclusion | patch (C# assertion); hook-script failure paths deferred |
+| EC9 | `ForbiddenHostingOwnershipTests` still scans CiCd-owned `.github/workflows`/`hexalith-ci.json` text | medium | `IsGovernedPath` excludes no `.github/` path, and `IsOwnedTextFile` includes `.yml`/`.json`; this contradicts the gate rule against workflow-text assertions | patch |
+| VG1 | Integration-phase forwarding of floors and fail-skips is untested | medium | Pre-verified gap: no Builds test runs `--phase integration` with a policy | patch (Builds test) |
+| VG2+BH15c | `--fail-skips on` is asserted only on the floored project | medium | Pre-verified gap: `tests[1]` is never asserted | patch (Builds test) |
+| VG3+BH12a | No contract cases for `solution: none` with floors or `failSkips: true` | medium | Pre-verified gap: none of 214 contract cases combine these | patch (Builds fixtures) |
+| BH15a/b | Unsupported-policy cases share one substring; the unknown-project case asserts no return code | low | `ci_pipeline.py:418,424` differ only by the project prefix; `test_ci_pipeline.py:451-452` has no return-code assertion | patch |
+| EC6 | Consumer now compiles inside the repository under the root `.editorconfig` | low | It was a `TemporaryDirectory` at `805b35da`; it is now under `artifacts/`, and the root `.editorconfig` enables CA1062/CA1822/CA2007 | patch (consumer `root = true` editorconfig) |
+| BH14 | Dead `publication_paths`/`--publication-version` remains after the toolchain removal | low | Its only consumer, `publish-release-packages.sh`, was deleted in `2b212567` | patch (deletion) |
+| BH4 | CiCd `references/Hexalith.Agents` gitlink is still pre-delivery `0d03363` | low | Commons, PolymorphicSerializations and Works gitlinks track their current mains | patch |
+| BH10 | 17 executable runners committed under `evidence/14/` | low | AGENTS.md: executed code never lives under `_bmad-output/`; `docs/pre-adoption-publication.md` names no Agents runners | patch (remove, keep digests) |
+| BH6 | `planning.md` still states the superseded scheduled-only nightly rule | low | Contradicts the 2026-11-18 Spec Change Log | patch (supersession note) |
+| BH8 | README claims for `v2.0.3`/nuget.org have no record | low | Readbacks were run interactively and not saved | patch (record) |
+| BH9 | Several evidence digests are truncated | low | `4b00af84…`, `245bcacf…`, `141b58be…`, `e3f4f873…`, `f3b2b383…` | patch (full values) |
+| EC5 | Isolated consumer restore treats new low/moderate advisories as errors | maybe-false (medium if true) | `TreatWarningsAsErrors` was already in the consumer at `805b35da` (pre-existing); not shown to trip | defer |
+| BH3+VG5+EC3 | `consumer_package_validation.py` lacks `import os` | false | Current `main` `2b212567` line 3 imports `os` (added by `528c937` within the reviewed range) | reject |
+| BH11 | Shared NU1901/NU1902 treatment weakens audits org-wide | false | The architecture (release build `-warnaserror:NU1900;NU1903;NU1904;NU1905`) and task 3 define this central treatment | reject |
+| BH17+EC8 | Floors far below actual; Debug source-mode floors dropped | false | Frozen intent preserves the original floors; the shared CI is package-mode only by architecture | reject |
+| EC7 | C# exclusion lines are not trimmed | false | Malformed lines fail the authority test loudly; the file has none | reject |
+| BH12b | Schema `integer` accepts `2.0`; the reader rejects it | low | Loud reader failure; the schema cannot express it without added complexity | reject |
+| BH12c | No contract case for a minimum on an excluded project | false | Covered at pipeline level by `test_unsupported_policy_and_unknown_or_excluded_minimum_fail_before_testing` | reject |
+| BH13 | Fixture/schema re-pretty-printing churn | low | Already landed; reverting is more churn, not a direct correction | reject |
+| BH16 | Repeated MSBuild evaluation in `validate_test_policy` | low | Performance only; the fix adds caching | reject |
+| EC1 | Floor above int32 passes the reader | low | Unrealistic; MTP fails loudly | reject |
+| EC2 | A floor applies per target framework | low | All Agents suites are single-target; the fix adds a guard | reject |
+| BH5 | Decisions belong in the Spec Change Log | n/a | The fix edits this build's spec | reject |
 
 ## Verification
 

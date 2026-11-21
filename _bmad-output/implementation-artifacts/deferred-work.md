@@ -435,3 +435,10 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-11-pilot-migration-commons-and-polymorphicserializations.md`
   summary: Name the method and path in the nightly runtime's retry-budget and invalid-retry-delay errors.
   evidence: `tools/nightly_runtime.py:399` and `:403` raise `<delay error>: HTTP <status>; {...}` and `GitHub API retry budget exhausted: HTTP <status>; {...}` with no method or path, while terminal errors say `GitHub API <method> <path> failed`. The message had no path before story 11's diagnostics commit `a968a421` either, so this predates the story. A caller that doesn't add its own context therefore can't name the endpoint (review BH12).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
+  summary: Agents' isolated package-consumer restore uses TreatWarningsAsErrors with default NuGet audit, so a new low or moderate advisory could fail the after-unit-tests hook despite the central NU1901/NU1902 treatment.
+  evidence: Pre-existing at 805b35da (validate_consumer already set TreatWarningsAsErrors). Unverified; settle it by restoring the consumer against a package with a known low-severity advisory and checking whether NU1901 becomes an error.
+- source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
+  summary: Agents' tests/tooling suite (hook-script failure paths, UI consumer assets, built-package hook) no longer runs in any CI after adoption; decide whether these hook-tooling tests stay local-only (with an owner) or move into a product gate.
+  evidence: The delivered after-unit-tests action runs only scripts/check-built-packages.py, and the shared CI and check.py run only .NET projects (verification-gap review, story 14).

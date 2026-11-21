@@ -76,6 +76,8 @@ and `post-approval-hosting-path-failure.{json,log}`. They are historical failure
 
 ## Pending acceptance
 
+> **Superseded (2026-11-18):** a nightly on `main`, scheduled or dispatched with `qualify-bump` false, is valid acceptance evidence (spec Change Log). Acceptance was met on 2026-11-21; see `../adoption-20261121/README.md`.
+
 1. Refresh current mains and AD-21 authenticated provisioning evidence with the
    intended credentials, including App scope, stale drafts/tags, rulesets,
    environment, identity/policy, grants, scans and retention.

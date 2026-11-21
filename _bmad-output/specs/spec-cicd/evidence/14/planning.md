@@ -1,5 +1,9 @@
 # Story 14 planning
 
+> **Superseded (2026-11-18):** the approved on-demand nightly change (spec Change Log, CAP-13/CAP-16) makes a nightly on `main`, scheduled or dispatched with `qualify-bump` false, valid acceptance evidence, judged on this module's own rows. The scheduled-only wording below is historical.
+
+> **2026-11-21:** the runner scripts this record used were removed from git under the AGENTS.md Evidence rule. Their blob ids and SHA-256 values, and how to recover them, are in `removed-runners.json`.
+
 Planning only, 2026-11-16. No product files, production registration, remote
 configuration, releases or credentials were changed. The original workspace is
 preserved. Work continues in the clean worktree

@@ -36,7 +36,7 @@ legacy NuGet policy 26964 and the legacy Zot push.
 - `tabs.py` (visible tab titles only) `878dcb011a4800756a47a58aff16d1f8ebf36dec7a24ea86d2db5fad0f6fb30e`
 - Raw cleanup record `d4f839ff934e4a50ef0c8e3619ea3d09f85e3447becb6014873d95f8b0d2177d` (13,168,380 bytes)
 - Raw grants record `6b94bc3a989fc342450b566c2c55f1bb2e5fc91a52a97158b06e3f87d8a352ca`
-- Failed browser attempts before GitHub 2FA completed: open-window `4b00af84…`, observe `245bcacf…`
+- Failed browser attempts before GitHub 2FA completed: open-window `4b00af84bcccaa31f8968028b0d8ec0f1b04a3ce0cb72d46d795a80791686e58`, observe `245bcacfb277859bbe076a186113365e131795570130a74352d005f247cb279a`
 
 ## Registration, delivery and acceptance
 
@@ -51,7 +51,7 @@ legacy NuGet policy 26964 and the legacy Zot push.
 - Hosted delivery [44886812692](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44886812692)
   succeeded (validate and deliver green; `failed: false`). It adopted Agents
   as `3406b3cb1f01e01d07bc71980ff15c24a99a29c5`
-  (`build(cicd): apply 62dc50b1… from Hexalith.CiCd`, parent `0d03363`). The
+  (`build(cicd): apply 62dc50b18888be88d9ce27415d22f612c55c50af from Hexalith.CiCd`, parent `0d03363bef95c0feecc136579b843f4cbcd34a21`). The
   owned files are byte-identical to the render, the Builds gitlink is `v6.4.4`
   and foreign content is preserved. See
   [`authenticated-adoption.json`](authenticated-adoption.json).
@@ -88,7 +88,7 @@ legacy NuGet policy 26964 and the legacy Zot push.
     succeeded at dispatch head `6865c6e6` with outcome `published` and version
     `2.0.3`. The full output lists `publication: pending`, but the GitHub
     release `v2.0.3` is published, immutable and bot-authored, and all six
-    packages list `2.0.3` on nuget.org;
+    packages list `2.0.3` on nuget.org ([`release-readback-v2.0.3.json`](release-readback-v2.0.3.json));
   - both release CodeQL jobs (C# and JavaScript/TypeScript) succeeded;
   - Agents' row in the attempt's scan job passes.
 - Matrix audit: Builds `v6.4.4` (`fe68718b`) `test_ci_config`,
@@ -97,7 +97,7 @@ legacy NuGet policy 26964 and the legacy Zot push.
   `17b738f7552195c79c8b292989661be79ad0a21f60662774ed8a606947fb7002`). They
   include the count-boundary, fail-skips, failure-order, unsupported-policy and
   renderer-default tests. A first invocation from the wrong directory failed to
-  import a sibling test module (log `141b58be…`) and is not a test result.
+  import a sibling test module (log `141b58be89247ca1029afc092eaef4ee4f25ab69f68ec36a83aadf11c17ec4f2`) and is not a test result.
 - Task 4: module-agent `2b212567` removed the legacy semantic-release
   toolchain (root npm files, planner/publisher, publish/recover/verify scripts
   and their tooling tests). `check.py`, the hook and the Node tooling tests

@@ -1,0 +1,112 @@
+{
+  "schema": "hexalith.story14.review-loop-1-patches.v1",
+  "recorded_at": "2026-11-21",
+  "decision": "human 'apply recommended': option A for intent_gap BH2+EC4 plus the approved review patches (spec Review Triage Log)",
+  "builds": {
+    "credential_profile": "/home/administrator/.config/gh-cicd-agent",
+    "base": "055d7df5b49669d5b705ce163b0b2e187ecb9a50",
+    "head": "5052d7cb22f825c973b6484ab670d6a8059a6f71",
+    "message": "test(ci): cover integration-phase floors and solution-none policy",
+    "scope": "tests and fixtures only (Github/lib/tests/test_ci_pipeline.py, Github/lib/tests/fixtures/contract.json)",
+    "findings": [
+      "VG1",
+      "VG2+BH15c",
+      "VG3+BH12a",
+      "BH15a/b"
+    ],
+    "mutation_demonstrations": "each new assertion fails under its targeted production mutation and passes after restoration",
+    "verification": {
+      "python_3_12": {
+        "tests": 117,
+        "result": "OK",
+        "log_sha256": "4fdb96abaf0e32101aa39d438db8ffa12740ca2e79734d0dc4a10a82403ffb5c"
+      },
+      "python_3_14": {
+        "tests": 117,
+        "result": "OK",
+        "log_sha256": "ee3d74cda739e7daa52134452cd07f02d58150ce3259a57bb921249ac7eb3e7d"
+      },
+      "broader_shared_library": "799 tests: the only problems were the guard suites lacking node_modules in a fresh clone; after npm ci they pass (30/30)"
+    },
+    "push": {
+      "pre_push_main": "055d7df5b49669d5b705ce163b0b2e187ecb9a50",
+      "readback_main": "5052d7cb22f825c973b6484ab670d6a8059a6f71",
+      "fast_forward": true
+    },
+    "hosted_ci": {
+      "run": 44905570784,
+      "url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/44905570784",
+      "conclusion": "in_progress at record time"
+    }
+  },
+  "agents": {
+    "credential_profile": "/home/administrator/.config/gh-module-agent",
+    "base": "2b212567fc546cef1d194c9ff778b082fc80fccb",
+    "commits": {
+      "004468ca04e5126037045a8ec6f0b54592722754": "fix(packaging): compare catalog package assets by content (BH2+EC4 option A, EC6 consumer root editorconfig, BH14 dead publication code)",
+      "83c5a11d0c5bf38b0952d3869a4bf29648613468": "test(server): enforce the approved authority exclusions (BH1+VG4 exact six exclusions in a product test, EC9 CiCd-owned text excluded from the hosting scan)"
+    },
+    "asset_policy": {
+      "schemaVersion": "2 -> 3",
+      "rule": "versions of every non-Agents package map to '$catalog'; Agents UI keeps '$produced'; kind, package, path and SHA-256 remain exact",
+      "baseline_blob": "22f6b75669c243dd1261a205ec4d6d88764a9b13 -> 0ff20722 (regenerated mechanically)",
+      "replaced_version_fields": {
+        "selected": 42,
+        "consumers": 94
+      },
+      "only_versions_and_schema_changed": true,
+      "proof_sha256": "4c69a57f2fbb83f90b92ed7c837e427a51f4cfc3600e410b9894481e89457c5a"
+    },
+    "verification": {
+      "check_py": {
+        "exit": 0,
+        "suites": {
+          "Contracts": 2005,
+          "Client": 7,
+          "Domain": 1086,
+          "Server": 2121,
+          "UI": 1362
+        },
+        "skips": 0,
+        "log_sha256": "710a1d9680f155ed826dc2b178d7c458c0ba1a6864a20e9c055ff859572d9bd6"
+      },
+      "hook": {
+        "exit": 0,
+        "result": "Validated six built packages and seven isolated package consumers.",
+        "log_sha256": "4b17fedabf2d2e64c6dda590a31869729001e6f32a3b12d6e2c9260b195ae176"
+      },
+      "tooling_suite": {
+        "tests": 233,
+        "failures": 5,
+        "errors": 1,
+        "note": "all in pre-existing story_59_verifier_test.py",
+        "log_sha256": "da8dc03dd65447fbd27eaa0eacccf13299424b68ff0f1146454fad953aff63c0"
+      },
+      "exclusion_limit_negative_control": {
+        "added": "src/Hexalith.Agents/Hexalith.Agents.csproj",
+        "result": "authority test failed on the exact-six assertion before the validator ran; file restored",
+        "log_sha256": "b022edfa6d947ccbb3ebecf9b5ef571fe646e2555ddd8fa5ee309f9799202d45"
+      }
+    },
+    "owned_portions_unchanged": true,
+    "push": {
+      "pre_push_main": "2b212567fc546cef1d194c9ff778b082fc80fccb",
+      "readback_main": "83c5a11d0c5bf38b0952d3869a4bf29648613468",
+      "fast_forward": true
+    },
+    "hosted_ci": {
+      "run": 44906603757,
+      "url": "https://github.com/Hexalith/Hexalith.Agents/actions/runs/44906603757",
+      "conclusion": "success"
+    }
+  },
+  "cicd": {
+    "gitlink": "references/Hexalith.Agents 0d03363bef95c0feecc136579b843f4cbcd34a21 -> 83c5a11d0c5bf38b0952d3869a4bf29648613468 (BH4)",
+    "records": [
+      "BH10 17 runners removed (../removed-runners.json)",
+      "BH6 supersession notes (planning.md, local-implementation/README.md)",
+      "BH8 release-readback-v2.0.3.json",
+      "BH9 full digests"
+    ]
+  }
+}

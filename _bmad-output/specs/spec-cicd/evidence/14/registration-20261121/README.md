@@ -80,7 +80,7 @@ accepted-branch transport:
   version; every SHA-256 is unchanged.
 - **Phase 2, version-only product fix.** A simulated module-agent commit from
   the simulated delivered main changes only those 39 version fields (blob
-  `e3f4f873…` → `22f6b756…`). The guard, the same five suites and the hook
+  `e3f4f873aaca499a5ab611e1960de368f5ccd53e` → `22f6b75669c243dd1261a205ec4d6d88764a9b13`). The guard, the same five suites and the hook
   then pass: `Validated six built packages and seven isolated package
   consumers.` The worktree stays clean and the hook scratch is removed.
 
@@ -124,7 +124,7 @@ other nuget.org policies, and remove Agents from legacy `NUGET_API_KEY`
 ## Other observations
 
 The legacy Agents CI on `0d03363` fails in "Initialize root-declared
-submodules". The recorded AI.Tools gitlink `f3b2b383…` is not available on the
+submodules". The recorded AI.Tools gitlink `f3b2b3839ab967481383fedffdf29f6a492d9af6` is not available on the
 AI.Tools remote. The rendered CI initializes only the direct Builds dependency
 (`submodules: []`), so this legacy failure does not apply after delivery.
 

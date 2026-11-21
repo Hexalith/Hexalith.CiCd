@@ -1,5 +1,7 @@
 # Story 14 local readiness, 2026-11-16
 
+> **2026-11-21:** the runner scripts this record used were removed from git under the AGENTS.md Evidence rule. Their blob ids and SHA-256 values, and how to recover them, are in `../removed-runners.json`.
+
 Story 14 remains **in progress**. This resume ran sequential local qualification
 without GitHub reads, remote repository operations, provisioning, release,
 registration or delivery. It preserves the already published preparation and

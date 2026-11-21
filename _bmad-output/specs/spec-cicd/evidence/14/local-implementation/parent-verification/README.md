@@ -1,5 +1,7 @@
 # Historical parent task and diff verification
 
+> **2026-11-21:** the runner scripts this record used were removed from git under the AGENTS.md Evidence rule. Their blob ids and SHA-256 values, and how to recover them, are in `../../removed-runners.json`.
+
 This report records the checkpoint before the human approved the six exact
 historical exclusions. The decision is now applied and the full ordered proof
 passes. See [current results](../README.md) and
