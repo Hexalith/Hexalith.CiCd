@@ -1,0 +1,694 @@
+{
+ "schema": "hexalith.story14.ad21-refresh.v1",
+ "observed_at": "2026-11-21T06:16:13.922677+00:00",
+ "method": "GET only; command-local maintainer profile; no remote writes",
+ "administration_profile": "/home/administrator/.config/gh",
+ "identity": {
+  "login": "jpiquot",
+  "id": 6775094
+ },
+ "repository": {
+  "id": 1277685416,
+  "full_name": "Hexalith/Hexalith.Agents",
+  "default_branch": "main",
+  "visibility": "public",
+  "archived": false,
+  "security_and_analysis": {
+   "secret_scanning": {
+    "status": "enabled"
+   },
+   "secret_scanning_push_protection": {
+    "status": "enabled"
+   },
+   "dependabot_security_updates": {
+    "status": "disabled"
+   },
+   "secret_scanning_non_provider_patterns": {
+    "status": "disabled"
+   },
+   "secret_scanning_validity_checks": {
+    "status": "disabled"
+   }
+  }
+ },
+ "main": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+ "rulesets": [],
+ "environments": [
+  {
+   "name": "production",
+   "deployment_branch_policy": null,
+   "protection_rules": [],
+   "branch_policies": "HTTP/2.0 404 Not Found",
+   "secret_names": [],
+   "variable_names": []
+  }
+ ],
+ "publish_switch": "true",
+ "retention": {
+  "days": 90,
+  "maximum_allowed_days": 90
+ },
+ "codeql_default_setup": "not-configured",
+ "code_scanning_analyses": [
+  {
+   "analysis_key": ".github/workflows/codeql.yml:analyze",
+   "category": ".github/workflows/codeql.yml:analyze",
+   "tool": "CodeQL",
+   "count": 100,
+   "latest": "2026-11-20T16:55:35Z"
+  }
+ ],
+ "dependabot_security_updates": {
+  "enabled": false,
+  "paused": false
+ },
+ "immutable_releases": {
+  "enabled": false,
+  "enforced_by_owner": false
+ },
+ "releases": [
+  {
+   "id": 446267591,
+   "tag_name": "v2.0.0",
+   "draft": true,
+   "prerelease": false,
+   "immutable": false,
+   "published_at": null,
+   "target_commitish": "23ce124203d14874c6c60196ec2023e86b9db30a"
+  },
+  {
+   "id": 426297010,
+   "tag_name": "v1.2.2",
+   "draft": true,
+   "prerelease": false,
+   "immutable": false,
+   "published_at": null,
+   "target_commitish": "d2a486d5e94057cf43b88c3f1ace93b40f7f7d9a"
+  },
+  {
+   "id": 426274664,
+   "tag_name": "v1.2.1",
+   "draft": true,
+   "prerelease": false,
+   "immutable": false,
+   "published_at": null,
+   "target_commitish": "b088be0c7d6c759c146e94d967d56c98f19fc8fc"
+  },
+  {
+   "id": 446489734,
+   "tag_name": "v2.0.2",
+   "draft": false,
+   "prerelease": false,
+   "immutable": false,
+   "published_at": "2026-11-16T01:01:20Z",
+   "target_commitish": "dd94e17591ab265a8226d4fff9b2b1ec3363b552"
+  },
+  {
+   "id": 446391382,
+   "tag_name": "v2.0.1",
+   "draft": false,
+   "prerelease": false,
+   "immutable": false,
+   "published_at": "2026-11-15T21:58:42Z",
+   "target_commitish": "4aa69ee30d30bddd643bdd2221c4b7e0cff7c302"
+  },
+  {
+   "id": 391703175,
+   "tag_name": "v1.0.0",
+   "draft": false,
+   "prerelease": false,
+   "immutable": false,
+   "published_at": "2026-09-18T18:45:33Z",
+   "target_commitish": "main"
+  }
+ ],
+ "tags": [
+  {
+   "name": "v2.0.2",
+   "sha": "dd94e17591ab265a8226d4fff9b2b1ec3363b552"
+  },
+  {
+   "name": "v2.0.1",
+   "sha": "4aa69ee30d30bddd643bdd2221c4b7e0cff7c302"
+  },
+  {
+   "name": "v2.0.0",
+   "sha": "23ce124203d14874c6c60196ec2023e86b9db30a"
+  },
+  {
+   "name": "v1.2.2",
+   "sha": "d2a486d5e94057cf43b88c3f1ace93b40f7f7d9a"
+  },
+  {
+   "name": "v1.2.1",
+   "sha": "b088be0c7d6c759c146e94d967d56c98f19fc8fc"
+  },
+  {
+   "name": "v1.2.0",
+   "sha": "edf7e773edb5a38879cec9a58664b6472adb8408"
+  },
+  {
+   "name": "v1.1.0",
+   "sha": "f3206c8b53890798f5ccfd75c4c3d641929731eb"
+  },
+  {
+   "name": "v1.0.0",
+   "sha": "862949f88a0065a11d3bd60f7a77dc3582bd439b"
+  }
+ ],
+ "workflows": [
+  {
+   "name": "CI",
+   "path": ".github/workflows/ci.yml",
+   "state": "active"
+  },
+  {
+   "name": "CodeQL",
+   "path": ".github/workflows/codeql.yml",
+   "state": "active"
+  },
+  {
+   "name": "Commitlint",
+   "path": ".github/workflows/commitlint.yml",
+   "state": "active"
+  },
+  {
+   "name": "Dependency Review",
+   "path": ".github/workflows/dependency-review.yml",
+   "state": "active"
+  },
+  {
+   "name": "Recover release packages",
+   "path": ".github/workflows/recover-release.yml",
+   "state": "active"
+  },
+  {
+   "name": "Release",
+   "path": ".github/workflows/release.yml",
+   "state": "active"
+  },
+  {
+   "name": "Dependabot Updates",
+   "path": "dynamic/dependabot/dependabot-updates",
+   "state": "active"
+  }
+ ],
+ "recent_main_runs": [
+  {
+   "id": 44776243809,
+   "name": "Commitlint",
+   "event": "push",
+   "head_sha": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+   "status": "completed",
+   "conclusion": "success",
+   "created_at": "2026-11-20T16:43:39Z"
+  },
+  {
+   "id": 44776243751,
+   "name": "CodeQL",
+   "event": "push",
+   "head_sha": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+   "status": "completed",
+   "conclusion": "success",
+   "created_at": "2026-11-20T16:43:39Z"
+  },
+  {
+   "id": 44776243747,
+   "name": "CI",
+   "event": "push",
+   "head_sha": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-20T16:43:39Z"
+  },
+  {
+   "id": 44762670286,
+   "name": "Commitlint",
+   "event": "push",
+   "head_sha": "05ddee81529d89950182bf35aaf6e12035ccaaed",
+   "status": "completed",
+   "conclusion": "success",
+   "created_at": "2026-11-20T15:22:45Z"
+  },
+  {
+   "id": 44762670115,
+   "name": "CI",
+   "event": "push",
+   "head_sha": "05ddee81529d89950182bf35aaf6e12035ccaaed",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-20T15:22:45Z"
+  },
+  {
+   "id": 44762670003,
+   "name": "CodeQL",
+   "event": "push",
+   "head_sha": "05ddee81529d89950182bf35aaf6e12035ccaaed",
+   "status": "completed",
+   "conclusion": "success",
+   "created_at": "2026-11-20T15:22:45Z"
+  },
+  {
+   "id": 44697101434,
+   "name": "submodules in /. - Update #1718397338",
+   "event": "dynamic",
+   "head_sha": "e4b48774833a13be7ba8748e86da9a07f78e916d",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-20T07:43:46Z"
+  },
+  {
+   "id": 44697095514,
+   "name": "npm_and_yarn in /. - Update #1718397154",
+   "event": "dynamic",
+   "head_sha": "e4b48774833a13be7ba8748e86da9a07f78e916d",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-20T07:43:43Z"
+  },
+  {
+   "id": 44697095703,
+   "name": "github_actions in /. - Update #1718397165",
+   "event": "dynamic",
+   "head_sha": "e4b48774833a13be7ba8748e86da9a07f78e916d",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-20T07:43:43Z"
+  },
+  {
+   "id": 44307493948,
+   "name": "Commitlint",
+   "event": "push",
+   "head_sha": "e4b48774833a13be7ba8748e86da9a07f78e916d",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-18T12:48:48Z"
+  },
+  {
+   "id": 44307493869,
+   "name": "CodeQL",
+   "event": "push",
+   "head_sha": "e4b48774833a13be7ba8748e86da9a07f78e916d",
+   "status": "completed",
+   "conclusion": "success",
+   "created_at": "2026-11-18T12:48:48Z"
+  },
+  {
+   "id": 44307493888,
+   "name": "CI",
+   "event": "push",
+   "head_sha": "e4b48774833a13be7ba8748e86da9a07f78e916d",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-18T12:48:48Z"
+  },
+  {
+   "id": 44304130809,
+   "name": "Commitlint",
+   "event": "push",
+   "head_sha": "887ae0f4e85415b9e4bb2db4dc23bd80797b84df",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-18T12:27:45Z"
+  },
+  {
+   "id": 44304130807,
+   "name": "CodeQL",
+   "event": "push",
+   "head_sha": "887ae0f4e85415b9e4bb2db4dc23bd80797b84df",
+   "status": "completed",
+   "conclusion": "success",
+   "created_at": "2026-11-18T12:27:45Z"
+  },
+  {
+   "id": 44304130883,
+   "name": "CI",
+   "event": "push",
+   "head_sha": "887ae0f4e85415b9e4bb2db4dc23bd80797b84df",
+   "status": "completed",
+   "conclusion": "failure",
+   "created_at": "2026-11-18T12:27:45Z"
+  }
+ ],
+ "app_selection": {
+  "status": "HTTP/2.0 403 Forbidden",
+  "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user",
+  "agents_present": null
+ },
+ "org_grants": {
+  "actions:HEXALITH_REGISTRY_PULL_USERNAME": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 8
+  },
+  "actions:HEXALITH_REGISTRY_PULL_PASSWORD": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 8
+  },
+  "actions:NUGET_API_KEY": {
+   "visibility": "selected",
+   "agents_selected": true,
+   "selected_count": 24
+  },
+  "actions:HEXALITH_ZOT_API_KEY": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 4
+  },
+  "actions:HEXALITH_ZOT_USERNAME": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 4
+  },
+  "actions:AZURE_APPLICATIONID": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 7
+  },
+  "actions:AZURE_APPLICATIONSECRET": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 7
+  },
+  "actions:AZURE_SUBSCRIPTION_ID": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 6
+  },
+  "actions:AZURE_TENANT_ID": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 6
+  },
+  "actions:SONAR_TOKEN": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 7
+  },
+  "dependabot:HEXALITH_REGISTRY_PULL_USERNAME": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 8
+  },
+  "dependabot:HEXALITH_REGISTRY_PULL_PASSWORD": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 8
+  },
+  "actions-variable:HEXALITH_NUGET_USER": {
+   "visibility": "selected",
+   "agents_selected": false,
+   "selected_count": 8
+  }
+ },
+ "repo_secret_names": [],
+ "repo_variable_names": [
+  "HEXALITH_RELEASE_PUBLISH_ENABLED",
+  "NUGET_TRUSTED_PUBLISHING_USER"
+ ],
+ "requests": [
+  {
+   "endpoint": "user",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/git/ref/heads/main",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/rulesets?includes_parents=true",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/environments",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/environments/production/deployment-branch-policies",
+   "status": "HTTP/2.0 404 Not Found",
+   "exit": 1,
+   "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/environments/production/secrets",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/environments/production/variables",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/actions/variables/HEXALITH_RELEASE_PUBLISH_ENABLED",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/actions/permissions/artifact-and-log-retention",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/code-scanning/default-setup",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/code-scanning/analyses?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/automated-security-fixes",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/immutable-releases",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/releases?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/tags?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/actions/workflows?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/actions/runs?branch=main&per_page=15",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "user/installations/179966090/repositories?per_page=100",
+   "status": "HTTP/2.0 403 Forbidden",
+   "exit": 1,
+   "error": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/actions/secrets?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  },
+  {
+   "endpoint": "repos/Hexalith/Hexalith.Agents/actions/variables?per_page=100",
+   "status": "HTTP/2.0 200 OK",
+   "exit": 0,
+   "error": ""
+  }
+ ]
+}

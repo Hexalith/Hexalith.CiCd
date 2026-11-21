@@ -1,0 +1,151 @@
+{
+  "started_at": "2026-11-21T08:32:25.365599+00:00",
+  "context": "jpiquot@local",
+  "namespace": "registry-distribution",
+  "administration_profile": "/home/administrator/.config/gh",
+  "operations": [
+    {
+      "recorded_at": "2026-11-21T08:32:25.706854+00:00",
+      "operation": "verify maintainer account",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:26.065449+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:26.398170+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:26.719622+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:27.198696+00:00",
+      "operation": "read Agents release secret metadata before provisioning",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:27.881079+00:00",
+      "operation": "set Hexalith.Agents hexalith-release HEXALITH_REGISTRY_USERNAME",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:28.532004+00:00",
+      "operation": "set Hexalith.Agents hexalith-release HEXALITH_REGISTRY_PASSWORD",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:28.867348+00:00",
+      "operation": "patch secret distribution-registry-htpasswd",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:29.179729+00:00",
+      "operation": "patch configmap distribution-registry-config",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:29.568364+00:00",
+      "operation": "patch deployment distribution-registry",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:41.164842+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution rollout status deployment/distribution-registry --timeout=150s",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:41.410791+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get configmap distribution-registry-config -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:41.669152+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get secret distribution-registry-htpasswd -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:41.912305+00:00",
+      "operation": "kubectl --context jpiquot@local -n registry-distribution get deployment distribution-registry -o json",
+      "exit": 0
+    },
+    {
+      "recorded_at": "2026-11-21T08:32:53.003342+00:00",
+      "operation": "read Hexalith.Agents environment secret metadata",
+      "exit": 0
+    }
+  ],
+  "identities": {
+    "Hexalith.Agents": {
+      "username": "hexalith-agents-publish",
+      "repository_patterns": [
+        "agents",
+        "agents/**"
+      ],
+      "actions": [
+        "read",
+        "create",
+        "update"
+      ],
+      "admin_actions": [],
+      "bcrypt_cost": 12,
+      "secret_values_persisted_locally": false,
+      "environment_secret_names": [
+        "HEXALITH_REGISTRY_PASSWORD",
+        "HEXALITH_REGISTRY_USERNAME"
+      ]
+    }
+  },
+  "preservation": {
+    "old_htpasswd_rows_byte_identical": true,
+    "existing_configuration_and_grants_unchanged": true,
+    "legacy_access_removed": false,
+    "configuration_sha256": "3e27584685269ce0c3501ca77e2563a8535f156121e8b69e5f32cf329fd5a915"
+  },
+  "resourceVersions": {
+    "secret_before": "47199665",
+    "secret_after": "49008098",
+    "configmap_before": "47199666",
+    "configmap_after": "49008107",
+    "deployment_before": "47199773",
+    "deployment_after": "49008216"
+  },
+  "authentication": [
+    {
+      "repository": "Hexalith.Agents",
+      "username": "hexalith-agents-publish",
+      "method": "GET",
+      "endpoint": "/v2/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "repository": "Hexalith.Agents",
+      "username": "hexalith-agents-publish",
+      "method": "POST",
+      "endpoint": "/v2/commons/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "repository": "Hexalith.Agents",
+      "username": "hexalith-agents-publish",
+      "method": "POST",
+      "endpoint": "/v2/story-14-unrelated/blobs/uploads/",
+      "status": 403,
+      "expected": 403
+    }
+  ],
+  "verification_limits": [
+    "Authenticated registry access and foreign-write refusals are real server results.",
+    "Own namespace read/create/update grants are verified from preserved live ACL and restarted workload; no package/image or upload was created.",
+    "No legacy registry identity or credential was revoked before adoption."
+  ],
+  "completed_at": "2026-11-21T08:32:53.003642+00:00",
+  "result": "pass"
+}

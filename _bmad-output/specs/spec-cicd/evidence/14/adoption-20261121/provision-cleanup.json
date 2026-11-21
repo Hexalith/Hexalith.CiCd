@@ -1,0 +1,105 @@
+{
+  "started_at": "2026-11-21T08:27:15.016114+00:00",
+  "phase": "cleanup",
+  "module": "Hexalith.Agents",
+  "repository_id": 1277685416,
+  "administration_profile": "/home/administrator/.config/gh",
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "result": "pass",
+  "completed_at": "2026-11-21T08:31:30.771269+00:00",
+  "deleted_drafts": [
+    {
+      "id": 446267591,
+      "tag": "v2.0.0"
+    },
+    {
+      "id": 426297010,
+      "tag": "v1.2.2"
+    },
+    {
+      "id": 426274664,
+      "tag": "v1.2.1"
+    }
+  ],
+  "deleted_tags": [
+    {
+      "tag": "v1.1.0",
+      "sha": "f3206c8b53890798f5ccfd75c4c3d641929731eb"
+    },
+    {
+      "tag": "v1.2.0",
+      "sha": "edf7e773edb5a38879cec9a58664b6472adb8408"
+    },
+    {
+      "tag": "v1.2.1",
+      "sha": "b088be0c7d6c759c146e94d967d56c98f19fc8fc"
+    },
+    {
+      "tag": "v1.2.2",
+      "sha": "d2a486d5e94057cf43b88c3f1ace93b40f7f7d9a"
+    },
+    {
+      "tag": "v2.0.0",
+      "sha": "23ce124203d14874c6c60196ec2023e86b9db30a"
+    }
+  ],
+  "stale_state_assessment": {
+    "codeql": "legacy CodeQL analyses deleted or already absent",
+    "unmarked_drafts": [
+      {
+        "id": 446267591,
+        "tag": "v2.0.0"
+      },
+      {
+        "id": 426297010,
+        "tag": "v1.2.2"
+      },
+      {
+        "id": 426274664,
+        "tag": "v1.2.1"
+      }
+    ],
+    "orphan_version_tags": [
+      "v1.1.0",
+      "v1.2.0",
+      "v1.2.1",
+      "v1.2.2",
+      "v2.0.0"
+    ],
+    "cleanup_writes": 8
+  },
+  "raw_record": {
+    "sha256": "d4f839ff934e4a50ef0c8e3619ea3d09f85e3447becb6014873d95f8b0d2177d",
+    "bytes": 13168380,
+    "location": "session scratch (not retained in git; Evidence rule)"
+  },
+  "request_counts": [
+    {
+      "method": "DELETE",
+      "status": "200 OK",
+      "count": 214
+    },
+    {
+      "method": "DELETE",
+      "status": "204 No Content",
+      "count": 8
+    },
+    {
+      "method": "DELETE",
+      "status": "404 Not Found",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "status": "200 OK",
+      "count": 226
+    },
+    {
+      "method": "GET",
+      "status": "404 Not Found",
+      "count": 1
+    }
+  ],
+  "codeql_analysis_delete_requests": 216,
+  "final_codeql_inventory": "HTTP/2.0 404 Not Found"
+}

@@ -1,0 +1,113 @@
+{
+  "started_at": "2026-11-21T08:34:03.963444+00:00",
+  "phase": "settings-grants",
+  "module": "Hexalith.Agents",
+  "repository_id": 1277685416,
+  "administration_profile": "/home/administrator/.config/gh",
+  "default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "result": "pass",
+  "completed_at": "2026-11-21T08:34:13.499876+00:00",
+  "shared_grants_verified": true,
+  "legacy_access_removed": false,
+  "writes": [
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1277685416",
+      "status": "HTTP/2.0 204 No Content"
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1277685416",
+      "status": "HTTP/2.0 204 No Content"
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories/1277685416",
+      "status": "HTTP/2.0 204 No Content"
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories/1277685416",
+      "status": "HTTP/2.0 204 No Content"
+    },
+    {
+      "method": "PUT",
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories/1277685416",
+      "status": "HTTP/2.0 204 No Content"
+    }
+  ],
+  "grant_readbacks": [
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "recorded_at": "2026-11-21T08:34:07.274729+00:00",
+      "repository_count": 8,
+      "agents_selected": false
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "recorded_at": "2026-11-21T08:34:07.977581+00:00",
+      "repository_count": 9,
+      "agents_selected": true
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "recorded_at": "2026-11-21T08:34:08.602363+00:00",
+      "repository_count": 8,
+      "agents_selected": false
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "recorded_at": "2026-11-21T08:34:09.312686+00:00",
+      "repository_count": 9,
+      "agents_selected": true
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "recorded_at": "2026-11-21T08:34:10.053212+00:00",
+      "repository_count": 8,
+      "agents_selected": false
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories",
+      "recorded_at": "2026-11-21T08:34:10.772277+00:00",
+      "repository_count": 9,
+      "agents_selected": true
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "recorded_at": "2026-11-21T08:34:11.433066+00:00",
+      "repository_count": 8,
+      "agents_selected": false
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories",
+      "recorded_at": "2026-11-21T08:34:12.182791+00:00",
+      "repository_count": 9,
+      "agents_selected": true
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "recorded_at": "2026-11-21T08:34:12.773356+00:00",
+      "repository_count": 8,
+      "agents_selected": false
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories",
+      "recorded_at": "2026-11-21T08:34:13.498248+00:00",
+      "repository_count": 9,
+      "agents_selected": true
+    }
+  ],
+  "settings": {
+    "codeql_default_setup": "not-configured",
+    "dependabot_security_updates_enabled": false,
+    "publish_switch": "true",
+    "retention_days": 90
+  },
+  "push_protection": "enabled",
+  "raw_record": {
+    "sha256": "6b94bc3a989fc342450b566c2c55f1bb2e5fc91a52a97158b06e3f87d8a352ca",
+    "bytes": 490944,
+    "location": "session scratch (not retained in git; Evidence rule)"
+  }
+}

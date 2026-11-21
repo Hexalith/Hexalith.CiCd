@@ -1,0 +1,217 @@
+{
+ "schema": "hexalith.story14.registration-qualification.v1",
+ "observed_at": "2026-11-21",
+ "scope": "local preparation; remote reads only (git fetch, gh GET); no commits, pushes, dispatches or setting changes",
+ "fresh_remote_state": {
+  "cicd_main": "399b2f2d9102649e17b0017c4da26e07e8d4f991",
+  "cicd_local_head_equals_main": true,
+  "agents_main": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+  "builds_main": "315722135a383bec43e1a35a18231f130d65fb7a",
+  "builds_version": "v6.4.4",
+  "builds_tag_commit": "fe68718b6c074a6b500a7191e3554a1d39e17688",
+  "agents_pre_delivery_builds_gitlink": "6b6eb4eec1b9c718e4d3581fdcbe77f8b09907f1"
+ },
+ "registration_working_tree": {
+  "setup/Hexalith.Agents.yml": "4066012226a538556ac428f5cd4a8b57eb98fe59",
+  "rendered/Hexalith.Agents.perimeter.json": "e85d57d85164e8c9e1ab888227085390bca56b2d",
+  "rendered/Hexalith.Agents/.github/hexalith-ci.json": "20bdbcaade249d067c925505a484b86cfa98de74",
+  "rendered/Hexalith.Agents/.github/dependabot.yml": "42d2ea0d0f8496bfb142cd35904c798e05e619d3",
+  "rendered/Hexalith.Agents/.github/workflows/ci.yml": "edde6059d8ce775b8665fc470032a1fbbb01a3ca",
+  "rendered/Hexalith.Agents/.github/workflows/release.yml": "d9bc894f14bfef39f4f3166011a1a792d29a2d18",
+  "rendered_tree": "c9566a982699d9cf450ae98f9b7f3c5122fd843b",
+  "references/Hexalith.Agents gitlink (unchanged, equals Agents main)": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+  "render_check_working_tree": "pass"
+ },
+ "disposable_committed_candidate": {
+  "base": "399b2f2d9102649e17b0017c4da26e07e8d4f991",
+  "tree": "9f214544ce9f7fead03823aedfd561247f5919cf",
+  "commits": {
+   "validation_and_scan": "fa0c4db2d5bd8e865cb01ae0053e3668987bbbde",
+   "product_simulation_deterministic": "d9f439b41757617be6d40718748797582462a93d"
+  },
+  "render_check": "pass",
+  "validate_verdict": {
+   "global": true,
+   "modules": [
+    "Hexalith.AI.Tools",
+    "Hexalith.Agents",
+    "Hexalith.Commons",
+    "Hexalith.Conversations",
+    "Hexalith.McpCli",
+    "Hexalith.PolymorphicSerializations",
+    "Hexalith.Works"
+   ]
+  },
+  "validate_exit": 0,
+  "validate_stderr_sha256": "6204cdafcad2248e376ba4dc8d00dcbbeb2f36d529d11432a31b506716391342"
+ },
+ "prospective_live_main_scan": {
+  "result": "fail",
+  "controllerRevision": "fa0c4db2d5bd8e865cb01ae0053e3668987bbbde",
+  "findings": 0,
+  "global_errors": [],
+  "detector": {
+   "name": "jscpd",
+   "policySha256": "abd8c8ad7ad31d1b315f6fe73742e410b245016f0b63c6ceabecc8615c41ffd8",
+   "signatures": "verified",
+   "version": "5.4.3"
+  },
+  "modules": [
+   {
+    "module": "Hexalith.AI.Tools",
+    "result": "pass",
+    "revision": "87a738ceeba8975c0b087bc5ecee7dfbc14bf73c",
+    "files": 0,
+    "discovery_errors": 0
+   },
+   {
+    "module": "Hexalith.Agents",
+    "result": "pass",
+    "revision": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+    "files": 6,
+    "discovery_errors": 0
+   },
+   {
+    "module": "Hexalith.Commons",
+    "result": "fail",
+    "revision": "258f9d20e33bd0ae411cf8b3836a26a131f5b9ae",
+    "files": 4,
+    "discovery_errors": 2
+   },
+   {
+    "module": "Hexalith.Conversations",
+    "result": "fail",
+    "revision": "08953f5eed404228a2b8bd41c7d2bf5eaaab543a",
+    "files": 9,
+    "discovery_errors": 7
+   },
+   {
+    "module": "Hexalith.McpCli",
+    "result": "fail",
+    "revision": "e79b7f8b64303397ce9dfd856ed2111b513ade88",
+    "files": 29,
+    "discovery_errors": 100
+   },
+   {
+    "module": "Hexalith.PolymorphicSerializations",
+    "result": "fail",
+    "revision": "c6d0dfce6dc4f9a0699a51f80baf021ba5ef5d60",
+    "files": 2,
+    "discovery_errors": 3
+   },
+   {
+    "module": "Hexalith.Works",
+    "result": "fail",
+    "revision": "07020c84223937d3a3326e3ed45633eaf9ea73db",
+    "files": 5,
+    "discovery_errors": 23
+   }
+  ],
+  "agents_files": [
+   {
+    "format": "yaml",
+    "path": ".github/actions/after-unit-tests/action.yml",
+    "sha256": "be00b42b104d63bdef762edb6d59781568a3a0e8bc9adaa874028fc35ea6e3c4"
+   },
+   {
+    "format": "python",
+    "path": "scripts/check-built-packages.py",
+    "sha256": "bf64def0895a0b34b0b445a0195a1c806dcb90efe0323af59321dd31f99a6693"
+   },
+   {
+    "format": "python",
+    "path": "scripts/consumer_package_validation.py",
+    "sha256": "3e0016f9f33e50b67ab72d7a4a500de5f3617373fa8a0b65971f99a485bbc8c8"
+   },
+   {
+    "format": "python",
+    "path": "scripts/nuget_package_validation.py",
+    "sha256": "5072370944a6fd6d49c1cdd190563a6df5418051a1df1dbcb4737f5f1b80963f"
+   },
+   {
+    "format": "python",
+    "path": "scripts/release_package_integrity.py",
+    "sha256": "9317b8f31b5481b195aec3ee881e3030f2af10ac68ed9dac28eeb9d9974609a8"
+   },
+   {
+    "format": "python",
+    "path": "scripts/release_package_inventory.py",
+    "sha256": "0d66efae03b428de2b2088458b7f5914c055a2b1f3c2db53be498d86ae71b71c"
+   }
+  ],
+  "report_sha256": "fcf67dc9e54788f10d372feb3c633209d053483319d1fb63c02b4a6454ad1d7c",
+  "summary_sha256": "44e4e1589630508d0d60062dc7eef3ee7bea91605740ee2539c5da24794d7c94"
+ },
+ "simulated_delivery": {
+  "nature": "disposable simulation with the tagged v6.4.4 perimeter library and a local accepted-branch transport; not adoption or delivery evidence",
+  "module_main": "0d03363bef95c0feecc136579b843f4cbcd34a21",
+  "simulated_tree": "72db87a6f82b5b5c850a7b4252a3e2ece952c0c6",
+  "simulated_commit": "acc634da412bc2454765e665518ee886f8f3a893",
+  "changed_paths": 174,
+  "changed_summary": "legacy workflows codeql/commitlint/dependency-review/recover-release deleted; ci/release replaced; hexalith-ci.json added; dependabot, instruction blocks, deny entries, package.json selectors, Builds gitlink v6.4.4; .releaserc.json, commitlint.config.mjs and bmad-testarch-ci skill copies removed",
+  "record_sha256": "1a6b8a5f63896c2ab2e24db418dbafd767e3ad0500510ea5516c92815ee54ce2"
+ },
+ "product_phase_1_delivered_main": {
+  "checker": "tagged v6.4.4 local_check.run (guard, package-mode Release restore/build, classified stage-3 tests), Python 3.12, SDK 11.0.100",
+  "guard": "pass",
+  "check_exit": 0,
+  "check_seconds": 193,
+  "suites": {
+   "Client": [
+    7,
+    6
+   ],
+   "Contracts": [
+    2005,
+    529
+   ],
+   "Server": [
+    2121,
+    549
+   ],
+   "Domain (Hexalith.Agents.Tests)": [
+    1086,
+    787
+   ],
+   "UI": [
+    1362,
+    1073
+   ]
+  },
+  "suites_format": "[passed, original floor]; zero failures, zero skips, failSkips true",
+  "hook_exit": 1,
+  "hook_seconds": 106,
+  "hook_result": "consumer executable asset baseline changed: 11 unique rows differ only in version (EventStore 5.3.0->5.4.0 x7, FrontComposer.Shell 6.0.0->6.0.1 x4); SHA-256 unchanged",
+  "check_log_sha256": "0c80323a04b5a834df82210765279435c7bf3398f8131ed54d6f22d0a7ef6551",
+  "hook_log_sha256": "ac45cd21c3568acb8235d4da626ab4ae477545cbeef07f830b4fb2862f9f0085",
+  "worktree_clean_before_and_after": true,
+  "hook_scratch_removed": true
+ },
+ "product_phase_2_version_only_fix": {
+  "nature": "simulated module-agent product commit from the simulated delivered main; not pushed",
+  "change": "eng/consumer-executable-assets.json: 39 '\"version\": \"5.3.0\"' -> '5.4.0' and '\"version\": \"6.0.0\"' -> '6.0.1' (all Hexalith.EventStore.* and Hexalith.FrontComposer.Shell rows)",
+  "original_blob": "e3f4f873aaca499a5ab611e1960de368f5ccd53e",
+  "fixed_blob": "22f6b75669c243dd1261a205ec4d6d88764a9b13",
+  "patch_sha256": "6efc98177b0e2f371e9e8f5225e86743cd11c7651d83a059e59b4949736fbbce",
+  "check_exit": 0,
+  "check_seconds": 190,
+  "suites_identical_to_phase_1": true,
+  "hook_exit": 0,
+  "hook_seconds": 103,
+  "hook_result": "Validated six built packages and seven isolated package consumers.",
+  "check_log_sha256": "37088736df3d873a81d6ef7825687e32fa06b9dcdf034b2a964911a6574f5dc1",
+  "hook_log_sha256": "cd9dbf86c16df2e9c60b7e8cffcc781354825b366b69c6e0f1101f294d9e1dc4",
+  "worktree_clean_after": true,
+  "hook_scratch_removed": true
+ },
+ "delivered_package_json": "absent-json leaves name/version/private/description/engines, empty devDependencies and the semantic-release override; package-lock.json is not owned and remains",
+ "runners_sha256": {
+  "ad21_refresh.py": "7c38c0d81bf97cf586b9349bb76d6b1997bfbff52db343dcea62b1a3ddef05c9",
+  "cicd_candidate.sh": "17a15bd97c463749182ad8ee7a23f175d13c53c2689ef671e75f1ae53984af6e",
+  "agents_simulated.sh": "c6d8eb01f6a70cebbd1e142cf96fc95c5eae694ab426d03aaae76bc271610b03",
+  "simulate_delivery.py": "4eeb96f911a6d1b7e25d3b8d569468a7d56e5a1a2ba015f21706210993ca4fa0",
+  "check_driver.py": "87af7be91c4e6c568fe640a166b3fed007b54b478d574aff2975080881332e61",
+  "absent_json_probe.sh": "e12ef77a5e814b88eb00da2681bf092f240617aa8cdc046bc62e146da80c5a4a"
+ },
+ "runners_note": "disposable session scripts run under run-with-temp; retained only by digest per the Evidence rule"
+}

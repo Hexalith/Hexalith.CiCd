@@ -153,14 +153,29 @@ If adopted stage 4 still selects them, add a test-project trait/filter, not a CI
   product tests. The floor script has a neutral product name.
 - Keep six-package inventory, archive integrity, UI static assets and isolated
   consumers. The prepared hook uses existing Release output and cleaned scratch,
-  without rebuilding Agents or retaining receipts. Hook enablement is pending
-  complete cross-module duplication qualification. Agents source discovery passes
-  the unchanged scanner (six files, no errors). The current `builds-version` pin
-  `v6.2.0` contains the shared floors/fail-skips fields and central NU1901/NU1902
-  treatment. The [2026-11-17 prospective scan](evidence/14/local-resume-20261117/README.md)
-  remains incomplete because the local Conversations snapshot has seven
-  unresolved discovery expressions; zero reported copies does not establish
-  clean coverage. Resolve those in Conversations' owning migration.
+  without rebuilding Agents or retaining receipts. The current `builds-version`
+  pin `v6.4.4` contains the shared floors/fail-skips fields and central
+  NU1901/NU1902 treatment. The [2026-11-21 fresh live-main scan](evidence/14/registration-20261121/README.md)
+  of the prospective registry discovers six Agents hook sources with no errors
+  and reports zero cross-module copies. Coverage is still incomplete: Commons,
+  Conversations, McpCli, PolymorphicSerializations and Works have unresolved
+  discovery expressions, which belong to their owning migrations. On 2026-11-21
+  the human decided that Agents qualifies on its own scan row, no run-level
+  errors and no finding involving Agents, the test nightly acceptance applies.
+  No scanner exception is approved.
+- The registration enables `after-unit-tests`, both C# and JavaScript/TypeScript
+  CodeQL, the five floors and fail-skips. A simulated delivery onto Agents main
+  at `v6.4.4` passes the guard and all five suites, then the hook fails: 11
+  `eng/consumer-executable-assets.json` rows still record the pre-delivery
+  catalog (EventStore 5.3.0, FrontComposer.Shell 6.0.0). Only the version
+  fields differ; every SHA-256 is unchanged. A simulated version-only product
+  update from delivered main passes the guard, the floors and the
+  six-package/seven-consumer hook. The module agent applies it after delivery,
+  because the pre-delivery pin still selects the old versions.
+- After delivery, `package.json` keeps only an empty tool-only stub, and
+  `package-lock.json` stays. The root npm files were restored on Agents main
+  for the legacy release. Deleting both is a module-agent product step (AD-21
+  step 2) once delivery has removed the legacy release.
 - Delete pinned-workflow-source, npm tooling, workflow-text and story-evidence
   assertions, traceability-manifest checks and redundant full/focused runners.
   Remove the registered nested-submodule automation scan from
@@ -170,5 +185,7 @@ If adopted stage 4 still selects them, add a test-project trait/filter, not a CI
   Historical source-mapping runners remain outside hosted gates. Runtime tests
   with story-related names stay.
 - Delivery owns legacy workflow/release/commitlint removal. Module preparation
-  preserves that perimeter. Production registration awaits the accepted pilot,
-  an acceptable Builds release, provisioning and authenticated App delivery.
+  preserves that perimeter. The pilot checkpoint was accepted on 2026-11-19, and
+  `v6.4.4` is acceptable. `setup/Hexalith.Agents.yml` and its render are prepared
+  locally but not committed. Publication waits for the AD-21 maintainer
+  provisioning. Authenticated App delivery follows publication.

@@ -566,13 +566,21 @@ and commit checks, and exact fresh-main base/head preservation before each push.
 After delivery, the normal standalone module checker is mandatory. A failed hook
 source scan blocks registration; no release, provisioned state or nightly result
 is inferred from local preparation.
-The [2026-11-17 local snapshot qualification](../../../specs/spec-cicd/evidence/14/local-resume-20261117/README.md)
-discovers every Agents hook source (six files, no errors). The local Commons
-snapshot is complete; Conversations has seven unresolved discovery expressions.
-Keep registration blocked until complete fresh live-main discovery and
-duplication qualification pass; no scanner exception is approved. The current
-`builds-version` pin `v6.2.0` contains the shared count/skip fields and central
-NU1901/NU1902 treatment; that pin is not an adoption or hook-enablement decision.
+The [2026-11-21 registration preparation](../../../specs/spec-cicd/evidence/14/registration-20261121/README.md)
+renders `setup/Hexalith.Agents.yml` at `v6.4.4`. That pin contains the shared
+count/skip fields and central NU1901/NU1902 treatment. The setup and render are
+not committed. A disposable committed candidate passes global and per-module
+validation for all seven modules. The fresh live-main scan discovers six Agents
+hook sources with no errors and reports zero copies. Commons, Conversations,
+McpCli, PolymorphicSerializations and Works still have unresolved discovery
+expressions, so coverage is incomplete. On 2026-11-21 the human decided that
+Agents' hook-source scan qualifies on the same test nightly acceptance applies:
+its own row passes with no errors, the report has no run-level errors and no
+finding involves Agents. Other modules' discovery failures stay with their
+owning migrations. A copy found once they are fixed fails Agents' nightly row
+and is fixed then. No scanner exception is approved. Registration follows the
+AD-21 maintainer provisioning: rulesets, `hexalith-release`, organization
+grants and stale-state cleanup.
 
 - **Binds:** CAP-4, CAP-7, CAP-10, CAP-12, CAP-16; every module onboarding
 - **Prevents:** migrations that need the App key in an agent session; deliveries rejected by rulesets; modules adopted with settings that bypass the ADs; legacy state misleading the new release; legacy credentials outliving their users; a first release failing on a waiver its tag lacks
