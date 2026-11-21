@@ -1,0 +1,36 @@
+{
+  "browsers": false,
+  "buildProjects": [],
+  "buildsTag": "v6.4.4",
+  "ciTimeoutMinutes": 30,
+  "codeql": [
+    "csharp",
+    "javascript-typescript"
+  ],
+  "dapr": false,
+  "dotnetTools": false,
+  "hooks": [
+    "after-unit-tests"
+  ],
+  "jobs": {},
+  "moduleManifest": null,
+  "npmWorkspaces": [],
+  "publishedBuilds": null,
+  "registry": false,
+  "schema": "hexalith.ci.v1",
+  "solution": "Hexalith.Agents.slnx",
+  "submodules": [],
+  "tests": {
+    "exclude": {},
+    "failSkips": true,
+    "integration": [],
+    "minimumExpectedTests": {
+      "test/Hexalith.Agents.Client.Tests/Hexalith.Agents.Client.Tests.csproj": 6,
+      "test/Hexalith.Agents.Contracts.Tests/Hexalith.Agents.Contracts.Tests.csproj": 529,
+      "test/Hexalith.Agents.Server.Tests/Hexalith.Agents.Server.Tests.csproj": 549,
+      "test/Hexalith.Agents.Tests/Hexalith.Agents.Tests.csproj": 787,
+      "test/Hexalith.Agents.UI.Tests/Hexalith.Agents.UI.Tests.csproj": 1073
+    }
+  },
+  "windowsCheckout": null
+}
