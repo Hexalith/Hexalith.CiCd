@@ -98,7 +98,8 @@ legacy NuGet policy 26964 and the legacy Zot push.
   include the count-boundary, fail-skips, failure-order, unsupported-policy and
   renderer-default tests. A first invocation from the wrong directory failed to
   import a sibling test module (log `141b58be…`) and is not a test result.
-- Still open: Agents `main` keeps the tool-only `package.json`/lock that
-  `05ddee8` restored, together with the legacy semantic-release
-  planner/publisher, the publish/recover/verify scripts and their tooling
-  tests. Their removal awaits a human scope decision.
+- Task 4: module-agent `2b212567` removed the legacy semantic-release
+  toolchain (root npm files, planner/publisher, publish/recover/verify scripts
+  and their tooling tests). `check.py`, the hook and the Node tooling tests
+  pass, and CI [44899631836](https://github.com/Hexalith/Hexalith.Agents/actions/runs/44899631836)
+  is green. See [`legacy-release-toolchain-removal-2b212567.json`](legacy-release-toolchain-removal-2b212567.json).

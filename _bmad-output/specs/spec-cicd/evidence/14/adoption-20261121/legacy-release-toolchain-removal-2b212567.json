@@ -1,0 +1,42 @@
+{
+  "schema": "hexalith.story14.legacy-release-toolchain-removal.v1",
+  "recorded_at": "2026-11-21",
+  "decision": "human 'apply recommended' (option A) for reopened task 4",
+  "credential_profile": "/home/administrator/.config/gh-module-agent",
+  "base": "3bfd86a9ef8fe743259e0d7c4e376f6ffb6d0ed0",
+  "head": "2b212567fc546cef1d194c9ff778b082fc80fccb",
+  "tree": "3bf2671bc17e6309227fca9e06760b4e8a43a100",
+  "message": "build: remove the legacy semantic-release toolchain",
+  "changed_paths": 20,
+  "lines": {"added": 15, "deleted": 7335},
+  "deleted": [
+    "package.json", "package-lock.json",
+    "eng/semantic-release-plan.mjs", "eng/github-release-publisher.mjs",
+    "scripts/publish-release-packages.sh", "scripts/recover-release-packages.py", "scripts/verify-github-release.py",
+    "scripts/verify-release-source.py", "scripts/pack-release-packages.py", "scripts/verify-nuget-publication.py",
+    "tests/tooling/semantic_release_plan_test.py", "tests/tooling/github_release_publisher_test.py",
+    "tests/tooling/publish_release_packages_test.py", "tests/tooling/recover_release_packages_test.py",
+    "tests/tooling/github_release_verification_test.py", "tests/tooling/release_source_proof_test.py",
+    "tests/tooling/verify_nuget_publication_test.py", "tests/tooling/package_pack_test.py"],
+  "edited": {
+    "scripts/release_package_inventory.py": "removed three helpers used only by the deleted pack script; load_packages (used by the hook) unchanged; no remaining callers of the removed helpers",
+    "CONTRIBUTING.md": "removed npm/semantic-release/legacy release instructions; local commit checks now point to check.py; releases owned by Hexalith.CiCd"},
+  "kept_with_reason": {
+    "scripts/check-built-packages.py and its imports (consumer_package_validation, nuget_package_validation, release_package_inventory, release_package_integrity, eng/release-packages.json)": "product hook",
+    "scripts/validate-nuget-packages.py, scripts/validate-consumer-package-references.py": "used by kept consumer tooling tests and fixtures",
+    "src/Hexalith.Agents.UI/wwwroot/pendingProviderCommands.js": "keeps JavaScript/TypeScript CodeQL meaningful"},
+  "owned_portions_unchanged": true,
+  "verification": {
+    "references_to_deleted_paths": "none outside _bmad-output/, .agents/, references/ and generic BMAD skill docs (log e06754653e6ba8a02359aabef6bec22ad3290548badac51a68365c40e80ebf01)",
+    "check_py": {"exit": 0, "guard": "passed (absent package.json accepted; commit message linted)", "suites": {"Client": 7, "Contracts": 2005, "Server": 2121, "Domain": 1086, "UI": 1362}, "skips": 0, "log_sha256": "ad347f2972718da1072b6b28d73d89b9250527a71b41e3f794fc7897179f1263"},
+    "hook": {"exit": 0, "result": "Validated six built packages and seven isolated package consumers.", "log_sha256": "d13ecd6d7d656977c85d49d357486446cf78fa66cd5191716407c0a7a5d7d7f6"},
+    "python_tooling_tests": {"ran": 234, "failures": 5, "errors": 1, "skipped": 51, "log_sha256": "2f2fc21c00f69ac838353bbc5abdca7aeea4b6e7a67adbff0f364fd147e31dc7",
+      "all_failures_in": "tests/tooling/story_59_verifier_test.py (subject eng/verify-story-5.9.ps1 unchanged)",
+      "pre_existing": "identical 5 failures and 1 error on an untouched export of origin/main 3bfd86a9 (log 65533ccd4555f5136a2239996e4716af15c17c0f38e60f91ade7344302d741d9); not part of hosted CI",
+      "skips": "50 parties_readiness_verifier_test.py (Parties submodule not initialized, by rule); 1 Story 5.3 test needing a Debug assembly, which passes 15/15 after a Debug build (log 832049f6b4d778419530d0ffa82096883b172f6b9815513f5e6c005bcbd609fe)"},
+    "node_tooling_tests": {"passed": 5, "exit": 0, "log_sha256": "8ce8ebd0d22bb1c47d1fed04623de9fcb50120f85093779acbc36fda4f2fc89e"}},
+  "push": {"pre_push_main": "3bfd86a9ef8fe743259e0d7c4e376f6ffb6d0ed0", "readback_main": "2b212567fc546cef1d194c9ff778b082fc80fccb", "fast_forward": true},
+  "follow_ups_outside_story_14": [
+    "story_59_verifier_test.py fails locally on main independently of this change",
+    "CONTRIBUTING 'Updating the Builds dependency' still mentions a nonpublishing release rehearsal from the legacy process"]
+}
