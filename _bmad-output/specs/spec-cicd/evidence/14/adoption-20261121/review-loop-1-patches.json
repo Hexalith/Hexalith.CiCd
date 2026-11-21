@@ -36,7 +36,7 @@
     "hosted_ci": {
       "run": 44905570784,
       "url": "https://github.com/Hexalith/Hexalith.Builds/actions/runs/44905570784",
-      "conclusion": "in_progress at record time"
+      "conclusion": "success"
     }
   },
   "agents": {
@@ -107,6 +107,17 @@
       "BH6 supersession notes (planning.md, local-implementation/README.md)",
       "BH8 release-readback-v2.0.3.json",
       "BH9 full digests"
-    ]
+    ],
+    "verification": {
+      "render_check": "exit 0 on 09297e0e",
+      "validate": {
+        "exit": 0,
+        "verdict": {
+          "global": true,
+          "modules": 7
+        },
+        "log_sha256": "68025ce8b833a6b5ae990e0e20dd2afcd3aeff8649142eab8124b51f9458863e"
+      }
+    }
   }
 }
