@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / '_bmad-output/specs/spec-cicd/evidence/18/qualify-owning-g6.py'
+SOURCE = ROOT / 'tools/qualification/qualify-owning-g6.py'
 SPEC = importlib.util.spec_from_file_location('g6_host_ports', SOURCE)
 G6 = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(G6)

@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import sys
 
-source = Path(__file__).resolve().parents[5]
+source = Path(__file__).resolve().parents[4]
 print('SUPERPROJECT SOURCE', subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True).strip(), flush=True)
 print('HARNESS SHA256', hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), flush=True)
 scratch = Path(os.environ['TMPDIR'])
@@ -130,7 +130,7 @@ if '--nightly' in sys.argv:
 if '--g6' in sys.argv:
     import runpy
     try:
-        runpy.run_path(str(Path(__file__).with_name('qualify-owning-g6.py')))['run'](root, scratch)
+        runpy.run_path(str(Path(__file__).resolve().parents[2] / 'qualify-owning-g6.py'))['run'](root, scratch)
     except Exception as failure:
         print('OWNING G6 FAILURE', type(failure).__name__, str(failure), flush=True)
         failures.append(('owning-g6', 1))

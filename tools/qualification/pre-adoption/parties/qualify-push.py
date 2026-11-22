@@ -10,7 +10,10 @@ import sys
 import tempfile
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[5]
+ROOT = HERE.parents[3]
+FIXTURES = HERE / 'fixtures'
+OUTPUT = Path(os.environ['TMPDIR']) / 'parties-publication-results'
+OUTPUT.mkdir(parents=True, exist_ok=True)
 MODULE = ROOT / 'references/Hexalith.Parties'
 BUILDS = ROOT / 'references/Hexalith.Builds'
 BASE = 'a575021fc97a8eda664711089270b60f5e570ded'
@@ -29,19 +32,19 @@ try:
     assert git('rev-parse', 'HEAD').decode().strip() == BASE
     assert git('rev-parse', 'origin/main').decode().strip() == BASE
     assert not git('diff', '--name-only')
-    state = json.loads((HERE.parent / 'current-preparation-state.json').read_text())
-    accepted = json.loads((HERE.parent / 'accepted-local-verification.json').read_text())
+    state = json.loads((FIXTURES / 'current-preparation-state.json').read_text())
+    accepted = json.loads((FIXTURES / 'accepted-local-verification.json').read_text())
     assert state['patch_sha256'] == accepted['final_patch_sha256']
-    patch = (HERE.parent / 'current-preparation.patch').read_bytes()
+    patch = (FIXTURES / 'current-preparation.patch').read_bytes()
     assert sha(patch) == state['patch_sha256']
-    normalization = json.loads((HERE / 'whitespace-normalization.json').read_text())
+    normalization = json.loads((FIXTURES / 'whitespace-normalization.json').read_text())
     with tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']) as temporary:
         temporary = Path(temporary)
         environment = dict(os.environ, GIT_INDEX_FILE=str(temporary / 'expected.index'))
         git('read-tree', BASE, environment=environment)
         subprocess.run(['git', 'apply', '--cached', '--binary', '-'], input=patch,
                        cwd=MODULE, env=environment, check=True, capture_output=True)
-        unit = json.loads((HERE.parent / accepted['unit_run'] / 'unit-only-preparation.json').read_text())
+        unit = json.loads((FIXTURES / accepted['unit_run'] / 'unit-only-preparation.json').read_text())
         for name, revision in unit['dependencies'].items():
             path = 'references/' + name
             actual_pin = git('ls-files', '--stage', '--', path).decode().split()
@@ -92,7 +95,7 @@ try:
         }
         record['messages'] = {}
         for name, message in messages.items():
-            path = HERE / (name + '-commit-message.txt')
+            path = OUTPUT / (name + '-commit-message.txt')
             path.write_text(message)
             tools.lint_message(message, name)
             if name == 'parties':
@@ -103,11 +106,11 @@ try:
                 assert result.returncode == 0, result.stdout + result.stderr
             record['messages'][name] = {'message': message, 'result': 'pass'}
         record.update(result='pass', locked_install=True, signatures_verified=True,
-                      existing_product_test_evidence=str(HERE.parent / 'accepted-local-verification.json'),
+                      existing_product_test_evidence=str(FIXTURES / 'accepted-local-verification.json'),
                       owned_files_unchanged=state['owned_files_unchanged'])
 except Exception as error:
     record['error'] = str(error)
     raise
 finally:
-    (HERE / 'pre-push-qualification.json').write_text(json.dumps(record, indent=2) + '\n')
+    (OUTPUT / 'pre-push-qualification.json').write_text(json.dumps(record, indent=2) + '\n')
 print(json.dumps(record, indent=2))

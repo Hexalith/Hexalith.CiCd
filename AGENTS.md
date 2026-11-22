@@ -59,6 +59,4 @@ and artifact links. Raw logs, tree dumps, generated patches, packages, test
 results and earlier attempts stay in the producing Actions run or under
 `$TMPDIR`; record their digest and a one-line result instead. Code that tests
 or procedures execute lives under `tools/`, never under `_bmad-output/`. Files
-added under `_bmad-output/` stay under 256 KiB. Until story 28-3 moves them,
-the approved pre-adoption runners named in
-[pre-adoption publication](docs/pre-adoption-publication.md) stay where they are.
+added under `_bmad-output/` stay under 256 KiB.

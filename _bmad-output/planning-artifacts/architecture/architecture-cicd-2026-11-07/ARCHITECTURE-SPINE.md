@@ -646,7 +646,7 @@ grants and stale-state cleanup.
   - CiCd and Builds with exactly the org owners as collaborators, no deploy keys, and no installation holding Contents, Workflows or single-file write except the CiCd App (AD-7).
 
 - **EventStore-only bootstrap, approved 2026-11-16.** Before actual accepted
-  adoption, `evidence/20/pre-adoption-verify.py` replaces the unavailable module
+  adoption, `tools/qualification/pre-adoption/eventstore/pre-adoption-verify.py` replaces the unavailable module
   checker only for exact committed product-preparation pushes. It uses shared
   Release build/unit and policy routines, applicable package/consumer tests,
   complete unchanged owned byte/mode/gitlink comparisons, isolated exports under

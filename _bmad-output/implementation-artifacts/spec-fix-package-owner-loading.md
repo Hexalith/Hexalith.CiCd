@@ -42,7 +42,7 @@ continues once exact-input qualification succeeds.
   isolated Projects worktree from freshly fetched module main and overlay the
   exact current tracked/untracked candidate before editing. Use the intended
   module-agent profile for module operations and no credential fallback.
-- Reuse `_bmad-output/specs/spec-cicd/evidence/18/local-package-build.py` for
+- Reuse `tools/qualification/pre-adoption/projects/local-package-build.py` for
   standalone disposable qualification. All clones/build output go under wrapper
   `TMPDIR`; save useful logs outside. Adapt a private driver for the isolated
   source rather than editing shared drivers or overwriting existing results.

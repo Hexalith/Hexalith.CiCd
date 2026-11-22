@@ -742,9 +742,8 @@
     Follow the approved spec-20-migrate-eventstore.md and AD-21 ordering.
     Provision the private runner and approval environment without manufacturing
     Azure authority or running faults. Use the EventStore-only pre-adoption
-    verifier (evidence/20 until story 28-3 moves it to
-    tools/qualification/pre-adoption/eventstore/) before preparation pushes,
-    with exact source/Builds identities, unchanged owned portions and
+    verifier in tools/qualification/pre-adoption/eventstore/ before preparation
+    pushes, with exact source/Builds identities, unchanged owned portions and
     immediate freshness checks. This
     exception expires at accepted adoption; normal check.py then becomes
     mandatory. Product writes use module-agent, shared changes use CiCd-agent,

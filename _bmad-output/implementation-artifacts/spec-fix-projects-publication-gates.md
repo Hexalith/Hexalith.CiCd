@@ -59,3 +59,13 @@ The package fixture attempted to discover a Folders EventStore executable outsid
 - Final detailed results and scope limits are in evidence/projects-publication-gate-fix-20261116/README.md. No module push or superproject commit was made. Keep this spec in-progress; do not mark incomplete full qualification or publication done.
 
 - Final exact-source collector repeat after repository CRLF normalization passed with zero build warnings/errors, both authenticated export protocols and effective workload binding verified, and a 2,226ms warmed restart. The refreshed SDK G-6 reports also pass33+1 with exact provider/control-plane cleanup. Scoped whitespace checks pass. The full current Projects package build remains red on the unreleased upstream attribute; no success was substituted for that result.
+
+## Runner relocation (story 28-3, 2026-11-22)
+
+The runner named in the frozen intent now lives at
+`tools/qualification/qualify-owning-g6.py`; the Projects caller is
+`tools/qualification/pre-adoption/projects/local-package-build.py`. G-6 now
+reads its 21 retained selectors from the frozen projection under
+`tools/qualification/fixtures/` instead of the Projects checkout under
+qualification. Otherwise the relocation changes paths and scratch output only; the frozen product requirements,
+historical results and publication limits above remain in force.

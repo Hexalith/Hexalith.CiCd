@@ -523,12 +523,19 @@ class ValidateTests(unittest.TestCase):
 
 class GlobalTests(unittest.TestCase):
     def test_bootstrap_digest_failure_fails_actual_global_runner(self):
-        with (mock.patch.object(global_check, "run_tool_tests"),
+        with (workspace() as fixture,
+              mock.patch.object(global_check, "run_tool_tests"),
+              mock.patch.object(global_check, "check_app_inventory"),
               mock.patch.object(global_check, "lint_workflows"),
               mock.patch.object(global_check, "check_release"),
               mock.patch.object(global_check, "github_api", return_value={"encoding": "base64", "content": "dGFtcGVyZWQ="}),
               redirect_stderr(io.StringIO()) as diagnostic):
-            self.assertFalse(global_check.run(ROOT))
+            fixture.module()
+            fixture.commit()
+            manifest = fixture.root / "tools/tests/fixtures/delivery-bootstrap.json"
+            manifest.parent.mkdir(parents=True)
+            shutil.copyfile(ROOT / "tools/tests/fixtures/delivery-bootstrap.json", manifest)
+            self.assertFalse(global_check.run(fixture.root))
         self.assertIn("global immutable delivery bootstrap:", diagnostic.getvalue())
         self.assertIn("source digest mismatch", diagnostic.getvalue())
 

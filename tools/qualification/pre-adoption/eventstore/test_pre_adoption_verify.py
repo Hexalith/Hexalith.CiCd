@@ -229,7 +229,7 @@ class ReleasedPreparationConfigurationTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory(prefix='eventstore-stage-projection-')
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        self.plan = json.loads(Path(__file__).with_name('planned-configuration.json').read_text())
+        self.plan = json.loads((Path(__file__).parent / 'fixtures/planned-configuration.json').read_text())
         self.sdk_output = '10.0.404 [/fixture/sdk]\n11.0.100 [/fixture/sdk]\n'
         self.bin = self.root / 'bin'
         self.bin.mkdir()

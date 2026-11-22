@@ -22,7 +22,7 @@ import tarfile
 
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[4]
+ROOT = HERE.parents[3]
 MODULE = "Hexalith.EventStore"
 CI_PROFILE = "/home/administrator/.config/gh-cicd-agent"
 MODULE_TOKEN_FILE = Path("/home/administrator/.config/gh-module-agent/token")
@@ -394,7 +394,7 @@ def main() -> int:
         git(module, "remote", "set-url", "origin", git(args.module, "config", "--get", "remote.origin.url"))
         # Export only already available direct repositories, never initialize
         # the module's nested gitlinks. Missing source is a blocking prerequisite.
-        plan = json.loads((HERE / "planned-configuration.json").read_text())
+        plan = json.loads((HERE / "fixtures/planned-configuration.json").read_text())
         configuration, projection = preparation_stage_configuration(plan, args.builds_tag, command, module)
         ci_pipeline.validate_config(configuration, repository="Hexalith/" + MODULE)
         stage_configuration = workspace / "eventstore-preparation-stages-1-3.json"

@@ -1,0 +1,509 @@
+{
+  "candidate": "6f63af7d65a82bdac5c7612b77318d4a6611d994",
+  "commands": [
+    {
+      "label": "package-checks",
+      "arguments": [
+        "python3",
+        "scripts/tests/test_release_packages.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11,
+      "log": "package-checks.log"
+    },
+    {
+      "label": "nightly-classification",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-nightly-drift-gates.ps1",
+        "-ProviderProfile",
+        "pinned-snapshots"
+      ],
+      "exit_code": 1,
+      "seconds": 0.92,
+      "log": "nightly-classification.log"
+    },
+    {
+      "label": "dotnet11-runtimes",
+      "arguments": [
+        "/tmp/hexalith-job.WY3Qxeud/dotnet11/dotnet",
+        "--list-runtimes"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0,
+      "log": "dotnet11-runtimes.log"
+    },
+    {
+      "label": "package-restore",
+      "arguments": [
+        "dotnet",
+        "restore",
+        "Hexalith.Folders.CI.slnx",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "exit_code": 0,
+      "seconds": 1.32,
+      "log": "package-restore.log"
+    },
+    {
+      "label": "package-build",
+      "arguments": [
+        "dotnet",
+        "build",
+        "Hexalith.Folders.CI.slnx",
+        "--no-restore",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "exit_code": 0,
+      "seconds": 24.57,
+      "log": "package-build.log"
+    },
+    {
+      "label": "generator-dotnet11-only",
+      "arguments": [
+        "/tmp/hexalith-job.WY3Qxeud/dotnet11/dotnet",
+        "msbuild",
+        "src/Hexalith.Folders.Client/Hexalith.Folders.Client.csproj",
+        "-t:GenerateHexalithFoldersIdempotencyHelpers",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "exit_code": 1,
+      "seconds": 0.68,
+      "log": "generator-dotnet11-only.log"
+    },
+    {
+      "label": "native-generator-dotnet11-only",
+      "arguments": [
+        "/tmp/hexalith-job.WY3Qxeud/dotnet11/dotnet",
+        "msbuild",
+        "src/Hexalith.Folders.Client/Hexalith.Folders.Client.csproj",
+        "-t:VerifyHexalithFoldersNativeClient",
+        "-p:Configuration=Release",
+        "-p:UseHexalithProjectReferences=false",
+        "-p:NuGetAudit=true",
+        "-p:NuGetAuditMode=all",
+        "-p:NuGetAuditLevel=low",
+        "-warnaserror",
+        "-m:1"
+      ],
+      "exit_code": 1,
+      "seconds": 0.47,
+      "log": "native-generator-dotnet11-only.log"
+    },
+    {
+      "label": "dapr-prerequisite",
+      "arguments": [
+        "dapr",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11,
+      "log": "dapr-prerequisite.log"
+    },
+    {
+      "label": "docker-prerequisite",
+      "arguments": [
+        "docker",
+        "version",
+        "--format",
+        "{{.Server.Version}}"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07,
+      "log": "docker-prerequisite.log"
+    },
+    {
+      "label": "test-Hexalith.Folders.Sample.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/samples/Hexalith.Folders.Sample.Tests/bin/Release/net11.0/Hexalith.Folders.Sample.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 0.62,
+      "log": "attempt-1/test-Hexalith.Folders.Sample.Tests.log",
+      "summary": {
+        "total": 10,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.Cli.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.Cli.Tests/bin/Release/net11.0/Hexalith.Folders.Cli.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 0.62,
+      "log": "attempt-1/test-Hexalith.Folders.Cli.Tests.log",
+      "summary": {
+        "total": 808,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.EventStore.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.EventStore.Tests/bin/Release/net11.0/Hexalith.Folders.EventStore.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 5.99,
+      "log": "attempt-1/test-Hexalith.Folders.EventStore.Tests.log",
+      "summary": {
+        "total": 124,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.IntegrationTests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.IntegrationTests/bin/Release/net11.0/Hexalith.Folders.IntegrationTests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 47.38,
+      "log": "attempt-1/test-Hexalith.Folders.IntegrationTests.log",
+      "summary": {
+        "total": 854,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.LoadTests.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.LoadTests.Tests/bin/Release/net11.0/Hexalith.Folders.LoadTests.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "attempt-1/test-Hexalith.Folders.LoadTests.Tests.log",
+      "summary": {
+        "total": 12,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.Mcp.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.Mcp.Tests/bin/Release/net11.0/Hexalith.Folders.Mcp.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 1.12,
+      "log": "attempt-1/test-Hexalith.Folders.Mcp.Tests.log",
+      "summary": {
+        "total": 756,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.Server.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.Server.Tests/bin/Release/net11.0/Hexalith.Folders.Server.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 289.42,
+      "log": "attempt-1/test-Hexalith.Folders.Server.Tests.log",
+      "summary": {
+        "total": 1437,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 11
+      },
+      "proof_status": "incomplete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.Testing.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.Testing.Tests/bin/Release/net11.0/Hexalith.Folders.Testing.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "attempt-1/test-Hexalith.Folders.Testing.Tests.log",
+      "summary": {
+        "total": 75,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.UI.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.UI.Tests/bin/Release/net11.0/Hexalith.Folders.UI.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3,
+      "log": "attempt-1/test-Hexalith.Folders.UI.Tests.log",
+      "summary": {
+        "total": 557,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.Workers.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.HIdwwph5/Hexalith.Folders/tests/Hexalith.Folders.Workers.Tests/bin/Release/net11.0/Hexalith.Folders.Workers.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 6.07,
+      "log": "attempt-1/test-Hexalith.Folders.Workers.Tests.log",
+      "summary": {
+        "total": 186,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.UI.E2E.Tests",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-complete-project-tests.ps1",
+        "-ProjectName",
+        "Hexalith.Folders.UI.E2E.Tests"
+      ],
+      "exit_code": 0,
+      "seconds": 15.46,
+      "log": "attempt-1/test-Hexalith.Folders.UI.E2E.Tests.log",
+      "summary": {
+        "total": 63,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "complete",
+      "status": "reused",
+      "source_candidate": "91f557d1633f6fd8d912faa9bd47085490401c11"
+    },
+    {
+      "label": "test-Hexalith.Folders.AppHost.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/tests/Hexalith.Folders.AppHost.Tests/bin/Release/net11.0/Hexalith.Folders.AppHost.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 5.65,
+      "log": "test-Hexalith.Folders.AppHost.Tests.log",
+      "summary": {
+        "total": 193,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 10,
+        "not_run": 6
+      },
+      "proof_status": "incomplete"
+    },
+    {
+      "label": "test-Hexalith.Folders.Tests",
+      "arguments": [
+        "dotnet",
+        "/tmp/hexalith-job.WY3Qxeud/Hexalith.Folders/tests/Hexalith.Folders.Tests/bin/Release/net11.0/Hexalith.Folders.Tests.dll",
+        "-noLogo",
+        "-noColor"
+      ],
+      "exit_code": 0,
+      "seconds": 107.08,
+      "log": "test-Hexalith.Folders.Tests.log",
+      "summary": {
+        "total": 2489,
+        "errors": 0,
+        "failed": 0,
+        "skipped": 2,
+        "not_run": 0
+      },
+      "proof_status": "incomplete"
+    },
+    {
+      "label": "test-Hexalith.Folders.Contracts.Tests",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-complete-project-tests.ps1",
+        "-ProjectName",
+        "Hexalith.Folders.Contracts.Tests"
+      ],
+      "exit_code": 1,
+      "seconds": 69.45,
+      "log": "test-Hexalith.Folders.Contracts.Tests.log",
+      "summary": {
+        "total": 493,
+        "errors": 0,
+        "failed": 6,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "failed"
+    },
+    {
+      "label": "test-Hexalith.Folders.Client.Tests",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-complete-project-tests.ps1",
+        "-ProjectName",
+        "Hexalith.Folders.Client.Tests"
+      ],
+      "exit_code": 1,
+      "seconds": 26.56,
+      "log": "test-Hexalith.Folders.Client.Tests.log",
+      "summary": {
+        "total": 392,
+        "errors": 0,
+        "failed": 16,
+        "skipped": 0,
+        "not_run": 0
+      },
+      "proof_status": "failed"
+    },
+    {
+      "label": "capacity-smoke",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-capacity-smoke-ci-gates.ps1"
+      ],
+      "exit_code": 0,
+      "seconds": 9.63,
+      "log": "capacity-smoke.log"
+    },
+    {
+      "label": "capacity-calibration",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-capacity-calibration-gates.ps1"
+      ],
+      "exit_code": 0,
+      "seconds": 13.73,
+      "log": "capacity-calibration.log"
+    },
+    {
+      "label": "forgejo-alpine-smoke",
+      "arguments": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "tests/tools/run-forgejo-smart-http-alpine-smoke.ps1",
+        "-RunId",
+        "038e552cd8a74c969b40c438e42e7171"
+      ],
+      "exit_code": 1,
+      "seconds": 4.14,
+      "log": "forgejo-alpine-smoke.log"
+    }
+  ]
+}

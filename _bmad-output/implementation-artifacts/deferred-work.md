@@ -481,3 +481,27 @@ source_spec: `30-1-verify-the-cicd-app-workflow-inventory.md`
 severity: medium
 reason: tools/check_app_inventory.py and check_global.workflow_paths compare path.suffix case-sensitively, so a .github/workflows file ending .YML that selects cicd-app is not inspected. GitHub documents only .yml and .yaml and does not state whether matching is case-sensitive. A hosted probe of an uppercase-extension workflow, or an authoritative GitHub statement, settles it; if GitHub runs such files, casefold the suffix in both discovery paths. (declared severity: medium (unverified))
 status: open
+
+### DW-41: The relocated EventStore verifier suite is not discovered by the CiCd tool-suite gate.
+origin: spec-deferred 20f3d4904c68
+location: tools/check_global.py:401
+source_spec: `28-3-executable-fixtures-out-of-evidence.md`
+severity: medium
+reason: check_global.run_tool_tests globs only tools/tests/test_*.py, so tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py (17 tests) runs only when invoked by hand. Pre-existing: the suite was equally undiscovered under evidence/20. It needs jsonschema and Builds release fdda17c0a4538b0f7c99f813c20ca24b49006530 objects at references/Hexalith.Builds, so gate wiring needs a prerequisite decision.
+status: open
+
+### DW-42: Live in-progress procedures still name executables under evidence, which AGENTS.md now forbids without exception.
+origin: spec-deferred eaab043bb34f
+location: _bmad-output/implementation-artifacts/spec-23-migrate-tenants.md:64
+source_spec: `28-3-executable-fixtures-out-of-evidence.md`
+severity: medium
+reason: spec-23-migrate-tenants.md (in-progress) names evidence/23/read-preflight.py for the next read-only AD-21 refresh and evidence/23/qualify-eventstore-snapshot-candidate.py; eventstore-release-readiness-20261117 READMEs invoke evidence-resident verify and audit scripts. Pre-existing: the removed AGENTS.md sentence exempted only the runbook-named pre-adoption runners for stories 17, 18, 20 and 21, which this story relocated. Resolution needs AGENTS.md wording or relocating story 23 tooling, both outside this story.
+status: open
+
+### DW-43: The Parties publication runner's exact-input checks are bare asserts that python3 -O removes.
+origin: spec-deferred ef40bb6bea8b
+location: tools/qualification/pre-adoption/parties/qualify-push.py:32
+source_spec: `28-3-executable-fixtures-out-of-evidence.md`
+severity: medium
+reason: tools/qualification/pre-adoption/parties/qualify-push.py checks HEAD and origin, patch identity, dependency pins, untracked source bytes and modes and the expected tree with assert; under -O they vanish and the record reports result pass. Pre-existing and unchanged by the path-only relocation, which forbids logic changes; other repository procedures use run-with-temp python3 -O -B, so the pattern can be copied.
+status: open

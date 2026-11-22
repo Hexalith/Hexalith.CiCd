@@ -142,11 +142,11 @@ def run(root, scratch):
         project = owner / 'tests' / name / (name + '.csproj')
         subprocess.run(['dotnet', 'build', str(project), *flags], cwd=owner, check=True)
         assemblies[name] = next((project.parent / 'bin/Release').glob('*/' + name + '.dll'))
-    historical = root / '_bmad-output/implementation-artifacts/qualification-evidence/g-6-runtime-toolchain-20261001/attempt-16/capture/deterministic-support.json'
+    historical = Path(__file__).resolve().parent / 'fixtures/deterministic-support.json'
     selectors = json.loads(historical.read_text())['selectors']
     if len(selectors) != 21 or len(set(selectors)) != 21:
         raise ValueError('Expected the exact retained 21 owning support methods')
-    results = Path(__file__).resolve().parent
+    results = scratch
     support = scratch / 'owning-support-ctrf.json'
     command = ['dotnet', str(assemblies['Hexalith.EventStore.Server.Tests'])]
     command += [argument for method in selectors for argument in ('-method', method)]

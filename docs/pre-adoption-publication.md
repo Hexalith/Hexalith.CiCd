@@ -52,10 +52,13 @@ and retain useful results outside it. Initialize no nested submodules in the
 umbrella checkout.
 
 Existing runners provide reusable checks, but several bind hardcoded historical
-candidates and output paths. Inspect and adapt them in a disposable job before
+candidates. Their fixtures live beside the relocated tools and default raw
+output stays under `$TMPDIR` (the EventStore verifier retains its explicit
+`--report` contract). Inspect and adapt them in a disposable job before
 using them for another candidate; retain the runner's exact source identity
-and invocation, and write fresh results to a new evidence directory. Do not
-overwrite old qualification or treat a stale pass as covering the current tree.
+and invocation. Write one receipt with revisions, tree ids, digests and results;
+keep raw output under `$TMPDIR`. Do not overwrite old qualification or treat a
+stale pass as covering the current tree.
 
 Run released policy checks from the committed bytes of an acceptable immutable
 Builds release. Retain the exact tag and full commit identity, its authenticated
@@ -65,9 +68,10 @@ dirty or unreleased umbrella Builds sources cannot supply a released-policy pass
 
 | Module | Existing check implementations | Evidence boundary |
 | --- | --- | --- |
-| Folders | [Product qualification](../_bmad-output/specs/spec-cicd/evidence/17/verify-product-candidate.py), [final candidate checks](../_bmad-output/specs/spec-cicd/evidence/17/verify-final-candidate.py) | Historical qualification includes audit and retained-product failures. The saved candidate excludes later owner repair; it cannot qualify that repair unchanged. |
-| Parties | [Publication qualification](../_bmad-output/specs/spec-cicd/evidence/21/publication/qualify-push.py), [accepted product evidence](../_bmad-output/specs/spec-cicd/evidence/21/accepted-local-verification.json) | That pass binds one preparation tree. Additional pending source or gitlink changes require new matching evidence. |
-| Projects | [Package/product qualification](../_bmad-output/specs/spec-cicd/evidence/18/local-package-build.py), [owning G-6](../_bmad-output/specs/spec-cicd/evidence/18/qualify-owning-g6.py) | Full package/runtime checks remain required. The [Folders owner prerequisite](../_bmad-output/specs/spec-cicd/evidence/18/folder-owner-prerequisite.md) includes unexecuted component cases; local smoke results do not prove complete pre-push acceptance or remote owner availability. |
+| EventStore | [Preparation verifier](../tools/qualification/pre-adoption/eventstore/pre-adoption-verify.py), [verifier tests](../tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py) | The Story 20 EventStore-only approval retains its exact-input, released-policy, adoption-expiry and explicit durable-report requirements. |
+| Folders | [Product qualification](../tools/qualification/pre-adoption/folders/verify-product-candidate.py), [final candidate checks](../tools/qualification/pre-adoption/folders/verify-final-candidate.py) | Historical qualification includes audit and retained-product failures. The saved candidate excludes later owner repair; it cannot qualify that repair unchanged. |
+| Parties | [Publication qualification](../tools/qualification/pre-adoption/parties/qualify-push.py), [accepted product evidence](../tools/qualification/pre-adoption/parties/fixtures/accepted-local-verification.json) (byte-identical to the story 21 record) | That pass binds one preparation tree. Additional pending source or gitlink changes require new matching evidence. |
+| Projects | [Package/product qualification](../tools/qualification/pre-adoption/projects/local-package-build.py), [owning G-6](../tools/qualification/qualify-owning-g6.py) | Full package/runtime checks remain required. The [Folders owner prerequisite](../_bmad-output/specs/spec-cicd/evidence/18/folder-owner-prerequisite.md) includes unexecuted component cases; local smoke results do not prove complete pre-push acceptance or remote owner availability. |
 
 Keep failed, skipped, unrun or unavailable required checks visible. Fix product
 failures; report pipeline defects and permission refusals under the existing

@@ -16,25 +16,27 @@ import subprocess
 import sys
 import time
 
-CICD = Path(__file__).resolve().parents[5]
-EVIDENCE = Path(__file__).resolve().parent
+CICD = Path(__file__).resolve().parents[4]
+FIXTURES = Path(__file__).resolve().parent / 'fixtures'
 SOURCE = CICD / 'references/Hexalith.Folders'
 BASE = 'a448d20873dc9e809623f85da206e8d8a13bb9ab'
 SCRATCH = Path(os.environ['TMPDIR'])
+OUTPUT = SCRATCH / 'folders-product-results'
+OUTPUT.mkdir(parents=True, exist_ok=True)
 ROOT = SCRATCH / 'Hexalith.Folders'
 # Adopt and reap only our own orphaned subprocess descendants on Linux.
 ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0)
-COMMON = Path('/home/administrator/projects/hexalith/cicd/.git/modules/references')
+COMMON = Path(subprocess.check_output(['git', '-C', str(CICD), 'rev-parse', '--path-format=absolute', '--git-common-dir'], text=True).strip()) / 'modules/references'
 RESULT = {'status': 'running', 'base': BASE, 'cicd': subprocess.check_output(['git', '-C', str(CICD), 'rev-parse', 'HEAD'], text=True).strip(), 'inputs': {}, 'commands': [], 'limitations': []}
 
 
 def save():
-    (EVIDENCE / 'product-verification.json').write_text(json.dumps(RESULT, indent=2) + '\n')
+    (OUTPUT / 'product-verification.json').write_text(json.dumps(RESULT, indent=2) + '\n')
 
 
 def job(label, arguments, *, cwd=ROOT, environment=None, timeout=1800):
     start = time.time()
-    log = EVIDENCE / (label + '.log')
+    log = OUTPUT / (label + '.log')
     print(label, 'running', flush=True)
     env = os.environ.copy()
     env.update(CI='true', DOTNET_NOLOGO='1', DOTNET_CLI_TELEMETRY_OPTOUT='1', DOTNET_CLI_UI_LANGUAGE='en-US', MSBUILDDISABLENODEREUSE='1', UseSharedCompilation='false')
@@ -109,7 +111,7 @@ for relative in sorted(set(changed + untracked) - {''}):
         raise RuntimeError('unsupported candidate path: ' + relative)
 git('add', '--all')
 patch = subprocess.check_output(['git', '-C', str(ROOT), 'diff', '--cached', '--binary', BASE])
-(EVIDENCE / 'folders-product-candidate.patch').write_bytes(patch)
+(OUTPUT / 'folders-product-candidate.patch').write_bytes(patch)
 RESULT['patch_sha256'] = hashlib.sha256(patch).hexdigest()
 RESULT['tree'] = git('write-tree')
 subprocess.run(['git', '-C', str(ROOT), '-c', 'user.name=Hexalith module agent', '-c', 'user.email=module-agent@hexalith.com', 'commit', '-m', 'build: prepare Folders central CI migration'], check=True, capture_output=True)
@@ -120,8 +122,8 @@ owned = ['.github/workflows', '.github/dependabot.yml', '.github/hexalith-ci.jso
 previous = git('ls-tree', '-r', BASE, '--', *owned)
 current = git('ls-tree', '-r', 'HEAD', '--', *owned)
 RESULT['owned_tree_preserved'] = previous == current
-(EVIDENCE / 'owned-tree-baseline.txt').write_text(previous + '\n')
-(EVIDENCE / 'owned-tree-candidate.txt').write_text(current + '\n')
+(OUTPUT / 'owned-tree-baseline.txt').write_text(previous + '\n')
+(OUTPUT / 'owned-tree-candidate.txt').write_text(current + '\n')
 if previous != current:
     raise RuntimeError('owned tree changed')
 # Ordinary standalone copies at exact existing local objects: no submodule init.
@@ -138,7 +140,7 @@ sys.path.insert(0, str(CICD / 'tools'))
 import delivery_runtime
 from scan_discovery import Discovery
 files, errors = Discovery(delivery_runtime.Git(ROOT), RESULT['candidate']).discover()
-(EVIDENCE / 'action-discovery.json').write_text(json.dumps({'candidate': RESULT['candidate'], 'paths': sorted(files), 'errors': errors}, indent=2) + '\n')
+(OUTPUT / 'action-discovery.json').write_text(json.dumps({'candidate': RESULT['candidate'], 'paths': sorted(files), 'errors': errors}, indent=2) + '\n')
 RESULT['action_discovery'] = {'files': len(files), 'error_count': len(errors), 'diagnostic_samples': errors[:5], 'diagnostics': 'action-discovery.json'}
 save()
 # Released audit/action/commit policy, without delivered-state substitution.
@@ -224,20 +226,20 @@ save()
 # Attempt every retained project once when its complete assembly was built.
 # Missing assemblies remain explicit failures, never exemptions.
 from ci_pipeline import discover_test_projects, classify_projects
-config = json.loads((EVIDENCE / 'registration-candidate/rendered/Hexalith.Folders/.github/hexalith-ci.json').read_text())
+config = json.loads((FIXTURES / 'registration-candidate/rendered/Hexalith.Folders/.github/hexalith-ci.json').read_text())
 discovered = discover_test_projects(ROOT, 'Hexalith.Folders.CI.slnx')
 classified = classify_projects(discovered, config, repository='Hexalith/Hexalith.Folders')
 RESULT['shared_classification'] = dataclasses.asdict(classified)
-(EVIDENCE / 'shared-classification.json').write_text(json.dumps(RESULT['shared_classification'], indent=2) + '\n')
+(OUTPUT / 'shared-classification.json').write_text(json.dumps(RESULT['shared_classification'], indent=2) + '\n')
 projects = [(path, Path(path).stem) for path in (*classified.unit, *classified.integration)]
-prior = json.loads((EVIDENCE / 'attempt-1/product-verification.json').read_text())
+prior = json.loads((FIXTURES / 'attempt-1/product-verification.json').read_text())
 reusable = {'Hexalith.Folders.Sample.Tests', 'Hexalith.Folders.Cli.Tests', 'Hexalith.Folders.EventStore.Tests', 'Hexalith.Folders.IntegrationTests', 'Hexalith.Folders.LoadTests.Tests', 'Hexalith.Folders.Mcp.Tests', 'Hexalith.Folders.Server.Tests', 'Hexalith.Folders.Testing.Tests', 'Hexalith.Folders.UI.Tests', 'Hexalith.Folders.Workers.Tests', 'Hexalith.Folders.UI.E2E.Tests'}
 RESULT['reuse_basis'] = 'Attempt-1 immutable candidate ' + prior['candidate'] + '; unchanged test/source C# inputs and package/dependency revisions. Zero-exit/incomplete counters remain incomplete. Changed Contracts, Client and core provider suites are rerun.'
 for command in prior['commands']:
     if command['label'].removeprefix('test-') in reusable:
         reused = dict(command, status='reused', source_candidate=prior['candidate'], log='attempt-1/' + command['log'])
         RESULT['commands'].append(reused)
-second = json.loads((EVIDENCE / 'attempt-2/product-verification.json').read_text())
+second = json.loads((FIXTURES / 'attempt-2/product-verification.json').read_text())
 for command in second['commands']:
     if command['label'] == 'test-Hexalith.Folders.Tests':
         RESULT['commands'].append(dict(command, status='reused', source_candidate=second['candidate'], log='attempt-2/' + command['log']))
