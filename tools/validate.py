@@ -24,13 +24,18 @@ checks = importlib.util.module_from_spec(_spec)
 sys.modules[_spec.name] = checks
 _spec.loader.exec_module(checks)
 renderer = checks.renderer
+scope_checks = checks.load_module("_cicd_change_scope", Path(__file__).with_name("change_scope.py"))
 
 
-def global_checks(project: Path) -> bool:
+def global_checks(project: Path, scope="full") -> bool:
     """The same locked global entry point is invoked exactly once per verdict."""
     try:
-        output = checks.command(["uv", "run", "--locked", "--script", "--python", sys.executable,
-                                 Path(__file__).with_name("check_global.py"), "--project-root", project],
+        scope = scope_checks.normalize_scope(scope)
+        arguments = ["uv", "run", "--locked", "--script", "--python", sys.executable,
+                     Path(__file__).with_name("check_global.py"), "--project-root", project]
+        if scope != "full":
+            arguments += ["--scope", scope]
+        output = checks.command(arguments,
                                 cwd=project, timeout=1800)
         if output:
             checks.log(output.decode("utf-8", "backslashreplace").rstrip())
@@ -148,9 +153,14 @@ def check_module(project: Path, repository: str, contract) -> None:
                 raise checks.CheckError(f"{repository}: live-main {label} {path} must be a committed regular file")
 
 
-def validate(project: Path) -> tuple[dict, int]:
+def validate(project: Path, scope="full", event_name=None) -> tuple[dict, int]:
     project = project.resolve()
-    global_passed = global_checks(project)
+    scope = scope_checks.normalize_scope(scope)
+    if event_name not in (None, "", "pull_request", "push", "schedule"):
+        scope = "full"
+    if scope == "none" and event_name in ("pull_request", "push"):
+        return {"global": True, "modules": []}, 0
+    global_passed = global_checks(project) if scope == "full" else global_checks(project, scope)
     passed = []
     try:
         registrations = renderer.registry(project)
@@ -187,11 +197,12 @@ def emit_verdict(verdict: dict) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=ROOT)
+    parser.add_argument("--scope", default="full")
     args = parser.parse_args()
     try:
         if sys.version_info < (3, 12):
             raise checks.CheckError("Python 3.12 or later is required")
-        verdict, status = validate(args.project_root)
+        verdict, status = validate(args.project_root, args.scope, os.environ.get("GITHUB_EVENT_NAME"))
     except checks.FAILURES as error:
         checks.log(f"validation: {error}")
         verdict, status = {"global": False, "modules": []}, 1

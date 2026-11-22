@@ -264,7 +264,7 @@
         }
       },
       "context_jobs": {
-        "validate": "5673ca07ffa3415b79ce6c5b35696293e1b2751f099121dcb9a6555e3e8a3c90"
+        "validate": "bc77a8fba193d8a453a1e79828c2740f35d25b9b6363bc950e3201fb83ef95fa"
       },
       "jobs": {
         "deliver": {
@@ -274,7 +274,7 @@
               "group": "deliver-owned-writes",
               "cancel-in-progress": false
             },
-            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}",
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && (github.event_name != 'push' || needs.validate.outputs.skip_checks != '1') && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}",
             "runs-on": "ubuntu-latest",
             "timeout-minutes": 40,
             "environment": "cicd-app",

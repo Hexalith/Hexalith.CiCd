@@ -13,29 +13,49 @@ from __future__ import annotations
 
 import json
 import hashlib
+import os
 from pathlib import Path
 import re
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
+from contextlib import redirect_stderr, redirect_stdout
+import io
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
 import yaml
-from delivery_support import ROOT, Workspace, bootstrap_source, git
+from delivery_support import ROOT, Workspace, bootstrap_source, git, load
+
+scope_checks = load(ROOT / "tools/change_scope.py", "_workflow_change_scope")
+
+
+class GithubString(str):
+    """GitHub expression equality ignores string case; outputs preserve it."""
+    def __eq__(self, other):
+        return self.casefold() == other.casefold() if isinstance(other, str) else super().__eq__(other)
+
+    def __ne__(self, other):
+        return not self == other
 
 
 class Workflow:
     def __init__(self, workspace, *, ref="refs/heads/main", event="push", validation="success", verdict=None,
                  mint_fail=(), cancel_after=None, delivery="full", g6_plan=None, job="deliver",
-                 suite_result="success", checkout_fail=False):
+                 suite_result="success", checkout_fail=False, scope=None, classification="full",
+                 builds_checkout_fail=False, scope_fail=False):
         self.w = workspace
         self.document = yaml.safe_load((ROOT / ".github/workflows/deliver.yml").read_bytes())
         self.job = self.document["jobs"][job]
         self.job_name = job
         self.suite_result = suite_result
         self.checkout_fail = checkout_fail
+        self.classification = classification
+        self.builds_checkout_fail = builds_checkout_fail
+        self.scope_fail = scope_fail
         self.context = {"github": {"ref": ref, "sha": workspace.sha, "repository": "Hexalith/Hexalith.CiCd",
             "workspace": str(workspace.root), "run_id": "101", "run_attempt": "1", "event_name": event, "token": "inert-checkout-token"},
             "needs": {"validate": {"result": validation, "outputs": {"verdict": json.dumps(verdict) if verdict is not None else ""}}},
@@ -45,6 +65,7 @@ class Workflow:
         # Model validation at its I/O boundary, then evaluate the real job's
         # output mapping even when that job's result is failure.
         self.context["steps"] = {"validate": {"outputs": self.context["needs"]["validate"]["outputs"]},
+                                 "scope": {"outputs": {"scope": scope or "", "skip_checks": str(scope_checks.skip_checks(scope, event))}},
                                  "g6_qualify": {"outputs": {"plan": json.dumps(g6_plan) if g6_plan else ""}}}
         self.context["needs"]["validate"]["outputs"] = {
             key: self.expand(value) for key, value in self.document["jobs"]["validate"].get("outputs", {}).items()}
@@ -70,7 +91,7 @@ class Workflow:
         result = []
         for token in tokens:
             if token.startswith("'"):
-                result.append(repr(token[1:-1]))
+                result.append("string(" + repr(token[1:-1].replace("''", "'")) + ")")
             elif token in {"&&", "||", "!"}:
                 result.append({"&&": "and", "||": "or", "!": "not"}[token])
             elif token in {"==", "!=", "(", ")", ","}:
@@ -80,10 +101,11 @@ class Workflow:
             elif token in {"true", "false"}:
                 result.append("True" if token == "true" else "False")
             else:
-                result.append(repr(self.lookup(token)))
+                actual = self.lookup(token)
+                result.append("string(" + repr(actual) + ")" if isinstance(actual, str) else repr(actual))
         return eval(" ".join(result), {"__builtins__": {}}, {"always": lambda: True,
             "success": lambda: not self.failed and not self.cancelled, "failure": lambda: self.failed, "cancelled": lambda: self.cancelled,
-            "format": lambda pattern, value: pattern.format(value)})
+            "format": lambda pattern, value: pattern.format(value), "string": GithubString})
 
     def expand(self, value):
         if not isinstance(value, str):
@@ -141,6 +163,8 @@ class Workflow:
                         # Candidate bytes already exist in this real Git fixture;
                         # only the external checkout action is substituted.
                         if step.get("id") == "cicd" and self.checkout_fail:
+                            outcome = "failure"
+                        if inputs.get("repository") == "Hexalith/Hexalith.Builds" and self.builds_checkout_fail:
                             outcome = "failure"
                         self.checkouts.append(inputs)
                         self.finish_step(identifier, step, outcome, outputs)
@@ -206,6 +230,20 @@ class Workflow:
                 else:
                     raise AssertionError("unhandled external action " + action)
             elif "run" in step:
+                env = base | {key: self.expand(value) for key, value in step.get("env", {}).items()}
+                if identifier == "scope" and self.job_name == "validate":
+                    self.commands.append(shlex.split(step["run"]))
+                    outputs = {} if self.scope_fail else {"scope": self.classification,
+                        "skip_checks": str(scope_checks.skip_checks(self.classification, env.get("CHANGE_SCOPE_EVENT", "")))}
+                    self.finish_step(identifier, step, "failure" if self.scope_fail else "success", outputs)
+                    continue
+                if identifier == "validate" and self.job_name == "validate":
+                    command = shlex.split(step["run"])
+                    self.assert_validation_command(command)
+                    self.commands.append(command)
+                    outputs = {"verdict": json.dumps({"global": True, "modules": []})}
+                    self.finish_step(identifier, step, "success", outputs)
+                    continue
                 if identifier == "g6_tests" and self.job_name == "validate":
                     self.finish_step(identifier, step, self.suite_result, outputs)
                     continue
@@ -216,7 +254,6 @@ class Workflow:
                     raise AssertionError("privileged command is not isolated Python")
                 self.commands.append(command)
                 self.w.outputs.unlink(missing_ok=True)
-                env = base | {key: self.expand(value) for key, value in step.get("env", {}).items()}
                 if command[3:4] == ["module"]:
                     self.processes.append({"name": step["name"], "slot": int(command[command.index("--slot") + 1]),
                                            "token": env.get("MODULE_TOKEN", "")})
@@ -231,8 +268,71 @@ class Workflow:
             self.finish_step(identifier, step, outcome, outputs)
         return "failure" if self.failed else "success"
 
+    @staticmethod
+    def assert_validation_command(command):
+        if command != ["uv", "run", "--locked", "--script", "tools/validate.py", "--scope", "$CICD_CHANGE_SCOPE"]:
+            raise AssertionError("validation must pass scope through a quoted environment variable")
+
 
 class WorkflowTests(unittest.TestCase):
+    def test_explicit_push_none_skips_writer_tokens_and_ref_changes(self):
+        w = self.fixture()
+        w.ref("Hexalith.Alpha")
+        before = git(w.remote, "for-each-ref", "refs/heads/delivered/")
+        workflow = Workflow(w, scope="none", verdict={"global": True, "modules": []})
+        self.assertEqual("skipped", workflow.execute())
+        self.assertEqual([], workflow.commands + workflow.actions + workflow.mints + workflow.uploads)
+        self.assertEqual(before, git(w.remote, "for-each-ref", "refs/heads/delivered/"))
+
+    def test_missing_or_unknown_scope_keeps_failure_repair(self):
+        for scope in (None, "", "unknown", "NONE"):
+            with self.subTest(scope=scope):
+                w = self.fixture()
+                w.ref("Hexalith.Alpha")
+                workflow, report = self.run_workflow(w, scope=scope, validation="failure")
+                self.assertTrue(report["failed"])
+                self.assertEqual("pushed", report["modules"][0]["application"])
+                self.assertTrue(workflow.mints)
+
+    def test_scheduled_none_keeps_delivery_freshness_and_accepted_repairs(self):
+        w = self.fixture()
+        for name in w.modules:
+            w.ref(name)
+        workflow, report = self.run_workflow(w, scope="none", event="schedule",
+                                             verdict={"global": True, "modules": w.modules})
+        self.assertFalse(report["failed"], report)
+        self.assertTrue(all(row["application"] == "pushed" for row in report["modules"]))
+        self.assertTrue(any(command[3:4] == ["initialize"] for command in workflow.commands))
+        self.assertEqual(["Hexalith.CiCd", *w.modules], [inputs["repositories"] for _, inputs in workflow.mints])
+
+    def test_validation_classifies_before_builds_and_only_pr_push_none_omit_it(self):
+        for event, scope in (("push", "none"), ("pull_request", "none"), ("schedule", "none"),
+                             ("push", "module"), ("push", "full"), ("push", ""), ("push", "unknown"), ("push", "NONE")):
+            with self.subTest(event=event, scope=scope):
+                workflow = Workflow(self.fixture(()), event=event, job="validate", classification=scope)
+                self.assertEqual("success", workflow.execute())
+                self.assertEqual(["python3", "-I", "tools/change_scope.py"], workflow.commands[0])
+                self.assertEqual(scope, workflow.lookup("steps.scope.outputs.scope"))
+                builds = [checkout for checkout in workflow.checkouts if checkout.get("repository") == "Hexalith/Hexalith.Builds"]
+                self.assertEqual(0 if scope == "none" and event in ("push", "pull_request") else 1, len(builds))
+                self.assertEqual("success", workflow.lookup("steps.validate.outcome"))
+                self.assertEqual([], workflow.mints)
+
+    def test_expression_equality_matches_github_case_insensitive_strings(self):
+        workflow = Workflow(self.fixture(()), scope="NONE")
+        self.assertTrue(workflow.expression("'NONE' == 'none'"))
+        self.assertFalse(workflow.expression("needs.validate.outputs.scope != 'none'"))
+        self.assertTrue(workflow.expression("needs.validate.outputs.skip_checks != '1'"))
+
+    def test_classifier_or_builds_failure_retains_conservative_validation(self):
+        for options in ({"scope_fail": True}, {"builds_checkout_fail": True}):
+            with self.subTest(options=options):
+                workflow = Workflow(self.fixture(()), job="validate", **options)
+                self.assertEqual("failure", workflow.execute())
+                self.assertEqual("success", workflow.lookup("steps.validate.outcome"))
+                if options.get("scope_fail"):
+                    self.assertEqual("", workflow.lookup("steps.scope.outputs.scope"))
+
     def test_shallow_checkout_uses_frozen_pinned_bootstrap_bytes(self):
         import delivery_support
         original = delivery_support.subprocess.run
@@ -376,6 +476,106 @@ class WorkflowTests(unittest.TestCase):
         workflow, report = self.run_workflow(w, validation="failure")
         self.assertTrue(report["failed"])
         self.assertIsNone(report["tools_source_sha"])
+
+
+class WorkflowBoundaryTests(unittest.TestCase):
+    def test_actual_workflow_env_and_arguments_reach_classifier_and_validator(self):
+        # Reuse the validator's existing exact dependency lock in disposable
+        # scratch; this workflow suite keeps its own PyYAML-only environment.
+        with tempfile.TemporaryDirectory(prefix="workflow-scope-cli-") as directory:
+            driver = Path(directory) / "boundary.py"
+            metadata = re.search(r"(?ms)^# /// script\n.*?^# ///\n", (ROOT / "tools/validate.py").read_text()).group()
+            driver.write_text(metadata + "import sys\n"
+                + f"sys.path.insert(0, {str(Path(__file__).parent)!r})\n"
+                + "from test_delivery_workflow import WorkflowBoundaryTests\n"
+                + "WorkflowBoundaryTests().assert_cli_boundary()\n")
+            shutil.copyfile(ROOT / "tools/validate.py.lock", Path(str(driver) + ".lock"))
+            result = subprocess.run(["uv", "run", "--locked", "--script", "--python", "3.12", str(driver)],
+                                    capture_output=True, timeout=180)
+            self.assertEqual(0, result.returncode, (result.stdout + result.stderr).decode(errors="replace"))
+
+    def assert_cli_boundary(self):
+        # Only network Git transport, anonymous live-module clones and the
+        # global child process are substituted. Both real CLIs, Git trees,
+        # schema readers, module loop and verdict output execute unchanged.
+        import test_validate as fixtures
+        with fixtures.workspace() as fixture:
+            fixture.module("Hexalith.Alpha")
+            fixture.module("Hexalith.Beta")
+            fixture.commit()
+            baseline = git(fixture.root, "rev-parse", "HEAD")
+            cases = (("pull_request", "README.md", "none"), ("push", "README.md", "none"),
+                     ("push", "setup/Hexalith.Alpha.yml", "module"), ("push", "tools/shared.py", "full"),
+                     ("schedule", "README.md", "none"), ("workflow_dispatch", "README.md", "full"))
+            for event, path, expected in cases:
+                with self.subTest(event=event, path=path):
+                    git(fixture.root, "reset", "--hard", baseline)
+                    changed = fixture.root / path
+                    changed.parent.mkdir(parents=True, exist_ok=True)
+                    changed.write_text((changed.read_text() if changed.exists() else "") + "\n# candidate\n")
+                    git(fixture.root, "add", "--", path)
+                    git(fixture.root, "commit", "--quiet", "-m", "Boundary candidate")
+                    candidate = git(fixture.root, "rev-parse", "HEAD")
+                    workflow = Workflow(SimpleNamespace(root=fixture.root, sha=candidate), event=event, job="validate")
+                    workflow.context["github"]["event"] = {"pull_request": {"base": {"sha": baseline}}}
+                    steps = {step.get("id"): step for step in workflow.job["steps"] if "id" in step}
+                    environment = {key: value for key, value in os.environ.items()
+                                   if not key.startswith("CHANGE_SCOPE_") and key not in ("CICD_CHANGE_SCOPE", "GITHUB_OUTPUT")}
+                    environment["GITHUB_EVENT_NAME"] = event
+                    output = fixture.root.parent / "scope-output"
+                    output.unlink(missing_ok=True)
+                    scope_env = environment | {key: workflow.expand(value) for key, value in steps["scope"]["env"].items()}
+                    scope_env["GITHUB_OUTPUT"] = str(output)
+                    command = shlex.split(steps["scope"]["run"])
+                    self.assertEqual(["python3", "-I"], command[:2])
+                    classifier = load(ROOT / command[2], "_boundary_scope")
+                    original_git = classifier.git
+                    def anonymous(project, *arguments):
+                        if arguments[0] == "ls-remote":
+                            return f"{baseline}\trefs/heads/delivered/Hexalith.Alpha\n".encode()
+                        if arguments[0] == "fetch":
+                            return fixtures.git(project, "fetch", "--quiet", "--no-tags", "--depth=1", str(fixture.root), arguments[-1])
+                        return original_git(project, *arguments)
+                    with (mock.patch.object(classifier, "git", side_effect=anonymous),
+                          mock.patch.dict(os.environ, scope_env, clear=True), redirect_stdout(io.StringIO()) as stdout,
+                          redirect_stderr(io.StringIO())):
+                        self.assertEqual(0, classifier.main([*command[3:], "--project-root", str(fixture.root)]))
+                    self.assertEqual(expected + "\n", stdout.getvalue())
+                    outputs = dict(line.split("=", 1) for line in output.read_text().splitlines())
+                    self.assertEqual(str(int(expected == "none" and event in ("push", "pull_request"))), outputs["skip_checks"])
+                    workflow.context["steps"]["scope"] = {"outputs": outputs}
+                    validate_env = environment | {key: workflow.expand(value) for key, value in steps["validate"]["env"].items()}
+                    # Let a real shell expand the actual quoted CLI argument,
+                    # including the empty-string behavior when wiring is lost.
+                    expanded = subprocess.run(["bash", "-c", 'set -- ' + steps["validate"]["run"] + '\nprintf "%s\\0" "$@"'],
+                                              env=validate_env, capture_output=True, check=True).stdout
+                    arguments = [item.decode() for item in expanded.split(b"\0")[:-1]]
+                    self.assertEqual(["uv", "run", "--locked", "--script", "tools/validate.py"], arguments[:5])
+                    validator = fixtures.validator
+                    original_command = validator.checks.command
+                    global_calls = []
+                    def external_child(arguments, **options):
+                        if arguments[0] == "uv":
+                            global_calls.append(list(map(str, arguments)))
+                            return b""
+                        return original_command(arguments, **options)
+                    fixture.cloned.clear()
+                    with (mock.patch.object(validator.checks, "command", side_effect=external_child),
+                          mock.patch.object(validator, "clone_module", side_effect=fixture.clone),
+                          mock.patch.dict(os.environ, validate_env, clear=True),
+                          mock.patch.object(sys, "argv", [arguments[4], *arguments[5:], "--project-root", str(fixture.root)]),
+                          redirect_stdout(io.StringIO()) as stdout, redirect_stderr(io.StringIO())):
+                        self.assertEqual(0, validator.main())
+                    fast = expected == "none" and event in ("push", "pull_request")
+                    modules = [] if fast else ["Hexalith.Alpha", "Hexalith.Beta"]
+                    self.assertEqual({"global": True, "modules": modules}, json.loads(stdout.getvalue()))
+                    self.assertEqual(modules, fixture.cloned)
+                    self.assertEqual(0 if fast else 1, len(global_calls))
+                    if not fast:
+                        if expected in ("none", "module"):
+                            self.assertEqual(["--scope", expected], global_calls[0][-2:])
+                        else:
+                            self.assertNotIn("--scope", global_calls[0])
 
 
 class NarrowWorkflowTests(unittest.TestCase):

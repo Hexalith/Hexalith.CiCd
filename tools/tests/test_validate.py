@@ -44,6 +44,7 @@ def load(name, path):
 render_tests = load("_validate_render_fixtures", ROOT / "tools/tests/test_render.py")
 global_check = load("_validate_global_checks", ROOT / "tools/check_global.py")
 validator = load("_validate_orchestrator", ROOT / "tools/validate.py")
+scope_check = validator.scope_checks
 renderer = global_check.renderer
 git = render_tests.git
 run = render_tests.run
@@ -1164,6 +1165,295 @@ class ReleaseTests(unittest.TestCase):
                         api.compare["merge_base_commit"] = []
                     with self.assertRaises(ValueError):
                         global_check.check_release(contract, api=api)
+
+
+class ScopeTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(prefix="hexalith-scope-fixture-")
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        git(self.root, "init", "--quiet", "--initial-branch=main")
+        self.write("README.md")
+        self.write("setup/Hexalith.Alpha.yml")
+        self.write("rendered/Hexalith.Alpha/file.yml")
+        self.write(".gitmodules")
+        self.base = self.commit()
+
+    def write(self, path, content="initial\n"):
+        target = self.root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content)
+        return target
+
+    def commit(self):
+        git(self.root, "add", "--all")
+        git(self.root, "commit", "--quiet", "--allow-empty", "-m", "Scope fixture")
+        return git(self.root, "rev-parse", "HEAD").decode().strip()
+
+    def comparison(self, base=None):
+        return scope_check.compare(scope_check.tree(self.root, self.commit()),
+                                   scope_check.tree(self.root, base or self.base))
+
+    def external_git(self, baselines, *, discovery=None, failed_fetch=None):
+        original = scope_check.git
+        self.external_calls = []
+        def call(project, *arguments):
+            if arguments[0] == "ls-remote":
+                self.external_calls.append(arguments)
+                if isinstance(discovery, Exception):
+                    raise discovery
+                if discovery is not None:
+                    return discovery
+                return b"".join(f"{sha}\trefs/heads/delivered/Hexalith.Module{index}\n".encode()
+                                for index, sha in enumerate(baselines))
+            if arguments[0] == "fetch":
+                self.external_calls.append(arguments)
+                self.assertEqual(arguments[1:-1], ("--quiet", "--no-tags", "--depth=1", "--filter=blob:none", scope_check.REMOTE))
+                if arguments[-1] == failed_fetch:
+                    raise OSError("fetch refused")
+                # Substitute only GitHub transport; every fetched object and
+                # commit/tree read still comes from a real Git repository.
+                return git(project, "fetch", "--quiet", "--no-tags", "--depth=1", str(self.root), arguments[-1])
+            return original(project, *arguments)
+        return mock.patch.object(scope_check, "git", side_effect=call)
+
+    def test_approved_prose_paths_include_additions_deletions_and_unusual_names(self):
+        paths = [*scope_check.inputs.PROSE_FILES,
+                 *(prefix + "fixture" for prefix in scope_check.inputs.PROSE_DIRECTORIES),
+                 scope_check.inputs.EVIDENCE_ROOT + "/receipt.json", "docs/note.md", "docs/tab\tand\nline.md"]
+        for path in paths:
+            self.write(path, "changed\n")
+        self.assertEqual("none", self.comparison())
+        self.assertEqual("none", scope_check.compare(scope_check.tree(self.root, self.base),
+                                                     scope_check.tree(self.root, self.commit())))
+
+    def test_module_setup_render_execution_and_perimeter_inputs(self):
+        for path in ("setup/Hexalith.Alpha.yml", "rendered/Hexalith.Alpha/file.yml",
+                     "rendered/Hexalith.Alpha-execution/file.yml", "rendered/Hexalith.Alpha.perimeter.json"):
+            with self.subTest(path=path):
+                git(self.root, "reset", "--hard", self.base)
+                self.write(path, "changed\n")
+                self.assertEqual("module", self.comparison())
+                self.assertEqual("module", scope_check.compare(scope_check.tree(self.root, self.base),
+                                                               scope_check.tree(self.root, self.commit())))
+
+    def test_shared_and_unknown_paths_are_full(self):
+        for path in ("builds-version", "templates/shared.j2", "tools/test.py", "docs/proposals/fixture.md",
+                     "docs/contracts-prerequisites/input.md", "unknown", "setup/Alpha.yaml",
+                     "rendered/Hexalith.Unknown/file", ".gitmodules"):
+            with self.subTest(path=path):
+                git(self.root, "reset", "--hard", self.base)
+                self.write(path, "changed\n")
+                self.assertEqual("full", self.comparison())
+
+    def test_renames_consider_both_paths_and_modes_are_not_lost(self):
+        self.write("tools/shared.py")
+        base = self.commit()
+        (self.root / "docs").mkdir()
+        git(self.root, "mv", "tools/shared.py", "docs/moved.md")
+        self.assertEqual("full", self.comparison(base))
+        git(self.root, "reset", "--hard", self.base)
+        (self.root / "docs").mkdir(exist_ok=True)
+        git(self.root, "mv", "README.md", "docs/renamed.md")
+        self.assertEqual("none", self.comparison())
+        git(self.root, "reset", "--hard", self.base)
+        (self.root / "README.md").chmod(0o755)
+        self.assertEqual("full", self.comparison())
+        git(self.root, "reset", "--hard", self.base)
+        (self.root / "README.md").unlink()
+        (self.root / "README.md").symlink_to("setup/Hexalith.Alpha.yml")
+        self.assertEqual("full", self.comparison())
+
+    def test_only_existing_direct_gitlink_values_are_prose(self):
+        path = "references/Hexalith.Alpha"
+        (self.root / path).mkdir(parents=True)
+        git(self.root, "update-index", "--add", "--cacheinfo", "160000", self.base, path)
+        git(self.root, "commit", "--quiet", "-m", "Existing gitlink")
+        base = git(self.root, "rev-parse", "HEAD").decode().strip()
+        git(self.root, "update-index", "--cacheinfo", "160000", base, path)
+        self.assertEqual("none", self.comparison(base))
+        self.write(".gitmodules", "changed\n")
+        self.assertEqual("full", self.comparison(base))
+        git(self.root, "reset", "--hard", base)
+        git(self.root, "update-index", "--force-remove", path)
+        self.assertEqual("full", self.comparison(base))
+        git(self.root, "reset", "--hard", self.base)
+        (self.root / "references/New").mkdir(parents=True)
+        git(self.root, "update-index", "--add", "--cacheinfo", "160000", self.base, "references/New")
+        self.assertEqual("full", self.comparison())
+
+    def test_committed_inputs_ignore_worktree_and_module_checkouts(self):
+        self.write("README.md", "committed\n")
+        self.commit()
+        self.write("templates/uncommitted.j2")
+        self.write("references/Hexalith.Alpha/never-read", "untracked module\n")
+        with self.external_git([self.base]):
+            self.assertEqual("none", scope_check.classify(self.root, "push"))
+        self.assertEqual(["ls-remote", "fetch"], [call[0] for call in self.external_calls])
+        self.assertTrue(all(scope_check.REMOTE in call for call in self.external_calls))
+
+    def test_failed_or_cancelled_tools_predecessor_cannot_hide_behind_prose(self):
+        for predecessor in ("red", "cancelled"):
+            with self.subTest(predecessor=predecessor):
+                git(self.root, "reset", "--hard", self.base)
+                self.write("tools/changed.py", predecessor)
+                self.commit()
+                self.write("README.md", "later prose\n")
+                self.commit()
+                with self.external_git([self.base]):
+                    self.assertEqual("full", scope_check.classify(self.root, "push"))
+
+    def test_distinct_accepted_baselines_choose_narrowest_after_all_are_read(self):
+        self.write("tools/changed.py")
+        accepted = self.commit()
+        self.write("README.md", "prose\n")
+        self.commit()
+        for event in ("push", "schedule"):
+            with self.subTest(event=event), self.external_git([self.base, accepted, accepted]):
+                self.assertEqual("none", scope_check.classify(self.root, event))
+                self.assertEqual(2, sum(call[0] == "fetch" for call in self.external_calls))
+        with self.external_git([accepted, self.base], failed_fetch=self.base), redirect_stderr(io.StringIO()):
+            self.assertEqual("full", scope_check.classify(self.root, "push"))
+
+    def test_pr_uses_exact_base_without_accepted_ref_discovery(self):
+        self.write("README.md", "prose\n")
+        self.commit()
+        with self.external_git([]):
+            self.assertEqual("none", scope_check.classify(self.root, "pull_request", self.base))
+        self.assertEqual(["fetch"], [call[0] for call in self.external_calls])
+        with self.external_git([]), redirect_stderr(io.StringIO()):
+            self.assertEqual("full", scope_check.classify(self.root, "pull_request", "main"))
+        with mock.patch.object(scope_check, "git") as external:
+            self.assertEqual("full", scope_check.classify(self.root, "workflow_dispatch"))
+            self.assertEqual("full", scope_check.classify(self.root, ""))
+            external.assert_not_called()
+
+    def test_missing_malformed_unreadable_discovery_and_fetch_take_full_path(self):
+        for discovery in (b"", b"malformed\n", b"bad\trefs/heads/delivered/Alpha\n",
+                          (self.base + "\trefs/heads/other/Alpha\n").encode(), OSError("discovery refused")):
+            with self.subTest(discovery=discovery), self.external_git([], discovery=discovery), redirect_stderr(io.StringIO()):
+                self.assertEqual("full", scope_check.classify(self.root, "push"))
+        with self.external_git(["f" * 40], failed_fetch="f" * 40), redirect_stderr(io.StringIO()):
+            self.assertEqual("full", scope_check.classify(self.root, "schedule"))
+
+    def test_anonymous_git_removes_credentials_context_and_user_configuration(self):
+        with (mock.patch.dict(os.environ, {"GH_TOKEN": "inert", "GITHUB_TOKEN": "inert",
+                                          "GIT_DIR": "inert", "SSH_AUTH_SOCK": "inert"}),
+              mock.patch.object(scope_check.subprocess, "run", return_value=mock.Mock(stdout=b"")) as process):
+            scope_check.git(self.root, "ls-remote", "--refs", scope_check.REMOTE, "refs/heads/delivered/*")
+        environment = process.call_args.kwargs["env"]
+        self.assertTrue(all(key not in environment for key in ("GH_TOKEN", "GITHUB_TOKEN", "GIT_DIR", "SSH_AUTH_SOCK")))
+        self.assertEqual(environment["GIT_CONFIG_GLOBAL"], os.devnull)
+        self.assertFalse(Path(environment["HOME"]).exists())
+        for option in ("credential.helper=", "http.extraHeader=", "http.followRedirects=false", "submodule.recurse=false"):
+            self.assertIn(option, process.call_args.args[0])
+
+    def test_nested_and_nonrepository_candidate_roots_cannot_use_enclosing_git(self):
+        nested = self.root / "child"
+        nested.mkdir()
+        with tempfile.TemporaryDirectory(prefix="hexalith-not-a-repository-") as directory:
+            for project in (nested, Path(directory)):
+                with self.subTest(project=project), self.external_git([self.base]), redirect_stderr(io.StringIO()) as diagnostic:
+                    self.assertEqual("full", scope_check.classify(project, "push"))
+                    self.assertEqual([], self.external_calls)
+                    self.assertIn("fallback=candidate root unverified", diagnostic.getvalue())
+
+    def test_diagnostics_bind_candidate_baseline_and_class_without_raw_errors(self):
+        self.write("README.md", "prose\n")
+        candidate = self.commit()
+        with self.external_git([self.base]), redirect_stderr(io.StringIO()) as diagnostic:
+            self.assertEqual("none", scope_check.classify(self.root, "push"))
+        self.assertEqual([f"change scope: candidate={candidate}", f"change scope: baseline={self.base} class=none"],
+                         diagnostic.getvalue().splitlines())
+        secret = "inert-credential\n::error::" + "x" * 1000
+        with self.external_git([], discovery=OSError(secret)), redirect_stderr(io.StringIO()) as diagnostic:
+            self.assertEqual("full", scope_check.classify(self.root, "push"))
+        self.assertNotIn(secret, diagnostic.getvalue())
+        self.assertIn("fallback=accepted refs unreadable", diagnostic.getvalue())
+        self.assertLess(len(diagnostic.getvalue()), 200)
+        with self.external_git([self.base], failed_fetch=self.base), redirect_stderr(io.StringIO()) as diagnostic:
+            self.assertEqual("full", scope_check.classify(self.root, "push"))
+        self.assertIn(f"baseline={self.base} class=full fallback=baseline fetch failed", diagnostic.getvalue())
+
+    def test_cli_emits_separate_scope_output(self):
+        output = self.root / "github-output"
+        with (mock.patch.object(scope_check, "classify", return_value="none") as classify,
+              mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(output), "CHANGE_SCOPE_EVENT": "pull_request",
+                                           "CHANGE_SCOPE_PR_BASE": self.base}), redirect_stdout(io.StringIO())):
+            self.assertEqual(0, scope_check.main(["--project-root", str(self.root)]))
+        classify.assert_called_once_with(self.root, "pull_request", self.base)
+        self.assertEqual("scope=none\nskip_checks=1\n", output.read_text())
+
+    def test_internal_skip_decision_requires_exact_scope_and_pr_or_push(self):
+        for scope in ("none", "NONE", "None", "", None, "unknown", "module", "full"):
+            for event in ("pull_request", "push", "schedule", "workflow_dispatch", ""):
+                with self.subTest(scope=scope, event=event):
+                    self.assertEqual(int(scope == "none" and event in ("pull_request", "push")),
+                                     scope_check.skip_checks(scope, event))
+
+
+class ScopeSelectionTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(prefix="hexalith-scope-selection-")
+        self.addCleanup(temporary.cleanup)
+        self.project = Path(temporary.name)
+
+    def test_prose_pr_and_push_have_no_builds_module_or_suite_reads(self):
+        for event in ("pull_request", "push"):
+            with (self.subTest(event=event), mock.patch.object(validator, "global_checks") as checks,
+                  mock.patch.object(validator.renderer, "registry") as registry,
+                  mock.patch.object(validator.checks, "selected_contract") as builds):
+                self.assertEqual(({"global": True, "modules": []}, 0), validator.validate(self.project, "none", event))
+                checks.assert_not_called()
+                registry.assert_not_called()
+                builds.assert_not_called()
+
+    def test_module_and_schedule_keep_every_module_and_independent_verdict(self):
+        with workspace() as fixture:
+            fixture.module("Hexalith.Alpha")
+            fixture.module("Hexalith.Beta")
+            fixture.commit()
+            for scope, event in (("module", "push"), ("none", "schedule")):
+                with (self.subTest(scope=scope), mock.patch.object(validator, "global_checks", return_value=False) as checks,
+                      mock.patch.object(validator, "clone_module", side_effect=fixture.clone), redirect_stderr(io.StringIO())):
+                    self.assertEqual(({"global": False, "modules": ["Hexalith.Alpha", "Hexalith.Beta"]}, 1),
+                                     validator.validate(fixture.root, scope, event))
+                    checks.assert_called_once_with(fixture.root, scope)
+            self.assertEqual(["Hexalith.Alpha", "Hexalith.Beta"] * 2, fixture.cloned)
+
+    def test_missing_unknown_malformed_or_manual_scope_uses_full_global_child(self):
+        for scope, event in ((None, "push"), ("", "push"), ("unknown", "push"), ({}, "push"),
+                             ("none", "workflow_dispatch"), ("module", "workflow_dispatch")):
+            with (self.subTest(scope=scope, event=event), mock.patch.object(validator, "global_checks", return_value=True) as checks,
+                  mock.patch.object(validator.renderer, "registry", return_value=[]),
+                  mock.patch.object(validator.checks, "selected_contract")):
+                self.assertEqual(0, validator.validate(self.project, scope, event)[1])
+                checks.assert_called_once_with(self.project)
+
+    def test_only_suites_depend_on_scope_and_online_proofs_remain(self):
+        callbacks = ("check_app_inventory", "check_committed_inputs", "check_committed_render", "check_bootstrap",
+                     "check_render", "check_documents", "check_release", "lint_workflows", "run_tool_tests")
+        from contextlib import ExitStack
+        for scope in ("none", "module", "full", None, "", "bad", {}):
+            with self.subTest(scope=scope), ExitStack() as stack:
+                calls = {name: stack.enter_context(mock.patch.object(global_check, name)) for name in callbacks}
+                stack.enter_context(mock.patch.object(global_check, "selected_contract"))
+                stack.enter_context(mock.patch.object(global_check.renderer, "registry", return_value=[]))
+                stack.enter_context(redirect_stderr(io.StringIO()))
+                self.assertTrue(global_check.run(self.project, scope))
+                for name, callback in calls.items():
+                    self.assertEqual(0 if name == "run_tool_tests" and scope in ("none", "module") else 1,
+                                     callback.call_count, name)
+
+    def test_scope_reaches_locked_child_and_default_remains_full(self):
+        for scope in ("none", "module", "bad", None):
+            with mock.patch.object(validator.checks, "command", return_value=b"") as command:
+                self.assertTrue(validator.global_checks(self.project, scope))
+            arguments = command.call_args.args[0]
+            if scope in ("none", "module"):
+                self.assertEqual(["--scope", scope], arguments[-2:])
+            else:
+                self.assertNotIn("--scope", arguments)
 
 
 if __name__ == "__main__":

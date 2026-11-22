@@ -29,6 +29,8 @@ jobs:
       contents: read
     outputs:
       verdict: ${{ steps.validate.outputs.verdict }}
+      scope: ${{ steps.scope.outputs.scope }}
+      skip_checks: ${{ steps.scope.outputs.skip_checks }}
       g6_plan: ${{ steps.g6_qualify.outputs.plan }}
     steps:
       - name: Checkout CiCd candidate
@@ -38,15 +40,23 @@ jobs:
           submodules: false
           persist-credentials: false
 
+      - name: Classify committed CiCd changes
+        id: scope
+        env:
+          CHANGE_SCOPE_EVENT: ${{ github.event_name }}
+          CHANGE_SCOPE_PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: python3 -I tools/change_scope.py
+
       - name: Setup uv
         id: uv
+        if: ${{ !cancelled() && steps.cicd.outcome == 'success' }}
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: '0.13.7'
           enable-cache: false
 
       - name: Checkout Builds objects and tags
-        if: ${{ inputs.delivery != 'projects-g6-catalog' }}
+        if: ${{ !cancelled() && steps.cicd.outcome == 'success' && inputs.delivery != 'projects-g6-catalog' && (steps.scope.outputs.skip_checks != '1' || (github.event_name != 'push' && github.event_name != 'pull_request')) }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: Hexalith/Hexalith.Builds
@@ -77,7 +87,8 @@ jobs:
         if: ${{ !cancelled() && inputs.delivery != 'projects-g6-catalog' && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: uv run --locked --script tools/validate.py
+          CICD_CHANGE_SCOPE: ${{ steps.scope.outputs.scope }}
+        run: uv run --locked --script tools/validate.py --scope "$CICD_CHANGE_SCOPE"
 
       - name: Qualify narrow catalog delivery behavior without secrets
         id: g6_tests
@@ -109,7 +120,7 @@ jobs:
     concurrency:
       group: deliver-owned-writes
       cancel-in-progress: false
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (github.event_name != 'push' || needs.validate.outputs.skip_checks != '1') && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: cicd-app

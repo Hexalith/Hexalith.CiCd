@@ -486,7 +486,7 @@ def lint_workflows(project: Path, contract) -> None:
             f"{len(paths)} explicit workflows passed online audits")
 
 
-def run(project: Path) -> bool:
+def run(project: Path, scope="full") -> bool:
     project = project.resolve()
     failures = []
 
@@ -511,18 +511,22 @@ def run(project: Path) -> bool:
     except FAILURES as error:
         failures.append("selected contract")
         log(f"global selected contract/prerequisite: {error}")
-    check("tool suites", lambda: run_tool_tests(project))
+    # Only the two explicit narrow classes exclude suites. All other inputs,
+    # including missing, misspelled or non-string scopes, retain full checks.
+    if not isinstance(scope, str) or scope not in ("none", "module"):
+        check("tool suites", lambda: run_tool_tests(project))
     return not failures
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=ROOT)
+    parser.add_argument("--scope", default="full")
     args = parser.parse_args()
     if sys.version_info < (3, 12):
         log("Python 3.12 or later is required")
         return 1
-    return int(not run(args.project_root))
+    return int(not run(args.project_root, args.scope))
 
 
 if __name__ == "__main__":
