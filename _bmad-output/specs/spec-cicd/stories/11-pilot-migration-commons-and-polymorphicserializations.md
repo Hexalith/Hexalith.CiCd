@@ -2,8 +2,8 @@
 title: 'Pilot migration: Commons and PolymorphicSerializations'
 type: 'chore'
 created: '2026-11-22'
-status: 'done'
-baseline_revision: '9f7a56fd1e0de05f6b8a8789fba983c072ce3db6'
+status: done
+baseline_revision: 052fe731f4ffb2d1f3c139e8562634d540ccd2ec
 review_loop_iteration: 0
 followup_review_recommended: false
 context:
@@ -121,9 +121,58 @@ membership, and the authenticated NuGet readback established the pilot policies
 and the expired key's configured scope. The November 19 pilot acceptance and
 run `44566082537` remain the historical checkpoint.
 
+## Completion reconciliation — 2026-11-22
+
+The [completion receipt](../evidence/11/completion-reconciliation-20261122.json)
+binds this reconciliation to CiCd commit
+`052fe731f4ffb2d1f3c139e8562634d540ccd2ec`, tree
+`9a85174e9082a544037bf1371da3302a10f8b45b`, and the existing maintainer acceptance
+above. Receipt SHA-256:
+`b84ac18be9835b742c92e37936af7a7185037ee49f83170603f0b09b6baabd0c`.
+The earlier blocked reconciliation and repair receipts remain unchanged; their
+findings are resolved or expressly accepted by the later maintainer decision.
+
+Read-only verification matches all nine planning-bound evidence digests,
+fourteen module commit/tree/parent identities, retained product-source blobs,
+the unchanged legacy spec and canonical ownership policy, and the exact released
+Builds `v6.6.1` contract. Fresh authenticated readbacks confirm the three Apps
+still report selected scope, both probe PRs remain closed unmerged, all four
+remote probe branches remain absent, and Builds `v6.6.1` remains immutable.
+Exact installation membership and NuGet scope retain the authenticated repair
+receipt as their authority, with both accepted AD-7 exceptions still open.
+
+The requested CiCd-agent nightly judgment again exits 0: both pilots and
+`--checkpoint pilot` pass, with unchanged compact receipt SHA-256
+`88ad73321566120dfa2421c3bf58e3a1df60b408a3afe676fa4abdfffec3a016`.
+Both release runs report nothing to release with successful Release CodeQL and
+passing scan rows; bump is no-change and keepalive passes. AI.Tools, Builds and
+McpCli failures remain unrelated to the pilot verdict. Renderer `--check` exits
+0. No product or policy correction, adoption, probe replay, dispatch or remote
+mutation was needed. This completes the accepted reconciliation; it does not
+replace the November 19 checkpoint or close the two accepted exceptions.
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+### 2026-11-22 — Review pass
+
+- verdicts: 9 findings — high 0, medium 0, low 3, false 6, maybe-false 0
+- findings:
+  - `[false]` `[reject]` Blind B1: first-page branch lists cannot establish probe-ref absence — both authenticated responses contain exactly one branch, below `per_page=100`; their body digests match the receipt exactly (`0b318956…4378` and `032f3344…e707`). No page is omitted and no probe ref is present.
+  - `[low]` `[patch]` Blind B2: renderer qualification lacks its exact invocation/runtime — the completion receipt now records the wrapper, executable, arguments, uv/CPython versions, source commit/tree, renderer/lock blobs and SHA-256 identities. The targeted command and parent renderer check pass.
+  - `[low]` `[patch]` Blind B3: expired-key mapping remains unverified without an explicit completion disposition — the receipt now binds the earlier story 3-7 approval and pilot cleanup plan by blob and digest, retaining the expired key without regeneration/replacement. Mapping remains unverified; no package-scope deletion or additional accepted AD-7 exception is claimed.
+  - `[low]` `[reject]` Blind B4: historical planning-stop wording conflicts with the execution completion narrative — that sentence remains inside the read-only intent contract, while the dated execution tasks, maintainer acceptance and completion addendum establish the resumed scope. The workflow rejects findings whose fix edits this build's spec; no historical intent was rewritten.
+  - `[false]` `[reject]` Intent I1: new receipt does not itself exercise all maintainer settings — exact authenticated membership/NuGet readbacks are bound to the unchanged repair receipt; required inclusion, pilot policy scope and the two later accepted exceptions were already recorded in baseline story blob `309df37e2409fb63a8c100728054c67647b8751b`. This run preserves that authority rather than asserting new unrestricted AD-7 compliance.
+  - `[false]` `[reject]` Intent I2: document-only changes do not perform product preparation/adoption — the invocation names an existing checkpoint. Exact historical source/parent/tree and registration/delivery evidence establishes the completed preparation/adoption sequence; neither a second adoption nor invented pilot waivers are necessary.
+  - `[false]` `[reject]` Intent I3: CiCd-profile cleanup readbacks do not freshly exercise restricted-token writes — historical credential-bound push and Update branch evidence remains digest-bound and is revalidated against actual Git objects. New GET-only cleanup checks are explicitly distinguished from those writes; no new module-token operation is claimed.
+  - `[false]` `[reject]` Intent I4: rejudgment does not run another delivery or credential experiment — the preserved November 19 checkpoint and its real delivery/probes satisfy the existing-checkpoint reading. The exact requested nightly acceptance command again passes both pilot rows/checkpoint; no new run is represented as required or performed.
+  - `[false]` `[reject]` Intent I5: unchanged policy is not a fresh instruction correction — canonical, rendered and delivered text already states the observed allowance and prohibits agent import of owned CI/CD through Update branch. The original qualification and actual redelivery remain authenticated; confirming that correction satisfies the request without editing owned module files.
+
+Edge-case review returned `[]`; verification-gap review reported no gaps. All four
+review layers completed; the fourth launched after a concurrency slot became
+available. Two low receipt corrections were applied, no new item was deferred,
+and no intent/spec loopback was needed. Patched entries: high 0, medium 0, low 2.
 
 ## Design Notes
 
@@ -139,13 +188,43 @@ This is a planning handoff for reconciling an existing completed checkpoint. The
 
 ## Auto Run Result
 
-Earlier automated verdict: blocked
-Blocking condition: current AD-7/AD-21 App installation scope fails; CiCd App membership requires authenticated settings access (HTTP 403 / Confirm access); refreshed NuGet requires Sign In, leaving current sole-policy/package-ID and legacy-key scope unverified.
+Status: done
 
-Execution result — 2026-11-22: the rendered entrypoint ran exactly once for this invocation. One implementation subagent completed the independently executable reconciliation. Tasks 3–5 passed; tasks 1–2 and final acceptance in task 6 remain incomplete. Nightly `44566082537` rejudgment passes both pilots and the pilot checkpoint, and renderer `--check` passes. Exact historical restricted-token probe, delivery, Update branch HTTP 202 and cleanup proofs are revalidated. The published 10-2 correction is accurate and needs no source change. Historical acceptance remains preserved; this run does not renew it. No remote mutation, credential change, product change, probe replay, dispatch, adoption, commit or push occurred. See [execution reconciliation](../evidence/11/execution-reconciliation-20261122.md) for exact settings failures, revisions, digests and required access.
+Reconciled the already adopted pilots and existing accepted checkpoint. The
+rendered skill entrypoint ran exactly once. One implementation subagent and four
+independent review layers completed; the implementation subagent applied two
+low receipt corrections. The November 19 acceptance, original restricted-token
+probes, real delivery and published 10-2 correction remain preserved.
 
-Prior planning result: ready-for-dev
+Files changed:
 
-Halted after planning as explicitly requested, 2026-11-22. The rendered bmad-build-auto entrypoint ran exactly once; three investigation subagents completed and their findings are recorded in the companion. The ready-for-development gate passed after rereading the workflow and saved spec. Checked planning YAML, canonical root baseline, unique story path, intent-contract delimiters, six unchecked execution tasks, five Given/When/Then acceptance criteria, nine historical evidence digests, file size/whitespace and unchanged legacy spec identity.
+- This story: current baseline, completion decision, receipt link/digest, review
+  triage and final workflow result.
+- [Completion receipt](../evidence/11/completion-reconciliation-20261122.json):
+  bound evidence/source identities, authenticated cleanup/settings metadata,
+  exact renderer verification, expired-key disposition and checkpoint judgment.
 
-Execution prerequisites remain: repair the observed Cursor/connector all-repository installation scope; verify exact CiCd App membership after the recorded maintainer-profile 403; obtain authenticated current NuGet policy/key-scope visibility and finish the listed inventory checks. These are explicit actionable dependencies, not a claim that current AD-21 passes. Historical adoption, probe outcomes, cleanup, 10-2 correction and accepted nightly evidence remain preserved. No implementation, probe replay, publication, adoption, maintainer repair, commit or push was performed in this planning invocation.
+Verification passes: the requested CiCd-agent nightly acceptance command exits
+0 with both pilot verdicts and the pilot checkpoint `pass`; renderer
+`run-with-temp uv run --locked --script --python 3.12 tools/render.py --check`
+exits 0. Parent verification repeated both commands after the receipt corrections.
+Historical evidence digests, Git identities, receipt authority blobs/digests,
+JSON/frontmatter parsing, file-size limits and whitespace checks pass. No module
+push or policy-source change occurred, so their conditional verification does
+not apply.
+
+Review: nine findings, two low patches, no new deferrals. Six rejected concerns
+are refuted individually in the triage log; the remaining low finding requires
+editing this build's read-only historical spec and is rejected by the workflow.
+Follow-up review recommended: false (patched high 0, medium 0, low 2).
+
+Residual risks remain explicit: the extra `Hexalith.Docs` CiCd App grant and
+nine other repositories' overlapping NuGet wildcard policies are accepted open
+AD-7 exceptions. The retained expired legacy NuGet key's GitHub-secret mapping
+remains unverified under its prior approved disposition. No fresh unconditional
+AD-7 compliance, key mapping or package-scope deletion is claimed. Existing
+repair/reconciliation receipts and the legacy completed story remain unchanged.
+
+No remote setting, credential, product/policy source, ref or PR was changed;
+no adoption, probe replay, merge, release/nightly dispatch or push occurred.
+The workflow records these reviewed documentation changes in a local commit.

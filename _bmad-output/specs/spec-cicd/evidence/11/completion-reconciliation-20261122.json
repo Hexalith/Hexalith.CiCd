@@ -1,0 +1,276 @@
+{
+  "authentication": {
+    "GH_TOKEN_present": false,
+    "GITHUB_TOKEN_present": false,
+    "account": {
+      "id": 6775094,
+      "login": "jpiquot"
+    },
+    "default_profile": "/home/administrator/.config/gh-cicd-agent",
+    "maintainer_profile": "/home/administrator/.config/gh",
+    "target": "Hexalith/Hexalith.CiCd"
+  },
+  "decision": {
+    "authority": "Maintainer acceptance \u2014 2026-11-22 in the id-keyed story; later than the repair receipt blocked verdict",
+    "exceptions": [
+      {
+        "finding": "CiCd App 179966090 also selects Hexalith.Docs",
+        "state": "accepted_open_AD-7_exception"
+      },
+      {
+        "finding": "Nine other repositories have active NuGet wildcard policies overlapping the pilot package IDs",
+        "policy_ids": [
+          16915,
+          18269,
+          18601,
+          18928,
+          20362,
+          20456,
+          20857,
+          20891,
+          22255
+        ],
+        "state": "accepted_open_AD-7_exception"
+      }
+    ],
+    "historical_checkpoint_acceptance": "2026-11-19",
+    "legacy_nuget_key_954800": {
+      "authority": [
+        {
+          "blob": "032f380a7e6ca98e748d876c5026ca806ff0d763",
+          "path": "_bmad-output/specs/spec-cicd/stories/3-7-bootstrap-the-first-builds-release.md",
+          "section": "Approved interactive NuGet repair and qualification disposition \u2014 2026-11-12",
+          "sha256": "07d0a47fa5832cf5b8903e985f2a3c6f70670a67e45c81659d5f55db95a8ae4d"
+        },
+        {
+          "blob": "d3e0859e9d37b94795024de797e48e7daeb7f9a9",
+          "path": "_bmad-output/specs/spec-cicd/evidence/11/post-adoption-cleanup-plan.md",
+          "section": "Legacy NuGet API key cleanup target",
+          "sha256": "370b68db8c2542af073812c6b66597cd70b9547c9b12f3d6b06b0bcf039d4c98"
+        }
+      ],
+      "completion_disposition": "Retain the existing Github Hexalith key in its observed expired state under the prior explicit story 3-7 approval carried forward by the pilot cleanup plan; do not regenerate or replace it.",
+      "github_secret_mapping": "unverified; no secret-value mapping is asserted",
+      "new_AD-7_exception": false,
+      "observed_status": "Expired; configured scope authenticated in the maintainer repair receipt",
+      "package_scope_deletion_claimed": false
+    },
+    "new_checkpoint_dispatched": false
+  },
+  "evidence_sha256": {
+    "ad-7-ad-21-maintainer-repair-20261122.json": "f67ac3de9ace8527817e746558214daeb49b8abfdd3e7489dc49f31333d4942d",
+    "checkpoint-revalidation-receipt.json": "88ad73321566120dfa2421c3bf58e3a1df60b408a3afe676fa4abdfffec3a016",
+    "execution-reconciliation-20261122.md": "1565325b60186c8ff1dec3e71bb52e6fa9b5c0ce631c278ccd5739843793a85f",
+    "source-and-probe-revalidation-20261122.json": "77e2c4486b8e2042fbafc8d4768139329f11622fb556bc3e04ed12d509e87a27"
+  },
+  "maintainer_scope": {
+    "current_selection_metadata": {
+      "179966090": "selected",
+      "182926560": "selected",
+      "77847816": "selected"
+    },
+    "exact_selection_and_nuget_scope_authority": "ad-7-ad-21-maintainer-repair-20261122.json",
+    "new_settings_mutation": false
+  },
+  "product_or_policy_source_changes": false,
+  "recorded_at": "2026-11-22T14:39:42.187378+00:00",
+  "remote_mutations": false,
+  "remote_probe_readback": {
+    "Hexalith.Commons": {
+      "probe_pr": {
+        "head": "517c1af6036e7a0074a8ea5cf081f1046c6f58fe",
+        "merged": false,
+        "number": 52,
+        "state": "closed"
+      },
+      "remote_probe_refs_absent": [
+        "cicd-pilot-update-commons-20261116",
+        "cicd-pilot-fresh-commons-20261116"
+      ]
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "probe_pr": {
+        "head": "e571f080f58f80519786063ada4f60a236cf1efb",
+        "merged": false,
+        "number": 19,
+        "state": "closed"
+      },
+      "remote_probe_refs_absent": [
+        "cicd-pilot-update-poly-20261116",
+        "cicd-pilot-fresh-poly-20261116"
+      ]
+    }
+  },
+  "requests": [
+    {
+      "body_sha256": "5727444c53a2b7cc7c921b904af869463544bbe3788479718289ad1a749bc7ba",
+      "endpoint": "user",
+      "profile": "/home/administrator/.config/gh",
+      "request_id": "D23B:F7C99:7E96E2:E9C003:6B02FEA9",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "7aaf9fe8f7b3b842d4f67b5cc407197a3cd9464a7da9d37f180bb863921bff49",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd",
+      "profile": "/home/administrator/.config/gh",
+      "request_id": "D257:126952:81B9B7:ECEE26:6B02FEA9",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "fb01fd651df36fbe843350c3c05d12ad6f402befbc172be850f0ac180b4609fa",
+      "endpoint": "orgs/Hexalith/installations?per_page=100",
+      "profile": "/home/administrator/.config/gh",
+      "request_id": "D24E:341825:7EADC4:EA1496:6B02FEAA",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "5727444c53a2b7cc7c921b904af869463544bbe3788479718289ad1a749bc7ba",
+      "endpoint": "user",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D25A:1E59C5:121FE95D:1B5E8EDD:6B02FEAA",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "0300537b800aa90472edc624c5cb4ec5abf7a15c940753ef993937115b0dc87a",
+      "endpoint": "repos/Hexalith/Hexalith.CiCd",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D259:345245:12282946:1B6F4B5F:6B02FEAB",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "cc5f78934f95ae1c1f9da9ee3f87b86e65fd018aac2d88da677ab83599847e03",
+      "endpoint": "repos/Hexalith/Hexalith.Commons/pulls/52",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D241:2F58A2:11F1340D:1B04F67D:6B02FEAB",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "0b3189569f10a72703d2ab45307822b40894bbf2b61debe977e3fa0b621a4378",
+      "endpoint": "repos/Hexalith/Hexalith.Commons/branches?per_page=100",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D25D:E0EC3:11DC6B8B:1AF7F33E:6B02FEAC",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "e4056336313c940a9f2c773d4c5bb57950c5814ded617bd844de512f09928843",
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/pulls/19",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D261:2D801A:12207704:1B546EA3:6B02FEAC",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "032f3344f4784e1499f8320a1953f8a4758fe195f7b17aaca9e003e37830e707",
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/branches?per_page=100",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D263:23C945:124C798C:1B96526C:6B02FEAC",
+      "status": "HTTP/2.0 200 OK"
+    },
+    {
+      "body_sha256": "892b645f0dd865bfe8b26e9c80c6eac5b97baf231602bc086c5159fc803dfc21",
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v6.6.1",
+      "profile": "/home/administrator/.config/gh-cicd-agent",
+      "request_id": "D277:E8514:11E9BEF2:1B0EDFE0:6B02FEAD",
+      "status": "HTTP/2.0 200 OK"
+    }
+  ],
+  "result": "complete_with_recorded_maintainer_exceptions",
+  "schema": "hexalith.pilot-reconciliation.v1",
+  "source": {
+    "accepted_story_blob": "309df37e2409fb63a8c100728054c67647b8751b",
+    "canonical_ownership_blob": "fe59f37fc84bb9b95099b073ef79e479d549fdd5",
+    "commit": "052fe731f4ffb2d1f3c139e8562634d540ccd2ec",
+    "legacy_spec_blob": "e71dcb4661c23e6e9a3a06fdc1357215b55afd9d",
+    "tree": "9a85174e9082a544037bf1371da3302a10f8b45b"
+  },
+  "source_qualification": {
+    "actual_delivery_workflow_difference": "pass",
+    "canonical_policy": "unchanged",
+    "historical_evidence_digests_matched": 9,
+    "legacy_spec": "unchanged",
+    "local_probe_refs": "absent",
+    "module_commit_tree_parent_identities_matched": 14,
+    "pre_delivery_workflow_equality": "pass",
+    "retained_product_source_blobs": "match",
+    "selected_builds": {
+      "commit": "27fe4d62ca1f3cce07a9f19e1e30b02cbaa51357",
+      "immutable": true,
+      "release_id": 454360652,
+      "tag": "v6.6.1",
+      "tree": "e55fefff3fa765e4a7bc9408caf61ea0a59b6dc5"
+    },
+    "update_import_matches_adoption_except_pilot_document": "pass"
+  },
+  "verification": {
+    "nightly_acceptance": {
+      "bump": "no-change",
+      "checkpoint": {
+        "name": "pilot",
+        "reasons": [],
+        "verdict": "pass"
+      },
+      "delivery_wait": "not-run; no bump pushed",
+      "exit_code": 0,
+      "keepalive": "pass",
+      "modules": {
+        "Hexalith.Commons": {
+          "reasons": [],
+          "verdict": "pass"
+        },
+        "Hexalith.PolymorphicSerializations": {
+          "reasons": [],
+          "verdict": "pass"
+        }
+      },
+      "release_outcomes": "nothing; successful Release CodeQL and passing scan rows",
+      "release_runs": {
+        "Hexalith.Commons": 44566233481,
+        "Hexalith.PolymorphicSerializations": 44566277325
+      },
+      "run": {
+        "attempt": 1,
+        "event": "workflow_dispatch",
+        "head": "6b413de903926c52a355472f018d3ebcdbc8e144",
+        "id": 44566082537
+      },
+      "stdout_sha256": "489ad21b380952c3334e4291e56ff03003e7e3ef4940dea24e66ba5b6d856eed",
+      "unrelated_failed_modules": [
+        "Hexalith.AI.Tools",
+        "Hexalith.Builds",
+        "Hexalith.McpCli"
+      ]
+    },
+    "renderer_check": {
+      "arguments": [
+        "--verbose",
+        "run",
+        "--locked",
+        "--script",
+        "--python",
+        "3.12",
+        "tools/render.py",
+        "--check"
+      ],
+      "disposable_workspace_wrapper": "run-with-temp",
+      "executable": "/home/administrator/.local/bin/uv",
+      "exit_code": 0,
+      "python_runtime": {
+        "executable": "/home/administrator/.cache/uv/environments-v2/render-9f14a6571660035a/bin/python3",
+        "implementation": "CPython",
+        "version": "3.12.13"
+      },
+      "stderr_sha256": "39819cf63f26857a13a4a8e2f5cff2dbf7eb5e5f0b7dd37ab51055e36094cdeb",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tested_source": {
+        "commit": "052fe731f4ffb2d1f3c139e8562634d540ccd2ec",
+        "lock_blob": "4481492c6c5b7b392723c31912f4767526239e4f",
+        "lock_sha256": "f3457ceee82406783682b4a94e0bbae036a79a8b6116854530e2af59117c7162",
+        "renderer_blob": "8e0959e358376d141183ef0c7f4fd259abf63a11",
+        "renderer_inputs_unchanged_from_commit": true,
+        "renderer_sha256": "74ab10baddea28c863b05010ec6f27c3692ac289fce04a647cb4725bc0a0f163",
+        "tree": "9a85174e9082a544037bf1371da3302a10f8b45b"
+      },
+      "uv_version": "uv 0.11.16 (x86_64-unknown-linux-gnu)",
+      "working_directory": "/home/administrator/projects/hexalith/cicd"
+    }
+  }
+}

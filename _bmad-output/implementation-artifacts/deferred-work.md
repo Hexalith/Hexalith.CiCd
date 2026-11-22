@@ -448,3 +448,11 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
   summary: RESOLVED — the BH7 legacy nuget.org API key readback for Hexalith.Agents is closed.
   evidence: On 2026-11-22 the human ruled "NUGET API KEYS are obsolete, use trusted publishing", so no readback will be done. Agents publishes only through scoped trusted publishing policy 28307; its NUGET_API_KEY grant and legacy policy 26964 are removed. This resolution supersedes the open entry above without rewriting its evidence.
+
+### DW-37: Unreadable `deferred:` items in 11-pilot-migration-commons-and-polymorphicserializations.md
+origin: spec-deferred-malformed 1d1be2e49bcd
+location: n/a
+source_spec: `11-pilot-migration-commons-and-polymorphicserializations.md`
+severity: low
+reason: The dev session recorded deferred findings the orchestrator could not parse, so they were NOT filed as entries: item 1: not a mapping (got str); item 2: not a mapping (got str). Read `11-pilot-migration-commons-and-polymorphicserializations.md`'s frontmatter and re-file them by hand.
+status: open
