@@ -9,7 +9,7 @@ Cancellation and the manual `qualify-bump` mode skip production scanning.
 
 ## Sources and scope
 
-The registry is the committed `setup/*.yml` tree at the controller's CiCd
+The registry is the committed [`setup/*.yml` tree](../setup/) at the controller's CiCd
 revision, capped at 17 modules. Invalid names, case collisions, symlinks and a
 Builds registration fail. Registration includes modules awaiting adoption;
 `delivered/*`, enabled hooks and local submodule checkouts do not determine scope.
@@ -333,7 +333,7 @@ Python 3.12 or later. Dependency installation, module object stores, selected
 source copies and raw detector output live in private disposable scratch.
 
 The committed policy is weak mode, **10 lines / 50 tokens**, with the `yaml`,
-`bash`, `powershell` and `python` formats, one root per module, `skipLocal`,
+`bash`, `powershell`, `python`, `javascript` and `typescript` formats, one root per module, `skipLocal`,
 absolute report paths and Git ignores disabled. The wrapper authenticates every
 reported endpoint against its own selected-file manifest and the original line
 range. It gates only fragments involving distinct modules, independently of
@@ -359,21 +359,50 @@ failed seed in place. Reports contain no scan credentials. Selected scope and
 findings are deterministic for unchanged source revisions and policy; observation
 metadata and future live main revisions may differ.
 
-For a local scan, retain outputs outside disposable scratch:
+For a standalone local scan, use an existing checkout and toolchain and retain
+outputs outside disposable scratch. `UV_NO_CACHE=1` puts uv's temporary cache and
+environments under the wrapper's scratch and propagates to child uv processes:
 
 ```sh
-SCAN_DIRECTORY="$PWD/../cicd-duplicate-scan-observations" run-with-temp uv run --locked tools/scan.py
+SCAN_DIRECTORY="$PWD/../cicd-duplicate-scan-observations" run-with-temp env UV_NO_CACHE=1 uv run --locked --script --python 3.12 tools/scan.py
 ```
 
-Use Node 24 and Python 3.12 or later, plus PowerShell 7 (`pwsh`) when PowerShell
+Use the [Linux bootstrap](../README.md#linux-maintainer-quickstart) for uv 0.13.7,
+Python 3.12 and adjacent script locks. Use Node 24 with npm, plus PowerShell 7
+(tested: 7.6.2; `pwsh`) when PowerShell
 sources are reachable. A fixed parser helper reads source on stdin through
 the native parser's `ModuleAnalysis` mode, avoiding host module lookup and type
 resolution. It never evaluates, imports or dot-sources module text. The internal
 analysis API must be present; incompatible PowerShell versions fail explicitly.
 An unavailable parser, timeout, parse error or malformed parser output fails
 coverage explicitly. Profiles are disabled. Run from a checkout containing the committed
-policy and registry. The production registry is intentionally empty until
-onboarding; local synthetic registrations belong in temporary test repositories.
+policy and live [registrations](../setup/), including those awaiting adoption;
+local synthetic registrations belong in temporary test repositories. npm needs
+HTTPS access to `https://registry.npmjs.org` for the integrity-locked jscpd 5.4.3
+and TypeScript 6.0.3 packages
+and access to signature/provenance verification services. `npm audit signatures`
+is mandatory: a refusal or failed audit fails the scan, including zero-scope
+scans. Production scans additionally need anonymous GitHub Git access.
+
+The focused integration case installs and verifies the real pinned detector,
+then measures substantial copied examples in all six configured
+formats. It requires compatible PowerShell 7 with the native `ModuleAnalysis`
+API (tested: 7.6.2) even when no live registered module has PowerShell sources;
+its fixtures include that format. For a fresh bootstrap, insert the focused
+command below inside `BOOTSTRAP`, after the offline suite and before the final
+assertions and cleanup. Omit its `run-with-temp` prefix because the outer wrapper
+already owns scratch; the bootstrap deletes its checkout and uv on exit.
+Standalone use requires an existing parent checkout and toolchain. Run from the
+parent root with Node 24/npm and `pwsh` on `PATH`:
+
+```sh
+run-with-temp env UV_NO_CACHE=1 uv run --locked --script --python 3.12 tools/tests/test_scan.py \
+  ScanTests.test_all_six_languages_use_actual_pinned_detector -v
+```
+
+This case uses local synthetic Git sources rather than live module origins.
+Registry or signature access failures leave detector integration unproven;
+offline controller success does not qualify it.
 
 ## Calibration and retuning
 
@@ -394,13 +423,14 @@ an exactly five-line Python block with 90 tokens produced no clone at a
 five-line minimum. Test examples must exceed both floors comfortably instead of
 assuming inclusive boundaries from option names.
 
-The committed scanner fixtures additionally measured the final 10/50 policy
+The 2026-11-15 scanner fixtures additionally measured the final 10/50 policy
 through the production controller and real Git snapshots: YAML 36 lines / 216
 tokens, Bash 18 / 54, PowerShell 18 / 72, and Python 18 / 144 all failed with
 actionable cross-module findings. Three-statement fragments in each format
-passed; same-module copies passed. These calibration observations are printed
-by the enabled `test_all_four_languages_use_actual_pinned_detector` test and
-reproduced by the commands below on Python 3.12 and the current interpreter.
+passed; same-module copies passed. These are historical four-format observations.
+The current `ScanTests.test_all_six_languages_use_actual_pinned_detector` case
+also covers JavaScript and TypeScript and prints its measured calibration
+results; the focused command above reproduces the current case.
 
 The anonymous live-source measurements were:
 
@@ -416,19 +446,19 @@ noise. These observations do not establish future noise rates for nonempty
 action corpora and justify no module or language exclusions.
 
 To retune, retain full live source identities and scope counts, run the real
-pinned detector against substantial and short boilerplate examples in all four
+pinned detector against substantial and short boilerplate examples in all six
 formats, and compare findings before changing the central policy. Classify
 false positives by the copied code and line ranges, then rerun the same corpus
 with the candidate thresholds. Commit the measured tradeoff and keep the
 substantial-clone, same-module, suppression and zero-scope checks enabled:
 
 ```sh
-run-with-temp uv run --locked --script tools/tests/test_scan.py -v
-run-with-temp uv run --locked --script --python 3.12 tools/tests/test_scan.py -v
-run-with-temp uv run --locked --script tools/tests/test_nightly_workflow.py -v
+run-with-temp env UV_NO_CACHE=1 uv run --locked --script --python 3.12 tools/tests/test_scan.py -v
+run-with-temp env UV_NO_CACHE=1 uv run --locked --script --python 3.12 tools/tests/test_nightly_workflow.py -v
 ```
 
-Save useful results and logs outside the wrapper's temporary directory. No test
+Record one-line results and log digests; keep raw logs in disposable scratch or
+the producing Actions run. No test
 may silently skip detector integration. Moving shared code into Builds and
 deleting module copies is a separate authorized change after inspecting the
 reported fragments.

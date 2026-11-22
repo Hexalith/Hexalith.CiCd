@@ -61,3 +61,95 @@ The product owner can fit these changes into the existing sprint. Reverting the 
 4. **Maintainer.** Record proof requests per tag, runner-minutes by change class, nightly barrier waits and weekly evidence growth. For adopted modules, use the last-200-run method, reporting the window, sample size, main CI success and standard-module p90 against 95% and 10 minutes. Story 27-2 owns the eventual fleet-wide measurement. [Baseline and targets](../specs/spec-cicd/baseline-and-targets.md)
 
 The planning handoff covers all seven findings. Runtime implementation, the hosted App settings readback, a post-fix pilot receipt, online supply-chain checks and the fleet measurements are follow-up evidence. Story 28-8 retains its own decision point.
+
+## 30-2 clean-checkout qualification — 22 November 2026
+
+**Result:** the [root quickstart](../../README.md#linux-maintainer-quickstart)
+passed on Linux x86_64: uv 0.13.7 installed managed Python 3.12.16, the locked
+render comparison passed, and all 39 dependency-free controller tests passed
+with `uv --offline`. Both executable README blocks ran unchanged with initial
+`PATH=/usr/bin:/bin`, exercising the documented fallback `run-with-temp`
+function. The fresh public parent clone initialized only Builds at gitlink
+`3060b20abfcf4ea804ad31816d435e5c754fc129`; the selected and historical tag
+fetches succeeded, and the final assertions confirmed unchanged tracked files
+and no initialized product modules. Installer, interpreter, executable links,
+caches, checkout and raw log stayed beneath private `TMPDIR` and were removed
+when the foreground job finished. Quickstart log SHA-256:
+`815c019facb60cfcfcfd27e7cb53ee5bae25772fd8bc805de93a17d775e2c2a7`.
+
+The public clone resolved to commit
+`307405aba85e587982b69d6ce5847ab2c06000a3`, tree
+`05ff900ff5230ca6c295845005b9f87a20537147`. The focused detector command ran
+against the implementation baseline commit
+`242e868f1060681f134a13692f38c52619e959f1`, tree
+`6fc665759992de34287ded8b9a8c5a15f6aa8fbb`. The relevant source objects below
+are identical at both commits; these are distinct qualifications, not a claim
+that their complete trees match. The README candidate blob (with the qualified bootstrap blocks unchanged) is
+`c29dec547900bd410102fbc52974ae1e508772ac`; the corrected scan-guide blob is
+`5865c087dda3e056e0dc320260e6c16e3da17a76`.
+Standalone commands gained inherited `UV_NO_CACHE=1` during documentation review
+after these runs; the recorded verification digests retain their original executions.
+
+| Relevant input | Full Git object identity (blob unless marked tree) |
+|---|---|
+| `builds-version` | `ecb8b9a7d5cd90f97c08600ef5730590df82cdc4` |
+| `.gitmodules` | `5f4db08e8b4a26baaa3649160a7ddf3f8c5e1b0c` |
+| `.github/workflows/deliver.yml` (uv pin) | `a10275be9c3ae186cfa301d598731c484e2ca260` |
+| `setup/` (live registry tree) | `bb299f775e8564d7dc873f21a5abe10952e4d15c` |
+| `templates/` (tree) | `6a2337c8dee8cc4dbae9c9687bf00b21c96e8075` |
+| `rendered/` (accepted output tree) | `d1c499bd45fe6ae9e832e2144d9e4a6360db1d40` |
+| `tools/render.py` | `8e0959e358376d141183ef0c7f4fd259abf63a11` |
+| `tools/render.py.lock` | `4481492c6c5b7b392723c31912f4767526239e4f` |
+| `tools/nightly_runtime.py` | `3e18a8b916e6e029a64f3c891279ccf882cf0537` |
+| `tools/tests/test_nightly_runtime.py` | `670b0ab8256006666b7f7ac07326ae39ddd1e3b9` |
+| `tools/tests/test_nightly_runtime.py.lock` | `7518fc90bf78b2b347b694f695c6e1ed120d523c` |
+| `tools/tests/test_scan.py` | `e1e6f5e42ae343e8589dc6bbf3c75d4e30706d02` |
+| `tools/tests/test_scan.py.lock` | `c590b9a3f47f2876468871984ca81de8ff999733` |
+| `tools/scan.py` | `6beec52b74fd9b4d720be03a96f1071e5d8de260` |
+| `.jscpd.json` | `7f2bed36ea9f4d7620c175656a0a3290df9d7a39` |
+| `tools/jscpd/package.json` | `68a2a66e16aae5dc0de236929502b2f3b8d7cd88` |
+| `tools/jscpd/package-lock.json` | `a5f8267232aabf308c4b834c5cc8ed03a84ad7fd` |
+
+Builds tag objects are lightweight tags, so the tag object and commit IDs match:
+
+| Acquired tag | Tag/commit ID | Tree ID |
+|---|---|---|
+| `v6.6.1` (selected) | `27fe4d62ca1f3cce07a9f19e1e30b02cbaa51357` | `e55fefff3fa765e4a7bc9408caf61ea0a59b6dc5` |
+| `v6.0.6` (renderer fixture) | `fdda17c0a4538b0f7c99f813c20ca24b49006530` | `81882bd1852cf3c10c7a2b6647b238c8eec22fa8` |
+| `v5.1.0` (global-suite fixture) | `9ebc31f606bc02f8a0ec2f1ec344127e2468c6b4` | `397a855c1acb779f1631835444c3b750ffd72f72` |
+
+**Observed online detector result:** the exact focused command in the
+[scan guide](../../docs/duplicate-scan.md) passed (one test, six formats) using
+uv 0.13.7, Python 3.12.16, Node 24.22.1, npm 11.19.1 and PowerShell 7.6.2.
+Its normal isolated install, mandatory `npm audit signatures` and pinned jscpd
+5.4.3/TypeScript 6.0.3 checks succeeded. Substantial copied examples were
+detected at YAML 36 lines/216 tokens, Bash 18/54, PowerShell 18/72, Python
+18/144, JavaScript 18/198 and TypeScript 18/198. Detector log SHA-256:
+`a406d5ed6e466375bec6c601ef8c702b6b40f1170e13624def53cd917504b322`.
+No raw output or executable runner was committed under `_bmad-output/`.
+
+**Online boundary and prerequisites:** full `tools/check_global.py` and
+`tools/validate.py` were not executed in this qualification and remain unproven,
+as do a production live-source scan and hosted workflow outcomes. Their guide
+requires Linux x86_64, the same pinned uv/Python and script locks, local selected
+and historical Builds tags, Node 24/npm, compatible PowerShell 7 with the native
+`ModuleAnalysis` API, npm registry and signature/provenance access, GitHub Git/API
+and release/archive connectivity, and the existing read-only `GITHUB_TOKEN` or
+`GH_TOKEN` for release/bootstrap proofs and online auditing as applicable.
+The local offline pass and the focused detector pass do not waive any failed,
+refused or unexecuted online gate. The earlier dated audit observations above
+remain historical; current scope is the live [`setup/` tree](../../setup/).
+
+Independent repetition of the documented commands also passed: clean bootstrap
+(39 offline tests), log SHA-256
+`64837cfa6eccb7c01c9f27a9c53d67a74ab8faa96d760d563d7bebdcbab855f5`;
+real six-language detector, log SHA-256
+`487f62372c5f92b48deaf97b7bff5b4628bdbff238d29755ca78a9d6a5e63b6d`.
+The repeated public checkout resolved to the same commit and tree above.
+
+Post-review verification passed again against the same public commit/tree:
+locked render and all 39 offline controller tests, log SHA-256
+`1a15c9ad52a4522172aeb54e04d0413f18e91484a54404cf6c4155696bfba2c7`.
+The reviewed focused command with inherited `UV_NO_CACHE=1` also passed all six
+formats with the same pinned toolchain and mandatory signatures, log SHA-256
+`0682981917d0309b45728f047ebb0d853d7570629b06715753af69dcfa8f89f7`.
