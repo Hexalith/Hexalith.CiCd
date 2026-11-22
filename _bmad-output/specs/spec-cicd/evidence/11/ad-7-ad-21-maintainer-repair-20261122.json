@@ -1,0 +1,764 @@
+{
+  "recorded_at": "2026-11-22T14:29:00.363232+00:00",
+  "result": "scoped_repairs_verified_acceptance_blocked",
+  "source_baseline": {
+    "commit": "9f7a56fd1e0de05f6b8a8789fba983c072ce3db6",
+    "tree": "3379e0b784c11f45591e1a71df4637aacfb4c9f7",
+    "legacy_done_spec_blob": "e71dcb4661c23e6e9a3a06fdc1357215b55afd9d",
+    "module_inventory": {
+      "blob": "5722b539321ce31ad5174e79110b255053bfb036",
+      "sha256": "bbae531a9c6343d29dea65f45379e275667ee5830dfcdb75565f43f77ee5da3c"
+    },
+    "prior_execution_reconciliation_sha256": "1565325b60186c8ff1dec3e71bb52e6fa9b5c0ce631c278ccd5739843793a85f",
+    "pilot_checkpoint": {
+      "historical_acceptance": "2026-11-19",
+      "run": 44566082537,
+      "receipt_sha256": "88ad73321566120dfa2421c3bf58e3a1df60b408a3afe676fa4abdfffec3a016"
+    }
+  },
+  "github": {
+    "effective_profile": "/home/administrator/.config/gh",
+    "default_profile": "/home/administrator/.config/gh-cicd-agent",
+    "token_overrides": {
+      "GH_TOKEN": false,
+      "GITHUB_TOKEN": false
+    },
+    "api_preflight_at": "2026-11-22T14:18:35.003032+00:00",
+    "api_preflight": {
+      "account": {
+        "endpoint": "user",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:32 GMT",
+          "x-github-request-id": "DF34:35FB30:12053966:1B34B008:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "5727444c53a2b7cc7c921b904af869463544bbe3788479718289ad1a749bc7ba",
+        "readback": {
+          "login": "jpiquot",
+          "id": 6775094
+        }
+      },
+      "organization_membership": {
+        "endpoint": "user/memberships/orgs/Hexalith",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:32 GMT",
+          "x-github-request-id": "DF50:EECCF:122EFAC2:1B7FA836:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "admin:org, read:org, repo, user, write:org"
+        },
+        "body_sha256": "13a584c7c58b02c6862c2f4b5b88847f400c4f37b786ff2a371c674111217015",
+        "readback": {
+          "state": "active",
+          "role": "admin",
+          "organization_id": 80614290
+        }
+      },
+      "target": {
+        "endpoint": "repos/Hexalith/Hexalith.CiCd",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:32 GMT",
+          "x-github-request-id": "DF4C:5F3F5:1261CB7B:1BB6A513:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "repo"
+        },
+        "body_sha256": "a468dc652f81d00e30279c19c9f09d9f7cdc58aae866bd78a50ba0ef2507c2d7",
+        "readback": {
+          "id": 1379430755,
+          "full_name": "Hexalith/Hexalith.CiCd",
+          "permissions": {
+            "admin": true,
+            "maintain": true,
+            "push": true,
+            "triage": true,
+            "pull": true
+          },
+          "default_branch": "main"
+        }
+      },
+      "organization_installations": {
+        "endpoint": "orgs/Hexalith/installations?per_page=100",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:32 GMT",
+          "x-github-request-id": "DF54:35FB30:12053966:1B34B004:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "admin:org, read:org, write:org"
+        },
+        "body_sha256": "71074cc159c663adbe921b5397661718b50ae89d30dc6a8b7cdea788b29646e0",
+        "readback": {
+          "total_count": 7,
+          "current": [
+            {
+              "id": 77847816,
+              "repository_selection": "all",
+              "updated_at": "2026-11-19T11:48:57.000+01:00"
+            },
+            {
+              "id": 179966090,
+              "repository_selection": "selected",
+              "updated_at": "2026-11-17T09:08:51.000+01:00"
+            },
+            {
+              "id": 182926560,
+              "repository_selection": "all",
+              "updated_at": "2026-11-17T13:32:58.000+01:00"
+            }
+          ],
+          "absent_agent_slugs": [
+            "claude",
+            "semgrep-app"
+          ]
+        }
+      },
+      "repositories": {
+        "endpoint": "orgs/Hexalith/repos?type=all&per_page=100",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:34 GMT",
+          "x-github-request-id": "DF68:1E59C5:11F51C4E:1B1EA036:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "0b56f39f1e76f4cc0130df2cb1946b3f3a054dc58b4f766b793cef06f376191c",
+        "readback": {
+          "repositories": 67,
+          "missing": []
+        }
+      },
+      "cicd_app_membership": {
+        "endpoint": "user/installations/179966090/repositories?per_page=100",
+        "status": "HTTP/2.0 403 Forbidden",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:32 GMT",
+          "x-github-request-id": "DF58:1E59C5:11F51C4C:1B1EA030:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "read:user, user"
+        },
+        "body_sha256": "b376f1e37c53dc89af3066bb0ce5817e44fe1b7e107a2900d0b4e8e92849db5e",
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation."
+      },
+      "Commons_main": {
+        "endpoint": "repos/Hexalith/Hexalith.Commons/branches/main",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:33 GMT",
+          "x-github-request-id": "DF06:DA64E:7CF76C:E77CD3:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "d391088ebef2c80cf92d907d70a1281985bcdc11d8dfd1e1ac9e6e06689d30c2",
+        "readback": {
+          "commit": "5f646d4e49279cca0d31ab577e91719c3ed7e434",
+          "tree": "da06b03bb4dee9cd758c66b2ae332e3aa8374321"
+        }
+      },
+      "Commons_environment": {
+        "endpoint": "repos/Hexalith/Hexalith.Commons/environments/hexalith-release",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:32 GMT",
+          "x-github-request-id": "DF10:0CC9:2D2DC7:5499BD:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "19fc8d07922c827bcbc9a9d47987bc6efa1a37a4f962eb3965a116728deaca3d",
+        "readback": {
+          "id": 27433088213,
+          "name": "hexalith-release",
+          "protection_rules": [
+            {
+              "id": 72670631,
+              "node_id": "GA_kwDOOM0ElM4EVN2n",
+              "type": "branch_policy"
+            }
+          ],
+          "deployment_branch_policy": {
+            "protected_branches": false,
+            "custom_branch_policies": true
+          }
+        }
+      },
+      "Commons_branches": {
+        "endpoint": "repos/Hexalith/Hexalith.Commons/environments/hexalith-release/deployment-branch-policies",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:33 GMT",
+          "x-github-request-id": "DF1A:131648:7FC6CD:EA12F0:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "883dbfc204403c348054055a1b213be6b39c93fee7989a3c6777fcccbca6cac2",
+        "readback": {
+          "total_count": 1,
+          "branch_policies": [
+            {
+              "id": 66912951,
+              "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjkxMjk1MQ==",
+              "name": "main",
+              "type": "branch"
+            }
+          ]
+        }
+      },
+      "PolymorphicSerializations_main": {
+        "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/branches/main",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:33 GMT",
+          "x-github-request-id": "DF20:1782:8D5E33E:D501074:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "9513046754b458e19531e09da6a4b994a8b2279a651ec73c075d13c3f30b0aeb",
+        "readback": {
+          "commit": "99c2344f08d3e3560a891f79ab63f8722fa14e60",
+          "tree": "1665abeefacb8080370bc615877bfa76b66110d4"
+        }
+      },
+      "PolymorphicSerializations_environment": {
+        "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:33 GMT",
+          "x-github-request-id": "DF22:1CDDC1:12BE2BE0:1C3AD9D2:6B02F9B8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "8a25d4f674dd40a1519e5e6279b32fd28aa370c3aafde3944ce5ec2b1823bc27",
+        "readback": {
+          "id": 27433090855,
+          "name": "hexalith-release",
+          "protection_rules": [
+            {
+              "id": 72670636,
+              "node_id": "GA_kwDOOQ0N_s4EVN2s",
+              "type": "branch_policy"
+            }
+          ],
+          "deployment_branch_policy": {
+            "protected_branches": false,
+            "custom_branch_policies": true
+          }
+        }
+      },
+      "PolymorphicSerializations_branches": {
+        "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release/deployment-branch-policies",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:33 GMT",
+          "x-github-request-id": "DF30:366AAA:12B42656:1C3C7820:6B02F9B9",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": ""
+        },
+        "body_sha256": "7e6cea6967f7e87db106b688aa6dd5129d21ac185908b5db5e791691769afe04",
+        "readback": {
+          "total_count": 1,
+          "branch_policies": [
+            {
+              "id": 66912958,
+              "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjkxMjk1OA==",
+              "name": "main",
+              "type": "branch"
+            }
+          ]
+        }
+      },
+      "Commons_release_workflow": {
+        "endpoint": "repos/Hexalith/Hexalith.Commons/contents/.github/workflows/release.yml?ref=5f646d4e49279cca0d31ab577e91719c3ed7e434",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:34 GMT",
+          "x-github-request-id": "DF3C:366AAA:12B42F0C:1C3C8508:6B02F9BA",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "repo"
+        },
+        "body_sha256": "2a77bee4183c15ac07c6def631282835ae2dde462d373f73609a20ecb64e7649",
+        "readback": {
+          "path": ".github/workflows/release.yml",
+          "blob": "2021354ba66400f8e93e5c9db2d4c49f7eef6aae",
+          "source_sha256": "920bcf81eee2051dd14b3f1e31d2ff0fb81568ca4b04db66b590ae444793de83",
+          "binding_lines": [
+            "uses: \"Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.6.1\"",
+            "environment: hexalith-release",
+            "id-token: write"
+          ]
+        }
+      },
+      "PolymorphicSerializations_release_workflow": {
+        "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/contents/.github/workflows/release.yml?ref=99c2344f08d3e3560a891f79ab63f8722fa14e60",
+        "status": "HTTP/2.0 200 OK",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 14:18:34 GMT",
+          "x-github-request-id": "D298:DA4D:12306622:1B770F2F:6B02F9BA",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "repo"
+        },
+        "body_sha256": "30aacefbc4d8ddd92cdac2e5c16edf6b70b06b5a3d88a8b9417040684194da7e",
+        "readback": {
+          "path": ".github/workflows/release.yml",
+          "blob": "2021354ba66400f8e93e5c9db2d4c49f7eef6aae",
+          "source_sha256": "920bcf81eee2051dd14b3f1e31d2ff0fb81568ca4b04db66b590ae444793de83",
+          "binding_lines": [
+            "uses: \"Hexalith/Hexalith.Builds/.github/workflows/release.yml@v6.6.1\"",
+            "environment: hexalith-release",
+            "id-token: write"
+          ]
+        }
+      }
+    },
+    "api_after": {
+      "recorded_at": "2026-11-22T14:29:00.363232+00:00",
+      "endpoint": "orgs/Hexalith/installations?per_page=100",
+      "status": "HTTP/2.0 200 OK",
+      "request_id": "D261:2D801A:120AD5D1:1B341414:6B02FC2B",
+      "body_sha256": "fb01fd651df36fbe843350c3c05d12ad6f402befbc172be850f0ac180b4609fa",
+      "total_count": 7,
+      "target_installations": [
+        {
+          "id": 77847816,
+          "app_slug": "chatgpt-codex-connector",
+          "app_id": 1144995,
+          "target_id": 80614290,
+          "repository_selection": "selected",
+          "permissions": {
+            "checks": "read",
+            "issues": "write",
+            "actions": "write",
+            "contents": "write",
+            "metadata": "read",
+            "statuses": "read",
+            "workflows": "write",
+            "pull_requests": "write"
+          },
+          "suspended_at": null,
+          "updated_at": "2026-11-22T15:28:35.000+01:00"
+        },
+        {
+          "id": 179966090,
+          "app_slug": "hexalith-cicd",
+          "app_id": 5671811,
+          "target_id": 80614290,
+          "repository_selection": "selected",
+          "permissions": {
+            "actions": "write",
+            "contents": "write",
+            "metadata": "read",
+            "workflows": "write",
+            "administration": "read",
+            "security_events": "read"
+          },
+          "suspended_at": null,
+          "updated_at": "2026-11-17T09:08:51.000+01:00"
+        },
+        {
+          "id": 182926560,
+          "app_slug": "cursor",
+          "app_id": 1210556,
+          "target_id": 80614290,
+          "repository_selection": "selected",
+          "permissions": {
+            "pages": "read",
+            "checks": "write",
+            "issues": "write",
+            "actions": "write",
+            "members": "read",
+            "contents": "write",
+            "metadata": "read",
+            "packages": "read",
+            "statuses": "read",
+            "workflows": "write",
+            "deployments": "read",
+            "discussions": "write",
+            "merge_queues": "write",
+            "pull_requests": "write",
+            "administration": "read",
+            "organization_custom_roles": "read",
+            "organization_custom_org_roles": "read",
+            "organization_custom_properties": "read"
+          },
+          "suspended_at": null,
+          "updated_at": "2026-11-22T15:26:32.000+01:00"
+        }
+      ],
+      "other_app_slugs": [
+        "codacy-production",
+        "codecov",
+        "sonarqubecloud",
+        "travis-ci"
+      ]
+    },
+    "required_repository_ids": {
+      "Hexalith.AI.Tools": 1221438803,
+      "Hexalith.Agents": 1277685416,
+      "Hexalith.ChatBot": 1234748496,
+      "Hexalith.Commons": 952960148,
+      "Hexalith.Conversations": 1231551514,
+      "Hexalith.EventStore": 1155154671,
+      "Hexalith.Folders": 1229485448,
+      "Hexalith.FrontComposer": 1202567471,
+      "Hexalith.McpCli": 1379417482,
+      "Hexalith.Memories": 1188027961,
+      "Hexalith.Parties": 1170072276,
+      "Hexalith.Platform": 1328589450,
+      "Hexalith.PolymorphicSerializations": 957156862,
+      "Hexalith.Projects": 871087402,
+      "Hexalith.Tenants": 1174267565,
+      "Hexalith.Timesheets": 1272275109,
+      "Hexalith.Works": 1264171182,
+      "Hexalith.Builds": 952945989,
+      "Hexalith.CiCd": 1379430755
+    },
+    "unrelated_repository_ids": {
+      "Hexalith_old": 568370439,
+      "Hexalith.AI": 629551223,
+      "semantic-kernel": 647343286,
+      "HexalithApp_old": 786418755,
+      "Hexalith.Inventories": 796191088,
+      "HexalithAspire": 796201155,
+      "Hexalith.Dynamics365Finance": 796320664,
+      "Hexalith.Parties.Old": 798880730,
+      "Hexalith.ExternalSystems": 798881062,
+      "Hexalith.Sales": 798887497,
+      "Hexalith.Identities": 798887842,
+      "Hexalith.Oidc_old": 808510301,
+      "Hexalith.EasyAuthentication_old": 834719990,
+      "Hexalith": 851523569,
+      "HexalithApp": 851770509,
+      "Hexalith.Security_OLD": 852168913,
+      "Hexalith.Oidc": 854107919,
+      "Hexalith.Tasks": 871088314,
+      "Hexalith.Contacts": 871088977,
+      "Hexalith.Documents_OLD": 871091034,
+      "Hexalith.Templates": 871603551,
+      "Hexalith.UrlToText": 876719824,
+      "Hexalith.DaprIdentityStore": 890456345,
+      "ollama": 943757274,
+      "qdrant": 943757505,
+      "kernel-memory": 943990311,
+      "open-webui": 943990893,
+      "Hexalith.MyNewPackage": 956657445,
+      "Hexalith.Streams": 958460421,
+      "Hexalith.KeyValueStorages": 960307124,
+      "Hexalith.EventStores": 963292804,
+      "Hexalith.Security": 966892135,
+      "Hexalith.NetAspire": 967276766,
+      "Hexalith.IdentityStores": 967469113,
+      "Hexalith.Documents": 968206525,
+      "Hexalith.Domains": 968662765,
+      "Hexalith.ChatClient": 1027122874,
+      "Hexalith.MyNewModule": 1027188474,
+      "Hexalith.GitStorage": 1107174746,
+      "Hexalith.Applications": 1120511943,
+      "Hexalith.MarkdownEditor": 1131658602,
+      "Hexalith.GitDocumentStorage": 1154280248,
+      "Hexalith.FrontShell": 1177697182,
+      "Hexalith.AI.Project": 1221455078,
+      "Hexalith.Todos": 1264947605,
+      "slide-video-producer": 1271966197,
+      "Hexalith.BmadSkills": 1299011770,
+      "Hexalith.Docs": 1449165317
+    },
+    "exact_inventory_rechecked_before_each_save": true,
+    "cursor": {
+      "id": 182926560,
+      "before": {
+        "path": "github.com/organizations/Hexalith/settings/installations/182926560",
+        "title": "Installed GitHub App - Cursor",
+        "selection": "all",
+        "save_enabled": false,
+        "count": 0
+      },
+      "after_reload": {
+        "path": "github.com/organizations/Hexalith/settings/installations/182926560",
+        "title": "Installed GitHub App - Cursor",
+        "selection": "selected",
+        "save_enabled": false,
+        "count": 48
+      },
+      "selected_repositories": "keys of unrelated_repository_ids",
+      "exact_selection_verified": true
+    },
+    "codex": {
+      "id": 77847816,
+      "before": {
+        "path": "github.com/organizations/Hexalith/settings/installations/77847816",
+        "title": "Installed GitHub App - ChatGPT Codex Connector",
+        "selection": "all",
+        "save_enabled": false,
+        "count": 0
+      },
+      "after_reload": {
+        "path": "github.com/organizations/Hexalith/settings/installations/77847816",
+        "title": "Installed GitHub App - ChatGPT Codex Connector",
+        "selection": "selected",
+        "save_enabled": false,
+        "count": 49
+      },
+      "selected_repositories": "keys of unrelated_repository_ids plus the approved module allowlist",
+      "exact_selection_verified": true,
+      "approved_module_allowlist": [
+        "Hexalith.EventStore"
+      ],
+      "authority": {
+        "story_1_blob": "03884067dc143bd87da769e3f3b51ef651d55e99",
+        "story_1_sha256": "d9c2fc42e6248fa0aa560e43f059ba362536ffd14936a0816bb220a749b87817",
+        "authenticated_2026_11_12_followup_blob": "0f9c593152c86e726a27458f0d26a0771256da6d",
+        "authenticated_2026_11_12_followup_sha256": "a162830363d695d94565069e418f972bf5941b8a2604d9d79e5c4532209a7941"
+      }
+    },
+    "cicd": {
+      "id": 179966090,
+      "after_reload": {
+        "path": "github.com/organizations/Hexalith/settings/installations/179966090",
+        "title": "Installed GitHub App - Hexalith CiCd",
+        "selection": "selected",
+        "save_enabled": false,
+        "count": 20
+      },
+      "required_inclusion_verified": true,
+      "additional_repositories": [
+        "Hexalith.Docs"
+      ],
+      "selection_changed": false
+    }
+  },
+  "nuget": {
+    "trusted_publishing": {
+      "path": "nuget.org/account/trustedpublishing",
+      "authenticated_account": "jpiquot",
+      "reloaded": true,
+      "visible_policy_ids": [
+        16915,
+        17941,
+        18269,
+        18601,
+        18796,
+        18797,
+        18928,
+        20362,
+        20456,
+        20857,
+        20891,
+        22255,
+        26029,
+        26906,
+        27048,
+        27049,
+        27180,
+        27245,
+        27252,
+        27339,
+        27451,
+        27467,
+        28307
+      ],
+      "pilots": [
+        {
+          "id": 27048,
+          "status": "Active",
+          "repository": "Hexalith.Commons#952960148",
+          "repository_owner": "Hexalith#80614290",
+          "workflow": "release.yml",
+          "environment": "hexalith-release",
+          "owner": "Hexalith",
+          "scope": "Push new packages and package versions",
+          "package_scope": [
+            "Hexalith.Commons*"
+          ],
+          "publisher": "GitHubActions",
+          "package_ids": [
+            "Hexalith.Commons",
+            "Hexalith.Commons.Aspire",
+            "Hexalith.Commons.Configurations",
+            "Hexalith.Commons.Diagnostics",
+            "Hexalith.Commons.Http",
+            "Hexalith.Commons.Metadatas",
+            "Hexalith.Commons.Publication",
+            "Hexalith.Commons.Serialization",
+            "Hexalith.Commons.ServiceDefaults",
+            "Hexalith.Commons.StringEncoders",
+            "Hexalith.Commons.TenantAccess",
+            "Hexalith.Commons.UniqueIds"
+          ]
+        },
+        {
+          "id": 27049,
+          "status": "Active",
+          "repository": "Hexalith.PolymorphicSerializations#957156862",
+          "repository_owner": "Hexalith#80614290",
+          "workflow": "release.yml",
+          "environment": "hexalith-release",
+          "owner": "Hexalith",
+          "scope": "Push new packages and package versions",
+          "package_scope": [
+            "Hexalith.PolymorphicSerializations*"
+          ],
+          "publisher": "GitHubActions",
+          "package_ids": [
+            "Hexalith.PolymorphicSerializations"
+          ]
+        }
+      ],
+      "other_active_wildcard_push_policies": [
+        {
+          "id": 16915,
+          "repository": "Hexalith.EventStore#1155154671",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 18269,
+          "repository": "Hexalith.FrontComposer#1202567471",
+          "workflow": "release-publish.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions"
+        },
+        {
+          "id": 18601,
+          "repository": "Hexalith.Parties#1170072276",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 18928,
+          "repository": "Hexalith.Conversations#1231551514",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 20362,
+          "repository": "Hexalith.Memories#1188027961",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 20456,
+          "repository": "Hexalith.Platform#1328589450",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 20857,
+          "repository": "Hexalith.Projects#871087402",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 20891,
+          "repository": "Hexalith.Timesheets#1272275109",
+          "workflow": "release.yml",
+          "environment": "production",
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        },
+        {
+          "id": 22255,
+          "repository": "Hexalith.Chatbot#1234748496",
+          "workflow": "release.yml",
+          "environment": null,
+          "scope": "Push new packages and package versions, Unlist or relist package versions"
+        }
+      ]
+    },
+    "legacy_key": {
+      "path": "nuget.org/account/apikeys",
+      "authenticated_account": "jpiquot",
+      "reloaded": true,
+      "id": 954800,
+      "name": "Github Hexalith",
+      "status": "Expired",
+      "owner": "Hexalith",
+      "glob": "Hexalith.*",
+      "scope": "Push new packages and package versions",
+      "github_secret_mapping": "unverified",
+      "mutated": false
+    },
+    "package_sources": {
+      "Commons": {
+        "endpoint": "repos/Hexalith/Hexalith.Commons/contents/scripts/validate-nuget-packages.py?ref=5f646d4e49279cca0d31ab577e91719c3ed7e434",
+        "request_id": "D247:35FB30:121029AD:1B450821:6B02FAFC",
+        "commit_or_ref": "5f646d4e49279cca0d31ab577e91719c3ed7e434",
+        "blob": "03872d04808a4ab4d1b8e695480ed5438d08c1f5",
+        "source_sha256": "c633731625f50f0aa4d55e35d1e6c76eaa25c29b607adbb04ee7d1b1fc108ef8",
+        "package_ids": [
+          "Hexalith.Commons",
+          "Hexalith.Commons.Aspire",
+          "Hexalith.Commons.Configurations",
+          "Hexalith.Commons.Diagnostics",
+          "Hexalith.Commons.Http",
+          "Hexalith.Commons.Metadatas",
+          "Hexalith.Commons.Publication",
+          "Hexalith.Commons.Serialization",
+          "Hexalith.Commons.ServiceDefaults",
+          "Hexalith.Commons.StringEncoders",
+          "Hexalith.Commons.TenantAccess",
+          "Hexalith.Commons.UniqueIds"
+        ]
+      },
+      "PolymorphicSerializations": {
+        "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/contents/src/libraries/Hexalith.PolymorphicSerializations/Hexalith.PolymorphicSerializations.csproj?ref=99c2344f08d3e3560a891f79ab63f8722fa14e60",
+        "request_id": "D249:36376F:12201CAB:1B69586A:6B02FAFC",
+        "commit_or_ref": "99c2344f08d3e3560a891f79ab63f8722fa14e60",
+        "blob": "ca151ec3a7359741cb05e1bbf58bea4a0d33c455",
+        "source_sha256": "d5a81674a6dd8951043ad5d008af83e35734e95ee0f3b89b396047fb0fe634e1",
+        "package_ids": [
+          "Hexalith.PolymorphicSerializations"
+        ]
+      },
+      "reusable_release": {
+        "endpoint": "repos/Hexalith/Hexalith.Builds/contents/.github/workflows/release.yml?ref=27fe4d62ca1f3cce07a9f19e1e30b02cbaa51357",
+        "request_id": "D245:2D801A:1200FC0E:1B2548CB:6B02FAFC",
+        "commit_or_ref": "27fe4d62ca1f3cce07a9f19e1e30b02cbaa51357",
+        "blob": "e1c26b4eb45db3d08fb673645f1a80929aaa5cc0",
+        "source_sha256": "181ff605c022c3ed1eb8cd94577bf77b84d5320781f4f0d7967c699573638f36",
+        "binding_lines": [
+          "category: hexalith-release/${{ matrix.language }}",
+          "RELEASE_OUTPUT_DIRECTORY: ${{ runner.temp }}/hexalith-release-outcome",
+          "name: hexalith-release-outcome"
+        ]
+      }
+    },
+    "package_feed": {
+      "checked_ids": 13,
+      "identity": "NuGet V3 flat-container index per exact package ID",
+      "all_http_status": 200
+    },
+    "ownership": {
+      "search": "https://azuresearch-usnc.nuget.org/query",
+      "exact_search_ids": 12,
+      "owners": [
+        "Hexalith"
+      ],
+      "aspire_fallback": "https://www.nuget.org/packages/Hexalith.Commons.Aspire#owners-body"
+    }
+  },
+  "blocking_findings": [
+    "CiCd App selection includes Hexalith.Docs in addition to the AD-7 repositories. The request authorized verification only for that installation.",
+    "Nine active policies bound to other repositories display an owner-wide wildcard push scope covering pilot IDs, including the retained Codex module EventStore. The requested two repository-bound pilot policies pass. Package-level isolation across repository policies is not established."
+  ],
+  "remote_mutations": [
+    "Cursor repository selection",
+    "Codex connector repository selection"
+  ],
+  "renewed_acceptance": false,
+  "readback_digests": {
+    "cursor_previous": "bd57c54eaee97a2ca3cab2c30c6d294b8064fcaac9173eaf533ff507fb5ea6c3",
+    "cursor_persisted": "6a84db42daa3d7f9532e530aa3c85129cba48d9037c461f83371f77affa736c5",
+    "codex_previous": "2262110547bee4383da2ca6c9fd5f31fe1cadc9879d363d104b24f66cacce02e",
+    "codex_persisted": "fb7446dd7db966b940b6763c9d37928fb860d9b25dfebc679b311b5d044fd577",
+    "cicd": "669f8e65549853f21efb03dacf9c63ebeea343e32069e1f50644dc1b118e7b5b",
+    "nuget_policies": "e1839f0b86b8ce2144b52f93a6a5b598464812b1aa788478d8be08cbc8054a14",
+    "nuget_legacy_key": "3566b12376cd175e30a91071a0d988a4ee7a732a3a298d0adb0de95dfa501808",
+    "public_package_indexes": "caba34a305b1a45784de8e3445e867d90f8ec30ca5e0e35fcf9faf2eaea68daf",
+    "public_package_owners": "8f771e42c9aa1c692fb32bc195ed8010c5651e1ee21847ce1d63a05f056d5828"
+  }
+}

@@ -2,14 +2,16 @@
 title: 'Pilot migration: Commons and PolymorphicSerializations'
 type: 'chore'
 created: '2026-11-22'
-status: 'blocked'
+status: 'done'
 baseline_revision: '9f7a56fd1e0de05f6b8a8789fba983c072ce3db6'
 review_loop_iteration: 0
 followup_review_recommended: false
 context:
   - '{project-root}/_bmad-output/specs/spec-cicd/evidence/11/planning-context-20261122.md'
 warnings: [oversized]
-deferred: []
+deferred:
+  - 'CiCd App 179966090 also selects Hexalith.Docs.'
+  - 'Nine other repositories have active NuGet wildcard policies that overlap the pilot package IDs.'
 ---
 
 <intent-contract>
@@ -41,14 +43,14 @@ deferred: []
 
 ## Tasks & Acceptance
 
-**Execution (resumed 2026-11-22; current access blockers remain):**
+**Execution (resumed 2026-11-22, with readback and maintainer acceptance below)**
 
-- [ ] `../evidence/11/planning-context-20261122.md` and new identity receipts beside it — refresh AD-21 inventory before checkpoint work. In an explicitly authorized interactive maintainer session, repair Cursor installation `182926560` to exclude managed repositories and connector `77847816` to the modules that use it, excluding CiCd/Builds; preserve unrelated installation selections. Verify CiCd App `179966090` membership through available authorized settings access. Preserve exact 403 if access remains unavailable; do not switch tokens to evade it. No renewed acceptance while this drift or required checks remain unresolved.
-- [ ] `../evidence/11/` — authenticate current main-only `hexalith-release`, both module-specific Zot ACLs and environment binding using provisioning identities without exposing credentials; verify sole scoped NuGet policies `27048`/`27049`, package IDs, `release.yml`, environment and legacy key scope through authenticated NuGet access. Reconcile legacy key `954800` as expired/unmapped unless actual scope proves otherwise. Preserve historical additive-then-cleanup order, complete legacy-org-secret exclusions and narrow legacy Zot no-op. Verify stale CodeQL/draft/tag inventory, exact rulesets, scan/security settings, grants and retention. Record each success, failure and unverified item separately.
+- [x] `../evidence/11/planning-context-20261122.md` and new identity receipts beside it — refresh AD-21 inventory before checkpoint work. In an explicitly authorized interactive maintainer session, repair Cursor installation `182926560` to exclude managed repositories and connector `77847816` to the modules that use it, excluding CiCd/Builds; preserve unrelated installation selections. Verify CiCd App `179966090` membership through available authorized settings access. Preserve exact 403 if access remains unavailable; do not switch tokens to evade it. The maintainer acceptance below records the additional CiCd App grant.
+- [x] `../evidence/11/` — authenticate current main-only `hexalith-release`, both module-specific Zot ACLs and environment binding using provisioning identities without exposing credentials; verify sole scoped NuGet policies `27048`/`27049`, package IDs, `release.yml`, environment and legacy key scope through authenticated NuGet access. Reconcile legacy key `954800` as expired/unmapped unless actual scope proves otherwise. Preserve historical additive-then-cleanup order, complete legacy-org-secret exclusions and narrow legacy Zot no-op. Verify stale CodeQL/draft/tag inventory, exact rulesets, scan/security settings, grants and retention. Record each success, failure and unverified item separately. The maintainer acceptance below records the cross-repository NuGet policy overlap.
 - [x] `../evidence/11/` and the legacy completed spec — verify product cleanup, retained hooks/tests, central waiver disposition and acceptable release pin from exact source trees. Both pilots are already adopted; use the normal standalone `python3 references/Hexalith.Builds/check.py` before any new module push. If a genuine product gap exists, fix only its module-owned source with the restricted credential after fresh-main qualification; central policy changes belong in CiCd/Builds. Do not invent waivers or rerun registration just to populate this record.
 - [x] `../evidence/11/` — revalidate historical base/head/preparation/adoption/update objects and HTTP outcomes from the digest-bound sources in the companion. Verify pre-delivery workflow equality, actual delivery workflow difference, fresh post-delivery branch parent and successful push, both Update branch HTTP 202 responses and exact resulting workflow/owned-tree imports. Bind the evidence to the restricted credential source, not account `admin:true`. Confirm PRs 52/19 remain closed unmerged and all recorded disposable refs absent. Keep the stale `remote_push_performed:false` discrepancy visible with the successful server readbacks; preserve raw historical files.
 - [x] `templates/partials/ownership-block.txt.j2`, `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md` and this story — confirm the published correction matches the actual allowance: GitHub permits importing workflows via Update branch with the restricted token, while agent policy forbids using it for owned CI/CD changes and requires a fresh-main product branch. Preserve observed commitlint failure on service-generated merge subjects; do not claim those probe heads passed product tests. Change canonical text/tests/render only if an actual mismatch remains, then validate and deliver through the normal path.
-- [ ] `tools/nightly_acceptance.py` and a new compact receipt under `../evidence/11/` — read-only rejudge run `44566082537` for both pilots and `--checkpoint pilot`; bind authenticated artifacts, release CodeQL, release-or-nothing results, scan rows, bump/delivery and keepalive. Record unrelated module failures without using them to reject passing pilot rows. Evidence/access failure remains unverified and never becomes a fabricated new success. Reconcile this id-keyed story with the historical acceptance only when all required proofs and current maintainer preconditions are resolved.
+- [x] `tools/nightly_acceptance.py` and a new compact receipt under `../evidence/11/` — read-only rejudge run `44566082537` for both pilots and `--checkpoint pilot`; bind authenticated artifacts, release CodeQL, release-or-nothing results, scan rows, bump/delivery and keepalive. Record unrelated module failures without using them to reject passing pilot rows. Evidence/access failure remains unverified and never becomes a fabricated new success. Record the reconciliation decision and any exceptions expressly accepted by the maintainer.
 
 **Acceptance Criteria:**
 
@@ -58,7 +60,7 @@ deferred: []
 - Given the verified server allowance, when canonical and delivered 10-2 instructions are checked, then they accurately state that allowance and prohibit importing owned CI/CD through Update branch while directing agents to fresh-main product branches.
 - Given authenticated nightly `44566082537`, when both pilots and the pilot checkpoint are judged, then each pilot's CodeQL, release-or-nothing and scan evidence passes, bump/delivery and keepalive satisfy the checkpoint, and the resulting decision preserves the dated historical acceptance without claiming this planning run implemented anything.
 
-## Execution revalidation — 2026-11-22
+## Earlier execution revalidation — 2026-11-22
 
 The [execution reconciliation](../evidence/11/execution-reconciliation-20261122.md)
 and compact receipts record completed source/probe/policy qualification and
@@ -74,6 +76,50 @@ changed, and no connector module selection is inferred. Existing settings,
 Zot ACLs, grants, stale release/tag/CodeQL inventory and the immutable release
 pin otherwise qualify. The legacy `done` spec and original evidence remain
 unchanged. No renewed checkpoint acceptance is asserted.
+
+## Current AD-7 and AD-21 readback — 2026-11-22
+
+The [maintainer repair receipt](../evidence/11/ad-7-ad-21-maintainer-repair-20261122.json)
+records authenticated settings and NuGet readbacks, repository and source
+identities, and request and readback digests. Receipt SHA-256
+`f67ac3de9ace8527817e746558214daeb49b8abfdd3e7489dc49f31333d4942d`.
+
+- Saved and reloaded Cursor installation `182926560` with all 48 unrelated
+  repositories. It excludes the 17 modules, Builds and CiCd. Saved and
+  reloaded Codex connector `77847816` with the same 48 unrelated repositories
+  plus `Hexalith.EventStore`, the only managed module in the maintainer's
+  recorded allowlist. Both installations report selected scope through the
+  maintainer API. [Allowlist decision](1-maintainer-preconditions-and-remaining-checks.md#implementation-notes)
+- The CiCd App `179966090` settings reload confirmed all 19 required
+  repositories following the maintainer API's HTTP 403. The page also lists
+  `Hexalith.Docs`. Required inclusion passes. The additional grant remains
+  open against the AD-7 repository scope and was outside the authorized
+  repairs. [AD-7](../../../planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md#ad-7--credentials)
+- The refreshed NuGet inventory for `jpiquot` shows one active push-only policy
+  per pilot repository. Commons policy `27048` covers all 12 Commons IDs
+  through `Hexalith.Commons*`. Policy `27049` covers
+  `Hexalith.PolymorphicSerializations` through
+  `Hexalith.PolymorphicSerializations*`. Both bind `release.yml` and
+  `hexalith-release`, which match the exact GitHub workflow blobs and main-only
+  environment settings. Legacy key `954800` is **Expired**, with owner
+  `Hexalith`, glob `Hexalith.*` and push scope for new packages and versions.
+  Its GitHub secret mapping remains unverified.
+- Nine active policies for other repositories have a `*` push scope under
+  the same `Hexalith` package owner. This includes EventStore policy `16915`.
+  Those scopes overlap the pilots' package IDs, so AD-7 publishing isolation
+  remains open. [NuGet policy scopes and ownership](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing#select-scopes)
+
+The repair receipt records the blocked verdict at the end of verification.
+
+## Maintainer acceptance — 2026-11-22
+
+After reviewing the repair results and the two open findings, the maintainer
+responded `accept`. Story 11 is done with the `Hexalith.Docs` App grant and the
+nine overlapping wildcard policies recorded as open AD-7 exceptions for this
+acceptance. The authenticated CiCd App settings readback established required
+membership, and the authenticated NuGet readback established the pilot policies
+and the expired key's configured scope. The November 19 pilot acceptance and
+run `44566082537` remain the historical checkpoint.
 
 ## Spec Change Log
 
@@ -93,7 +139,7 @@ This is a planning handoff for reconciling an existing completed checkpoint. The
 
 ## Auto Run Result
 
-Status: blocked
+Earlier automated verdict: blocked
 Blocking condition: current AD-7/AD-21 App installation scope fails; CiCd App membership requires authenticated settings access (HTTP 403 / Confirm access); refreshed NuGet requires Sign In, leaving current sole-policy/package-ID and legacy-key scope unverified.
 
 Execution result — 2026-11-22: the rendered entrypoint ran exactly once for this invocation. One implementation subagent completed the independently executable reconciliation. Tasks 3–5 passed; tasks 1–2 and final acceptance in task 6 remain incomplete. Nightly `44566082537` rejudgment passes both pilots and the pilot checkpoint, and renderer `--check` passes. Exact historical restricted-token probe, delivery, Update branch HTTP 202 and cleanup proofs are revalidated. The published 10-2 correction is accurate and needs no source change. Historical acceptance remains preserved; this run does not renew it. No remote mutation, credential change, product change, probe replay, dispatch, adoption, commit or push occurred. See [execution reconciliation](../evidence/11/execution-reconciliation-20261122.md) for exact settings failures, revisions, digests and required access.
