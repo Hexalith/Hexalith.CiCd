@@ -187,16 +187,16 @@ The architecture spine (first companion) decides how each capability is built, i
 - Every Builds file that a managed module uses today, directly or through a Builds workflow, stays unchanged until all 17 modules are adopted. Callers outside them are not waited for. New pipeline code goes in new files, and a Builds-only workflow is deleted in the change that ships its replacement (AD-20). Tests aren't frozen: a change that renames or deletes a Builds-only workflow deletes every test that asserts its text, even inside a frozen directory.
 - Claude Code deny rules go in each module's `.claude/settings.json`, never in machine-wide managed settings: a deny there would also block agents here from editing Builds.
 - Credentials (AD-7):
-  - One org GitHub App delivers, dispatches, and publishes the GitHub releases that a module's own token can't.
-    - Its private key exists only in this repository's `cicd-app` environment. The environment can be used from `main` only, and only by the delivery job and nightly's App jobs.
-    - Those jobs run only standard-library Python, git, and SHA-pinned actions.
-    - Each job mints its own short-lived tokens, scoped to what it needs, and uses none more than 50 minutes after minting.
+  - One organization GitHub App is installed on all current and future Hexalith repositories. It delivers managed CI/CD files, dispatches release workflows, and publishes their GitHub releases. CAP-4 and CAP-16 govern which repositories enter managed CI/CD.
+    - Its private key exists only in this repository's `cicd-app` environment, restricted to `main`. The reviewed consumers are seven workflows and ten jobs: delivery, four nightly App jobs, and five closed manual migration jobs. The [App inventory](../../../docs/cicd-app-inventory.md) records every token, profile, target, owner disposition and retirement condition; `tools/check_app_inventory.py` enforces the reviewed source boundary during global validation.
+    - Those jobs must run only isolated standard-library Python, git, and SHA-pinned actions. The inventory retains the visibility diagnostic's inline non-isolated Python discrepancy and the optional proposal token's ungranted Pull requests scope. The 2026-11-22 implementation readback verifies the active installation's `all` mode, effective grants and main-only environment. The earlier selected-list HTTP 403 and story 11's `Hexalith.Docs` exception describe the historical selected-mode policy.
+    - Each job mints its own short-lived tokens with explicit owner, repository set and permission inputs and uses none more than 50 minutes after minting.
   - Org owners and agents in this repository can reach the App key through a push to `main`. This is accepted under the careless-agent model. The key never enters a module.
   - Each repository's publish job runs in its own `hexalith-release` environment, from `main` only. The environment holds that module's own registry push identity. After adoption, the module's only nuget.org Trusted Publishing policy names that environment and is scoped to the module's package IDs.
   - Nothing unattended uses a personal token.
   - Module agents use a token that has no Workflows, Administration, Actions, Variables, or Secrets write access.
   - Agents in this repository use a second token, scoped to Builds and this repository, in interactive sessions only.
-  - Agent sessions never run with the maintainer's personal `gh` login, which has the `workflow` scope.
+  - Agent sessions never run with the maintainer's personal `gh` login, which has the `workflow` scope. The one exception is a read-only GET the user explicitly authorizes in an interactive session, run with that profile for the single command (AD-7).
 - Actions limits:
   - Reusable workflows nest at most 10 levels deep, with at most 50 called workflows per run.
   - From 2026-12-02, `pull_request_target` is blocked by default on public repos.

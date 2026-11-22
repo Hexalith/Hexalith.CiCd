@@ -456,3 +456,28 @@ source_spec: `11-pilot-migration-commons-and-polymorphicserializations.md`
 severity: low
 reason: The dev session recorded deferred findings the orchestrator could not parse, so they were NOT filed as entries: item 1: not a mapping (got str); item 2: not a mapping (got str). Read `11-pilot-migration-commons-and-polymorphicserializations.md`'s frontmatter and re-file them by hand.
 status: open
+
+### DW-38: Complete current App selected-repository membership remains unverified.
+origin: spec-deferred 4ec62ad298c1
+location: docs/cicd-app-inventory.md
+source_spec: `30-1-verify-the-cicd-app-workflow-inventory.md`
+severity: medium
+reason: Read-only maintainer GET user/installations/179966090/repositories returned HTTP 403 with request identity and response digest retained in evidence/30-1/hosted-readback-20261122.json. Installation grants and the environment client-ID binding were readable; neither proves the full selected-repository set. A reader authorized for installation repository enumeration is needed. Preserve story 11's accepted open Hexalith.Docs exception.
+status: done 2026-11-22
+resolution: Story 30-3 verified `repository_selection: all` on the active installation and records the approved AD-7 change. The historical selected-list refusal and story 11's earlier Hexalith.Docs exception remain in their receipts. [Story 30-3](../specs/spec-cicd/stories/30-3-reconcile-organization-wide-cicd-app-access.md)
+
+### DW-39: Current route-specific owner continuation or retirement confirmations remain pending.
+origin: spec-deferred 10b7fe32491e
+location: docs/cicd-app-inventory.md#migration-owner-dispositions
+source_spec: `30-1-verify-the-cicd-app-workflow-inventory.md`
+severity: medium
+reason: All thirteen migration route/profile records preserve historical authority and read-only hosted results but have retirement_confirmation_observed false. No route was removed. The corresponding EventStore or Projects owner must provide an attributable decision before retirement; historical success cannot supply consent.
+status: open
+
+### DW-40: Workflow discovery skips case-variant extensions such as .YML.
+origin: spec-deferred 5a4d3459c21e
+location: tools/check_app_inventory.py:184
+source_spec: `30-1-verify-the-cicd-app-workflow-inventory.md`
+severity: medium
+reason: tools/check_app_inventory.py and check_global.workflow_paths compare path.suffix case-sensitively, so a .github/workflows file ending .YML that selects cicd-app is not inspected. GitHub documents only .yml and .yaml and does not state whether matching is case-sensitive. A hosted probe of an uppercase-extension workflow, or an authoritative GitHub statement, settles it; if GitHub runs such files, casefold the suffix in both discovery paths. (declared severity: medium (unverified))
+status: open

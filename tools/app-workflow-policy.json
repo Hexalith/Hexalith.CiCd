@@ -1,0 +1,2908 @@
+{
+  "schema": "hexalith.cicd-app-inventory.v1",
+  "reviewed_revision": "307405aba85e587982b69d6ce5847ab2c06000a3",
+  "selector_sources": {
+    "tools/delivery_bootstrap.py": {
+      "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
+      "bound": "Working-tree bootstrap source; the deliver job runs the literal bootstrap commit pinned in its checkout step, bound by that step digest. At most 17 module slots from the committed registry plus ancestral delivered refs; exact candidate verdict or accepted-source repair, no Builds target."
+    },
+    "tools/delivery_runtime.py": {
+      "sha256": "287a3a38b270899342f5f9557df882c1cfbc878872e73ae4f4128f22a4fa1dec",
+      "bound": "Candidate runtime imported by the exported tools/deliver.py after a passing verdict; slot selection uses the pinned bootstrap sibling. Fixed Hexalith origins, validated names, CAPACITY=17, bounded Git/HTTP and token budgets; registry and installation selection guards."
+    },
+    "tools/deliver.py": {
+      "sha256": "94fbe91d4ce5b18a43b52c945cd36b3b4a7090fb87127192f7e4c455e91c7df7",
+      "bound": "Accepted-source module application; no change to validation verdict or product gates."
+    },
+    "tools/nightly.py": {
+      "sha256": "188eb04fe84dc39a8f6dc72d5d9e5bd1e062c164f09978589e0fb258ababc586",
+      "bound": "At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
+    },
+    "tools/nightly_runtime.py": {
+      "sha256": "0429f4fdc492e796785f97f693590352623909ff14f8bcdfffe52c375f645ed0",
+      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use."
+    },
+    "tools/nightly_publish.py": {
+      "sha256": "9679abb0eb186f2fa8cfa4ee0a58ee8f39198f5518c2875d053707762f1de82d",
+      "bound": "Only authenticated successful nightly targets can be published with the selected per-target token."
+    },
+    "tools/nightly_delivery_wait.py": {
+      "sha256": "5d656c8d861ae019efbc06ecf20c921d16734add776f3ed7a458846d271b070d",
+      "bound": "Actions read only for CiCd plus committed validated registered modules, maximum 17 module identities."
+    },
+    "tools/deliver_g6_catalog.py": {
+      "sha256": "44a8ab213c505016c3e8915980496a556b261dd14c0f51bcdccd320ba2c8ed00",
+      "bound": "Only Projects; closed catalog and ci-gates profiles with separate exact paths and absent full-writer target."
+    },
+    "tools/deliver_contracts_prerequisites.py": {
+      "sha256": "99e810858062a2c7e2c2f2d67f847d41e7b95fbc1171090bd483c79c23c55381",
+      "bound": "Four closed profiles: EventStore publisher, Projects publisher, Projects pins, Projects prerequisite policy; no caller-supplied repository."
+    },
+    "tools/propose_eventstore_contracts_prerequisite.py": {
+      "sha256": "beba0e7bc0ab49e0c936ac7cade8ea20b3a4782195d3f936f08f30b6b840f7a9",
+      "bound": "Only EventStore fixed cicd/contracts-prerequisite-eventstore branch and optional draft PR, no main write or publication."
+    },
+    "tools/dispatch_contracts_prerequisite.py": {
+      "sha256": "7667e70dd227aecb6fcfdb436128019c9c11178d46efeb4c9483d4c3a80b5b01",
+      "bound": "Only eventstore/projects owner choices and publish/verify operations selecting approved existing release.yml profiles."
+    }
+  },
+  "workflows": {
+    ".github/workflows/deliver-contracts-prerequisites.yml": {
+      "context": {
+        "name": "Deliver reviewed contracts prerequisites",
+        "on": {
+          "workflow_dispatch": {
+            "inputs": {
+              "profile": {
+                "description": "Fixed reviewed prerequisite",
+                "required": true,
+                "type": "choice",
+                "options": [
+                  "eventstore-publisher",
+                  "projects-publisher",
+                  "projects-pins",
+                  "projects-prerequisite-policy"
+                ]
+              }
+            }
+          }
+        },
+        "permissions": {},
+        "concurrency": {
+          "group": "deliver-contracts-prerequisites",
+          "cancel-in-progress": false
+        }
+      },
+      "context_jobs": {
+        "validate": "427a7fad715535ee8deae697f91174d15d59cb4935cd1370ff101bd33a6c3967"
+      },
+      "jobs": {
+        "deliver": {
+          "boundary": {
+            "needs": "validate",
+            "if": "${{ !cancelled() && github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && github.workflow_ref == 'Hexalith/Hexalith.CiCd/.github/workflows/deliver-contracts-prerequisites.yml@refs/heads/main' && needs.validate.result == 'success' && needs.validate.outputs.behavioral-result == 'success' && needs.validate.outputs.plan != '' }}",
+            "concurrency": {
+              "group": "deliver-owned-writes",
+              "cancel-in-progress": false
+            },
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 40,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            }
+          },
+          "tokens": [
+            {
+              "index": 2,
+              "step": {
+                "name": "Mint fixed publisher repository contents and workflows token",
+                "if": "${{ inputs.profile == 'eventstore-publisher' || inputs.profile == 'projects-publisher' }}",
+                "id": "publisher-token",
+                "timeout-minutes": 1,
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ inputs.profile == 'eventstore-publisher' && 'Hexalith.EventStore' || 'Hexalith.Projects' }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write"
+                }
+              }
+            },
+            {
+              "index": 3,
+              "step": {
+                "name": "Mint only Projects contents token for fixed pins or policy",
+                "if": "${{ inputs.profile == 'projects-pins' || inputs.profile == 'projects-prerequisite-policy' }}",
+                "id": "pins-token",
+                "timeout-minutes": 1,
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.Projects",
+                  "permission-contents": "write"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Initialize delivery failure receipt",
+              "sha256": "76265c593a8fab1ac7fabccdb16f8acf6314de5087c42d0033a9176ed80c8a90"
+            },
+            {
+              "index": 1,
+              "identity": "Checkout only exact qualified trusted owner sources",
+              "sha256": "00b6ac8bc194134eeda3092166d0b5b7c272b0c5877e0287ab839f1139067f93"
+            },
+            {
+              "index": 4,
+              "identity": "Deliver only the exact qualified prerequisite",
+              "sha256": "ca8c4ac2c63434ec5716feba837f589a81953835b4c16d4366e48445ccbbedb7"
+            },
+            {
+              "index": 5,
+              "identity": "Upload delivery receipt",
+              "sha256": "777f650efca1a62a108bdc3e5623e7d78c276cff942b3ab50038d8c1fb521de4"
+            }
+          ]
+        }
+      }
+    },
+    ".github/workflows/deliver-projects-ci-gates.yml": {
+      "context": {
+        "name": "Deliver reviewed Projects gate repair",
+        "on": {
+          "workflow_dispatch": null
+        },
+        "permissions": {},
+        "concurrency": {
+          "group": "deliver-projects-ci-gates",
+          "cancel-in-progress": false
+        }
+      },
+      "context_jobs": {
+        "validate": "e15e39db3a5a81b9c6e3fd065b50d6d38f044c90b1f62ba0a237d6ae70582bc7"
+      },
+      "jobs": {
+        "deliver": {
+          "boundary": {
+            "needs": "validate",
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.plan != '' }}",
+            "concurrency": {
+              "group": "deliver-owned-writes",
+              "cancel-in-progress": false
+            },
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 40,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            }
+          },
+          "tokens": [
+            {
+              "index": 1,
+              "step": {
+                "name": "Mint only Projects content correction token",
+                "id": "token",
+                "timeout-minutes": 1,
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.Projects",
+                  "permission-contents": "write"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Checkout exact qualified owner source",
+              "sha256": "fa6345477b4aa631e4637359b830bea06cc7e359e9d77bfedc6a13ca46bfc278"
+            },
+            {
+              "index": 2,
+              "identity": "Apply only the exact qualified nine-file repair",
+              "sha256": "1551fc58d9949405896455302993994cc6b964e20a33cc83e14de8aecb2df151"
+            },
+            {
+              "index": 3,
+              "identity": "Upload delivery receipt",
+              "sha256": "7b096e0a200c6e8d7000324212d7a3c0cc3187b1ea52cd7e1ef478d7041bf2d9"
+            }
+          ]
+        }
+      }
+    },
+    ".github/workflows/deliver.yml": {
+      "context": {
+        "name": "Delivery",
+        "on": {
+          "push": {
+            "branches": [
+              "main"
+            ]
+          },
+          "pull_request": null,
+          "schedule": [
+            {
+              "cron": "47 * * * *"
+            }
+          ],
+          "workflow_dispatch": {
+            "inputs": {
+              "delivery": {
+                "description": "Delivery scope",
+                "type": "choice",
+                "default": "full",
+                "options": [
+                  "full",
+                  "projects-g6-catalog"
+                ]
+              }
+            }
+          }
+        },
+        "permissions": {},
+        "cache-mode": "none",
+        "concurrency": {
+          "group": "${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.delivery == 'projects-g6-catalog' && 'deliver-projects-g6-catalog' || (github.ref == 'refs/heads/main' && 'deliver' || format('deliver-validate-{0}', github.ref)) }}",
+          "cancel-in-progress": "${{ github.ref != 'refs/heads/main' }}"
+        }
+      },
+      "context_jobs": {
+        "validate": "5673ca07ffa3415b79ce6c5b35696293e1b2751f099121dcb9a6555e3e8a3c90"
+      },
+      "jobs": {
+        "deliver": {
+          "boundary": {
+            "needs": "validate",
+            "concurrency": {
+              "group": "deliver-owned-writes",
+              "cancel-in-progress": false
+            },
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}",
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 40,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            },
+            "env": {
+              "DELIVERY_DIRECTORY": "${{ github.workspace }}/.delivery-state-${{ github.run_id }}-${{ github.run_attempt }}"
+            }
+          },
+          "tokens": [
+            {
+              "index": 1,
+              "step": {
+                "name": "Mint only Projects catalog correction token",
+                "id": "g6_token",
+                "timeout-minutes": 1,
+                "if": "${{ inputs.delivery == 'projects-g6-catalog' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.Projects",
+                  "permission-contents": "write",
+                  "permission-workflows": "write"
+                }
+              }
+            },
+            {
+              "index": 6,
+              "step": {
+                "name": "Mint CiCd accepted-ref and freshness token",
+                "timeout-minutes": 1,
+                "id": "cicd_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.ready == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.CiCd",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 9,
+              "step": {
+                "name": "Mint module slot 01 token",
+                "timeout-minutes": 1,
+                "id": "module_01_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_01 != '' && steps.module_01_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_01 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_01 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 12,
+              "step": {
+                "name": "Mint module slot 02 token",
+                "timeout-minutes": 1,
+                "id": "module_02_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_02 != '' && steps.module_02_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_02 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_02 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 15,
+              "step": {
+                "name": "Mint module slot 03 token",
+                "timeout-minutes": 1,
+                "id": "module_03_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_03 != '' && steps.module_03_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_03 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_03 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 18,
+              "step": {
+                "name": "Mint module slot 04 token",
+                "timeout-minutes": 1,
+                "id": "module_04_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_04 != '' && steps.module_04_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_04 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_04 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 21,
+              "step": {
+                "name": "Mint module slot 05 token",
+                "timeout-minutes": 1,
+                "id": "module_05_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_05 != '' && steps.module_05_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_05 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_05 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 24,
+              "step": {
+                "name": "Mint module slot 06 token",
+                "timeout-minutes": 1,
+                "id": "module_06_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_06 != '' && steps.module_06_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_06 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_06 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 27,
+              "step": {
+                "name": "Mint module slot 07 token",
+                "timeout-minutes": 1,
+                "id": "module_07_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_07 != '' && steps.module_07_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_07 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_07 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 30,
+              "step": {
+                "name": "Mint module slot 08 token",
+                "timeout-minutes": 1,
+                "id": "module_08_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_08 != '' && steps.module_08_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_08 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_08 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 33,
+              "step": {
+                "name": "Mint module slot 09 token",
+                "timeout-minutes": 1,
+                "id": "module_09_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_09 != '' && steps.module_09_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_09 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_09 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 36,
+              "step": {
+                "name": "Mint module slot 10 token",
+                "timeout-minutes": 1,
+                "id": "module_10_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_10 != '' && steps.module_10_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_10 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_10 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 39,
+              "step": {
+                "name": "Mint module slot 11 token",
+                "timeout-minutes": 1,
+                "id": "module_11_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_11 != '' && steps.module_11_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_11 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_11 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 42,
+              "step": {
+                "name": "Mint module slot 12 token",
+                "timeout-minutes": 1,
+                "id": "module_12_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_12 != '' && steps.module_12_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_12 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_12 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 45,
+              "step": {
+                "name": "Mint module slot 13 token",
+                "timeout-minutes": 1,
+                "id": "module_13_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_13 != '' && steps.module_13_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_13 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_13 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 48,
+              "step": {
+                "name": "Mint module slot 14 token",
+                "timeout-minutes": 1,
+                "id": "module_14_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_14 != '' && steps.module_14_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_14 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_14 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 51,
+              "step": {
+                "name": "Mint module slot 15 token",
+                "timeout-minutes": 1,
+                "id": "module_15_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_15 != '' && steps.module_15_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_15 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_15 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 54,
+              "step": {
+                "name": "Mint module slot 16 token",
+                "timeout-minutes": 1,
+                "id": "module_16_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_16 != '' && steps.module_16_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_16 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_16 == 'true' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 57,
+              "step": {
+                "name": "Mint module slot 17 token",
+                "timeout-minutes": 1,
+                "id": "module_17_token",
+                "if": "${{ inputs.delivery != 'projects-g6-catalog' && !cancelled() && steps.select.outputs.slot_17 != '' && steps.module_17_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_17 }}",
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-administration": "${{ steps.select.outputs.check_17 == 'true' && 'read' || '' }}"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Checkout exact qualified narrow owner source",
+              "sha256": "245ba1eb7e224dd77ac2e5afdcdcf390379dbb01aedc42059dd1140cbf967431"
+            },
+            {
+              "index": 2,
+              "identity": "Deliver exact qualified Projects catalog correction",
+              "sha256": "79cb3429dc8992ec6bd652bc32c48d7de0e09e0b458dc23ebf763710fbba2232"
+            },
+            {
+              "index": 3,
+              "identity": "Upload narrow delivery receipt",
+              "sha256": "e0a3d4e0ef24a441c43ab3c1fdd16f74c248cacc994c5d6bbdb94bf2e9dd4145"
+            },
+            {
+              "index": 4,
+              "identity": "Checkout immutable delivery bootstrap",
+              "sha256": "dbaa7c57217651412feb5c9b2a042a9f045d6ec311d445875a0daadb41e9dcca"
+            },
+            {
+              "index": 5,
+              "identity": "select",
+              "sha256": "16f373f511f97b54835e5f421763f4706c1bf885871118d73bfe8736eca7c885"
+            },
+            {
+              "index": 7,
+              "identity": "Initialize delivery and hourly freshness",
+              "sha256": "a47141cb67717992fc657dea5eef65c9cb1fa0fa3e085aa2c30cf6c5fc7fe7e4"
+            },
+            {
+              "index": 8,
+              "identity": "module_01_budget",
+              "sha256": "0952ca46afa4477f985a77675e39428eb0d82fe847f9b394f75cb2fd7fe798ec"
+            },
+            {
+              "index": 10,
+              "identity": "Process module slot 01",
+              "sha256": "2d02f49e8f62e854c5b10d7293ec8a03f9251df72605b298b67666c22f684cc7"
+            },
+            {
+              "index": 11,
+              "identity": "module_02_budget",
+              "sha256": "9b1386ede7941998df14107839b03390dbb2a23117444f402eb8f10201f49ecf"
+            },
+            {
+              "index": 13,
+              "identity": "Process module slot 02",
+              "sha256": "36ad7adbc57fd95834622fe4c50269ad9c9d30aa31ac185659d3afebcf19b977"
+            },
+            {
+              "index": 14,
+              "identity": "module_03_budget",
+              "sha256": "431afec73231029e36a169631b2ba16c9a7b00dcc7b0bedee565db0d2cf2843c"
+            },
+            {
+              "index": 16,
+              "identity": "Process module slot 03",
+              "sha256": "7649e5333722d4fa37147a04bba470332ca9a5ddbcb44d804dbdc94db6743753"
+            },
+            {
+              "index": 17,
+              "identity": "module_04_budget",
+              "sha256": "901cd3c1f16da13ee6d2e21bc4b7b06c508b968d61ae458b7dd28109947baec1"
+            },
+            {
+              "index": 19,
+              "identity": "Process module slot 04",
+              "sha256": "4ad24058fc2e5db408ccebd1c264f2662f232377dd57f45af6a52605b2777aee"
+            },
+            {
+              "index": 20,
+              "identity": "module_05_budget",
+              "sha256": "c6c9fbf982c0c4babeffaf2934ec9befff5ca4c5d8b34d28b26aec3a3741fdc4"
+            },
+            {
+              "index": 22,
+              "identity": "Process module slot 05",
+              "sha256": "7b887a700bbce2cd2a8fc471304efd314cee230167cf3b2bde6c82bf763b82c8"
+            },
+            {
+              "index": 23,
+              "identity": "module_06_budget",
+              "sha256": "bbef4f2f9ebb30e87cf60d46d4bbbe634f4f6d094143eaf178e23636097a925c"
+            },
+            {
+              "index": 25,
+              "identity": "Process module slot 06",
+              "sha256": "2c93b8e7f7f8d0218a38790d989e75a049ed08752dc1e5cdb106bc192e4376ea"
+            },
+            {
+              "index": 26,
+              "identity": "module_07_budget",
+              "sha256": "7ab5068b4b88114c85e5343ce33e44678b606c3e3ceb56e77f69ce19ca131458"
+            },
+            {
+              "index": 28,
+              "identity": "Process module slot 07",
+              "sha256": "d1866218468b900716ec9587360dbc217e60e93ff09258ccdf5b1c7cace83979"
+            },
+            {
+              "index": 29,
+              "identity": "module_08_budget",
+              "sha256": "72bfc29f5da63f65e45deb6af6e1cae3cf8a9a7e94fc5901b8fb766c176bd337"
+            },
+            {
+              "index": 31,
+              "identity": "Process module slot 08",
+              "sha256": "c2c972abaa21fae4ed5e11c3d2a8bc465d8d06a4472c8ef6c7134c18a6594c2c"
+            },
+            {
+              "index": 32,
+              "identity": "module_09_budget",
+              "sha256": "c8a2231308b16c123e6c07ee929cffb2013192b1eb32dcdbb748e89cb5cfb8b0"
+            },
+            {
+              "index": 34,
+              "identity": "Process module slot 09",
+              "sha256": "3e1d50d410881b584c3fd550d6866b24dd43dacdb7469932f763f1850b998e75"
+            },
+            {
+              "index": 35,
+              "identity": "module_10_budget",
+              "sha256": "05b46ee4288f65d50b559eee8aaca1e8e41eb310825977003c3e472ebe11487d"
+            },
+            {
+              "index": 37,
+              "identity": "Process module slot 10",
+              "sha256": "b0b51e250a6b1b1a4a58d4d40c7ceadd78575d9553c672a7eeb9ea1c9de83618"
+            },
+            {
+              "index": 38,
+              "identity": "module_11_budget",
+              "sha256": "9a8362e05f382f7ae5ca0357a21acc9f608593246fa5772b3fb561755a2e7ba2"
+            },
+            {
+              "index": 40,
+              "identity": "Process module slot 11",
+              "sha256": "e265afb190f53a10cd9056648f0a559505040b4c872f432334072ac84d24cfd0"
+            },
+            {
+              "index": 41,
+              "identity": "module_12_budget",
+              "sha256": "ea60cfb375fd6deb8d4be39dd484b4ff6da053c03759d4e1552bbc2dff88dab8"
+            },
+            {
+              "index": 43,
+              "identity": "Process module slot 12",
+              "sha256": "32f8c1b5144326fdad6d86b7271b3a84f12322611fb80284a50f5b940d8baf9b"
+            },
+            {
+              "index": 44,
+              "identity": "module_13_budget",
+              "sha256": "141f1bc5aa70a54d6967461554ba4ef65f4089e6e32f655c2caa92361e5a5a5d"
+            },
+            {
+              "index": 46,
+              "identity": "Process module slot 13",
+              "sha256": "3a044d1b409e76533ba33666caacde1293de1e93a07c411389d0e95c1dadc4bd"
+            },
+            {
+              "index": 47,
+              "identity": "module_14_budget",
+              "sha256": "258e570ba4d48c2a73ae2da5a8e0167bc9a328bcc08506173cede803cc219d87"
+            },
+            {
+              "index": 49,
+              "identity": "Process module slot 14",
+              "sha256": "3b6c8ed202ee4b567a820ab7a097f1e7ca5c1e67e76da4febac90690cbbd7805"
+            },
+            {
+              "index": 50,
+              "identity": "module_15_budget",
+              "sha256": "e2265e437d7da3159e953b7bc517e744d648a46e62f8181ca7cebe18623c2634"
+            },
+            {
+              "index": 52,
+              "identity": "Process module slot 15",
+              "sha256": "dc71643a07729eeaae54d109806768b72f6da5122cca44af4e5db6e1fd66a19d"
+            },
+            {
+              "index": 53,
+              "identity": "module_16_budget",
+              "sha256": "7851f0a26861eb5361793ee99a53accc8d2fad78511849aabcc627358da7807f"
+            },
+            {
+              "index": 55,
+              "identity": "Process module slot 16",
+              "sha256": "d1aee0617f48cc23f3b93d03d1a8136744ce44f6536d0705cd7b8d803b71d32d"
+            },
+            {
+              "index": 56,
+              "identity": "module_17_budget",
+              "sha256": "99c080db5fb5b78545bb014c7c9836964c7f18746189a9293d749f2a0894b844"
+            },
+            {
+              "index": 58,
+              "identity": "Process module slot 17",
+              "sha256": "d911fb72c564da9c4e7d74c976dffc1897a485272824d944613eeb257a2b059c"
+            },
+            {
+              "index": 59,
+              "identity": "Finalize delivery report and aggregate result",
+              "sha256": "3cb38f6f29fb4193928a66ff0aaf1d07920161eda05bd662379a4c731f6504eb"
+            },
+            {
+              "index": 60,
+              "identity": "Upload delivery report",
+              "sha256": "3f88228237f7cd3e24c54c1581b870704178f2b42b35730538385d09124759f8"
+            }
+          ]
+        }
+      }
+    },
+    ".github/workflows/dispatch-contracts-prerequisites.yml": {
+      "context": {
+        "name": "Dispatch fixed contracts prerequisite publishers",
+        "on": {
+          "workflow_dispatch": {
+            "inputs": {
+              "owner": {
+                "description": "Approved fixed package owner",
+                "type": "choice",
+                "required": true,
+                "options": [
+                  "eventstore",
+                  "projects"
+                ]
+              },
+              "operation": {
+                "description": "Publish approved package or verify existing publication",
+                "type": "choice",
+                "required": true,
+                "options": [
+                  "publish",
+                  "verify"
+                ]
+              }
+            }
+          }
+        },
+        "permissions": {}
+      },
+      "context_jobs": {
+        "behavioral": "9cee73e05dc530f738cb97c6bd8f16d95a3cd798c24c277823a882807bb61153"
+      },
+      "jobs": {
+        "dispatch": {
+          "boundary": {
+            "needs": "behavioral",
+            "if": "${{ !cancelled() && needs.behavioral.result == 'success' && github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && (inputs.owner == 'eventstore' || inputs.owner == 'projects') && (inputs.operation == 'publish' || inputs.operation == 'verify') }}",
+            "concurrency": {
+              "group": "deliver-owned-writes",
+              "cancel-in-progress": false
+            },
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 10,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            }
+          },
+          "tokens": [
+            {
+              "index": 2,
+              "step": {
+                "name": "Mint only Actions write and Contents read for the chosen fixed owner",
+                "id": "token",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ inputs.owner == 'eventstore' && 'Hexalith.EventStore' || 'Hexalith.Projects' }}",
+                  "permission-actions": "write",
+                  "permission-contents": "read"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Initialize failure receipt before checkout or token minting",
+              "sha256": "4852e8a641d990002521c8fe98f41fe93a454d50ed7affa5f3280d54eaecd5c1"
+            },
+            {
+              "index": 1,
+              "identity": "checkout",
+              "sha256": "054ee3ae57e12166c141ccf160e1073784e4c8eaefcde8c10e1195c9cd67a00f"
+            },
+            {
+              "index": 3,
+              "identity": "Dispatch once or retain the exact token failure diagnosis",
+              "sha256": "5e094e05399aad21877de7b4d538fac8f93be58d4d3f9a3c6ec44cd232a7b309"
+            },
+            {
+              "index": 4,
+              "identity": "Retain success, ambiguity and token failure receipts",
+              "sha256": "3301a1b8a3a297ecc3988b68ae8ca5f31781113806db8912d14e321b7a0fdabe"
+            }
+          ]
+        }
+      }
+    },
+    ".github/workflows/nightly.yml": {
+      "context": {
+        "name": "Nightly releases",
+        "on": {
+          "schedule": [
+            {
+              "cron": "17 2 * * *"
+            }
+          ],
+          "workflow_dispatch": {
+            "inputs": {
+              "qualify-bump": {
+                "description": "Qualify the job token on an isolated inert probe ref; skip nightly writes",
+                "required": false,
+                "default": false,
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "permissions": {},
+        "cache-mode": "none",
+        "concurrency": {
+          "group": "${{ github.ref == 'refs/heads/main' && 'nightly' || format('nightly-skipped-{0}', github.ref) }}",
+          "cancel-in-progress": false
+        }
+      },
+      "context_jobs": {
+        "bump-push": "14b134b92768c0348ad6df660ffe65966d84a2e5758002056f78e87390047cb6",
+        "bump": "179205e268e694f9fea9c3477eca926cfed748c624042d0331193731043c477f",
+        "scan": "ddcf0a6cf63ee701098038be00f6e9b3fc8eebd249634a1ff25d21e1e9bc4ae4"
+      },
+      "jobs": {
+        "dispatch": {
+          "boundary": {
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}",
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 55,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            },
+            "env": {
+              "NIGHTLY_DIRECTORY": "${{ github.workspace }}-nightly-state-dispatch-${{ github.run_id }}-${{ github.run_attempt }}"
+            },
+            "outputs": {
+              "artifact_id": "${{ steps.state.outputs.artifact-id }}"
+            }
+          },
+          "tokens": [
+            {
+              "index": 4,
+              "step": {
+                "name": "Mint barrier_token App token",
+                "id": "barrier_token",
+                "if": "${{ !cancelled() && steps.barrier_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.CiCd",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 8,
+              "step": {
+                "name": "Mint target_01_token App token",
+                "id": "target_01_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_01 != '' && steps.target_01_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_01 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_01 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 11,
+              "step": {
+                "name": "Mint target_02_token App token",
+                "id": "target_02_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_02 != '' && steps.target_02_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_02 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_02 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 14,
+              "step": {
+                "name": "Mint target_03_token App token",
+                "id": "target_03_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_03 != '' && steps.target_03_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_03 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_03 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 17,
+              "step": {
+                "name": "Mint target_04_token App token",
+                "id": "target_04_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_04 != '' && steps.target_04_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_04 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_04 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 20,
+              "step": {
+                "name": "Mint target_05_token App token",
+                "id": "target_05_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_05 != '' && steps.target_05_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_05 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_05 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 23,
+              "step": {
+                "name": "Mint target_06_token App token",
+                "id": "target_06_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_06 != '' && steps.target_06_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_06 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_06 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 26,
+              "step": {
+                "name": "Mint target_07_token App token",
+                "id": "target_07_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_07 != '' && steps.target_07_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_07 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_07 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 29,
+              "step": {
+                "name": "Mint target_08_token App token",
+                "id": "target_08_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_08 != '' && steps.target_08_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_08 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_08 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 32,
+              "step": {
+                "name": "Mint target_09_token App token",
+                "id": "target_09_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_09 != '' && steps.target_09_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_09 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_09 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 35,
+              "step": {
+                "name": "Mint target_10_token App token",
+                "id": "target_10_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_10 != '' && steps.target_10_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_10 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_10 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 38,
+              "step": {
+                "name": "Mint target_11_token App token",
+                "id": "target_11_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_11 != '' && steps.target_11_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_11 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_11 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 41,
+              "step": {
+                "name": "Mint target_12_token App token",
+                "id": "target_12_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_12 != '' && steps.target_12_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_12 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_12 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 44,
+              "step": {
+                "name": "Mint target_13_token App token",
+                "id": "target_13_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_13 != '' && steps.target_13_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_13 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_13 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 47,
+              "step": {
+                "name": "Mint target_14_token App token",
+                "id": "target_14_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_14 != '' && steps.target_14_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_14 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_14 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 50,
+              "step": {
+                "name": "Mint target_15_token App token",
+                "id": "target_15_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_15 != '' && steps.target_15_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_15 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_15 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 53,
+              "step": {
+                "name": "Mint target_16_token App token",
+                "id": "target_16_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_16 != '' && steps.target_16_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_16 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_16 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 56,
+              "step": {
+                "name": "Mint target_17_token App token",
+                "id": "target_17_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_17 != '' && steps.target_17_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_17 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_17 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            },
+            {
+              "index": 59,
+              "step": {
+                "name": "Mint target_18_token App token",
+                "id": "target_18_token",
+                "if": "${{ !cancelled() && steps.select.outputs.slot_18 != '' && steps.target_18_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.select.outputs.slot_18 }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "write",
+                  "permission-administration": "${{ steps.select.outputs.slot_18 != 'Hexalith.Builds' && 'read' || '' }}"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "seed",
+              "sha256": "bf1c027bc112580e40d5cfcadbb73c94c9c091c45f58a46ee846f26a8c20ee4a"
+            },
+            {
+              "index": 1,
+              "identity": "checkout",
+              "sha256": "35e0dfe364eeb19143878422372ca038ee1ae1cc38a0dc7281da09158fb6a009"
+            },
+            {
+              "index": 2,
+              "identity": "initialize",
+              "sha256": "b373c790724897a5a07b7f5c2f6b2b6806c3fc6ff6195422b0f927b6bd8d957f"
+            },
+            {
+              "index": 3,
+              "identity": "barrier_budget",
+              "sha256": "3012af92d9b986974aac074dffe57ead2f583e80a24dd87219e8d1cb180e28ce"
+            },
+            {
+              "index": 5,
+              "identity": "Wait for hourly delivery barrier",
+              "sha256": "3e5edde22586e69857fb01b9408ebeb9886dd0d317dd8d8af79385063a32dd49"
+            },
+            {
+              "index": 6,
+              "identity": "select",
+              "sha256": "338aab5ee23cfa1c6e703cdf7ede71c716d33e46f86520843cde802ef13bb59c"
+            },
+            {
+              "index": 7,
+              "identity": "target_01_budget",
+              "sha256": "2b17c41842dc60a2bfde7fe1638be81129019be7f1aaf607c03ca4e1a375ffe5"
+            },
+            {
+              "index": 9,
+              "identity": "Dispatch target slot 01",
+              "sha256": "cbbedabf534a0663e4bd66f8e309f64fdff1988fefd2949e5915dcbf689614eb"
+            },
+            {
+              "index": 10,
+              "identity": "target_02_budget",
+              "sha256": "adec569305ab358461f42c7e4e6b4862b7f043db9361b7f21fd71446a0563ca4"
+            },
+            {
+              "index": 12,
+              "identity": "Dispatch target slot 02",
+              "sha256": "e29fbff68292690b949a673ab5706e737d4861cb8c891e0bc0359456a5d6fe81"
+            },
+            {
+              "index": 13,
+              "identity": "target_03_budget",
+              "sha256": "9c56d08fca48cacdd5cab1de4e611679d767904a9dd06eb5e158a55c17e16291"
+            },
+            {
+              "index": 15,
+              "identity": "Dispatch target slot 03",
+              "sha256": "cd37ab7c6cc3bea722c6724c3316f064fc360040ec29d35a6ce85f6c060e2dcc"
+            },
+            {
+              "index": 16,
+              "identity": "target_04_budget",
+              "sha256": "ddc9f5ede39260a0cb4a77593ce4252b65e05e8bd1e8ce802ececc27ead60056"
+            },
+            {
+              "index": 18,
+              "identity": "Dispatch target slot 04",
+              "sha256": "c3fe5d85b33f5b67d1bafa667fd2f8f491bd9b97cacb5097d7460a978e657de2"
+            },
+            {
+              "index": 19,
+              "identity": "target_05_budget",
+              "sha256": "7e547c09e2db6f8e8aa0b9710cbb3e34c35f85bbbf953cf1a7619afa5bf42062"
+            },
+            {
+              "index": 21,
+              "identity": "Dispatch target slot 05",
+              "sha256": "c54dde7c4f66cecca33bd2f14df1acc0e31f49e289bf4c4b10c19a09f85d6b3e"
+            },
+            {
+              "index": 22,
+              "identity": "target_06_budget",
+              "sha256": "0a6fea76578d6148bb3e2af6bbb362860e89f8e6276d61aa80474a5bd54a263b"
+            },
+            {
+              "index": 24,
+              "identity": "Dispatch target slot 06",
+              "sha256": "ac1abed1d171fa4b750a81a52a5b04ccfb18501cfa6fcb2ffbaaa491af2e18e3"
+            },
+            {
+              "index": 25,
+              "identity": "target_07_budget",
+              "sha256": "d2b46bc3941d2b76b59d69332d2dc771fdc71eeed2f481a68b9ef91d0641bc61"
+            },
+            {
+              "index": 27,
+              "identity": "Dispatch target slot 07",
+              "sha256": "28a29776575b68569556a5f4db08f38b79a574d24c3000dd8944331a1abdc6b5"
+            },
+            {
+              "index": 28,
+              "identity": "target_08_budget",
+              "sha256": "95d1ad9384c712d15997dd7424ce04d68650ec02fe7ff83728161292ae898946"
+            },
+            {
+              "index": 30,
+              "identity": "Dispatch target slot 08",
+              "sha256": "d1ee26e03beb5efb2f9d8a5b229423f6c35876e0236099f4f420490ab835a4b4"
+            },
+            {
+              "index": 31,
+              "identity": "target_09_budget",
+              "sha256": "67cc27544c41f7132a0d71bb1dd7b2d1e305138165ff2466d09ea3f729d222d5"
+            },
+            {
+              "index": 33,
+              "identity": "Dispatch target slot 09",
+              "sha256": "52c0372385cc91e10e52c0bc9e631c01e4003b02e36c4776727b1ef9859894d5"
+            },
+            {
+              "index": 34,
+              "identity": "target_10_budget",
+              "sha256": "dbdb69cdae735a57987eb28a83a4db10214e7db8e2078ad54f8405c9c0c2bc30"
+            },
+            {
+              "index": 36,
+              "identity": "Dispatch target slot 10",
+              "sha256": "18caa3c143b59a87011b2054b37d8ab82d744c2261208c48cb0c28e167ac75ef"
+            },
+            {
+              "index": 37,
+              "identity": "target_11_budget",
+              "sha256": "21db9dbda2b0c73fb464d04ecdffcdd7283a1afb4099291c7a55c2b0ce313db1"
+            },
+            {
+              "index": 39,
+              "identity": "Dispatch target slot 11",
+              "sha256": "1ca1a8b9e94dab81817d1b6592a0790aa8d7131fe101e33c9b9563fe65727a9f"
+            },
+            {
+              "index": 40,
+              "identity": "target_12_budget",
+              "sha256": "618182d9a7b173fdda6aaa7619a3fca1f1e0b8a0a27c32e6abe5ee5e10069fef"
+            },
+            {
+              "index": 42,
+              "identity": "Dispatch target slot 12",
+              "sha256": "06b20f87dad4551b11f22d8a3e21ef4de4542b0d8c8d5b91340e77b2b0a130cd"
+            },
+            {
+              "index": 43,
+              "identity": "target_13_budget",
+              "sha256": "abff1ba2393fc3d739c08427c4d8d469935a9fb7be87257d50f67c35cd768564"
+            },
+            {
+              "index": 45,
+              "identity": "Dispatch target slot 13",
+              "sha256": "386af45cb949755dc8d18a0a25cb93aad45e14fbd73e20cbbc9eaf4bcc13f9e5"
+            },
+            {
+              "index": 46,
+              "identity": "target_14_budget",
+              "sha256": "e641066cf74020b1384b553b04c4410c4accf7085ab9e1dd20a13d9e5b5adfd4"
+            },
+            {
+              "index": 48,
+              "identity": "Dispatch target slot 14",
+              "sha256": "9163fc7748c1266598cef2cc220e6de47f50fd2b30ee50149306bb14d34e652b"
+            },
+            {
+              "index": 49,
+              "identity": "target_15_budget",
+              "sha256": "818643e37eed6bfa29857cc0b092795191583457cf9301c0f722804bf7b8abcb"
+            },
+            {
+              "index": 51,
+              "identity": "Dispatch target slot 15",
+              "sha256": "a1f7e78994b025719c38d8618b1a03d44629b306735190aa55466c03b65592b2"
+            },
+            {
+              "index": 52,
+              "identity": "target_16_budget",
+              "sha256": "a0eca0b970b5e93cb3fc9a953445962a50ee88fba82f477b81726bd2e700b85d"
+            },
+            {
+              "index": 54,
+              "identity": "Dispatch target slot 16",
+              "sha256": "c406627b10d737f432cf154a4e14e54d5325a5283b28292f6cd54506443e1fd5"
+            },
+            {
+              "index": 55,
+              "identity": "target_17_budget",
+              "sha256": "ac15eba86f3471c8713e1b96b46cd915907925005a7466ee07e0349595831639"
+            },
+            {
+              "index": 57,
+              "identity": "Dispatch target slot 17",
+              "sha256": "733e34df857767dde81ec36ef6105cefe292cdeb840e7414bbac60eb165c176e"
+            },
+            {
+              "index": 58,
+              "identity": "target_18_budget",
+              "sha256": "c211aa3b7de067f198775776d3b0b3e064a60cdac36710a4333348ef82bd013f"
+            },
+            {
+              "index": 60,
+              "identity": "Dispatch target slot 18",
+              "sha256": "6f443886d69593909f0a957c8eb35a9662e5a6d279c638ed01c9de46145e6836"
+            },
+            {
+              "index": 61,
+              "identity": "Finalize dispatch state and verdicts",
+              "sha256": "e61670e143f85a2ea95520d541d3b8a891cb9186422cf5a27042600edaeca78f"
+            },
+            {
+              "index": 62,
+              "identity": "Report unavailable checkout",
+              "sha256": "902122186cc766c7f70a023482be7d66b85c8a15c4913922fbe26391aaae7354"
+            },
+            {
+              "index": 63,
+              "identity": "state",
+              "sha256": "66a37c220b354aae0d03778248dd2cc6e119c35a6ed2ba4f7c7630cb2f8882b3"
+            }
+          ]
+        },
+        "wait": {
+          "boundary": {
+            "needs": "dispatch",
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}",
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 330,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read",
+              "actions": "read"
+            },
+            "env": {
+              "NIGHTLY_DIRECTORY": "${{ github.workspace }}-nightly-state-wait-${{ github.run_id }}-${{ github.run_attempt }}"
+            },
+            "outputs": {
+              "artifact_id": "${{ steps.state.outputs.artifact-id }}"
+            }
+          },
+          "tokens": [
+            {
+              "index": 4,
+              "step": {
+                "name": "Mint poll_01_token App token",
+                "id": "poll_01_token",
+                "if": "${{ !cancelled() && steps.poll_01_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_01_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 7,
+              "step": {
+                "name": "Mint poll_02_token App token",
+                "id": "poll_02_token",
+                "if": "${{ !cancelled() && steps.poll_02_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_02_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 10,
+              "step": {
+                "name": "Mint poll_03_token App token",
+                "id": "poll_03_token",
+                "if": "${{ !cancelled() && steps.poll_03_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_03_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 13,
+              "step": {
+                "name": "Mint poll_04_token App token",
+                "id": "poll_04_token",
+                "if": "${{ !cancelled() && steps.poll_04_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_04_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 16,
+              "step": {
+                "name": "Mint poll_05_token App token",
+                "id": "poll_05_token",
+                "if": "${{ !cancelled() && steps.poll_05_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_05_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 19,
+              "step": {
+                "name": "Mint poll_06_token App token",
+                "id": "poll_06_token",
+                "if": "${{ !cancelled() && steps.poll_06_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_06_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 22,
+              "step": {
+                "name": "Mint poll_07_token App token",
+                "id": "poll_07_token",
+                "if": "${{ !cancelled() && steps.poll_07_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_07_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 25,
+              "step": {
+                "name": "Mint poll_08_token App token",
+                "id": "poll_08_token",
+                "if": "${{ !cancelled() && steps.poll_08_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_08_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 28,
+              "step": {
+                "name": "Mint poll_09_token App token",
+                "id": "poll_09_token",
+                "if": "${{ !cancelled() && steps.poll_09_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.poll_09_budget.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "seed",
+              "sha256": "33cce48cfe4ada32057697e06af78736d32991b2b2da9c7b698d8b84052399f1"
+            },
+            {
+              "index": 1,
+              "identity": "checkout",
+              "sha256": "35e0dfe364eeb19143878422372ca038ee1ae1cc38a0dc7281da09158fb6a009"
+            },
+            {
+              "index": 2,
+              "identity": "initialize",
+              "sha256": "f39af5252a16504f20ea955ac487f0631e5c52dac505beaf3181092dcc09d7ca"
+            },
+            {
+              "index": 3,
+              "identity": "poll_01_budget",
+              "sha256": "e02c744d0984f292e795b418fac8c6787bbcd6f1488959159fc86cbab8f5e450"
+            },
+            {
+              "index": 5,
+              "identity": "Poll release slice 01",
+              "sha256": "f00ea761091443d682741efb4b6023dc37605117eb1adb7efb41431e92c35a7d"
+            },
+            {
+              "index": 6,
+              "identity": "poll_02_budget",
+              "sha256": "565217bb051e76bf4524acff8f03fb193e08aa75c648c257314a170b73d628a3"
+            },
+            {
+              "index": 8,
+              "identity": "Poll release slice 02",
+              "sha256": "79cfdff5a784e7031b7a61e90405068a0544835555f051d2c708b1eb93cb5a37"
+            },
+            {
+              "index": 9,
+              "identity": "poll_03_budget",
+              "sha256": "43f2196c02d137de103a1d367c54ec6ab344a9a735fbf9243e6087626173269f"
+            },
+            {
+              "index": 11,
+              "identity": "Poll release slice 03",
+              "sha256": "0b881ed93b966d71d0386e6b72aa607970d8b5e53d31185ea0602b7285376c4b"
+            },
+            {
+              "index": 12,
+              "identity": "poll_04_budget",
+              "sha256": "1a14c9fcad3b00e5b23602a0d8d0be59218091ecce80605226eea1a5779b7038"
+            },
+            {
+              "index": 14,
+              "identity": "Poll release slice 04",
+              "sha256": "167847b060cd7c790c9d4a81da3854d5c2eea5e13cf0029f11975543f644a53b"
+            },
+            {
+              "index": 15,
+              "identity": "poll_05_budget",
+              "sha256": "aa7e238b80013680503adc3a586adbf2bb8a712e1652576d9b4a7685c9daf781"
+            },
+            {
+              "index": 17,
+              "identity": "Poll release slice 05",
+              "sha256": "84d7d5a9872e7b38ec58795a869a26767a784938f22f36050868e47f5e83852e"
+            },
+            {
+              "index": 18,
+              "identity": "poll_06_budget",
+              "sha256": "82fc62b1a322b4afd1e74c4b6d8f06697dc7dbe3b8c44575ec122ea582829be1"
+            },
+            {
+              "index": 20,
+              "identity": "Poll release slice 06",
+              "sha256": "2450b49d2dbc099ac5fb8a894792dbeb76517bcd4ea445b6740c5aa15fe4cfc6"
+            },
+            {
+              "index": 21,
+              "identity": "poll_07_budget",
+              "sha256": "b6b9c4e9a9560824bf226059ef214bb502effdfde643f78786840448eb092e8d"
+            },
+            {
+              "index": 23,
+              "identity": "Poll release slice 07",
+              "sha256": "853745b59b05e3ccfc15c60624ddf10fb0c6e62e45b67b108f5e63a79eba4557"
+            },
+            {
+              "index": 24,
+              "identity": "poll_08_budget",
+              "sha256": "c532088f7d46c9e05fa618b2fdcb0facac1b81f4797f280204939419b21bcf2b"
+            },
+            {
+              "index": 26,
+              "identity": "Poll release slice 08",
+              "sha256": "ea5db4b468e5f9af78fc854d0693812f1f4523b6c7f553fb72454c7fe1a61575"
+            },
+            {
+              "index": 27,
+              "identity": "poll_09_budget",
+              "sha256": "7bc94ab61ef5ae42928f603e463a277c0f6e818f255f53c15fa3ec8713c64af2"
+            },
+            {
+              "index": 29,
+              "identity": "Poll release slice 09",
+              "sha256": "a30cd20685617e186432fb5d2508e5fcab832b4f0932ff97a6683a1621b1e1a1"
+            },
+            {
+              "index": 30,
+              "identity": "Finalize wait state and verdicts",
+              "sha256": "63f42a06739b87882648c5673a66f79c5be8ef540af9f7cd2643dbf780457618"
+            },
+            {
+              "index": 31,
+              "identity": "Report unavailable checkout",
+              "sha256": "902122186cc766c7f70a023482be7d66b85c8a15c4913922fbe26391aaae7354"
+            },
+            {
+              "index": 32,
+              "identity": "state",
+              "sha256": "7f2a06fd21fd55d68715a75eb7cf6ee469490f8da57f2a82fa9f0746277f695f"
+            }
+          ]
+        },
+        "publish-ready": {
+          "boundary": {
+            "needs": "wait",
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}",
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 55,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read",
+              "actions": "read"
+            },
+            "env": {
+              "NIGHTLY_DIRECTORY": "${{ github.workspace }}-nightly-state-publish-ready-${{ github.run_id }}-${{ github.run_attempt }}"
+            },
+            "outputs": {
+              "artifact_id": "${{ steps.state.outputs.artifact-id }}"
+            }
+          },
+          "tokens": [
+            {
+              "index": 4,
+              "step": {
+                "name": "Mint target_01_token App token",
+                "id": "target_01_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_01 != '' && steps.target_01_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_01 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 7,
+              "step": {
+                "name": "Mint target_02_token App token",
+                "id": "target_02_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_02 != '' && steps.target_02_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_02 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 10,
+              "step": {
+                "name": "Mint target_03_token App token",
+                "id": "target_03_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_03 != '' && steps.target_03_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_03 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 13,
+              "step": {
+                "name": "Mint target_04_token App token",
+                "id": "target_04_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_04 != '' && steps.target_04_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_04 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 16,
+              "step": {
+                "name": "Mint target_05_token App token",
+                "id": "target_05_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_05 != '' && steps.target_05_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_05 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 19,
+              "step": {
+                "name": "Mint target_06_token App token",
+                "id": "target_06_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_06 != '' && steps.target_06_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_06 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 22,
+              "step": {
+                "name": "Mint target_07_token App token",
+                "id": "target_07_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_07 != '' && steps.target_07_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_07 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 25,
+              "step": {
+                "name": "Mint target_08_token App token",
+                "id": "target_08_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_08 != '' && steps.target_08_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_08 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 28,
+              "step": {
+                "name": "Mint target_09_token App token",
+                "id": "target_09_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_09 != '' && steps.target_09_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_09 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 31,
+              "step": {
+                "name": "Mint target_10_token App token",
+                "id": "target_10_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_10 != '' && steps.target_10_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_10 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 34,
+              "step": {
+                "name": "Mint target_11_token App token",
+                "id": "target_11_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_11 != '' && steps.target_11_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_11 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 37,
+              "step": {
+                "name": "Mint target_12_token App token",
+                "id": "target_12_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_12 != '' && steps.target_12_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_12 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 40,
+              "step": {
+                "name": "Mint target_13_token App token",
+                "id": "target_13_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_13 != '' && steps.target_13_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_13 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 43,
+              "step": {
+                "name": "Mint target_14_token App token",
+                "id": "target_14_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_14 != '' && steps.target_14_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_14 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 46,
+              "step": {
+                "name": "Mint target_15_token App token",
+                "id": "target_15_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_15 != '' && steps.target_15_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_15 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 49,
+              "step": {
+                "name": "Mint target_16_token App token",
+                "id": "target_16_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_16 != '' && steps.target_16_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_16 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 52,
+              "step": {
+                "name": "Mint target_17_token App token",
+                "id": "target_17_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_17 != '' && steps.target_17_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_17 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 55,
+              "step": {
+                "name": "Mint target_18_token App token",
+                "id": "target_18_token",
+                "if": "${{ !cancelled() && steps.initialize.outputs.slot_18 != '' && steps.target_18_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.slot_18 }}",
+                  "skip-token-revoke": true,
+                  "permission-contents": "write",
+                  "permission-workflows": "write",
+                  "permission-actions": "read"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "seed",
+              "sha256": "1e6d5b36c9861382449f9e8c08e2336a05a3b8fc93d5ad8dddd8d9c6d4dad2b0"
+            },
+            {
+              "index": 1,
+              "identity": "checkout",
+              "sha256": "35e0dfe364eeb19143878422372ca038ee1ae1cc38a0dc7281da09158fb6a009"
+            },
+            {
+              "index": 2,
+              "identity": "initialize",
+              "sha256": "99a865898159f63c29111612d1ad13ab68cf2f31e7d5f325a870e7c6ad938595"
+            },
+            {
+              "index": 3,
+              "identity": "target_01_budget",
+              "sha256": "74e4ca169e0e4a3c98f2d49cb11cab5b9c6a351162402fc61c555f7448a84466"
+            },
+            {
+              "index": 5,
+              "identity": "Publish target slot 01",
+              "sha256": "d499191394e8f356678c06caa5fd6cc41599f40290db170848491c58bac8280d"
+            },
+            {
+              "index": 6,
+              "identity": "target_02_budget",
+              "sha256": "204f32b832b780689f32d2e2ffcc324435e34b174b13754c2344eb6d425a31d4"
+            },
+            {
+              "index": 8,
+              "identity": "Publish target slot 02",
+              "sha256": "1f1343e71661f8db1142355964adbef8edcd69cb8e9704bbc1998782f8bcb2d7"
+            },
+            {
+              "index": 9,
+              "identity": "target_03_budget",
+              "sha256": "0fc2eb2bc19298a64c8cdbed55b4a9e4d061fc919c6e4f741a4437a9c6b38b67"
+            },
+            {
+              "index": 11,
+              "identity": "Publish target slot 03",
+              "sha256": "2a8da09d0ce2d5263252c68fd68f5260cce87fcd03804a6356f38a80788eae08"
+            },
+            {
+              "index": 12,
+              "identity": "target_04_budget",
+              "sha256": "0a32a78e5b50b05deb040c291fcd935c006d67a9317db332d0d28ec5ef57644c"
+            },
+            {
+              "index": 14,
+              "identity": "Publish target slot 04",
+              "sha256": "42ef2f7bacb61510bf0a7d2ca6bafe6a66e9cea279dddeab508384bbcbeaa3a4"
+            },
+            {
+              "index": 15,
+              "identity": "target_05_budget",
+              "sha256": "bc47aa9fe45d2a1b5a50cbd78024cefbc692197c716a5501863e670bd414a2f6"
+            },
+            {
+              "index": 17,
+              "identity": "Publish target slot 05",
+              "sha256": "888be2b0d3f09eab57a8968db8e3329b8a1a08d422521a2d08fdd2bfe2d0969d"
+            },
+            {
+              "index": 18,
+              "identity": "target_06_budget",
+              "sha256": "77079c55657498d1384a9d750ae9064e901f2d7757cbce9ad72ea2e4caf12c62"
+            },
+            {
+              "index": 20,
+              "identity": "Publish target slot 06",
+              "sha256": "c03799e9c9f84e294bdcf7026d0be2a3a01f2d60f10e773a42b3bdbdbe5c4ae8"
+            },
+            {
+              "index": 21,
+              "identity": "target_07_budget",
+              "sha256": "e9950f38bf90bbf44bd8f94b05107f7a027b879b848a3a4dab9c89018c7f1065"
+            },
+            {
+              "index": 23,
+              "identity": "Publish target slot 07",
+              "sha256": "1a85c9b1558d8f808057067451430dec5a7ea6cd2e67dc8d77948e4d8b5084dd"
+            },
+            {
+              "index": 24,
+              "identity": "target_08_budget",
+              "sha256": "031932cb84741f5b65ecae9ce375a97c1778f870ebffc789260f4ba8a1ea8928"
+            },
+            {
+              "index": 26,
+              "identity": "Publish target slot 08",
+              "sha256": "d0c217c5500ca9c80204b70638d4c0ca90a1f8be473a3f8c5d5dac63fe2676c3"
+            },
+            {
+              "index": 27,
+              "identity": "target_09_budget",
+              "sha256": "aa370855a5affac4ad1e7833bec6fa30cca6cdd9c818a4ccba3bfed4809f8311"
+            },
+            {
+              "index": 29,
+              "identity": "Publish target slot 09",
+              "sha256": "442eea7625cf06cbd62d27945aa599f0ab17af92cc63c1f435bea17ab6f0380d"
+            },
+            {
+              "index": 30,
+              "identity": "target_10_budget",
+              "sha256": "1abbca2a1c7e2515778515ea84f7089bcd62a98b66f4e88dffb12fecab27c03f"
+            },
+            {
+              "index": 32,
+              "identity": "Publish target slot 10",
+              "sha256": "3487044d3f2b4d2f9b63485257d7389575835d144db4a77439962866b3fba7f4"
+            },
+            {
+              "index": 33,
+              "identity": "target_11_budget",
+              "sha256": "176185d413b55b5e914c83f5e8b943e28ad2dfc1efec62a4e97df71e25ef5508"
+            },
+            {
+              "index": 35,
+              "identity": "Publish target slot 11",
+              "sha256": "7fea093c3d7c7bf9f1bd9e42a0113f117539099972fd7321c92f0bdee3ab7600"
+            },
+            {
+              "index": 36,
+              "identity": "target_12_budget",
+              "sha256": "9e0b65f48b89582d397c8e13808d591ec24538c7551971a9ddf82cff455fd85f"
+            },
+            {
+              "index": 38,
+              "identity": "Publish target slot 12",
+              "sha256": "1ce6cbd828e392ce3e52f2f3b92be1374ff7267126f9b6f870964659a2a4c5b8"
+            },
+            {
+              "index": 39,
+              "identity": "target_13_budget",
+              "sha256": "7fabd2c27eb376568ebfe753f1ad6174eeaf64e6639f59885a2423999ba55ffa"
+            },
+            {
+              "index": 41,
+              "identity": "Publish target slot 13",
+              "sha256": "27c966c6cad0ecef928eda54df0dd8c89e615ca52ed19ce567f33b4410267050"
+            },
+            {
+              "index": 42,
+              "identity": "target_14_budget",
+              "sha256": "8daa81b4acec2692190686f5f06ec3283e22a72a681efd5869abac038653d2c3"
+            },
+            {
+              "index": 44,
+              "identity": "Publish target slot 14",
+              "sha256": "05e4040488709a2aa125b24d029c0f4ac6e22ede8e6c26ca57aaa0e70109c331"
+            },
+            {
+              "index": 45,
+              "identity": "target_15_budget",
+              "sha256": "0cc37f3cdc4445238268a9f8f3dc7b62a06b57182bd502b28e9fe7200afb5c48"
+            },
+            {
+              "index": 47,
+              "identity": "Publish target slot 15",
+              "sha256": "26bbd51569046179acecef592917097b1ea416472f37255e2e26c87f7e4a10a5"
+            },
+            {
+              "index": 48,
+              "identity": "target_16_budget",
+              "sha256": "7afa4f5555ac2280038c1952c77f7d35d29276ea84c6368d8f0b90dad41ac664"
+            },
+            {
+              "index": 50,
+              "identity": "Publish target slot 16",
+              "sha256": "bf803d9817a0e4c4aeee0b5e7affc4daa48bbe8ae6c5807199cf69f243cb0e10"
+            },
+            {
+              "index": 51,
+              "identity": "target_17_budget",
+              "sha256": "859fca5156f7cc57b75e5af49b4e682aef09ae06fb1994a19c162b06223dd4b4"
+            },
+            {
+              "index": 53,
+              "identity": "Publish target slot 17",
+              "sha256": "6e21ae5ec0d0a4d0c58876d652864d273553653dfd39591eb5b11cd8a3f1ca11"
+            },
+            {
+              "index": 54,
+              "identity": "target_18_budget",
+              "sha256": "ed038763dcdd9451c0fc5cc4f7132d3239ce79a3fdfa519d97ff8c0cc349aec9"
+            },
+            {
+              "index": 56,
+              "identity": "Publish target slot 18",
+              "sha256": "feb1542200c7fe7df64dfa4c753561648ab2cdaf707f9853055854ffc1afc2e3"
+            },
+            {
+              "index": 57,
+              "identity": "Finalize publish-ready state and verdicts",
+              "sha256": "8c602bf2ad9c832a9c34488c3d13baf9be70495370f71538355f032ead1ba731"
+            },
+            {
+              "index": 58,
+              "identity": "Report unavailable checkout",
+              "sha256": "902122186cc766c7f70a023482be7d66b85c8a15c4913922fbe26391aaae7354"
+            },
+            {
+              "index": 59,
+              "identity": "state",
+              "sha256": "d4be66e623f8f4b4b322a9848b4a6d62065672944587671d0d7df8c08a443cd8"
+            }
+          ]
+        },
+        "delivery-wait": {
+          "boundary": {
+            "needs": "bump-push",
+            "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true && needs.bump-push.outputs.result == 'pushed' && needs.bump-push.outputs.candidate != '' }}",
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 105,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read",
+              "actions": "read"
+            },
+            "env": {
+              "NIGHTLY_DIRECTORY": "${{ github.workspace }}-nightly-delivery-wait-${{ github.run_id }}-${{ github.run_attempt }}",
+              "BUMP_SHA": "${{ needs.bump-push.outputs.candidate }}",
+              "BUMP_PUSH_RESULT": "${{ needs.bump-push.outputs.result }}"
+            }
+          },
+          "tokens": [
+            {
+              "index": 4,
+              "step": {
+                "name": "Mint propagation slice 01 token",
+                "id": "propagation_01_token",
+                "if": "${{ !cancelled() && steps.propagation_01_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 7,
+              "step": {
+                "name": "Mint propagation slice 02 token",
+                "id": "propagation_02_token",
+                "if": "${{ !cancelled() && steps.propagation_02_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 10,
+              "step": {
+                "name": "Mint propagation slice 03 token",
+                "id": "propagation_03_token",
+                "if": "${{ !cancelled() && steps.propagation_03_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 13,
+              "step": {
+                "name": "Mint propagation slice 04 token",
+                "id": "propagation_04_token",
+                "if": "${{ !cancelled() && steps.propagation_04_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ steps.initialize.outputs.repositories }}",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Seed conservative propagation report before checkout",
+              "sha256": "f57f28330b60d4922fedefbf238a31a16789f6a5a6780c7241c9345aa15a9b33"
+            },
+            {
+              "index": 1,
+              "identity": "checkout",
+              "sha256": "7289a7e38f9a04b068ef2437b2a1fb4329d8667e166c6a4c8c303260c2d009de"
+            },
+            {
+              "index": 2,
+              "identity": "initialize",
+              "sha256": "98a524871e567a5baf6c98261e7bcb6589aaeafd418ff2a4c2cce95053447c66"
+            },
+            {
+              "index": 3,
+              "identity": "propagation_01_budget",
+              "sha256": "ed0101b9aec06b18fb8d965873639613e648a8cfd1a464acd4485349a064503f"
+            },
+            {
+              "index": 5,
+              "identity": "Observe delivery and every pushed module CI in slice 01",
+              "sha256": "e0a6fbf1cc4eecd2b152b5c07113c28a2a3125ae82217fd2db51dfb5b76fb883"
+            },
+            {
+              "index": 6,
+              "identity": "propagation_02_budget",
+              "sha256": "830bd51a146268f9b7696b6fb0b66961bf0f9a256034315ba2a35b54f22f8d4f"
+            },
+            {
+              "index": 8,
+              "identity": "Observe delivery and every pushed module CI in slice 02",
+              "sha256": "b2eb834a63a6d63bc0b180a5d3de4320247911bf682724f0a6799587804321ad"
+            },
+            {
+              "index": 9,
+              "identity": "propagation_03_budget",
+              "sha256": "aabe91da0e0fbbef736425d0b167249cc4b5c3508b68c76bb1e81cb5e9e8d9c7"
+            },
+            {
+              "index": 11,
+              "identity": "Observe delivery and every pushed module CI in slice 03",
+              "sha256": "0349bb59b6efbd8d8bf45cfe55bc3b003fb4bc39468f0ba6bbd95dd7db452bbc"
+            },
+            {
+              "index": 12,
+              "identity": "propagation_04_budget",
+              "sha256": "f5ad9ee5e6bf0961b719cd734bb49ae924db7487c76f92ccb2145d65a1a0cd63"
+            },
+            {
+              "index": 14,
+              "identity": "Observe delivery and every pushed module CI in slice 04",
+              "sha256": "5e668ff4133040682c33d6d50516d593f6eba0b788e1806e31341abd9347aa6f"
+            },
+            {
+              "index": 15,
+              "identity": "Finalize delivery and module CI verdict",
+              "sha256": "ba82c0e7852e4cce8c05a95a28a75f94b95c08487ac10384a07821917a0b9c67"
+            },
+            {
+              "index": 16,
+              "identity": "Report unavailable propagation controller",
+              "sha256": "e365f8c07e0ba60eecb3f776498bd954a3c65d8f6c971d51af8cd3bdce0353bf"
+            },
+            {
+              "index": 17,
+              "identity": "Upload token-free propagation observations",
+              "sha256": "e80c24391c96ffb849d5dbec483e1a213fa2c011af87257d598b4481cc357691"
+            }
+          ]
+        }
+      }
+    },
+    ".github/workflows/propose-eventstore-contracts-prerequisite.yml": {
+      "context": {
+        "name": "Propose reviewed EventStore Contracts prerequisite",
+        "on": {
+          "workflow_dispatch": null
+        },
+        "permissions": {},
+        "concurrency": {
+          "group": "propose-eventstore-contracts-prerequisite",
+          "cancel-in-progress": false
+        }
+      },
+      "context_jobs": {
+        "validate": "c3239c2c23b65730f37e61b2cc9d2bece9eac4760180c941ea6f3f0f3bbf8309"
+      },
+      "jobs": {
+        "propose": {
+          "boundary": {
+            "needs": "validate",
+            "if": "${{ !cancelled() && github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && github.workflow_ref == 'Hexalith/Hexalith.CiCd/.github/workflows/propose-eventstore-contracts-prerequisite.yml@refs/heads/main' && needs.validate.result == 'success' && needs.validate.outputs.behavioral-result == 'success' && needs.validate.outputs.plan != '' }}",
+            "concurrency": {
+              "group": "deliver-owned-writes",
+              "cancel-in-progress": false
+            },
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 40,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            }
+          },
+          "tokens": [
+            {
+              "index": 2,
+              "step": {
+                "name": "Mint only EventStore branch Contents and Workflows write token",
+                "id": "branch-token",
+                "timeout-minutes": 1,
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.EventStore",
+                  "permission-contents": "write",
+                  "permission-workflows": "write"
+                }
+              }
+            },
+            {
+              "index": 4,
+              "step": {
+                "name": "Attempt separate existing-App PR metadata token without new grants",
+                "if": "${{ !cancelled() && steps.branch.outputs.branch-success == 'true' }}",
+                "id": "pr-token",
+                "timeout-minutes": 1,
+                "continue-on-error": true,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.EventStore",
+                  "permission-contents": "read",
+                  "permission-pull-requests": "write"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Initialize branch and optional PR failure receipts before mint",
+              "sha256": "7820eeb7183fafd8762df665a4fe10df63cf42125aa1811d78d7c62485b4b10c"
+            },
+            {
+              "index": 1,
+              "identity": "Checkout only exact trusted proposal sources and fixed reviewed packet",
+              "sha256": "0b7749f4a9667ea45e9743171e298d8a9f3bb066d611cd0af29d2f9936301034"
+            },
+            {
+              "index": 3,
+              "identity": "branch",
+              "sha256": "015a72fa7bd1fbfcbccd9dcaabc932555ac7ac232aa7193202833e699afd4dd7"
+            },
+            {
+              "index": 5,
+              "identity": "Create or retain the fixed draft PR, or retain its precise blocker",
+              "sha256": "5009ba0841e58f8046a4904dccbd85abde2bd50690221199397867262b193027"
+            },
+            {
+              "index": 6,
+              "identity": "Upload required branch receipt",
+              "sha256": "f0f4cb42441d810f1adf28b3634703b8a00bd55e1c6276053afdd58325001146"
+            },
+            {
+              "index": 7,
+              "identity": "Upload required PR receipt",
+              "sha256": "6521887a556511d5562cd0661be3f684b4c20104889dc94f9e94fe2b662b76fe"
+            }
+          ]
+        }
+      }
+    },
+    ".github/workflows/qualify-package-owner-access.yml": {
+      "context": {
+        "name": "Qualify approved package owner access",
+        "on": {
+          "workflow_dispatch": null
+        },
+        "permissions": {},
+        "concurrency": {
+          "group": "qualify-approved-package-owner-access",
+          "cancel-in-progress": false
+        }
+      },
+      "context_jobs": {},
+      "jobs": {
+        "qualify": {
+          "boundary": {
+            "if": "${{ github.repository == 'Hexalith/Hexalith.CiCd' && github.ref == 'refs/heads/main' }}",
+            "runs-on": "ubuntu-latest",
+            "timeout-minutes": 5,
+            "environment": "cicd-app",
+            "permissions": {
+              "contents": "read"
+            },
+            "strategy": {
+              "fail-fast": false,
+              "matrix": {
+                "repository": [
+                  "Hexalith.EventStore",
+                  "Hexalith.Projects"
+                ]
+              }
+            }
+          },
+          "tokens": [
+            {
+              "index": 1,
+              "step": {
+                "name": "Mint a read-only token for one approved package owner",
+                "id": "token",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "${{ matrix.repository }}",
+                  "permission-contents": "read"
+                }
+              }
+            }
+          ],
+          "context_steps": [
+            {
+              "index": 0,
+              "identity": "Initialize source-bound failure receipt",
+              "sha256": "20cd3260cbe4f98b8107d96425ed19da754cf7a21825708ddc67bd35ad53c52d"
+            },
+            {
+              "index": 2,
+              "identity": "Verify fixed repository visibility without writes",
+              "sha256": "b66c54a0c32bb15408b4dcfb4f1a046e339b12e6c3c33f5586a95ff99489dfe3"
+            },
+            {
+              "index": 3,
+              "identity": "Retain read-only owner access result",
+              "sha256": "16494a6b75779b3f572f8863203611941510559f3c1e6ea07493b59b33d4cea7"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

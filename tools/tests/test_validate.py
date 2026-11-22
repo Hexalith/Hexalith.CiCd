@@ -109,6 +109,7 @@ def workspace():
 def external_global_checks(module=global_check):
     """The child suites are always stubbed: exercising this runner cannot recurse."""
     with (mock.patch.object(module, "run_tool_tests") as tests,
+          mock.patch.object(module, "check_app_inventory"),
           mock.patch.object(module, "lint_workflows") as lint,
           mock.patch.object(module, "check_bootstrap"),
           mock.patch.object(module, "check_release") as release):
@@ -750,7 +751,7 @@ class GlobalTests(unittest.TestCase):
                     "sys.dont_write_bytecode = True\n"
                     f"spec=importlib.util.spec_from_file_location('global_cli', {str(ROOT / 'tools/check_global.py')!r})\n"
                     "module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module; spec.loader.exec_module(module)\n"
-                    "module.run_tool_tests = module.lint_workflows = module.check_release = module.check_bootstrap = lambda *arguments: None\n"
+                    "module.run_tool_tests = module.lint_workflows = module.check_release = module.check_bootstrap = module.check_app_inventory = lambda *arguments: None\n"
                     "raise SystemExit(module.main())\n")
                 result = run([sys.executable, "-I", harness, "--project-root", fixture.root], check=False)
                 self.assertEqual(result.returncode, int(failing))

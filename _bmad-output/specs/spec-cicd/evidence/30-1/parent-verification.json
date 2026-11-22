@@ -1,0 +1,122 @@
+{
+  "source_revision": "307405aba85e587982b69d6ce5847ab2c06000a3",
+  "commands": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_app_inventory.py"
+      ],
+      "exit_code": 0,
+      "test_count": 17,
+      "result": "passed",
+      "log_sha256": "a74b614fa4496c4dfd94757474a479597cf5271f323250e97a341190bcd6b9ad",
+      "output_bytes": 117
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_validate.py"
+      ],
+      "exit_code": 0,
+      "test_count": 54,
+      "result": "passed",
+      "log_sha256": "144906e7755f87e6cd21594bf22f34f44eb032cb7d1607f9c709e98ad2fc47e0",
+      "output_bytes": 154
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_delivery_workflow.py"
+      ],
+      "exit_code": 0,
+      "test_count": 17,
+      "result": "passed",
+      "log_sha256": "35b7b6ab29eb0655dff4fd12bbbe4a2946dbaf241d8d7620db2c5208cf108d4e",
+      "output_bytes": 118
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_nightly_workflow.py"
+      ],
+      "exit_code": 0,
+      "test_count": 30,
+      "result": "passed",
+      "log_sha256": "4489f3eb356cd9d408cb4c8dff0c203ae283042fdb5805b691ed9bf65100cda8",
+      "output_bytes": 131
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_delivery_bootstrap.py"
+      ],
+      "exit_code": 0,
+      "test_count": 9,
+      "result": "passed",
+      "log_sha256": "b018027634df258bf50376a722a1d776b761486123ea9db7c6e81a725a57c22b",
+      "output_bytes": 108
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_nightly_runtime.py"
+      ],
+      "exit_code": 0,
+      "test_count": 39,
+      "result": "passed",
+      "log_sha256": "36612d0ab45aca0b8d0a26d6df1878fca5b40bdee6462b32a9d95db5a21a09ca",
+      "output_bytes": 139
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/render.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "test_count": null,
+      "result": "passed",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_bytes": 0
+    }
+  ],
+  "manual_evidence_checks": [
+    "hosted branch policy and sole main branch verified",
+    "effective installation grants verified; missing optional PR grant retained",
+    "selected-repository 403 retained as unverified",
+    "all downloaded historical artifact hashes match GitHub digests",
+    "no route workflow, generated file or module change",
+    "all 13 owner dispositions retain routes with explicit retirement conditions and no observed confirmation; all candidate file identities verified",
+    "live environment public client-ID matches the installation client-ID",
+    "authenticated artifact-list request identities and returned workflow_run bindings verified"
+  ],
+  "matrix_audit": {
+    "reviewed_source": "test_real_parent_source_is_seven_workflows_ten_jobs_76_mints_without_secrets",
+    "discovery_drift": "test_unknown_workflow_each_discovery_signal_independently and test_unknown_job_each_discovery_signal_independently",
+    "scope_drift": "test_token_boundaries_reject_every_input_and_identity_change, test_dynamic_permission_and_repository_expressions_are_bound, test_job_condition_environment_dependency_and_matrix_are_bound, test_manual_profile_owner_operation_and_catalog_options_are_closed",
+    "hosted_access": "parent read-only evidence assertions passed; 403 retained",
+    "owner_decision": "parent asserts 13 pending dispositions and zero changed workflow/module/generated paths"
+  },
+  "verified_at": "2026-11-22T16:42:41.610086+00:00"
+}

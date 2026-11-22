@@ -1,0 +1,744 @@
+{
+  "schema": "hexalith.cicd-app-readback.v1",
+  "observed_at": "2026-11-22T16:15:30.353705+00:00",
+  "operation": "GET only; no secret read, App mint, dispatch, settings change or repository write",
+  "authentication": {
+    "ordinary_profile": "/home/administrator/.config/gh-cicd-agent",
+    "readback_profile": "/home/administrator/.config/gh",
+    "GH_TOKEN_present": false,
+    "GITHUB_TOKEN_present": false
+  },
+  "source": {
+    "commit": "307405aba85e587982b69d6ce5847ab2c06000a3",
+    "tree": "05ff900ff5230ca6c295845005b9f87a20537147",
+    "workflow_blobs": {
+      ".github/workflows/deliver.yml": "a10275be9c3ae186cfa301d598731c484e2ca260",
+      ".github/workflows/nightly.yml": "03e4599a0409d86ea10733cbd2bb17ea02a68391",
+      ".github/workflows/qualify-package-owner-access.yml": "af84cd65f38a51755e1d74a725293019b268a2d4",
+      ".github/workflows/propose-eventstore-contracts-prerequisite.yml": "6a7de1381ff5d3a0d25f72b6b7a69b27698638ad",
+      ".github/workflows/deliver-contracts-prerequisites.yml": "860ab4d39adb346e2d612bbe89e4e4410ae0bcee",
+      ".github/workflows/dispatch-contracts-prerequisites.yml": "85ec8739ac614e88aba241a6ed21cfbd0af05930",
+      ".github/workflows/deliver-projects-ci-gates.yml": "b58495da0a8d1c937e2473ff5c9590a32f735b16"
+    }
+  },
+  "reads": [
+    {
+      "label": "account",
+      "method": "GET",
+      "endpoint": "https://api.github.com/user",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "0d5b873d2217c074b961d72df1aa8de1f9dc4010c5a4e8fcead2f0c8f562ed54",
+      "body_sha256": "5727444c53a2b7cc7c921b904af869463544bbe3788479718289ad1a749bc7ba",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:30 GMT",
+        "x-github-request-id": "D23A:356B:1260C5A2:1BC46364:6B031521",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4965",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "login": "jpiquot",
+        "id": 6775094
+      }
+    },
+    {
+      "label": "repository-Hexalith.CiCd",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "b1126459939f3a23f393058144a9bf8ea545df30835bd794490f93d3accb823d",
+      "body_sha256": "1695d13554d99495ea0e450a0df4f4c40249b91cbb6eb821b7518318f706c2ca",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:30 GMT",
+        "x-github-request-id": "D244:E8514:12AA3B3F:1C2FC4EB:6B031522",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "repo",
+        "x-ratelimit-remaining": "4964",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "full_name": "Hexalith/Hexalith.CiCd",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "label": "repository-Hexalith.EventStore",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.EventStore",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "cc26078c0f7df5a702934d73c130382bad78d9c828c15b2b8cfa74ee1c4d8e49",
+      "body_sha256": "3d345dd68f58f3c6a6775a437dfb0f0cfe87207aaa12b3de30a54e160143c8ea",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:30 GMT",
+        "x-github-request-id": "D243:1CDDC1:13AF17AB:1DA4BF8B:6B031522",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "repo",
+        "x-ratelimit-remaining": "4963",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "full_name": "Hexalith/Hexalith.EventStore",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "label": "repository-Hexalith.Projects",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.Projects",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "64dfe1102cdeabfb58e8773332c40cbec67895076b79c7fea05bea36605d21f1",
+      "body_sha256": "654b2d38d9cfbb262a7ebec5ba0a18d01459e53c796984203b74a9d1121360d1",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:31 GMT",
+        "x-github-request-id": "D247:24E7A1:8443BD:F3DEE2:6B031523",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "repo",
+        "x-ratelimit-remaining": "4962",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "full_name": "Hexalith/Hexalith.Projects",
+        "default_branch": "main",
+        "permissions": {
+          "admin": true,
+          "maintain": true,
+          "push": true,
+          "triage": true,
+          "pull": true
+        }
+      }
+    },
+    {
+      "label": "environment",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/environments/cicd-app",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "22269fe0a0cf0e1098bcfdab12ce90d6867397920b0ac923b6af8f48c8e673ff",
+      "body_sha256": "62b5d307d91b9f2e0432c2cba4e16ce1bbf6438faf61e915f4dffb23a4350ca1",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:31 GMT",
+        "x-github-request-id": "D249:124739:86251C:F5CE1C:6B031523",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4961",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "id": 26651706924,
+        "name": "cicd-app",
+        "updated_at": "2026-11-08T20:26:34Z",
+        "can_admins_bypass": true,
+        "protection_rules": [
+          {
+            "id": 71744292,
+            "node_id": "GA_kwDOUjhxY84ERrsk",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        },
+        "html_url": "https://github.com/Hexalith/Hexalith.CiCd/deployments/activity_log?environments_filter=cicd-app"
+      }
+    },
+    {
+      "label": "branches",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/environments/cicd-app/deployment-branch-policies",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "1723ffd42dc5ad826cf2fdb64a05faa2f0302d6e4d6f16e0af504c761d6d55ec",
+      "body_sha256": "fa563aefcf72e6b38b6932dcaa5e26a4d7c7263b58b9e63cd804dd6e304993ed",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:32 GMT",
+        "x-github-request-id": "D24B:2D1CF5:12F61ED2:1CA00B2B:6B031523",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4998",
+        "x-ratelimit-reset": "1795367548"
+      },
+      "result": {
+        "total_count": 1,
+        "branch_policies": [
+          {
+            "id": 65975204,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NTk3NTIwNA==",
+            "name": "main",
+            "type": "branch"
+          }
+        ]
+      }
+    },
+    {
+      "label": "installation",
+      "method": "GET",
+      "endpoint": "https://api.github.com/orgs/Hexalith/installations?per_page=100",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "7106b33c0d3705ecd8fc75bb3ed37868166a653a13315a98f65838666671fc7d",
+      "body_sha256": "6ee90f58d1740f454d71f365e9ebc7096d75562781afb709778adf9a744b716a",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:32 GMT",
+        "x-github-request-id": "D24D:CD37D:12CAC202:1C585C85:6B031524",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "admin:org, read:org, write:org",
+        "x-ratelimit-remaining": "4960",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 7,
+        "cicd_installations": [
+          {
+            "id": 179966090,
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            },
+            "suspended_at": null,
+            "updated_at": "2026-11-17T09:08:51.000+01:00",
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/179966090"
+          }
+        ]
+      }
+    },
+    {
+      "label": "selected-repositories",
+      "method": "GET",
+      "endpoint": "https://api.github.com/user/installations/179966090/repositories?per_page=100",
+      "http_status": 403,
+      "exit_code": 1,
+      "response_sha256": "e77dcd320fd6a08ee65fdc137137ed5892342a0d965315fb3645b9b750366255",
+      "body_sha256": "b376f1e37c53dc89af3066bb0ce5817e44fe1b7e107a2900d0b4e8e92849db5e",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:32 GMT",
+        "x-github-request-id": "D24F:1BD539:837016:F3265D:6B031524",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "read:user, user",
+        "x-ratelimit-remaining": "4959",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+        "documentation_url": "https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token",
+        "status": "403"
+      },
+      "diagnostic": "gh: You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation. (HTTP 403)\ngh: This API operation needs the \"read:user\" scope. To request it, run:  gh auth refresh -h github.com -s read:user"
+    },
+    {
+      "label": "runs-deliver",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "e823d7fca60e0a1ef2a3f92ce6da559e81508ee9f6c51282e86b13af8f65e9b6",
+      "body_sha256": "e3085725f6a6f956c46a64743c8d63a4cdfe61316e34a690b7ac55a9d987c482",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:33 GMT",
+        "x-github-request-id": "D251:342953:1383E066:1D6B3D28:6B031524",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4958",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 198,
+        "runs": [
+          {
+            "id": 45042807806,
+            "run_attempt": 1,
+            "event": "push",
+            "status": "queued",
+            "conclusion": null,
+            "head_sha": "307405aba85e587982b69d6ce5847ab2c06000a3",
+            "head_branch": "main",
+            "created_at": "2026-11-22T16:15:31Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45042807806",
+            "path": ".github/workflows/deliver.yml"
+          },
+          {
+            "id": 45035802400,
+            "run_attempt": 1,
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "7dc3a2ef50b06ed0b3e6cad93736a8d07741b830",
+            "head_branch": "main",
+            "created_at": "2026-11-22T14:59:47Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45035802400",
+            "path": ".github/workflows/deliver.yml"
+          },
+          {
+            "id": 45033604419,
+            "run_attempt": 1,
+            "event": "push",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "052fe731f4ffb2d1f3c139e8562634d540ccd2ec",
+            "head_branch": "main",
+            "created_at": "2026-11-22T14:35:01Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45033604419",
+            "path": ".github/workflows/deliver.yml"
+          },
+          {
+            "id": 45014868708,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "9f7a56fd1e0de05f6b8a8789fba983c072ce3db6",
+            "head_branch": "main",
+            "created_at": "2026-11-22T10:56:50Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45014868708",
+            "path": ".github/workflows/deliver.yml"
+          },
+          {
+            "id": 45008159757,
+            "run_attempt": 1,
+            "event": "push",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "705ef75404763c3ba495d2baf06cb6fcd53e7f6a",
+            "head_branch": "main",
+            "created_at": "2026-11-22T09:33:55Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45008159757",
+            "path": ".github/workflows/deliver.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "runs-nightly",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/nightly.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "d18d13f939ae3f3b0601066aa41c9607d9eb40747caf35ae66ce9989e899f482",
+      "body_sha256": "de917833c265865b443461d734b91295ce3a23f133a3c07eef1aceb67c153b45",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:33 GMT",
+        "x-github-request-id": "D253:36376F:130435A0:1CC0033D:6B031525",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4957",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 23,
+        "runs": [
+          {
+            "id": 45009181227,
+            "run_attempt": 1,
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "705ef75404763c3ba495d2baf06cb6fcd53e7f6a",
+            "head_branch": "main",
+            "created_at": "2026-11-22T09:46:38Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45009181227",
+            "path": ".github/workflows/nightly.yml"
+          },
+          {
+            "id": 44891434944,
+            "run_attempt": 1,
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "62dc50b18888be88d9ce27415d22f612c55c50af",
+            "head_branch": "main",
+            "created_at": "2026-11-21T09:50:03Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44891434944",
+            "path": ".github/workflows/nightly.yml"
+          },
+          {
+            "id": 44890586692,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "62dc50b18888be88d9ce27415d22f612c55c50af",
+            "head_branch": "main",
+            "created_at": "2026-11-21T09:39:09Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44890586692",
+            "path": ".github/workflows/nightly.yml"
+          },
+          {
+            "id": 44715684274,
+            "run_attempt": 1,
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "8c83d4b2b5217a19180fb42fd3960b3c7d6506f0",
+            "head_branch": "main",
+            "created_at": "2026-11-20T10:01:43Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44715684274",
+            "path": ".github/workflows/nightly.yml"
+          },
+          {
+            "id": 44566082537,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "6b413de903926c52a355472f018d3ebcdbc8e144",
+            "head_branch": "main",
+            "created_at": "2026-11-19T16:26:17Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44566082537",
+            "path": ".github/workflows/nightly.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "runs-qualify-package-owner-access",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/qualify-package-owner-access.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "68553fb144940e7574542fc40ed66b8ba6690a038fe6f799dfac23a3a54b6745",
+      "body_sha256": "2c90c380ad37e68c113e03c7a8fb0ac761ff3118465b057cfe0db85a12bf6b9b",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:34 GMT",
+        "x-github-request-id": "D255:FE008:1279771B:1BE22EE3:6B031525",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4956",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 1,
+        "runs": [
+          {
+            "id": 43984971766,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "95d181721d55535c0e7c57d2f12f6537d754341c",
+            "head_branch": "main",
+            "created_at": "2026-11-17T00:07:00Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43984971766",
+            "path": ".github/workflows/qualify-package-owner-access.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "runs-propose-eventstore-contracts-prerequisite",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/propose-eventstore-contracts-prerequisite.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "974b1f38e52a28348a2a80d45ab3e1df7bf2df24444033ab3825f2e14462c1f0",
+      "body_sha256": "aa44f70d7d4c2c7e2a73908f2c69ac69c5d39dea860c6048fef269196e41a9d2",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:34 GMT",
+        "x-github-request-id": "D259:345245:12EB094A:1C9443AA:6B031526",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4955",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 2,
+        "runs": [
+          {
+            "id": 44048869488,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5abd918e58ab95a554c680c49d3bc1b044270011",
+            "head_branch": "main",
+            "created_at": "2026-11-17T08:41:19Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44048869488",
+            "path": ".github/workflows/propose-eventstore-contracts-prerequisite.yml"
+          },
+          {
+            "id": 44047190091,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "c47729d371295387f99b88f36388162623ef41d4",
+            "head_branch": "main",
+            "created_at": "2026-11-17T08:29:39Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44047190091",
+            "path": ".github/workflows/propose-eventstore-contracts-prerequisite.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "runs-deliver-contracts-prerequisites",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver-contracts-prerequisites.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "99ea9cf1f143970e0b9f13806c79c4747a1e51af6156c128cc0cac1da45ea5a3",
+      "body_sha256": "d2ae94aed7b1ef82e18bce7ea0ba9bc5f0c780133bae45d775ef28bab030979e",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:34 GMT",
+        "x-github-request-id": "D264:103D4B:86B3CB:F69C2E:6B031526",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4954",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 3,
+        "runs": [
+          {
+            "id": 44047185889,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "c47729d371295387f99b88f36388162623ef41d4",
+            "head_branch": "main",
+            "created_at": "2026-11-17T08:29:37Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44047185889",
+            "path": ".github/workflows/deliver-contracts-prerequisites.yml"
+          },
+          {
+            "id": 44040329397,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+            "head_branch": "main",
+            "created_at": "2026-11-17T07:38:57Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44040329397",
+            "path": ".github/workflows/deliver-contracts-prerequisites.yml"
+          },
+          {
+            "id": 44040325658,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+            "head_branch": "main",
+            "created_at": "2026-11-17T07:38:55Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44040325658",
+            "path": ".github/workflows/deliver-contracts-prerequisites.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "runs-dispatch-contracts-prerequisites",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/dispatch-contracts-prerequisites.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "12c73a76918d84118bfe7ae1365d1c3762f26410a7cbe6048f9a622f0c8a0eee",
+      "body_sha256": "9658bec39cc61d0bc08cd0fc2e37a83925feef17edfbb9feafdd06688d967b23",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:35 GMT",
+        "x-github-request-id": "D238:CD37D:12CADCA1:1C588431:6B031527",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4953",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 2,
+        "runs": [
+          {
+            "id": 44050298566,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5abd918e58ab95a554c680c49d3bc1b044270011",
+            "head_branch": "main",
+            "created_at": "2026-11-17T08:51:21Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44050298566",
+            "path": ".github/workflows/dispatch-contracts-prerequisites.yml"
+          },
+          {
+            "id": 44047986587,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "c47729d371295387f99b88f36388162623ef41d4",
+            "head_branch": "main",
+            "created_at": "2026-11-17T08:35:05Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44047986587",
+            "path": ".github/workflows/dispatch-contracts-prerequisites.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "runs-deliver-projects-ci-gates",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver-projects-ci-gates.yml/runs?per_page=5",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "b7059ad91a4f328078acffc67943332419fbb93e79bc17f4d9f469ec1f81bd4e",
+      "body_sha256": "e6ba350649558eb2f3d61fdb6f2367badb81277941c26da21f0f4c1f6a885857",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:15:35 GMT",
+        "x-github-request-id": "D25B:366AAA:13AA5DA3:1DAE32B5:6B031527",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4952",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 1,
+        "runs": [
+          {
+            "id": 43951248000,
+            "run_attempt": 1,
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "194bdcb0481632499b7ed9d1e0730a47bfca2437",
+            "head_branch": "main",
+            "created_at": "2026-11-16T20:34:50Z",
+            "html_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43951248000",
+            "path": ".github/workflows/deliver-projects-ci-gates.yml"
+          }
+        ]
+      }
+    },
+    {
+      "label": "repository-client-variable",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/variables/HEXALITH_CICD_APP_CLIENT_ID",
+      "http_status": 404,
+      "exit_code": 1,
+      "response_sha256": "88a378aa24a7219400546583f88c8a07c5f695aa08126e798a41ff0a2f128ef8",
+      "body_sha256": "7daec3e7b1d8d4e43b020d824bb8d9711d4aec5d5713a3e7ba631568e6aca662",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:35:49 GMT",
+        "x-github-request-id": "D4E8:DA4D:134A351C:1D1E7664:6B0319E5",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4826",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "message": "Not Found",
+        "documentation_url": "https://docs.github.com/rest/actions/variables#get-a-repository-variable",
+        "status": "404"
+      },
+      "diagnostic": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "label": "environment-client-variables",
+      "method": "GET",
+      "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/environments/cicd-app/variables?per_page=100",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "d13abe835ccd487dc3a98abadac7b24857655f3bf948027b6ffc2ffb8b7a160d",
+      "body_sha256": "c8f032d78b8887a7e85c4448fb5d6d162539e26c134710c60d04fd2e36c0c942",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:35:49 GMT",
+        "x-github-request-id": "D4EE:1733:12695BE5:1BCBB5C1:6B0319E5",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "",
+        "x-ratelimit-remaining": "4988",
+        "x-ratelimit-reset": "1795367548"
+      },
+      "result": {
+        "total_count": 1,
+        "client_variables": [
+          {
+            "name": "HEXALITH_CICD_APP_CLIENT_ID",
+            "value": "Iv23liRwXrNRB9QVzmuh",
+            "created_at": "2026-11-08T20:27:34Z",
+            "updated_at": "2026-11-08T20:27:34Z"
+          }
+        ]
+      }
+    },
+    {
+      "label": "installation-client-binding",
+      "method": "GET",
+      "endpoint": "https://api.github.com/orgs/Hexalith/installations?per_page=100",
+      "http_status": 200,
+      "exit_code": 0,
+      "response_sha256": "9c53a269fe53124c6d6f5aed5496c2ad27c210c98d822bd04b666b95b2ea74f8",
+      "body_sha256": "6ee90f58d1740f454d71f365e9ebc7096d75562781afb709778adf9a744b716a",
+      "headers": {
+        "date": "Sun, 22 Nov 2026 16:35:50 GMT",
+        "x-github-request-id": "D4EA:FE008:12A2CA28:1C205546:6B0319E5",
+        "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+        "x-accepted-oauth-scopes": "admin:org, read:org, write:org",
+        "x-ratelimit-remaining": "4825",
+        "x-ratelimit-reset": "1795367022"
+      },
+      "result": {
+        "total_count": 7,
+        "cicd_installations": [
+          {
+            "id": 179966090,
+            "app_id": 5671811,
+            "app_slug": "hexalith-cicd",
+            "client_id": "Iv23liRwXrNRB9QVzmuh",
+            "repository_selection": "selected",
+            "permissions": {
+              "actions": "write",
+              "contents": "write",
+              "metadata": "read",
+              "workflows": "write",
+              "administration": "read",
+              "security_events": "read"
+            },
+            "suspended_at": null,
+            "html_url": "https://github.com/organizations/Hexalith/settings/installations/179966090"
+          }
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Repository permission flags describe account access, not token API grants.",
+    "Selected repository set remains unverified on HTTP 403. Preserve the separate story-11 accepted Hexalith.Docs exception.",
+    "Successful workflow runs and historical scoped approvals do not establish owner retirement confirmation.",
+    "Installation permissions are effective installation grants; no new installation token was minted to inspect per-token downscoping."
+  ],
+  "client_identity_binding": {
+    "result": "verified",
+    "variable_source": "cicd-app environment; its explicit value selects the App",
+    "nonsecret_client_id": "Iv23liRwXrNRB9QVzmuh",
+    "installation_id": 179966090,
+    "app_id": 5671811,
+    "app_slug": "hexalith-cicd",
+    "repository_variable_read": "HTTP 404 retained; environment binding is independently verified"
+  },
+  "updated_at": "2026-11-22T16:35:50.755329+00:00"
+}

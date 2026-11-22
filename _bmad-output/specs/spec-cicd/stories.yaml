@@ -460,6 +460,16 @@
     Record read-only hosted evidence and owner disposition for each migration
     route. Acceptance criteria are in the 2026-11-19 sprint change proposal
     under 30-1. Retirement requires the corresponding owner's confirmation.
+- id: "30-3"
+  title: "Reconcile organization-wide CiCd App access"
+  description: >-
+    Align the CiCd credential contract and onboarding guidance with the active
+    Hexalith installation's All repositories setting. Verify the installation,
+    grants, environment binding and scoped workflow token policy independently.
+  invoke_dev_with: >-
+    Apply the approved 2026-11-22 sprint change proposal. Record the read-only
+    organization installation and environment receipts, reconcile DW-38 and
+    verify source policy and managed perimeter identities against the baseline.
 - id: "30-2"
   title: "Document and reproduce validation from a fresh checkout"
   description: >-

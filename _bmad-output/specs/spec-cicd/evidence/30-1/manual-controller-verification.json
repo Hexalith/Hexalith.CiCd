@@ -1,0 +1,69 @@
+{
+  "purpose": "Exercise existing closed manual-profile controller behavior in addition to source mutation checks; no hosted execution or token mint.",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/tests/test_deliver_contracts_prerequisites.py"
+      ],
+      "exit_code": 0,
+      "test_count": 44,
+      "result": "passed",
+      "log_sha256": "5a39cf14ba3ad90a4164954d082aa1ba9faa238908cd4882a100a95fd4e2a54e",
+      "output_bytes": 8169
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/tests/test_propose_eventstore_contracts_prerequisite.py"
+      ],
+      "exit_code": 0,
+      "test_count": 30,
+      "result": "passed",
+      "log_sha256": "fd166096703f2217e0a011196dc4d5970fe962e546e3aa6cffc231f3fcaa10d1",
+      "output_bytes": 5693
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/tests/test_dispatch_contracts_prerequisite.py"
+      ],
+      "exit_code": 0,
+      "test_count": 50,
+      "result": "passed",
+      "log_sha256": "373c4ce97c88c8b5e2699b0e8acd8416defd8e5a8cdbd424931a5d44a6be92d3",
+      "output_bytes": 8473
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_deliver_g6_catalog.py"
+      ],
+      "exit_code": 0,
+      "test_count": 28,
+      "result": "passed",
+      "log_sha256": "1eac2725cdc069e115f48e783c0b40c105deef16c3cf7b67e6aa8d31a855daf3",
+      "output_bytes": 128
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "--script",
+        "tools/tests/test_deliver_projects_ci_gates.py"
+      ],
+      "exit_code": 0,
+      "test_count": 18,
+      "result": "passed",
+      "log_sha256": "edcd7411f2b5f702c4e0fa5ef8691cd2920a0eff8d5bc967b2a2ea7d096fe1c0",
+      "output_bytes": 118
+    }
+  ]
+}

@@ -1,0 +1,1138 @@
+{
+  "schema": "hexalith.cicd-app-route-evidence.v1",
+  "observed_at": "2026-11-22T16:16:37.561162+00:00",
+  "operation": "GET only; historical evidence, no new workflow execution",
+  "runs": [
+    {
+      "run_id": 43984971766,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43984971766",
+      "total_count": 2,
+      "artifacts": [
+        {
+          "id": 14284842129,
+          "name": "package-owner-access-Hexalith.Projects",
+          "size_in_bytes": 593,
+          "digest": "sha256:43b851d6327446110dabe7487db13698695020ff3b56f99f8488385360a339e8",
+          "expired": false,
+          "created_at": "2026-11-17T00:09:49Z",
+          "updated_at": "2026-11-17T00:09:49Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14284842129",
+          "download_exit": 0,
+          "download_sha256": "43b851d6327446110dabe7487db13698695020ff3b56f99f8488385360a339e8",
+          "receipts": [
+            {
+              "path": "package-owner-Hexalith.Projects.json",
+              "sha256": "359ce1183dc0f9cd286e20a953a120d1a409b8fec783e5956c31d8b41481735c",
+              "bytes": 693,
+              "result": {
+                "status": "qualified",
+                "repository": "Hexalith/Hexalith.Projects",
+                "requested_permissions": {
+                  "contents": "read"
+                },
+                "repositories": [
+                  "Hexalith/Hexalith.Projects"
+                ],
+                "main": "0bb322c2105c841eba150fd6cb5aab2b3d4b2d4c",
+                "owner_source": "95d181721d55535c0e7c57d2f12f6537d754341c",
+                "installation_id": "179966090",
+                "app_slug": "hexalith-cicd",
+                "token_result": "success",
+                "run_attempt": "1",
+                "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43984971766"
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 43984971766,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "95d181721d55535c0e7c57d2f12f6537d754341c"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14284718646,
+          "name": "package-owner-access-Hexalith.EventStore",
+          "size_in_bytes": 600,
+          "digest": "sha256:ca805dbeb8421673a5ed52c8af8dc4c2aec0aa452d42b7f84e6d6987a5ebab72",
+          "expired": false,
+          "created_at": "2026-11-17T00:20:49Z",
+          "updated_at": "2026-11-17T00:20:49Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14284718646",
+          "download_exit": 0,
+          "download_sha256": "ca805dbeb8421673a5ed52c8af8dc4c2aec0aa452d42b7f84e6d6987a5ebab72",
+          "receipts": [
+            {
+              "path": "package-owner-Hexalith.EventStore.json",
+              "sha256": "834b9afa7cd9b0ce98d25c6769f680c5a42ba0a288e87c6f47db8243ed6d62c1",
+              "bytes": 697,
+              "result": {
+                "status": "qualified",
+                "repository": "Hexalith/Hexalith.EventStore",
+                "requested_permissions": {
+                  "contents": "read"
+                },
+                "repositories": [
+                  "Hexalith/Hexalith.EventStore"
+                ],
+                "main": "3b2350e7c1fff640131f8101596c78a59e31a03f",
+                "owner_source": "95d181721d55535c0e7c57d2f12f6537d754341c",
+                "installation_id": "179966090",
+                "app_slug": "hexalith-cicd",
+                "token_result": "success",
+                "run_attempt": "1",
+                "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43984971766"
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 43984971766,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "95d181721d55535c0e7c57d2f12f6537d754341c"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-43984971766",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43984971766/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "3031f24374e13375a7633fec599b1c8150c824c84e54b05d8531fcd22e9ab753",
+        "body_sha256": "72221450b77ea3a4c54027ff6c98b31062a5c4950a02930de7af7fa0aeb38493",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:50 GMT",
+          "x-github-request-id": "D4F8:2F58A2:12DBA44D:1C646E93:6B0319E6",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4824",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 2
+        }
+      }
+    },
+    {
+      "run_id": 44048869488,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44048869488",
+      "total_count": 3,
+      "artifacts": [
+        {
+          "id": 14313176286,
+          "name": "eventstore-proposal-qualification",
+          "size_in_bytes": 1149,
+          "digest": "sha256:41ee8ea0ddefe86c70fc1a8901b4a64cf6d9340c730988dc39ba199864a64123",
+          "expired": false,
+          "created_at": "2026-11-17T08:44:25Z",
+          "updated_at": "2026-11-17T08:44:25Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14313176286",
+          "download_exit": 0,
+          "download_sha256": "41ee8ea0ddefe86c70fc1a8901b4a64cf6d9340c730988dc39ba199864a64123",
+          "receipts": [
+            {
+              "path": "eventstore-proposal-qualification.json",
+              "sha256": "695b9d1f0360990272f6793a1842f71c5d1708b8383a872e78041d931d554a89",
+              "bytes": 2255,
+              "result": {
+                "schema": "hexalith.eventstore-prerequisite-proposal.v1",
+                "status": "qualified",
+                "reason": null,
+                "repository": "Hexalith.EventStore",
+                "operation": "qualify",
+                "owner_source": "5abd918e58ab95a554c680c49d3bc1b044270011",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "branch_success": false,
+                "target_ref": "refs/heads/cicd/contracts-prerequisite-eventstore",
+                "comparison_url": "https://github.com/Hexalith/Hexalith.EventStore/compare/main...cicd/contracts-prerequisite-eventstore?expand=1",
+                "failed_operation": null,
+                "push_attempted": false,
+                "post_attempted": false,
+                "run_id": "44048869488",
+                "run_attempt": 1
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44048869488,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "5abd918e58ab95a554c680c49d3bc1b044270011"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14312513806,
+          "name": "eventstore-proposal-pr",
+          "size_in_bytes": 679,
+          "digest": "sha256:40ce5694924f664061688bb180652e9a876506bf6b10364bdaf6c810a368b300",
+          "expired": false,
+          "created_at": "2026-11-17T08:44:54Z",
+          "updated_at": "2026-11-17T08:44:54Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14312513806",
+          "download_exit": 0,
+          "download_sha256": "40ce5694924f664061688bb180652e9a876506bf6b10364bdaf6c810a368b300",
+          "receipts": [
+            {
+              "path": "eventstore-proposal-pr.json",
+              "sha256": "09dcf809dabccd78bc85d78e8139f1c48266835576ed6f29b416d17410ed1726",
+              "bytes": 908,
+              "result": {
+                "schema": "hexalith.eventstore-prerequisite-proposal.v1",
+                "status": "pr-blocked",
+                "reason": "scoped same-App PR token unavailable; branch and comparison URL retained",
+                "repository": "Hexalith.EventStore",
+                "operation": "pull-request",
+                "owner_source": "5abd918e58ab95a554c680c49d3bc1b044270011",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": "e67afa4519e3d9d0d37eab3c110077b14218dcd3",
+                "delivered_tree": "330e35a6576060f0a94177ca9c3cf0eb205d5330",
+                "branch_success": true,
+                "target_ref": "refs/heads/cicd/contracts-prerequisite-eventstore",
+                "comparison_url": "https://github.com/Hexalith/Hexalith.EventStore/compare/main...cicd/contracts-prerequisite-eventstore?expand=1",
+                "failed_operation": "require scoped same-App PR token",
+                "push_attempted": false,
+                "post_attempted": false,
+                "run_id": "44048869488",
+                "run_attempt": 1
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44048869488,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "5abd918e58ab95a554c680c49d3bc1b044270011"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14312079838,
+          "name": "eventstore-proposal-branch",
+          "size_in_bytes": 1333,
+          "digest": "sha256:f17c31c6c973faa965144ac38f3f1daf3710f70383ba80c1c16f6b2ac676f4cc",
+          "expired": false,
+          "created_at": "2026-11-17T08:44:52Z",
+          "updated_at": "2026-11-17T08:44:52Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14312079838",
+          "download_exit": 0,
+          "download_sha256": "f17c31c6c973faa965144ac38f3f1daf3710f70383ba80c1c16f6b2ac676f4cc",
+          "receipts": [
+            {
+              "path": "eventstore-proposal-branch.json",
+              "sha256": "86f1556df39aa97782e54fb8ad97ffb5fa9480c512156813cc4c45ea3ff24e05",
+              "bytes": 3502,
+              "result": {
+                "schema": "hexalith.eventstore-prerequisite-proposal.v1",
+                "status": "proposed",
+                "reason": null,
+                "repository": "Hexalith.EventStore",
+                "operation": "propose",
+                "owner_source": "5abd918e58ab95a554c680c49d3bc1b044270011",
+                "candidate_sha": "e67afa4519e3d9d0d37eab3c110077b14218dcd3",
+                "candidate_tree": "330e35a6576060f0a94177ca9c3cf0eb205d5330",
+                "delivered_sha": "e67afa4519e3d9d0d37eab3c110077b14218dcd3",
+                "delivered_tree": "330e35a6576060f0a94177ca9c3cf0eb205d5330",
+                "branch_success": true,
+                "target_ref": "refs/heads/cicd/contracts-prerequisite-eventstore",
+                "comparison_url": "https://github.com/Hexalith/Hexalith.EventStore/compare/main...cicd/contracts-prerequisite-eventstore?expand=1",
+                "failed_operation": null,
+                "push_attempted": true,
+                "post_attempted": false,
+                "run_id": "44048869488",
+                "run_attempt": 1
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44048869488,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "5abd918e58ab95a554c680c49d3bc1b044270011"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-44048869488",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44048869488/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "9facaaea16ad44072b78eb73ef8f8af62c564578941ba2a99862cb3a279d2a55",
+        "body_sha256": "5a644c63ec598faca90d8b169675cbeb1988d2fd8d47b2cf4d7845d47bd0896f",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:50 GMT",
+          "x-github-request-id": "D49C:35A1E2:852031:F5AF71:6B0319E6",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4823",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 3
+        }
+      }
+    },
+    {
+      "run_id": 44047185889,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44047185889",
+      "total_count": 2,
+      "artifacts": [
+        {
+          "id": 14311837669,
+          "name": "contracts-prerequisites-qualification-projects-prerequisite-policy",
+          "size_in_bytes": 995,
+          "digest": "sha256:d71fd834f8d1b1039c2010028c270fcb0373d82c17ca5b0349b0a057f6be5915",
+          "expired": false,
+          "created_at": "2026-11-17T08:32:01Z",
+          "updated_at": "2026-11-17T08:32:01Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14311837669",
+          "download_exit": 0,
+          "download_sha256": "d71fd834f8d1b1039c2010028c270fcb0373d82c17ca5b0349b0a057f6be5915",
+          "receipts": [
+            {
+              "path": "contracts-prerequisites-qualification.json",
+              "sha256": "a3a140d4b98b4e1adce6a797cece99fecbcbde82ede90968a06b6527aa7cfb3f",
+              "bytes": 1802,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-delivery.v1",
+                "status": "qualified",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "profile": "projects-prerequisite-policy",
+                "operation": "qualify",
+                "owner_source": "c47729d371295387f99b88f36388162623ef41d4",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "failed_operation": null,
+                "push_attempted": false
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44047185889,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "c47729d371295387f99b88f36388162623ef41d4"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14311264163,
+          "name": "contracts-prerequisites-delivery-projects-prerequisite-policy",
+          "size_in_bytes": 1133,
+          "digest": "sha256:522e0e4213e028f134159b1dc9d7a01a7254b99e11ea95b16b33b900b6ebd12b",
+          "expired": false,
+          "created_at": "2026-11-17T08:32:27Z",
+          "updated_at": "2026-11-17T08:32:27Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14311264163",
+          "download_exit": 0,
+          "download_sha256": "522e0e4213e028f134159b1dc9d7a01a7254b99e11ea95b16b33b900b6ebd12b",
+          "receipts": [
+            {
+              "path": "contracts-prerequisites-delivery.json",
+              "sha256": "470b528b521832364e69849597c13ad465e02fc9c1ace47f0d0d98ee6b39c8cc",
+              "bytes": 2752,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-delivery.v1",
+                "status": "delivered",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "profile": "projects-prerequisite-policy",
+                "operation": "deliver",
+                "owner_source": "c47729d371295387f99b88f36388162623ef41d4",
+                "candidate_sha": "78633a653c1a6768a795678203d836b3caac2c12",
+                "candidate_tree": "5c119865a200f961e997f68c043fb7520fd96997",
+                "delivered_sha": "78633a653c1a6768a795678203d836b3caac2c12",
+                "delivered_tree": "5c119865a200f961e997f68c043fb7520fd96997",
+                "failed_operation": null,
+                "push_attempted": true
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44047185889,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "c47729d371295387f99b88f36388162623ef41d4"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-44047185889",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44047185889/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "69034006b4ddcc3dbdfc30e8db473facbc35e4cd0c0256b9d9cffe82d3511619",
+        "body_sha256": "47c34d7bb099cb2a35302c2b35404e1b35112f77b238d7de35e6271480cd7b97",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:51 GMT",
+          "x-github-request-id": "D24A:35FB30:131CF682:1CD8E15E:6B0319E6",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4822",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 2
+        }
+      }
+    },
+    {
+      "run_id": 44040329397,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44040329397",
+      "total_count": 2,
+      "artifacts": [
+        {
+          "id": 14309790154,
+          "name": "contracts-prerequisites-qualification-projects-publisher",
+          "size_in_bytes": 991,
+          "digest": "sha256:2bb677c77d8acbfbc663c9b550636b0f03ef73e8faea1380ceee53aa968c14a7",
+          "expired": false,
+          "created_at": "2026-11-17T07:42:32Z",
+          "updated_at": "2026-11-17T07:42:32Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14309790154",
+          "download_exit": 0,
+          "download_sha256": "2bb677c77d8acbfbc663c9b550636b0f03ef73e8faea1380ceee53aa968c14a7",
+          "receipts": [
+            {
+              "path": "contracts-prerequisites-qualification.json",
+              "sha256": "7c535b3bb39a68d4492e4d48ef7ee652133b28b5a8fcbd374c933e6d4d5a725b",
+              "bytes": 1782,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-delivery.v1",
+                "status": "qualified",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "profile": "projects-publisher",
+                "operation": "qualify",
+                "owner_source": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "failed_operation": null,
+                "push_attempted": false
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44040329397,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14308663832,
+          "name": "contracts-prerequisites-delivery-projects-publisher",
+          "size_in_bytes": 1129,
+          "digest": "sha256:f8ba123a66dc79d38e14973b2d975b813f420355e219c166528ca7d46f48a33e",
+          "expired": false,
+          "created_at": "2026-11-17T07:42:54Z",
+          "updated_at": "2026-11-17T07:42:54Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14308663832",
+          "download_exit": 0,
+          "download_sha256": "f8ba123a66dc79d38e14973b2d975b813f420355e219c166528ca7d46f48a33e",
+          "receipts": [
+            {
+              "path": "contracts-prerequisites-delivery.json",
+              "sha256": "6e12bef7359228cb00b45648023f1a63693367f42d641a1a2dc8f56512d97a64",
+              "bytes": 2732,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-delivery.v1",
+                "status": "delivered",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "profile": "projects-publisher",
+                "operation": "deliver",
+                "owner_source": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+                "candidate_sha": "8b53d6b917957762949d39c21bc5de0919811413",
+                "candidate_tree": "8a6bf0d5e43522ed441cb26b14cf1f0cd931a95a",
+                "delivered_sha": "8b53d6b917957762949d39c21bc5de0919811413",
+                "delivered_tree": "8a6bf0d5e43522ed441cb26b14cf1f0cd931a95a",
+                "failed_operation": null,
+                "push_attempted": true
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44040329397,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-44040329397",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44040329397/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "afc843f379bc05d692c743582f15dec4ef5318412698be06f5a48a49f2254844",
+        "body_sha256": "28c810b6d3fa1812b892191418e2bf3413efd6a2935ffa3e72b3e7096c7e2df1",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:51 GMT",
+          "x-github-request-id": "D4FA:1C906:1306CD27:1CBD1437:6B0319E7",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4821",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 2
+        }
+      }
+    },
+    {
+      "run_id": 44040325658,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44040325658",
+      "total_count": 2,
+      "artifacts": [
+        {
+          "id": 14309495470,
+          "name": "contracts-prerequisites-delivery-eventstore-publisher",
+          "size_in_bytes": 1489,
+          "digest": "sha256:4e4ac2c40bd74951b96c91799ca8f95370d7ff04059de13b8be27eaeac2026cf",
+          "expired": false,
+          "created_at": "2026-11-17T07:40:32Z",
+          "updated_at": "2026-11-17T07:40:32Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14309495470",
+          "download_exit": 0,
+          "download_sha256": "4e4ac2c40bd74951b96c91799ca8f95370d7ff04059de13b8be27eaeac2026cf",
+          "receipts": [
+            {
+              "path": "contracts-prerequisites-delivery.json",
+              "sha256": "eeeee1cea1f566d39d4716cbf7c2aeedb38bcc83e457754eadfcf06733c185a7",
+              "bytes": 3599,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-delivery.v1",
+                "status": "failed",
+                "reason": "non-forced prerequisite push failed; remote outcome may be ambiguous; no retry or reapply",
+                "repository": "Hexalith.EventStore",
+                "profile": "eventstore-publisher",
+                "operation": "deliver",
+                "owner_source": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+                "candidate_sha": "a99d99c4302dedce8d045bb2d8f904dcfc5f9b6f",
+                "candidate_tree": "96ff1db669f09625e2c2d092da681e9d3f7b3fbd",
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "failed_operation": "git push a99d99c4302dedce8d045bb2d8f904dcfc5f9b6f:refs/heads/main",
+                "push_attempted": true
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44040325658,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14308778249,
+          "name": "contracts-prerequisites-qualification-eventstore-publisher",
+          "size_in_bytes": 998,
+          "digest": "sha256:a7f1df688ce8e68f22a870a58424c12f725e316bf4569667878411d76a98bdf4",
+          "expired": false,
+          "created_at": "2026-11-17T07:40:15Z",
+          "updated_at": "2026-11-17T07:40:15Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14308778249",
+          "download_exit": 0,
+          "download_sha256": "a7f1df688ce8e68f22a870a58424c12f725e316bf4569667878411d76a98bdf4",
+          "receipts": [
+            {
+              "path": "contracts-prerequisites-qualification.json",
+              "sha256": "55f93d56dbd02375a014c0655ab149ebc0ad3cfcd4f08a950eda98ae764cbe85",
+              "bytes": 1790,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-delivery.v1",
+                "status": "qualified",
+                "reason": null,
+                "repository": "Hexalith.EventStore",
+                "profile": "eventstore-publisher",
+                "operation": "qualify",
+                "owner_source": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "failed_operation": null,
+                "push_attempted": false
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44040325658,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "cc4b8cc46f4e254e20518c46726fc5a57ed1164f"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-44040325658",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44040325658/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "7161e4ec26564fc2c1e8c927bea073edefb19d5ca7b2146277e9591781a0fa26",
+        "body_sha256": "e1a8e41e611f5f3d1b13e174583971a737f72abb40673c575289eb0eec672fc5",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:51 GMT",
+          "x-github-request-id": "D49E:171B:8145546:C317A9C:6B0319E7",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4820",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 2
+        }
+      }
+    },
+    {
+      "run_id": 44050298566,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44050298566",
+      "total_count": 1,
+      "artifacts": [
+        {
+          "id": 14313322196,
+          "name": "contracts-prerequisite-dispatch-projects-verify-44050298566-1",
+          "size_in_bytes": 1070,
+          "digest": "sha256:29cc44fc9dbc4f8c2eb222f7c5070c43fb04f630518089f3958705693da65e9d",
+          "expired": false,
+          "created_at": "2026-11-17T08:51:56Z",
+          "updated_at": "2026-11-17T08:51:56Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14313322196",
+          "download_exit": 0,
+          "download_sha256": "29cc44fc9dbc4f8c2eb222f7c5070c43fb04f630518089f3958705693da65e9d",
+          "receipts": [
+            {
+              "path": "contracts-prerequisite-dispatch.json",
+              "sha256": "5145f0bc471422a931c3ec241be036498f89a3d58bed89c62f73747c12a55ad1",
+              "bytes": 1853,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-dispatch.v1",
+                "status": "correlated",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "owner": "projects",
+                "operation": "verify",
+                "owner_source": "5abd918e58ab95a554c680c49d3bc1b044270011",
+                "failed_operation": null,
+                "dispatch_attempted": true
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44050298566,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "5abd918e58ab95a554c680c49d3bc1b044270011"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-44050298566",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44050298566/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "d352b9a5aebb1dc1ee78cae4d1eed7f1663a9e3d2729598895602017559ddc5f",
+        "body_sha256": "55554904d63ce32ed9272205a002c771e971445542dc2fd721bbe5f92f83b5b7",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:52 GMT",
+          "x-github-request-id": "D4A8:1CDDC1:13DAB13A:1DE6225F:6B0319E8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4819",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 1
+        }
+      }
+    },
+    {
+      "run_id": 44047986587,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44047986587",
+      "total_count": 1,
+      "artifacts": [
+        {
+          "id": 14313150135,
+          "name": "contracts-prerequisite-dispatch-projects-publish-44047986587-1",
+          "size_in_bytes": 1131,
+          "digest": "sha256:60d96dfaa4168ddfd313e9c1e4d05f4d00824d4d8c4a3acbfbc87212fda4a48c",
+          "expired": false,
+          "created_at": "2026-11-17T08:38:03Z",
+          "updated_at": "2026-11-17T08:38:03Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14313150135",
+          "download_exit": 0,
+          "download_sha256": "60d96dfaa4168ddfd313e9c1e4d05f4d00824d4d8c4a3acbfbc87212fda4a48c",
+          "receipts": [
+            {
+              "path": "contracts-prerequisite-dispatch.json",
+              "sha256": "a8b3108f0324e3868545d4764c3d94fe105684478d4443d4ddce8c475449b86b",
+              "bytes": 2014,
+              "result": {
+                "schema": "hexalith.contracts-prerequisites-dispatch.v1",
+                "status": "correlated",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "owner": "projects",
+                "operation": "publish",
+                "owner_source": "c47729d371295387f99b88f36388162623ef41d4",
+                "failed_operation": null,
+                "dispatch_attempted": true
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 44047986587,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "c47729d371295387f99b88f36388162623ef41d4"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-44047986587",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/44047986587/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "310f7c0b1e9521b054e84701c468982db662508890490cfdd3fc6ca2b6223a1c",
+        "body_sha256": "0a1724469325cf443d987ab10d013c74e3f06c4d0e9f26f88af127133a8255ad",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:52 GMT",
+          "x-github-request-id": "D4A9:FE008:12A2DF03:1C2075C2:6B0319E8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4818",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 1
+        }
+      }
+    },
+    {
+      "run_id": 43951248000,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43951248000",
+      "total_count": 2,
+      "artifacts": [
+        {
+          "id": 14267991761,
+          "name": "projects-ci-gates-qualification",
+          "size_in_bytes": 970,
+          "digest": "sha256:7d8a76f307b37ee7838ad7b910152ec4aa28242c931753ac38d58dd2d4c3d7af",
+          "expired": false,
+          "created_at": "2026-11-16T20:35:54Z",
+          "updated_at": "2026-11-16T20:35:54Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14267991761",
+          "download_exit": 0,
+          "download_sha256": "7d8a76f307b37ee7838ad7b910152ec4aa28242c931753ac38d58dd2d4c3d7af",
+          "receipts": [
+            {
+              "path": "projects-ci-gates-qualification.json",
+              "sha256": "9cf468682a3fe8692e302fdac96d0815ff6150b6ad58e13d1ff4f304a0a61f83",
+              "bytes": 1710,
+              "result": {
+                "schema": "hexalith.projects-ci-gates-delivery.v1",
+                "status": "qualified",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "operation": "qualify",
+                "owner_source": "194bdcb0481632499b7ed9d1e0730a47bfca2437",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "failed_operation": null,
+                "push_attempted": false
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 43951248000,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "194bdcb0481632499b7ed9d1e0730a47bfca2437"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14266094991,
+          "name": "projects-ci-gates-delivery",
+          "size_in_bytes": 1109,
+          "digest": "sha256:00270c9de69f801948c9bc58e78099dd0dca8776ceffdfc936867f44a3fb363d",
+          "expired": false,
+          "created_at": "2026-11-16T20:38:58Z",
+          "updated_at": "2026-11-16T20:38:58Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14266094991",
+          "download_exit": 0,
+          "download_sha256": "00270c9de69f801948c9bc58e78099dd0dca8776ceffdfc936867f44a3fb363d",
+          "receipts": [
+            {
+              "path": "projects-ci-gates-delivery.json",
+              "sha256": "e07334d490b73168edd01f786990292e860e36ed3ba0fdc2edcb10a74322145c",
+              "bytes": 2693,
+              "result": {
+                "schema": "hexalith.projects-ci-gates-delivery.v1",
+                "status": "delivered",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "operation": "deliver",
+                "owner_source": "194bdcb0481632499b7ed9d1e0730a47bfca2437",
+                "candidate_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+                "candidate_tree": "2a7fdf8f1559190d80257dbc5a79dc1c06069aeb",
+                "delivered_sha": "7da7e95b670838de3181e946709e1246695a0e72",
+                "delivered_tree": "2a7fdf8f1559190d80257dbc5a79dc1c06069aeb",
+                "failed_operation": null,
+                "push_attempted": true
+              }
+            }
+          ],
+          "digest_verified": true,
+          "workflow_run": {
+            "id": 43951248000,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "194bdcb0481632499b7ed9d1e0730a47bfca2437"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "artifact_list_request": {
+        "label": "artifact-list-43951248000",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43951248000/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "4e90540ea22962fe1be32d9e17d239d95eaae23f8d602212f5da55b96e1a6931",
+        "body_sha256": "ced89c8808c0ed39fd4a3fad2363c3269c858d97291f63c119fec2fd91e4cc14",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:53 GMT",
+          "x-github-request-id": "D4AB:1733:12697A9B:1BCBE326:6B0319E8",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4817",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 2
+        }
+      }
+    },
+    {
+      "repository": "Hexalith.CiCd",
+      "run_id": 43939511545,
+      "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43939511545",
+      "head_sha": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+      "conclusion": "success",
+      "event": "workflow_dispatch",
+      "artifacts": [
+        {
+          "id": 14262771705,
+          "name": "projects-g6-delivery",
+          "size_in_bytes": 1033,
+          "digest": "sha256:39da628172a81bfe166858dd78acc0dc2b759a2152f90d37c608c116fb3bba97",
+          "expired": false,
+          "created_at": "2026-11-16T19:31:09Z",
+          "updated_at": "2026-11-16T19:31:09Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14262771705",
+          "download_exit": 0,
+          "download_sha256": "39da628172a81bfe166858dd78acc0dc2b759a2152f90d37c608c116fb3bba97",
+          "digest_verified": true,
+          "receipts": [
+            {
+              "path": "projects-g6-delivery.json",
+              "sha256": "f5e3c42171ff3bb15a90d29f40490d9deb4653c1fc03799225446eccd982f88a",
+              "bytes": 2582,
+              "result": {
+                "schema": "hexalith.projects-g6-catalog-delivery.v1",
+                "status": "delivered",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "operation": "deliver",
+                "owner_source": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+                "candidate_sha": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+                "candidate_tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+                "delivered_sha": "146d0f7e9964c82da23d31b51e6ab62efdcfdda6",
+                "delivered_tree": "c5425f42f16a8fe328ae5ec9f7c3d3ad81bd0047",
+                "failed_operation": null,
+                "push_attempted": true
+              }
+            }
+          ],
+          "workflow_run": {
+            "id": 43939511545,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "2a1128e0106baed22999c4687d7d15e7639f22cf"
+          },
+          "artifact_run_binding_verified": true
+        },
+        {
+          "id": 14262518280,
+          "name": "projects-g6-qualification",
+          "size_in_bytes": 877,
+          "digest": "sha256:7c68b5d4cd0e45d4d6e1a0f9d9fa62c5853945355ba9c20cfeabd63c79a45526",
+          "expired": false,
+          "created_at": "2026-11-16T19:30:49Z",
+          "updated_at": "2026-11-16T19:30:49Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/artifacts/14262518280",
+          "download_exit": 0,
+          "download_sha256": "7c68b5d4cd0e45d4d6e1a0f9d9fa62c5853945355ba9c20cfeabd63c79a45526",
+          "digest_verified": true,
+          "receipts": [
+            {
+              "path": "g6-qualification.json",
+              "sha256": "d5e6b7552fb20d9b576e195996b54f25c6b7bbd6fe4438d0c8f043448cf7c005",
+              "bytes": 1599,
+              "result": {
+                "schema": "hexalith.projects-g6-catalog-delivery.v1",
+                "status": "qualified",
+                "reason": null,
+                "repository": "Hexalith.Projects",
+                "operation": "qualify",
+                "owner_source": "2a1128e0106baed22999c4687d7d15e7639f22cf",
+                "candidate_sha": null,
+                "candidate_tree": null,
+                "delivered_sha": null,
+                "delivered_tree": null,
+                "failed_operation": null,
+                "push_attempted": false
+              }
+            }
+          ],
+          "workflow_run": {
+            "id": 43939511545,
+            "repository_id": 1379430755,
+            "head_repository_id": 1379430755,
+            "head_branch": "main",
+            "head_sha": "2a1128e0106baed22999c4687d7d15e7639f22cf"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "total_count": 2,
+      "artifact_list_request": {
+        "label": "artifact-list-43939511545",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/runs/43939511545/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "b2c90c8fbf8dca642825c0a21b4b98dd255428d7944ad6376e1f824725f8fa8c",
+        "body_sha256": "68082f2aca304cc17c1b3c6a2dac63ca10e52fc56d4495656dd1608fc00168fe",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:53 GMT",
+          "x-github-request-id": "D272:DA4D:134A593B:1D1EAC00:6B0319E9",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4816",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 2
+        }
+      }
+    },
+    {
+      "repository": "Hexalith.Projects",
+      "run_id": 43967083172,
+      "run_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43967083172",
+      "head_sha": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37",
+      "conclusion": "failure",
+      "event": "push",
+      "artifacts": [
+        {
+          "id": 14276892777,
+          "name": "g6-current-cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37-43967083172-1",
+          "size_in_bytes": 4180,
+          "digest": "sha256:bb66b53da170ed7af3a4560a54a851ac09f1404a01ae63e232a408837f765755",
+          "expired": false,
+          "created_at": "2026-11-16T22:18:03Z",
+          "updated_at": "2026-11-16T22:18:03Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/artifacts/14276892777",
+          "download_exit": 0,
+          "download_sha256": "bb66b53da170ed7af3a4560a54a851ac09f1404a01ae63e232a408837f765755",
+          "digest_verified": true,
+          "receipts": [
+            {
+              "path": "source-mapping/catalog-acquisition.json",
+              "sha256": "52c040aff4ed1df7c2c8942a4a1b13c9e8a2f9ba00455f86ae3837950e6efcc1",
+              "bytes": 4679,
+              "result": {
+                "schema": "hexalith.g6-catalog-acquisition.v1",
+                "status": "prepared",
+                "acquired": true
+              }
+            },
+            {
+              "path": "source-mapping/conversations.json",
+              "sha256": "7656a16fc5dd5bb1c976004c21599bb76660961dff9d24b2b33aaa4e92179834",
+              "bytes": 2398,
+              "result": {
+                "status": "prepared"
+              }
+            }
+          ],
+          "workflow_run": {
+            "id": 43967083172,
+            "repository_id": 871087402,
+            "head_repository_id": 871087402,
+            "head_branch": "main",
+            "head_sha": "cdacfb2a2c9d1eb23f2dbd59b53f42b945e80f37"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "total_count": 1,
+      "artifact_list_request": {
+        "label": "artifact-list-43967083172",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43967083172/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "27c37ed54652e76b4df3b8865f70708ff259d74e524c32d5dd0707f64fa7376d",
+        "body_sha256": "f1175eda4e1790c38add5ec763ec7f40565614ba54dbe2d2383f2ea000c7d97f",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:53 GMT",
+          "x-github-request-id": "D4AD:2D801A:130E6566:1CB8DDA4:6B0319E9",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4815",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 1
+        }
+      }
+    },
+    {
+      "repository": "Hexalith.Projects",
+      "run_id": 43982007709,
+      "run_url": "https://github.com/Hexalith/Hexalith.Projects/actions/runs/43982007709",
+      "head_sha": "3361f2e3b5655fa1ad50a2d12c640bbd5edcbb4b",
+      "conclusion": "failure",
+      "event": "push",
+      "artifacts": [
+        {
+          "id": 14284283842,
+          "name": "g6-current-3361f2e3b5655fa1ad50a2d12c640bbd5edcbb4b-43982007709-1",
+          "size_in_bytes": 4179,
+          "digest": "sha256:9fbd58f07e8a64e548202b48d51dd38e4d7002e0e0b0aa3cc4900d8a8e90782e",
+          "expired": false,
+          "created_at": "2026-11-17T00:12:12Z",
+          "updated_at": "2026-11-17T00:12:12Z",
+          "url": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/artifacts/14284283842",
+          "download_exit": 0,
+          "download_sha256": "9fbd58f07e8a64e548202b48d51dd38e4d7002e0e0b0aa3cc4900d8a8e90782e",
+          "digest_verified": true,
+          "receipts": [
+            {
+              "path": "source-mapping/catalog-acquisition.json",
+              "sha256": "ac2fcb4cf70719ada48b0a9cfa315294012e563a749fd67e1c907549fbc04173",
+              "bytes": 4679,
+              "result": {
+                "schema": "hexalith.g6-catalog-acquisition.v1",
+                "status": "prepared",
+                "acquired": true
+              }
+            },
+            {
+              "path": "source-mapping/conversations.json",
+              "sha256": "7656a16fc5dd5bb1c976004c21599bb76660961dff9d24b2b33aaa4e92179834",
+              "bytes": 2398,
+              "result": {
+                "status": "prepared"
+              }
+            }
+          ],
+          "workflow_run": {
+            "id": 43982007709,
+            "repository_id": 871087402,
+            "head_repository_id": 871087402,
+            "head_branch": "main",
+            "head_sha": "3361f2e3b5655fa1ad50a2d12c640bbd5edcbb4b"
+          },
+          "artifact_run_binding_verified": true
+        }
+      ],
+      "total_count": 1,
+      "artifact_list_request": {
+        "label": "artifact-list-43982007709",
+        "method": "GET",
+        "endpoint": "https://api.github.com/repos/Hexalith/Hexalith.Projects/actions/runs/43982007709/artifacts?per_page=100",
+        "http_status": 200,
+        "exit_code": 0,
+        "response_sha256": "7a3fcb117f3ab589b753d5bd99fae9c4578aea50ab10af560e33df2da79721c0",
+        "body_sha256": "8b7f51350c8efa6c62e829e5f9a9ff2079af6fd2a09f08ebb5e709218427e9c9",
+        "headers": {
+          "date": "Sun, 22 Nov 2026 16:35:54 GMT",
+          "x-github-request-id": "D4AF:128307:86CAAC:F76CDD:6B0319EA",
+          "x-oauth-scopes": "admin:org, gist, read:packages, repo, workflow",
+          "x-accepted-oauth-scopes": "",
+          "x-ratelimit-remaining": "4814",
+          "x-ratelimit-reset": "1795367022"
+        },
+        "result": {
+          "total_count": 1
+        }
+      }
+    }
+  ],
+  "limits": "Latest historical migration runs sampled; success is not owner retirement confirmation. JSON receipt fields are whitelisted; archives and raw results discarded with TMPDIR.",
+  "updated_at": "2026-11-22T16:35:55.005379+00:00"
+}

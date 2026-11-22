@@ -1,0 +1,484 @@
+{
+  "schema": "hexalith.cicd-app-source-inventory.v1",
+  "baseline": {
+    "commit": "307405aba85e587982b69d6ce5847ab2c06000a3",
+    "tree": "05ff900ff5230ca6c295845005b9f87a20537147",
+    "workflow_blobs": {
+      ".github/workflows/deliver.yml": "a10275be9c3ae186cfa301d598731c484e2ca260",
+      ".github/workflows/nightly.yml": "03e4599a0409d86ea10733cbd2bb17ea02a68391",
+      ".github/workflows/qualify-package-owner-access.yml": "af84cd65f38a51755e1d74a725293019b268a2d4",
+      ".github/workflows/propose-eventstore-contracts-prerequisite.yml": "6a7de1381ff5d3a0d25f72b6b7a69b27698638ad",
+      ".github/workflows/deliver-contracts-prerequisites.yml": "860ab4d39adb346e2d612bbe89e4e4410ae0bcee",
+      ".github/workflows/dispatch-contracts-prerequisites.yml": "85ec8739ac614e88aba241a6ed21cfbd0af05930",
+      ".github/workflows/deliver-projects-ci-gates.yml": "b58495da0a8d1c937e2473ff5c9590a32f735b16"
+    }
+  },
+  "source_result": {
+    "workflows": 7,
+    "privileged_jobs": 10,
+    "mint_steps": 76,
+    "meaning": "Source-step counts; the fixed package visibility matrix expands its one step across two owners. Hosted state is separate."
+  },
+  "workflow_jobs": {
+    ".github/workflows/deliver-contracts-prerequisites.yml": {
+      "deliver": 2
+    },
+    ".github/workflows/deliver-projects-ci-gates.yml": {
+      "deliver": 1
+    },
+    ".github/workflows/deliver.yml": {
+      "deliver": 19
+    },
+    ".github/workflows/dispatch-contracts-prerequisites.yml": {
+      "dispatch": 1
+    },
+    ".github/workflows/nightly.yml": {
+      "dispatch": 19,
+      "wait": 9,
+      "publish-ready": 18,
+      "delivery-wait": 4
+    },
+    ".github/workflows/propose-eventstore-contracts-prerequisite.yml": {
+      "propose": 2
+    },
+    ".github/workflows/qualify-package-owner-access.yml": {
+      "qualify": 1
+    }
+  },
+  "selector_sources": {
+    "tools/delivery_bootstrap.py": {
+      "baseline_git_blob": "ea0a9a34021466e6a48099845ebe0fa40ad7d002",
+      "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
+      "bound": "At most 17 module slots from the committed registry plus ancestral delivered refs; exact candidate verdict or accepted-source repair, no Builds target."
+    },
+    "tools/delivery_runtime.py": {
+      "baseline_git_blob": "e53d73c39a1d0ae87ef85ff34991a3405fc14977",
+      "sha256": "287a3a38b270899342f5f9557df882c1cfbc878872e73ae4f4128f22a4fa1dec",
+      "bound": "Fixed Hexalith origins, validated names, CAPACITY=17, bounded Git/HTTP and token budgets; registry and installation selection guards."
+    },
+    "tools/deliver.py": {
+      "baseline_git_blob": "26c8c62fff988a7da8719661f69f9c75ec074a02",
+      "sha256": "94fbe91d4ce5b18a43b52c945cd36b3b4a7090fb87127192f7e4c455e91c7df7",
+      "bound": "Accepted-source module application; no change to validation verdict or product gates."
+    },
+    "tools/nightly.py": {
+      "baseline_git_blob": "39545a595d4f7adcc85de5ca6e3fee9b0ed5f7cb",
+      "sha256": "188eb04fe84dc39a8f6dc72d5d9e5bd1e062c164f09978589e0fb258ababc586",
+      "bound": "At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
+    },
+    "tools/nightly_runtime.py": {
+      "baseline_git_blob": "3e18a8b916e6e029a64f3c891279ccf882cf0537",
+      "sha256": "0429f4fdc492e796785f97f693590352623909ff14f8bcdfffe52c375f645ed0",
+      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use."
+    },
+    "tools/nightly_publish.py": {
+      "baseline_git_blob": "00b7173251ad83a02b8f2cd90abe20ae19c0d2ab",
+      "sha256": "9679abb0eb186f2fa8cfa4ee0a58ee8f39198f5518c2875d053707762f1de82d",
+      "bound": "Only authenticated successful nightly targets can be published with the selected per-target token."
+    },
+    "tools/nightly_delivery_wait.py": {
+      "baseline_git_blob": "786b8e6b7f292329cbc115dff7ee02466380b9b8",
+      "sha256": "5d656c8d861ae019efbc06ecf20c921d16734add776f3ed7a458846d271b070d",
+      "bound": "Actions read only for CiCd plus committed validated registered modules, maximum 17 module identities."
+    },
+    "tools/deliver_g6_catalog.py": {
+      "baseline_git_blob": "6efa46678d5d4a615bfad1591b8315736eba727e",
+      "sha256": "44a8ab213c505016c3e8915980496a556b261dd14c0f51bcdccd320ba2c8ed00",
+      "bound": "Only Projects; closed catalog and ci-gates profiles with separate exact paths and absent full-writer target."
+    },
+    "tools/deliver_contracts_prerequisites.py": {
+      "baseline_git_blob": "8875866f26926ae260a259c7f8f48c1fadd2798c",
+      "sha256": "99e810858062a2c7e2c2f2d67f847d41e7b95fbc1171090bd483c79c23c55381",
+      "bound": "Four closed profiles: EventStore publisher, Projects publisher, Projects pins, Projects prerequisite policy; no caller-supplied repository."
+    },
+    "tools/propose_eventstore_contracts_prerequisite.py": {
+      "baseline_git_blob": "f3661d8287af9ea9409ae365c456baf1a53d1923",
+      "sha256": "beba0e7bc0ab49e0c936ac7cade8ea20b3a4782195d3f936f08f30b6b840f7a9",
+      "bound": "Only EventStore fixed cicd/contracts-prerequisite-eventstore branch and optional draft PR, no main write or publication."
+    },
+    "tools/dispatch_contracts_prerequisite.py": {
+      "baseline_git_blob": "a1e646b037a2168d50a6385eb249f72588dbc13f",
+      "sha256": "7667e70dd227aecb6fcfdb436128019c9c11178d46efeb4c9483d4c3a80b5b01",
+      "bound": "Only eventstore/projects owner choices and publish/verify operations selecting approved existing release.yml profiles."
+    }
+  },
+  "retained_authorities": {
+    "_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-19.md": {
+      "baseline_git_blob": "54cc2912d58429bfd6130f996b6756b8af5ee433",
+      "sha256": "82720746bb62cb7aa72dcd8fde447136cb12f0f4793836771da409c97d7791f5"
+    },
+    "docs/contracts-prerequisites/owner-routes.md": {
+      "baseline_git_blob": "97353d89faec1e589e051cd655067d0d081e9a61",
+      "sha256": "0327de0a0aea97b517e64d6c3671a1b2793a82050a9d5c7ecdc24d464d59dce3"
+    },
+    "docs/projects-ci-gates-repair.md": {
+      "baseline_git_blob": "db37dd8de49528a53ebc6b643ea56afd637cebb1",
+      "sha256": "08e1ce1273e78d4a76d3a39dd624f9be0cf71fd9cfc864d8abbeb9faeaece055"
+    },
+    "docs/contracts-prerequisites/approver.json": {
+      "baseline_git_blob": "e52e0ad26df0e7004109e2cecc1e6b81029fdaa3",
+      "sha256": "b9f9352c429627c0cabbe49052fbc9ca0c93fe482619e3fc2b92c550ba1a8196"
+    },
+    "_bmad-output/specs/spec-cicd/stories/11-pilot-migration-commons-and-polymorphicserializations.md": {
+      "baseline_git_blob": "4a2709191dec093685d28c5387ccb3a5cf929cc5",
+      "sha256": "95d1303d4f6a0b9ebf279346da43e4399d30d7c8de726498deb200e9468b421a"
+    }
+  },
+  "hosted_receipts": {
+    "hosted-readback-20261122.json": {
+      "sha256": "cd42283b620f7022373a07ddd2251cd2d213d391b6913eefeeb45dc123a90af1",
+      "role": "Read-only observations; no inferred retirement consent or fresh full membership proof."
+    },
+    "hosted-route-artifacts-20261122.json": {
+      "sha256": "5610c1ef9bf9fe7a96772ca2ea37c29563e267dc9fcf5ea89f39037d22203437",
+      "role": "Read-only observations; no inferred retirement consent or fresh full membership proof."
+    }
+  },
+  "observed_discrepancies": [
+    "Package visibility workflow runs inline Python without isolation (-I); retained source does not satisfy that AD-7 execution rule.",
+    "Optional EventStore PR token requests Pull requests write absent from effective installation grants; retained historical receipt is pr-blocked.",
+    "Current complete selected-repository membership is unverified: selected-repositories GET returned HTTP 403.",
+    "Story 11 accepted the extra Hexalith.Docs installation grant as an open AD-7 exception; it remains open."
+  ],
+  "owner_dispositions_document": "docs/cicd-app-inventory.md#migration-owner-dispositions",
+  "owner_dispositions": [
+    {
+      "route": "package-visibility/eventstore",
+      "owner": "EventStore package owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        43984971766
+      ],
+      "result_or_pending": "qualified fixed one-target read",
+      "retirement_condition": "Both package owners retain visibility results, finish using the diagnostic, and explicitly confirm retirement."
+    },
+    {
+      "route": "package-visibility/projects",
+      "owner": "Projects package owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        43984971766
+      ],
+      "result_or_pending": "qualified fixed one-target read",
+      "retirement_condition": "Both package owners retain visibility results, finish using the diagnostic, and explicitly confirm retirement."
+    },
+    {
+      "route": "eventstore-proposal/branch-and-optional-pr",
+      "owner": "EventStore owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        44048869488
+      ],
+      "result_or_pending": "branch proposed; optional PR blocked by unavailable same-App scope",
+      "retirement_condition": "Named proposal resolved and EventStore owner explicitly confirms route is no longer needed."
+    },
+    {
+      "route": "prerequisite/eventstore-publisher",
+      "owner": "EventStore owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        44040325658
+      ],
+      "result_or_pending": "qualified; non-forced push failed with ambiguous remote outcome",
+      "retirement_condition": "Owners reconcile approved publisher, pin and policy results, identify the last live profile and explicitly confirm this profile retirement."
+    },
+    {
+      "route": "prerequisite/projects-publisher",
+      "owner": "Projects owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        44040329397
+      ],
+      "result_or_pending": "delivered; final publication acceptance unproven here",
+      "retirement_condition": "Owners reconcile approved publisher, pin and policy results, identify the last live profile and explicitly confirm this profile retirement."
+    },
+    {
+      "route": "prerequisite/projects-pins",
+      "owner": "Projects owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [],
+      "result_or_pending": "approved exact perimeter retained; no matching delivery in sampled runs",
+      "retirement_condition": "Verify both signed archives and approved pin result; reconcile all publisher/pin/policy results, identify last live profile and explicitly confirm retirement."
+    },
+    {
+      "route": "prerequisite/projects-prerequisite-policy",
+      "owner": "Projects owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        44047185889
+      ],
+      "result_or_pending": "delivered; owner retirement unconfirmed",
+      "retirement_condition": "Owners reconcile approved publisher, pin and policy results, identify the last live profile and explicitly confirm this profile retirement."
+    },
+    {
+      "route": "dispatch/eventstore/publish",
+      "owner": "EventStore owner",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [],
+      "result_or_pending": "no corresponding receipt in sampled runs",
+      "retirement_condition": "Both owners accept final prerequisite publication or verification receipts and explicitly confirm retirement of this route."
+    },
+    {
+      "route": "dispatch/eventstore/verify",
+      "owner": "EventStore owner",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [],
+      "result_or_pending": "no corresponding receipt in sampled runs",
+      "retirement_condition": "Both owners accept final prerequisite publication or verification receipts and explicitly confirm retirement of this route."
+    },
+    {
+      "route": "dispatch/projects/publish",
+      "owner": "Projects owner",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        44047986587
+      ],
+      "result_or_pending": "correlated dispatch; release completion unproven here",
+      "retirement_condition": "Both owners accept final prerequisite publication or verification receipts and explicitly confirm retirement of this route."
+    },
+    {
+      "route": "dispatch/projects/verify",
+      "owner": "Projects owner",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        44050298566
+      ],
+      "result_or_pending": "correlated dispatch; verification completion unproven here",
+      "retirement_condition": "Both owners accept final prerequisite publication or verification receipts and explicitly confirm retirement of this route."
+    },
+    {
+      "route": "projects/ci-gates",
+      "owner": "Projects owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        43951248000
+      ],
+      "result_or_pending": "nine-file repair delivered; hosted CI/Commitlint/G-6 owner acceptance pending",
+      "retirement_condition": "Projects owner accepts hosted CI, Commitlint and G-6 for repaired source and explicitly confirms retirement."
+    },
+    {
+      "route": "delivery/projects-g6-catalog",
+      "owner": "Projects owner with CiCd maintainer",
+      "decision": "retain_pending_explicit_owner_confirmation",
+      "retirement_confirmation_observed": false,
+      "retained_runs": [
+        43939511545,
+        43967083172,
+        43982007709
+      ],
+      "result_or_pending": "catalog delivered; sampled later G-6 failed despite prepared acquisition receipts",
+      "retirement_condition": "Projects owner confirms catalog consumer has retired and explicitly approves removing fixed profile."
+    }
+  ],
+  "verification": [
+    {
+      "command": "uv run --locked --script tools/tests/test_app_inventory.py",
+      "exit_code": 0,
+      "test_count": 17,
+      "result": "passed",
+      "log_sha256": "a74b614fa4496c4dfd94757474a479597cf5271f323250e97a341190bcd6b9ad",
+      "output_bytes": 117,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_validate.py",
+      "exit_code": 0,
+      "test_count": 54,
+      "result": "passed",
+      "log_sha256": "144906e7755f87e6cd21594bf22f34f44eb032cb7d1607f9c709e98ad2fc47e0",
+      "output_bytes": 154,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_delivery_workflow.py",
+      "exit_code": 0,
+      "test_count": 17,
+      "result": "passed",
+      "log_sha256": "35b7b6ab29eb0655dff4fd12bbbe4a2946dbaf241d8d7620db2c5208cf108d4e",
+      "output_bytes": 118,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_nightly_workflow.py",
+      "exit_code": 0,
+      "test_count": 30,
+      "result": "passed",
+      "log_sha256": "4489f3eb356cd9d408cb4c8dff0c203ae283042fdb5805b691ed9bf65100cda8",
+      "output_bytes": 131,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_delivery_bootstrap.py",
+      "exit_code": 0,
+      "test_count": 9,
+      "result": "passed",
+      "log_sha256": "b018027634df258bf50376a722a1d776b761486123ea9db7c6e81a725a57c22b",
+      "output_bytes": 108,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_nightly_runtime.py",
+      "exit_code": 0,
+      "test_count": 39,
+      "result": "passed",
+      "log_sha256": "36612d0ab45aca0b8d0a26d6df1878fca5b40bdee6462b32a9d95db5a21a09ca",
+      "output_bytes": 139,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/render.py --check",
+      "exit_code": 0,
+      "test_count": null,
+      "result": "passed",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_bytes": 0,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "python3 -I tools/tests/test_deliver_contracts_prerequisites.py",
+      "exit_code": 0,
+      "test_count": 44,
+      "result": "passed",
+      "log_sha256": "5a39cf14ba3ad90a4164954d082aa1ba9faa238908cd4882a100a95fd4e2a54e",
+      "output_bytes": 8169,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "python3 -I tools/tests/test_propose_eventstore_contracts_prerequisite.py",
+      "exit_code": 0,
+      "test_count": 30,
+      "result": "passed",
+      "log_sha256": "fd166096703f2217e0a011196dc4d5970fe962e546e3aa6cffc231f3fcaa10d1",
+      "output_bytes": 5693,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "python3 -I tools/tests/test_dispatch_contracts_prerequisite.py",
+      "exit_code": 0,
+      "test_count": 50,
+      "result": "passed",
+      "log_sha256": "373c4ce97c88c8b5e2699b0e8acd8416defd8e5a8cdbd424931a5d44a6be92d3",
+      "output_bytes": 8473,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_deliver_g6_catalog.py",
+      "exit_code": 0,
+      "test_count": 28,
+      "result": "passed",
+      "log_sha256": "1eac2725cdc069e115f48e783c0b40c105deef16c3cf7b67e6aa8d31a855daf3",
+      "output_bytes": 128,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "uv run --locked --script tools/tests/test_deliver_projects_ci_gates.py",
+      "exit_code": 0,
+      "test_count": 18,
+      "result": "passed",
+      "log_sha256": "edcd7411f2b5f702c4e0fa5ef8691cd2920a0eff8d5bc967b2a2ea7d096fe1c0",
+      "output_bytes": 118,
+      "disposable_workspace": "run-with-temp; raw logs removed after digest capture"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_bytes": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit_code": 0,
+      "result": "passed",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_bytes": 0
+    }
+  ],
+  "limits": [
+    "Offline source qualification does not certify hosted scope, grant missing API access, or retire a route.",
+    "No key read/mint, publication or delivery dispatch, hosted write, module perimeter edit, or route removal.",
+    "No unconditional AD-7 compliance asserted; completed historical story outcomes remain unchanged."
+  ],
+  "candidate_files": {
+    "tools/check_app_inventory.py": {
+      "git_blob": "a3b452d692c5b7899b3a5d65003754d6e41d0485",
+      "sha256": "5a7de6f92f0b0c2337cd7e042bec5a03503129829be42c6ac4f79e29f8e87791"
+    },
+    "tools/check_app_inventory.py.lock": {
+      "git_blob": "4481492c6c5b7b392723c31912f4767526239e4f",
+      "sha256": "f3457ceee82406783682b4a94e0bbae036a79a8b6116854530e2af59117c7162"
+    },
+    "tools/app-workflow-policy.json": {
+      "git_blob": "414ab95013dcabc715f8a85ae6db271b54681373",
+      "sha256": "2afd799ee3ef07cbab4f437b001a8f6a7a5c47ad70884550fba163ef1ca6701c"
+    },
+    "tools/check_global.py": {
+      "git_blob": "b49314c54b44d0a055c1df2f5e9abb126d5ddfd0",
+      "sha256": "e8c9f728140facbda1d23339faa81d56494a6742cdf53a1f25175e298d40afd9"
+    },
+    "tools/tests/test_app_inventory.py": {
+      "git_blob": "c474499c842f14b9ef6d4f8c9866883a32aebe6b",
+      "sha256": "5b2487f4b71458035823880d9fb2fcb1e7f0fff7034071b5db972d2c6951f096"
+    },
+    "tools/tests/test_app_inventory.py.lock": {
+      "git_blob": "4481492c6c5b7b392723c31912f4767526239e4f",
+      "sha256": "f3457ceee82406783682b4a94e0bbae036a79a8b6116854530e2af59117c7162"
+    },
+    "tools/tests/test_validate.py": {
+      "git_blob": "752f2bbb7b8bb0b2d0b2c1ac84f2d1f3c48b7596",
+      "sha256": "4ac7513b01b9d26d2f6b38932c1ee69d3d008e899ee6f8f66f668382d5e7be2f"
+    },
+    "docs/cicd-app-inventory.md": {
+      "git_blob": "eb788c22f8af8ca17ee29842c3e289693179e318",
+      "sha256": "a9bb4b3715c5305282382e6138fcf0b5123bd2b6ceb66d2931c7b08e7fdfc9c6"
+    },
+    "_bmad-output/specs/spec-cicd/SPEC.md": {
+      "git_blob": "f89a6c485f5705af2e3df3b7ea7ef7597eec1d5b",
+      "sha256": "e2dab122053cc73c975b134d84d41519b44f112de30d1516512ca0fc75f71043"
+    },
+    "_bmad-output/specs/spec-cicd/enforcement.md": {
+      "git_blob": "8154805320aa38a40a97497c7813caa9db541737",
+      "sha256": "b25a9f070005e35696bfb258b40aa579717436b78b850b24acd6b978abb9fa5e"
+    },
+    "_bmad-output/planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md": {
+      "git_blob": "9bde9c882f3b352c07062a51bd99f58f87a1087b",
+      "sha256": "a9f4a248932dabc48d6280a4556330c7b148ee620c1e96fb79c3a2dc471794c4"
+    }
+  },
+  "hosted_identity_binding": {
+    "result": "verified",
+    "nonsecret_variable": "cicd-app/HEXALITH_CICD_APP_CLIENT_ID",
+    "app_id": 5671811,
+    "installation_id": 179966090,
+    "authority": "hosted-readback-20261122.json/client_identity_binding",
+    "repository_variable_read": "HTTP 404 retained without absence inference; independent environment binding verified"
+  },
+  "artifact_binding_result": "Authenticated artifact-list request IDs and response/body digests retained; every artifact workflow_run matches its selected historical run. Archive IDs and verified digests unchanged.",
+  "verification_totals": {
+    "tests_passed": 336,
+    "test_suites": 11,
+    "locked_renderer_check": "passed",
+    "inventory_mutation_methods": 17,
+    "whitespace_checks": "passed"
+  },
+  "verification_receipts": {
+    "parent-verification.json": {
+      "sha256": "896f0421a7c23a07c21a6ac6a64bb38b67d1d516ac16a73eac42c18a1a101dac"
+    },
+    "manual-controller-verification.json": {
+      "sha256": "1511c0bdd54aba803644433e20cf1247292a2a28fceac50df8f0e98ebcb6a717"
+    }
+  }
+}

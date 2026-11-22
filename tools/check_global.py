@@ -415,6 +415,14 @@ def run_tool_tests(project: Path) -> None:
         raise CheckError("; ".join(failures))
 
 
+def check_app_inventory(project: Path) -> None:
+    inventory = load_module("_cicd_app_inventory", Path(__file__).with_name("check_app_inventory.py"))
+    try:
+        inventory.check(project)
+    except inventory.InventoryError as error:
+        raise CheckError(str(error)) from error
+
+
 def workflow_paths(project: Path) -> list[str]:
     paths = []
     for directory in (renderer.safe_path(project, ".github/workflows"),):
@@ -490,6 +498,7 @@ def run(project: Path) -> bool:
             failures.append(label)
             log(f"global {label}: {error}")
 
+    check("App workflow inventory", lambda: check_app_inventory(project))
     check("committed render inputs", lambda: check_committed_inputs(project))
     check("committed render", lambda: check_committed_render(project))
     check("immutable delivery bootstrap", lambda: check_bootstrap(project))

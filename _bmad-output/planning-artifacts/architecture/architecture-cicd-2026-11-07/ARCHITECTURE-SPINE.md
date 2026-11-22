@@ -215,18 +215,20 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Binds:** CAP-7, CAP-8, CAP-12, CAP-13; every CiCd workflow
 - **Prevents:** unattended paths dying on token expiry; module runs or agents holding cross-repo write power; agents bypassing CiCd through its own repos; the App key or the publish credentials being reachable from a branch or from third-party code
 - **Rule:**
-  - **The App.** One org-owned GitHub App has Contents, Workflows and Actions read & write, and Administration and Code scanning alerts read. It is installed on selected repos: the 17 modules, Builds and CiCd. Preconditions it can't read are a manual checklist (AD-21).
+  - **The App.** The Hexalith organization installs `hexalith-cicd` with **All repositories** access, covering current and future organization repositories. The App has Contents, Workflows and Actions write, and Administration, Metadata and Code scanning alerts read. Every workflow token explicitly scopes its owner, repository set and required permissions to the reviewed job. The committed setup registry, accepted delivery refs and fixed migration profiles bound automation targets, with CiCd and Builds targeted by their named jobs. The maintainer checks preconditions outside the App's read access at onboarding (AD-21).
   - **The key.** It exists only as a secret of the CiCd environment `cicd-app`. The standing consumers are `deliver.yml` (`deliver`) and `nightly.yml` (`dispatch`, `wait`, `publish-ready` and `delivery-wait`). The delivery job also carries the manual Projects G-6 catalog route. Five additional manual migration workflows reference the key. The [migration inventory](../../sprint-change-proposal-2026-11-19.md#app-key-inventory) identifies each job, owner role, repository selection, requested permissions and retirement decision. Review changes to any of these jobs, token steps or target selections against this boundary.
+    - The [reviewed App inventory](../../../../docs/cicd-app-inventory.md) names all seven workflows, ten privileged jobs and 76 mint steps. `tools/check_app_inventory.py` enforces `tools/app-workflow-policy.json` as an offline global check: environment and key discovery are independent; job conditions, token identities, every permission/input, manual profiles and matrix/selector context are bound. Trusted controller hashes preserve the dynamic repository bounds; expressions alone do not establish their runtime target set.
+    - On 2026-11-22 at 17:07–17:08 UTC, hosted readback verified the active installation's `all` mode, effective grants, environment client-ID binding and sole deployment branch `main`. The inventory preserves the earlier selected-mode observation and HTTP 403, story 11's historical `Hexalith.Docs` exception, the visibility diagnostic's inline non-isolated Python discrepancy and the optional proposal token's ungranted Pull requests write request. Each migration route/profile is retained until the corresponding owner explicitly confirms its documented retirement condition. [Hosted inventory](../../../../docs/cicd-app-inventory.md#hosted-observations-on-22-november-2026)
     - A job in `cicd-app` runs only stdlib Python (`python3 -I`) from CiCd's `tools/` and from Builds at an acceptable tag, git, and SHA-pinned actions, and parses only JSON. Render, validation, tests, linting and the scan run in jobs with no secrets.
     - Each job mints its own tokens with `actions/create-github-app-token`, passing `owner`, `repositories` and `permission-*` for each use. No token is used more than 50 minutes after it was minted. A job re-mints by running that action again as its own step (no CiCd script signs the App JWT), so a long wait alternates mint and poll steps.
-    - The key is reachable by every CiCd Contents writer and every creator of an acceptable Builds tag: the org owners, CiCd-agent sessions and the CiCd App. This is accepted under the careless-agent model. It never enters a module.
+    - The key is reachable by every CiCd Contents writer and every creator of an acceptable Builds tag: the org owners, CiCd-agent sessions and the CiCd App. A holder of the key could mint a token with the installation's grants across the organization. This is accepted under the careless-agent model. It never enters a module.
   - **Environments.** `cicd-app` and each repo's `hexalith-release` have one protection rule: deployment branch `main`, with no required reviewers and no wait timer.
   - **Publish credentials.** Each managed repo's `hexalith-release` holds that module's own registry push pair, a Zot identity that can push only that module's repositories and is distinct from the legacy `HEXALITH_ZOT_*`. Only the publish job references it. After adoption, a module's only nuget.org Trusted Publishing policy is for `release.yml`, names `hexalith-release` and is scoped to the module's package-ID prefix (Builds from its rewrite, AD-19).
   - **Untrusted content in write jobs.** In `cicd-app` and restore jobs, git runs with no submodule recursion, `GIT_LFS_SKIP_SMUDGE=1` and `core.hooksPath=/dev/null`, and receives tokens only as a header scoped to `https://github.com/`. Artifacts and module JSON are read in memory with a size cap, never extracted. Each module is processed in isolation: one module's failure is reported without stopping the others.
   - **Module agents.** A fine-grained token on module repos only, with Contents and Pull requests write. It has no Workflows, Administration, Actions, Variables or Secrets write. Module agents start each branch from current `main`.
   - **CiCd agents.** A fine-grained token on Builds and CiCd only, with Contents, Workflows and Actions write, for interactive sessions only.
   - **App-based agents.** `claude`, `cursor` and `semgrep-app` are installed on no managed repo. `chatgpt-codex-connector` is installed only on the modules where it is used, never on CiCd or Builds; there it holds Workflows write that the org cannot remove. It can publish its own module's packages and containers through an edited workflow on `main`; this is accepted, limited to that module by the per-module scoping. The guard, nightly's pre-dispatch check (AD-18), the release drift check (AD-17) and hourly delivery repair the files.
-  - Nothing unattended uses a personal token, and agent sessions never run with the maintainer's personal `gh` login.
+  - Nothing unattended uses a personal token, and agent sessions never run with the maintainer's personal `gh` login. The one exception is a read-only GET that the user explicitly authorizes in an interactive session; it selects the maintainer's `gh` profile for that command only, with `GH_TOKEN` and `GITHUB_TOKEN` unset, and never becomes the session default.
 
 ### AD-8 — Guard and restore
 
@@ -585,6 +587,7 @@ grants and stale-state cleanup.
 - **Binds:** CAP-4, CAP-7, CAP-10, CAP-12, CAP-16; every module onboarding
 - **Prevents:** migrations that need the App key in an agent session; deliveries rejected by rulesets; modules adopted with settings that bypass the ADs; legacy state misleading the new release; legacy credentials outliving their users; a first release failing on a waiver its tag lacks
 - **Rule:**
+  - **Organization precondition (maintainer):** Verify that the active Hexalith CiCd App installation uses **All repositories** (AD-7).
   - **Once, before the first adoption (maintainer):**
     - create the `HEXALITH_*` org secrets and variables. The pull pair is a pull-only Zot account, stored as both an Actions and a Dependabot org secret;
     - restrict the legacy org secrets (`NUGET_API_KEY`, `HEXALITH_ZOT_*`, `AZURE_*`, `SONAR_TOKEN`) to the repos that still read them, never CiCd or Builds;
@@ -593,7 +596,6 @@ grants and stale-state cleanup.
     - turn on secret-scanning push protection for CiCd, Builds and every module;
     - keep the org's default workflow permission at `read`, and require approval for fork PRs from all external contributors.
   1. **Maintainer preconditions, once per repo, in this order:**
-     - add the repo to the App installation;
      - delete stale CodeQL configurations, unmarked drafts, and any draft or tag left by an incomplete legacy release;
      - set rulesets to exactly these, creating missing ones: `main` blocks deletion and force-push; `v*` tags block update and deletion. An orphan `v*` tag found later is deleted by the maintainer with that ruleset briefly disabled;
      - create the environment `hexalith-release` (AD-7) holding the module's own push pair, and add a nuget.org policy for `release.yml` naming it, scoped to the module's package-ID glob (for example `Hexalith.Commons*`), beside any existing policy;
@@ -601,6 +603,8 @@ grants and stale-state cleanup.
      - set `HEXALITH_RELEASE_PUBLISH_ENABLED` to exactly `true` or `false`;
      - set the repo's Actions artifact and log retention to 90 days;
      - grant access to the org secrets and variables.
+
+     Delivery verifies access to each adoption candidate with its repository-scoped App token (AD-3).
   2. **Module agents** prepare the product side with module-agent tokens:
      - custom actions;
      - deleting the gates and YAML-asserting tests the gate rule removes;
@@ -713,8 +717,8 @@ flowchart TB
   MAINT -->|"module-agent token"| MODS["17 module repos"]
   MAINT -->|"CiCd-agent token"| BUILDS["Hexalith.Builds"]
   APPS["Org agent App: chatgpt-codex-connector"] -.->|"Workflows write on the modules where used; guard, drift checks, delivery"| MODS
-  CICD -->|"GitHub App from env cicd-app"| MODS
-  CICD -->|"GitHub App: dispatch"| BUILDS
+  CICD -->|"Repository-scoped App tokens from cicd-app"| MODS
+  CICD -->|"Repository-scoped App token for dispatch"| BUILDS
   MODS -->|"uses exact tag"| BUILDS
   MODS -->|"Trusted Publishing from env hexalith-release"| NUGET["nuget.org"]
   BUILDS -->|"Trusted Publishing from env hexalith-release"| NUGET
