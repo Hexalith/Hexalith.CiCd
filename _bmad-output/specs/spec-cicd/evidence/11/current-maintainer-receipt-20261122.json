@@ -1,0 +1,1134 @@
+{
+  "recorded_at": "2026-11-22T12:25:36.732009+00:00",
+  "effective_default_profile": "/home/administrator/.config/gh-cicd-agent",
+  "administration_profile": "/home/administrator/.config/gh",
+  "override_presence": {
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false
+  },
+  "method": "GET only",
+  "requests": [
+    {
+      "endpoint": "user",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "5727444c53a2b7cc7c921b904af869463544bbe3788479718289ad1a749bc7ba",
+      "request_id": "D27A:1782:7F36546:BFD0E35:6B02DF40"
+    },
+    {
+      "endpoint": "orgs/Hexalith/installations?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "71074cc159c663adbe921b5397661718b50ae89d30dc6a8b7cdea788b29646e0",
+      "request_id": "D27F:E8514:10DCD53D:197C3038:6B02DF40"
+    },
+    {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "http": 403,
+      "exit": 1,
+      "response_sha256": "b376f1e37c53dc89af3066bb0ce5817e44fe1b7e107a2900d0b4e8e92849db5e",
+      "request_id": "D260:1703:6EF8695:A750AF1:6B02DF41",
+      "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+      "accepted_scopes": "read:user, user",
+      "profile_scopes": "admin:org, gist, read:packages, repo, workflow"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/environments/hexalith-release/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "51e71dbed10666559d0b42ad35fa0ba8a57e775925dfda6791eafd63270efba2",
+      "request_id": "D28B:1D78FA:7600ED:DB0BBD:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "883dbfc204403c348054055a1b213be6b39c93fee7989a3c6777fcccbca6cac2",
+      "request_id": "D289:2CCD18:786FC6:DD919F:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/commits/main",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "b359e6823191df7014f31ac41c21fd23cf7f3c57fa54150c73938a8fc7cfb8f4",
+      "request_id": "D283:7BF35:7557EC:DA7015:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/rulesets?includes_parents=true&per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "cd75be72db70d13cae7faeadbfa3cc7ec69510cf4b0d21139a8d6e59e6335549",
+      "request_id": "D285:D2F32:782FA9:DD4BB3:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/environments/hexalith-release",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "19fc8d07922c827bcbc9a9d47987bc6efa1a37a4f962eb3965a116728deaca3d",
+      "request_id": "D287:DA64E:76C62B:DC2532:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "2a74a880513f49b122be5eecab6c478e670d23b69d95ca8f2f16910a18943279",
+      "request_id": "D281:3CCFB1:770B6B:DC2755:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/code-scanning/default-setup",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "debb7f7d75012d2bc517a770877e3c5d42fca55fe915e83e19cc80a20168cf7c",
+      "request_id": "D28F:FE008:10B27901:1937758C:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/immutable-releases",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "f4b2b8919d556de186d7b4afe009126b30c99e3edefb005e4e56ab17069b52dd",
+      "request_id": "D293:5F3F5:11779741:1A581AFB:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/automated-security-fixes",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "8a0a15ba9d18fbed2294a579cbae9c005dd2fc71b83c56a28e7f55f984e8771f",
+      "request_id": "D291:36376F:112FBD17:1A003CBD:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/actions/permissions/artifact-and-log-retention",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "c442a43edd5cf6d7110c96e43860888e18bafa4586118fe0267b75780cbdb463",
+      "request_id": "D295:36376F:112FBD17:1A003CBE:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/actions/variables?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "f18972d895de2d79a2646a875ca6b96f81e46850c51856954edfc0df67589adf",
+      "request_id": "D297:35FB30:1120200B:19DD35B2:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/actions/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "28c5423a249b6b471b90805492666338fab88266ac6a72b4f2b711fa65c03a68",
+      "request_id": "D264:EECCF:11485DA7:1A2503A9:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/dependabot/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "28c5423a249b6b471b90805492666338fab88266ac6a72b4f2b711fa65c03a68",
+      "request_id": "FF6A:1E59C5:110FE097:19C73252:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/environments/production/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "28c5423a249b6b471b90805492666338fab88266ac6a72b4f2b711fa65c03a68",
+      "request_id": "D299:1703:6EF8E92:A751706:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/keys?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "request_id": "FF6C:2D801A:1111DE59:19BF15E5:6B02DF41"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/matching-refs/tags/v?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "82b69a88d900f45ebfc1875eed067dce862f979aa1b1992489f997b70a27a622",
+      "request_id": "FF84:F856B:775F6B:DCBA25:6B02DF42"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/code-scanning/analyses?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "4e5cd21ac18c58d25995cbbcf84f0b5cef331324f0be9dfff13b4e2304983d74",
+      "request_id": "FF7C:23C945:113CF9F5:19FEFC0D:6B02DF42"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/code-scanning/analyses?per_page=100&page=2",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "452b68a53775dd7b134ae075a5d7b1c038ae51f77f10829a61748d300ab8d0fe",
+      "request_id": "FF7E:CD37D:10FCFBFF:19A379EC:6B02DF42"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/releases?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "839da29e2bcd2155dde905a56258aa56495b100083608bae85a704a43b7559ab",
+      "request_id": "FF78:1CDDC1:11D44EDA:1ADC9D18:6B02DF42"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/rulesets/27356310",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "da480d0fdd5808e4b04520674f830ed39fb72c9d7ee7dcb40e90362434bff3d6",
+      "request_id": "FF62:171B:6140A85:92FE768:6B02DF42"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/rulesets/27356311",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "55dc524569c165ea2684b3bd514b4c96c8ae0412f78511fe71231d012ea242e4",
+      "request_id": "FF80:23C945:113D0512:19FF0D30:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release/deployment-branch-policies?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "7e6cea6967f7e87db106b688aa6dd5129d21ac185908b5db5e791691769afe04",
+      "request_id": "FF74:345245:1119BC4E:19D9027E:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "8a25d4f674dd40a1519e5e6279b32fd28aa370c3aafde3944ce5ec2b1823bc27",
+      "request_id": "FF2C:342953:11A40EC8:1A9BD919:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/hexalith-release/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "c49d9c1d23b8b1c23d9a641f4003cec722a6495aa69564e0f660a27c5c8fca7d",
+      "request_id": "FF82:2D1CF5:112405F0:19E434E3:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets?includes_parents=true&per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "34a269fc97db51a4ed190e8526bcd7a48ff5f523f552e17f1282cb07aa508f31",
+      "request_id": "FF38:366AAA:11C78251:1AD92266:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/commits/main",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "108ddc9d61f4be42f1e2206f75a577e1e4c95f2b18ce2da2d0fee31bc187e984",
+      "request_id": "FF72:E8514:10DCEFE8:197C571A:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "ad6477f18dd5543637efe98b57ffd014278657f021320524168c93ad1a11817d",
+      "request_id": "FF66:1E59C5:110FEE6A:19C74737:6B02DF43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/immutable-releases",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "f4b2b8919d556de186d7b4afe009126b30c99e3edefb005e4e56ab17069b52dd",
+      "request_id": "FF8A:1E59C5:110FF114:19C74B47:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/automated-security-fixes",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "8a0a15ba9d18fbed2294a579cbae9c005dd2fc71b83c56a28e7f55f984e8771f",
+      "request_id": "FF48:2F58A2:10E69456:1975773B:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/actions/permissions/artifact-and-log-retention",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "c442a43edd5cf6d7110c96e43860888e18bafa4586118fe0267b75780cbdb463",
+      "request_id": "FF30:DA4D:11497179:1A1C709D:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/code-scanning/default-setup",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "debb7f7d75012d2bc517a770877e3c5d42fca55fe915e83e19cc80a20168cf7c",
+      "request_id": "FF44:1E59C5:110FF0B8:19C74AE6:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/actions/variables?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "907908aa4d051e13a502df9c1944688b78124f084cb3b1a9276b049e25d30fc1",
+      "request_id": "FF54:345245:1119BF1B:19D906DD:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/actions/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "28c5423a249b6b471b90805492666338fab88266ac6a72b4f2b711fa65c03a68",
+      "request_id": "FF8E:2442A6:78BD20:DDEAFC:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/dependabot/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "28c5423a249b6b471b90805492666338fab88266ac6a72b4f2b711fa65c03a68",
+      "request_id": "FF56:345245:1119C104:19D909E9:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/environments/production/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "28c5423a249b6b471b90805492666338fab88266ac6a72b4f2b711fa65c03a68",
+      "request_id": "FF5A:FE008:10B28F4F:19379731:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/keys?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "request_id": "FF60:2D1CF5:11240BE7:19E43DB2:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/matching-refs/tags/v?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "b7d3135c409661c116a97b68bef960b20bca7d637e844b31a7acf65a157ba992",
+      "request_id": "FF3A:1BE0C8:79554F:DFF9B3:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/releases?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "10b3be5cd16b8e75c188f4c7441af503ae6b26d48d13f4021edcd185fe339af8",
+      "request_id": "FF5E:356B:1097297D:1914C6BE:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/code-scanning/analyses?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "e75f1e4a595f4b0e80b7cb5f603582557b8e1df4978e2afafb055fe927f30699",
+      "request_id": "FF3E:E0EC3:10CFF8BE:19662AEE:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets/27356312",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "395e5f04ab4318d0a73a2d093e129c56eabfb7a87066fc4df0e45de9d2a9d6e2",
+      "request_id": "D284:E8514:10DCFA29:197C65FA:6B02DF44"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/rulesets/27356313",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "3adfd578d0e4e84ccce0cfe967f2661b486c223675d8d5e0346d253a76e044ac",
+      "request_id": "FF70:342953:11A41C77:1A9BED61:6B02DF45"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "0d4d0568a390df1c2a1c2df9fdf38ad80aa090ba1766641c71b39a00097d5bb6",
+      "request_id": "FF76:21F36A:79253C:DE5717:6B02DF45"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONID/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "2d82d602b2611f382b98fbaeab1c1c91d3c659b79a51280be27732ca99dbca80",
+      "request_id": "D26E:345245:1119CDD6:19D91D71:6B02DF45"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_APPLICATIONSECRET/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "2d82d602b2611f382b98fbaeab1c1c91d3c659b79a51280be27732ca99dbca80",
+      "request_id": "FF7A:E91BA:76CC42:DBF89F:6B02DF46"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_SUBSCRIPTION_ID/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "c6fd38906e505f0ed1cd3d5a6fce180651ee10714309f7b544dfe128b5414c86",
+      "request_id": "FF34:23C945:113D21E0:19FF375D:6B02DF46"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/AZURE_TENANT_ID/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "c6fd38906e505f0ed1cd3d5a6fce180651ee10714309f7b544dfe128b5414c86",
+      "request_id": "D298:138981:762676:DB5939:6B02DF47"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "921827f336c61716cc5363f7916b2a54db6c58dd9c276176f8403d83c2558573",
+      "request_id": "D280:E8514:10DD0E16:197C83DF:6B02DF47"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "921827f336c61716cc5363f7916b2a54db6c58dd9c276176f8403d83c2558573",
+      "request_id": "FF42:171B:6143387:9302452:6B02DF47"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_API_KEY/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "44e83baa90ee7347e893542c09657bf9ec6ad70ee873b2cf6b04f57e6be9e9dd",
+      "request_id": "FF88:CD37D:10FD2A22:19A3BF10:6B02DF47"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/HEXALITH_ZOT_USERNAME/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "44e83baa90ee7347e893542c09657bf9ec6ad70ee873b2cf6b04f57e6be9e9dd",
+      "request_id": "FF2E:36376F:112FF4B4:1A0091F9:6B02DF48"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/NUGET_API_KEY/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "08ff10c31c84e9f283741ff212484f784880e0a1afcb161c8a02edc397c16462",
+      "request_id": "D245:240BFF:759571:DAA229:6B02DF49"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/secrets/SONAR_TOKEN/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "5e51d547f5144688fa852af2d749616071e8134020ab7b9061cdcd527593ae68",
+      "request_id": "FF4C:23C945:113D3A5F:19FF5C23:6B02DF49"
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "d2a85ebb055b024557124c72a4fa13e7dd708867bea4c2ace20a65f79d8648ea",
+      "request_id": "FF64:366AAA:11C7B829:1AD9722F:6B02DF49"
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_PASSWORD/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "921827f336c61716cc5363f7916b2a54db6c58dd9c276176f8403d83c2558573",
+      "request_id": "D247:18867A:7747A2:DC6E77:6B02DF49"
+    },
+    {
+      "endpoint": "orgs/Hexalith/dependabot/secrets/HEXALITH_REGISTRY_PULL_USERNAME/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "921827f336c61716cc5363f7916b2a54db6c58dd9c276176f8403d83c2558573",
+      "request_id": "FF68:342953:11A445DA:1A9C2BBF:6B02DF4A"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/variables/HEXALITH_NUGET_USER/repositories?per_page=100&page=1",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "921827f336c61716cc5363f7916b2a54db6c58dd9c276176f8403d83c2558573",
+      "request_id": "FF36:E0EC3:10D02A05:196674D6:6B02DF4A"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/permissions/artifact-and-log-retention",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "86f93af71c90e82f99804385aa9c4c5fb966a54418738ca15da8d72c96e70b95",
+      "request_id": "FF4A:1E59C5:111029C8:19C7A148:6B02DF4A"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/permissions/workflow",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "b6b16dd0b1e2894083a98dcb5ff00ac0dc6e9d9586db5f00b3a323c0caeb5301",
+      "request_id": "FF4E:E8514:10DD309C:197CB6BC:6B02DF4B"
+    },
+    {
+      "endpoint": "orgs/Hexalith/actions/permissions/fork-pr-contributor-approval",
+      "http": 200,
+      "exit": 0,
+      "response_sha256": "9e1d311f9e8df080b0bbe40f03f338e85b91fc7fdc74c703927ef237fdda4528",
+      "request_id": "FF50:2978F0:774B32:DCEA8C:6B02DF4B"
+    }
+  ],
+  "modules": {
+    "Hexalith.Commons": {
+      "repository_id": 952960148,
+      "security": {
+        "secret_scanning": {
+          "status": "enabled"
+        },
+        "secret_scanning_push_protection": {
+          "status": "enabled"
+        },
+        "dependabot_security_updates": {
+          "status": "disabled"
+        },
+        "secret_scanning_non_provider_patterns": {
+          "status": "disabled"
+        },
+        "secret_scanning_validity_checks": {
+          "status": "disabled"
+        }
+      },
+      "main": {
+        "commit": "5f646d4e49279cca0d31ab577e91719c3ed7e434",
+        "tree": "da06b03bb4dee9cd758c66b2ae332e3aa8374321"
+      },
+      "rulesets": [
+        {
+          "id": 27356310,
+          "name": "Protect main",
+          "target": "branch",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/heads/main"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "deletion"
+            },
+            {
+              "type": "non_fast_forward"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec44zQSUzgGhbJY",
+          "bypass_actors": []
+        },
+        {
+          "id": 27356311,
+          "name": "v tags",
+          "target": "tag",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/tags/v*"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "update"
+            },
+            {
+              "type": "deletion"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec44zQSUzgGhbJc",
+          "bypass_actors": []
+        }
+      ],
+      "release_environment": {
+        "id": 27433088213,
+        "protection_rules": [
+          {
+            "id": 72670631,
+            "node_id": "GA_kwDOOM0ElM4EVN2n",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        },
+        "branch_policies": [
+          {
+            "id": 66912951,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjkxMjk1MQ==",
+            "name": "main",
+            "type": "branch"
+          }
+        ],
+        "secret_metadata": [
+          {
+            "name": "HEXALITH_REGISTRY_PASSWORD",
+            "created_at": "2026-11-16T07:53:09Z",
+            "updated_at": "2026-11-16T07:53:09Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_USERNAME",
+            "created_at": "2026-11-16T07:53:08Z",
+            "updated_at": "2026-11-16T07:53:08Z"
+          }
+        ]
+      },
+      "environment_binding": "unchanged secret metadata plus original provisioning identity; stored values unreadable",
+      "codeql_default": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "python"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "dependabot_updates": {
+        "enabled": false,
+        "paused": false
+      },
+      "immutable_releases": {
+        "enabled": true,
+        "enforced_by_owner": false
+      },
+      "retention": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "publish_enabled": [
+        {
+          "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+          "value": "true",
+          "created_at": "2026-09-19T07:58:05Z",
+          "updated_at": "2026-09-19T07:58:05Z"
+        }
+      ],
+      "empty_inventory_counts": {
+        "repo_actions_secrets": 0,
+        "repo_dependabot_secrets": 0,
+        "production_secrets": 0,
+        "deploy_keys": 0
+      },
+      "stale_release_inventory": {
+        "release_count": 87,
+        "drafts": [],
+        "orphan_v_tags": [],
+        "v_tag_count": 87
+      },
+      "code_scanning_inventory": {
+        "count": 153,
+        "configuration_paths": [
+          "(default)",
+          ".github/workflows/release.yml:codeql"
+        ],
+        "tools": [
+          "CodeQL",
+          "SonarCloud"
+        ]
+      }
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "repository_id": 957156862,
+      "security": {
+        "secret_scanning": {
+          "status": "enabled"
+        },
+        "secret_scanning_push_protection": {
+          "status": "enabled"
+        },
+        "dependabot_security_updates": {
+          "status": "disabled"
+        },
+        "secret_scanning_non_provider_patterns": {
+          "status": "disabled"
+        },
+        "secret_scanning_validity_checks": {
+          "status": "disabled"
+        }
+      },
+      "main": {
+        "commit": "99c2344f08d3e3560a891f79ab63f8722fa14e60",
+        "tree": "1665abeefacb8080370bc615877bfa76b66110d4"
+      },
+      "rulesets": [
+        {
+          "id": 27356312,
+          "name": "Protect main",
+          "target": "branch",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/heads/main"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "deletion"
+            },
+            {
+              "type": "non_fast_forward"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec45DQ3-zgGhbJg",
+          "bypass_actors": []
+        },
+        {
+          "id": 27356313,
+          "name": "v tags",
+          "target": "tag",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/tags/v*"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "update"
+            },
+            {
+              "type": "deletion"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec45DQ3-zgGhbJk",
+          "bypass_actors": []
+        }
+      ],
+      "release_environment": {
+        "id": 27433090855,
+        "protection_rules": [
+          {
+            "id": 72670636,
+            "node_id": "GA_kwDOOQ0N_s4EVN2s",
+            "type": "branch_policy"
+          }
+        ],
+        "deployment_branch_policy": {
+          "protected_branches": false,
+          "custom_branch_policies": true
+        },
+        "branch_policies": [
+          {
+            "id": 66912958,
+            "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NjkxMjk1OA==",
+            "name": "main",
+            "type": "branch"
+          }
+        ],
+        "secret_metadata": [
+          {
+            "name": "HEXALITH_REGISTRY_PASSWORD",
+            "created_at": "2026-11-16T07:53:11Z",
+            "updated_at": "2026-11-16T07:53:11Z"
+          },
+          {
+            "name": "HEXALITH_REGISTRY_USERNAME",
+            "created_at": "2026-11-16T07:53:10Z",
+            "updated_at": "2026-11-16T07:53:10Z"
+          }
+        ]
+      },
+      "environment_binding": "unchanged secret metadata plus original provisioning identity; stored values unreadable",
+      "codeql_default": {
+        "state": "not-configured",
+        "languages": [
+          "actions",
+          "csharp",
+          "python"
+        ],
+        "query_suite": "default",
+        "threat_model": "remote",
+        "updated_at": null,
+        "schedule": null,
+        "runner_type": "standard",
+        "runner_label": null
+      },
+      "dependabot_updates": {
+        "enabled": false,
+        "paused": false
+      },
+      "immutable_releases": {
+        "enabled": true,
+        "enforced_by_owner": false
+      },
+      "retention": {
+        "days": 90,
+        "maximum_allowed_days": 90
+      },
+      "publish_enabled": [
+        {
+          "name": "HEXALITH_RELEASE_PUBLISH_ENABLED",
+          "value": "true",
+          "created_at": "2026-10-18T15:10:20Z",
+          "updated_at": "2026-10-18T15:10:20Z"
+        }
+      ],
+      "empty_inventory_counts": {
+        "repo_actions_secrets": 0,
+        "repo_dependabot_secrets": 0,
+        "production_secrets": 0,
+        "deploy_keys": 0
+      },
+      "stale_release_inventory": {
+        "release_count": 61,
+        "drafts": [],
+        "orphan_v_tags": [],
+        "v_tag_count": 61
+      },
+      "code_scanning_inventory": {
+        "count": 13,
+        "configuration_paths": [
+          "(default)",
+          ".github/workflows/release.yml:codeql"
+        ],
+        "tools": [
+          "CodeQL",
+          "SonarCloud"
+        ]
+      }
+    }
+  },
+  "organization": {
+    "actions_grants": [
+      {
+        "name": "AZURE_APPLICATIONID",
+        "visibility": "selected",
+        "selected_count": 7,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "14a328fd9752ee9d4917db44100b33423c152d4caded61ee00390dd001d685f0"
+      },
+      {
+        "name": "AZURE_APPLICATIONSECRET",
+        "visibility": "selected",
+        "selected_count": 7,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "14a328fd9752ee9d4917db44100b33423c152d4caded61ee00390dd001d685f0"
+      },
+      {
+        "name": "AZURE_SUBSCRIPTION_ID",
+        "visibility": "selected",
+        "selected_count": 6,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "24326d035c377f634a58745a5e161bf4096e5a100609a3e336b4161b6796c225"
+      },
+      {
+        "name": "AZURE_TENANT_ID",
+        "visibility": "selected",
+        "selected_count": 6,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "24326d035c377f634a58745a5e161bf4096e5a100609a3e336b4161b6796c225"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+        "visibility": "selected",
+        "selected_count": 9,
+        "pilot_selection": {
+          "Hexalith.Commons": true,
+          "Hexalith.PolymorphicSerializations": true
+        },
+        "selected_ids_sha256": "688698be02f3b48c9dde19a62492e24d6914d70581d2339168e09170862c38a8"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+        "visibility": "selected",
+        "selected_count": 9,
+        "pilot_selection": {
+          "Hexalith.Commons": true,
+          "Hexalith.PolymorphicSerializations": true
+        },
+        "selected_ids_sha256": "688698be02f3b48c9dde19a62492e24d6914d70581d2339168e09170862c38a8"
+      },
+      {
+        "name": "HEXALITH_ZOT_API_KEY",
+        "visibility": "selected",
+        "selected_count": 4,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "8b825f8d0904242d0b253efd74648743fe7fa66340f3105df04ae1673a899045"
+      },
+      {
+        "name": "HEXALITH_ZOT_USERNAME",
+        "visibility": "selected",
+        "selected_count": 4,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "8b825f8d0904242d0b253efd74648743fe7fa66340f3105df04ae1673a899045"
+      },
+      {
+        "name": "NUGET_API_KEY",
+        "visibility": "selected",
+        "selected_count": 23,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "ae7f15fddf945f77e7be573ea9ca1f6a753a7ff7b40029a46a4c93f5a2a546ff"
+      },
+      {
+        "name": "SONAR_TOKEN",
+        "visibility": "selected",
+        "selected_count": 7,
+        "pilot_selection": {
+          "Hexalith.Commons": false,
+          "Hexalith.PolymorphicSerializations": false
+        },
+        "selected_ids_sha256": "5859460ee95632c655a6de4ee4ec4be8fd35f79464e9c8c3381d1070f51e3da6"
+      }
+    ],
+    "dependabot_grants": [
+      {
+        "name": "HEXALITH_REGISTRY_PULL_PASSWORD",
+        "visibility": "selected",
+        "selected_count": 9,
+        "pilot_selection": {
+          "Hexalith.Commons": true,
+          "Hexalith.PolymorphicSerializations": true
+        },
+        "selected_ids_sha256": "688698be02f3b48c9dde19a62492e24d6914d70581d2339168e09170862c38a8"
+      },
+      {
+        "name": "HEXALITH_REGISTRY_PULL_USERNAME",
+        "visibility": "selected",
+        "selected_count": 9,
+        "pilot_selection": {
+          "Hexalith.Commons": true,
+          "Hexalith.PolymorphicSerializations": true
+        },
+        "selected_ids_sha256": "688698be02f3b48c9dde19a62492e24d6914d70581d2339168e09170862c38a8"
+      }
+    ],
+    "nuget_user_grants": {
+      "Hexalith.Commons": true,
+      "Hexalith.PolymorphicSerializations": true
+    },
+    "retention": {
+      "days": 90,
+      "maximum_allowed_days": 400
+    },
+    "workflow_permissions": {
+      "default_workflow_permissions": "read",
+      "can_approve_pull_request_reviews": true
+    },
+    "fork_approval": {
+      "approval_policy": "all_external_contributors"
+    }
+  },
+  "remote_mutations": false,
+  "account": {
+    "login": "jpiquot",
+    "id": 6775094
+  },
+  "installations": [
+    {
+      "id": 31615326,
+      "app_slug": "travis-ci",
+      "repository_selection": "selected",
+      "permissions": {
+        "checks": "write",
+        "members": "read",
+        "contents": "read",
+        "metadata": "read",
+        "statuses": "write",
+        "deployments": "write",
+        "pull_requests": "read",
+        "repository_hooks": "write"
+      }
+    },
+    {
+      "id": 31626264,
+      "app_slug": "codacy-production",
+      "repository_selection": "all",
+      "permissions": {
+        "checks": "write",
+        "issues": "write",
+        "members": "read",
+        "contents": "read",
+        "metadata": "read",
+        "statuses": "write",
+        "pull_requests": "write",
+        "repository_hooks": "write",
+        "organization_hooks": "write",
+        "repository_custom_properties": "read",
+        "organization_custom_properties": "read"
+      }
+    },
+    {
+      "id": 31641834,
+      "app_slug": "codecov",
+      "repository_selection": "all",
+      "permissions": {
+        "checks": "write",
+        "issues": "read",
+        "members": "read",
+        "contents": "read",
+        "metadata": "read",
+        "statuses": "write",
+        "pull_requests": "write",
+        "administration": "read"
+      }
+    },
+    {
+      "id": 77847816,
+      "app_slug": "chatgpt-codex-connector",
+      "repository_selection": "all",
+      "permissions": {
+        "checks": "read",
+        "issues": "write",
+        "actions": "write",
+        "contents": "write",
+        "metadata": "read",
+        "statuses": "read",
+        "workflows": "write",
+        "pull_requests": "write"
+      }
+    },
+    {
+      "id": 97329264,
+      "app_slug": "sonarqubecloud",
+      "repository_selection": "all",
+      "permissions": {
+        "checks": "write",
+        "members": "read",
+        "contents": "read",
+        "metadata": "read",
+        "statuses": "write",
+        "pull_requests": "write",
+        "security_events": "write",
+        "organization_copilot_seat_management": "read"
+      }
+    },
+    {
+      "id": 179966090,
+      "app_slug": "hexalith-cicd",
+      "repository_selection": "selected",
+      "permissions": {
+        "actions": "write",
+        "contents": "write",
+        "metadata": "read",
+        "workflows": "write",
+        "administration": "read",
+        "security_events": "read"
+      }
+    },
+    {
+      "id": 182926560,
+      "app_slug": "cursor",
+      "repository_selection": "all",
+      "permissions": {
+        "pages": "read",
+        "checks": "write",
+        "issues": "write",
+        "actions": "write",
+        "members": "read",
+        "contents": "write",
+        "metadata": "read",
+        "packages": "read",
+        "statuses": "read",
+        "workflows": "write",
+        "deployments": "read",
+        "discussions": "write",
+        "merge_queues": "write",
+        "pull_requests": "write",
+        "administration": "read",
+        "organization_custom_roles": "read",
+        "organization_custom_org_roles": "read",
+        "organization_custom_properties": "read"
+      }
+    }
+  ],
+  "installation_membership": {
+    "unverified": {
+      "endpoint": "user/installations/179966090/repositories?per_page=100",
+      "http": 403,
+      "exit": 1,
+      "response_sha256": "b376f1e37c53dc89af3066bb0ce5817e44fe1b7e107a2900d0b4e8e92849db5e",
+      "request_id": "D260:1703:6EF8695:A750AF1:6B02DF41",
+      "message": "You must authenticate with an access token authorized to a GitHub App, a personal access token, or basic auth in order to list repositories for an installation.",
+      "accepted_scopes": "read:user, user",
+      "profile_scopes": "admin:org, gist, read:packages, repo, workflow"
+    }
+  },
+  "zot": {
+    "context": "jpiquot@local",
+    "namespace": "registry-distribution",
+    "configmap": "distribution-registry-config",
+    "resourceVersion": "49008107",
+    "identities": {
+      "hexalith-commons-publish": {
+        "repository_policies": [
+          {
+            "pattern": "commons",
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          },
+          {
+            "pattern": "commons/**",
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ],
+        "admin_policy": false
+      },
+      "hexalith-polymorphicserializations-publish": {
+        "repository_policies": [
+          {
+            "pattern": "polymorphicserializations",
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          },
+          {
+            "pattern": "polymorphicserializations/**",
+            "actions": [
+              "read",
+              "create",
+              "update"
+            ]
+          }
+        ],
+        "admin_policy": false
+      }
+    }
+  },
+  "completed_at": "2026-11-22T12:25:48.549337+00:00",
+  "checks": {
+    "Hexalith.Commons": {
+      "rulesets": "pass",
+      "main_only_environment": "pass",
+      "environment_binding": "historical provisioning identities plus unchanged secret timestamps; values unreadable",
+      "immutable_releases": "pass",
+      "security_and_retention": "pass",
+      "stale_release_and_legacy_CodeQL_configuration": "pass",
+      "other_secret_and_key_inventories": "empty"
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "rulesets": "pass",
+      "main_only_environment": "pass",
+      "environment_binding": "historical provisioning identities plus unchanged secret timestamps; values unreadable",
+      "immutable_releases": "pass",
+      "security_and_retention": "pass",
+      "stale_release_and_legacy_CodeQL_configuration": "pass",
+      "other_secret_and_key_inventories": "empty"
+    }
+  },
+  "organization_checks": "pass; complete required and legacy secret metadata/selection inventories queried",
+  "zot_checks": "pass for current ACL scopes; original provisioning is the environment binding authority",
+  "result": "incomplete; Cursor/connector all-repository scope fails AD-7/AD-21, CiCd App membership unverified",
+  "required_access": "attended GitHub Confirm access for installation settings; do not broaden module token or obtain App key"
+}

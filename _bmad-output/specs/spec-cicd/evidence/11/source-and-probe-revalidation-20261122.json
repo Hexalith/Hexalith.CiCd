@@ -1,0 +1,438 @@
+{
+  "recorded_at": "2026-11-22T12:30:55.926286+00:00",
+  "root_commit": "9f7a56fd1e0de05f6b8a8789fba983c072ce3db6",
+  "historical_evidence": {
+    "pre-delivery-probes.json": "6f49e6d41cbd4da49a86472b9feeb8d773ab4f0237db500abb930761da0516b4",
+    "authenticated-adoption.json": "82097ebc568d76d0d9251ecf17e66e8be2f596b36433f7ce5a9516b2b4ce99e3",
+    "post-adoption-fresh-branch-outcomes.json": "8ad437da41b01c27482fc7967dc7f2577951502f8c7dc49ff7243eae79d09fba",
+    "post-delivery-update-branch.json": "ac6b49453e512941424057c6a8d40209adc54c0110acd438bf0ccd41775047ed",
+    "product-probe-cleanup.json": "1ff61047132d4f2d5d2e2accb710fce114d0460d12654b40f3b62e4a29c76c64",
+    "nuget-policy-verification.json": "c84f74706313909892c9fc60138f49ace5911c4aaaacf0c9c61c259bb51b108f",
+    "nuget-cleanup-verify-cleanup.json": "77e81a82b760409368ac0b33ab77d49918e2a455efd7a2e59b7400cd65218317",
+    "resume-prior-acceptance-audit.json": "319c85713afa215212c19ad854f04194355d53b9066adc3ae5a0b6005bd15bb7",
+    "pilot-checkpoint-receipt-44566082537.json": "88ad73321566120dfa2421c3bf58e3a1df60b408a3afe676fa4abdfffec3a016",
+    "verify-and-publish-probes.py": "c75840d7bd4967703497f4e6b2da17c48c0299fe2b94363fb26dca25cef39c6d",
+    "prepare-post-adoption-probes.py": "4cf3bf5a44d8b6009e9851710ee9da6831d3f14fe9684ea28fc2b603abe92c84",
+    "publish-fresh-probes.py": "bc31ccfa8c4b3150b69a423926dfdbea1981d9c3a70a5831a7abe7522aa84f3c",
+    "qualify-update-branch.py": "81d9a0b42a2a636f2296250d7fe07191a6947b8e5397537c3c3a8261901d84b1",
+    "post-adoption-check.json": "9ad61f2e88d405cec5693f545506a30980cee174cac33b524b4b53f00d6c30b0",
+    "pre-adoption-verification.json": "548d4ca0349440e6f272a19901439c79594a26819da411e6a728fca3de1d54fe",
+    "post-update-pr-failure-evidence.json": "7934019e86bdc1525bbcbcb6bfad5feab4816fe16f2f9182b2551f609be60011",
+    "authenticated-policy-redelivery.json": "843ceb2975e5ff95f8d42e220be5d798806a1290d8a9db182d2800983810e839",
+    "adoption-candidate.json": "9ad2761ca0510d311d72879b167095af10213a77f12de0a20e169c9aeaae09d3",
+    "post-adoption-github-cleanup.json": "68d84229f626853089b3c5ae4cb8b3c46e53d616940138d566d8557dc61ff6f2",
+    "post-adoption-legacy-codeql-cleanup.json": "e5d450a881f19da64ab0bb5b210a32b7628056c7027a29508a04a6a79586790f",
+    "provision-registry.json": "710d6682a84c97f1c4e9d741230e1eaf97a91f0640f7040ae6ade77dd25ee12d",
+    "legacy-nuget-key-metadata.json": "2a21c889285719a6eb9d011ee7787ad5a09dac33b31e2db6b217bcd88799b1af",
+    "zot-pilot-legacy-disposition.md": "2fbd03019dd28596bf197020806588faebcbfcf02849cccdf4501010311025ea"
+  },
+  "modules": {
+    "Hexalith.Commons": {
+      "objects": {
+        "base": {
+          "commit": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+          "tree": "9fa59dd79f5966b9603fef2ec310cb729c664707",
+          "parents": "fbf4e94233821f6ca336af91a06feaaeb7a16855"
+        },
+        "pre_delivery": {
+          "commit": "e3d4da366a2e8c6b6216f4a7b57c15241313da79",
+          "tree": "b943cddd458bc0c3ba3ae3da8467986f6055a048",
+          "parents": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2"
+        },
+        "preparation": {
+          "commit": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+          "tree": "5f98676ea39d6273fba833e144c69a25061f58c6",
+          "parents": "ab5e92faa3bab1fa43b8ecadd423432dfe652bb2"
+        },
+        "adoption": {
+          "commit": "5169f6b6165482d4b1499ccc5958eb897101be4f",
+          "tree": "e1bfdb71421d68e5fd9e706afc5dd255f5bc8a40",
+          "parents": "a83959832ebdad9fe5a5ea268fb0224c49cfa8ea"
+        },
+        "fresh_product": {
+          "commit": "47d51c025ec2413ad758d74b552772fcd275e446",
+          "tree": "a21daad9236f2e1c9fb9ec1ef8c40c77ec87e70c",
+          "parents": "5169f6b6165482d4b1499ccc5958eb897101be4f"
+        },
+        "update_result": {
+          "commit": "517c1af6036e7a0074a8ea5cf081f1046c6f58fe",
+          "tree": "1776ee46cd6fa848b8fa631fbcbaf4ed7785eca0",
+          "parents": "e3d4da366a2e8c6b6216f4a7b57c15241313da79 5169f6b6165482d4b1499ccc5958eb897101be4f"
+        },
+        "current_main": {
+          "commit": "5f646d4e49279cca0d31ab577e91719c3ed7e434",
+          "tree": "da06b03bb4dee9cd758c66b2ae332e3aa8374321",
+          "parents": "2942e219de3324b7b707219c3df56a1399bd205a"
+        }
+      },
+      "current_pr": {
+        "number": 52,
+        "state": "closed",
+        "merged": false,
+        "html_url": "https://github.com/Hexalith/Hexalith.Commons/pull/52"
+      },
+      "probes": {
+        "workflow_equality_before_delivery": "pass",
+        "actual_delivery_workflow_difference": "pass",
+        "fresh_product_push_and_readback": "pass",
+        "normal_checker_exit": 0,
+        "update_http": 202,
+        "imported_owned_tree_matches_adoption": "pass; only pilot-ci-probe.md differs",
+        "cleanup": "pass; PR closed unmerged and all recorded local/remote refs absent",
+        "historical_metadata_defect": "remote_push_performed:false is stale; push_attempted:true, push_confirmed:true and successful server readbacks establish actual push",
+        "merge_head_product_tests": "not run; service merge subject failed strict commitlint subject-empty/type-empty",
+        "failed_CI_log_sha256": "9e6d8f94d599c282d7ba6ab9d14de73ec790d6329b6bcd55f56a1c47fc57f024"
+      },
+      "product": {
+        "legacy_tooling_absent": true,
+        "module_audit_waiver_scan": "no matches in tracked MSBuild/rsp/NuGet configs",
+        "original_csharp_test_paths_retained": 48,
+        "test_path_digest": "33615c501cd6ce36635d47774c48dce966b6838a82a9ef8205a6e60b11bf56e0",
+        "source_blobs": {
+          ".github/actions/after-unit-tests/action.yml": "087b66f028b4ea1e91444512cf4486d0802f76e6",
+          "scripts/pack-release-packages.py": "e9d8dd6e99419e07580e62f3dae390a95852ea05",
+          "scripts/validate-nuget-packages.py": "03872d04808a4ab4d1b8e695480ed5438d08c1f5",
+          "scripts/validate-consumer-package-references.py": "231f1347930b4ede0b82686204e810733d793581",
+          "global.json": "701104b3d54283ad578b7e1e71aca01d1a59d523"
+        },
+        "adoption_sdk_pin_preserved": true,
+        "canonical_and_current_delivered_policy": "equal",
+        "later_product_improvements": "preserved",
+        "payload_symbol_pairs": 12,
+        "isolated_consumer": "retained",
+        "NU5104": "distinct packaging treatment preserved; no pilot NU190x waiver invented"
+      }
+    },
+    "Hexalith.PolymorphicSerializations": {
+      "objects": {
+        "base": {
+          "commit": "476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+          "tree": "9335a48da3b68760cbb833cf98b940ca9b896aa3",
+          "parents": "e97b56930e213f674b64c157551f499b0473ec43"
+        },
+        "pre_delivery": {
+          "commit": "dbea7efd64ec75e2b92920665cb1ebffda15fa88",
+          "tree": "784dfc7ddb50eec621ec888dc5f2d2e62be31e88",
+          "parents": "476cfccac3c5ba694a8e0ef11b1157728b9ec093"
+        },
+        "preparation": {
+          "commit": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+          "tree": "ac994911e01c63a8bff4da82d3e84be556e966fc",
+          "parents": "476cfccac3c5ba694a8e0ef11b1157728b9ec093"
+        },
+        "adoption": {
+          "commit": "49fbe97f7224e2795ffb3293330d9efde6c0f561",
+          "tree": "704aa5df44841f882e45b77f9110cdb10e80222d",
+          "parents": "c547c763a20e1fbf6b7a5c9d3b4791260fb61149"
+        },
+        "fresh_product": {
+          "commit": "1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591",
+          "tree": "24906bc31cb7ae7046bb63950bb8e1a90f5f1971",
+          "parents": "49fbe97f7224e2795ffb3293330d9efde6c0f561"
+        },
+        "update_result": {
+          "commit": "e571f080f58f80519786063ada4f60a236cf1efb",
+          "tree": "7b3f3522d47b33c27cb52b2774da6b753200ffd9",
+          "parents": "dbea7efd64ec75e2b92920665cb1ebffda15fa88 49fbe97f7224e2795ffb3293330d9efde6c0f561"
+        },
+        "current_main": {
+          "commit": "99c2344f08d3e3560a891f79ab63f8722fa14e60",
+          "tree": "1665abeefacb8080370bc615877bfa76b66110d4",
+          "parents": "16f28af63a2f17ba0c0ac072f4d240849df4ae7e"
+        }
+      },
+      "current_pr": {
+        "number": 19,
+        "state": "closed",
+        "merged": false,
+        "html_url": "https://github.com/Hexalith/Hexalith.PolymorphicSerializations/pull/19"
+      },
+      "probes": {
+        "workflow_equality_before_delivery": "pass",
+        "actual_delivery_workflow_difference": "pass",
+        "fresh_product_push_and_readback": "pass",
+        "normal_checker_exit": 0,
+        "update_http": 202,
+        "imported_owned_tree_matches_adoption": "pass; only pilot-ci-probe.md differs",
+        "cleanup": "pass; PR closed unmerged and all recorded local/remote refs absent",
+        "historical_metadata_defect": "remote_push_performed:false is stale; push_attempted:true, push_confirmed:true and successful server readbacks establish actual push",
+        "merge_head_product_tests": "not run; service merge subject failed strict commitlint subject-empty/type-empty",
+        "failed_CI_log_sha256": "c93a457c3565ae1eefd0e091669202aa203b0838d048ccaadf4c24c295fcb973"
+      },
+      "product": {
+        "legacy_tooling_absent": true,
+        "module_audit_waiver_scan": "no matches in tracked MSBuild/rsp/NuGet configs",
+        "original_csharp_test_paths_retained": 8,
+        "test_path_digest": "973503fb1649b579890e318e6a6fa4735bca1d0559cf83b4d5c2982dda7c91ce",
+        "source_blobs": {
+          ".github/actions/after-unit-tests/action.yml": "2f05602442d8480ea572a1bf0698d862f1272930",
+          "scripts/validate-readme-sample.py": "1851a649edf1ec0bcd08379e4cf41388752fc838",
+          "global.json": "701104b3d54283ad578b7e1e71aca01d1a59d523"
+        },
+        "adoption_sdk_pin_preserved": true,
+        "canonical_and_current_delivered_policy": "equal",
+        "later_product_improvements": "preserved"
+      }
+    }
+  },
+  "requests": [
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/ab5e92faa3bab1fa43b8ecadd423432dfe652bb2",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "5a79660ecce1f119d7a81e1059e4b1f476fbd9208ffbf9690f72ae1d60b62baf"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/e3d4da366a2e8c6b6216f4a7b57c15241313da79",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "50639478bd277474c0e201a704f71d951218741d685fc640880db66883ccdc3b"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/a83959832ebdad9fe5a5ea268fb0224c49cfa8ea",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "c64efce9de615ff7152ee8f85ce5317422d62503f17073195921455ac0afd70c"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/5169f6b6165482d4b1499ccc5958eb897101be4f",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "d108efec502c363db48078055edaeaec6fc4281793c15f04c362f82989d1ce28"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/47d51c025ec2413ad758d74b552772fcd275e446",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "ef808f63ddc7d1bfc0f2555405ec4fab1d636b69594b4ae2854f276f27be2801"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/517c1af6036e7a0074a8ea5cf081f1046c6f58fe",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "5ede916afde53917f9ad617b7a35a9d7dd8280d842f4c6fc23d4a4dbdf690a56"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/commits/5f646d4e49279cca0d31ab577e91719c3ed7e434",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "d4c0fb69d60f362f7f7271d1bc94a0aca47f47c7ec704eef5257b8d4054f21de"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/pulls/52",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "cc5f78934f95ae1c1f9da9ee3f87b86e65fd018aac2d88da677ab83599847e03"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Commons/git/matching-refs/heads/cicd-pilot-",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/476cfccac3c5ba694a8e0ef11b1157728b9ec093",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "d0c6d276212a6282525c6efd3cda93854aab887bd455c53f00ee6049f9a47dc3"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/dbea7efd64ec75e2b92920665cb1ebffda15fa88",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "1933c8261e445af7ac4c73c4f5ea1bae24986974ebcea7bb958e056c0ecc3379"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/c547c763a20e1fbf6b7a5c9d3b4791260fb61149",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "267faf86e99ce771a74bc15269b3bc26903edaf11ddbd51e6b56211a66183aac"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/49fbe97f7224e2795ffb3293330d9efde6c0f561",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "8184c7e2f6c7fd7363d8ceb6fcb81ecc300c5c443c4177eeadf6ff5a469c1cac"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/1a2e079a7e1d77beb71a3ec09f7ca5fd175ae591",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "bd2f6d13205a35ffda1b3526806ce29788ee9fc1931bed69c5114df343394f76"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/e571f080f58f80519786063ada4f60a236cf1efb",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "a180f92f0115325ab0210c464db51a74bdf886f15561507230b34149b56ca7f5"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/commits/99c2344f08d3e3560a891f79ab63f8722fa14e60",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "0fc139eabdda61e1e757f2eb9373bea1695e17ee366321f8a582f28dfd0739a9"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/pulls/19",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "e4056336313c940a9f2c773d4c5bb57950c5814ded617bd844de512f09928843"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.PolymorphicSerializations/git/matching-refs/heads/cicd-pilot-",
+      "profile": "protected module token",
+      "exit": 0,
+      "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v6.0.6",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "312a02c66905d6a8d2964090fd9ffb7a0fc498e45c04affa1e44b21ede66baf4"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/tags/v6.0.6",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "2cbe6a94ca4bb29541b1d833eccb60616a8436ad57aec1da7069f59fc6ae2a77"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/heads/main",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "c5c7d8677bff620ed67662d1ccae12343b58dcccb60be57b83ba53b9a6476463"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/compare/fdda17c0a4538b0f7c99f813c20ca24b49006530...0de063655f61d43f80410cbc01d2b492c5eac9cf?per_page=1&page=2",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "9bd95d5d43e6d3980366306ff57974352309db9c131aedae32ae5578f6502f43"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/releases/tags/v6.6.1",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "892b645f0dd865bfe8b26e9c80c6eac5b97baf231602bc086c5159fc803dfc21"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/tags/v6.6.1",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "10347236bf6a986822ab1648381eb3336ae9b6a6bd44fd2dae50b9adb8d205d6"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/git/ref/heads/main",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "c5c7d8677bff620ed67662d1ccae12343b58dcccb60be57b83ba53b9a6476463"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.Builds/compare/27fe4d62ca1f3cce07a9f19e1e30b02cbaa51357...0de063655f61d43f80410cbc01d2b492c5eac9cf?per_page=1&page=2",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "94a706b9e393af2f6c07954ca618237e596d0d0b1fdad14439d1c6a4cc628fdb"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/runs/43860977581",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "39d4ecbf980edad2b1a649f7616a3a514fecfec763fcaf5b1ee550009ad3ee62"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/runs/43860977581/artifacts",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "6c99c014d84550d6c55f46f0cd243b9fc098a0cd15958ff31556482ff402cfbe"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/artifacts/14223904289/zip",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "67232cc468f68166b4d6d70eb4798b94154cbcd0762fc2d95bcf6c388a5bd729"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "476e6db7cd9d5baf8db04c5c1d09d929044889572f9fffe576fb91f295b0a593"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/runs/43869480499/artifacts",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "c92da025e8fb8066ff8fea6e4acfc600e52bf591abf0da1184bc6f91f13a85f2"
+    },
+    {
+      "endpoint": "repos/Hexalith/Hexalith.CiCd/actions/artifacts/14228292488/zip",
+      "profile": "CiCd-agent",
+      "exit": 0,
+      "response_sha256": "312d4a49e3cc0f268e89f89eb63dffe61a0ceaee94d83a00f8da9cc503447701"
+    }
+  ],
+  "mutations": false,
+  "result": "pass for independent historical, product, release pin and policy checks; current maintainer prerequisites unresolved",
+  "builds": {
+    "v6.0.6": {
+      "commit": "fdda17c0a4538b0f7c99f813c20ca24b49006530",
+      "tree": "81882bd1852cf3c10c7a2b6647b238c8eec22fa8",
+      "release_id": 446824101,
+      "url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.0.6",
+      "published_at": "2026-11-16T09:34:49Z",
+      "immutable": true,
+      "author": "github-actions[bot]",
+      "ancestor_of_live_main": "0de063655f61d43f80410cbc01d2b492c5eac9cf",
+      "props_blob": "89c2b567c9399b6aade05a3fa2230e3078bb54d8"
+    },
+    "v6.6.1": {
+      "commit": "27fe4d62ca1f3cce07a9f19e1e30b02cbaa51357",
+      "tree": "e55fefff3fa765e4a7bc9408caf61ea0a59b6dc5",
+      "release_id": 454360652,
+      "url": "https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.6.1",
+      "published_at": "2026-11-22T10:29:53Z",
+      "immutable": true,
+      "author": "github-actions[bot]",
+      "ancestor_of_live_main": "0de063655f61d43f80410cbc01d2b492c5eac9cf",
+      "props_blob": "2783fc927acebb34513c2a9d0e106d362b71d0b7"
+    },
+    "waiver_disposition": "No pilot module NU190x waiver existed to migrate; released Props owns low/moderate advisory treatment. No new waiver or adoption.",
+    "selected_contract_blobs": {
+      "schemas/hexalith.ci.v1.json": "cd66664e4deb47b576ce2b9acc4759d2bb1c9f59",
+      "Github/lib/perimeter.py": "6049279065c27a36ff16f09184375a7fbe480e64",
+      "Github/lib/perimeter_config.py": "4ac121d62fcb4c26459459f9ad168fbcf897b1ad"
+    }
+  },
+  "deliveries": [
+    {
+      "run_id": 43860977581,
+      "source": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+      "url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43860977581",
+      "artifact_id": 14223904289,
+      "artifact_digest": "sha256:67232cc468f68166b4d6d70eb4798b94154cbcd0762fc2d95bcf6c388a5bd729"
+    },
+    {
+      "run_id": 43869480499,
+      "source": "3427f041c5f686c460c1fa027cf6f835791209c1",
+      "url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/43869480499",
+      "artifact_id": 14228292488,
+      "artifact_digest": "sha256:312d4a49e3cc0f268e89f89eb63dffe61a0ceaee94d83a00f8da9cc503447701"
+    }
+  ],
+  "policy": {
+    "canonical_blob": "fe59f37fc84bb9b95099b073ef79e479d549fdd5",
+    "render_check_exit": 0,
+    "render_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "canonical_correction_or_delivery_needed": false
+  },
+  "completed_at": "2026-11-22T12:31:10.437051+00:00",
+  "legacy_spec_blob_preserved": "e71dcb4661c23e6e9a3a06fdc1357215b55afd9d",
+  "original_registration": {
+    "commit": "ba62ae71d148d3c5951f4508f7ebaf1bf49ab858",
+    "tree": "9c4e484bfb1dbd1936026af784467eca193066fd",
+    "parent": "37e73a99dfe82c3b7741554d6f4ff2207711644b",
+    "selected_builds": "v6.0.6",
+    "submodules_setup_and_render_in_one_commit": true,
+    "actual_delivery_source": "f002539f6fbaddaa9b621a9cbf75a1263eee5dea",
+    "actual_delivery_source_addendum": "one child commit corrects the renderer fixture only; original registration inputs stay unchanged",
+    "changed_paths_digest": "a546f397d5bacbf5e66b65301eea8a301f8fd981238b39ccf207399d88a632f9"
+  }
+}
