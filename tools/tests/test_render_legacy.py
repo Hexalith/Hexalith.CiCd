@@ -172,7 +172,7 @@ class RenderTests(unittest.TestCase):
                 "tests": {"integration": [], "exclude": {}, "failSkips": False, "minimumExpectedTests": {}},
                 "hooks": [], "jobs": {}, "submodules": [], "buildProjects": [], "publishedBuilds": None,
                 "ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False,
-                "moduleManifest": None, "windowsCheckout": None,
+                "moduleManifest": None, "windowsCheckout": None, "docs": "warn",
             })
             self.assertEqual({"job-timeout-minutes": 30},
                              fixture.yaml(".github/workflows/ci.yml")["jobs"]["ci"]["with"])
@@ -191,7 +191,7 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(fixture.json(), {
                 "schema": "hexalith.ci.v1", "buildsTag": fixture.tag, **supplied,
                 "tests": {**supplied["tests"], "failSkips": False, "minimumExpectedTests": {}},
-                "buildProjects": [], "publishedBuilds": None, "ciTimeoutMinutes": 30,
+                "buildProjects": [], "publishedBuilds": None, "ciTimeoutMinutes": 30, "docs": "warn",
                 "npmWorkspaces": [], "dotnetTools": False, "moduleManifest": None, "windowsCheckout": None,
             })
             names = ("solution", "submodules", "global-json", "module-manifest", "windows-checkout", "source-revision", "module-authority")

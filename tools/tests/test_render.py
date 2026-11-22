@@ -27,7 +27,7 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures/render"
 LEGACY_TAG = "v6.0.6"
 CURRENT_TAG = (ROOT / "builds-version").read_text().strip()
 CURRENT_DEFAULTS = {
-    "ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False,
+    "ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False, "docs": "warn",
     "moduleManifest": None, "windowsCheckout": None, "publishedBuilds": None, "buildProjects": [],
 }
 CURRENT_TEST_DEFAULTS = {"minimumExpectedTests": {}, "failSkips": False}
