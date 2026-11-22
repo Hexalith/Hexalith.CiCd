@@ -69,7 +69,9 @@ legacy NuGet policy 26964 and the legacy Zot push.
     legacy Zot path or grant ([`zot-legacy-disposition.json`](zot-legacy-disposition.json));
   - the legacy nuget.org API key's package scope was not observable this
     session (the API Keys URL opened as Trusted Publishing). Story 11 recorded
-    that key as expired, and Agents can no longer read `NUGET_API_KEY`.
+    that key as expired, and Agents can no longer read `NUGET_API_KEY`. On
+    2026-11-22 the human ruled that nuget.org API keys are obsolete and that
+    publishing uses trusted publishing only, so no readback will be done.
 - Adopted CI [44888639144](https://github.com/Hexalith/Hexalith.Agents/actions/runs/44888639144)
   passed the guard, restore/build and the five floors, then failed only at the
   hook, as the simulation predicted. The module-agent fix `6865c6e6` changes

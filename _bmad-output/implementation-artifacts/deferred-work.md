@@ -445,3 +445,6 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
   summary: Confirm, by human readback on nuget.org, that the legacy API key behind NUGET_API_KEY is expired or no longer covers Hexalith.Agents* (story 14 review finding BH7).
   evidence: Two attended probes of nuget.org/account/apikeys opened Trusted Publishing instead; only story 11's 2026-11-16 "expired" record supports the disposition. Agents' NUGET_API_KEY grant and legacy policy 26964 are already removed.
+- source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
+  summary: RESOLVED — the BH7 legacy nuget.org API key readback for Hexalith.Agents is closed.
+  evidence: On 2026-11-22 the human ruled "NUGET API KEYS are obsolete, use trusted publishing", so no readback will be done. Agents publishes only through scoped trusted publishing policy 28307; its NUGET_API_KEY grant and legacy policy 26964 are removed. This resolution supersedes the open entry above without rewriting its evidence.
