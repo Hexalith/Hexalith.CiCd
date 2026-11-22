@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import base64
 from datetime import datetime, timezone
+import hashlib
 import http.client
 import importlib.util
 import json
@@ -36,6 +37,13 @@ class DeliveryError(ValueError):
     """Only sanitized diagnostics may cross the transport boundary."""
 
 
+def remember_token(token):
+    if token:
+        for secret in (token, base64.b64encode(("x-access-token:" + token).encode()).decode()):
+            if secret not in _SECRETS:
+                _SECRETS.append(secret)
+
+
 def clean(value) -> str:
     value = str(value)
     for secret in _SECRETS:
@@ -56,6 +64,10 @@ def sha(value) -> str:
     if not isinstance(value, str) or not SHA.fullmatch(value):
         raise DeliveryError("invalid full Git commit identity")
     return value
+
+
+def identity_diagnostic(value) -> str:
+    return value if isinstance(value, str) and SHA.fullmatch(value) else "[noncanonical identity]"
 
 
 def json_read(data: bytes | str):
@@ -123,7 +135,8 @@ def environment() -> dict[str, str]:
 
 def sanitize() -> dict[str, str]:
     tokens = {key: os.environ.get(key, "") for key in ("CICD_TOKEN", "MODULE_TOKEN")}
-    _SECRETS.extend(value for value in tokens.values() if value)
+    for token in tokens.values():
+        remember_token(token)
     os.environ.clear()
     os.environ.update(environment())
     sys.dont_write_bytecode = True
@@ -162,6 +175,7 @@ class Git:
         if token is not None:
             if not token:
                 raise DeliveryError("scoped App token unavailable")
+            remember_token(token)
             self.budget.check(token=True)
             i = int(env["GIT_CONFIG_COUNT"])
             env.update({"GIT_CONFIG_COUNT": str(i + 1), f"GIT_CONFIG_KEY_{i}": "http.https://github.com/.extraheader",
@@ -317,6 +331,7 @@ class API:
         if token is not None:
             if not token:
                 raise DeliveryError("scoped App token unavailable")
+            remember_token(token)
             self.budget.check(token=True)
             headers["Authorization"] = "Bearer " + token
         try:
@@ -332,6 +347,18 @@ class API:
                     raise DeliveryError("GitHub API returned a null response")
                 return value
         except HTTPError as error:
+            if path.startswith("/repos/Hexalith/Hexalith.Builds/"):
+                # Never retain the response body or arbitrary headers. These
+                # bounded fields suffice to diagnose existing-scope refusals.
+                fields = []
+                for key in ("X-GitHub-Request-Id", "X-RateLimit-Limit", "X-RateLimit-Remaining",
+                            "X-RateLimit-Reset", "X-RateLimit-Used", "X-RateLimit-Resource", "Retry-After"):
+                    value = error.headers.get(key) if error.headers is not None else None
+                    if value is not None:
+                        fields.append(key + "=" + clean(value)[:128])
+                error.close()
+                raise DeliveryError(f"Builds release unverified (HTTP {error.code})" +
+                                    (": " + ", ".join(fields) if fields else "")) from None
             error.close()
             if absent and error.code == 404:
                 return None
@@ -386,6 +413,69 @@ class Transport:
         self.budget = budget or Budget()
         self.api = api or API(self.budget)
 
+    def bind_delivery(self, state, report, tokens):
+        """Share only release identities/refusals across sequential children.
+
+        Bootstrap strips GitHub context from child environments. Its private
+        state/report supplies the selection, run and attempt instead.
+        """
+        root = Path(state["root"]).resolve()
+        self.builds_scope = {"root": str(root), "started": state["started"],
+                             "source": state["source"], "candidate": state["candidate"],
+                             "run_id": report["run_id"], "run_attempt": report["run_attempt"]}
+        selection = hashlib.sha256(str(state["started"]).encode("ascii")).hexdigest()
+        self.builds_proofs_path = root / ("builds-proofs-" + selection + ".json")
+        self.builds_token = tokens.get("CICD_TOKEN") or tokens.get("MODULE_TOKEN") or None
+        for token in tokens.values():
+            remember_token(token)
+
+    def builds_proof(self, tag):
+        if not isinstance(tag, str) or not TAG.fullmatch(tag):
+            raise DeliveryError("Builds version is not an exact stable tag")
+        scope = getattr(self, "builds_scope", None)
+        token = getattr(self, "builds_token", None)
+        # Preserve direct-call behavior for the bootstrap and nightly transport,
+        # including subclasses which do not initialize delivery attributes.
+        if scope is None:
+            return self.verify_builds(tag, token)
+        self.budget.check()
+        if self.builds_proofs_path.exists():
+            state = read_state(self.builds_proofs_path)
+            if set(state) != {"scope", "proofs"} or state["scope"] != scope:
+                raise DeliveryError("Builds proof scope mismatch")
+        else:
+            state = {"scope": scope, "proofs": {}}
+        proofs = state["proofs"]
+        if (not isinstance(proofs, dict) or len(proofs) > CAPACITY * 5
+                or any(not TAG.fullmatch(key) for key in proofs)):
+            raise DeliveryError("malformed Builds proof state")
+        if tag not in proofs:
+            if len(proofs) >= CAPACITY * 5:
+                raise DeliveryError("Builds proof capacity exceeded")
+            if not token:
+                raise DeliveryError("scoped App token unavailable")
+            # Persist before crossing HTTP: even an interrupted child must not
+            # retry metadata, possibly under a different available credential.
+            proofs[tag] = {"ok": False, "reason": "Builds release unverified (verification did not complete)"}
+            atomic(self.builds_proofs_path, state)
+            try:
+                raw, source = self.verify_builds(tag, token)
+                proofs[tag] = {"ok": True, "raw": sha(raw), "source": sha(source)}
+            except Exception as error:
+                proofs[tag] = {"ok": False, "reason": clean(error)}
+            atomic(self.builds_proofs_path, state)
+        proof = proofs[tag]
+        if not isinstance(proof, dict) or type(proof.get("ok")) is not bool:
+            raise DeliveryError("malformed Builds proof outcome")
+        if proof["ok"]:
+            if set(proof) != {"ok", "raw", "source"}:
+                raise DeliveryError("malformed Builds proof identity")
+            return sha(proof["raw"]), sha(proof["source"])
+        if (set(proof) != {"ok", "reason"} or not isinstance(proof["reason"], str)
+                or clean(proof["reason"]) != proof["reason"]):
+            raise DeliveryError("malformed Builds proof refusal")
+        raise DeliveryError(proof["reason"])
+
     def remote(self, repository):
         return "https://github.com/Hexalith/" + name(repository, module=False) + ".git"
 
@@ -436,18 +526,21 @@ class Transport:
         except Exception as error:
             raise DeliveryError(f"Builds {clean(tag)}: {clean(error)}") from None
 
-    def _builds(self, tag, destination):
+    def verify_builds(self, tag, token=None):
         if not TAG.fullmatch(tag):
             raise DeliveryError("Builds version is not an exact stable tag")
+        # Delivery persists refusals; retain only canonical response identities
+        # there while preserving diagnostics for existing unbound callers.
+        received_identity = identity_diagnostic if getattr(self, "builds_scope", None) is not None else clean
         path = "/repos/Hexalith/Hexalith.Builds/"
-        release = self.api.get(path + "releases/tags/" + tag)
+        release = self.api.get(path + "releases/tags/" + tag, token)
         if (not isinstance(release, dict) or release.get("tag_name") != tag
                 or release.get("draft") is not False or release.get("immutable") is not True
                 or not isinstance(release.get("author"), dict)
                 or release["author"].get("login") != "github-actions[bot]"):
             raise DeliveryError("Builds release must be published, immutable and authored by github-actions[bot]")
         timestamp(release.get("published_at"))
-        reference = self.api.get(path + "git/ref/tags/" + tag)
+        reference = self.api.get(path + "git/ref/tags/" + tag, token)
         if not isinstance(reference, dict) or reference.get("ref") != "refs/tags/" + tag:
             raise DeliveryError("Builds tag ref identity mismatch")
         kind, raw = object_identity(reference)
@@ -456,15 +549,16 @@ class Transport:
             if source in seen or len(seen) >= 16:
                 raise DeliveryError("Builds annotated tag cycle/depth limit")
             seen.add(source)
-            value = self.api.get(path + "git/tags/" + source)
+            value = self.api.get(path + "git/tags/" + source, token)
             if not isinstance(value, dict) or value.get("sha") != source:
-                raise DeliveryError(f"Builds annotated tag identity mismatch: expected {source}, received {value.get('sha') if isinstance(value, dict) else None}")
+                received = received_identity(value.get("sha") if isinstance(value, dict) else None)
+                raise DeliveryError(f"Builds annotated tag identity mismatch: expected {source}, received {received}")
             kind, source = object_identity(value)
-        main = self.api.get(path + "git/ref/heads/main")
+        main = self.api.get(path + "git/ref/heads/main", token)
         if not isinstance(main, dict) or main.get("ref") != "refs/heads/main":
             raise DeliveryError("Builds main identity mismatch")
         main_kind, main_sha = object_identity(main)
-        comparison = self.api.get(path + f"compare/{source}...{main_sha}?per_page=1&page=2")
+        comparison = self.api.get(path + f"compare/{source}...{main_sha}?per_page=1&page=2", token)
         base = comparison.get("base_commit") if isinstance(comparison, dict) else None
         merge_base = comparison.get("merge_base_commit") if isinstance(comparison, dict) else None
         base_sha = base.get("sha") if isinstance(base, dict) else base
@@ -476,7 +570,11 @@ class Transport:
                 or not isinstance(comparison.get("merge_base_commit"), dict)
                 or comparison["merge_base_commit"].get("sha") != source):
             raise DeliveryError(f"Builds release {source} is not ancestral to live main {main_sha}: "
-                                f"returned base_commit {clean(base_sha)}, merge_base_commit {clean(merge_base_sha)}")
+                                f"returned base_commit {received_identity(base_sha)}, merge_base_commit {received_identity(merge_base_sha)}")
+        return raw, source
+
+    def _builds(self, tag, destination):
+        raw, source = self.builds_proof(tag)
         # Verify capability from authenticated-by-identity committed objects
         # before exporting or executing even one byte of this release.
         git = Git(Path(destination) / "objects", self.budget)

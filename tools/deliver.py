@@ -235,6 +235,7 @@ def operate(operation, state_path, *, slot=None, transport=None, tokens=None, no
     report = rt.read_state(report_path)
     tokens = tokens or {}
     transport = transport or rt.Transport(rt.Budget(state["started"]))
+    transport.bind_delivery(state, report, tokens)
     git = rt.Git(root / "cicd.git", transport.budget)
     if operation == "initialize":
         if not tokens.get("CICD_TOKEN"):

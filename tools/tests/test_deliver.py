@@ -77,7 +77,9 @@ class DeliveryTests(unittest.TestCase):
             self.assertEqual(git(Path(w.remotes[row["repository"]]), "show", "main:.github/hexalith-ci.json"), '{"accepted":true}')
         requests = [json.loads(line) for line in Path(w.config["requests"]).read_text().splitlines()]
         self.assertTrue(requests)
-        self.assertTrue(all(request["authorization"] is None for request in requests), requests)
+        self.assertTrue(all(request["path"].startswith("/repos/Hexalith/Hexalith.Builds/") for request in requests), requests)
+        self.assertTrue(all(request["authorization"] == "Bearer inert-cicd-token" for request in requests), requests)
+        self.assertEqual(sum(request["path"].startswith("/repos/Hexalith/Hexalith.Builds/releases/tags/") for request in requests), 1, requests)
 
     def test_each_closed_app_check_blocks_only_its_module_and_preserves_repair(self):
         prefix = "/repos/Hexalith/Hexalith.Alpha"
