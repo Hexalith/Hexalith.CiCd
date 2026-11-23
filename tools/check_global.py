@@ -402,11 +402,15 @@ def run_tool_tests(project: Path) -> None:
     suites = sorted(renderer.safe_path(project, "tools/tests").glob("test_*.py"))
     if not suites:
         raise CheckError("tool tests: no suites found")
+    commands = [["uv", "run", "--locked", "--script", "--python", sys.executable, suite] for suite in suites]
+    # The relocated suite uses this gate's locked jsonschema installation and
+    # reads the frozen Builds loader and schema directly from the reference's objects.
+    eventstore = renderer.safe_path(project, "tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py")
+    commands.append([sys.executable, "-B", eventstore])
     failures = []
-    for suite in suites:
+    for arguments in commands:
         try:
-            output = command(["uv", "run", "--locked", "--script", "--python", sys.executable, suite],
-                             cwd=project, timeout=600)
+            output = command(arguments, cwd=project, timeout=600)
             if output:
                 log(output.decode("utf-8", "backslashreplace").rstrip())
         except FAILURES as error:

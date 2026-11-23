@@ -27,16 +27,21 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
 record = {'module_base': BASE, 'result': 'failed'}
 try:
-    assert git('rev-parse', 'HEAD').decode().strip() == BASE
-    assert git('rev-parse', 'origin/main').decode().strip() == BASE
-    assert not git('diff', '--name-only')
+    require(git('rev-parse', 'HEAD').decode().strip() == BASE, 'module HEAD differs from the frozen base')
+    require(git('rev-parse', 'origin/main').decode().strip() == BASE, 'origin/main differs from the frozen base')
+    require(not git('diff', '--name-only'), 'module has unstaged changes')
     state = json.loads((FIXTURES / 'current-preparation-state.json').read_text())
     accepted = json.loads((FIXTURES / 'accepted-local-verification.json').read_text())
-    assert state['patch_sha256'] == accepted['final_patch_sha256']
+    require(state['patch_sha256'] == accepted['final_patch_sha256'], 'preparation patch differs from accepted digest')
     patch = (FIXTURES / 'current-preparation.patch').read_bytes()
-    assert sha(patch) == state['patch_sha256']
+    require(sha(patch) == state['patch_sha256'], 'current-preparation.patch digest mismatch')
     normalization = json.loads((FIXTURES / 'whitespace-normalization.json').read_text())
     with tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']) as temporary:
         temporary = Path(temporary)
@@ -48,25 +53,25 @@ try:
         for name, revision in unit['dependencies'].items():
             path = 'references/' + name
             actual_pin = git('ls-files', '--stage', '--', path).decode().split()
-            assert actual_pin[:2] == ['160000', revision], path
+            require(actual_pin[:2] == ['160000', revision], f'dependency pin mismatch: {path}')
             git('update-index', '--cacheinfo', '160000', revision, path, environment=environment)
         record['verified_dependency_revisions'] = unit['dependencies']
         for item in state['untracked_inputs']:
             path = MODULE / item['path']
             body = path.read_bytes()
             if item['path'] == normalization['path']:
-                assert item['sha256'] == normalization['before_sha256']
-                assert sha(body) == normalization['after_sha256']
+                require(item['sha256'] == normalization['before_sha256'], 'normalization input digest mismatch')
+                require(sha(body) == normalization['after_sha256'], 'normalized source digest mismatch')
             else:
-                assert sha(body) == item['sha256'], item['path']
-            assert oct(path.stat().st_mode & 0o777) == item['mode']
+                require(sha(body) == item['sha256'], item['path'])
+            require(oct(path.stat().st_mode & 0o777) == item['mode'], f"source mode mismatch: {item['path']}")
             blob = subprocess.check_output(['git', 'hash-object', '-w', '--stdin'],
                                            cwd=MODULE, input=body).decode().strip()
             mode = '100755' if path.stat().st_mode & 0o100 else '100644'
             git('update-index', '--add', '--cacheinfo', mode, blob, item['path'], environment=environment)
         expected_tree = git('write-tree', environment=environment).decode().strip()
         tree = git('write-tree').decode().strip()
-        assert tree == expected_tree, (tree, expected_tree)
+        require(tree == expected_tree, f'staged tree {tree} differs from expected {expected_tree}')
         record.update(tree=tree, exact_verified_inputs=True, whitespace_only_adjustment=normalization)
 
         sys.path.insert(0, str(BUILDS / 'Github/lib'))
@@ -103,7 +108,7 @@ try:
                     'node', str(tools_dir / 'node_modules/@commitlint/cli/cli.js'),
                     '--config', str(copied_config), '--color=false'],
                     'owning repository commitlint', message)
-                assert result.returncode == 0, result.stdout + result.stderr
+                require(result.returncode == 0, result.stdout + result.stderr)
             record['messages'][name] = {'message': message, 'result': 'pass'}
         record.update(result='pass', locked_install=True, signatures_verified=True,
                       existing_product_test_evidence=str(FIXTURES / 'accepted-local-verification.json'),

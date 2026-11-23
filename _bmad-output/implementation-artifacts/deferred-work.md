@@ -406,10 +406,14 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/28-1-self-contained-maintenance-test-fixture.md`
   summary: Make test_maintenance.py independent of a developer's global Git config, such as a `url.<ssh>.insteadOf https://github.com/` rule or `core.autocrlf=true`.
   evidence: Blind Hunter reproduced this with GIT_CONFIG_GLOBAL: `git remote get-url` in tools/maintenance.py:51 expands insteadOf, so both origins look foreign, and autocrlf rewrites the checked-out workflow. The behavior predates 28-1, which used the same tool call and checkout. It does not occur in Actions or the bump scratch. A fix must keep tools/maintenance.py unchanged and must not drop the safe.directory entries that runners may rely on.
+  status: done 2026-11-23
+  resolution: The fixture keeps caller Git trust settings when reading the committed CiCd and Builds inputs, then isolates configuration for its disposable repositories. The 28 maintenance tests passed, including a subprocess render with a global GitHub URL rewrite, core.autocrlf=true and explicit safe.directory trust for both real sources.
 
 - source_spec: `_bmad-output/specs/spec-cicd/stories/28-1-self-contained-maintenance-test-fixture.md`
   summary: Add refusal tests for the maintenance render guards that still have none.
   evidence: The guards without tests are abbreviated revisions, a target HEAD other than the selected revision, a registration render not at origin/main, a changed incoming owned workflow (baseSha256), an uncommitted target workflow, an unrelated preparation output or receipt, and a policy path outside .github/workflows/*.yml. Each is a refusal in tools/maintenance.py:118-186. 28-1's fixture now reaches them for their own reasons, but the gap predates this story and is outside its acceptance criteria.
+  status: done 2026-11-23
+  resolution: The 28-test maintenance suite exercises abbreviated owner and target revisions, a mismatched HEAD, stale registration main, unexpected committed and uncommitted workflow bytes, occupied proposal and receipt files, an out-of-scope directory and an invalid workflow extension. Each refusal checks the reason and preserves the workflows, index entries and flags, and outputs.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-19-migrate-chatbot.md`
   summary: Human scope decision needed: a ChatBot product story to make the required live/release cases passable (EventStore 5 with a `net11.0` retarget, and atomic participation in `ChatBotAdmissionEvidenceValidator`) before story 19 resumes.
@@ -435,6 +439,8 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-11-pilot-migration-commons-and-polymorphicserializations.md`
   summary: Name the method and path in the nightly runtime's retry-budget and invalid-retry-delay errors.
   evidence: `tools/nightly_runtime.py:399` and `:403` raise `<delay error>: HTTP <status>; {...}` and `GitHub API retry budget exhausted: HTTP <status>; {...}` with no method or path, while terminal errors say `GitHub API <method> <path> failed`. The message had no path before story 11's diagnostics commit `a968a421` either, so this predates the story. A caller that doesn't add its own context therefore can't name the endpoint (review BH12).
+  status: done 2026-11-23
+  resolution: The nightly runtime retains the validated method and query-free path on retry-delay and budget refusals. All 40 runtime tests passed, including checks for bounded HTTP evidence, credential redaction, transport errors and a single request with no retry sleep.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-14-migrate-agents.md`
   summary: Agents' isolated package-consumer restore uses TreatWarningsAsErrors with default NuGet audit, so a new low or moderate advisory could fail the after-unit-tests hook despite the central NU1901/NU1902 treatment.
@@ -488,7 +494,8 @@ location: tools/check_global.py:401
 source_spec: `28-3-executable-fixtures-out-of-evidence.md`
 severity: medium
 reason: check_global.run_tool_tests globs only tools/tests/test_*.py, so tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py (17 tests) runs only when invoked by hand. Pre-existing: the suite was equally undiscovered under evidence/20. It needs jsonschema and Builds release fdda17c0a4538b0f7c99f813c20ca24b49006530 objects at references/Hexalith.Builds, so gate wiring needs a prerequisite decision.
-status: open
+status: done 2026-11-23
+resolution: Full validation runs the relocated suite once with the gate’s locked Python environment. All 17 tests passed against the original loader and schema blobs from fdda17c0a4538b0f7c99f813c20ca24b49006530 with a replacement ref, signing configuration and inherited repository/index settings in disposable repositories. The 77 validation tests passed, including a real suite run that failed the gate when the selected Builds repository lacked the release.
 
 ### DW-42: Live in-progress procedures still name executables under evidence, which AGENTS.md now forbids without exception.
 origin: spec-deferred eaab043bb34f
@@ -504,4 +511,5 @@ location: tools/qualification/pre-adoption/parties/qualify-push.py:32
 source_spec: `28-3-executable-fixtures-out-of-evidence.md`
 severity: medium
 reason: tools/qualification/pre-adoption/parties/qualify-push.py checks HEAD and origin, patch identity, dependency pins, untracked source bytes and modes and the expected tree with assert; under -O they vanish and the record reports result pass. Pre-existing and unchanged by the path-only relocation, which forbids logic changes; other repository procedures use run-with-temp python3 -O -B, so the pattern can be copied.
-status: open
+status: done 2026-11-23
+resolution: The Parties qualifier enforces each source, patch, pin, hash, mode, tree and commit-message check under both Python modes. The two relocation tests passed. Normal Python and python -O raised the expected refusal and wrote matching failed receipts for each mismatched source, dependency pin, staged tree and owning commitlint rejection. Both modes passed the controlled preparation with both commit messages verified.

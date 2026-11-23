@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-import tarfile
 import tempfile
 import unittest
 from unittest import mock
@@ -17,7 +16,13 @@ SPEC.loader.exec_module(verifier)
 
 
 def process(arguments, cwd, **_):
-    return subprocess.run(arguments, cwd=cwd, text=True, capture_output=True, check=True)
+    env = os.environ.copy()
+    if arguments[0] == 'git':
+        # These commands only create and inspect the disposable history.
+        env = {key: value for key, value in env.items() if not key.startswith('GIT_')}
+        env.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM='1')
+        arguments = ['git', '-c', 'core.hooksPath=' + os.devnull, *arguments[1:]]
+    return subprocess.run(arguments, cwd=cwd, env=env, text=True, capture_output=True, check=True)
 
 
 def git(repository, *arguments, **authentication):
@@ -206,18 +211,24 @@ class ReleasedPreparationConfigurationTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # Materialize the actual immutable release, never import current main's
-        # loader or schema. No SDK installation or product build is performed.
+        # Only the loader and schema from the immutable release are needed.
         cls.temporary = tempfile.TemporaryDirectory(prefix='eventstore-v606-contract-')
         cls.addClassCleanup(cls.temporary.cleanup)
         cls.release = Path(cls.temporary.name) / 'release'
         cls.release.mkdir()
-        archive = Path(cls.temporary.name) / 'release.tar'
-        with archive.open('wb') as output:
-            subprocess.run(['git', 'archive', cls.RELEASE_SHA], cwd=verifier.ROOT / 'references/Hexalith.Builds',
-                           stdout=output, check=True, timeout=30)
-        with tarfile.open(archive) as payload:
-            payload.extractall(cls.release, filter='data')
+        source = verifier.ROOT / 'references/Hexalith.Builds'
+        # Preserve protected safe.directory config for the real checkout while
+        # ignoring repository/index overrides inherited from a hook.
+        local = set(subprocess.check_output(['git', 'rev-parse', '--local-env-vars'], text=True).split())
+        local -= {'GIT_CONFIG', 'GIT_CONFIG_PARAMETERS', 'GIT_CONFIG_COUNT'}
+        env = {key: value for key, value in os.environ.items() if key not in local}
+        env.update(GIT_NO_REPLACE_OBJECTS='1', GIT_NO_LAZY_FETCH='1', GIT_CEILING_DIRECTORIES=str(source.parent))
+        for name in ('Github/lib/ci_config.py', 'schemas/hexalith.ci.v1.json'):
+            body = subprocess.check_output(['git', 'cat-file', 'blob', cls.RELEASE_SHA + ':' + name],
+                                           cwd=source, env=env, timeout=30)
+            destination = cls.release / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(body)
         spec = importlib.util.spec_from_file_location('eventstore_released_v606_config', cls.release / 'Github/lib/ci_config.py')
         cls.loader = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.loader)

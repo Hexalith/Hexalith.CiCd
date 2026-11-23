@@ -6,8 +6,10 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from copy import deepcopy
 
 # The candidate supplies only blobs committed at its HEAD. Its remotes,
@@ -20,8 +22,10 @@ CANDIDATE = Path(__file__).resolve().parents[2]
 SOURCE = Path(os.environ.get('MAINTENANCE_BUILDS_SOURCE', CANDIDATE / 'references/Hexalith.Builds')).resolve()
 # An inherited GIT_DIR, GIT_INDEX_FILE, etc. (for example from a Git hook)
 # would point the fixture and the tool at another repository.
-for name in subprocess.run(['git', 'rev-parse', '--local-env-vars'], capture_output=True, text=True, check=True).stdout.split():
-    os.environ.pop(name, None)
+GIT_LOCAL = subprocess.check_output(['git', 'rev-parse', '--local-env-vars'], text=True).split()
+GIT_CONFIG_ENV = {'GIT_CONFIG', 'GIT_CONFIG_PARAMETERS', 'GIT_CONFIG_COUNT'}
+# The actual sources may need caller-provided safe.directory configuration.
+SOURCE_ENV = {key: value for key, value in os.environ.items() if key not in GIT_LOCAL or key in GIT_CONFIG_ENV}
 spec = importlib.util.spec_from_file_location('maintenance', CANDIDATE / 'tools/maintenance.py')
 tool = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(tool)
@@ -39,7 +43,7 @@ def git(cwd, *arguments, data=None, env=None):
 
 
 def committed(relative):
-    return git(CANDIDATE, 'cat-file', 'blob', 'HEAD:' + relative)
+    return git(CANDIDATE, 'cat-file', 'blob', 'HEAD:' + relative, env=SOURCE_ENV)
 
 
 POLICY_BYTES = committed(tool.POLICY)
@@ -61,8 +65,7 @@ def make_owner(directory, origin=OWNER_ORIGIN, changes=None):
         entries.append(f'100644 {blob}\t{relative}\n')
     git(directory, 'update-index', '--add', '--index-info', data=''.join(entries).encode())
     tree = git(directory, 'write-tree').decode().strip()
-    revision = git(directory, 'commit-tree', '--no-gpg-sign', '-m', 'maintenance owner fixture', tree,
-                   env={**os.environ, **IDENTITY}).decode().strip()
+    revision = git(directory, 'commit-tree', '--no-gpg-sign', '-m', 'maintenance owner fixture', tree).decode().strip()
     git(directory, 'update-ref', 'refs/heads/main', revision)
     git(directory, 'remote', 'add', 'origin', origin)
     return directory, revision
@@ -73,11 +76,16 @@ class MaintenanceWriteTests(unittest.TestCase):
     def setUpClass(cls):
         temporary = tempfile.TemporaryDirectory()
         cls.addClassCleanup(temporary.cleanup)
-        cls.owner = make_owner(Path(temporary.name) / 'owner')
         # The ceiling stops discovery at SOURCE: an uninitialized Builds
         # directory fails here instead of borrowing the candidate's objects.
         cls.objects = git(SOURCE, 'rev-parse', '--path-format=absolute', '--git-path', 'objects',
-                          env={**os.environ, 'GIT_CEILING_DIRECTORIES': str(SOURCE.parent)})
+                          env={**SOURCE_ENV, 'GIT_CEILING_DIRECTORIES': str(SOURCE.parent)})
+        # From here on, every Git call (including those in the renderer) is
+        # against a disposable repository owned by the fixture.
+        fixture_env = {key: value for key, value in SOURCE_ENV.items() if not key.startswith('GIT_')}
+        fixture_env.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM='1', **IDENTITY)
+        cls.enterClassContext(patch.dict(os.environ, fixture_env, clear=True))
+        cls.owner = make_owner(Path(temporary.name) / 'owner')
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -111,7 +119,7 @@ class MaintenanceWriteTests(unittest.TestCase):
             outputs = {str(path.relative_to(self.output)):
                        os.readlink(path) if path.is_symlink() else path.read_bytes() if path.is_file() else None
                        for path in self.output.rglob('*')}
-        return workflows, outputs, self.run_git('diff', '--cached', '--binary')
+        return workflows, outputs, self.run_git('ls-files', '--stage', '-v', '-z')
 
     def refused_without_overwrite(self, reason, **arguments):
         before = self.snapshot()
@@ -190,6 +198,56 @@ class MaintenanceWriteTests(unittest.TestCase):
         owner = make_owner(self.root / 'foreign-owner', origin=FOREIGN_ORIGIN)
         self.refused_without_overwrite('foreign owner or target origin', owner=owner)
 
+    def test_abbreviated_owner_and_target_revisions_refuse(self):
+        directory, revision = self.owner
+        for arguments in ({'owner': (directory, revision[:12])}, {'revision': BASE[:12]}):
+            with self.subTest(arguments=arguments):
+                self.refused_without_overwrite('full immutable Git revisions are required', **arguments)
+
+    def test_target_head_differs_from_selected_revision(self):
+        other = POLICY['ownedOutputs'][REPOSITORY]['registration']['baseRevision']
+        self.refused_without_overwrite('target checkout differs from the selected source', revision=other)
+
+    def test_registration_proposal_requires_current_main(self):
+        revision = POLICY['ownedOutputs'][REPOSITORY]['registration']['baseRevision']
+        self.run_git('-c', 'submodule.recurse=false', 'checkout', '--detach', revision)
+        self.run_git('update-ref', 'refs/remotes/origin/main', BASE)
+        self.refused_without_overwrite('registration delivery requires the freshly selected current main',
+                                       role='registration', revision=revision, apply=False)
+
+    def test_changed_incoming_workflow_requires_new_policy(self):
+        self.workflow.write_bytes(self.before + b'\n# committed upstream change\n')
+        self.run_git('add', '.github/workflows/ci.yml')
+        self.run_git('commit', '-m', 'Changed incoming workflow')
+        revision = self.run_git('rev-parse', 'HEAD').decode().strip()
+        self.refused_without_overwrite('incoming owned workflow changed', revision=revision)
+
+    def test_uncommitted_workflow_hidden_from_status_is_preserved(self):
+        self.run_git('update-index', '--assume-unchanged', '.github/workflows/ci.yml')
+        self.workflow.write_bytes(self.before + b'\n# local workflow edit\n')
+        self.refused_without_overwrite('uncommitted target workflow would be overwritten')
+
+    def test_unrelated_preparation_output_is_preserved(self):
+        occupied = self.output / '.github/workflows/ci.yml'
+        occupied.parent.mkdir(parents=True)
+        occupied.write_bytes(b'unrelated preparation')
+        self.refused_without_overwrite('an unrelated preparation output would be overwritten', apply=False)
+
+    def test_unrelated_receipt_is_preserved_before_apply(self):
+        self.output.mkdir()
+        (self.output / 'maintenance-delivery.json').write_bytes(b'unrelated receipt')
+        self.refused_without_overwrite('an unrelated delivery receipt would be overwritten')
+
+    def test_policy_cannot_write_outside_its_workflow_scope(self):
+        for name in ('other.yml', '.github/workflows/ci.txt'):
+            with self.subTest(name=name):
+                policy = deepcopy(POLICY)
+                files = policy['ownedOutputs'][REPOSITORY]['maintenance']['files']
+                files[name] = files.pop('.github/workflows/ci.yml')
+                owner = make_owner(self.root / Path(name).stem, changes={tool.POLICY: json.dumps(policy).encode()})
+                self.refused_without_overwrite('policy attempts to write outside its exact owned workflow scope', owner=owner)
+                self.assertFalse((self.target / name).exists())
+
     def test_changed_executing_tool_refuses_before_any_write(self):
         changed = {'tools/maintenance.py': OWNED['tools/maintenance.py'] + b'\n# changed owner tool\n'}
         owner = make_owner(self.root / 'changed-tool', changes=changed)
@@ -223,6 +281,21 @@ class MaintenanceWriteTests(unittest.TestCase):
         unrelated = self.target / 'unrelated-task.txt'; unrelated.write_bytes(b'user changes')
         self.execute()
         self.assertEqual(unrelated.read_bytes(), b'user changes')
+
+
+class FixtureConfigurationTests(unittest.TestCase):
+    def test_render_with_global_url_rewrite_and_crlf_conversion(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            config = Path(temporary) / 'gitconfig'
+            for key, value in (('safe.directory', str(CANDIDATE)), ('safe.directory', str(SOURCE)),
+                               ('url.ssh://fixture.invalid/.insteadOf', 'https://github.com/'),
+                               ('core.autocrlf', 'true')):
+                git(CANDIDATE, 'config', '--file', str(config), '--add', key, value, env=SOURCE_ENV)
+            env = dict(SOURCE_ENV, GIT_CONFIG_GLOBAL=str(config), GIT_TEST_ASSUME_DIFFERENT_OWNER='1')
+            case = 'MaintenanceWriteTests.test_exact_named_branch_applies_only_committed_owned_templates'
+            result = subprocess.run([sys.executable, '-B', __file__, case], env=env,
+                                    text=True, capture_output=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stderr)
 
 
 class ProductionEnvironmentTests(unittest.TestCase):

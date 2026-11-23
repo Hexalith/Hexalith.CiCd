@@ -892,14 +892,50 @@ class GlobalTests(unittest.TestCase):
             directory.mkdir(parents=True)
             for name in ("test_render.py", "test_validate.py"):
                 (directory / name).write_text("# fixture suite\n")
+            eventstore = fixture.root / "tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py"
+            eventstore.parent.mkdir(parents=True)
+            eventstore.write_text("# relocated fixture suite\n")
+            expected = [
+                ["uv", "run", "--locked", "--script", "--python", sys.executable, directory / name]
+                for name in ("test_render.py", "test_validate.py")
+            ] + [[sys.executable, "-B", eventstore]]
             with mock.patch.object(global_check, "command", return_value=b"") as command:
                 global_check.run_tool_tests(fixture.root)
-            self.assertEqual(command.call_count, 2)
+            self.assertEqual(expected, [call.args[0] for call in command.call_args_list])
             for call in command.call_args_list:
-                arguments = list(map(str, call.args[0]))
-                self.assertIn("--locked", arguments)
-                self.assertNotIn("--lint", arguments)
+                self.assertEqual(call.kwargs["cwd"], fixture.root)
                 self.assertGreater(call.kwargs["timeout"], 0)
+
+    def test_tool_suite_gate_propagates_missing_eventstore_release(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            # An empty ordinary suite prevents recursion into test_validate.
+            tests = project / "tools/tests"
+            tests.mkdir(parents=True)
+            (tests / "test_empty.py").touch()
+            suite = Path("tools/qualification/pre-adoption/eventstore")
+            shutil.copytree(ROOT / suite, project / suite)
+            builds = project / "references/Hexalith.Builds"
+            builds.mkdir(parents=True)
+            git(builds, "init", "--quiet")
+            caller = project / "caller"
+            caller.mkdir()
+            git(caller, "init", "--quiet")
+            # The caller can see the real release. Only the selected Builds
+            # repository lacks the object, so inheriting GIT_DIR must fail this test.
+            objects = git(ROOT / "references/Hexalith.Builds", "rev-parse", "--path-format=absolute",
+                          "--git-path", "objects")
+            (caller / ".git/objects/info/alternates").write_bytes(objects)
+            config = project / "caller.gitconfig"
+            git(caller, "config", "--file", str(config), "commit.gpgSign", "true")
+            env = {"GIT_CONFIG_GLOBAL": str(config), "GIT_DIR": str(caller / ".git"),
+                   "GIT_WORK_TREE": str(caller), "GIT_INDEX_FILE": str(caller / "index")}
+            with mock.patch.dict(os.environ, env), self.assertRaises(global_check.CheckError) as failure:
+                global_check.run_tool_tests(project)
+            self.assertIn("fdda17c0a4538b0f7c99f813c20ca24b49006530:Github/lib/ci_config.py", str(failure.exception))
+            self.assertIn("FAILED (errors=1)", str(failure.exception))
+            self.assertFalse((caller / "index").exists())
+            self.assertEqual(git(caller, "for-each-ref"), b"")
 
     def test_workflow_lints_receive_actual_explicit_paths_and_reject_incomplete_results(self):
         with workspace() as fixture:

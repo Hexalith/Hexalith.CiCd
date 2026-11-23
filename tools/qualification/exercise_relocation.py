@@ -75,9 +75,10 @@ class Snapshot:
 
 class Boundaries:
     """A bounded external-tool model. Unknown operations fail the exercise."""
-    def __init__(self, layout, scratch, kind, *, refuse_policy=False):
+    def __init__(self, layout, scratch, kind, *, refuse_policy=False, parties_case="source"):
         self.layout, self.scratch, self.kind = layout, scratch, kind
         self.refuse_policy = refuse_policy
+        self.parties_case = parties_case
         self.calls, self.policy_calls, self.reads = [], [], []
         self.containers = {}
         self.original_open = Path.open
@@ -138,7 +139,8 @@ class Boundaries:
             elif operation == 'ls-files':
                 if '--stage' in args:
                     name = Path(args[-1]).name
-                    stdout = '160000 ' + self.dependencies[name] + ' 0\t' + args[-1] + '\n'
+                    pin = '0' * 40 if self.parties_case == 'pin' else self.dependencies[name]
+                    stdout = '160000 ' + pin + ' 0\t' + args[-1] + '\n'
                 elif '--others' in args:
                     pass
                 else:
@@ -151,7 +153,9 @@ class Boundaries:
                 else:
                     stdout = '\n'.join('160000 commit ' + BUILDS_SHA + '\treferences/' + name
                                        for name in ('Hexalith.Builds', 'Hexalith.McpCli', 'Hexalith.Memories', 'Hexalith.Platform', 'Hexalith.Tenants'))
-            elif operation == 'write-tree': stdout = 'd' * 40 + '\n'
+            elif operation == 'write-tree':
+                wrong_tree = self.parties_case == 'tree' and not (kwargs.get('env') or {}).get('GIT_INDEX_FILE')
+                stdout = ('c' if wrong_tree else 'd') * 40 + '\n'
             elif operation == 'hash-object': stdout = 'e' * 40 + '\n'
             elif operation == 'cat-file': stdout = 'tree ' + 'd' * 40 + '\n'
             elif operation == 'bundle': Path(args[2]).write_bytes(b'controlled bundle\n')
@@ -243,7 +247,11 @@ class Boundaries:
         class Tools:
             def __init__(self, root): self.environment = dict(os.environ)
             lint_message = lambda *args: self.policy_calls.append('lint_message')
-            _process = lambda *args: subprocess.CompletedProcess([], 0, '', '')
+            def _process(_tools, arguments, operation, message):
+                self.policy_calls.append(operation)
+                if self.parties_case == 'commitlint':
+                    return subprocess.CompletedProcess(arguments, 1, '', 'controlled commitlint rejection')
+                return subprocess.CompletedProcess(arguments, 0, '', '')
         class PipelineError(Exception):
             def __init__(self, message, returncode=1): super().__init__(message); self.returncode = returncode
         @dataclass
@@ -335,17 +343,16 @@ def parties_success_inputs(layout):
     write(module / 'commitlint.config.mjs', 'export default {};\n')
 
 
-def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_success=False):
+def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_case='source'):
     layout = workspace / kind
     shutil.copytree(checkout / 'tools/qualification', layout / 'tools/qualification',
                     ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
     source_layout(layout)
-    if parties_success:
-        assert kind == 'parties'
+    if kind == 'parties' and parties_case != 'source':
         parties_success_inputs(layout)
     scratch = layout / 'scratch'
     scratch.mkdir()
-    boundaries = Boundaries(layout, scratch, kind, refuse_policy=refuse_policy)
+    boundaries = Boundaries(layout, scratch, kind, refuse_policy=refuse_policy, parties_case=parties_case)
     code = layout / 'tools/qualification'
     before = manifest(code)
     qualifier = {
@@ -363,7 +370,7 @@ def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_success=
     def child_reaped(*args): raise ChildProcessError()
     environment = {'PATH': str(layout / 'controlled-sdk'), 'TMPDIR': str(scratch),
                    'TMP': str(scratch), 'TEMP': str(scratch)}
-    if kind == 'parties' and not parties_success:
+    if kind == 'parties' and parties_case == 'source':
         # All immutable proof fixtures and every dependency pin are checked first.
         # A real file with deliberately wrong bytes tests the preserved exact-input
         # refusal; the unavailable historical untracked bodies are never simulated.
@@ -401,9 +408,9 @@ def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_success=
                 exit_code = namespace['main']()
         except SystemExit as error:
             exit_code = int(error.code or 0)
-        except AssertionError as error:
-            if kind != 'parties' or parties_success: raise
-            refusal = type(error).__name__
+        except ValueError as error:
+            if kind != 'parties' or parties_case == 'success': raise
+            refusal = str(error)
     assert manifest(code) == before, kind + ' modified qualifier code or fixtures'
     fixture_reads = sorted({str(path.relative_to(code)) for path in boundaries.reads
                             if path.is_relative_to(code) and 'fixtures' in path.relative_to(code).parts})
@@ -411,6 +418,12 @@ def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_success=
     result = {'runner': 'tools/qualification/' + qualifier,
               'controlled_external_calls': len(boundaries.calls), 'policy_calls': boundaries.policy_calls,
               'fixture_reads': fixture_reads, 'log_sha256': digest(log), 'code_and_fixtures_unchanged': True}
+    if kind == 'parties':
+        result['qualification_error'] = refusal
+        if parties_case != 'success' and refusal is None:
+            raise AssertionError(f'Parties qualifier returned normally for {parties_case}')
+        if parties_case in ('pin', 'tree', 'commitlint'):
+            return result
     if kind.startswith('folders'):
         name = 'product-verification.json' if kind == 'folders-product' else 'final-candidate.json'
         report = next(scratch.rglob(name))
@@ -449,7 +462,7 @@ def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_success=
         assert record['push_performed'] is False and record['azure_executed'] is False
         assert 'execute_unit_projects' in boundaries.policy_calls
         result['preserved_result'] = 'controlled full preparation body completed'
-    elif parties_success:
+    elif parties_case == 'success':
         output_directory = scratch / 'parties-publication-results'
         record = json.loads((output_directory / 'pre-push-qualification.json').read_text())
         assert refusal is None and record['result'] == 'pass', record
@@ -472,12 +485,12 @@ def exercise(checkout, workspace, kind, *, refuse_policy=False, parties_success=
         result['preserved_result'] = 'controlled success body completed; both commit messages written in scratch'
     else:
         record = json.loads((scratch / 'parties-publication-results/pre-push-qualification.json').read_text())
-        assert refusal == 'AssertionError' and record['result'] == 'failed', record
-        # The exact-byte assertion names its input; other checks and boundary faults do not.
+        assert refusal == record['error'] and record['result'] == 'failed', record
+        # The exact-byte refusal names its input; other checks and boundary faults do not.
         assert record['error'] == state['untracked_inputs'][0]['path'], 'Refusal was not the exact-byte check: ' + record['error']
         assert record['verified_dependency_revisions'] == boundaries.dependencies
         mismatch = layout / 'references/Hexalith.Parties' / state['untracked_inputs'][0]['path']
-        assert mismatch.resolve() in boundaries.reads, 'Expected exact-input assertion was not reached'
+        assert mismatch.resolve() in boundaries.reads, 'Expected exact-input check was not reached'
         assert digest(mismatch) != state['untracked_inputs'][0]['sha256']
         result['refusal_input'] = {'path': state['untracked_inputs'][0]['path'],
                                    'expected_sha256': state['untracked_inputs'][0]['sha256'],
@@ -508,7 +521,7 @@ def main():
               'clean_checkout': clean, 'exercises': {}}
     for kind in ('folders-product', 'folders-final', 'projects', 'g6', 'eventstore', 'parties'):
         report['exercises'][kind] = exercise(checkout, workspace, kind)
-    report['exercises']['parties-success'] = exercise(checkout, workspace / 'controlled-success', 'parties', parties_success=True)
+    report['exercises']['parties-success'] = exercise(checkout, workspace / 'controlled-success', 'parties', parties_case='success')
     report['exercises']['released-policy-refusal'] = exercise(checkout, workspace / 'negative', 'folders-product', refuse_policy=True)
     report['limits'] = ['No network, credentials, module publication or real SDK/container product qualification is used.',
                         'Parties preserves exact-byte refusal for an intentionally mismatched disposable source file after all frozen fixtures and dependency pins are checked.',
