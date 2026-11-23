@@ -432,11 +432,11 @@ def workflow_paths(project: Path) -> list[str]:
     for directory in (renderer.safe_path(project, ".github/workflows"),):
         if directory.exists():
             for path in directory.iterdir():
-                if path.suffix in (".yml", ".yaml"):
+                if path.suffix.casefold() in (".yml", ".yaml"):
                     paths.append(path.relative_to(project).as_posix())
     paths += [path.relative_to(project).as_posix()
-              for suffix in ("yml", "yaml")
-              for path in renderer.safe_path(project, "rendered").glob(f"*/.github/workflows/*.{suffix}")]
+              for path in renderer.safe_path(project, "rendered").glob("*/.github/workflows/*")
+              if path.suffix.casefold() in (".yml", ".yaml")]
     for path in paths:
         target = renderer.safe_path(project, path)
         if not target.is_file():
@@ -454,6 +454,10 @@ def lint_workflows(project: Path, contract) -> None:
     if not any(os.environ.get(key) for key in ("GITHUB_TOKEN", "GH_TOKEN", "ZIZMOR_GITHUB_TOKEN")):
         raise CheckError("Online audits require a read-only GitHub token")
     paths = workflow_paths(project)
+    unsupported = [path for path in paths if Path(path).suffix not in (".yml", ".yaml")]
+    if unsupported:
+        raise CheckError("Pinned zizmor requires lowercase .yml or .yaml workflow extensions: "
+                         + ", ".join(unsupported))
     installer = load_module("_cicd_tagged_linter_installer", contract.root / "Tools/ci/lint_workflows.py")
     pins = renderer.json_document((contract.root / "Tools/ci/tools.json").read_bytes(), "tagged tool pins")
     with tempfile.TemporaryDirectory(prefix="hexalith-global-lint-") as directory:

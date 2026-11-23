@@ -31,10 +31,13 @@ still run. The module verdict shape and accepted-source repair behavior remain
 unchanged. Module workflows, generated perimeters and product gates are unchanged.
 The parent tool-suite discovery includes the locked mutation suite.
 
-Discovery parses every parent `.yml` and `.yaml` using the renderer's strict,
-duplicate-rejecting YAML reader. Either an environment **name** equal to
-`cicd-app` or an App-key reference discovers a consumer independently. Unrelated
-names such as `cicd-app-preview` and environment URL text do not select the App.
+Discovery parses every parent `.yml` and `.yaml`, including case variants,
+using the renderer's strict, duplicate-rejecting YAML reader. Either an
+environment **name** equal to `cicd-app` or an App-key reference independently
+identifies a consumer. Reviewed paths use lowercase extensions. Global workflow
+lint reports case variants in parent and rendered paths because pinned zizmor
+requires lowercase extensions. Unrelated names such as `cicd-app-preview` and
+environment URL text do not select the App.
 Dynamic environment names and unresolved computed `secrets[index]` expressions
 fail closed because their runtime value could select the environment or key.
 Literal references to unrelated secrets remain allowed. An unreviewed job-level

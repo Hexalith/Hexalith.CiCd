@@ -172,6 +172,29 @@ class AppInventoryTests(unittest.TestCase):
                 write(root, path, {"on": "workflow_dispatch", "jobs": {"unknown": job}})
                 self.invoke(root, 1, path)
 
+    def test_case_variant_workflow_extensions_reach_inventory_and_lint(self):
+        for extension in (".YML", ".YaMl"):
+            with self.subTest(extension=extension), workspace() as root:
+                path = ".github/workflows/unreviewed" + extension
+                write(root, path, {"on": "workflow_dispatch", "jobs": {"unreviewed": {
+                    "runs-on": "ubuntu-latest", "environment": "cicd-app", "steps": [{"run": "true"}],
+                }}})
+                rendered = "rendered/Hexalith.Fixture/" + path
+                (root / rendered).parent.mkdir(parents=True)
+                shutil.copyfile(root / path, root / rendered)
+                paths = global_check.workflow_paths(root)
+                self.assertIn(path, paths)
+                self.assertIn(rendered, paths)
+                self.assertIn("unreviewed App consumer workflow", self.invoke(root, 1, path).stderr)
+                with (mock.patch.dict(os.environ, {"GITHUB_TOKEN": "fixture"}, clear=True),
+                      mock.patch.object(global_check.platform, "system", return_value="Linux"),
+                      mock.patch.object(global_check.platform, "machine", return_value="x86_64"),
+                      self.assertRaises(global_check.CheckError) as refusal):
+                    global_check.lint_workflows(root, None)
+                self.assertIn("requires lowercase", str(refusal.exception))
+                self.assertIn(path, str(refusal.exception))
+                self.assertIn(rendered, str(refusal.exception))
+
     def test_unknown_job_each_discovery_signal_independently(self):
         for job in ({"environment": "cicd-app", "steps": [{"run": "true"}]},
                     {"environment": "CiCd-ApP", "steps": [{"run": "true"}]},

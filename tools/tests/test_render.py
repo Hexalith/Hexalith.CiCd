@@ -1138,6 +1138,13 @@ class RenderTests(unittest.TestCase):
             body = (ROOT / "templates/partials/ownership-block.txt.j2").read_text()
             self.assertTrue(body.strip())
             self.assertTrue(all(entry["text"] == body for entry in blocks))
+            self.assertIn("top-level `release` and `commitlint` keys", body)
+            for name in (".releaserc*", "release.config.*", "commitlint.config.*", ".commitlintrc*",
+                         "package.json", "semantic-release", "@semantic-release/*", "@commitlint/*",
+                         "dependencies", "devDependencies", "optionalDependencies", "peerDependencies",
+                         ".husky/commit-msg", "**/Directory.Build.rsp", "**/bmad-testarch-ci/**"):
+                with self.subTest(documented_perimeter_entry=name):
+                    self.assertIn(f"`{name}`", body)
             self.assertNotIn("<!-- hexalith-cicd:begin -->", body)
             self.assertNotIn("<!-- hexalith-cicd:end -->", body)
             for entry in blocks:

@@ -181,7 +181,7 @@ def check(project: Path):
     require(directory.is_dir(), ".github/workflows", "workflow directory missing")
     observed, token_count = set(), 0
     for path in sorted(directory.iterdir()):
-        if path.suffix not in (".yml", ".yaml"):
+        if path.suffix.casefold() not in (".yml", ".yaml"):
             continue
         source = path.relative_to(project).as_posix()
         document = renderer.yaml_document(read(project, source), source)

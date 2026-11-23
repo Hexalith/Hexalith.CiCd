@@ -117,7 +117,8 @@ location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/SelectedR
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: Upstream merge e588605ccf2c6577a2490e1a3fc512f8ffdc3960 introduced required ownerRunId/runId/role fields while SelectedRoutingCatalogSnapshotTests.CreateDescriptor still emits only environmentId. Reviewer executed the focused class: 34 tests, 4 failures, exit 2; negative controls also short-circuit. These C# changes were already on origin/main before resumed publisher changes.
-status: open
+status: done 2026-11-23
+resolution: Builds `b74b467ac5ce5d9f9fc440f43e279b7093b539de` binds all three fields in the fixture. The corrected test blob `f07fa2cab376672b3d02c82867f6dd092b47f1ee` is in current Builds main, the pinned v6.6.2 tag and the source whose hosted .NET unit job passed. [Hosted job](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43519435001/job/132209687921)
 
 ### DW-13: Strengthen the upstream malformed explicit-port CLI tests so missing manifest errors cannot satisfy them.
 origin: spec-deferred 633fd01f9c74
@@ -318,7 +319,8 @@ location: tools/nightly.py:338
 source_spec: `8-1-nightly-releases.md`
 severity: medium
 reason: `outcome()` requires exactly one `hexalith-release-outcome` artifact before it rejects artifacts created before `run_started_at`. If GitHub's list-run-artifacts endpoint returns earlier attempts' artifacts for a rerun, every rerun target fails closed as an unreadable outcome (medium if true). To settle it, list the artifacts of a hosted rerun release run. If earlier attempts appear, filter by `created_at >= run_started_at` before the uniqueness check. (declared severity: medium (unverified))
-status: open
+status: done 2026-11-23
+resolution: A hosted Timesheets rerun listed same-name publication artifacts from both attempts under its legacy uploader. Nightly now defensively excludes earlier-attempt outcome artifacts before requiring one current match. The regression covers distinct attempt starts, both listing orders, duplicate current artifacts and missing timestamps. [Hosted rerun](https://github.com/Hexalith/Hexalith.Timesheets/actions/runs/44421310299)
 
 ### DW-34: The delivery barrier's sequential per-status scans can miss a `deliver.yml` run that moves into `waiting` between two status queries.
 
@@ -355,6 +357,8 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
   summary: Scope the shared guide's mandatory Builds pre-push command for standalone tooling repositories.
   evidence: Review B1 (medium): AI.Tools entry points require hexalith-llm-instructions.md, whose new CI/CD section requires references/Hexalith.Builds/check.py before every push, but AI.Tools has no Builds checkout or .gitmodules. Clarify tooling versus product-module scope; the workflow defers agent-context changes found in review.
+  status: done 2026-11-23
+  resolution: AI.Tools `736687b79c1e4fa8beabdab75c4675bb76c466b9` scoped the checker prerequisite to adopted modules and specified standalone clones with Builds as a direct submodule. The wording is present in the checked-out main guide blob `2cda6714f426cb5c419d3b15d28a20e57dd7b039`.
 
 - source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
   summary: Make the restricted module-credential refusal rule explicitly override the shared Git guide's interactive maintainer fallback.
@@ -367,6 +371,8 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
   summary: Document forbidden release/commitlint configuration and agent-tooling portions alongside the positive ownership list.
   evidence: Review B4 (low): templates/perimeter.json.j2 also owns absent release/commitlint config, selected package entries, commitlint hook lines, Directory.Build.rsp and bmad-testarch-ci paths, while the final ownership body lists the positive ownership portions. Guard enforcement remains unchanged; the generated agent-context clarification is deferred by the build review workflow.
+  status: done 2026-11-23
+  resolution: The canonical ownership block and rendered module manifests now describe the guard's release and commitlint settings, package entries, hook lines, response files and agent-tooling paths.
 
 - source_spec: `_bmad-output/specs/spec-cicd/stories/10-2-agent-instructions-and-deny-entries.md`
   summary: Preserve foreign instructions or fail safely when repairing malformed or duplicated perimeter markers before pilot adoption.
@@ -496,7 +502,8 @@ location: tools/check_app_inventory.py:184
 source_spec: `30-1-verify-the-cicd-app-workflow-inventory.md`
 severity: medium
 reason: tools/check_app_inventory.py and check_global.workflow_paths compare path.suffix case-sensitively, so a .github/workflows file ending .YML that selects cicd-app is not inspected. GitHub documents only .yml and .yaml and does not state whether matching is case-sensitive. A hosted probe of an uppercase-extension workflow, or an authoritative GitHub statement, settles it; if GitHub runs such files, casefold the suffix in both discovery paths. (declared severity: medium (unverified))
-status: open
+status: done 2026-11-23
+resolution: CiCd conservatively inspects case variants of both YAML extensions. The App inventory refuses unreviewed privileged parent workflows. Global lint reports case variants in parent and rendered paths with the lowercase extension required by pinned zizmor. This is a local discovery guarantee.
 
 ### DW-41: The relocated EventStore verifier suite is not discovered by the CiCd tool-suite gate.
 
@@ -530,4 +537,8 @@ source_spec: `11-pilot-migration-commons-and-polymorphicserializations.md`
 severity: high
 reason: The November 22 readback identified nine other repository policies whose wildcard push scopes covered Commons and PolymorphicSerializations package IDs. The maintainer accepted the pilot with this exception open. Recheck the nine policy IDs and record the owner-approved disposition of each overlap. [Pilot repair receipt](../specs/spec-cicd/evidence/11/ad-7-ad-21-maintainer-repair-20261122.json) · [Maintainer acceptance](../specs/spec-cicd/stories/11-pilot-migration-commons-and-polymorphicserializations.md#maintainer-acceptance--2026-11-22)
 status: open
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-deferred-validation-findings.md`
+  summary: Recheck the release run attempt before recording a terminal outcome error if the artifact read fails.
+  evidence: Nightly already rechecks attempt identity after a successful artifact download. The baseline error path stores a terminal outcome error immediately, so a rerun that changes the artifact listing before the status recheck can be missed. Add a controlled attempt change during the listing and verify that the next attempt remains pollable.
 

@@ -34,10 +34,11 @@ switch, green CI, security gates and release content.
 
 Wait polls those exact repository, caller, main and workflow-dispatch
 identities every 60 seconds. Its one five-hour deadline includes every polling
-slice and mint overhead. A rerun attempt cannot consume an older attempt's
-outcome. Complete-mode releases may intentionally publish a SHA older than
-the dispatched run's head. Each completed run supplies its sole unexpired
-`hexalith-release-outcome` artifact, containing only `outcome.json`.
+slice and mint overhead. Wait ignores same-name artifacts created before the
+current attempt started. Each completed attempt must supply exactly one
+`hexalith-release-outcome` artifact. It must be unexpired, identify the
+correlated run and head, and contain only `outcome.json`. Complete-mode releases
+may intentionally publish a SHA older than the dispatched run's head.
 
 Successful `published`, `nothing` and `disabled` outcomes pass. A successful
 `ready` outcome passes only after the App authenticates the original bot-marked
