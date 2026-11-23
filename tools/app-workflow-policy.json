@@ -1,6 +1,6 @@
 {
   "schema": "hexalith.cicd-app-inventory.v1",
-  "reviewed_revision": "848b5c2d3497bdeae1aebc94e77b2cd1f20872d7",
+  "reviewed_revision": "f0d19e1054c9f25da4e0fe0e27a227a2b1d5e48e",
   "selector_sources": {
     "tools/delivery_bootstrap.py": {
       "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
@@ -15,11 +15,11 @@
       "bound": "Accepted-source module application; no change to validation verdict or product gates."
     },
     "tools/nightly.py": {
-      "sha256": "32e37a4158616ba14e27165f0dfab80a67990ce629baed33af8137f8a8e0d86b",
-      "bound": "At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
+      "sha256": "e8b0987f2d6d6b777d1e09220dff1a4ed3387b2e816bc923a4049e2fa4b6f5bd",
+      "bound": "At most three CiCd Actions-read barrier slices within two hours. At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
     },
     "tools/nightly_runtime.py": {
-      "sha256": "ac74e36036e7f4fdda19970382867a01c27f7b2a3ef32182dc4e62ca1117e0ff",
+      "sha256": "26f9d4ca7b1b9e749b99f7d74cbe0e8bed4b3b18819d5909e4b9dccf334827e3",
       "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. The job token is used only for initialization handoffs and fixed, public Builds REST reads. Workflow enable is limited to CiCd's nightly.yml, deliver.yml and scan.yml."
     },
     "tools/nightly_publish.py": {
@@ -1010,7 +1010,7 @@
           "boundary": {
             "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}",
             "runs-on": "ubuntu-latest",
-            "timeout-minutes": 105,
+            "timeout-minutes": 180,
             "environment": "cicd-app",
             "permissions": {
               "contents": "read"
@@ -1026,9 +1026,9 @@
             {
               "index": 4,
               "step": {
-                "name": "Mint barrier_token App token",
-                "id": "barrier_token",
-                "if": "${{ !cancelled() && steps.barrier_budget.outputs.active == 'true' }}",
+                "name": "Mint first Delivery barrier token",
+                "id": "barrier_01_token",
+                "if": "${{ !cancelled() && steps.barrier_01_budget.outputs.active == 'true' }}",
                 "continue-on-error": true,
                 "timeout-minutes": 1,
                 "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
@@ -1043,7 +1043,45 @@
               }
             },
             {
-              "index": 8,
+              "index": 7,
+              "step": {
+                "name": "Mint second Delivery barrier token",
+                "id": "barrier_02_token",
+                "if": "${{ !cancelled() && steps.barrier_02_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.CiCd",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 10,
+              "step": {
+                "name": "Mint final Delivery barrier token",
+                "id": "barrier_03_token",
+                "if": "${{ !cancelled() && steps.barrier_03_budget.outputs.active == 'true' }}",
+                "continue-on-error": true,
+                "timeout-minutes": 1,
+                "uses": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+                "with": {
+                  "client-id": "${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}",
+                  "private-key": "${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}",
+                  "owner": "Hexalith",
+                  "repositories": "Hexalith.CiCd",
+                  "skip-token-revoke": true,
+                  "permission-actions": "read"
+                }
+              }
+            },
+            {
+              "index": 14,
               "step": {
                 "name": "Mint target_01_token App token",
                 "id": "target_01_token",
@@ -1063,7 +1101,7 @@
               }
             },
             {
-              "index": 11,
+              "index": 17,
               "step": {
                 "name": "Mint target_02_token App token",
                 "id": "target_02_token",
@@ -1083,7 +1121,7 @@
               }
             },
             {
-              "index": 14,
+              "index": 20,
               "step": {
                 "name": "Mint target_03_token App token",
                 "id": "target_03_token",
@@ -1103,7 +1141,7 @@
               }
             },
             {
-              "index": 17,
+              "index": 23,
               "step": {
                 "name": "Mint target_04_token App token",
                 "id": "target_04_token",
@@ -1123,7 +1161,7 @@
               }
             },
             {
-              "index": 20,
+              "index": 26,
               "step": {
                 "name": "Mint target_05_token App token",
                 "id": "target_05_token",
@@ -1143,7 +1181,7 @@
               }
             },
             {
-              "index": 23,
+              "index": 29,
               "step": {
                 "name": "Mint target_06_token App token",
                 "id": "target_06_token",
@@ -1163,7 +1201,7 @@
               }
             },
             {
-              "index": 26,
+              "index": 32,
               "step": {
                 "name": "Mint target_07_token App token",
                 "id": "target_07_token",
@@ -1183,7 +1221,7 @@
               }
             },
             {
-              "index": 29,
+              "index": 35,
               "step": {
                 "name": "Mint target_08_token App token",
                 "id": "target_08_token",
@@ -1203,7 +1241,7 @@
               }
             },
             {
-              "index": 32,
+              "index": 38,
               "step": {
                 "name": "Mint target_09_token App token",
                 "id": "target_09_token",
@@ -1223,7 +1261,7 @@
               }
             },
             {
-              "index": 35,
+              "index": 41,
               "step": {
                 "name": "Mint target_10_token App token",
                 "id": "target_10_token",
@@ -1243,7 +1281,7 @@
               }
             },
             {
-              "index": 38,
+              "index": 44,
               "step": {
                 "name": "Mint target_11_token App token",
                 "id": "target_11_token",
@@ -1263,7 +1301,7 @@
               }
             },
             {
-              "index": 41,
+              "index": 47,
               "step": {
                 "name": "Mint target_12_token App token",
                 "id": "target_12_token",
@@ -1283,7 +1321,7 @@
               }
             },
             {
-              "index": 44,
+              "index": 50,
               "step": {
                 "name": "Mint target_13_token App token",
                 "id": "target_13_token",
@@ -1303,7 +1341,7 @@
               }
             },
             {
-              "index": 47,
+              "index": 53,
               "step": {
                 "name": "Mint target_14_token App token",
                 "id": "target_14_token",
@@ -1323,7 +1361,7 @@
               }
             },
             {
-              "index": 50,
+              "index": 56,
               "step": {
                 "name": "Mint target_15_token App token",
                 "id": "target_15_token",
@@ -1343,7 +1381,7 @@
               }
             },
             {
-              "index": 53,
+              "index": 59,
               "step": {
                 "name": "Mint target_16_token App token",
                 "id": "target_16_token",
@@ -1363,7 +1401,7 @@
               }
             },
             {
-              "index": 56,
+              "index": 62,
               "step": {
                 "name": "Mint target_17_token App token",
                 "id": "target_17_token",
@@ -1383,7 +1421,7 @@
               }
             },
             {
-              "index": 59,
+              "index": 65,
               "step": {
                 "name": "Mint target_18_token App token",
                 "id": "target_18_token",
@@ -1421,211 +1459,231 @@
             },
             {
               "index": 3,
-              "identity": "barrier_budget",
-              "sha256": "3012af92d9b986974aac074dffe57ead2f583e80a24dd87219e8d1cb180e28ce"
+              "identity": "barrier_01_budget",
+              "sha256": "63d40c61ac3e872035c712fd630ecd3cfbaa9b13328b7daeb4a90cbbf994bdb5"
             },
             {
               "index": 5,
-              "identity": "Wait for hourly delivery barrier",
-              "sha256": "3e5edde22586e69857fb01b9408ebeb9886dd0d317dd8d8af79385063a32dd49"
+              "identity": "barrier_01_observe",
+              "sha256": "22c865d3795fc65f9d3a64241f2241ba4ac93049d3b8cff553daaa4191ab3a5c"
             },
             {
               "index": 6,
+              "identity": "barrier_02_budget",
+              "sha256": "2922e819260e67621ecfa5b28d4ffb5b6b2d928e530d35fc4903af5120c96762"
+            },
+            {
+              "index": 8,
+              "identity": "barrier_02_observe",
+              "sha256": "042ccd20148a22c8208870b9b799e37556f24308724cb4e491a667c8888bd083"
+            },
+            {
+              "index": 9,
+              "identity": "barrier_03_budget",
+              "sha256": "c6013e1a26e93221863a7cd6a7b2c93e1b40dd0d515577e79ce0e53984a1cc95"
+            },
+            {
+              "index": 11,
+              "identity": "Observe Delivery with the final barrier token",
+              "sha256": "703a33aae38a542d83bc3c2c1ddd480d8bcf98d5d17148b6f95d89b5f16dae79"
+            },
+            {
+              "index": 12,
               "identity": "select",
               "sha256": "338aab5ee23cfa1c6e703cdf7ede71c716d33e46f86520843cde802ef13bb59c"
             },
             {
-              "index": 7,
+              "index": 13,
               "identity": "target_01_budget",
               "sha256": "2b17c41842dc60a2bfde7fe1638be81129019be7f1aaf607c03ca4e1a375ffe5"
             },
             {
-              "index": 9,
+              "index": 15,
               "identity": "Dispatch target slot 01",
               "sha256": "cbbedabf534a0663e4bd66f8e309f64fdff1988fefd2949e5915dcbf689614eb"
             },
             {
-              "index": 10,
+              "index": 16,
               "identity": "target_02_budget",
               "sha256": "adec569305ab358461f42c7e4e6b4862b7f043db9361b7f21fd71446a0563ca4"
             },
             {
-              "index": 12,
+              "index": 18,
               "identity": "Dispatch target slot 02",
               "sha256": "e29fbff68292690b949a673ab5706e737d4861cb8c891e0bc0359456a5d6fe81"
             },
             {
-              "index": 13,
+              "index": 19,
               "identity": "target_03_budget",
               "sha256": "9c56d08fca48cacdd5cab1de4e611679d767904a9dd06eb5e158a55c17e16291"
             },
             {
-              "index": 15,
+              "index": 21,
               "identity": "Dispatch target slot 03",
               "sha256": "cd37ab7c6cc3bea722c6724c3316f064fc360040ec29d35a6ce85f6c060e2dcc"
             },
             {
-              "index": 16,
+              "index": 22,
               "identity": "target_04_budget",
               "sha256": "ddc9f5ede39260a0cb4a77593ce4252b65e05e8bd1e8ce802ececc27ead60056"
             },
             {
-              "index": 18,
+              "index": 24,
               "identity": "Dispatch target slot 04",
               "sha256": "c3fe5d85b33f5b67d1bafa667fd2f8f491bd9b97cacb5097d7460a978e657de2"
             },
             {
-              "index": 19,
+              "index": 25,
               "identity": "target_05_budget",
               "sha256": "7e547c09e2db6f8e8aa0b9710cbb3e34c35f85bbbf953cf1a7619afa5bf42062"
             },
             {
-              "index": 21,
+              "index": 27,
               "identity": "Dispatch target slot 05",
               "sha256": "c54dde7c4f66cecca33bd2f14df1acc0e31f49e289bf4c4b10c19a09f85d6b3e"
             },
             {
-              "index": 22,
+              "index": 28,
               "identity": "target_06_budget",
               "sha256": "0a6fea76578d6148bb3e2af6bbb362860e89f8e6276d61aa80474a5bd54a263b"
             },
             {
-              "index": 24,
+              "index": 30,
               "identity": "Dispatch target slot 06",
               "sha256": "ac1abed1d171fa4b750a81a52a5b04ccfb18501cfa6fcb2ffbaaa491af2e18e3"
             },
             {
-              "index": 25,
+              "index": 31,
               "identity": "target_07_budget",
               "sha256": "d2b46bc3941d2b76b59d69332d2dc771fdc71eeed2f481a68b9ef91d0641bc61"
             },
             {
-              "index": 27,
+              "index": 33,
               "identity": "Dispatch target slot 07",
               "sha256": "28a29776575b68569556a5f4db08f38b79a574d24c3000dd8944331a1abdc6b5"
             },
             {
-              "index": 28,
+              "index": 34,
               "identity": "target_08_budget",
               "sha256": "95d1ad9384c712d15997dd7424ce04d68650ec02fe7ff83728161292ae898946"
             },
             {
-              "index": 30,
+              "index": 36,
               "identity": "Dispatch target slot 08",
               "sha256": "d1ee26e03beb5efb2f9d8a5b229423f6c35876e0236099f4f420490ab835a4b4"
             },
             {
-              "index": 31,
+              "index": 37,
               "identity": "target_09_budget",
               "sha256": "67cc27544c41f7132a0d71bb1dd7b2d1e305138165ff2466d09ea3f729d222d5"
             },
             {
-              "index": 33,
+              "index": 39,
               "identity": "Dispatch target slot 09",
               "sha256": "52c0372385cc91e10e52c0bc9e631c01e4003b02e36c4776727b1ef9859894d5"
             },
             {
-              "index": 34,
+              "index": 40,
               "identity": "target_10_budget",
               "sha256": "dbdb69cdae735a57987eb28a83a4db10214e7db8e2078ad54f8405c9c0c2bc30"
             },
             {
-              "index": 36,
+              "index": 42,
               "identity": "Dispatch target slot 10",
               "sha256": "18caa3c143b59a87011b2054b37d8ab82d744c2261208c48cb0c28e167ac75ef"
             },
             {
-              "index": 37,
+              "index": 43,
               "identity": "target_11_budget",
               "sha256": "21db9dbda2b0c73fb464d04ecdffcdd7283a1afb4099291c7a55c2b0ce313db1"
             },
             {
-              "index": 39,
+              "index": 45,
               "identity": "Dispatch target slot 11",
               "sha256": "1ca1a8b9e94dab81817d1b6592a0790aa8d7131fe101e33c9b9563fe65727a9f"
             },
             {
-              "index": 40,
+              "index": 46,
               "identity": "target_12_budget",
               "sha256": "618182d9a7b173fdda6aaa7619a3fca1f1e0b8a0a27c32e6abe5ee5e10069fef"
             },
             {
-              "index": 42,
+              "index": 48,
               "identity": "Dispatch target slot 12",
               "sha256": "06b20f87dad4551b11f22d8a3e21ef4de4542b0d8c8d5b91340e77b2b0a130cd"
             },
             {
-              "index": 43,
+              "index": 49,
               "identity": "target_13_budget",
               "sha256": "abff1ba2393fc3d739c08427c4d8d469935a9fb7be87257d50f67c35cd768564"
             },
             {
-              "index": 45,
+              "index": 51,
               "identity": "Dispatch target slot 13",
               "sha256": "386af45cb949755dc8d18a0a25cb93aad45e14fbd73e20cbbc9eaf4bcc13f9e5"
             },
             {
-              "index": 46,
+              "index": 52,
               "identity": "target_14_budget",
               "sha256": "e641066cf74020b1384b553b04c4410c4accf7085ab9e1dd20a13d9e5b5adfd4"
             },
             {
-              "index": 48,
+              "index": 54,
               "identity": "Dispatch target slot 14",
               "sha256": "9163fc7748c1266598cef2cc220e6de47f50fd2b30ee50149306bb14d34e652b"
             },
             {
-              "index": 49,
+              "index": 55,
               "identity": "target_15_budget",
               "sha256": "818643e37eed6bfa29857cc0b092795191583457cf9301c0f722804bf7b8abcb"
             },
             {
-              "index": 51,
+              "index": 57,
               "identity": "Dispatch target slot 15",
               "sha256": "a1f7e78994b025719c38d8618b1a03d44629b306735190aa55466c03b65592b2"
             },
             {
-              "index": 52,
+              "index": 58,
               "identity": "target_16_budget",
               "sha256": "a0eca0b970b5e93cb3fc9a953445962a50ee88fba82f477b81726bd2e700b85d"
             },
             {
-              "index": 54,
+              "index": 60,
               "identity": "Dispatch target slot 16",
               "sha256": "c406627b10d737f432cf154a4e14e54d5325a5283b28292f6cd54506443e1fd5"
             },
             {
-              "index": 55,
+              "index": 61,
               "identity": "target_17_budget",
               "sha256": "ac15eba86f3471c8713e1b96b46cd915907925005a7466ee07e0349595831639"
             },
             {
-              "index": 57,
+              "index": 63,
               "identity": "Dispatch target slot 17",
               "sha256": "733e34df857767dde81ec36ef6105cefe292cdeb840e7414bbac60eb165c176e"
             },
             {
-              "index": 58,
+              "index": 64,
               "identity": "target_18_budget",
               "sha256": "c211aa3b7de067f198775776d3b0b3e064a60cdac36710a4333348ef82bd013f"
             },
             {
-              "index": 60,
+              "index": 66,
               "identity": "Dispatch target slot 18",
               "sha256": "6f443886d69593909f0a957c8eb35a9662e5a6d279c638ed01c9de46145e6836"
             },
             {
-              "index": 61,
+              "index": 67,
               "identity": "Finalize dispatch state and verdicts",
               "sha256": "e61670e143f85a2ea95520d541d3b8a891cb9186422cf5a27042600edaeca78f"
             },
             {
-              "index": 62,
+              "index": 68,
               "identity": "Report unavailable checkout",
               "sha256": "902122186cc766c7f70a023482be7d66b85c8a15c4913922fbe26391aaae7354"
             },
             {
-              "index": 63,
+              "index": 69,
               "identity": "state",
               "sha256": "66a37c220b354aae0d03778248dd2cc6e119c35a6ed2ba4f7c7630cb2f8882b3"
             }
