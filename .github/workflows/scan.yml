@@ -1,0 +1,73 @@
+name: Cross-module duplicate scan
+
+on:
+  schedule:
+    - cron: '7 3 * * *'
+  workflow_dispatch:
+
+permissions: {}
+cache-mode: none
+
+jobs:
+  scan:
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    env:
+      SCAN_DIRECTORY: ${{ github.workspace }}-nightly-scan-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Seed conservative scan report and summary before checkout
+        run: >-
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['SCAN_DIRECTORY']); p.mkdir(mode=448,parents=True,exist_ok=True); (p/'report.json').write_text(json.dumps({'schema':'hexalith.duplicate-scan.v1','result':'fail','controllerRevision':'','modules':[],'findings':[],'errors':['controller checkout or tooling unavailable'],'detector':{},'policy':{}})+'\n'); (p/'summary.md').write_text('# Cross-module duplicate scan\n\nFAIL: controller checkout or tooling unavailable; coverage is unverified.\n')"
+
+      - name: Checkout CiCd scan controller and policy
+        id: checkout
+        timeout-minutes: 3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          submodules: false
+          persist-credentials: false
+
+      - name: Setup detector Node runtime
+        id: node
+        timeout-minutes: 3
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Setup locked scan environment
+        id: uv
+        timeout-minutes: 2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          enable-cache: false
+
+      - name: Scan registered modules at anonymous live main
+        id: scan
+        timeout-minutes: 42
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' && steps.node.outcome == 'success' && steps.uv.outcome == 'success' }}
+        run: uv run --locked tools/scan.py
+
+      - name: Preserve scan summary and reject incomplete coverage
+        if: ${{ always() }}
+        env:
+          SCAN_OUTCOME: ${{ steps.scan.outcome }}
+        run: >-
+          python3 -I -c "import json,os,pathlib; p=pathlib.Path(os.environ['SCAN_DIRECTORY']); summary=(p/'summary.md').read_text(); destination=os.environ.get('GITHUB_STEP_SUMMARY'); pathlib.Path(destination).open('a').write(summary) if destination else None; report=json.loads((p/'report.json').read_text()); raise SystemExit(0 if os.environ.get('SCAN_OUTCOME')=='success' and report.get('result')=='pass' else 1)"
+
+      - name: Upload token-free duplicate scan report and summary
+        if: ${{ always() }}
+        timeout-minutes: 3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hexalith-nightly-scan-${{ github.run_attempt }}
+          path: |
+            ${{ env.SCAN_DIRECTORY }}/report.json
+            ${{ env.SCAN_DIRECTORY }}/summary.md
+          if-no-files-found: error
+          retention-days: 90

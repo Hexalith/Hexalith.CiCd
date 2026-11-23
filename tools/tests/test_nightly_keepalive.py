@@ -18,6 +18,7 @@ from nightly_support import Clock
 
 controller = load(ROOT / "tools/nightly_keepalive.py", "_keepalive_tests")
 rt = controller.rt
+WORKFLOWS = ["nightly.yml", "deliver.yml", "scan.yml"]
 
 
 class Fixture:
@@ -88,7 +89,8 @@ class KeepaliveTests(unittest.TestCase):
         fixture = self.fixture()
         report = fixture.run()
         self.assertEqual(fixture.code, 0)
-        self.assertEqual(fixture.calls, ["nightly.yml", "deliver.yml"])
+        self.assertEqual(fixture.calls, WORKFLOWS)
+        self.assertEqual(report["enabled"], dict.fromkeys(WORKFLOWS, "enabled"))
         self.assertEqual(report["commit"], "pushed")
         head = git(fixture.remote, "rev-parse", "main")
         self.assertEqual(head, report["candidate"])
@@ -104,20 +106,23 @@ class KeepaliveTests(unittest.TestCase):
                 self.assertEqual(report["commit"], "not-needed")
                 self.assertEqual(git(fixture.remote, "rev-parse", "main"), fixture.base)
 
-    def test_both_enable_requests_attempted_after_first_error(self):
-        fixture = self.fixture(idle=0)
+    def test_all_enables_attempted_after_first_error_and_idle_main_is_maintained(self):
+        fixture = self.fixture()
         fixture.enable_failures.add("nightly.yml")
         report = fixture.run()
-        self.assertEqual(fixture.calls, ["nightly.yml", "deliver.yml"])
+        self.assertEqual(fixture.calls, WORKFLOWS)
         self.assertEqual(fixture.code, 1)
-        self.assertEqual(report["enabled"], {"nightly.yml": "failed", "deliver.yml": "enabled"})
+        self.assertEqual(report["enabled"], {"nightly.yml": "failed", "deliver.yml": "enabled", "scan.yml": "enabled"})
+        self.assertEqual(report["commit"], "pushed")
         self.assertIn("HTTP 403", report["errors"][0])
 
-    def test_both_enable_errors_remain_visible(self):
+    def test_all_enable_errors_remain_visible(self):
         fixture = self.fixture(idle=0)
-        fixture.enable_failures.update(("nightly.yml", "deliver.yml"))
+        fixture.enable_failures.update(WORKFLOWS)
         report = fixture.run()
-        self.assertEqual(len(report["errors"]), 2)
+        self.assertEqual(report["enabled"], dict.fromkeys(WORKFLOWS, "failed"))
+        self.assertEqual(report["errors"], [f"{name} enable failed: GitHub API PUT enable rejected: HTTP 403"
+                                             for name in WORKFLOWS])
         self.assertEqual(report["result"], "fail")
 
     def test_racing_main_never_overwritten(self):
@@ -161,7 +166,7 @@ class KeepaliveTests(unittest.TestCase):
                                  capture_output=True, env=environment)
         self.assertEqual(process.returncode, 0, process.stderr.decode())
         self.assertEqual(process.stdout, b"")
-        self.assertEqual((fixture.root / "calls").read_text().splitlines(), ["nightly.yml", "deliver.yml"])
+        self.assertEqual((fixture.root / "calls").read_text().splitlines(), WORKFLOWS)
         raw = (fixture.directory / "keepalive.json").read_text()
         self.assertNotIn("inert", raw)
         self.assertEqual(json.loads(raw)["commit"], "pushed")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Keep both schedules enabled and refresh an idle CiCd main with an empty commit."""
+"""Keep CiCd schedules enabled and refresh an idle main with an empty commit."""
 from __future__ import annotations
 
 import argparse
@@ -47,8 +47,8 @@ def run(directory, environment, token, transport, *, clock=time.time):
         context(environment)
         if environment.get("NIGHTLY_CANCELLED") == "true":
             raise rt.NightlyError("nightly cancelled; keepalive writes suppressed")
-        # Independent requests: a rejection on the first must not hide the second.
-        for workflow in ("nightly.yml", "deliver.yml"):
+        # Attempt every enable even if an earlier request fails.
+        for workflow in rt.KEEPALIVE_WORKFLOWS:
             try:
                 transport.api.enable(workflow, token)
                 report["enabled"][workflow] = "enabled"

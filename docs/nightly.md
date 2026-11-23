@@ -4,11 +4,9 @@
 The `nightly` concurrency group queues main runs without cancelling the active
 run; as with any GitHub concurrency group, a newer queued run replaces an older
 pending one. Skipped non-main dispatches use a separate group.
-It executes `dispatch → wait → publish-ready → scan → bump → bump-push → delivery-wait
+It executes `dispatch → wait → publish-ready → bump → bump-push → delivery-wait
 → keepalive`. Release dispatch, release wait, publication and delivery observation
-use `cicd-app`; scan has only a Contents-read job token, used by its pinned
-checkout/setup actions and never passed to the scan controller, while
-the bump producer uses only a read-only job token. The writer and
+use `cicd-app`. The bump producer uses only a read-only job token. The writer and
 keepalive use their own job tokens. There are no push or pull request triggers.
 
 Dispatch waits up to 45 minutes to observe two complete idle scans of main
@@ -125,33 +123,15 @@ just like re-running all jobs. Unverified pre-existing publication is never
 treated as proof that this nightly published a ready result.
 
 Once nightly has run, hourly delivery's existing freshness check fails if the
-last main nightly run is older than 26 hours. The secretless
-duplicate scan runs **after `publish-ready` and before `bump`**. Bump needs both
-publication and scan to finish. Bump and keepalive
-continue after ordinary publication or scan failures; the failed upstream job
-still makes the overall night fail. Explicit cancellation stops new work.
+last main nightly run is older than 26 hours. The bump waits for
+`publish-ready` to finish, even if publication fails. Keepalive continues
+after ordinary failures. A failed nightly job makes the overall night fail.
+Explicit cancellation stops new work.
 
-Scan reads the committed setup registry, including modules not yet adopted, and
-anonymously snapshots each module's live `main`. It scans YAML, shell, PowerShell
-and Python under every `.github/actions/**`, including dormant directories, and
-recursively discovers local scripts and Python imports. A substantial fragment
-shared by distinct modules fails the scan; repetition confined to one module
-does not. Missing or dynamic local calls, unsafe sources, fetch or discovery
-failures, detector setup failures and invalid output also fail visibly. Healthy
-siblings still contribute scope and findings. An empty registry or a module
-with no actions is an explicit successful zero scope.
-
-The scan job has a 55-minute limit, uses Node 24 and locked uv without caches,
-and installs integrity-pinned jscpd 5.4.3 into private disposable scratch with
-scripts disabled and npm signature verification. It never executes module code.
-Its central weak-mode policy uses 10 lines and 50 tokens across all four formats.
-The token-free `hexalith-nightly-scan-<attempt>` artifact retains `report.json`
-and `summary.md` for 90 days. Reports identify the full live source commits,
-selected original files, failures, cross-module line ranges and code to move
-into Builds. A conservative failed report and summary are seeded before
-checkout, so unavailable checkout or tooling cannot become a clean result.
-The summary is copied to the Actions job summary even after an ordinary failure.
-See [duplicate scan scope, reports and retuning](duplicate-scan.md).
+The duplicate scan runs independently at **03:07 UTC** or by manual
+dispatch on `main`. It reports its own verdict in Actions. Successful uploads
+retain `report.json` and `summary.md` for 90 days in
+`hexalith-nightly-scan-<attempt>`. See the [duplicate scan runbook](duplicate-scan.md).
 
 ## Testing on demand
 
@@ -162,13 +142,26 @@ push for 45 minutes, which is the dispatch barrier. Only the maintainer or an
 interactive CiCd session dispatches; a module agent cannot. A run takes about an
 hour. Judge it with
 `python3 tools/nightly_acceptance.py --run <id> --module <Repo>`: each module's
-verdict depends only on its own rows. Story 11 adds `--checkpoint pilot`. Record
-the receipt, not logs. Dispatching again without a fix only reports nothing to
-release.
+verdict includes eligibility, the exact release run, CodeQL, any required
+post-bump delivery, and duplicate scan coverage for the dispatch commit. For a
+historical attempt with a scan job, the reader authenticates that attempt's
+artifact. For an on-demand scan, start it after Nightly starts while the live
+module heads still match the dispatch SHAs. The reader checks up to 100 completed
+`scan.yml` runs on `main` created at or after Nightly started. A longer or
+incomplete listing leaves coverage unproven. The current attempt of the first
+qualifying run, ordered by creation time and run ID, decides coverage for each
+module with an exact dispatch-commit row. An absent or stale row leaves
+coverage unproven. A failing row, a run-level error in the selected report, or
+a duplicate involving the module fails acceptance even if a later scan is
+clean. Findings confined to other modules can fail the scan run while this
+module passes acceptance. Scan coverage can be pending after a successful
+Nightly run. `--checkpoint pilot` also checks the bump and keepalive.
+Dispatching Nightly again without a fix only reports nothing to release.
 
 `--receipt <path>` writes the identity-only receipt, and the tool exits 0 when
 every named module passes, 1 when any fails, and 2 when the run is rejected or
-unreadable.
+unreadable. Alongside the compact receipt, record each module's dispatch SHA,
+the deciding scan run and attempt, and the artifact name, ID and SHA-256 digest.
 
 ## Builds bumps and rollback
 
@@ -203,11 +196,9 @@ makes all later runs for that night no-change. A following UTC night may bump
 again. Unreadable history fails this guard.
 
 The producer renders in a disposable live-main checkout, locally commits the
-candidate, and runs the unchanged shared global gate. The gate runs the scan
-suite with the real pinned detector, so the bump job sets up the same pinned
-Node 24 as the scan job before its producer step. Only a successful
-candidate exposes `candidate.json` in `hexalith-nightly-bump-<attempt>`. Failed
-checks expose no candidate artifact. The separate
+candidate, and runs the shared global gate with the pin-dependent tool suites.
+Only a successful candidate exposes `candidate.json` in
+`hexalith-nightly-bump-<attempt>`. The separate
 `hexalith-nightly-bump-report-<attempt>` (`bump.json`) records candidate, no-change
 or failure observations. The isolated stdlib writer authenticates
 the artifact's run, attempt, source, name and digest; reconstructs and hashes its
@@ -224,7 +215,7 @@ The default transport is the writer job's `GITHUB_TOKEN`, scoped to Contents and
 Actions write. After confirmed push it explicitly dispatches `deliver.yml` on
 main because token push events do not create downstream workflow runs. The
 manual **qualify-bump** input runs only an isolated inert rendered-workflow
-probe on main; it skips releases, duplicate scanning, production bump, delivery and keepalive.
+probe on main. It skips releases, production bump, delivery and keepalive.
 It must record the remote SHA/tree and remove its probe refs. Hosted evidence
 and the conditional App fallback are tracked in
 [`nightly-bump-qualification.md`](nightly-bump-qualification.md). Fixture success
@@ -261,14 +252,15 @@ Actions read on exactly CiCd and the independently authorized module union.
 No rendering, tests, linting or artifact code runs in this App job.
 
 Keepalive runs even after failed or skipped ordinary prerequisites. It attempts
-both `nightly.yml` and `deliver.yml` enable calls independently, accepting the
+`nightly.yml`, `deliver.yml` and `scan.yml` enable calls independently, accepting the
 API's empty HTTP 204 response. It fetches fresh main and uses its UTC committer
 timestamp. Only a tip older than 50 days receives an empty
 `build(cicd): keepalive` commit with that exact tip as parent; it never overwrites
 a racing main. Enable and push failures remain red and are recorded in
 `hexalith-nightly-keepalive-<attempt>` (`keepalive.json`). The enable API is the
 primary protection against GitHub's 60-day schedule disable; the empty commit
-is secondary. If both schedules stop, the maintainer must re-enable them.
+is secondary. If Nightly stops and workflows become disabled, the maintainer
+must re-enable them.
 
 New job limits are 55 minutes for bump, 55 for bump-push, 105 for propagation and
 15 for keepalive. Dispatch, release wait and publication use 105/330/55 minutes. Every App

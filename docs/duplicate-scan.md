@@ -1,11 +1,15 @@
 # Cross-module duplicate scan
 
-`tools/scan.py` runs in nightly after publication and before the Builds bump.
-It reports generic custom-action code copied between modules so that a later
-change can move that code into Builds. The scan makes no module or Builds edits.
-Any cross-module finding or incomplete scan makes the job fail. Bump and
-keepalive remain eligible after this ordinary failure, and nightly stays red.
-Cancellation and the manual `qualify-bump` mode skip production scanning.
+`scan.yml` runs `tools/scan.py` daily at **03:07 UTC**. To run it on demand,
+open **Cross-module duplicate scan** in CiCd Actions and choose **Run workflow**
+on `main`. The job has a 55-minute limit and a Contents-read job token. The
+controller and policy are checked out at the triggering CiCd commit. The scan
+step is capped at 42 minutes to leave time for the summary and upload.
+The controller scans registered public modules anonymously and reports
+custom-action code copied between modules. A cross-module finding or incomplete
+coverage fails the scan run and names the affected source. Nightly releases
+and the Builds bump have their own verdicts. Nightly keepalive enables
+`scan.yml` alongside the other scheduled workflows.
 
 ## Sources and scope
 
@@ -352,12 +356,26 @@ The durable output directory contains:
   so module text stays inert Markdown. Fragment lines follow the detector's
   LF-only line numbering.
 
-The nightly job seeds both files before checkout and always uploads the directory
-as `hexalith-nightly-scan-<attempt>`, retained for 90 days. It also preserves the
-Markdown in the Actions summary. An unavailable controller or tooling leaves the
-failed seed in place. Reports contain no scan credentials. Selected scope and
-findings are deterministic for unchanged source revisions and policy; observation
-metadata and future live main revisions may differ.
+The scan job seeds both files before checkout, writes the Markdown to the
+Actions summary and attempts to upload the two files even after an ordinary
+failure. Cancellation or runner loss can interrupt finalization. Successful
+uploads are retained for 90 days as `hexalith-nightly-scan-<attempt>`. An
+unavailable controller or tooling leaves the failed seed in place. Reports
+contain no scan credentials. Selected scope and findings are deterministic for
+unchanged source revisions and policy. Observation metadata and future live
+main revisions may differ.
+
+For a module's release acceptance, the read-only acceptance tool checks the
+scan row for its exact dispatch commit. It uses the same attempt's artifact for
+historical Nightly runs with a scan job. To qualify a newer Nightly on demand,
+start the scan after Nightly starts while the live module heads still match its
+dispatch SHAs. The reader evaluates a single listing of at most 100 completed
+independent scans on `main` since Nightly started. It uses the current attempt
+of the first qualifying run, ordered by creation time and run ID, with a row
+for the exact dispatch commit. A failed row or duplicate involving the module
+still fails acceptance if a later scan passes. Record the deciding scan run and
+attempt, artifact name, ID and SHA-256 digest, and dispatch SHA alongside the
+compact receipt. See [Testing on demand](nightly.md#testing-on-demand).
 
 For a standalone local scan, use an existing checkout and toolchain and retain
 outputs outside disposable scratch. `UV_NO_CACHE=1` puts uv's temporary cache and

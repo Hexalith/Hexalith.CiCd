@@ -19,8 +19,8 @@
       "bound": "At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
     },
     "tools/nightly_runtime.py": {
-      "sha256": "abff8488beae11b086d29eeed23af8d0658038c16f3dab44b61657af95abcd07",
-      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. The job token is used only for initialization handoffs and fixed, public Builds REST reads."
+      "sha256": "ac74e36036e7f4fdda19970382867a01c27f7b2a3ef32182dc4e62ca1117e0ff",
+      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. The job token is used only for initialization handoffs and fixed, public Builds REST reads. Workflow enable is limited to CiCd's nightly.yml, deliver.yml and scan.yml."
     },
     "tools/nightly_publish.py": {
       "sha256": "9679abb0eb186f2fa8cfa4ee0a58ee8f39198f5518c2875d053707762f1de82d",
@@ -1003,8 +1003,7 @@
       },
       "context_jobs": {
         "bump-push": "14b134b92768c0348ad6df660ffe65966d84a2e5758002056f78e87390047cb6",
-        "bump": "179205e268e694f9fea9c3477eca926cfed748c624042d0331193731043c477f",
-        "scan": "ddcf0a6cf63ee701098038be00f6e9b3fc8eebd249634a1ff25d21e1e9bc4ae4"
+        "bump": "d345340929a249e8d158f98beecc62c6dde8f6ec0c672f361bcbd8b65b908b3d"
       },
       "jobs": {
         "dispatch": {

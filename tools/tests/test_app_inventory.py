@@ -315,7 +315,7 @@ class AppInventoryTests(unittest.TestCase):
                 self.invoke(root, 1, "tools/" + name)
 
     def test_unbound_transitive_dependency_job_fails(self):
-        for path, name in ((NIGHTLY, "bump-push"), (NIGHTLY, "scan"), (DELIVER, "validate")):
+        for path, name in ((NIGHTLY, "bump-push"), (NIGHTLY, "bump"), (DELIVER, "validate")):
             with self.subTest(path=path, name=name), workspace() as root:
                 policy = json.loads((root / inventory.POLICY).read_bytes())
                 policy["workflows"][path]["context_jobs"].pop(name)

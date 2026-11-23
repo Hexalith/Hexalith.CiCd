@@ -65,25 +65,36 @@ class RuntimeTests(unittest.TestCase):
         identity = 43643156668
         reply = {"workflow_run_id": identity, "run_url": f"https://api.github.com/repos/Hexalith/{rt.CICD}/actions/runs/{identity}",
                  "html_url": rt.run_link(rt.CICD, identity)}
-        api, opener, _ = self.api([(204, b""), (204, b""), reply, {}, {}, {}])
-        self.assertIsNone(api.enable("nightly.yml", "inert"))
-        self.assertIsNone(api.enable("deliver.yml", "inert"))
+        api, opener, _ = self.api([(204, b"")] * 3 + [reply, {}, {}, {}])
+        workflows = ("nightly.yml", "deliver.yml", "scan.yml")
+        for workflow in workflows:
+            self.assertIsNone(api.enable(workflow, "inert"))
+        self.assertEqual([request.full_url for request, _ in opener.requests], [
+            f"https://api.github.com/repos/Hexalith/Hexalith.CiCd/actions/workflows/{workflow}/enable"
+            for workflow in workflows
+        ])
         self.assertEqual(api.dispatch_delivery("inert"), {"runId": identity, "link": reply["html_url"]})
         api.get("/repos/Hexalith/Hexalith.Alpha/actions/workflows/ci.yml/runs?branch=main", "inert")
         api.get("/repos/Hexalith/Hexalith.CiCd/actions/runs/123/attempts/2/jobs?per_page=100&page=1", "inert")
         api.get("/repos/Hexalith/Hexalith.Builds/releases?per_page=100&page=1")
-        self.assertEqual([request.get_method() for request, _ in opener.requests], ["PUT", "PUT", "POST", "GET", "GET", "GET"])
+        self.assertEqual([request.get_method() for request, _ in opener.requests],
+                         ["PUT", "PUT", "PUT", "POST", "GET", "GET", "GET"])
         for responses in ([(200, {})], [(204, b"unexpected")], [(403, {})], [URLError("reset")]):
             api, opener, _ = self.api(responses)
             with self.assertRaises(rt.NightlyError):
-                api.enable("nightly.yml", "inert")
+                api.enable("scan.yml", "inert")
             self.assertEqual(len(opener.requests), 1)
         api, opener, _ = self.api([])
-        for workflow in ("ci.yml", "release.yml", "../nightly.yml"):
+        for workflow in ("ci.yml", "release.yml", "../nightly.yml", "scan.yaml"):
             with self.assertRaises(rt.NightlyError):
                 api.enable(workflow, "inert")
-        with self.assertRaises(rt.NightlyError):
-            api._request("PUT", "/repos/Hexalith/Hexalith.Alpha/actions/workflows/nightly.yml/enable", "inert")
+        for path in ("Hexalith.Alpha/actions/workflows/nightly.yml/enable",
+                     "Hexalith.Alpha/actions/workflows/scan.yml/enable",
+                     "Hexalith.CiCd/actions/workflows/ci.yml/enable",
+                     "Hexalith.CiCd/actions/workflows/scan.yml/disable",
+                     "Hexalith.CiCd/actions/workflows/scan.yml/enable?branch=main"):
+            with self.subTest(path=path), self.assertRaises(rt.NightlyError):
+                api._request("PUT", "/repos/Hexalith/" + path, "inert")
         with self.assertRaises(rt.NightlyError):
             api._request("POST", "/repos/Hexalith/Hexalith.Alpha/actions/workflows/deliver.yml/dispatches", "inert")
         self.assertFalse(opener.requests)

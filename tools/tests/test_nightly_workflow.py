@@ -16,11 +16,13 @@ import tempfile
 import unittest
 
 import yaml
-from delivery_support import ROOT, load
+from delivery_support import ROOT, git, load
 from test_delivery_workflow import Workflow as Expressions
 from nightly_support import Workspace, metadata, zip_document
 
 controller = load(ROOT / "tools/nightly.py", "_nightly_workflow_controller")
+NIGHTLY_WORKFLOW = ROOT / ".github/workflows/nightly.yml"
+SCAN_WORKFLOW = ROOT / ".github/workflows/scan.yml"
 TOKENS = ("CICD_TOKEN", "TARGET_TOKEN", "POLL_TOKEN", "HANDOFF_TOKEN", "MODULE_TOKEN", "NIGHTLY_MINT_EPOCH",
           "GITHUB_TOKEN", "GH_TOKEN", "NODE_AUTH_TOKEN", "NPM_TOKEN")
 
@@ -41,6 +43,10 @@ def artifact_path(inputs, workspace):
     if any(part.startswith(".") for part in relative.parts):
         raise AssertionError("artifact path would be excluded as hidden")
     return path
+
+
+def artifact_paths(inputs, workspace):
+    return [artifact_path({"path": path}, workspace) for path in inputs["path"].splitlines()]
 
 
 class Workflow(Expressions):
@@ -73,9 +79,10 @@ class Workflow(Expressions):
         return re.sub(r"\$\{\{(.*?)\}\}", replace, value)
 
     def __init__(self, workspace, *, event="workflow_dispatch", ref="refs/heads/main", mint_fail=(),
-                 cancel_after=None, lost_artifact=None, pending=(), fail_checkout=None, dispatch_mint_seconds=1):
+                 cancel_after=None, lost_artifact=None, pending=(), fail_checkout=None,
+                 dispatch_mint_seconds=1, path=NIGHTLY_WORKFLOW):
         self.w = workspace
-        self.document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
+        self.document = yaml.safe_load(path.read_bytes())
         self.context = {"github": {"ref": ref, "sha": workspace.sha, "repository": "Hexalith/Hexalith.CiCd",
             "workspace": str(workspace.candidate), "run_id": "101", "run_attempt": "1", "event_name": event,
             "token": "inert-handoff-token"}, "needs": {}, "steps": {}, "runner": {"temp": str(workspace.root / "runner-temp")},
@@ -251,20 +258,21 @@ class ArtifactPathWorkflowTests(unittest.TestCase):
         workflow = Workflow(Workspace(Path(temporary.name) / "workspace", ()))
         checkout = workflow.context["github"]["workspace"]
         uploads = []
-        for phase, job in workflow.document["jobs"].items():
+        jobs = workflow.document["jobs"] | yaml.safe_load(SCAN_WORKFLOW.read_bytes())["jobs"]
+        for phase, job in jobs.items():
             base = {key: workflow.expand(value) for key, value in job.get("env", {}).items()}
             workflow.context["env"] = base
             for step in job["steps"]:
                 if not step.get("uses", "").startswith("actions/upload-artifact@"):
                     continue
                 inputs = {key: workflow.expand(value) for key, value in step["with"].items()}
-                path = artifact_path(inputs, checkout)
-                self.assertEqual(path.suffix, "" if phase == "scan" else ".json")
+                paths = artifact_paths(inputs, checkout)
+                self.assertEqual([path.suffix for path in paths], [".json", ".md"] if phase == "scan" else [".json"])
                 self.assertNotIn("include-hidden-files", inputs)
-                uploads.append((phase, path))
-        self.assertEqual({phase for phase, _ in uploads}, set(workflow.document["jobs"]))
-        self.assertEqual(len(uploads), 9)
-        self.assertEqual(len({path for _, path in uploads}), 9)
+                uploads.extend((phase, path) for path in paths)
+        self.assertEqual({phase for phase, _ in uploads}, set(jobs))
+        self.assertEqual(len(uploads), 10)
+        self.assertEqual(len({path for _, path in uploads}), 10)
 
     def test_upload_boundary_rejects_parent_current_hidden_and_relative_paths(self):
         checkout = "/runner/work/Repo/Repo"
@@ -477,7 +485,7 @@ class NightlyWorkflowTests(unittest.TestCase):
 
 
 class PostReleaseWorkflow(Workflow):
-    """Execute the real new graph with controller results at the I/O boundary.
+    """Execute the post-release or scan graph with controller results at the I/O boundary.
 
     Producer, verifier and observers have separate real Git/controller suites.
     Here the boundary substitutes their outcomes so every workflow path, token
@@ -486,11 +494,13 @@ class PostReleaseWorkflow(Workflow):
     """
     def __init__(self, workspace, *, publication="success", producer="candidate", push="pushed",
                  propagation="success", keepalive="success", qualify=False, ref="refs/heads/main",
-                 mint_fail=(), cancel_after=None, fail_checkout=None, scan="pass", fail_tool=None):
-        super().__init__(workspace, ref=ref, mint_fail=mint_fail, cancel_after=cancel_after,
-                         fail_checkout=fail_checkout)
-        self.context["inputs"] = {"qualify-bump": qualify}
-        self.context["needs"] = {"publish-ready": {"result": publication, "outputs": {}}}
+                 mint_fail=(), cancel_after=None, fail_checkout=None, scan="pass", fail_tool=None,
+                 path=NIGHTLY_WORKFLOW, event="workflow_dispatch"):
+        super().__init__(workspace, event=event, ref=ref, mint_fail=mint_fail, cancel_after=cancel_after,
+                         fail_checkout=fail_checkout, path=path)
+        if path == NIGHTLY_WORKFLOW:
+            self.context["inputs"] = {"qualify-bump": qualify}
+            self.context["needs"] = {"publish-ready": {"result": publication, "outputs": {}}}
         self.producer, self.push, self.propagation, self.keepalive = producer, push, propagation, keepalive
         self.extension_calls = []
         self.current_directory = None
@@ -510,8 +520,10 @@ class PostReleaseWorkflow(Workflow):
                 result = "pass" if self.scan == "pass" else "fail"
                 directory = Path(env["SCAN_DIRECTORY"])
                 (directory / "report.json").write_text(json.dumps({"schema": "hexalith.duplicate-scan.v1",
+                    "controllerRevision": git(self.w.candidate, "rev-parse", "HEAD"),
                     "result": result, "modules": [], "findings": [], "errors": []}))
                 (directory / "summary.md").write_text("Duplicate scan: " + result.upper() + "\n")
+                (directory / "report.json.writing").write_text("interrupted write")
                 failed = self.scan == "failure"
         elif phase == "bump":
             if command != ["uv", "run", "--locked", "tools/bump.py"]:
@@ -595,7 +607,6 @@ class PostReleaseWorkflow(Workflow):
     def ordered_jobs(self):
         """Schedule by real dependencies, preferring reverse declaration order.
 
-        This makes a missing scan dependency observable: bump would start first.
         Conditions still decide eligibility after failed or skipped dependencies.
         """
         pending = {}
@@ -645,6 +656,9 @@ class PostReleaseWorkflow(Workflow):
             self.failed, self.upstream = False, None
 
     def execute(self):
+        triggers = self.document.get("on", self.document.get(True))
+        if self.context["github"]["event_name"] not in triggers:
+            return "not-triggered"
         for phase, job in self.ordered_jobs():
             self.failed, self.context["steps"] = False, {}
             if not self.job_condition(phase, job):
@@ -682,13 +696,15 @@ class PostReleaseWorkflow(Workflow):
                         if inputs.get("persist-credentials") is not False or inputs.get("submodules") is not False:
                             raise AssertionError("unsafe controller checkout")
                         failed = phase == self.fail_checkout
+                        if phase == "scan" and not failed:
+                            ref = inputs.get("ref", self.context["github"]["ref"])
+                            git(self.w.candidate, "checkout", "--quiet", "--detach", ref)
                     elif action == "astral-sh/setup-uv":
                         if phase not in {"bump", "scan"} or inputs.get("enable-cache") is not False or inputs.get("version") != "0.13.7":
                             raise AssertionError("uv or cache enabled in App job")
                         failed = self.fail_tool == (phase, identifier)
                     elif action == "actions/setup-node":
-                        # The bump's shared global gate runs the real-detector scan suite.
-                        if phase not in {"scan", "bump"} or inputs.get("node-version") != "24" or inputs.get("package-manager-cache") is not False or "cache" in inputs:
+                        if phase != "scan" or inputs.get("node-version") != "24" or inputs.get("package-manager-cache") is not False or "cache" in inputs:
                             raise AssertionError("unsafe detector runtime or package cache")
                         failed = self.fail_tool == (phase, identifier)
                     elif action == "actions/create-github-app-token":
@@ -707,19 +723,21 @@ class PostReleaseWorkflow(Workflow):
                             self.tokens[token] = len(self.mints) - 1
                             outputs["token"] = token
                     elif action == "actions/upload-artifact":
-                        path = artifact_path(inputs, self.context["github"]["workspace"])
-                        failed = not path.exists()
+                        paths = artifact_paths(inputs, self.context["github"]["workspace"])
+                        failed = not all(path.is_file() for path in paths)
                         if not failed:
                             if phase == "scan":
-                                if not path.is_dir() or {item.name for item in path.iterdir()} != {"report.json", "summary.md"}:
-                                    raise AssertionError("scan artifact lost its report or summary")
-                                summary = (path / "summary.md").read_text()
+                                directory = Path(env["SCAN_DIRECTORY"])
+                                if sorted(paths) != [directory / "report.json", directory / "summary.md"]:
+                                    raise AssertionError("scan artifact must upload exactly its report and summary")
+                                report_path, summary_path = sorted(paths)
+                                summary = summary_path.read_text()
                                 if "inert-" in summary:
                                     raise AssertionError("token leaked in scan summary")
                                 self.scan_summaries.append(summary)
-                                data = json.loads((path / "report.json").read_bytes())
                             else:
-                                data = json.loads(path.read_bytes())
+                                [report_path] = paths
+                            data = json.loads(report_path.read_bytes())
                             if "inert-" in json.dumps(data):
                                 raise AssertionError("token leaked in artifact")
                             self.uploads.append((phase, data))
@@ -753,7 +771,7 @@ class PostReleaseWorkflow(Workflow):
             self.results[phase] = "failure" if self.failed else "success"
             self.context["needs"][phase] = {"result": self.results[phase], "outputs": {
                 key: self.expand(value) for key, value in job.get("outputs", {}).items()}}
-        failed_upstream = self.context["needs"]["publish-ready"]["result"] == "failure"
+        failed_upstream = self.context["needs"].get("publish-ready", {}).get("result") == "failure"
         return "failure" if failed_upstream or "failure" in self.results.values() else "success"
 
 
@@ -767,20 +785,20 @@ class PostReleaseWorkflowTests(unittest.TestCase):
         for publication in ("success", "failure"):
             workflow = PostReleaseWorkflow(self.fixture(), publication=publication)
             self.assertEqual(workflow.execute(), "failure" if publication == "failure" else "success")
-            self.assertEqual(workflow.results, {"scan": "success", "bump": "success", "bump-push": "success",
+            self.assertEqual(workflow.results, {"bump": "success", "bump-push": "success",
                                                "delivery-wait": "success", "keepalive": "success"})
             self.assertEqual(workflow.context["needs"]["bump-push"]["outputs"]["candidate"], "b" * 40)
-            self.assertEqual([phase for phase, _ in workflow.uploads], ["scan", "bump", "bump", "bump-push", "delivery-wait", "keepalive"])
-            self.assertEqual([phase for phase, _, _, _ in workflow.extension_calls][:2], ["scan", "bump"])
+            self.assertEqual([phase for phase, _ in workflow.uploads], ["bump", "bump", "bump-push", "delivery-wait", "keepalive"])
+            self.assertEqual(workflow.extension_calls[0][0], "bump")
             # The failed release job remains an independent red verdict in Actions.
             self.assertEqual(workflow.context["needs"]["publish-ready"]["result"], publication)
 
     def test_explicit_nochange_skips_push_and_observation_but_keeps_alive(self):
         workflow = PostReleaseWorkflow(self.fixture(), producer="no-change")
         self.assertEqual(workflow.execute(), "success")
-        self.assertEqual(workflow.results, {"scan": "success", "bump": "success", "bump-push": "skipped",
+        self.assertEqual(workflow.results, {"bump": "success", "bump-push": "skipped",
                                            "delivery-wait": "skipped", "keepalive": "success"})
-        self.assertEqual([phase for phase, _ in workflow.uploads], ["scan", "bump", "keepalive"])
+        self.assertEqual([phase for phase, _ in workflow.uploads], ["bump", "keepalive"])
         self.assertFalse(workflow.mints)
 
     def test_failed_and_missing_candidate_never_reach_writer_and_keepalive_continues(self):
@@ -795,7 +813,7 @@ class PostReleaseWorkflowTests(unittest.TestCase):
             self.assertEqual(workflow.results["bump"], "failure")
 
     def test_unavailable_controllers_preserve_failed_reports_and_keepalive_independence(self):
-        for phase in ("scan", "bump", "bump-push", "delivery-wait", "keepalive"):
+        for phase in ("bump", "bump-push", "delivery-wait", "keepalive"):
             with self.subTest(phase=phase):
                 workflow = PostReleaseWorkflow(self.fixture(), fail_checkout=phase)
                 self.assertEqual(workflow.execute(), "failure")
@@ -804,29 +822,50 @@ class PostReleaseWorkflowTests(unittest.TestCase):
                 if phase != "keepalive":
                     self.assertEqual(workflow.results["keepalive"], "success")
 
-    def test_scan_failure_and_missing_report_stay_red_while_bump_continues(self):
+    def test_scan_runs_on_schedule_and_dispatch_on_main(self):
+        for event in ("schedule", "workflow_dispatch"):
+            with self.subTest(event=event):
+                workspace = self.fixture()
+                workflow = PostReleaseWorkflow(workspace, path=SCAN_WORKFLOW, event=event)
+                triggering_revision = workspace.sha
+                (workspace.candidate / "advanced.txt").write_text("CiCd main advanced after the trigger\n")
+                self.assertNotEqual(workspace.commit(), triggering_revision)
+                self.assertEqual(workflow.execute(), "success")
+                self.assertEqual(workflow.results, {"scan": "success"})
+                [(_, report)] = workflow.uploads
+                self.assertEqual(report["result"], "pass")
+                self.assertEqual(report["controllerRevision"], triggering_revision)
+                self.assertFalse(workflow.mints)
+        triggers = workflow.document.get("on", workflow.document.get(True))
+        self.assertEqual(triggers, {"schedule": [{"cron": "7 3 * * *"}], "workflow_dispatch": None})
+        self.assertNotIn("needs", workflow.document["jobs"]["scan"])
+        self.assertNotIn("environment", workflow.document["jobs"]["scan"])
+
+    def test_scan_failure_and_missing_report_do_not_change_nightly_verdict(self):
         for scan in ("failure", "missing"):
             with self.subTest(scan=scan):
-                workflow = PostReleaseWorkflow(self.fixture(), publication="failure", scan=scan)
+                workflow = PostReleaseWorkflow(self.fixture(), path=SCAN_WORKFLOW, scan=scan)
                 self.assertEqual(workflow.execute(), "failure")
-                self.assertEqual(workflow.results["scan"], "failure")
-                self.assertEqual(workflow.results["bump"], "success")
-                self.assertEqual(workflow.results["keepalive"], "success")
+                self.assertEqual(workflow.results, {"scan": "failure"})
                 report = next(value for phase, value in workflow.uploads if phase == "scan")
                 self.assertEqual(report["result"], "fail")
                 self.assertTrue(workflow.scan_summaries)
                 summary = (workflow.w.root / "summary.md").read_text()
                 self.assertIn(workflow.scan_summaries[0], summary)
+        nightly = PostReleaseWorkflow(self.fixture())
+        self.assertEqual(nightly.execute(), "success")
+        self.assertEqual(nightly.document["jobs"]["bump"]["needs"], ["publish-ready"])
+        self.assertNotIn("scan", nightly.document["jobs"])
+        self.assertEqual(nightly.results["bump"], "success")
+        self.assertEqual(nightly.results["keepalive"], "success")
 
-    def test_scan_tooling_failures_preserve_seed_and_summary(self):
-        for tool in ("node", "uv"):
-            with self.subTest(tool=tool):
-                workflow = PostReleaseWorkflow(self.fixture(), fail_tool=("scan", tool))
+    def test_scan_checkout_and_tooling_failures_preserve_seed_and_summary(self):
+        for configuration in ({"fail_checkout": "scan"}, {"fail_tool": ("scan", "node")}, {"fail_tool": ("scan", "uv")}):
+            with self.subTest(configuration=configuration):
+                workflow = PostReleaseWorkflow(self.fixture(), path=SCAN_WORKFLOW, **configuration)
                 self.assertEqual(workflow.execute(), "failure")
-                self.assertEqual(workflow.results["scan"], "failure")
-                self.assertEqual(workflow.results["bump"], "success")
-                self.assertEqual(workflow.results["keepalive"], "success")
-                self.assertFalse(any(phase == "scan" for phase, _, _, _ in workflow.extension_calls))
+                self.assertEqual(workflow.results, {"scan": "failure"})
+                self.assertFalse(workflow.extension_calls)
                 report = next(value for phase, value in workflow.uploads if phase == "scan")
                 self.assertEqual(report["result"], "fail")
                 # The seed carries the documented report shape, with no observations.
@@ -835,20 +874,18 @@ class PostReleaseWorkflowTests(unittest.TestCase):
                 self.assertIn("coverage is unverified", workflow.scan_summaries[0])
                 self.assertIn(workflow.scan_summaries[0], (workflow.w.root / "summary.md").read_text())
 
-    def test_bump_sets_up_pinned_node_before_its_shared_gate_producer(self):
-        workflow = PostReleaseWorkflow(self.fixture())
+    def test_scan_requires_node_but_bump_uses_only_checkout_and_locked_uv(self):
+        workflow = PostReleaseWorkflow(self.fixture(), fail_tool=("bump", "node"))
         self.assertEqual(workflow.execute(), "success")
         bump = [identifier for phase, identifier in workflow.executed if phase == "bump"]
-        self.assertLess(bump.index("node"), bump.index("produce"))
-        scan = [identifier for phase, identifier in workflow.executed if phase == "scan"]
-        self.assertLess(scan.index("node"), scan.index("scan"))
-        # The same pinned action and inputs serve the scan and the bump gate.
-        jobs = workflow.document["jobs"]
-        node = {phase: next(step for step in jobs[phase]["steps"] if step.get("id") == "node") for phase in ("scan", "bump")}
-        self.assertEqual(node["scan"]["uses"], node["bump"]["uses"])
-        self.assertEqual(node["scan"]["with"], node["bump"]["with"])
-        # Unavailable Node fails the bump without running its producer.
-        workflow = PostReleaseWorkflow(self.fixture(), fail_tool=("bump", "node"))
+        self.assertEqual([identifier for identifier in bump if not identifier.startswith("step_")][:3],
+                         ["checkout", "uv", "produce"])
+        self.assertNotIn("node", bump)
+        scan = PostReleaseWorkflow(self.fixture(), path=SCAN_WORKFLOW)
+        self.assertEqual(scan.execute(), "success")
+        identifiers = [identifier for _, identifier in scan.executed]
+        self.assertLess(identifiers.index("node"), identifiers.index("scan"))
+        workflow = PostReleaseWorkflow(self.fixture(), fail_tool=("bump", "uv"))
         self.assertEqual(workflow.execute(), "failure")
         self.assertEqual(workflow.results["bump"], "failure")
         self.assertFalse(any(phase == "bump" for phase, _, _, _ in workflow.extension_calls))
@@ -857,32 +894,33 @@ class PostReleaseWorkflowTests(unittest.TestCase):
         report = next(value for phase, value in workflow.uploads if phase == "bump")
         self.assertEqual(report["result"], "failed")
 
+    def test_scan_step_leaves_job_budget_to_summarize_and_upload(self):
+        job = yaml.safe_load(SCAN_WORKFLOW.read_bytes())["jobs"]["scan"]
+        scan = next(step for step in job["steps"] if step.get("id") == "scan")
+        upload = next(step for step in job["steps"] if step.get("uses", "").startswith("actions/upload-artifact@"))
+        self.assertEqual(scan["timeout-minutes"], 42)
+        self.assertEqual(upload["timeout-minutes"], 3)
+        self.assertGreaterEqual(job["timeout-minutes"] - sum(step.get("timeout-minutes", 0) for step in job["steps"]), 2)
+
     def test_job_conditions_follow_github_needs_status_semantics(self):
         # Without !cancelled(), GitHub's implicit success() skips a job after a
-        # failed need. The model observes both continuation guards.
-        for job, configuration in (("scan", {"publication": "failure"}), ("bump", {"scan": "failure"})):
-            with self.subTest(job=job):
-                workflow = PostReleaseWorkflow(self.fixture(), **configuration)
-                condition = workflow.document["jobs"][job]["if"]
-                workflow.document["jobs"][job]["if"] = condition.replace("!cancelled() && ", "")
-                workflow.execute()
-                self.assertEqual(workflow.results[job], "skipped")
-                self.assertEqual(workflow.results["keepalive"], "success")
-        workflow = PostReleaseWorkflow(self.fixture(), publication="failure", scan="failure")
-        self.assertEqual(workflow.execute(), "failure")
-        self.assertEqual((workflow.results["scan"], workflow.results["bump"]), ("failure", "success"))
+        # failed need. The model observes the bump's continuation guard.
+        workflow = PostReleaseWorkflow(self.fixture(), publication="failure")
+        bump = workflow.document["jobs"]["bump"]
+        bump["if"] = bump["if"].replace("!cancelled() && ", "")
+        workflow.execute()
+        self.assertEqual(workflow.results["bump"], "skipped")
+        self.assertEqual(workflow.results["keepalive"], "success")
 
     def test_nonmain_and_cancelled_scan_skip_production_controller(self):
-        workflow = PostReleaseWorkflow(self.fixture(), ref="refs/heads/other")
+        workflow = PostReleaseWorkflow(self.fixture(), path=SCAN_WORKFLOW, ref="refs/heads/other")
         workflow.execute()
         self.assertEqual(workflow.results["scan"], "skipped")
         self.assertFalse(workflow.extension_calls)
-        workflow = PostReleaseWorkflow(self.fixture(), cancel_after=("scan", "checkout"))
+        workflow = PostReleaseWorkflow(self.fixture(), path=SCAN_WORKFLOW, cancel_after=("scan", "checkout"))
         workflow.execute()
-        self.assertFalse(any(phase == "scan" for phase, _, _, _ in workflow.extension_calls))
-        self.assertEqual(workflow.results["bump"], "skipped")
-        self.assertEqual(workflow.results["keepalive"], "skipped")
-        self.assertIn("scan", [phase for phase, _ in workflow.uploads])
+        self.assertFalse(workflow.extension_calls)
+        self.assertEqual([report["result"] for _, report in workflow.uploads], ["fail"])
 
     def test_failed_push_or_propagation_remains_red_and_keeps_alive(self):
         for configuration in ({"push": "failure"}, {"propagation": "failure"}):
@@ -920,7 +958,6 @@ class PostReleaseWorkflowTests(unittest.TestCase):
             calls = [(phase, command) for phase, command, _, _ in workflow.extension_calls]
             self.assertEqual(calls, [("bump-push", ("python3", "-I", "tools/bump_push.py", "qualify"))]
                              if ref == "refs/heads/main" else [])
-            self.assertEqual(workflow.results["scan"], "skipped")
             self.assertEqual(workflow.results["keepalive"], "skipped")
 
     def test_cancellation_stops_new_mints_and_writes_but_retains_reports(self):
@@ -934,8 +971,9 @@ class PostReleaseWorkflowTests(unittest.TestCase):
     def test_exact_job_timeouts_and_controller_surface(self):
         document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
         expected = {"dispatch": 105, "wait": 330, "publish-ready": 55,
-                    "scan": 55, "bump": 55, "bump-push": 55, "delivery-wait": 105, "keepalive": 15}
+                    "bump": 55, "bump-push": 55, "delivery-wait": 105, "keepalive": 15}
         self.assertEqual({phase: job["timeout-minutes"] for phase, job in document["jobs"].items()}, expected)
+        self.assertEqual(yaml.safe_load(SCAN_WORKFLOW.read_bytes())["jobs"]["scan"]["timeout-minutes"], 55)
         observer = document["jobs"]["delivery-wait"]
         self.assertEqual(len([step for step in observer["steps"] if "uses" in step
                               and step["uses"].startswith("actions/create-github-app-token@")]), 4)
@@ -959,8 +997,7 @@ class OnDemandNightlyTests(unittest.TestCase):
         cls.addClassCleanup(temporary.cleanup)
         configurations = [{"producer": producer} for producer in ("candidate", "no-change", "failure", "missing")]
         configurations += [{"push": push} for push in ("failure", "dispatch-failure")]
-        configurations += [{"propagation": "failure"}, {"publication": "failure", "scan": "failure"},
-                           {"qualify": True}]
+        configurations += [{"propagation": "failure"}, {"publication": "failure"}, {"qualify": True}]
         cls.outputs = {}
         for index, configuration in enumerate(configurations):
             workspace = Workspace(Path(temporary.name) / f"workspace-{index}", ("Hexalith.Alpha", "Hexalith.Beta"))
@@ -1062,45 +1099,38 @@ class OnDemandNightlyTests(unittest.TestCase):
 
     def test_acceptance_tool_reads_the_artifacts_nightly_and_scan_upload(self):
         acceptance = load(ROOT / "tools/nightly_acceptance.py", "_nightly_workflow_acceptance")
-        def uploads(path):
+        def uploads(workflow):
             found = {}
-            for phase, job in yaml.safe_load(path.read_bytes())["jobs"].items():
+            for phase, job in workflow.document["jobs"].items():
                 for step in job.get("steps", []):
                     if step.get("uses", "").startswith("actions/upload-artifact@"):
-                        found.setdefault(step["with"]["name"], []).append((phase, step["with"]["path"]))
+                        name = workflow.expand(step["with"]["name"])
+                        found.setdefault(name, []).append((phase, step["with"]))
             return found
-        nightly = uploads(ROOT / ".github/workflows/nightly.yml")
-        jobs = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())["jobs"]
-        scan = ROOT / ".github/workflows/scan.yml"
-        # The tool finds these jobs by API display name, which is the job id only without `name:`.
-        self.assertTrue({"dispatch", "bump-push"} <= set(jobs))
-        for phase in ("dispatch", "scan", "bump-push"):
-            if phase in jobs:
-                self.assertNotIn("name", jobs[phase])
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        workflow = PostReleaseWorkflow(Workspace(Path(temporary.name) / "workspace", ("Hexalith.Alpha",)))
-        self.assertEqual(workflow.execute(), "success")
+        module = ("Hexalith.Alpha",)
+        nightly = PostReleaseWorkflow(Workspace(Path(temporary.name) / "nightly", module))
+        scan = PostReleaseWorkflow(Workspace(Path(temporary.name) / "scan", module), path=SCAN_WORKFLOW)
+        scan.context["github"]["run_attempt"] = "2"
+        self.assertEqual(scan.execute(), "success")
         for kind, (phase, template, members) in acceptance.ARTIFACTS.items():
             with self.subTest(artifact=kind):
-                name = template.format(attempt="${{ github.run_attempt }}")
-                if kind == "scan" and phase not in jobs:
-                    # After 28-7 the scan runs only in scan.yml, under the same artifact name.
-                    self.assertTrue(scan.exists())
-                    self.assertIn(name, uploads(scan))
-                    continue
-                self.assertEqual([item[0] for item in nightly.get(name, [])], [phase])
-                path = nightly[name][0][1]
+                workflow = scan if kind == "scan" else nightly
+                name = template.format(attempt=workflow.context["github"]["run_attempt"])
+                self.assertNotIn("name", workflow.document["jobs"][phase])
+                [(job, inputs)] = uploads(workflow)[name]
+                self.assertEqual(job, phase)
+                path = inputs["path"]
                 if len(members) == 1:
                     self.assertEqual(path.rsplit("/", 1)[-1], members[0])
                 else:
-                    # A directory upload: its members are what the executed job left there.
-                    variable = re.fullmatch(r"\$\{\{ env\.([A-Z_]+) \}\}", path)
-                    self.assertIsNotNone(variable)
-                    directory = Path(workflow.expand(workflow.document["jobs"][phase]["env"][variable.group(1)]))
-                    self.assertEqual(sorted(item.name for item in directory.iterdir()), sorted(members))
-        if scan.exists():
-            self.assertIn(acceptance.ARTIFACTS["scan"][1].format(attempt="${{ github.run_attempt }}"), uploads(scan))
+                    paths = artifact_paths({"path": workflow.expand(path)}, workflow.context["github"]["workspace"])
+                    self.assertEqual(sorted(item.name for item in paths), sorted(members))
+                    self.assertTrue((paths[0].parent / "report.json.writing").is_file())
+                    self.assertEqual(inputs["retention-days"], 90)
+                    self.assertEqual(inputs["if-no-files-found"], "error")
+                    self.assertEqual([phase for phase, _ in scan.uploads], ["scan"])
 
 
 if __name__ == "__main__":

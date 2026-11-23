@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import functools
+import hashlib
 import io
 import json
 import os
@@ -18,6 +19,7 @@ import unittest
 from unittest import mock
 
 from delivery_support import ROOT, git, load
+import test_nightly_acceptance as acceptance_tests
 
 sys.path.insert(0, str(ROOT / "tools"))
 sc = load(ROOT / "tools/scan.py", "_scan_tests")
@@ -362,7 +364,7 @@ pwsh -Command:"& ./scripts/direct.ps1"
             self.assertFalse(marker.exists())
 
 
-class ScanTests(unittest.TestCase):
+class ScanTests(acceptance_tests.Harness):
     @classmethod
     def setUpClass(cls):
         cls.temporary = tempfile.TemporaryDirectory(prefix="scan-real-detector-")
@@ -1435,6 +1437,112 @@ class ScanTests(unittest.TestCase):
         self.assertEqual(w.transport.seen, ["Hexalith.Alpha", "Hexalith.Beta"])
         self.assertTrue(all(row["revision"] == git(w.paths[row["module"]], "rev-parse", "HEAD") for row in first["modules"]))
         self.assertEqual(first, w.scan(self.factory))
+
+    def test_actions_reader_authenticates_real_historical_and_independent_scans(self):
+        alpha, beta, gamma = acceptance_tests.MODULES
+        w = self.workspace((alpha, beta))
+        nightly_source = git(w.cicd, "rev-parse", "HEAD")
+
+        def scan_members():
+            report = w.scan(self.factory)
+            members = {name: (w.output / name).read_bytes() for name in ("report.json", "summary.md")}
+            self.assertEqual(json.loads(members["report.json"]), report)
+            return report, members
+
+        def nightly_world(heads):
+            world = acceptance_tests.World(tuple(heads))
+            world.run["head_sha"] = nightly_source
+            world.nightly_overrides["identity"] = {
+                "runId": world.run["id"], "attempt": world.run["run_attempt"], "source": nightly_source}
+            for module, head in heads.items():
+                world.rows[module].update(dispatchHead=head, deliveredSha=nightly_source)
+                world.rows[module]["outcome"]["sha"] = head
+            return world
+
+        historical_report, historical_members = scan_members()
+        historical_heads = {module: git(path, "rev-parse", "HEAD") for module, path in w.paths.items()}
+        historical = nightly_world(historical_heads)
+        historical.scan = historical_members["report.json"]
+        historical.scan_summary = historical_members["summary.md"]
+        code, report = self.judge(historical, alpha, beta)
+        self.assertEqual(historical_report["result"], "pass")
+        self.assertEqual(code, 0)
+        self.assertEqual({item["scan"]["source"] for item in report["modules"].values()}, {"scan job"})
+
+        w.module(gamma)
+        scan_source = w.commit(w.cicd)
+        self.assertNotEqual(scan_source, nightly_source)
+        copied = ".github/actions/dormant/shared.py"
+        for module in (alpha, beta):
+            w.write(module, copied, block("python"))
+        unsupported = w.action(gamma, 'bash "$SCRIPT"')
+        heads = {module: w.commit(path) for module, path in w.paths.items()}
+        failed_report, failed_members = scan_members()
+        self.assertEqual(failed_report["result"], "fail")
+        self.assertTrue(failed_report["findings"])
+        self.assertIn(copied.encode(), failed_members["summary.md"])
+        self.assertIn(b"action.yml:", failed_members["summary.md"])
+
+        (w.paths[beta] / copied).unlink()
+        unsupported.unlink()
+        w.commit(w.paths[beta])
+        w.commit(w.paths[gamma])
+        clean_report, clean_members = scan_members()
+        self.assertEqual(clean_report["result"], "pass")
+        self.assertIn((alpha, heads[alpha]), {(row["module"], row["revision"]) for row in clean_report["modules"]})
+
+        independent = nightly_world(heads)
+        independent.run["conclusion"] = "success"
+        independent.nightly_result = "pass"
+        del independent.jobs["scan"]
+        independent.omit.add("scan")
+
+        def producer(run_id, hour, event, attempt, source, report, members):
+            run = {"id": run_id, "path": ".github/workflows/scan.yml", "head_branch": "main",
+                   "head_sha": source, "status": "completed", "run_attempt": attempt,
+                   "conclusion": "success" if report["result"] == "pass" else "failure",
+                   "event": event, "created_at": f"2026-11-18T{hour}:00:00Z",
+                   "repository": {"full_name": "Hexalith/Hexalith.CiCd"}}
+            return run, {"scan": members}
+
+        stale = producer(60001, "09", "workflow_dispatch", 1, nightly_source, historical_report, historical_members)
+        failed = producer(60002, "10", "schedule", 2, scan_source, failed_report, failed_members)
+        clean = producer(60003, "11", "workflow_dispatch", 1, scan_source, clean_report, clean_members)
+        independent.scan_producers = [stale]
+        code, report = self.judge(independent, alpha, gamma)
+        self.assertEqual(code, 1)
+        for module in (alpha, gamma):
+            self.assertIn("covers the dispatched head", self.reasons(report, module))
+            self.assertIsNone(report["modules"][module]["scan"])
+
+        independent.scan_producers = [stale, failed, clean]
+        code, report = self.judge(independent, alpha, beta, gamma)
+        self.assertEqual(code, 1)
+        self.assertEqual(self.verdicts(report), dict.fromkeys(heads, "fail"))
+        for module in (alpha, beta):
+            self.assertIn("cross-module duplicate findings", self.reasons(report, module))
+        self.assertIn("own scan row failed: .github/actions/dormant/action.yml:", self.reasons(report, gamma))
+        self.assertEqual({item["scan"]["runId"] for item in report["modules"].values()}, {60002})
+        self.assertFalse(any("runs/60003/artifacts" in call for call in self.github_calls))
+        self.assertIn({"name": "hexalith-nightly-scan-2", "id": 15000000002,
+                       "digest": "sha256:" + hashlib.sha256(acceptance_tests.zip_bytes(failed_members)).hexdigest()},
+                      report["artifacts"])
+
+        wrong_controller = producer(60004, "09", "workflow_dispatch", 1, nightly_source, failed_report, failed_members)
+        independent.scan_producers = [wrong_controller, clean]
+        code, report = self.judge(independent, alpha, gamma)
+        self.assertEqual(code, 1)
+        self.assertEqual(self.verdicts(report), {alpha: "pass", gamma: "fail"})
+        self.assertIn("skipped scan.yml run 60004: scan report controller revision", self.reasons(report, gamma))
+        self.assertEqual(report["modules"][alpha]["scan"], {"source": "scan.yml", "runId": 60003})
+
+        independent.scan_producers = [failed]
+        github = independent.github()
+        github.routes[acceptance_tests.API + "actions/runs/60002/artifacts?per_page=100"]["artifacts"][0][
+            "workflow_run"]["head_sha"] = nightly_source
+        code, _ = self.judge(github, alpha)
+        self.assertEqual(code, 2)
+        self.assertIn(f"artifact hexalith-nightly-scan-2 is not bound to run 60002 at {scan_source}", self.stderr)
 
     def test_module_policy_ignores_and_source_directives_cannot_hide_clones(self):
         w = self.workspace()

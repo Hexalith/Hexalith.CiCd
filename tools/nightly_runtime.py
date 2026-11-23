@@ -40,6 +40,7 @@ API_VERSION = "2026-03-10"
 SCHEMA = "hexalith.nightly.v1"
 DIGEST = re.compile(r"sha256:[0-9a-f]{64}\Z")
 TOKEN_NAMES = ("CICD_TOKEN", "TARGET_TOKEN", "POLL_TOKEN", "HANDOFF_TOKEN", "MODULE_TOKEN")
+KEEPALIVE_WORKFLOWS = ("nightly.yml", "deliver.yml", "scan.yml")
 
 
 class InventoryChanged(NightlyError):
@@ -219,7 +220,7 @@ class API:
                 matched[1] == CICD and suffix == "actions/workflows/deliver.yml/dispatches")
         elif method == "PUT":
             allowed = matched[1] == CICD and suffix in {
-                "actions/workflows/nightly.yml/enable", "actions/workflows/deliver.yml/enable"}
+                f"actions/workflows/{workflow}/enable" for workflow in KEEPALIVE_WORKFLOWS}
         elif method == "PATCH":
             allowed = re.fullmatch(r"releases/[1-9][0-9]*", suffix) is not None
         else:
@@ -429,7 +430,7 @@ class API:
         return self._request("GET", path, token, deadline=deadline)
 
     def enable(self, workflow, token):
-        if workflow not in {"nightly.yml", "deliver.yml"}:
+        if workflow not in KEEPALIVE_WORKFLOWS:
             raise NightlyError("workflow enable outside nightly contract")
         return self._request("PUT", f"/repos/Hexalith/{CICD}/actions/workflows/{workflow}/enable", token)
 

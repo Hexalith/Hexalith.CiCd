@@ -109,6 +109,7 @@ class World:
                      "modules": [{"module": module, "revision": head(module), "result": "pass", "files": [],
                                   "errors": []} for module in self.modules],
                      "findings": [], "errors": [], "detector": {}, "policy": {}}
+        self.scan_summary = b"# scan\n"
         self.bump = {"schema": "hexalith.nightly-bump-report.v1", "identity": self.bump_identity(),
                      "result": "no-change", "base": SOURCE, "candidate": "", "tag": "v6.2.0",
                      "reason": "no newer acceptable unskipped Builds tag"}
@@ -120,6 +121,7 @@ class World:
         self.nightly_overrides = {}
         self.omit, self.tamper, self.duplicate = set(), {}, set()
         self.scan_runs = []
+        self.scan_producers = []
         self.extra_routes = {}
 
     def bump_identity(self):
@@ -162,7 +164,7 @@ class World:
 
     def artifact_documents(self):
         documents = {"nightly": {"nightly.json": self.nightly()},
-                     "scan": {"report.json": self.scan, "summary.md": b"# scan\n"},
+                     "scan": {"report.json": self.scan, "summary.md": self.scan_summary},
                      "bump-report": {"bump.json": self.bump}, "keepalive": {"keepalive.json": self.keepalive}}
         if self.push is not None:
             documents["bump-push"] = {"bump-push.json": self.push}
@@ -211,18 +213,19 @@ class World:
                     "type": "file", "path": path, "encoding": "base64", "size": len(data),
                     "sha": hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest(),
                     "content": "\n".join(encoded[i:i + 60] for i in range(0, len(encoded), 60)) + "\n"}
-        if self.scan_runs:
-            listed = []
+        if self.scan_runs or self.scan_producers:
+            producers = list(self.scan_producers)
             for index, (created, report, *event) in enumerate(self.scan_runs, 1):
                 run = {"id": 60000 + index, "path": ".github/workflows/scan.yml", "head_branch": "main",
                        "head_sha": SOURCE, "status": "completed", "conclusion": "success", "run_attempt": 1,
                        "event": (event or ["schedule"])[0], "created_at": created,
                        "repository": {"full_name": "Hexalith/Hexalith.CiCd"}}
-                listed.append(run)
                 documents = {} if report is None else {"scan": {"report.json": report, "summary.md": b"# scan\n"}}
-                self.add_artifacts(routes, blobs, run, documents, 15000000000 + index)
+                producers.append((run, documents))
+            for run, documents in producers:
+                self.add_artifacts(routes, blobs, run, documents, 15000000000 + run["id"] - 60000)
             # GitHub lists newest first; the tool judges oldest first.
-            listed.reverse()
+            listed = sorted((run for run, _ in producers), key=lambda run: run["created_at"], reverse=True)
             routes[API + "actions/workflows/scan.yml/runs?branch=main&status=completed"
                    "&created=%3E%3D2026-11-18T08%3A05%3A35Z&per_page=100"] = {
                 "total_count": len(listed), "workflow_runs": listed}
@@ -730,6 +733,42 @@ class DeliveryAndCheckpointTests(Harness):
             stored = json.loads(receipt.read_bytes())
             self.assertEqual(stored["checkpoint"], {"name": "pilot", "verdict": "fail",
                                                     "reasons": checkpoint["reasons"]})
+
+    def test_bad_builds_pin_produces_no_candidate_and_fails_the_checkpoint(self):
+        from bump_support import FixtureGit, Workspace, producer, rt
+
+        world = World((MODULES[0],))
+        with tempfile.TemporaryDirectory() as temporary:
+            bump = Workspace(temporary)
+            gate = bump.cicd / "tools/check_global.py"
+            gate.parent.mkdir()
+            gate.write_text(
+                "import pathlib, subprocess, sys\n"
+                "project = pathlib.Path.cwd()\n"
+                "assert sys.flags.isolated\n"
+                "assert sys.argv[1:] == ['--project-root', str(project), '--suites', 'pin']\n"
+                "pin = subprocess.check_output(['git', 'show', 'HEAD:builds-version'], text=True).strip()\n"
+                f"assert pin == {bump.new['tag']!r}\n"
+                "print('controlled pin gate rejected ' + pin)\n"
+                "raise SystemExit(1)\n")
+            bump.commit()
+            with mock.patch.object(rt, "Git", FixtureGit), mock.patch("sys.stdout", new=io.StringIO()):
+                result = producer.produce(bump.transport, bump.directory, world.bump_identity(), render=bump.render)
+            self.assertIn("controlled pin gate rejected " + bump.new["tag"],
+                          (bump.directory / "global.log").read_text())
+            self.assertEqual(result["result"], "failed")
+            self.assertIn("failed shared global checks for " + bump.new["tag"], result["reason"])
+            self.assertEqual(result["candidate"], "")
+            self.assertFalse((bump.directory / "candidate.json").exists())
+            world.bump = (bump.directory / "bump.json").read_bytes()
+
+        world.jobs["bump"]["conclusion"] = "failure"
+        code, report = self.judge(world, MODULES[0], checkpoint="pilot")
+        self.assertEqual(code, 1)
+        self.assertEqual(self.verdicts(report), {MODULES[0]: "pass"})
+        self.assertEqual(report["push"], {"state": "not-run"})
+        self.assertEqual(report["checkpoint"]["verdict"], "fail")
+        self.assertIn("failed shared global checks for " + bump.new["tag"], " | ".join(report["checkpoint"]["reasons"]))
 
     def test_pilot_checkpoint_passes_on_no_change_or_pushed_and_delivered(self):
         world = World()
