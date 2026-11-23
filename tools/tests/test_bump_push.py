@@ -194,6 +194,38 @@ class PushTests(unittest.TestCase):
         self.assertFalse(br.condition({"nested": False}, {"const": {"nested": 0}}, {}))
         self.assertTrue(br.condition({"nested": 1.0}, {"const": {"nested": 1}}, {}))
 
+    def test_min_items_selects_defaults_only_by_array_length(self):
+        schema = {"if": {"properties": {"projects": {"minItems": 1}}, "required": ["projects"]},
+                  "then": {"properties": {"mode": {"default": "with-projects"}}},
+                  "else": {"properties": {"mode": {"default": "empty"}}}}
+        for value, expected in (({}, "empty"), ({"projects": []}, "empty"),
+                                ({"projects": ["one"]}, "with-projects"),
+                                ({"projects": ["one", "two"]}, "with-projects"), ({"projects": None}, "with-projects")):
+            with self.subTest(value=value):
+                self.assertEqual(br.add_defaults(value, schema, schema)["mode"], expected)
+        self.assertTrue(br.condition([], {"minItems": 0}, {}))
+        self.assertTrue(br.condition(["one"], {"minItems": 1.0}, {}))
+        for invalid in (-1, True, "1", 1.5, None, float("inf"), float("nan")):
+            with self.subTest(minimum=invalid), self.assertRaisesRegex(rt.NightlyError, "minItems"):
+                br.condition([], {"minItems": invalid}, {})
+
+    def test_writer_rejects_unverified_conditional_additions(self):
+        for predicate, reason in (({"minItems": 1}, "differ from tagged schema defaults"),
+                                  ({"maxItems": 0}, "unsupported schema default condition")):
+            with self.subTest(predicate=predicate), tempfile.TemporaryDirectory() as directory:
+                w = Workspace(directory)
+                w.release("v5.3.0", schema={"if": {"properties": {"tests": {"properties": {"integration": predicate}}}},
+                                            "else": {"properties": {"enabled": {"default": False}}}})
+                self.assertEqual(w.produce()["result"], "candidate")
+                candidate = w.value()
+                def change(store):
+                    path = "rendered/Hexalith.Alpha/.github/hexalith-ci.json"
+                    config = json.loads(store.blob(candidate["candidate"], path))
+                    config["enabled"] = 0
+                    oid = store.run("hash-object", "-w", "--stdin", data=json.dumps(config).encode()).decode().strip()
+                    store.run("update-index", "--cacheinfo", "100644", oid, path)
+                self.assert_refused(w, w.mutate(candidate, change), reason)
+
     def test_artifact_id_name_digest_run_and_attempt_binding(self):
         w = self.workspace()
         api = mock.Mock()

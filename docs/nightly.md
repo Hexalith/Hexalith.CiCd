@@ -11,11 +11,11 @@ checkout/setup actions and never passed to the scan controller, while
 the bump producer uses only a read-only job token. The writer and
 keepalive use their own job tokens. There are no push or pull request triggers.
 
-Dispatch waits up to 30 minutes for every main `deliver.yml` run to become
-terminal. It requires two complete idle scans 60 seconds apart. An active
-run or a change during pagination restarts that count. If that barrier cannot
-be read or does not clear, nothing is
-dispatched. Modules come exclusively from committed `setup/*.yml` files. The
+Dispatch waits up to 30 minutes to observe two complete idle scans of main
+`deliver.yml` runs, with 60 seconds between scans. An active run or a change
+during pagination restarts that count. A delivery can still arrive after the
+final observation. If the barrier cannot be read or does not clear, dispatch
+stops. Modules come exclusively from committed `setup/*.yml` files. The
 workflow has 18 fixed target slots: at most 17 modules plus Builds. A registry
 above that capacity fails initialization and nothing is dispatched.
 A module without a `delivered/<Repo>` ref is reported as not adopted, with

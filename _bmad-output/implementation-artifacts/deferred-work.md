@@ -33,7 +33,8 @@ location: .github/workflows/builds-ci.yml dotnet job; test/Hexalith.Builds.Tooli
 source_spec: `2-4-fail-fast-ci-build-and-unit-tests.md`
 severity: low
 reason: The replaced inline dotnet job ran the project explicitly. AD-13 now classifies it as integration (hosted run 42622137434 lists it under "integration"), and this story's intent forbids stage 4 execution. Its only ungated test, ToolAssembliesHaveIndependentEntryPoints, is unrun meanwhile; live tests skip without LiveGate. Story 2-5 implements integration execution and should confirm this project runs there.
-status: open
+status: done 2026-11-23
+resolution: Builds main push `5ec1779040606be89306129a7d2b245258c9acd2` ran `builds-ci.yml` and its local reusable `ci.yml`. Stage 4 ran Hexalith.Builds.Tooling.IntegrationTests after the unit tests and environment setup in the same job. Its ungated `ToolAssembliesHaveIndependentEntryPoints` passed and 12 opt-in live cases skipped. The run completed successfully. [Story 2-5](../specs/spec-cicd/stories/2-5-stage-4-environment-setup-and-hook-points.md) · [CI 42661065183, job 129312688454](https://github.com/Hexalith/Hexalith.Builds/actions/runs/42661065183/job/129312688454)
 
 ### DW-3: The reusable CI job's fixed 30-minute budget may be too short for larger consumers, with no per-project hang protection.
 origin: spec-deferred 0b604b83db2d
@@ -57,7 +58,8 @@ location: .github/workflows/builds-release.yml; Tools/G4PackageQualification.fun
 source_spec: `2-4-fail-fast-ci-build-and-unit-tests.md`
 severity: low
 reason: builds-release.yml passes HEXALITH_G4_SOURCE_CI_RUN_ID. Get-VerifiedSourceCiRun (Tools/G4PackageQualification.functions.ps1) accepts the exact-SHA push run of builds-ci.yml as the source-test evidence. Since this story, that run classifies Tooling.IntegrationTests as integration and does not execute it. This is the same root cause as the deferred Builds CI coverage item. Story 2-5 should confirm the project runs in stage 4 for both CI and release evidence.
-status: open
+status: done 2026-11-23
+resolution: At Builds `5ec1779040606be89306129a7d2b245258c9acd2`, the hosted Release job logged `HEXALITH_G4_SOURCE_CI_RUN_ID=42661065183`. That main push CI ran the DW-2 integration project (1 passed, 12 live cases skipped). At this revision, `builds-release.yml` checks the live branch tip before and after approval. `verify-g4-release-source.sh` selects the highest successful run ID among completed `builds-ci.yml` pushes for the exact branch and SHA. The workflow passes `approved_source.outputs.ci-run-id` to the release step. In the verifier source, `Get-VerifiedSourceCiRun` checks the ID, repository, workflow, branch, SHA, event, status, conclusion and URL and requires a positive attempt number. Qualification rechecks the recorded attempt before publication. The published v4.47.0 evidence ZIP (SHA-256 `16e379d3e1d2312a9c998d633c2311e627dd195711b7ae26a4e1a514e52e22fa`) contains `g4-tool-package-inventory.json`. Its `qualification.sourceValidation.ciRun` records run `42661065183`, attempt 1, workflow `.github/workflows/builds-ci.yml` and branch `main`. [Qualification evidence ZIP](https://github.com/Hexalith/Hexalith.Builds/releases/download/v4.47.0/g4-tool-qualification-evidence.zip) · [Release 42664680297, job 129325132481](https://github.com/Hexalith/Hexalith.Builds/actions/runs/42664680297/job/129325132481) · [CI job 129312688454](https://github.com/Hexalith/Hexalith.Builds/actions/runs/42661065183/job/129312688454) · [Source selector](https://github.com/Hexalith/Hexalith.Builds/blob/5ec1779040606be89306129a7d2b245258c9acd2/Tools/verify-g4-release-source.sh) · [Verifier](https://github.com/Hexalith/Hexalith.Builds/blob/5ec1779040606be89306129a7d2b245258c9acd2/Tools/G4PackageQualification.functions.ps1)
 
 ### DW-6: Cross-repository resolution of $/ in the reusable ci.yml has not been exercised by any hosted run.
 origin: spec-deferred 04af84c349a0
@@ -65,7 +67,8 @@ location: .github/workflows/ci.yml:54
 source_spec: `2-4-fail-fast-ci-build-and-unit-tests.md`
 severity: medium
 reason: The hosted probe (run 42615634829) and Builds' own calls are same-repository, so the caller and workflow commits coincide. Whether a module's cross-repository workflow_call resolves $/Github/ci-* to Hexalith.Builds at job.workflow_sha is documented but unverified. If it does not, every consumer's CI fails at preparation. Settle with the first module's hosted call of Hexalith/Hexalith.Builds/.github/workflows/ci.yml; if it fails, apply AD-9's pinned own-code checkout. (declared severity: medium (unverified))
-status: open
+status: done 2026-11-23
+resolution: The Commons main push at `5169f6b6165482d4b1499ccc5958eb897101be4f` called `Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.0.6`. Its `ci / Build and tests` job succeeded. The called tag peels to `fdda17c0a4538b0f7c99f813c20ca24b49006530`. Its workflow used `$/Github/guard`, `ci-prepare`, `ci-build`, `ci-unit-tests`, `ci-environment` and `ci-integration-tests` under the same `$/Github/` prefix. All six action manifests exist there. The Commons caller tree has no root `Github/` directory. Its package consumer hook ran from the module checkout, and the separate restore job skipped. [Caller](https://github.com/Hexalith/Hexalith.Commons/blob/5169f6b6165482d4b1499ccc5958eb897101be4f/.github/workflows/ci.yml) · [Called workflow](https://github.com/Hexalith/Hexalith.Builds/blob/fdda17c0a4538b0f7c99f813c20ca24b49006530/.github/workflows/ci.yml) · [Run 43864267698, job 133288671894](https://github.com/Hexalith/Hexalith.Commons/actions/runs/43864267698/job/133288671894) · [Story 11 receipt](../specs/spec-cicd/evidence/11/adopted-main-ci-proof.json)
 
 ### DW-7: Shared Linux restore/build passes a config-accepted leading-dash solution path to dotnet as a switch.
 origin: spec-deferred f53d0a644380
@@ -322,7 +325,8 @@ location: tools/nightly.py:214
 source_spec: `8-1-nightly-releases.md`
 severity: medium
 reason: `delivery_barrier` queries `requested`, `waiting`, `pending`, `queued` and `in_progress` one after another. A run that moves queued→waiting or in_progress→waiting after the `waiting` query and before the later query appears in no inventory, so the barrier can clear while delivery is still active (medium if true). Only deployment protection on the run's environment produces `waiting`. To settle it, check whether `cicd-app` protection rules can hold a main deliver run in `waiting`, or require two consecutive clear scans. (declared severity: medium (unverified))
-status: open
+status: done 2026-11-23
+resolution: Dispatch requires two complete idle scans separated by the existing 60-second poll. An active run, short page or changing page total resets the count. Both observations must finish inside the 30-minute limit and dispatch reserve. Controlled-clock tests cover queued and in-progress runs moving to waiting mid-scan, recovery after page drift, a busy run between idle scans, a late response and insufficient time for confirmation. The nightly controller suite passed 48 tests and the workflow suite passed 30.
 
 ### DW-35: Anonymous trusted-Builds REST acquisition in each nightly job may exhaust the shared unauthenticated rate limit on hosted runners.
 origin: spec-deferred 30d6c9d78f3f
@@ -337,6 +341,8 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/8-2-nightly-builds-bump.md`
   summary: Add a parity test showing that the writer's `bump_runtime.add_defaults` gives the same additions as `render.defaults` on a real tagged Builds CI schema that introduces new defaults.
   evidence: Story 8-2 review B9 (maybe-false; medium if true). The v5.1.0 and v5.2.2 `hexalith.ci.v1.json` schemas are byte-identical, so the writer's default-addition path is not reached yet, and every test uses a synthetic schema. If the two traversals drift, the writer either blocks valid bumps or accepts additions the renderer would not produce. The first Builds release that adds a CI default settles it: run both functions on that schema with the registered setups.
+  status: done 2026-11-23
+  resolution: The released v6.0.6 to v6.1.0 render and independent writer agree for AI.Tools, Commons and PolymorphicSerializations using the setup registry from `87de2b565d5896d7a24d31d065e02f033e5a4adf`. Each gained `ciTimeoutMinutes=30`, empty arrays for `npmWorkspaces` and `buildProjects`, `dotnetTools=false`, nulls for `moduleManifest`, `windowsCheckout` and `publishedBuilds`, and nested defaults `tests.minimumExpectedTests={}` and `tests.failSkips=false`. The 52 renderer tests passed, including this comparison of the complete typed documents. All 19 writer tests passed, including the tagged-schema predicate `minItems`, a forged numeric value for a boolean default and an unsupported predicate.
 
 ### DW-36: Verify eligible-source accounting can distinguish legitimate token-floor filtering from unexpectedly missing substantial detector inputs.
 origin: spec-deferred c8c02347814a

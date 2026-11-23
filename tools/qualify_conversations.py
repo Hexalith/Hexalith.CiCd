@@ -130,7 +130,9 @@ def acquire_fixture_releases(candidate_root: Path, builds: Path) -> dict:
     if len(payload) > 4096:
         raise delivery.DeliveryError("invalid owner fixture release manifest")
     declarations = delivery.json_read(payload)
-    if not isinstance(declarations, dict) or set(declarations) != {"delivery", "renderer"}:
+    # Historical candidates predate the tagged bump-default parity fixture.
+    if not isinstance(declarations, dict) or set(declarations) not in (
+            {"delivery", "renderer"}, {"delivery", "renderer", "bumpDefaults"}):
         raise delivery.DeliveryError("invalid owner fixture release manifest")
     for entry in declarations.values():
         if (not isinstance(entry, dict) or set(entry) != {"tag", "commit"}

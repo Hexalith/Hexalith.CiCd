@@ -153,6 +153,46 @@ def workspace(*, tag: str = CURRENT_TAG):
 
 
 class RenderTests(unittest.TestCase):
+    def test_bump_writer_matches_v610_defaults_for_historical_registry(self):
+        writer = load_module("_render_bump_runtime", ROOT / "tools/bump_runtime.py")
+        # Exact setup/*.yml contents at CiCd 87de2b565d5896d7a24d31d065e02f033e5a4adf.
+        setups = {
+            "Hexalith.AI.Tools": ("948f5fe8202ca7f2298a1c8a58313ebe0bf214a6", b"solution: none\n"),
+            "Hexalith.Commons": ("e88d5d75586650dad2aa96e8fb1badb06e4d9e41",
+                                 b"solution: Hexalith.Commons.slnx\nhooks: [after-unit-tests]\n"),
+            "Hexalith.PolymorphicSerializations": ("4e64c1c3d39427358fef5d923b54a519eeefb857",
+                                                   b"solution: Hexalith.PolymorphicSerializations.slnx\n"),
+        }
+        releases = json.loads((FIXTURES.parent / "builds-releases.json").read_bytes())
+        old_release, new_release = releases["renderer"], releases["bumpDefaults"]
+        new_tag = new_release["tag"]
+        additions = {"ciTimeoutMinutes": 30, "npmWorkspaces": [], "dotnetTools": False,
+                     "moduleManifest": None, "windowsCheckout": None, "publishedBuilds": None, "buildProjects": []}
+        test_additions = {"minimumExpectedTests": {}, "failSkips": False}
+        with workspace(tag=old_release["tag"]) as fixture:
+            for release in (old_release, new_release):
+                commit = git(fixture.builds, "rev-parse", release["tag"] + "^{commit}").decode().strip()
+                self.assertEqual(release["commit"], commit)
+            for name, (blob_id, contents) in setups.items():
+                self.assertEqual(blob_id, git(fixture.builds, "hash-object", "--stdin", input=contents).decode().strip(), name)
+                (fixture.root / "setup" / (name + ".yml")).write_bytes(contents)
+            fixture.cli()
+            before = {name: fixture.json(name=name) for name in setups}
+            fixture.select_tag(new_tag)
+            fixture.cli()
+            schema = json.loads(git(fixture.builds, "show", f"{new_tag}:schemas/hexalith.ci.v1.json"))
+            for name, original in before.items():
+                with self.subTest(module=name):
+                    actual = fixture.json(name=name)
+                    self.assertEqual(actual.keys() - original.keys(), set(additions))
+                    self.assertEqual(actual["tests"].keys() - original["tests"].keys(), set(test_additions))
+                    original["buildsTag"] = new_tag
+                    expected = original | additions | {"tests": original["tests"] | test_additions}
+                    # JSON text comparisons distinguish false, 0, and 0.0 at any depth.
+                    self.assertEqual(json.dumps(actual, sort_keys=True), json.dumps(expected, sort_keys=True))
+                    independent = writer.add_defaults(original, schema, schema)
+                    self.assertEqual(json.dumps(actual, sort_keys=True), json.dumps(independent, sort_keys=True))
+
     def execution_config(self, jobs):
         return {"jobs": jobs, "buildsTag": "v9.8.7", "solution": "Fixture.slnx", "registry": False,
                 "submodules": [], "tests": {}}

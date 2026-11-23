@@ -315,6 +315,20 @@ class NightlyControllerTests(unittest.TestCase):
         self.assertEqual(workspace.call("select"), 1)
         self.assertFalse(Path(workspace.config["dispatches"]).exists())
 
+    def test_barrier_confirmation_response_at_deadline_refuses_dispatch(self):
+        workspace = self.fixture(())
+        workspace.advance(controller.SECONDS["dispatch"] - 120 - 80)
+        started = workspace.clock()
+        path = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"
+        workspace.config["delays"] = {"GET " + path: 10}
+        self.assertEqual(workspace.call("barrier"), 1)
+        requests = [json.loads(line) for line in Path(workspace.config["requests"]).read_text().splitlines()]
+        self.assertEqual([row["at"] - started for row in requests if row["path"] == path], [0, 70])
+        self.assertEqual(workspace.clock() - started, 80)
+        self.assertFalse((workspace.directory / "barrier-cleared").exists())
+        self.assertEqual(workspace.call("select"), 1)
+        self.assertFalse(Path(workspace.config["dispatches"]).exists())
+
     def test_slow_dispatch_and_publication_slots_leave_healthy_siblings_time(self):
         workspace = self.fixture()
         workspace.call("barrier")

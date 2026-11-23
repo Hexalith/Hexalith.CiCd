@@ -68,16 +68,20 @@ class QualificationTests(unittest.TestCase):
             head = QUALIFY.git(builds, "rev-parse", "HEAD")
             with self.assertRaises(QUALIFY.delivery.DeliveryError):
                 QUALIFY.acquire_fixture_releases(owner, builds)
-            for entry in declarations.values():
-                tag = entry["tag"]
-                QUALIFY.git(remote, "fetch", "--no-tags", "--no-recurse-submodules", str(source),
-                            f"refs/tags/{tag}:refs/tags/{tag}")
-            self.assertEqual(declarations, QUALIFY.acquire_fixture_releases(owner, builds))
-            self.assertEqual(head, QUALIFY.git(builds, "rev-parse", "HEAD"))
-            self.assertEqual(b"", QUALIFY.git(builds, "status", "--porcelain"))
-            for entry in declarations.values():
-                self.assertEqual(entry["commit"], QUALIFY.git(builds, "rev-parse",
-                    "refs/tags/" + entry["tag"] + "^{commit}").decode().strip())
+            historical = {key: declarations[key] for key in ("delivery", "renderer")}
+            for expected in (historical, declarations):
+                with self.subTest(fixtures=list(expected)):
+                    manifest.write_text(json.dumps(expected))
+                    for entry in expected.values():
+                        tag = entry["tag"]
+                        QUALIFY.git(remote, "fetch", "--no-tags", "--no-recurse-submodules", str(source),
+                                    f"refs/tags/{tag}:refs/tags/{tag}")
+                    self.assertEqual(expected, QUALIFY.acquire_fixture_releases(owner, builds))
+                    self.assertEqual(head, QUALIFY.git(builds, "rev-parse", "HEAD"))
+                    self.assertEqual(b"", QUALIFY.git(builds, "status", "--porcelain"))
+                    for entry in expected.values():
+                        self.assertEqual(entry["commit"], QUALIFY.git(builds, "rev-parse",
+                            "refs/tags/" + entry["tag"] + "^{commit}").decode().strip())
             declarations["renderer"]["commit"] = "1" * 40
             manifest.write_text(json.dumps(declarations))
             with self.assertRaisesRegex(QUALIFY.delivery.DeliveryError, "fixture release identity"):

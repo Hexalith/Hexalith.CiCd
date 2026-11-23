@@ -31,10 +31,10 @@ fi
 
 Run this from any directory. It installs the workflow's pinned **uv 0.13.7**
 and managed **Python 3.12** into scratch, clones the parent without recursion,
-and initializes only Builds at the parent's gitlink. Fetch the selected tag and
-the historical `v6.0.6` renderer and `v5.1.0` global-suite fixture tags explicitly:
-the renderer reads local tagged Git blobs and never fetches them itself. The
-selected tag comes from [`builds-version`](builds-version), currently `v6.6.1`.
+and initializes only Builds at the parent's gitlink. Fetch the selected tag,
+both renderer fixture tags (`v6.0.6` and `v6.1.0`) and the `v5.1.0`
+global-suite fixture tag. The renderer reads local tagged Git blobs. The
+selected tag comes from [`builds-version`](builds-version).
 
 ```bash
 run-with-temp bash <<'BOOTSTRAP'
@@ -58,7 +58,8 @@ git -c submodule.recurse=false submodule update --init --checkout -- references/
 builds_tag=$(cat builds-version)
 git -c submodule.recurse=false -C references/Hexalith.Builds fetch --no-recurse-submodules origin \
   "refs/tags/$builds_tag:refs/tags/$builds_tag" \
-  refs/tags/v6.0.6:refs/tags/v6.0.6 refs/tags/v5.1.0:refs/tags/v5.1.0
+  refs/tags/v6.0.6:refs/tags/v6.0.6 refs/tags/v6.1.0:refs/tags/v6.1.0 \
+  refs/tags/v5.1.0:refs/tags/v5.1.0
 
 uv run --locked --script --python 3.12 tools/render.py --check
 uv run --offline --locked --script --python 3.12 tools/tests/test_nightly_runtime.py -v

@@ -325,7 +325,8 @@ def condition(value, schema, root, seen=()):
     Unsupported predicates fail closed rather than guessing which default the
     renderer's full JSON Schema validator would choose.
     """
-    if not isinstance(schema, dict) or set(schema) - {"$ref", "type", "const", "enum", "properties", "required", "allOf", "anyOf", "oneOf", "not"}:
+    if not isinstance(schema, dict) or set(schema) - {"$ref", "type", "const", "enum", "properties", "required",
+                                                       "minItems", "allOf", "anyOf", "oneOf", "not"}:
         raise rt.NightlyError("unsupported schema default condition")
     if len(seen) > 64:
         raise rt.NightlyError("schema default condition depth exceeded")
@@ -344,6 +345,13 @@ def condition(value, schema, root, seen=()):
         checks.append(schema_equal(value, schema["const"]))
     if "enum" in schema:
         checks.append(any(schema_equal(value, item) for item in schema["enum"]))
+    if "minItems" in schema:
+        minimum = schema["minItems"]
+        if isinstance(minimum, float) and minimum.is_integer():
+            minimum = int(minimum)
+        if type(minimum) is not int or minimum < 0:
+            raise rt.NightlyError("unsupported schema default condition minItems")
+        checks.append(not isinstance(value, list) or len(value) >= minimum)
     if "required" in schema and isinstance(value, dict):
         checks.append(all(key in value for key in schema["required"]))
     if "properties" in schema and isinstance(value, dict):
