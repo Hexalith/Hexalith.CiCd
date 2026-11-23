@@ -27,7 +27,7 @@ Edge cases become knobs in the setup file or custom actions:
 - **Order rule:** cheapest and most likely to fail first. Whenever a stage is added, review the order with the run-history method in `baseline-and-targets.md`.
 - **Test stages:** test projects are the solution's projects with `IsTestProject=true`. A name ending in `IntegrationTests`, `Integration.Tests`, or `AppHost.Tests`, or containing `E2E`, goes to stage 4. Everything else goes to stage 3. The setup file can only move a project to stage 4 or hand it to an enabled hook or job. There is never a plain skip (AD-13).
 - **`solution: none`:** stage 1 only.
-- **Submodules:** CI checks out Builds plus the submodules listed in the module's `submodules` knob, which story 2-3 adds (spine, Deferred). Today `initialize-build` clones every declared submodule, 2–17 per module.
+- **Submodules:** For a module with a solution, shared CI initializes Builds and the direct gitlinks named in the module's `submodules` list. Story 2-3 defines the list. Story 2-4 initializes those recorded commits without recursion and exposes the validated paths to Windows preparation (AD-12). The legacy `initialize-build` cloned every declared submodule, 2–17 per module at the time of the inventory.
   - Story 1 found, by static reading on 2026-11-08, that a package-mode build or its tests read sibling submodules in 8 modules. They do it through ungated AppHost or test-host references, sibling sources compiled with no condition, root `.slnx` files that list sibling projects, or tests that read sibling files:
     - ChatBot: EventStore, Platform, Tenants, Parties, Projects, Memories, Commons, FrontComposer, Timesheets.
     - Commons: PolymorphicSerializations (root `.slnx`; `Commons.Standalone.slnx` is clean).

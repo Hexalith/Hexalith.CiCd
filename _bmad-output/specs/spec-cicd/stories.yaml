@@ -58,8 +58,8 @@
     Work in references/Hexalith.Builds; commit and push there. Frozen files
     stay unchanged except tests (AD-20), including the composites modules call
     directly: initialize-dotnet, initialize-build, create-release, and verify.
-    Add the submodules knob if story 1 found a package-mode build that reads
-    more submodules (spine Deferred).
+    Define submodules as the list of additional direct gitlink paths required
+    by the package-mode build or its tests (story 1, AD-12).
 - id: "2-4"
   title: "Fail-fast CI: build and unit tests"
   description: >-
@@ -73,6 +73,8 @@
     stay unchanged except tests (AD-20), including the composites modules call
     directly: initialize-dotnet, initialize-build, create-release, and verify.
     Verify $/ first and apply the AD-9 fallback if it fails (spine Deferred).
+    For a module with a solution, have ci.yml initialize Builds and the listed
+    direct submodules at their recorded commits and output the validated list.
     Stage 1, the guard, arrives in 5-1; keep its slot first in the job.
 - id: "2-5"
   title: "Stage 4: environment setup and hook points"

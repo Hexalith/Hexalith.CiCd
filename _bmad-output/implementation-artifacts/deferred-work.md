@@ -3,9 +3,13 @@
 - source_spec: `_bmad-output/specs/spec-cicd/stories/1-maintainer-preconditions-and-remaining-checks.md`
   summary: Carry story 1's submodule answer into the spine and the CI stories. AD-12 l.323 "Only the Builds submodule is checked out" becomes "Builds plus the `submodules` knob". Spine Deferred l.713/715 close, and stories 2-3/2-4 state that the knob exists and that `ci.yml` checks it out.
   evidence: Story 1 found 8 package-mode builds that read sibling submodules (`pipeline-stages.md`), and SPEC.md:162 now says so. The follow-up is recorded only in the `.memlog.md` event, because story 1 may not edit the adopted spine. A `ci.yml` built to AD-12 as written would check out only Builds, and those 8 modules would fail CI (review BH-6, BH-7, EC-4).
+  status: done 2026-11-23
+  resolution: AD-12 and the story 2-3/2-4 handoff now specify the direct gitlink list used by shared CI and Windows preparation. Both story 1 probes have recorded outcomes in the spine. Five checkout and workflow-output tests passed against Builds v6.6.2.
 - source_spec: `_bmad-output/specs/spec-cicd/stories/1-maintainer-preconditions-and-remaining-checks.md`
   summary: Resolve the AD-20 versus AD-7 conflict. AD-20 has CiCd agents close Dependabot PRs on frozen files, but AD-7's CiCd-agent token has no Pull requests write. The `module-inventory.md` `dependabot.yml` row restates AD-20.
   evidence: Story 1 created the token to AD-7 (Actions, Contents and Workflows write only) and named the conflict as a spine follow-up in the memlog. A close attempt with that token would fail with 403 (review BH-4, EC-7).
+  status: done 2026-11-23
+  resolution: AD-20 and the Builds inventory assign reporting to the CiCd agent and closure without merge to a Builds maintainer. The frozen-path exclusions and AD-7 token grants still apply.
 - source_spec: `_bmad-output/specs/spec-cicd/stories/1-maintainer-preconditions-and-remaining-checks.md`
   summary: Codify the `registry.hexalith.com` Zot configuration (namespace `registry-distribution`: htpasswd Secret, config ConfigMap, Deployment) in a source outside the cluster.
   evidence: No kustomize source exists. Platform story 2-8 found the same (`externalKustomizeSourceLocated: false`). Both `ci-reader` (2-8) and `hexalith-registry-pull` (story 1) exist only as live objects, and their `last-applied-configuration` annotations are stale. Re-applying any older manifest would drop both principals and break CI and Dependabot pulls (review BH-15).
@@ -372,10 +376,14 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-10-1-module-agent-token.md`
   summary: Describe 10-2's canonical policy template without calling it already delivered in the 10-1 closeout.
   evidence: Closeout review B1 (low): the current-disposition paragraph says "its delivered policy" while all qualification is pre-adoption and no module delivery is proved. The verification record, reproduction recipe and triage explicitly state the canonical-template scope; the review workflow defers corrections to specifications.
+  status: done 2026-11-23
+  resolution: Story 10-1's dated disposition identifies the canonical template and places module delivery at the pilot. This matches `delivery_limit` in the [closeout receipt](../specs/spec-cicd/evidence/10-1/closeout-verification.json).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-10-1-module-agent-token.md`
   summary: Describe observed credential-source continuity without implying verified token-byte or grant continuity in the 10-1 closeout.
   evidence: Closeout review B6 (low): the current-disposition paragraph says "same protected module credential" but source path, account and expiration alone do not establish unchanged bytes or grants since the historical probes. Verification/recipe evidence and triage record this limit, and fresh read-only checks do not requalify write restrictions. The review workflow defers the spec wording correction.
+  status: done 2026-11-23
+  resolution: Story 10-1 lists the observed source path, account and expiration and attributes the write outcomes to the historical probes. All 41 retained evidence files matched the hashes in the closeout receipt.
 
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-19-migrate-chatbot.md`
@@ -463,7 +471,8 @@ location: n/a
 source_spec: `11-pilot-migration-commons-and-polymorphicserializations.md`
 severity: low
 reason: The dev session recorded deferred findings the orchestrator could not parse, so they were NOT filed as entries: item 1: not a mapping (got str); item 2: not a mapping (got str). Read `11-pilot-migration-commons-and-polymorphicserializations.md`'s frontmatter and re-file them by hand.
-status: open
+status: done 2026-11-23
+resolution: Reconciled both original findings. Story 30-3's approved organization-wide App installation covers the historical Hexalith.Docs grant, as recorded in archived DW-38. The nine overlapping NuGet policies have their own open item, DW-44. [Story 30-3](../specs/spec-cicd/stories/30-3-reconcile-organization-wide-cicd-app-access.md) · [DW-38](deferred-work-archive.md#dw-38-complete-current-app-selected-repository-membership-remains-unverified)
 
 ### DW-38: Complete current App selected-repository membership remains unverified.
 
@@ -512,4 +521,13 @@ origin: spec-deferred ef40bb6bea8b
 source_spec: `28-3-executable-fixtures-out-of-evidence.md`
 severity: medium
 archived: 2026-11-23
+
+### DW-44: Resolve NuGet trusted publishing scopes that overlap the pilot package IDs
+
+origin: manual recovery of story 11 deferred item 2 from DW-37, 2026-11-23
+location: nuget.org Trusted Publishing policies for the Hexalith package owner
+source_spec: `11-pilot-migration-commons-and-polymorphicserializations.md`
+severity: high
+reason: The November 22 readback identified nine other repository policies whose wildcard push scopes covered Commons and PolymorphicSerializations package IDs. The maintainer accepted the pilot with this exception open. Recheck the nine policy IDs and record the owner-approved disposition of each overlap. [Pilot repair receipt](../specs/spec-cicd/evidence/11/ad-7-ad-21-maintainer-repair-20261122.json) · [Maintainer acceptance](../specs/spec-cicd/stories/11-pilot-migration-commons-and-polymorphicserializations.md#maintainer-acceptance--2026-11-22)
+status: open
 

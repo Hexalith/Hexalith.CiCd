@@ -48,10 +48,13 @@ sequencing decision. The saved GitHub responses remain unchanged.
 | Probe cleanup and preservation | `18-first-probes-cleanup.txt`, `29-pr-cleanup.txt`, owned-state/tree snapshots, `parent-final-read-only.json` | Disposable refs removed or never created; no PR created or merged; no qualification write to main or owned files. |
 
 The [read-only closeout verification](../evidence/10-1/closeout-verification.json)
-audits all 41 retained evidence files and records their SHA-256 hashes. Fresh
-checks with the same protected module credential identify `jpiquot`, preserve
-the default CiCd-agent profile, and find no original probe ref or PR and zero
-matching dispatch runs. API and Git agree on live Commons main
+audits all 41 retained evidence files and records their SHA-256 hashes. The
+November 15 read-only checks observed the same protected credential source
+path, account (`jpiquot`) and expiration. The historical push and dispatch
+responses establish write behavior at the time of those probes. Whether the
+token bytes or grants changed between the probes and the readback is unknown.
+The readback preserved the default CiCd-agent profile and found no original
+probe ref, PR or matching dispatch run. API and Git agreed on Commons main
 `ab5e92faa3bab1fa43b8ecadd423432dfe652bb2`. Local owned-file hashes, Builds
 gitlink, HEAD and worktree status match across this read-only closeout. No new
 remote mutation was necessary to validate the already established outcomes.
@@ -60,8 +63,9 @@ This accepts pre-adoption GitHub mechanics only. Meaningful Update branch,
 Pull requests write, complete repository selection and absence of every
 prohibited token grant remain unverified; unreadable inventories and endpoint
 requirement headers do not establish those facts. The refused historical-head
-fixture is not an Update branch result. Story 10-2 already consumes the agreed
-handoff and its delivered policy prohibits Update branch pending the pilot.
+fixture is not an Update branch result. At this closeout, story 10-2's
+canonical template prohibited Update branch pending the pilot. Verification
+covered the template in CiCd. Module delivery and adoption awaited story 11.
 Story 11 must create its product-only probe branch/PR before real delivery,
 test its meaningful update afterward, repeat fresh post-delivery main
 branching, record actual revisions/responses, clean up and confirm or correct
@@ -115,10 +119,9 @@ or re-arm the orchestrator's internal state.
 The interactive closeout's seven findings and dispositions are recorded in
 the [closeout spec](../../../implementation-artifacts/spec-10-1-module-agent-token.md).
 Evidence coverage, reproducibility, authentication snapshots and log inclusion
-were strengthened. Two wording follow-ups are deferred: “delivered policy”
-means the completed canonical template, without asserting module delivery;
-“same credential” identifies the supplied protected source, without proving
-token-byte continuity or unchanged grants since the historical probes.
+were strengthened. The November 23 correction above resolves B1 and B6 by
+identifying the pre-adoption template and the three credential attributes
+that the readback observed.
 The [verification record](../evidence/10-1/closeout-verification.json) and
 [reproduction recipe](../evidence/10-1/closeout-reproduction.md) preserve those
 limits explicitly. The prior attempt remains historical, and Update branch

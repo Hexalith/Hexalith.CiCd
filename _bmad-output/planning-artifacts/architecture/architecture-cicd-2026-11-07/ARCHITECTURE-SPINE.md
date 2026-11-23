@@ -330,7 +330,8 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        Then hook `after-unit-tests`, then integration tests project by project, then hook `after-integration-tests`.
   - The environment setup is one Builds composite. CI stage 4 and `prepare` on Linux use it.
   - `solution: none` runs stage 1 only.
-  - Only the Builds submodule is checked out.
+  - For a module with a solution, shared CI initializes `references/Hexalith.Builds` and the additional direct gitlinks listed in `submodules` at their recorded commits. The root `.gitmodules` and Git index must identify each path. Initialization is non-recursive. Builds itself uses its own checkout and initializes only its configured direct gitlinks.
+  - The reusable `ci.yml` passes Windows preparation a `submodules` output containing the initialized paths as a JSON array. For a consumer with a solution, the first path is `references/Hexalith.Builds`. For `solution: none`, the array is empty.
   - No CodeQL runs on a push or PR.
   - The module `ci.yml` triggers on `push` to `main`, `pull_request` and `workflow_dispatch`.
   - A custom action that needs browsers or Dapr is a hook with that knob on. Locked npm workspaces and exact local .NET tools are optional generic preparation knobs, run once after successful units and once in a separate nightly-hook job; hooks reuse Release/package outputs (story 18).
@@ -543,7 +544,7 @@ sequenceDiagram
 - **Prevents:** rewriting Builds `main` and breaking modules that still call it at `@main` or a SHA; legacy files outliving the migration; commitlint running twice, or not at all, on Builds; a rename that turns Builds' own CI red; tests that assert workflow text surviving the migration
 - **Rule:**
   - **Freeze.** Every Builds file that a module uses today stays unchanged until the last module has moved. That covers direct use (a `uses:` of a Builds workflow or composite, at `@main` or a SHA) and use through a Builds workflow. It includes `domain-ci.yml`, `domain-ci-v2.yml`, `domain-release.yml`, `codeql.yml`, `commitlint.yml`, `dependency-review.yml`, `Github/initialize-build`, `Github/initialize-dotnet` and `Github/verify`. Builds' own workflows may stop using a frozen file but never change it.
-  - Until the final deletion, Builds' `dependabot.yml` excludes the frozen paths, and CiCd agents close Dependabot PRs that touch frozen files.
+  - Until the final deletion, Builds' `dependabot.yml` excludes the frozen paths. If a Dependabot PR still touches a frozen file, a CiCd agent reports the PR and the affected paths to a Builds maintainer. The maintainer closes the PR without merging it. This handoff uses the existing AD-7 grants.
   - The freeze covers what modules execute, not tests. A change that renames or deletes a Builds-only workflow also deletes every test that asserts that workflow's text, including tests inside frozen directories, and repoints any other test that reads it by name.
   - The last module has moved when all 17 managed modules are adopted (AD-18).
   - New pipeline code lives in new files.
@@ -789,9 +790,9 @@ Hexalith.<Module>/
 
 ## Deferred
 
-- **Story 1 check.** If a repo ruleset can restrict `v*` tag creation with GitHub Actions and the CiCd App as its only bypass actors, AD-21 adds that rule.
+- **Story 1 tag check (resolved).** GitHub rejected GitHub Actions as a ruleset bypass actor. AD-21 therefore restricts updates and deletions of `v*` tags and leaves creation open. [Probe results](../../../specs/spec-cicd/enforcement.md#accepted-residuals)
 - **Story 8 check.** A `GITHUB_TOKEN` push that changes only `rendered/<Repo>/.github/workflows/*.yml` is accepted. If it isn't, `bump-push` runs in `cicd-app` with an App token scoped to CiCd Contents and Workflows write (still stdlib only), and its push triggers `deliver.yml`, so the explicit dispatch is dropped.
-- **Submodules beyond Builds.** If story 1 finds a package-mode build that reads more, story 2 adds a `submodules` knob (minor Builds release), passed to Windows `prepare` as a `ci.yml` output (AD-12).
+- **Submodules beyond Builds (resolved).** Story 1 identified eight modules whose package-mode build or tests read sibling submodules. Story 2-3 defined the `submodules` list and story 2-4 implemented checkout and the workflow output in AD-12. [Story 1 inventory](../../../specs/spec-cicd/pipeline-stages.md)
 - **Hook and job secrets** (EventStore's Azure-backed tests). Added at story 20 as a minor Builds API change, passed explicitly by name. Story 20 decides where they go: the CI job, where every test can read them, or a dedicated job, which needs a spec change to the one-CI-job constraint and CAP-5.
 - **Whether bot commits or the enable-API call reset the 60-day schedule disable.** This can't be tested within a story. The nightly enable-API call is the primary keepalive, and the keepalive commit is secondary. If both CiCd schedules stop, the maintainer re-enables them on GitHub's warning.
 - **`$/` failing in story 2.** Apply the AD-9 fallback.
