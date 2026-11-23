@@ -365,17 +365,19 @@ def dispatch_target(state, item, transport, token, persist=lambda: None, sleep=t
 
 
 def outcome(item, run, transport, token, helpers):
+    started = rt.timestamp(run.get("run_started_at"))
     artifacts = transport.api.pages(f"/repos/Hexalith/{item['repository']}/actions/runs/{item['runId']}/artifacts", token,
                                         field="artifacts")
-    matches = [value for value in artifacts if isinstance(value, dict) and value.get("name") == "hexalith-release-outcome"]
+    matches = [value for value in artifacts
+               if isinstance(value, dict) and value.get("name") == "hexalith-release-outcome"
+               and rt.timestamp(value.get("created_at")) >= started]
     if len(matches) != 1:
-        raise rt.NightlyError("correlated run must have exactly one release outcome artifact")
+        raise rt.NightlyError("correlated run attempt must have exactly one release outcome artifact")
     metadata = matches[0]
     producer = metadata.get("workflow_run")
     if (metadata.get("expired") is not False or not isinstance(producer, dict)
-            or producer.get("id") != item["runId"] or producer.get("head_sha") != item["dispatchHead"]
-            or rt.timestamp(metadata.get("created_at")) < rt.timestamp(run.get("run_started_at"))):
-        raise rt.NightlyError("release outcome artifact is expired or from another run attempt")
+            or producer.get("id") != item["runId"] or producer.get("head_sha") != item["dispatchHead"]):
+        raise rt.NightlyError("release outcome artifact is expired or from another run")
     value = transport.api.artifact_member(item["repository"], metadata, "outcome.json", token)
     return helpers.outcome.validate_outcome(value)
 

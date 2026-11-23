@@ -12,7 +12,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from nightly_support import ROOT, Workspace, git, load, STAMP
+from nightly_support import ROOT, STAMP, Workspace, git, load, metadata, zip_document
 from nightly_publish_cases import TestNightlyPublication
 
 controller = load(ROOT / "tools/nightly.py", "_nightly_controller_tests")
@@ -607,6 +607,46 @@ class NightlyControllerTests(unittest.TestCase):
                 item = workspace.state("wait")["targets"][0]
                 if mode == "identity": self.assertEqual(code, 1)
                 else: self.assertIn("attempt", item["outcomeError"])
+
+    def test_rerun_downloads_only_a_unique_current_attempt_outcome(self):
+        for mode in ("previous-first", "previous-last", "duplicate", "unknown-age"):
+            with self.subTest(mode=mode):
+                workspace = self.fixture(())
+                dispatched = self.dispatch(workspace)["targets"][0]
+                head = dispatched["dispatchHead"]
+                run_id = dispatched["runId"]
+                payload = zip_document("outcome.json", {
+                    "schema": "hexalith.release-outcome.v1", "sha": head, "outcome": "nothing",
+                })
+                attempt_start = "2026-11-14T02:17:02Z"
+                current = metadata(run_id + 2000, "hexalith-release-outcome", payload, run_id, head,
+                                   created=attempt_start)
+                other = current | {"id": current["id"] - 1, "created_at": "2026-11-14T02:17:01Z"}
+                if mode == "duplicate":
+                    other["created_at"] = attempt_start
+                elif mode == "unknown-age":
+                    other.pop("created_at")
+                artifacts = [other, current] if mode == "previous-first" else [current, other]
+                prefix = "/repos/Hexalith/Hexalith.Builds/actions/"
+                workspace.config["run_attempts"]["Hexalith.Builds"] = 2
+                workspace.config["run_started"]["Hexalith.Builds"] = attempt_start
+                workspace.config["responses"][f"{prefix}runs/{run_id}/artifacts"] = {
+                    "total_count": len(artifacts), "artifacts": artifacts,
+                }
+                workspace.next_phase("wait", workspace.artifact("dispatch"))
+                self.assertEqual(workspace.call("poll", phase="wait"), 0)
+                item = workspace.state("wait")["targets"][0]
+                requests = [json.loads(line)["path"] for line in Path(workspace.config["requests"]).read_text().splitlines()]
+                downloads = [path for path in requests if path.startswith(prefix + "artifacts/") and path.endswith("/zip")]
+                if mode in ("previous-first", "previous-last"):
+                    self.assertEqual(item["outcome"]["outcome"], "nothing")
+                    self.assertEqual(item["outcomeError"], "")
+                    self.assertEqual(downloads, [f'{prefix}artifacts/{current["id"]}/zip'])
+                else:
+                    self.assertIsNone(item["outcome"])
+                    expected = "exactly one" if mode == "duplicate" else "invalid UTC timestamp"
+                    self.assertIn(expected, item["outcomeError"])
+                    self.assertEqual(downloads, [])
 
     def test_wait_deadline_survives_all_slices_and_timeout_is_a_failed_verdict(self):
         workspace = self.fixture(())
