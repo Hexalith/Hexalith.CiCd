@@ -95,16 +95,16 @@ class AppInventoryTests(unittest.TestCase):
             self.assertIn(boundary, result.stderr)
         return result
 
-    def test_real_parent_source_is_seven_workflows_ten_jobs_76_mints_without_secrets(self):
+    def test_real_parent_source_is_seven_workflows_ten_jobs_78_mints_without_secrets(self):
         result = self.invoke(ROOT)
-        self.assertIn("7 workflows, 10 jobs, 76 tokens", result.stdout)
+        self.assertIn("7 workflows, 10 jobs, 78 tokens", result.stdout)
         self.assertIn("hosted state unverified", result.stdout)
         with (offline_environment() as environment,
               mock.patch.dict(os.environ, environment, clear=True),
               mock.patch("socket.socket", side_effect=AssertionError("socket access forbidden")) as socket,
               mock.patch("socket.create_connection", side_effect=AssertionError("network access forbidden")) as connect,
               mock.patch("socket.getaddrinfo", side_effect=AssertionError("DNS access forbidden")) as lookup):
-            self.assertEqual(inventory.check(ROOT), {"workflows": 7, "jobs": 10, "tokens": 76})
+            self.assertEqual(inventory.check(ROOT), {"workflows": 7, "jobs": 10, "tokens": 78})
         socket.assert_not_called()
         connect.assert_not_called()
         lookup.assert_not_called()

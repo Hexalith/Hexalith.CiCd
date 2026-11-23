@@ -9,12 +9,14 @@ It executes `dispatch → wait → publish-ready → bump → bump-push → deli
 use `cicd-app`. The bump producer uses only a read-only job token. The writer and
 keepalive use their own job tokens. There are no push or pull request triggers.
 
-Dispatch waits up to 45 minutes to observe two complete idle scans of main
-`deliver.yml` runs, with 60 seconds between scans. An active run or a change
-during pagination restarts that count. The wait also respects the read token's
-use deadline and leaves time to select and dispatch targets. A delivery can
-still arrive after the final observation. If the barrier cannot be read or does
-not clear, dispatch stops. Modules come exclusively from committed `setup/*.yml`
+Dispatch waits up to two hours to observe two complete idle scans of main
+`deliver.yml` runs. Each polling slice starts a new idle count and waits
+60 seconds between scans. An active run or a change during pagination resets
+that count. The first two slices can yield around 45 minutes and resume with
+a fresh Actions-read token. The final slice uses the remaining time. The wait
+respects token deadlines and reserves time to select and dispatch targets. A
+delivery can still arrive after the final observation. If the barrier cannot
+be read or does not clear, dispatch stops. Modules come from committed `setup/*.yml`
 files. The workflow has 18 fixed target slots: at most 17 modules plus Builds.
 A registry above that capacity fails initialization and nothing is dispatched.
 A module without a `delivered/<Repo>` ref is reported as not adopted, with
@@ -71,9 +73,9 @@ permissions covering Actions read/write, Administration read, Contents write and
 Workflows write. A missing installation or permission fails only the affected
 mint and its target. `cicd-app` must let `main` runs, including scheduled ones,
 start without reviewer approval; otherwise the jobs wait instead of running
-unattended. Job limits are 105 minutes for dispatch, 330 for wait and 55 for
+unattended. Job limits are 180 minutes for dispatch, 330 for wait and 55 for
 publication. The dispatch and publication controllers stop scheduling work
-after 95 and 46 minutes respectively, leaving checkout, mint, finalization and
+after 170 and 46 minutes respectively, leaving checkout, mint, finalization and
 upload reserve. No cache, module checkout or
 module code runs in an App job.
 
@@ -137,10 +139,10 @@ retain `report.json` and `summary.md` for 90 days in
 
 Dispatch `nightly.yml` on `main` to test the nightly without waiting for 02:17
 UTC; it runs the same jobs and really releases, publishes and bumps. First
-confirm that no `nightly.yml` run is queued or in progress, and plan no CiCd
-push for 45 minutes, which is the dispatch barrier. Only the maintainer or an
-interactive CiCd session dispatches; a module agent cannot. A run takes about an
-hour. Judge it with
+confirm that no `nightly.yml` run is queued or in progress. Start with an idle
+Delivery queue and avoid CiCd pushes until the `dispatch` job finishes. Only the
+maintainer or an interactive CiCd session dispatches. Run time depends on the
+Delivery queue and target releases. Judge it with
 `python3 tools/nightly_acceptance.py --run <id> --module <Repo>`: each module's
 verdict includes eligibility, the exact release run, CodeQL, any required
 post-bump delivery, and duplicate scan coverage for the dispatch commit. For a

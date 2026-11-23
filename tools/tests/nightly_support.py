@@ -123,11 +123,13 @@ class Workspace(DeliveryWorkspace):
     def advance(self, seconds):
         self.clock_path.write_text(json.dumps(self.clock() + seconds))
 
-    def call(self, operation, *, phase="dispatch", slot=None, env=None, **extra):
+    def call(self, operation, *, phase="dispatch", slot=None, more_barrier_slices=False, env=None, **extra):
         self.config_path.write_text(json.dumps(self.config))
         args = [operation, "--phase", phase]
         if slot is not None:
             args += ["--slot", str(slot)]
+        if more_barrier_slices:
+            args.append("--more-barrier-slices")
         command = [sys.executable, "-I", str(Path(__file__).resolve()), "driver", str(self.config_path), *args]
         result = subprocess.run(command, env=env or self.env(**extra), capture_output=True)
         self.last = result
@@ -293,20 +295,23 @@ def fixture_transport(rt, config):
             if suffix == "immutable-releases":
                 return 200, {"enabled": repository not in config.get("fail_app", [])}
             if suffix == "actions/workflows/deliver.yml/runs":
+                clock_path = Path(config["requests"]).with_name("clock.json")
+                now = json.loads(clock_path.read_bytes())
+                selected = query.get("status", [""])[0]
+                runs = []
                 if config.get("barrier_transition"):
-                    clock_path = Path(config["requests"]).parent / "clock.json"
-                    elapsed = json.loads(clock_path.read_bytes()) - config["clock"]
+                    elapsed = now - config["clock"]
                     before, after = config["barrier_transition"]
                     status = config.setdefault("delivery_status", before) if elapsed < 120 else "completed"
-                    selected = query.get("status", [""])[0]
                     # Transition immediately after the first of the two status
                     # observations. Only later requests see the new status.
                     if selected in (before, after) and status == before:
                         config["delivery_status"] = after
                     runs = [{"id": 123, "head_branch": "main", "path": ".github/workflows/deliver.yml",
                              "status": status}] if selected == status else []
-                    return 200, {"total_count": len(runs), "workflow_runs": runs}
-                return 200, {"total_count": 0, "workflow_runs": []}
+                elif selected == "in_progress" and now < config.get("delivery_busy_until", 0):
+                    runs = [{"id": 123, "head_branch": "main", "path": ".github/workflows/deliver.yml", "status": selected}]
+                return 200, {"total_count": len(runs), "workflow_runs": runs}
             if method == "POST" and suffix.endswith("/dispatches"):
                 with Path(config["dispatches"]).open("a") as stream:
                     stream.write(json.dumps({"repository": repository, "document": json.loads(request.data)}) + "\n")

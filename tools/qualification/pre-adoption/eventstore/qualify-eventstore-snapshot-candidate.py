@@ -170,7 +170,7 @@ def main() -> int:
               "started_at": datetime.now(timezone.utc).isoformat(), "push_performed": False,
               "nested_submodule_initialization": False, "azure_executed": False, "operations": []}
     report["qualificationSource"] = {
-        "derivedFrom": "_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+        "sourceBlob": "2b10ee3bdcd3495665e64cbef82f3e4720cfc5ae",
         "sourceRevision": "166350673f5eb57555ed4a1aaf501f8828cfa32d",
         "sourceSha256": "5786daecdec77e924d5b79586b0367f976fcc9ce9cf68f454d1132a5414db763",
         "scope": "17 exact new product paths with source ownership, released package-mode and offline product checks",

@@ -439,9 +439,11 @@ class API:
                               token, {"ref": "main"})
         return dispatch_details(CICD, value)
 
-    def pages(self, path, token=None, *, field=None, deadline=None):
+    def pages(self, path, token=None, *, field=None, deadline=None, before_page=None):
         result, total = [], None
         for page in range(1, MAX_PAGES + 1):
+            if before_page is not None:
+                before_page()
             value = self.get(path + ("&" if "?" in path else "?") + f"per_page=100&page={page}", token,
                              deadline=deadline)
             observed_total = None

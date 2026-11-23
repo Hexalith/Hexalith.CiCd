@@ -307,8 +307,7 @@ class NightlyControllerTests(unittest.TestCase):
 
     def test_barrier_first_idle_without_time_to_confirm_refuses_dispatch(self):
         workspace = self.fixture(())
-        selection = (controller.rt.CAPACITY + 1) * controller.TARGET_SELECTION_SECONDS
-        workspace.advance(controller.SECONDS["dispatch"] - controller.TARGET_DISPATCH_RESERVE - selection - 60)
+        workspace.advance(controller.DELIVERY_BARRIER_SECONDS - 60)
         started = workspace.clock()
         self.assertEqual(workspace.call("barrier"), 1)
         self.assertEqual(workspace.clock(), started)
@@ -318,8 +317,7 @@ class NightlyControllerTests(unittest.TestCase):
 
     def test_barrier_confirmation_response_at_deadline_refuses_dispatch(self):
         workspace = self.fixture(())
-        selection = (controller.rt.CAPACITY + 1) * controller.TARGET_SELECTION_SECONDS
-        workspace.advance(controller.SECONDS["dispatch"] - controller.TARGET_DISPATCH_RESERVE - selection - 80)
+        workspace.advance(controller.DELIVERY_BARRIER_SECONDS - 80)
         started = workspace.clock()
         path = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"
         workspace.config["delays"] = {"GET " + path: 10}
@@ -340,6 +338,30 @@ class NightlyControllerTests(unittest.TestCase):
         self.assertFalse((workspace.directory / "barrier-cleared").exists())
         self.assertEqual(workspace.call("select"), 1)
         self.assertFalse(Path(workspace.config["dispatches"]).exists())
+
+    def test_barrier_yields_mid_scan_without_counting_an_incomplete_observation(self):
+        workspace = self.fixture(())
+        started = workspace.clock()
+        workspace.config["delivery_busy_until"] = started + controller.DELIVERY_BARRIER_SLICE_SECONDS
+        endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status="
+        workspace.config["delays"] = {f"GET {endpoint}{status}&per_page=100&page=1": 29
+                                      for status in ("requested", "waiting", "pending", "queued", "in_progress")}
+        self.assertEqual(workspace.call("barrier", more_barrier_slices=True), 0)
+        self.assertEqual(workspace.clock() - started, 2723)
+        self.assertFalse((workspace.directory / "barrier-cleared").exists())
+        self.assertEqual(workspace.state()["errors"], [])
+        workspace.config["delays"].clear()
+        started = workspace.clock()
+        self.assertEqual(workspace.call("barrier"), 0)
+        self.assertEqual(workspace.clock() - started, 60)
+        self.assertEqual(workspace.call("select"), 0)
+
+    def test_expired_barrier_permit_does_not_authorize_a_new_token(self):
+        workspace = self.fixture(())
+        workspace.advance(controller.DELIVERY_BARRIER_SECONDS)
+        self.assertEqual(workspace.call("permit"), 1)
+        self.assertEqual(workspace.outputs.read_text(), "")
+        self.assertTrue(any("maximum wait" in error for error in workspace.state()["errors"]))
 
     def test_slow_dispatch_and_publication_slots_leave_healthy_siblings_time(self):
         workspace = self.fixture()

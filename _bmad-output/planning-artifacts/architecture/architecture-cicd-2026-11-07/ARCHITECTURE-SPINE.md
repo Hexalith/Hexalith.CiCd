@@ -455,7 +455,7 @@ These arrows are the allowed dependencies. Builds never names a module, module f
 - **Rule:**
   - `nightly.yml` runs at 02:17 UTC, or when dispatched on `main`, as the jobs below. Both triggers run the same jobs and steps: the controllers only check that the event is one of the two, and only the `qualify-bump` input changes which jobs run. A job that uses the App runs in `cicd-app` and mints its own tokens (AD-7). Every job stays under the 6-hour job limit.
     1. **`dispatch`** (App).
-       - It first waits up to 45 minutes for two consecutive complete scans with no active `deliver.yml` run on `main`. The wait respects the Actions-read token deadline and reserves time for all target slots.
+       - It first waits up to two hours for two consecutive complete scans with no active `deliver.yml` run on `main`. The wait uses up to three fresh CiCd Actions-read tokens, counts both scans within one polling slice, and reserves time for all target slots.
        - A module is **adopted** when `delivered/<Repo>` exists and its live `main` has `.github/hexalith-ci.json`. A module with the ref and no file has a failed adoption push, and fails the night. An adopted module with immutable releases off fails the night.
        - Each adopted module whose live `ci.yml` and `release.yml` equal those at `delivered/<Repo>` gets its `release.yml` dispatched, with `delivered-sha` set to that ref's commit. A drifted module is not dispatched, and fails the night.
        - Builds' `builds-release.yml` is dispatched too.

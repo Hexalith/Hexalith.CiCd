@@ -1,8 +1,7 @@
 # CiCd App source inventory and hosted reconciliation
 
-The reviewed source at `307405aba85e587982b69d6ce5847ab2c06000a3`
-contains seven App-consuming workflows, ten privileged jobs and 76 token-mint
-steps. The count is of source steps: the package visibility matrix executes its
+The reviewed source contains seven App-consuming workflows, ten privileged jobs
+and 78 token-mint steps. The package visibility matrix executes its
 single mint once for each of two fixed owners. All tokens name owner `Hexalith`.
 The [reviewed policy](../tools/app-workflow-policy.json) records each exact job,
 condition, environment, token step, action pin, repository selection and requested
@@ -12,7 +11,7 @@ and owner retirement decisions have separate evidence below.
 | Workflow | Privileged job | Mint steps | Repository and requested permissions |
 |---|---|---:|---|
 | `deliver.yml` | `deliver` | 19 | CiCd: Contents/Workflows write, Actions read; 17 module slots: Contents/Workflows write and conditional Administration read; manual Projects catalog: Contents/Workflows write |
-| `nightly.yml` | `dispatch` | 19 | CiCd barrier: Actions read; 18 target slots: Actions write and Administration read except for Builds |
+| `nightly.yml` | `dispatch` | 21 | Three CiCd barrier mints with Actions read. 18 target slots with Actions write and Administration read except for Builds. |
 | `nightly.yml` | `wait` | 9 | Pending dispatched targets: Actions read |
 | `nightly.yml` | `publish-ready` | 18 | One successful target per slot: Contents/Workflows write, Actions read |
 | `nightly.yml` | `delivery-wait` | 4 | CiCd and authorized module delivery targets: Actions read |

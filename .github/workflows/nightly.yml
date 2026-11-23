@@ -23,7 +23,7 @@ jobs:
   dispatch:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
     runs-on: ubuntu-latest
-    timeout-minutes: 105
+    timeout-minutes: 180
     environment: cicd-app
     permissions:
       contents: read
@@ -53,14 +53,14 @@ jobs:
         env:
           HANDOFF_TOKEN: ${{ github.token }}
         run: python3 -I tools/nightly.py initialize --phase dispatch
-      - name: Record delivery barrier mint boundary
-        id: barrier_budget
+      - name: Record first Delivery barrier mint boundary
+        id: barrier_01_budget
         if: ${{ !cancelled() }}
         continue-on-error: true
         run: python3 -I tools/nightly.py permit --phase dispatch
-      - name: Mint barrier_token App token
-        id: barrier_token
-        if: ${{ !cancelled() && steps.barrier_budget.outputs.active == 'true' }}
+      - name: Mint first Delivery barrier token
+        id: barrier_01_token
+        if: ${{ !cancelled() && steps.barrier_01_budget.outputs.active == 'true' }}
         continue-on-error: true
         timeout-minutes: 1
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
@@ -72,12 +72,66 @@ jobs:
           skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
           permission-actions: read
 
-      - name: Wait for hourly delivery barrier
-        if: ${{ !cancelled() }}
+      - name: Observe Delivery with the first barrier token
+        id: barrier_01_observe
+        if: ${{ !cancelled() && steps.barrier_01_budget.outputs.active == 'true' }}
         continue-on-error: true
         env:
-          CICD_TOKEN: ${{ steps.barrier_token.outputs.token }}
-          NIGHTLY_MINT_EPOCH: ${{ steps.barrier_budget.outputs.mint_epoch }}
+          CICD_TOKEN: ${{ steps.barrier_01_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.barrier_01_budget.outputs.mint_epoch }}
+        run: python3 -I tools/nightly.py barrier --phase dispatch --more-barrier-slices
+      - name: Record second Delivery barrier mint boundary
+        id: barrier_02_budget
+        if: ${{ !cancelled() && steps.barrier_01_observe.outcome == 'success' }}
+        continue-on-error: true
+        run: python3 -I tools/nightly.py permit --phase dispatch
+      - name: Mint second Delivery barrier token
+        id: barrier_02_token
+        if: ${{ !cancelled() && steps.barrier_02_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.CiCd
+          skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
+          permission-actions: read
+
+      - name: Observe Delivery with the second barrier token
+        id: barrier_02_observe
+        if: ${{ !cancelled() && steps.barrier_02_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.barrier_02_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.barrier_02_budget.outputs.mint_epoch }}
+        run: python3 -I tools/nightly.py barrier --phase dispatch --more-barrier-slices
+      - name: Record final Delivery barrier mint boundary
+        id: barrier_03_budget
+        if: ${{ !cancelled() && steps.barrier_02_observe.outcome == 'success' }}
+        continue-on-error: true
+        run: python3 -I tools/nightly.py permit --phase dispatch
+      - name: Mint final Delivery barrier token
+        id: barrier_03_token
+        if: ${{ !cancelled() && steps.barrier_03_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 1
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.HEXALITH_CICD_APP_CLIENT_ID }}
+          private-key: ${{ secrets.HEXALITH_CICD_APP_PRIVATE_KEY }}
+          owner: Hexalith
+          repositories: Hexalith.CiCd
+          skip-token-revoke: true # zizmor: ignore[github-app] AD-7 forbids aged post-job token use; normal one-hour expiry applies
+          permission-actions: read
+
+      - name: Observe Delivery with the final barrier token
+        if: ${{ !cancelled() && steps.barrier_03_budget.outputs.active == 'true' }}
+        continue-on-error: true
+        env:
+          CICD_TOKEN: ${{ steps.barrier_03_token.outputs.token }}
+          NIGHTLY_MINT_EPOCH: ${{ steps.barrier_03_budget.outputs.mint_epoch }}
         run: python3 -I tools/nightly.py barrier --phase dispatch
 
       - name: Select adopted undrifted targets

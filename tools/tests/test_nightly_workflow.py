@@ -163,7 +163,8 @@ class Workflow(Expressions):
                                     "permission-contents": "write", "permission-workflows": "write", "permission-actions": "read"}:
                                 raise AssertionError("publication permission mismatch")
                         elif repositories == ["Hexalith.CiCd"]:
-                            if identifier != "barrier_token" or permissions != {"permission-actions": "read"}:
+                            if (not re.fullmatch(r"barrier_0[1-3]_token", identifier)
+                                    or permissions != {"permission-actions": "read"}):
                                 raise AssertionError("delivery barrier token is not read-only")
                         elif len(repositories) != 1 or permissions != ({"permission-actions": "write"} if repositories == ["Hexalith.Builds"]
                                 else {"permission-actions": "write", "permission-administration": "read"}):
@@ -235,7 +236,8 @@ class Workflow(Expressions):
                                 raise AssertionError("controller mint epoch is not its own mint boundary")
                     if phase == self.fail_checkout:
                         outcome = "failure"
-                    elif self.w.call(operation, phase=phase, slot=slot, env=env):
+                    elif self.w.call(operation, phase=phase, slot=slot,
+                                     more_barrier_slices="--more-barrier-slices" in args, env=env):
                         outcome = "failure"
                     if self.w.outputs.exists():
                         outputs = dict(line.split("=", 1) for line in self.w.outputs.read_text().splitlines())
@@ -314,10 +316,8 @@ class NightlyWorkflowTests(unittest.TestCase):
         workspace = self.fixture(tuple(f"Hexalith.Module{index:02d}" for index in range(1, 18)))
         repositories = [*workspace.modules, "Hexalith.Builds"]
         endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"
-        busy = {"id": 45163448014, "head_branch": "main", "path": ".github/workflows/deliver.yml", "status": "in_progress"}
-        # Replay a queue longer than Nightly 45159188381, with just enough time for two idle scans.
-        workspace.config["responses"][endpoint] = ([{"total_count": 1, "workflow_runs": [busy]}] * 43
-                                                    + [{"total_count": 0, "workflow_runs": []}])
+        # The final slice must see both idle scans, with time left for every target.
+        workspace.config["delivery_busy_until"] = workspace.clock() + 116 * 60
         workspace.config["delays"] = {}
         for index, repository in enumerate(repositories, 1):
             caller = "builds-release.yml" if repository == "Hexalith.Builds" else "release.yml"
@@ -335,7 +335,8 @@ class NightlyWorkflowTests(unittest.TestCase):
         self.assertEqual(targets, [*workspace.modules, "Hexalith.Builds"])
         permissions = [(identifier, inputs["repositories"], inputs["permission-actions"], inputs.get("permission-administration"))
                        for phase, identifier, _, inputs in workflow.mints if phase == "dispatch"]
-        self.assertEqual(permissions, [("barrier_token", "Hexalith.CiCd", "read", None)] + [
+        self.assertEqual(permissions, [(f"barrier_{index:02d}_token", "Hexalith.CiCd", "read", None)
+                                       for index in range(1, 4)] + [
             (f"target_{index:02d}_token", repository, "write", "" if repository == "Hexalith.Builds" else "read")
             for index, repository in enumerate(repositories, 1)])
         # Each dispatch and publication process authenticated with its own slot's mint.
@@ -345,9 +346,15 @@ class NightlyWorkflowTests(unittest.TestCase):
             for phase in ("dispatch", "publish-ready"):
                 self.assertIn((repository, f"Bearer inert-{phase}-target_{index:02d}_token"), used)
         first_dispatch_at = next(item["at"] for item in requests if item["method"] == "POST")
-        barrier_scans = [item["at"] for item in requests if item["path"] == endpoint]
-        self.assertEqual(barrier_scans[-1] - barrier_scans[0], 44 * 60)
-        self.assertGreater(first_dispatch_at, barrier_scans[-1])
+        barrier_scans = [item for item in requests if item["path"] == endpoint]
+        mint_times = {f"Bearer inert-{phase}-{identifier}": minted
+                      for phase, identifier, minted, _ in workflow.mints if identifier.startswith("barrier_")}
+        self.assertEqual({scan["authorization"] for scan in barrier_scans}, set(mint_times))
+        self.assertTrue(all(scan["at"] - mint_times[scan["authorization"]] < 50 * 60 - 30 for scan in barrier_scans))
+        self.assertLess(barrier_scans[-3]["at"], workspace.config["delivery_busy_until"])
+        self.assertGreaterEqual(barrier_scans[-2]["at"], workspace.config["delivery_busy_until"])
+        self.assertEqual(barrier_scans[-1]["at"] - barrier_scans[-2]["at"], 60)
+        self.assertGreater(first_dispatch_at, barrier_scans[-1]["at"])
         dispatch_timeout = workflow.document["jobs"]["dispatch"]["timeout-minutes"]
         self.assertLess(workflow.elapsed["dispatch"] + 7 * 60, dispatch_timeout * 60)
         self.assertLess(workflow.elapsed["publish-ready"] + 7 * 60, 55 * 60)
@@ -370,6 +377,55 @@ class NightlyWorkflowTests(unittest.TestCase):
         self.assertEqual(len(builds_reads), 12)
         self.assertTrue(all(item["method"] == "GET" for item in builds_reads))
         self.assertEqual(sum(item["path"].endswith("/releases/tags/v5.1.0") for item in builds_reads), 3)
+
+    def test_delivery_barrier_limits_mints_and_blocks_dispatch_on_failure(self):
+        endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"
+        run = {"id": 45192481439, "head_branch": "main", "path": ".github/workflows/deliver.yml", "status": "in_progress"}
+        for response, expected_mints, reason in (
+            ({"total_count": 1, "workflow_runs": [run]}, 3, "maximum wait"),
+            ({"status": 403, "body": {}}, 1, "HTTP 403"),
+            ({"total_count": 0, "workflow_runs": []}, 1, ""),
+        ):
+            with self.subTest(reason=reason):
+                workspace = self.fixture(())
+                workspace.config["responses"][endpoint] = response
+                workflow = Workflow(workspace)
+                workflow.execute()
+                self.assertEqual(workflow.results["dispatch"], "failure" if reason else "success")
+                self.assertEqual(sum(identifier.startswith("barrier_") for _, identifier, _, _ in workflow.mints), expected_mints)
+                receipt = workflow.uploads[0][1]
+                if reason:
+                    self.assertTrue(any(reason in error for error in receipt["errors"]))
+                    self.assertFalse(Path(workspace.config["dispatches"]).exists())
+                else:
+                    self.assertEqual(receipt["targets"][0]["dispatch"], "dispatched")
+                self.assertLess(workflow.elapsed["dispatch"], controller.DELIVERY_BARRIER_SECONDS)
+
+    def test_barrier_renewal_starts_a_new_idle_count_and_refuses_a_missing_mint(self):
+        endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"
+        for mint_failed in (False, True):
+            with self.subTest(mint_failed=mint_failed):
+                workspace = self.fixture(())
+                workspace.config["delivery_busy_until"] = workspace.clock() + 44 * 60
+                workflow = Workflow(workspace, mint_fail=("barrier_02_token",) if mint_failed else ())
+                workflow.execute()
+                self.assertEqual([identifier for _, identifier, _, _ in workflow.mints if identifier.startswith("barrier_")],
+                                 ["barrier_01_token", "barrier_02_token"])
+                requests = [json.loads(line) for line in Path(workspace.config["requests"]).read_text().splitlines()]
+                scans = [request for request in requests if request["path"] == endpoint]
+                if mint_failed:
+                    self.assertEqual(workflow.results["dispatch"], "failure")
+                    self.assertIn("barrier failed: delivery barrier token is unavailable", workflow.uploads[0][1]["errors"])
+                    self.assertFalse(any(request["method"] == "POST" for request in requests))
+                    self.assertEqual({request["authorization"] for request in scans}, {"Bearer inert-dispatch-barrier_01_token"})
+                else:
+                    self.assertEqual(workflow.results["dispatch"], "success")
+                    self.assertEqual([scan["authorization"] for scan in scans[-3:]], [
+                        "Bearer inert-dispatch-barrier_01_token", "Bearer inert-dispatch-barrier_02_token",
+                        "Bearer inert-dispatch-barrier_02_token",
+                    ])
+                    self.assertGreaterEqual(scans[-3]["at"], workspace.config["delivery_busy_until"])
+                    self.assertEqual(scans[-1]["at"] - scans[-2]["at"], 60)
 
     def test_mint_failure_and_failed_upstream_still_collect_and_finalize(self):
         workflow = Workflow(self.fixture(), mint_fail=("Hexalith.Alpha",))
@@ -970,7 +1026,7 @@ class PostReleaseWorkflowTests(unittest.TestCase):
 
     def test_exact_job_timeouts_and_controller_surface(self):
         document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
-        expected = {"dispatch": 105, "wait": 330, "publish-ready": 55,
+        expected = {"dispatch": 180, "wait": 330, "publish-ready": 55,
                     "bump": 55, "bump-push": 55, "delivery-wait": 105, "keepalive": 15}
         self.assertEqual({phase: job["timeout-minutes"] for phase, job in document["jobs"].items()}, expected)
         self.assertEqual(yaml.safe_load(SCAN_WORKFLOW.read_bytes())["jobs"]["scan"]["timeout-minutes"], 55)

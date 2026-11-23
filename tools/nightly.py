@@ -21,8 +21,9 @@ rt = load("nightly_runtime.py", "_nightly_controller_runtime")
 
 # Controller budgets leave each job its checkout, trailing mint,
 # finalization and upload reserve after the last controller-scheduled work.
-SECONDS = {"dispatch": 95 * 60, "wait": 320 * 60, "publish-ready": 46 * 60}
-DELIVERY_BARRIER_SECONDS = 45 * 60
+SECONDS = {"dispatch": 170 * 60, "wait": 320 * 60, "publish-ready": 46 * 60}
+DELIVERY_BARRIER_SECONDS = 120 * 60
+DELIVERY_BARRIER_SLICE_SECONDS = 45 * 60
 TARGET_SELECTION_SECONDS = 20
 TARGET_MINT_SECONDS = 60
 TARGET_OPERATION_SECONDS = 60
@@ -35,6 +36,10 @@ PHASES = {"dispatch": "dispatch", "wait": "wait", "publish-ready": "nightly"}
 STATUSES = {"queued", "requested", "waiting", "pending", "in_progress", "completed"}
 CONCLUSIONS = {"success", "failure", "neutral", "cancelled", "skipped", "timed_out", "action_required", "stale", "startup_failure"}
 SUPPRESSED = "further orchestration errors suppressed"
+
+
+class BarrierSliceEnded(Exception):
+    """Stop at a polling boundary so the next slice can start a complete scan."""
 
 
 def positive(value):
@@ -192,7 +197,7 @@ def needs_poll(item):
         item["status"] != "completed" or item["outcome"] is None and not item["outcomeError"])
 
 
-def permit(state, phase, slot, budget, clock):
+def permit(state, phase, slot, budget, directory, clock):
     budget.check()
     values = {"active": "false"}
     if slot is not None:
@@ -206,23 +211,36 @@ def permit(state, phase, slot, budget, clock):
         active = bool(pending) and clock() < state["wait"]["deadline"]
         values["repositories"] = ",".join(pending)
     else:
-        active = not state["errors"]
+        active = not state["errors"] and not (directory / "barrier-cleared").is_file()
+        if active and clock() >= budget.started + DELIVERY_BARRIER_SECONDS:
+            raise rt.NightlyError("delivery barrier did not clear before its deadline (maximum wait)")
     if active:
         values.update(active="true", mint_epoch=str(clock()))
     return values
 
 
-def delivery_barrier(state, transport, token, directory, clock, sleep):
+def delivery_barrier(transport, token, directory, clock, sleep, *, more_slices):
+    if not token:
+        raise rt.NightlyError("delivery barrier token is unavailable")
     budget = transport.budget
     started = clock()
+    refresh_at = started + DELIVERY_BARRIER_SLICE_SECONDS
     selection_reserve = (rt.CAPACITY + 1) * TARGET_SELECTION_SECONDS
     deadline, limit = min(
-        (started + DELIVERY_BARRIER_SECONDS, "maximum wait"),
+        (budget.started + DELIVERY_BARRIER_SECONDS, "maximum wait"),
         (started + budget.remaining(token=True), "token or operation budget"),
         (budget.started + budget.job_seconds - selection_reserve - TARGET_DISPATCH_RESERVE, "target dispatch reserve"),
         key=lambda boundary: boundary[0],
     )
     expired = f"delivery barrier did not clear before its deadline ({limit})"
+
+    def before_page():
+        now = clock()
+        if now >= deadline:
+            raise rt.NightlyError(expired)
+        if more_slices and now >= refresh_at:
+            raise BarrierSliceEnded
+
     previous = budget.deadline
     budget.deadline = deadline
     consecutive_idle = 0
@@ -233,11 +251,11 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
             runs = []
             try:
                 for status in ("requested", "waiting", "pending", "queued", "in_progress"):
-                    if clock() >= deadline:
-                        raise rt.NightlyError(expired)
                     runs.extend(transport.api.pages(
                         f"/repos/Hexalith/{rt.CICD}/actions/workflows/deliver.yml/runs?branch=main&status={status}",
-                        token, field="workflow_runs", deadline=deadline))
+                        token, field="workflow_runs", deadline=deadline, before_page=before_page))
+            except BarrierSliceEnded:
+                return
             except rt.InventoryChanged:
                 # Discard the whole scan. A fresh pass must observe queued work
                 # again; no partial inventory can establish an idle barrier.
@@ -260,6 +278,9 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
                 return
             if clock() + 60 >= deadline:
                 raise rt.NightlyError(expired)
+            # The next slice mints a fresh token and starts a new idle streak.
+            if more_slices and clock() + 60 >= refresh_at:
+                return
             sleep(60)
     finally:
         budget.deadline = previous
@@ -515,6 +536,7 @@ def main(argv=None, *, transport=None, clock=time.time, sleep=time.sleep):
     parser.add_argument("operation", choices=("initialize", "permit", "barrier", "select", "dispatch", "poll", "publish", "finalize"))
     parser.add_argument("--phase", choices=tuple(SECONDS), required=True)
     parser.add_argument("--slot", type=int)
+    parser.add_argument("--more-barrier-slices", action="store_true")
     args = parser.parse_args(argv)
     environment = dict(os.environ)
     tokens = rt.sanitize()
@@ -575,9 +597,10 @@ def main(argv=None, *, transport=None, clock=time.time, sleep=time.sleep):
             transport.budget = budget
             transport.api.budget = budget
         if args.operation == "permit":
-            values = permit(state, args.phase, args.slot, budget, clock)
+            values = permit(state, args.phase, args.slot, budget, directory, clock)
         elif args.operation == "barrier":
-            delivery_barrier(state, transport, tokens.get("CICD_TOKEN", ""), directory, clock, sleep)
+            delivery_barrier(transport, tokens.get("CICD_TOKEN", ""), directory, clock, sleep,
+                             more_slices=args.more_barrier_slices)
         elif args.operation == "select":
             values = select(state, transport, directory)
         elif args.operation == "dispatch":
