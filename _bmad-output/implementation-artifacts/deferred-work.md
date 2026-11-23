@@ -542,3 +542,18 @@ status: open
   summary: Recheck the release run attempt before recording a terminal outcome error if the artifact read fails.
   evidence: Nightly already rechecks attempt identity after a successful artifact download. The baseline error path stores a terminal outcome error immediately, so a rerun that changes the artifact listing before the status recheck can be missed. Add a controlled attempt change during the listing and verify that the next attempt remains pollable.
 
+### DW-45: Delivery's shared concurrency group can replace a pending main push before its evidence check runs.
+origin: spec-deferred 85628a2803d3
+location: .github/workflows/deliver.yml:20
+source_spec: `28-6-evidence-policy-and-growth-stop.md`
+severity: medium
+reason: The existing workflow-level group uses GitHub's single pending slot. If a later run replaces the pending push, that next push compares against its own previous SHA. A replay or concurrency redesign affects Delivery scheduling.
+status: open
+
+### DW-46: Nightly's observers consume the aggregate Delivery run status and conclusion.
+origin: spec-deferred e9bd5aa3af46
+location: tools/nightly_delivery_wait.py:331 and tools/nightly.py:205
+source_spec: `28-6-evidence-policy-and-growth-stop.md`
+severity: medium
+reason: An evidence-only failure can make an otherwise qualifying post-bump Delivery run red to the propagation observer. The pre-dispatch barrier also waits for the aggregate run to finish.
+status: open
