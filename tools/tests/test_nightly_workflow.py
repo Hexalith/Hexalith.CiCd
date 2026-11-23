@@ -73,7 +73,7 @@ class Workflow(Expressions):
         return re.sub(r"\$\{\{(.*?)\}\}", replace, value)
 
     def __init__(self, workspace, *, event="workflow_dispatch", ref="refs/heads/main", mint_fail=(),
-                 cancel_after=None, lost_artifact=None, pending=(), fail_checkout=None):
+                 cancel_after=None, lost_artifact=None, pending=(), fail_checkout=None, dispatch_mint_seconds=1):
         self.w = workspace
         self.document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
         self.context = {"github": {"ref": ref, "sha": workspace.sha, "repository": "Hexalith/Hexalith.CiCd",
@@ -82,6 +82,7 @@ class Workflow(Expressions):
             "secrets": {"HEXALITH_CICD_APP_PRIVATE_KEY": "inert-private-key"},
             "vars": {"HEXALITH_CICD_APP_CLIENT_ID": "inert-client-id"}}
         self.mint_fail, self.cancel_after = set(mint_fail), cancel_after
+        self.dispatch_mint_seconds = dispatch_mint_seconds
         Path(self.context["runner"]["temp"]).mkdir(exist_ok=True)
         self.lost_artifact, self.fail_checkout = lost_artifact, fail_checkout
         self.w.config["pending"] = list(pending)
@@ -161,7 +162,9 @@ class Workflow(Expressions):
                                 else {"permission-actions": "write", "permission-administration": "read"}):
                             raise AssertionError("dispatch permission mismatch")
                         self.mints.append((phase, identifier, self.w.clock(), inputs))
-                        self.w.advance(1)  # the action consumes time after the recorded boundary
+                        # The action consumes time after the recorded boundary.
+                        delay = self.dispatch_mint_seconds if phase == "dispatch" and identifier.startswith("target_") else 1
+                        self.w.advance(delay)
                         if identifier in self.mint_fail or phase + ":" + identifier in self.mint_fail or any(repo in self.mint_fail for repo in repositories):
                             outcome = "failure"
                         else:
@@ -300,9 +303,17 @@ class NightlyWorkflowTests(unittest.TestCase):
     def test_all_17_modules_and_builds_keep_slot_scopes_and_inputs(self):
         workspace = self.fixture(tuple(f"Hexalith.Module{index:02d}" for index in range(1, 18)))
         repositories = [*workspace.modules, "Hexalith.Builds"]
+        endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"
+        busy = {"id": 45163448014, "head_branch": "main", "path": ".github/workflows/deliver.yml", "status": "in_progress"}
+        # Replay a queue longer than Nightly 45159188381, with just enough time for two idle scans.
+        workspace.config["responses"][endpoint] = ([{"total_count": 1, "workflow_runs": [busy]}] * 43
+                                                    + [{"total_count": 0, "workflow_runs": []}])
+        workspace.config["delays"] = {}
         for index, repository in enumerate(repositories, 1):
+            caller = "builds-release.yml" if repository == "Hexalith.Builds" else "release.yml"
+            workspace.config["delays"][f"POST /repos/Hexalith/{repository}/actions/workflows/{caller}/dispatches"] = 50
             workspace.ready(repository, release_id=80000 + index, producer_id=50000 + index, artifact_id=90000 + index)
-        workflow = Workflow(workspace)
+        workflow = Workflow(workspace, dispatch_mint_seconds=59)
         self.assertEqual(workflow.execute(), "success")
         report = workflow.uploads[-1][1]
         self.assertEqual(len(report["targets"]), 18)
@@ -323,7 +334,12 @@ class NightlyWorkflowTests(unittest.TestCase):
         for index, repository in enumerate(repositories, 1):
             for phase in ("dispatch", "publish-ready"):
                 self.assertIn((repository, f"Bearer inert-{phase}-target_{index:02d}_token"), used)
-        self.assertLess(workflow.elapsed["dispatch"] + 7 * 60, 55 * 60)
+        first_dispatch_at = next(item["at"] for item in requests if item["method"] == "POST")
+        barrier_scans = [item["at"] for item in requests if item["path"] == endpoint]
+        self.assertEqual(barrier_scans[-1] - barrier_scans[0], 44 * 60)
+        self.assertGreater(first_dispatch_at, barrier_scans[-1])
+        dispatch_timeout = workflow.document["jobs"]["dispatch"]["timeout-minutes"]
+        self.assertLess(workflow.elapsed["dispatch"] + 7 * 60, dispatch_timeout * 60)
         self.assertLess(workflow.elapsed["publish-ready"] + 7 * 60, 55 * 60)
         writes = [json.loads(line) for line in Path(workspace.config["dispatches"]).read_text().splitlines()]
         self.assertEqual(len(writes), 18)
@@ -912,7 +928,7 @@ class PostReleaseWorkflowTests(unittest.TestCase):
 
     def test_exact_job_timeouts_and_controller_surface(self):
         document = yaml.safe_load((ROOT / ".github/workflows/nightly.yml").read_bytes())
-        expected = {"dispatch": 55, "wait": 330, "publish-ready": 55,
+        expected = {"dispatch": 105, "wait": 330, "publish-ready": 55,
                     "scan": 55, "bump": 55, "bump-push": 55, "delivery-wait": 105, "keepalive": 15}
         self.assertEqual({phase: job["timeout-minutes"] for phase, job in document["jobs"].items()}, expected)
         observer = document["jobs"]["delivery-wait"]

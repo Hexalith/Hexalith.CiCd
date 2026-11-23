@@ -1,6 +1,6 @@
 {
   "schema": "hexalith.cicd-app-inventory.v1",
-  "reviewed_revision": "71fdfc75eb70be38f1a4abb40fcd5822b48fba04",
+  "reviewed_revision": "3d097433140c3f885e33a7cb3d413005e560d70c",
   "selector_sources": {
     "tools/delivery_bootstrap.py": {
       "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
@@ -15,7 +15,7 @@
       "bound": "Accepted-source module application; no change to validation verdict or product gates."
     },
     "tools/nightly.py": {
-      "sha256": "b200ad0ee5091bb806ac729f03a5b689eaf149eb371bc0c46d8b28ad8273d953",
+      "sha256": "f07921b472c856fe09c481f33e2ce9ec557ee253e08251fe952bc5db6afdc93e",
       "bound": "At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
     },
     "tools/nightly_runtime.py": {
@@ -1011,7 +1011,7 @@
           "boundary": {
             "if": "${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}",
             "runs-on": "ubuntu-latest",
-            "timeout-minutes": 55,
+            "timeout-minutes": 105,
             "environment": "cicd-app",
             "permissions": {
               "contents": "read"
