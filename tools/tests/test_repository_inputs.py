@@ -40,6 +40,92 @@ class RepositoryInputsTests(unittest.TestCase):
         failures = inputs.registry_dependencies(ROOT, inputs.tracked_paths(ROOT))
         self.assertEqual([], failures, "\n".join(failures))
 
+    def test_tracked_unlisted_suites_do_not_read_the_builds_pin(self):
+        failures = inputs.pin_dependencies(ROOT, inputs.tracked_paths(ROOT))
+        self.assertEqual([], failures, "\n".join(failures))
+
+    def test_pin_boundary_reports_direct_and_shared_helper_reads_per_suite(self):
+        helper = "tools/tests/read_pin.py"
+        self.tracked(helper, "from pathlib import Path\n"
+                     "ROOT = Path(__file__).resolve().parents[2]\n"
+                     "PIN = (ROOT / 'builds-version').read_text()\n"
+                     "def read(root):\n"
+                     "    return (root / 'builds-version').read_bytes()\n")
+        first, second = "tools/tests/test_candidate.py", "tools/tests/test_other.py"
+        self.suite("from read_pin import read\nread(ROOT)\nopen('builds-version')\n", first)
+        self.suite("import read_pin\n", second)
+        self.assertEqual([
+            f"{helper}:3: {first} reads repository-root builds-version",
+            f"{helper}:3: {second} reads repository-root builds-version",
+            f"{helper}:5: {first} reads repository-root builds-version",
+            f"{first}:5: {first} reads repository-root builds-version",
+        ], inputs.pin_dependencies(self.root, inputs.tracked_paths(self.root)))
+
+    def test_pin_boundary_allows_selected_suites_and_disposable_inputs(self):
+        self.tracked("tools/read_pin.py", "def read(root):\n    return (root / 'builds-version').read_text()\n")
+        self.suite("from read_pin import read\nread(ROOT / 'fixture')\n"
+                   "open(ROOT / 'tools/tests/fixtures/builds-version')\n")
+        self.suite("open(ROOT / 'builds-version')\n", f"tools/tests/{inputs.PIN_SUITES[0]}")
+        self.assertEqual([], inputs.pin_dependencies(self.root, inputs.tracked_paths(self.root)))
+
+    def test_pin_boundary_tracks_subprocess_paths_and_git_revision_reads(self):
+        helper = "tools/tests/read_pin_process.py"
+        self.tracked(helper, "import subprocess\n"
+                     "def git(root, *args):\n"
+                     "    return subprocess.run(['git', '-C', str(root), *map(str, args)])\n")
+        suite = "tools/tests/test_candidate.py"
+        operations = (
+            ("subprocess.run(['cat', 'builds-version'], cwd={root})", suite, 5),
+            ("subprocess.run(['cat', Path('builds-version')], cwd={root})", suite, 5),
+            ("subprocess.check_output(['git', 'show', 'HEAD:builds-version'], cwd={root})", suite, 5),
+            ("subprocess.run(['git', '-C', str({root}), 'show', 'HEAD:builds-version'])", suite, 5),
+            ("git({root}, 'show', 'HEAD:builds-version')", helper, 3),
+        )
+        for operation, source, line in operations:
+            for root, expected in (("ROOT", [f"{source}:{line}: {suite} reads repository-root builds-version"]),
+                                   ("ROOT / 'fixture'", [])):
+                with self.subTest(operation=operation, root=root):
+                    self.suite("import subprocess\nfrom read_pin_process import git\n" + operation.format(root=root) + "\n")
+                    self.assertEqual(expected, inputs.pin_dependencies(self.root, inputs.tracked_paths(self.root)))
+        self.suite("import subprocess\nsubprocess.run(['cat', 'builds-version'])\n")
+        self.assertEqual([f"{suite}:4: {suite} reads repository-root builds-version"],
+                         inputs.pin_dependencies(self.root, inputs.tracked_paths(self.root)))
+
+    def test_pin_boundary_tracks_runpy_packages_and_imported_test_classes(self):
+        suite = "tools/tests/test_candidate.py"
+        fixtures = (
+            ("tools/tests/read_pin_path.py", "import runpy\nrunpy.run_path(ROOT / 'tools/tests/read_pin_path.py')\n",
+             "PIN = (ROOT / 'builds-version').read_text()\n", 3, 2),
+            ("tools/tests/read_pin_package/__init__.py", "import read_pin_package\n",
+             "PIN = (ROOT / 'builds-version').read_text()\n", 3, 3),
+            ("tools/tests/read_pin_cases.py", "from read_pin_cases import TestPublication\n",
+             "import unittest\nclass TestPublication(unittest.TestCase):\n"
+             "    def setUp(self):\n        self.root = ROOT\n"
+             "    def test_read(self):\n        (self.root / 'builds-version').read_text()\n", 8, 2),
+        )
+        for helper, body, contents, line, depth in fixtures:
+            self.suite(body)
+            for root, expected in (("checkout", [f"{helper}:{line}: {suite} reads repository-root builds-version"]),
+                                   ("checkout / 'fixture'", [])):
+                with self.subTest(helper=helper, root=root):
+                    self.tracked(helper, "from pathlib import Path\n"
+                                 f"checkout = Path(__file__).resolve().parents[{depth}]; ROOT = {root}\n"
+                                 + contents)
+                    self.assertEqual(expected, inputs.pin_dependencies(self.root, inputs.tracked_paths(self.root)))
+
+    def test_pin_boundary_tracks_concrete_path_transforms_and_globs(self):
+        suite = "tools/tests/test_candidate.py"
+        reads = ("({root} / 'builds-version.txt').with_suffix('').read_text()",
+                 "({root} / 'other').with_stem('builds-version').read_bytes()",
+                 "list({root}.glob('builds-*'))",
+                 "list({root}.rglob('builds-*'))")
+        for read in reads:
+            for root, expected in (("ROOT", [f"{suite}:3: {suite} reads repository-root builds-version"]),
+                                   ("(ROOT / 'fixture')", [])):
+                with self.subTest(read=read, root=root):
+                    self.suite(read.format(root=root) + "\n")
+                    self.assertEqual(expected, inputs.pin_dependencies(self.root, inputs.tracked_paths(self.root)))
+
     def test_executable_and_shared_data_mutations_fail_with_path_and_line(self):
         historical = inputs.EVIDENCE_ROOT + "/specs/spec-cicd/evidence/18/runner.py"
         for relative, body in (("tools/new_runner.py", f"source = {historical!r}\n"),

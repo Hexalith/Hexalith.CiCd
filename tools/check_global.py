@@ -39,7 +39,9 @@ def load_module(name: str, path: Path):
 
 
 renderer = load_module("_cicd_global_renderer", Path(__file__).with_name("render.py"))
+inputs = load_module("_cicd_global_repository_inputs", Path(__file__).with_name("repository_inputs.py"))
 CheckError = renderer.RenderError
+SUITE_SELECTIONS = ("all", "pin")
 SHA = re.compile(r"[0-9a-f]{40}")
 FAILURES = (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RecursionError, RuntimeError,
             subprocess.SubprocessError, http.client.HTTPException, renderer.SchemaError)
@@ -398,23 +400,38 @@ def check_release(contract, api=None) -> None:
         raise CheckError(f"Builds {tag}: release commit is not a verified ancestor of live main")
 
 
-def run_tool_tests(project: Path) -> None:
-    suites = sorted(renderer.safe_path(project, "tools/tests").glob("test_*.py"))
-    if not suites:
-        raise CheckError("tool tests: no suites found")
-    commands = [["uv", "run", "--locked", "--script", "--python", sys.executable, suite] for suite in suites]
-    # The relocated suite uses this gate's locked jsonschema installation and
-    # reads the frozen Builds loader and schema directly from the reference's objects.
-    eventstore = renderer.safe_path(project, "tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py")
-    commands.append([sys.executable, "-B", eventstore])
+def run_tool_tests(project: Path, selection="all") -> None:
+    directory = renderer.safe_path(project, "tools/tests")
+    if selection == "pin":
+        suites = [renderer.safe_path(project, f"tools/tests/{name}") for name in inputs.PIN_SUITES]
+        missing = [suite.name for suite in suites if not suite.is_file()]
+        if missing:
+            raise CheckError("tool tests: missing pin suites: " + ", ".join(missing))
+    elif selection == "all":
+        suites = sorted(directory.glob("test_*.py"))
+        if not suites:
+            raise CheckError("tool tests: no suites found")
+    else:
+        raise CheckError(f"tool tests: unknown suite selection {selection!r}")
+    commands = [(suite, ["uv", "run", "--locked", "--script", "--python", sys.executable, suite])
+                for suite in suites]
+    if selection == "all":
+        # The relocated suite uses this gate's locked jsonschema installation and
+        # reads the frozen Builds loader and schema directly from the reference's objects.
+        eventstore = renderer.safe_path(project, "tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py")
+        commands.append((eventstore, [sys.executable, "-B", eventstore]))
+    labels = ", ".join(suite.relative_to(project).as_posix() for suite, _ in commands)
+    log(f"tool suite selection: {selection} [{labels}]")
     failures = []
-    for arguments in commands:
+    for suite, arguments in commands:
+        label = suite.relative_to(project).as_posix()
+        log(f"tool suite {label}: running")
         try:
             output = command(arguments, cwd=project, timeout=600)
             if output:
                 log(output.decode("utf-8", "backslashreplace").rstrip())
         except FAILURES as error:
-            failures.append(str(error))
+            failures.append(f"{label}: {error}")
     if failures:
         raise CheckError("; ".join(failures))
 
@@ -498,7 +515,10 @@ def normalize_scope(scope) -> str:
     return scope if isinstance(scope, str) and scope in ("none", "module") else "full"
 
 
-def run(project: Path, scope="full") -> bool:
+def run(project: Path, scope="full", *, suites="all") -> bool:
+    if suites not in SUITE_SELECTIONS:
+        log(f"global tool suites: unknown suite selection {suites!r}")
+        return False
     project = project.resolve()
     failures = []
 
@@ -525,7 +545,9 @@ def run(project: Path, scope="full") -> bool:
         log(f"global selected contract/prerequisite: {error}")
     # Only the two explicit narrow classes exclude suites. All other inputs,
     # including missing, misspelled or non-string scopes, retain full checks.
-    if normalize_scope(scope) == "full":
+    if scope == "full" and suites == "pin":
+        check("tool suites", lambda: run_tool_tests(project, "pin"))
+    elif normalize_scope(scope) == "full":
         check("tool suites", lambda: run_tool_tests(project))
     return not failures
 
@@ -534,11 +556,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=ROOT)
     parser.add_argument("--scope", default="full")
+    parser.add_argument("--suites", choices=SUITE_SELECTIONS, default="all")
     args = parser.parse_args()
     if sys.version_info < (3, 12):
         log("Python 3.12 or later is required")
         return 1
-    return int(not run(args.project_root, args.scope))
+    return int(not run(args.project_root, args.scope, suites=args.suites))
 
 
 if __name__ == "__main__":

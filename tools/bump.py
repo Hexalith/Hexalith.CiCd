@@ -19,7 +19,7 @@ rt = br.rt
 JOB_SECONDS = 40 * 60
 
 
-def run_script(project, script, budget, log):
+def run_script(project, script, budget, log, *arguments):
     """Run the shared committed tool unchanged, within the producer reserve."""
     # The uv script interpreter already contains the locked renderer/global
     # dependencies. A child isolates the controller from tool imports/signals
@@ -27,7 +27,7 @@ def run_script(project, script, budget, log):
     with log.open("wb") as stream:
         try:
             completed = subprocess.run([sys.executable, "-I", str(project / "tools" / script),
-                                        "--project-root", str(project)], cwd=project,
+                                        "--project-root", str(project), *arguments], cwd=project,
                                        stdout=stream, stderr=subprocess.STDOUT,
                                        timeout=budget.timeout(max_seconds=40 * 60), check=False)
         except (OSError, subprocess.TimeoutExpired):
@@ -69,7 +69,7 @@ def produce(transport, directory, expected, *, render=None, check=None):
             # templates/setup/tools; no scheduler-SHA source substitutes for it.
             git.run("checkout", "--quiet", "--detach", "--force", base)
             builds.init()
-            # The unchanged global gate's suites read older released tags from
+            # The selected global suites read older released tags from
             # this reference, like validate's full-tag Builds checkout. Fetch
             # all of them first; selection then reverifies each tag it uses.
             builds.run("fetch", "--no-tags", "--no-recurse-submodules", transport.remote(rt.BUILDS),
@@ -94,7 +94,8 @@ def produce(transport, directory, expected, *, render=None, check=None):
             # The shared gate compares committed inputs/render against HEAD;
             # it must run only after the local candidate exists.
             if check is None:
-                passed = run_script(project, "check_global.py", transport.budget, directory / "global.log")
+                passed = run_script(project, "check_global.py", transport.budget, directory / "global.log",
+                                    "--suites", "pin")
             else:
                 passed = check(project)
             if not passed:

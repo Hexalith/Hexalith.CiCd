@@ -432,6 +432,38 @@ class AppInventoryTests(unittest.TestCase):
             self.assertNotIn("global selected contract/prerequisite:", diagnostic.getvalue())
         global_check.check_app_inventory(ROOT)
 
+    def test_tool_suite_gate_propagates_missing_eventstore_release(self):
+        git = global_check.renderer.git
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            # An empty ordinary suite prevents recursion into test_app_inventory.
+            tests = project / "tools/tests"
+            tests.mkdir(parents=True)
+            (tests / "test_empty.py").touch()
+            suite = Path("tools/qualification/pre-adoption/eventstore")
+            shutil.copytree(ROOT / suite, project / suite)
+            builds = project / "references/Hexalith.Builds"
+            builds.mkdir(parents=True)
+            git(builds, "init", "--quiet")
+            caller = project / "caller"
+            caller.mkdir()
+            git(caller, "init", "--quiet")
+            # The caller can see the real release. Only the selected Builds
+            # repository lacks the object, so inheriting GIT_DIR must fail this test.
+            objects = git(ROOT / "references/Hexalith.Builds", "rev-parse", "--path-format=absolute",
+                          "--git-path", "objects")
+            (caller / ".git/objects/info/alternates").write_bytes(objects)
+            config = project / "caller.gitconfig"
+            git(caller, "config", "--file", str(config), "commit.gpgSign", "true")
+            env = {"GIT_CONFIG_GLOBAL": str(config), "GIT_DIR": str(caller / ".git"),
+                   "GIT_WORK_TREE": str(caller), "GIT_INDEX_FILE": str(caller / "index")}
+            with mock.patch.dict(os.environ, env), self.assertRaises(global_check.CheckError) as failure:
+                global_check.run_tool_tests(project)
+            self.assertIn("fdda17c0a4538b0f7c99f813c20ca24b49006530:Github/lib/ci_config.py", str(failure.exception))
+            self.assertIn("FAILED (errors=1)", str(failure.exception))
+            self.assertFalse((caller / "index").exists())
+            self.assertEqual(git(caller, "for-each-ref"), b"")
+
 
 if __name__ == "__main__":
     unittest.main()

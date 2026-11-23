@@ -137,13 +137,16 @@ class BumpTests(unittest.TestCase):
         w = self.workspace()
         stub = w.cicd / "tools/check_global.py"
         stub.parent.mkdir()
-        stub.write_text("import os\nprint('stub gate', os.environ['BUMP_TEST_GATE_OUTPUT'])\n"
+        stub.write_text("import os, pathlib, sys\n"
+                        "assert sys.flags.isolated\n"
+                        "assert sys.argv[1:] == ['--project-root', str(pathlib.Path.cwd()), '--suites', 'pin']\n"
+                        "print('stub gate', os.environ['BUMP_TEST_GATE_OUTPUT'])\n"
                         "raise SystemExit(int(os.environ['BUMP_TEST_GATE_CODE']))\n")
         w.commit()
         secret = "inert-gate-credential-sentinel"
         rt.delivery._SECRETS.append(secret)
         self.addCleanup(rt.delivery._SECRETS.remove, secret)
-        for code, result in (("1", "failed"), ("0", "candidate")):
+        for code, result in (("0", "candidate"), ("1", "failed")):
             with self.subTest(code=code), mock.patch.dict(os.environ, {"BUMP_TEST_GATE_OUTPUT": secret,
                                                                       "BUMP_TEST_GATE_CODE": code}):
                 with mock.patch.object(rt, "Git", FixtureGit):

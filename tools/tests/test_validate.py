@@ -136,8 +136,7 @@ class Api:
                                    "object": {"type": "commit", "sha": self.commit}}
         self.calls = []
 
-    def __call__(self, path):
-        self.calls.append(path)
+    def responses(self):
         main = self.main.get("object", {}).get("sha") if isinstance(self.main.get("object"), dict) else None
         # Exact endpoints and argument order: a reversed or self-comparison
         # must not silently receive the acceptable compare document.
@@ -145,6 +144,11 @@ class Api:
                      "git/ref/heads/main": self.main,
                      f"compare/{self.commit}...{main}?per_page=1&page=2": self.compare}
         responses.update({f"git/tags/{sha}": document for sha, document in self.tags.items()})
+        return responses
+
+    def __call__(self, path):
+        self.calls.append(path)
+        responses = self.responses()
         if path not in responses:
             raise AssertionError(f"Unexpected API read: {path}")
         return copy.deepcopy(responses[path])
@@ -764,7 +768,8 @@ class GlobalTests(unittest.TestCase):
                     "    raise module.CheckError('sentinel suite ran')\n"
                     "module.run_tool_tests = fail_suite\n"
                     "raise SystemExit(module.main())\n")
-                for arguments, suites in (([], True), (["--scope", "unknown"], True),
+                for arguments, suites in (([], True), (["--suites", "all"], True), (["--suites", "pin"], True),
+                                          (["--scope", "unknown"], True),
                                           (["--scope", "module"], False), (["--scope", "none"], False)):
                     with self.subTest(arguments=arguments):
                         result = run([sys.executable, "-I", harness, "--project-root", fixture.root, *arguments], check=False)
@@ -773,6 +778,11 @@ class GlobalTests(unittest.TestCase):
                         self.assertIn(b"global committed render: " + (b"uncommitted" if failing else b"passed"), result.stderr)
                         self.assertEqual(suites, b"sentinel suite ran" in result.stderr)
                         self.assertNotIn(b"Traceback", result.stderr)
+                result = run([sys.executable, "-I", harness, "--project-root", fixture.root,
+                              "--scope", "none", "--suites", "unknown"], check=False)
+                self.assertEqual(2, result.returncode)
+                self.assertIn(b"argument --suites: invalid choice", result.stderr)
+                self.assertNotIn(b"global committed render", result.stderr)
 
     def test_unexpected_http_exception_is_collected_and_later_checks_run(self):
         with workspace() as fixture:
@@ -783,6 +793,60 @@ class GlobalTests(unittest.TestCase):
             lint.assert_called_once()
             tests.assert_called_once()
             self.assertIn("global acceptable Builds publication: IncompleteRead", diagnostic.getvalue())
+
+    def test_global_cli_pin_checks_release_and_excludes_independent_failure(self):
+        with workspace() as fixture:
+            fixture.commit()
+            with global_check.selected_contract(fixture.root) as contract:
+                api = Api(fixture, contract)
+            responses = fixture.root.parent / "release-responses.json"
+            responses.write_text(json.dumps(api.responses()))
+            tests = fixture.root / "tools/tests"
+            tests.mkdir(parents=True)
+            for name in global_check.inputs.PIN_SUITES:
+                (tests / name).touch()
+            (tests / "test_maintenance.py").write_text("raise SystemExit('independent suite failure')\n")
+            eventstore = fixture.root / "tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py"
+            eventstore.parent.mkdir(parents=True)
+            eventstore.write_text("print('relocated suite ran')\n")
+            harness = fixture.root.parent / "global_cli.py"
+            harness.write_text(
+                "import importlib.util, json, os, pathlib, sys\n"
+                f"spec=importlib.util.spec_from_file_location('global_cli', {str(ROOT / 'tools/check_global.py')!r})\n"
+                "gate=importlib.util.module_from_spec(spec); sys.modules[spec.name]=gate; spec.loader.exec_module(gate)\n"
+                "gate.lint_workflows = gate.check_bootstrap = gate.check_app_inventory = lambda *arguments: None\n"
+                f"responses = json.loads(pathlib.Path({str(responses)!r}).read_text())\n"
+                "if os.environ['CICD_TEST_TAG_MISMATCH'] == '1':\n"
+                f"    responses[{f'git/ref/tags/{api.tag}'!r}]['object']['sha'] = {'0' * 40!r}\n"
+                "gate.github_api = responses.__getitem__\n"
+                "raise SystemExit(gate.main())\n")
+            cases = (
+                (["--suites", "pin"], False, "pin", 0),
+                ([], False, "all", 1),
+                (["--scope", "unknown", "--suites", "pin"], False, "all", 1),
+                (["--suites", "pin"], True, "pin", 1),
+            )
+            pin_labels = ", ".join(f"tools/tests/{name}" for name in global_check.inputs.PIN_SUITES)
+            for arguments, mismatch, selection, status in cases:
+                with self.subTest(arguments=arguments, mismatch=mismatch):
+                    result = run([sys.executable, "-I", harness, "--project-root", fixture.root, *arguments],
+                                 env={"CICD_TEST_TAG_MISMATCH": str(int(mismatch))}, check=False)
+                    diagnostic = result.stderr.decode()
+                    self.assertEqual(status, result.returncode, diagnostic)
+                    if selection == "pin":
+                        self.assertIn(f"tool suite selection: pin [{pin_labels}]", diagnostic)
+                        self.assertNotIn("test_maintenance.py", diagnostic)
+                        self.assertNotIn("relocated suite ran", diagnostic)
+                    else:
+                        self.assertIn("tool suite selection: all [", diagnostic)
+                        self.assertIn("test_maintenance.py: uv exited 1", diagnostic)
+                        self.assertIn("independent suite failure", diagnostic)
+                        self.assertIn("relocated suite ran", diagnostic)
+                    if mismatch:
+                        self.assertIn("remote/local tag-object mismatch", diagnostic)
+                        self.assertIn("global tool suites: passed", diagnostic)
+                    else:
+                        self.assertIn("global acceptable Builds publication: passed", diagnostic)
 
     def test_committed_inputs_compare_pin_registry_and_used_templates_only(self):
         for cause in ("builds-version", "setup/Hexalith.Fixture.yml", "templates/perimeter.json.j2"):
@@ -905,37 +969,6 @@ class GlobalTests(unittest.TestCase):
             for call in command.call_args_list:
                 self.assertEqual(call.kwargs["cwd"], fixture.root)
                 self.assertGreater(call.kwargs["timeout"], 0)
-
-    def test_tool_suite_gate_propagates_missing_eventstore_release(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            project = Path(temporary)
-            # An empty ordinary suite prevents recursion into test_validate.
-            tests = project / "tools/tests"
-            tests.mkdir(parents=True)
-            (tests / "test_empty.py").touch()
-            suite = Path("tools/qualification/pre-adoption/eventstore")
-            shutil.copytree(ROOT / suite, project / suite)
-            builds = project / "references/Hexalith.Builds"
-            builds.mkdir(parents=True)
-            git(builds, "init", "--quiet")
-            caller = project / "caller"
-            caller.mkdir()
-            git(caller, "init", "--quiet")
-            # The caller can see the real release. Only the selected Builds
-            # repository lacks the object, so inheriting GIT_DIR must fail this test.
-            objects = git(ROOT / "references/Hexalith.Builds", "rev-parse", "--path-format=absolute",
-                          "--git-path", "objects")
-            (caller / ".git/objects/info/alternates").write_bytes(objects)
-            config = project / "caller.gitconfig"
-            git(caller, "config", "--file", str(config), "commit.gpgSign", "true")
-            env = {"GIT_CONFIG_GLOBAL": str(config), "GIT_DIR": str(caller / ".git"),
-                   "GIT_WORK_TREE": str(caller), "GIT_INDEX_FILE": str(caller / "index")}
-            with mock.patch.dict(os.environ, env), self.assertRaises(global_check.CheckError) as failure:
-                global_check.run_tool_tests(project)
-            self.assertIn("fdda17c0a4538b0f7c99f813c20ca24b49006530:Github/lib/ci_config.py", str(failure.exception))
-            self.assertIn("FAILED (errors=1)", str(failure.exception))
-            self.assertFalse((caller / "index").exists())
-            self.assertEqual(git(caller, "for-each-ref"), b"")
 
     def test_workflow_lints_receive_actual_explicit_paths_and_reject_incomplete_results(self):
         with workspace() as fixture:
@@ -1520,6 +1553,49 @@ class ScopeSelectionTests(unittest.TestCase):
                 for name, callback in calls.items():
                     self.assertEqual(0 if name == "run_tool_tests" and scope in ("none", "module") else 1,
                                      callback.call_count, name)
+
+    def test_global_suite_selection_uses_locked_commands_and_reports_independent_failure(self):
+        names = ("test_conversations_qualification.py", "test_delivery_workflow.py", "test_render.py",
+                 "test_render_legacy.py", "test_validate.py")
+        tests = self.project / "tools/tests"
+        tests.mkdir(parents=True)
+        independent = tests / "test_maintenance.py"
+        for path in [*(tests / name for name in names), independent]:
+            path.touch()
+        eventstore = self.project / "tools/qualification/pre-adoption/eventstore/test_pre_adoption_verify.py"
+        visited = []
+
+        def suite(arguments, *, cwd, timeout):
+            path = arguments[-1]
+            visited.append(path)
+            self.assertEqual(self.project, cwd)
+            self.assertEqual(600, timeout)
+            if path == eventstore:
+                self.assertEqual([sys.executable, "-B", path], arguments)
+            else:
+                self.assertEqual(["uv", "run", "--locked", "--script", "--python", sys.executable, path], arguments)
+            if path == independent:
+                raise global_check.CheckError("injected independent failure")
+            return b""
+
+        with (mock.patch.object(global_check, "command", side_effect=suite),
+              redirect_stderr(io.StringIO()) as diagnostic):
+            global_check.run_tool_tests(self.project, "pin")
+            self.assertEqual([tests / name for name in names], visited)
+            self.assertIn("tool suite selection: pin", diagnostic.getvalue())
+            self.assertNotIn(independent.name, diagnostic.getvalue())
+            visited.clear()
+            for arguments in ((), ("all",)):
+                with self.subTest(arguments=arguments):
+                    with self.assertRaisesRegex(global_check.CheckError,
+                                                "tools/tests/test_maintenance.py: injected independent failure"):
+                        global_check.run_tool_tests(self.project, *arguments)
+                    self.assertEqual([*sorted([*(tests / name for name in names), independent]), eventstore], visited)
+                    visited.clear()
+            (tests / names[0]).unlink()
+            with self.assertRaisesRegex(global_check.CheckError, f"missing pin suites: {names[0]}"):
+                global_check.run_tool_tests(self.project, "pin")
+            self.assertEqual([], visited)
 
     def test_scope_reaches_locked_child_and_default_remains_full(self):
         for scope in ("none", "module", "bad", None):

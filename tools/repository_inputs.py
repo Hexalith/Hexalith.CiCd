@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 import hashlib
 import itertools
 import os
@@ -33,6 +34,14 @@ EVIDENCE_PATH = re.compile(re.escape(EVIDENCE_ROOT) + r"(?:[/\\]|\b)")
 PROSE_FILES = {"README.md", "AGENTS.md", "limits.md", "LICENSE", "setup/README.md"}
 PROSE_DIRECTORIES = (".claude/", ".agents/", ".agent/", ".codex/", ".cursor/",
                      ".github/agents/", "_bmad/", ".bmad-loop/")
+# These suites consume the live Builds pin or exercise the fixture that does.
+PIN_SUITES = (
+    "test_conversations_qualification.py",
+    "test_delivery_workflow.py",
+    "test_render.py",
+    "test_render_legacy.py",
+    "test_validate.py",
+)
 READS = {"read_text", "read_bytes", "open", "glob", "rglob", "iterdir", "exists", "is_file", "is_dir", "is_symlink", "stat", "lstat"}
 # Standard-library calls whose path arguments are read, copied, executed or loaded.
 SINKS = {"open", "io.open", "os.listdir", "os.scandir", "os.walk", "os.stat", "os.lstat",
@@ -114,19 +123,21 @@ def values(*items):
 
 
 class PathReads:
-    """Bounded Python path flow for evidence and suite registry reads.
+    """Bounded Python path flow for evidence and suite input reads.
 
     Unknown fixture objects stay unknown. Known paths retain their identity
     through assignments, parameters, returned values and repository helpers.
     Both sides of conditionals are visited, so an unexecuted test branch cannot
     hide a dependency. This is a dependency guard, not a Python interpreter.
     """
-    def __init__(self, root: Path, *, check_registry=True):
+    def __init__(self, root: Path, *, check_registry=True, pin_suite=None):
         self.root = root.resolve()
         self.check_registry = check_registry
+        self.pin_suite = pin_suite
         self.modules = {}
         self.failures = set()
         self.active = set()
+        self.imported_classes = set()
 
     def module(self, source):
         if source in self.modules:
@@ -145,10 +156,20 @@ class PathReads:
         return self.modules[source]
 
     def local_module(self, name, source):
-        suffix = name.replace(".", "/") + ".py"
-        for relative in ((Path(source).parent / suffix).as_posix(), "tools/" + suffix):
-            if (self.root / relative).is_file():
-                return relative
+        parts = name.split(".")
+        for directory in (Path(source).parent, Path("tools")):
+            target = directory.joinpath(*parts)
+            package = target / "__init__.py"
+            module = target.with_suffix(".py") if name else directory / ".py"
+            if self.pin_suite and name and (self.root / package).is_file():
+                module = package
+            if (self.root / module).is_file():
+                if self.pin_suite:
+                    for index in range(1, len(parts)):
+                        initializer = directory.joinpath(*parts[:index], "__init__.py")
+                        if (self.root / initializer).is_file():
+                            self.module(initializer.as_posix())
+                return module.as_posix()
         return None
 
     @staticmethod
@@ -199,14 +220,15 @@ class PathReads:
                 path = FilePath(path) if isinstance(path, str) else path
                 if isinstance(path, FilePath) and path.value.endswith(".py"):
                     try:
-                        relative = Path(path.value).relative_to(self.root).as_posix()
+                        target = Path(os.path.normpath(self.root / path.value)) if self.pin_suite else Path(path.value)
+                        relative = target.relative_to(self.root).as_posix()
                     except ValueError:
                         continue
                     if (self.root / relative).is_file():
                         return values(Module(relative))
         return None
 
-    def check(self, paths, source, line):
+    def check(self, paths, source, line, *, pin=True):
         for path in paths:
             if isinstance(path, str):
                 path = FilePath(path)
@@ -216,8 +238,32 @@ class PathReads:
             for directory in ("setup", "rendered") if self.check_registry else ():
                 if normalized == self.root / directory or self.root / directory in normalized.parents:
                     self.failures.add(f"{source}:{line}: suite reads repository-root {directory}/")
+            if pin and self.pin_suite and normalized == self.root / "builds-version":
+                self.failures.add(f"{source}:{line}: {self.pin_suite} reads repository-root builds-version")
             if EVIDENCE_ROOT in normalized.parts:
                 self.failures.add(f"{source}:{line}: active Python path reads evidence")
+
+    def process_pin(self, commands, cwd, source, line):
+        """Check explicit argv paths and Git's revision:path syntax."""
+        for command in commands:
+            if not isinstance(command, Sequence) or not command.items:
+                continue
+            argv = tuple(frozenset(item.value if isinstance(item, FilePath) else item
+                                   for item in argument if isinstance(item, (str, FilePath)))
+                         for argument in command.items)
+            git = any(Path(executable).name == "git" for executable in argv[0])
+            directory = cwd
+            for index, argument in enumerate(argv[1:], 1):
+                if git and "-C" in argument and index + 1 < len(argv):
+                    directory = frozenset(os.path.normpath(Path(base) / value)
+                                          for base in directory or ("",) for value in argv[index + 1]
+                                          if base or os.path.isabs(value))
+                for value in argument:
+                    path = value.split(":", 1)[1] if git and ":" in value else value
+                    if Path(path).name != "builds-version":
+                        continue
+                    candidates = values(path) if os.path.isabs(path) else values(*(str(Path(base) / path) for base in directory))
+                    self.check(candidates, source, line)
 
     def expression(self, node, env, source):
         if node is None:
@@ -227,7 +273,15 @@ class PathReads:
         if isinstance(node, ast.Name):
             return env.get(node.id, frozenset())
         if isinstance(node, (ast.List, ast.Tuple)):
-            return values(Sequence(tuple(self.expression(item, env, source) for item in node.elts)))
+            items = [()]
+            for item in node.elts:
+                if self.pin_suite and isinstance(item, ast.Starred):
+                    spreads = [value.items for value in self.expression(item.value, env, source) if isinstance(value, Sequence)]
+                    items = [prefix + spread for prefix in items for spread in spreads or [(frozenset(),)]]
+                else:
+                    value = self.expression(item, env, source)
+                    items = [prefix + (value,) for prefix in items]
+            return values(*(Sequence(item) for item in items))
         if isinstance(node, ast.Set):
             return frozenset().union(*(self.expression(item, env, source) for item in node.elts))
         if isinstance(node, ast.Dict):
@@ -322,6 +376,8 @@ class PathReads:
             return self.join(arguments)
         if names & {"str", "os.fspath"} and arguments:
             return frozenset(item.value if isinstance(item, FilePath) else item for item in arguments[0])
+        if self.pin_suite and name == "map" and len(node.args) == 2 and self.key(node.args[0]) in {"str", "os.fspath"}:
+            return arguments[1]
         supplied = [*arguments, *keywords.values()]
         if names & SINKS:
             self.check(self.iterate(frozenset().union(*supplied)), source, node.lineno)
@@ -329,7 +385,16 @@ class PathReads:
             # Relative strings are resolved by the child's cwd; constructed or absolute paths are known.
             self.check(frozenset(item for item in self.iterate(frozenset().union(*supplied))
                                  if isinstance(item, FilePath) or isinstance(item, str) and os.path.isabs(item)),
-                       source, node.lineno)
+                       source, node.lineno, pin=False)
+            if self.pin_suite:
+                cwd = keywords.get("cwd", values(str(self.root)))
+                directories = [item.value if isinstance(item, FilePath) else item for item in cwd
+                               if isinstance(item, (str, FilePath))]
+                self.process_pin(arguments[0] if arguments else keywords.get("args", ()),
+                                 directories, source, node.lineno)
+        if self.pin_suite and "runpy.run_path" in names:
+            for module in self.loaded(arguments or [keywords.get("path_name", ())]) or ():
+                self.module(module.source)
         if any(value.startswith(("Path.", "pathlib.Path.")) and value.rsplit(".", 1)[-1] in READS for value in names) and arguments:
             self.check(arguments[0], source, node.lineno)
         if names & LOADERS and len(arguments) > 1:
@@ -348,6 +413,15 @@ class PathReads:
             attr = node.func.attr
             if attr in READS:
                 self.check(base, source, node.lineno)
+            if self.pin_suite and attr in {"with_suffix", "with_stem"} and arguments:
+                result = set()
+                for path, part in itertools.product(base, arguments[0]):
+                    if isinstance(path, FilePath) and isinstance(part, str):
+                        try:
+                            result.add(FilePath(str(getattr(Path(path.value), attr)(part))))
+                        except ValueError:
+                            pass
+                return frozenset(result)
             if attr in {"resolve", "absolute", "expanduser", "with_suffix", "with_stem"}:
                 return base
             if attr in {"joinpath", "with_name"} and arguments:
@@ -361,6 +435,12 @@ class PathReads:
             if attr in {"glob", "rglob", "iterdir"}:
                 paths = self.join([base, arguments[0]]) if arguments else base
                 self.check(paths, source, node.lineno)
+                if self.pin_suite and attr in {"glob", "rglob"} and arguments:
+                    for directory, pattern in itertools.product(base, arguments[0]):
+                        if isinstance(directory, FilePath) and isinstance(pattern, str):
+                            target = Path(os.path.normpath(self.root / directory.value / pattern))
+                            if target.parent == self.root and fnmatchcase("builds-version", target.name):
+                                self.check(values(FilePath(str(self.root / "builds-version"))), source, node.lineno)
                 return paths
         results = set()
         for function in self.expression(node.func, env, source):
@@ -386,6 +466,8 @@ class PathReads:
                 local[parameter.arg] = self.expression(default, globals_, function.source)
             for parameter, argument in zip(parameters, arguments):
                 local[parameter.arg] = argument
+            if self.pin_suite and definition.args.vararg:
+                local[definition.args.vararg.arg] = values(Sequence(tuple(arguments[len(parameters):])))
             local.update(keywords)
             self.active.add(signature)
             results.update(self.statements(definition.body, local, function.source))
@@ -402,6 +484,10 @@ class PathReads:
                     local = self.local_module(alias.name, source)
                     if local:
                         env[alias.asname or alias.name] = values(Module(local))
+                        if self.pin_suite:
+                            # Plain imports execute top-level reads even when
+                            # the suite never accesses a module attribute.
+                            self.module(local)
                     elif alias.name in STANDARD:
                         env[alias.asname or alias.name.split(".")[0]] = values(Symbol(alias.name if alias.asname else alias.name.split(".")[0]))
             elif isinstance(node, ast.ImportFrom):
@@ -411,6 +497,10 @@ class PathReads:
                     for alias in node.names:
                         env[alias.asname or alias.name] = (values(Function(local, alias.name)) if alias.name in functions
                                                          else globals_.get(alias.name, frozenset()))
+                        imported = (local, alias.name)
+                        if self.pin_suite and ("@class:" + alias.name) in globals_ and imported not in self.imported_classes:
+                            self.imported_classes.add(imported)
+                            self.scan(local, test_class=alias.name)
                 elif node.module in STANDARD:
                     for alias in node.names:
                         env[alias.asname or alias.name] = values(Symbol(node.module + "." + alias.name))
@@ -470,7 +560,7 @@ class PathReads:
                     self.merge(env, branch)
         return frozenset(returned)
 
-    def scan(self, source):
+    def scan(self, source, *, test_class=None):
         tree, env, _ = self.module(source)
         classes = {node.name: node for node in tree.body if isinstance(node, ast.ClassDef)}
 
@@ -482,11 +572,14 @@ class PathReads:
                     yield from lineage(classes[name], (*seen, name))
             yield node
 
-        for node in tree.body:
+        for node in tree.body if test_class is None else [classes[test_class]]:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 self.statements(node.body, env.copy(), source)
             elif isinstance(node, ast.ClassDef):
                 chain = list(dict.fromkeys(lineage(node)))
+                if test_class and not any(method.name.startswith("test_") for item in chain for method in item.body
+                                          if isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef))):
+                    continue
                 state = {}
                 for item in chain:
                     state.update(env.get("@class:" + item.name, env))
@@ -510,3 +603,18 @@ def registry_dependencies(root: Path, paths: list[str]) -> list[str]:
                 and (root / relative).is_file()):
             analysis.scan(relative)
     return sorted(analysis.failures)
+
+
+def pin_dependencies(root: Path, paths: list[str]) -> list[str]:
+    selected = {f"tools/tests/{suite}" for suite in PIN_SUITES}
+    failures = set()
+    for relative in paths:
+        path = root / relative
+        if (relative.startswith("tools/") and path.match("test_*.py")
+                and relative not in selected and path.is_file()):
+            # Give each entry point its own analysis so imported reads keep
+            # the consuming suite even when several suites share a helper.
+            analysis = PathReads(root, check_registry=False, pin_suite=relative)
+            analysis.scan(relative)
+            failures.update(analysis.failures)
+    return sorted(failures)
