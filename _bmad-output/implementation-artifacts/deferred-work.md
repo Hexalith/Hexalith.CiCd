@@ -77,7 +77,8 @@ location: references/Hexalith.Builds/Github/lib/ci_pipeline.py:282
 source_spec: `2-6-sample-module-self-test-and-the-windows-job.md`
 severity: low
 reason: ci_config.validate_config path() accepts a solution such as "-consumer.slnx", and ci_pipeline.restore_and_build passes prepared.document["solution"] unchanged to "dotnet restore"/"dotnet build". dotnet parses it as a switch and fails with MSB1001; the recovery pass reproduced this failure on the Windows path. The function predates story 2-6 and is unchanged by it, and shared CI calls it before any Linux prepare, so prepare exposes no new path. The smallest fix is passing str(prepared.root / solution), as the Windows prepare script now does.
-status: open
+status: done 2026-11-23
+resolution: Shared Linux CI resolves the module-contained solution before passing it to SDK restore and build. A real .NET 11.0.100 fixture confirms the raw leading-dash path fails and the shared entry point builds it. [Verification](spec-deferred-builds-invocation-and-attachment.md)
 
 ### DW-8: Retire or narrow the story 3-1 spike publishing credentials that remain live after the spike: the nuget.org policy `Hexalith.Builds CiCd`, the Zot principal `cicd-publish-spike-3-1`, and the spike
 origin: spec-deferred d1a742edfcfa
@@ -145,7 +146,8 @@ location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/NativeTes
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: The incoming NativeTestExecutorTests attached-routing test varies ownerRunId only while SelectedRoutingCatalogSnapshot validates several independent identity fields. Exact owner/environment/role/hold substitutions would establish refusal for each newly introduced boundary.
-status: open
+status: done 2026-11-23
+resolution: The attached-routing theory now substitutes the descriptor environment independently of the hold environment. It checks the identity diagnostic for every invalid run, environment, role and hold case. Both valid captures still verify the exact retained bytes. [Verification](spec-deferred-builds-invocation-and-attachment.md)
 
 ### DW-16: Verify attached candidate-policy refusal independently of TestObservation.
 origin: spec-deferred 1499f0465ace
@@ -153,7 +155,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runti
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: Incoming NativeTestExecutor code refuses attachments when CandidatePolicy is populated, but no test supplies CandidatePolicy with absent TestObservation. Existing access-observation refusal does not isolate that branch.
-status: open
+status: done 2026-11-23
+resolution: Builds `565b9e63bce9d3b5b43483d01da81ef7ceb33a20` adds an attachment with a valid hold, an owner candidate policy and no access observation. The test checks HXT009 and confirms the child and attachment workspace are never created. [Verification](spec-deferred-builds-invocation-and-attachment.md)
 
 ### DW-17: Preserve the requested explicit endpoint in unmanaged occupied-port diagnostics.
 origin: spec-deferred fc4e7db0f6d6
@@ -170,7 +173,8 @@ location: references/Hexalith.Builds/README.md:1399
 source_spec: `3-4-the-publish-composite.md`
 severity: low
 reason: Upstream commit bfda07ee appends "### Explicit endpoints and attached routing snapshots" (README.md:1399) after "## License" (README.md:1394), so it renders as a License subsection. README.md:641-643 still says owners requiring routing-catalog observations fail attached runs as startup-failure. README.md:752-754 still says every claim conflict retries up to 64 times, with no exception for explicit ports. Not changed by publisher work.
-status: open
+status: done 2026-11-23
+resolution: Builds `565b9e63bce9d3b5b43483d01da81ef7ceb33a20` moves explicit endpoints into the runtime documentation and describes attached routing snapshots and the one-attempt explicit claim. The guidance is present on current Builds main. [Verification](spec-deferred-builds-invocation-and-attachment.md)
 
 ### DW-19: Test and explain the upstream refusal of explicit EventStore ports on attached suites.
 origin: spec-deferred b3ca79539e5e
@@ -248,7 +252,8 @@ location: references/Hexalith.Builds/Github/lib/release_state.py dispatch_settin
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: low
 reason: Follow-up review BH3/VG3. release_state.dispatch_settings materializes the dispatch blob into tempfile.TemporaryDirectory(prefix="hexalith-release-config-") and passes it to load_config. Two calls on an invalid configuration printed /tmp/hexalith-release-config-e4hcdqgv/hexalith-ci.json: ... and then /tmp/hexalith-release-config-m4ev6d9i/hexalith-ci.json: .... The guard's expected_state.load_ci maps loader errors to the committed path. dispatch_settings already has this behavior at implementation baseline f01c3ab70f7e7401b3b73217983955f7771a1465, and this story did not change it. Fix: apply the same str(error).replace(str(path), relative) mapping, and assert the logical path and repeat stability in test_release_adapters.
-status: open
+status: done 2026-11-23
+resolution: Release resolve names the committed configuration path for validation and JSON syntax failures. Composite tests verify repeat stability, a sample module path and refusal before configuration outputs are emitted. [Verification](spec-deferred-builds-invocation-and-attachment.md)
 
 ### DW-26: Builds main stays red on two baseline failures with no follow-up owner: the package-catalog validator's 14 EventStore 4.2.0-versus-5.0.0 assertions (exit 1) and the 44 failing Evidence.Tests
 origin: spec-deferred 25bd20338ca7
@@ -588,3 +593,7 @@ resolution: Both Nightly observers continue to query Delivery. Evidence runs in 
 - source_spec: `_bmad-output/implementation-artifacts/spec-deferred-catalog-authority.md`
   summary: Honor conditional package inclusion in the C# default catalog lookup when there is no materialized snapshot.
   evidence: The current catalog makes Hexalith.Platform.TestExtension 2.2.5 available only to Hexalith.Platform.EventStoreHost. MSBuild excludes the package in the default view. CompositionDeclarationOptions can still return the item by reading the raw XML without evaluating its enclosing ItemGroup condition.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-deferred-builds-invocation-and-attachment.md`
+  summary: Use option-safe SDK paths when restoring and building explicitly listed additional test projects.
+  evidence: Builds `Github/lib/ci_pipeline.py` passes `tests.additional` project paths directly to restore and build. A root filename starting with a dash is accepted by the path validation and can be interpreted as an SDK option. The solution-path repair in DW-7 uses a contained absolute path for both commands.
