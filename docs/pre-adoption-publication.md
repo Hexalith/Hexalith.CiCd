@@ -48,17 +48,20 @@ push range with the owning repository's pinned policy, and retain the successful
 results; checking only the final message is insufficient. Include pending
 tracked and untracked changes when creating the candidate; preserve the shared
 worktree and index. Create standalone copies under `run-with-temp`'s `TMPDIR`
-and retain useful results outside it. Initialize no nested submodules in the
-umbrella checkout.
+and keep raw local output there. Initialize no nested submodules in the umbrella
+checkout.
 
 Existing runners provide reusable checks, but several bind hardcoded historical
-candidates. Their fixtures live beside the relocated tools and default raw
-output stays under `$TMPDIR` (the EventStore verifier retains its explicit
-`--report` contract). Inspect and adapt them in a disposable job before
-using them for another candidate; retain the runner's exact source identity
-and invocation. Write one receipt with revisions, tree ids, digests and results;
-keep raw output under `$TMPDIR`. Do not overwrite old qualification or treat a
-stale pass as covering the current tree.
+candidates. Their fixtures live beside the relocated tools. Inspect and adapt
+them in a disposable job before using them for another candidate. Retain one
+compact, durable qualification receipt. Include the
+full source commit and tree IDs, relevant blob IDs and dependency gitlinks, the
+runner and invocation, and a one-line outcome and SHA-256 digest for each
+required result. Include Actions run and artifact links when available. Keep
+raw logs, tree listings, patches, packages, test output and earlier attempts in
+the producing Actions run or under `$TMPDIR`. The EventStore verifier still
+requires the explicit durable `--report` named in its approval. Preserve past
+receipts and qualify changed inputs against their current tree.
 
 Run released policy checks from the committed bytes of an acceptable immutable
 Builds release. Retain the exact tag and full commit identity, its authenticated

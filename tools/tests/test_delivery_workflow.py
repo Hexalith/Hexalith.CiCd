@@ -620,6 +620,47 @@ class WorkflowBoundaryTests(unittest.TestCase):
                             self.assertNotIn("--scope", global_calls[0])
 
 
+class EvidenceWorkflowTests(unittest.TestCase):
+    def test_evidence_runs_only_on_pull_requests_and_main_pushes_with_exact_event_inputs(self):
+        fixture = SimpleNamespace(root=ROOT, sha="a" * 40)
+        for event, ref, runs in (("pull_request", "refs/pull/1/merge", True),
+                                 ("push", "refs/heads/main", True),
+                                 ("schedule", "refs/heads/main", False),
+                                 ("workflow_dispatch", "refs/heads/main", False)):
+            with self.subTest(event=event):
+                workflow = Workflow(fixture, event=event, ref=ref, validation="failure", job="evidence")
+                self.assertEqual(runs, workflow.condition(workflow.job["if"]))
+                if not runs:
+                    self.assertEqual("skipped", workflow.execute())
+                    self.assertEqual([], workflow.actions + workflow.commands)
+                    continue
+                pr_base = "b" * 40 if event == "pull_request" else ""
+                push_before = "c" * 40 if event == "push" else ""
+                workflow.context["github"]["event"] = {"pull_request": {"base": {"sha": pr_base}},
+                                                          "before": push_before}
+                step = workflow.job["steps"][1]
+                self.assertEqual({"EVIDENCE_PR_BASE": pr_base, "EVIDENCE_PUSH_BEFORE": push_before},
+                                 {key: workflow.expand(value) for key, value in step["env"].items()})
+                self.assertEqual(["python3", "-I", "tools/check_evidence.py"], shlex.split(step["run"]))
+        feature = Workflow(fixture, event="push", ref="refs/heads/feature", job="evidence")
+        self.assertEqual("not-triggered", feature.execute())
+
+    def test_evidence_read_only_checkout_and_independence_from_the_writer(self):
+        workflow = Workflow(SimpleNamespace(root=ROOT, sha="a" * 40), job="evidence")
+        evidence = workflow.job
+        self.assertEqual({"contents": "read"}, evidence["permissions"])
+        self.assertEqual({"if", "runs-on", "timeout-minutes", "permissions", "steps"}, set(evidence))
+        checkout, check = evidence["steps"]
+        self.assertEqual({"name", "uses", "with"}, set(checkout))
+        self.assertEqual(workflow.document["jobs"]["validate"]["steps"][0]["uses"], checkout["uses"])
+        self.assertEqual({"fetch-depth": 1, "fetch-tags": False, "sparse-checkout": "/tools/check_evidence.py",
+                          "sparse-checkout-cone-mode": False, "submodules": False, "persist-credentials": False},
+                         checkout["with"])
+        self.assertEqual({"name", "env", "run"}, set(check))
+        self.assertEqual("validate", workflow.document["jobs"]["deliver"]["needs"])
+        self.assertNotIn("needs", workflow.document["jobs"]["validate"])
+
+
 class NarrowWorkflowTests(unittest.TestCase):
     def fixture(self):
         from test_deliver_g6_catalog import CatalogWorkspace, delivery
