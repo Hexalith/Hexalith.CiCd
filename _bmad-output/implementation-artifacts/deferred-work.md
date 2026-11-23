@@ -226,6 +226,8 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/4-1-perimeter-contract-and-library-in-builds.md`
   summary: Verify and document the minimum Git capability required for snapshot-pinned perimeter attributes (medium, unverified).
   evidence: Resumed review RB9 notes that old Git versions may ignore GIT_ATTR_SOURCE; no older binary was available to reproduce its exact behavior. Current hosted/local Git passes selected-index and dirty-worktree attribute controls. Settle this with a cross-version real-Git repair demonstrating whether an unsupported attribute source can affect hashing, then document or enforce the proven minimum without weakening index atomicity.
+  status: done 2026-11-23
+  resolution: The pinned Builds repair test used the dirty worktree filter on Git 2.40.4 and passed with snapshot attributes on Git 2.41.0. The maintainer quickstart documents the minimum. [Verification](spec-deferred-cicd-qualification.md)
 
 ### DW-24: On create-mode drift, release resolve still emits CodeQL and nightly-hook settings parsed from the drifted dispatch-SHA configuration, so the owned edit can steer the release security jobs.
 origin: spec-deferred 5638b7c7b782
@@ -339,7 +341,8 @@ location: tools/delivery_runtime.py:365 (Transport.builds), reused by tools/nigh
 source_spec: `8-1-nightly-releases.md`
 severity: medium
 reason: Each nightly job acquires the trusted Builds release through delivery's existing anonymous `Transport.builds` reads: about four per job, twelve per night. If hosted runners share egress IPs, the 60/hour unauthenticated quota may already be spent, failing initialization and with it the whole night (medium if true). The same anonymous pattern already runs hourly in delivery and passed story 7's hosted requalification. To settle it, record the X-RateLimit headers from hosted nightly runs. If they show exhaustion, authenticate these public reads with the job token. (declared severity: medium (unverified))
-status: open
+status: done 2026-11-23
+resolution: Dispatch, wait and publish-ready use the existing read-only job token for fixed Builds REST reads, with credential-free Git object acquisition and no anonymous fallback. Hosted rate-limit headers remain unobserved. [Verification](spec-deferred-cicd-qualification.md)
 - source_spec: `_bmad-output/specs/spec-cicd/stories/8-2-nightly-builds-bump.md`
   summary: Confirm that the bump-push and keepalive GITHUB_TOKEN fast-forward pushes to CiCd `main` are not blocked by classic branch protection; the hosted probe only pushed a disposable ref.
   evidence: Story 8-2 review B1 (maybe-false; medium if true). Ruleset 26812262 has only `deletion` and `non_fast_forward`, so fast-forwards pass it, but classic protection on `main` (`protected: true`) was unreadable with the agent token (HTTP 403). To settle it, read `branches/main/protection` with an admin token, or watch the first production bump or keepalive push. A GH006 rejection would fail every bump night loudly.
@@ -524,7 +527,8 @@ location: _bmad-output/implementation-artifacts/spec-23-migrate-tenants.md:64
 source_spec: `28-3-executable-fixtures-out-of-evidence.md`
 severity: medium
 reason: spec-23-migrate-tenants.md (in-progress) names evidence/23/read-preflight.py for the next read-only AD-21 refresh and evidence/23/qualify-eventstore-snapshot-candidate.py; eventstore-release-readiness-20261117 READMEs invoke evidence-resident verify and audit scripts. Pre-existing: the removed AGENTS.md sentence exempted only the runbook-named pre-adoption runners for stories 17, 18, 20 and 21, which this story relocated. Resolution needs AGENTS.md wording or relocating story 23 tooling, both outside this story.
-status: open
+status: done 2026-11-23
+resolution: The live Tenants preflight, its test and the prerequisite verifier now run from tools/. The completed EventStore packet points to current procedures and its pinned replay record. [Verification](spec-deferred-cicd-qualification.md)
 
 ### DW-43: The Parties publication runner's exact-input checks are bare asserts that python3 -O removes.
 
@@ -555,7 +559,8 @@ location: .github/workflows/deliver.yml:20
 source_spec: `28-6-evidence-policy-and-growth-stop.md`
 severity: medium
 reason: The existing workflow-level group uses GitHub's single pending slot. If a later run replaces the pending push, that next push compares against its own previous SHA. A replay or concurrency redesign affects Delivery scheduling.
-status: open
+status: done 2026-11-23
+resolution: Evidence has its own PR and main push workflow without concurrency. The checker still uses each event's exact baseline. [Verification](spec-deferred-cicd-qualification.md)
 
 ### DW-46: Nightly's observers consume the aggregate Delivery run status and conclusion.
 origin: spec-deferred e9bd5aa3af46
@@ -563,4 +568,5 @@ location: tools/nightly_delivery_wait.py:331 and tools/nightly.py:205
 source_spec: `28-6-evidence-policy-and-growth-stop.md`
 severity: medium
 reason: An evidence-only failure can make an otherwise qualifying post-bump Delivery run red to the propagation observer. The pre-dispatch barrier also waits for the aggregate run to finish.
-status: open
+status: done 2026-11-23
+resolution: Both Nightly observers continue to query Delivery. Evidence runs in a separate workflow and has its own status and conclusion. [Verification](spec-deferred-cicd-qualification.md)

@@ -1,6 +1,6 @@
 {
   "schema": "hexalith.cicd-app-inventory.v1",
-  "reviewed_revision": "3d097433140c3f885e33a7cb3d413005e560d70c",
+  "reviewed_revision": "848b5c2d3497bdeae1aebc94e77b2cd1f20872d7",
   "selector_sources": {
     "tools/delivery_bootstrap.py": {
       "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
@@ -15,12 +15,12 @@
       "bound": "Accepted-source module application; no change to validation verdict or product gates."
     },
     "tools/nightly.py": {
-      "sha256": "f07921b472c856fe09c481f33e2ce9ec557ee253e08251fe952bc5db6afdc93e",
+      "sha256": "32e37a4158616ba14e27165f0dfab80a67990ce629baed33af8137f8a8e0d86b",
       "bound": "At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
     },
     "tools/nightly_runtime.py": {
-      "sha256": "dfa686d1cca14d1eea29e62474bea38806b42d7882c5d3a175e91e847a943a81",
-      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use."
+      "sha256": "abff8488beae11b086d29eeed23af8d0658038c16f3dab44b61657af95abcd07",
+      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. The job token is used only for initialization handoffs and fixed, public Builds REST reads."
     },
     "tools/nightly_publish.py": {
       "sha256": "9679abb0eb186f2fa8cfa4ee0a58ee8f39198f5518c2875d053707762f1de82d",
@@ -1418,7 +1418,7 @@
             {
               "index": 2,
               "identity": "initialize",
-              "sha256": "b373c790724897a5a07b7f5c2f6b2b6806c3fc6ff6195422b0f927b6bd8d957f"
+              "sha256": "98750bba9387be251866ad1d770229719a47484a770f45069bf2e42f3acbd5dc"
             },
             {
               "index": 3,
