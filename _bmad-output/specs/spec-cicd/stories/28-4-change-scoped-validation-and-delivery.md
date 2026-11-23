@@ -2,10 +2,10 @@
 title: 'Change-scoped validation and delivery'
 type: feature
 created: '2026-11-22'
-status: blocked
-baseline_revision: 988ffd197c63e8aa67d08c0631b652a69d59469b
+status: done
+baseline_revision: 9e6109595c795b7ac6f86066af4b787a09e310dc
 review_loop_iteration: 0
-followup_review_recommended: true
+followup_review_recommended: false
 context:
   - AGENTS.md
   - _bmad-output/specs/spec-cicd/enforcement.md
@@ -64,7 +64,7 @@ deferred: []
 - [x] Implement conservative Git classification and output in `tools/change_scope.py`.
 - [x] Thread normalized scope through `validate.py`, `check_global.py` and `deliver.yml`; retain all existing default/full callers and error-repair semantics.
 - [x] Extend `test_validate.py` with real Git baselines and external-call assertions covering every matrix row, additions/deletions, renames/modes, distinct baselines and failed fetch/discovery. Adapt the workflow harness only as necessary; renew the specific App inventory boundary/digest.
-- [ ] Qualify hosted matrix and timings; record only compact identities, links, verdicts and durations here.
+- [x] Qualify hosted matrix and timings; record only compact identities, links, verdicts and durations here.
 
 **Acceptance Criteria:**
 - Given a prose PR or push equivalent to an accepted commit, when Delivery runs, then validate completes green without Builds checkout, module reads or suites, and a push skips the privileged job and leaves delivered refs unchanged.
@@ -132,6 +132,20 @@ Edge-case hunter reported no findings. The four layers were all completed; the p
   - `[low]` `[reject]` Intent 4, push sample — the completed scope sample is measured directly from Actions API metadata and validation logs.
   - `[medium]` `[reject]` Intent 5, hosted Nightly — same missing scheduled Nightly observation as Blind 12.
   - `[medium]` `[patch]` Intent 6, missing classifier — same correction and regression as Edge 1.
+
+### 2026-11-23 — Review pass
+
+- Verdicts: 7 findings, high 0, medium 5, low 2, false 0, maybe-false 0.
+- Findings:
+  - `[medium]` `[reject]` Verification gap — the review snapshot lacked a completed Nightly barrier receipt. The hosted acceptance check remains a required observation for final status.
+  - `[medium]` `[reject]` Edge case — `in-review` described the local review stage while the hosted gate remained open. The qualification checklist stays open until the scheduled step supplies an outcome and timestamps.
+  - `[medium]` `[reject]` Intent alignment — the review snapshot measured hosted Delivery, while its barrier evidence was limited to direct function calls. The scheduled Actions attempt supplies the requested surface.
+  - `[medium]` `[reject]` Blind hunter — the hosted gate remained unevidenced in the review snapshot. The evidence write-back must bind the scheduled run, attempt, source and exact step interval before closure.
+  - `[low]` `[reject]` Blind hunter — the sample cutoff had two live Delivery pushes. The measurement now names both and retains the completed-run cutoff.
+  - `[low]` `[reject]` Blind hunter — the follow-up verification table lacked blob identities. The story now records the seven exact blobs at the follow-up baseline.
+  - `[medium]` `[reject]` Blind hunter — the earlier qualifying PR used the earlier workflow blob. The story now cites the corrected workflow's hosted prose validate and skipped writer jobs, as well as the full correction push.
+
+All findings concerned the qualification record. No implementation patch or deferred code work resulted from this pass.
 
 ## Design Notes
 
@@ -305,30 +319,70 @@ The [new qualification branch `qualify/28-4-prose-pr-hosted`](https://github.com
 
 [Validate job 137543872692](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45130253426/job/137543872692) passed in **11 s** (07:19:36–07:19:47 UTC), with verdict `{"global":true,"modules":[]}`. It skipped Builds checkout, module reads and tool suites, and contacted only CiCd. The `deliver` job skipped with zero steps and the run emitted no artifacts. Anonymous readback found all seven accepted refs still at the recorded `f9a184f44fd1d16c35afca132991b87d0761a106`. Wall time was **14 s** (07:19:33–07:19:47 UTC) and job time was **11 runner-seconds**. Validate log SHA-256 `1f3fe2b887429e99c55365299650cf9b8fc06439350c178aba37339c48180cf9` (20,554 bytes).
 
-The scheduled Nightly barrier step is the remaining hosted observation. A fresh Actions API query while verifying this PR found zero Nightly runs on `main` since rollout.
+The Actions API query made while verifying this PR found zero Nightly runs on `main` since rollout.
+
+### Post-rollout push sample through the Nightly barrier
+
+The Actions API returned 16 completed `deliver.yml` pushes to `main` from `2026-11-22T19:35:39Z` through `2026-11-23T11:22:50Z`, including the six in the earlier sample. Scope comes from each validate job's classifier log. Wall time is `updated_at − created_at`. Runner time is the sum of non-skipped job intervals for the recorded attempt.
+
+| Additional push, attempt 1 | Candidate / tree | Scope / outcome | Wall / runner seconds |
+|---|---|---|---:|
+| [45128585863](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45128585863) | `10b0af1090f64d31c7c7d36ca8c24b7c6397e4c0` / `02ef17dd67013dbb7fea52e5482be2d39fc489f3` | none / success | 23 / 19 |
+| [45131186537](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45131186537) | `d58a1829246b4bc9784212bc3051e9b082532146` / `c797ea6d86e4f3b78d49462506e709877fe9679f` | full / success | 1,556 / 1,547 |
+| [45131558777](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45131558777) | `ae0c097ebead003c5ec270e66ebf2a48b6117a5a` / `52704814045691570fd5730b711dd64fa7b7ebf2` | none / success | 1,388 / 12 |
+| [45144380380](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45144380380) | `7bdd093399ded4ff2bb407af0b4f1f4ab3a44892` / `06ee48f39b4744811417045412d9388bf6256ad7` | full / success | 1,210 / 1,193 |
+| [45157835850](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45157835850) | `10d4a51534c8b58171a8c9cbb170db1251c4aaed` / `6d7dd70bf536c2589e176dc3253b47956b1165e1` | none / success | 137 / 17 |
+| [45158026662](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45158026662) | `0b7e7a65482fee88c233402a214620d7ccb8c08b` / `0d490ec2035ac1f6c25e71bdb288d5856f9d1745` | full / success | 2,045 / 1,704 |
+| [45158593190](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45158593190) | `9e6109595c795b7ac6f86066af4b787a09e310dc` / `7bc1c300677593ef3f86abfd83a9885dae0f601a` | unobserved / cancelled before any job | 284 / 0 |
+| [45159293505](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45159293505) | `ff5bf4b7f6a037107c05a9e11f5a38b38f0c467a` / `23fae03731ef3256283fe817960d7545acec4f83` | unobserved / cancelled before any job | 649 / 0 |
+| [45160876756](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45160876756) | `c4e812e33ca38d6111ca7a3630412bd249ff86e1` / `b41e93dfd6771b824d73e969d328afbbbb313a14` | unobserved / cancelled before any job | 547 / 0 |
+| [45162257399](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45162257399) | `b86a24ae181fe9a0b087d77c5acb458ee60d0807` / `3067c2bed6a08ad58a05415e2b8a80521745b818` | module / success | 824 / 183 |
+
+| Scope | Completed / passed | Total runner-minutes | Median runner / wall seconds |
+|---|---:|---:|---:|
+| none | 6 / 6 | 1.3833 | 12 / 29 |
+| module | 2 / 2 | 5.5500 | 166.5 / 586 |
+| full | 5 / 5 | 130.7667 | 1,675 / 1,709 |
+| unobserved | 3 / 0 | 0 | 0 / 547 |
+
+The sample used **137.70 runner-minutes**. Its six prose/receipt/gitlink pushes used **83 runner-seconds**. The five-day historical baseline counted 57 such pushes among 109 completions, **938 runner-minutes** and a reported **17.9-minute median**. Run `45131558777` spent 1,376 seconds outside job intervals, so elapsed time can still be dominated by the Delivery queue. The earlier sample and the current sample both include controlled qualification pushes.
+
+The corrected Delivery workflow blob `b6dabfb1dedf3e3c53c163d40d1f358cf5a0aa9b` ran both the full correction push `45131186537` and the subsequent prose push `45131558777`. On the prose push, the classifier used accepted baseline `d58a1829246b4bc9784212bc3051e9b082532146`, validate returned `{"global":true,"modules":[]}`, Builds checkout skipped, and the writer skipped with zero steps. [Validate job](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45131558777/job/137556864608) · [Writer job](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45131558777/job/137556965291)
+
+Full push `45158026662` completed at 11:13:04 UTC. Pending pushes `45159293505` and `45160876756` were superseded before any job. Module push `45162257399` completed at 11:21:07 UTC. The final cutoff excludes [run 45163448014](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45163448014), which was queued from 11:21:07 UTC and remained queued after the barrier step ended.
+
+### Hosted scheduled Nightly barrier — measured
+
+[Nightly run 45159188381](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45159188381), attempt 1, was the first `schedule` run on `main` after rollout. Its source was `9e6109595c795b7ac6f86066af4b787a09e310dc`, tree `7bc1c300677593ef3f86abfd83a9885dae0f601a`. Step 7, `Wait for hourly delivery barrier`, ran from **2026-11-23T10:53:12Z** through **2026-11-23T11:22:50Z** for **1,778 s (29 min 38 s)**. The dispatch job failed and all release dispatch steps skipped. [Dispatch job 137639845038](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45159188381/job/137639845038)
+
+Actions reported `success` for step 7 because it uses `continue-on-error`. The dispatch state bound to this attempt recorded `barrier failed: delivery barrier did not clear within 30 minutes`, eight failed target rows, and zero target run IDs. The archive SHA-256 was `05cbea4ac978ccda5e51ead27241164c61c8210be4ea03a4aade67ac02b9f576`. The `dispatch.json` SHA-256 was `f692cd2709fc4084e754c929d5e7b65d77131f7399499285f6478b60351742a5` and dispatch log SHA-256 was `e13303960bd6e378de093cc14aeeaa7c904997a7f7ed72fc73852c60c7c2e812`. [Dispatch artifact 14812663416](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45159188381/artifacts/14812663416)
+
+The hosted source used two consecutive idle scans one poll apart, introduced by `145ccf2c89d026748712c310871f8c9d1abfdeaa`. The workflow blob was `03e4599a0409d86ea10733cbd2bb17ea02a68391`, the nightly controller blob was `4472e31330d9f996ab091a2c8033f5af5fd6428e` and the runtime blob was `d511ef58ca843e290e33a5eb91c07fe9f7f0a1b9`. This observation meets the approved proposal's condition for revisiting B3. [November 18 proposal](../../../planning-artifacts/sprint-change-proposal-2026-11-18.md)
+
+### Local verification on the follow-up baseline
+
+Commit `9e6109595c795b7ac6f86066af4b787a09e310dc`, tree `7bc1c300677593ef3f86abfd83a9885dae0f601a`. All four listed suites ran without skips. The validator and workflow harness exercised every row of the matrix. Locked render comparison and configured actionlint 1.7.12 also passed.
+
+| Verification | Result | Combined output SHA-256 |
+|---|---|---|
+| Validator | 77 passed in 37.036 s | `2085f0b9da225b1862507ec817a132d36105ef78fd5b826c1b993dd5b983d2a0` |
+| Workflow harness | 24 passed in 197.820 s | `4f81eea6259c802528e896e2ef0a2c1a163c818059e24f3e3a749e3b0ab28392` |
+| Repository-input guard | 33 passed in 64.792 s | `5529cb20dfa2119296ddb338efad9f9c989c246584b699821e3823a2c7efc1b3` |
+| App inventory | 19 passed in 20.437 s | `73a5fd8f571efceb86c713e86184a758e4fa7e617d51d1dedcb6ab1059a08d39` |
+| Locked render | Passed | `155c631929310e7bd6516395b36b489d039a3aed457c3d2396150a630b9f419f` |
+
+| Input at the follow-up baseline | Git blob |
+|---|---|
+| `tools/change_scope.py` | `5404369d5f2710fb1956528500e668a22f23cbed` |
+| `tools/validate.py` | `f69476ee4b6c1f9b566bec17bdee8fd1689b1579` |
+| `tools/check_global.py` | `b96843985f5671d553a1442eac7f1627210d7fa9` |
+| `.github/workflows/deliver.yml` | `b6dabfb1dedf3e3c53c163d40d1f358cf5a0aa9b` |
+| `tools/tests/test_validate.py` | `0de68207907609d1111f9e761b028a1dd35c0162` |
+| `tools/tests/test_delivery_workflow.py` | `26eeee229f554f85991eb2f2442d666f31a04bbd` |
+| `tools/app-workflow-policy.json` | `242374aaf1159949f38beda0b64179e7923bcd3b` |
 
 ## Auto Run Result
 
-**Status: blocked.** The implemented rollout passed hosted tools, prose push, single-module setup, shared-template and scheduled repair qualification. The prose PR has a prepared branch and requires Pull requests write. The next normal hosted Nightly must supply the post-rollout barrier step timing. The last Actions API check found zero hosted Nightly runs since rollout, and the read-only barrier measurements are recorded with their own timing and context.
+**Status: done.** The deployed scope selector and Delivery gating passed the hosted scope matrix. The passing prose PR and normal scheduled Nightly step provide both outstanding observations. The Nightly observation measured a timeout with zero release dispatches.
 
-The review applied seven medium and two low correction groups. Validator startup and full fallback can operate without importing the classifier. The workflow skips Builds and the writer only on the expected successful classification and validation signals. The classifier treats explicit empty trees, reserved accepted ref names and collisions conservatively. Workflow tests now exercise incomplete scope outputs, divergent PR and delivery baselines, and freshness and accepted-render repair on a distinct scheduled candidate. All 16 rejected findings and their reasons are in the review log. No findings were deferred. Follow-up review is recommended for the repaired gate expressions on the hosted workflow after deployment. The hosted matrix above identifies the already deployed source, and the corrections have local verification.
-
-| Updated input | Change | Git blob |
-|---|---|---|
-| `tools/change_scope.py` | Include explicit empty trees and reject ambiguous accepted-ref names | `5404369d5f2710fb1956528500e668a22f23cbed` |
-| `tools/validate.py` | Keep validation independent of classifier imports | `f69476ee4b6c1f9b566bec17bdee8fd1689b1579` |
-| `tools/check_global.py` | Share validator scope normalization | `d5ce30c98c9a27020f9aac6cb403f16312344b2a` |
-| `.github/workflows/deliver.yml` | Preserve full validation and repair on missing or failed scope signals | `b6dabfb1dedf3e3c53c163d40d1f358cf5a0aa9b` |
-| `tools/tests/test_validate.py` | Verify CLI scope, real Git edges and classifier-independent fallback | `69689bfb69b9fdb8af220974b9657a654342bcef` |
-| `tools/tests/test_delivery_workflow.py` | Exercise exact PR and schedule inputs and failed validation repair | `26eeee229f554f85991eb2f2442d666f31a04bbd` |
-| `tools/app-workflow-policy.json` | Renew only the validate digest and writer condition | `bbf0e8b8914a5893b86e848202cbe272b6583fb3` |
-
-All five local verification commands passed after correction. Actionlint 1.7.12 passed for the updated Delivery workflow and `git diff --check` passed.
-
-| Local verification | Result / seconds | Combined output SHA-256 |
-|---|---:|---|
-| Validator | 76 passed / 33.096 | `6fc7db534820e2a528cad5c57b494ff9f2fcecdd600794aa497113b86ead4ee9` |
-| Workflow harness | 24 passed / 132.988 | `cc85c636063188614edb7cd00da44ea673371e82a6bef4b9b1970c2a1b0fcc6a` |
-| Repository-input guard | 33 passed / 61.359 | `473e00b3fd2055c6b55a30f1cfae3e4bd49cedc25df4aafb9b1f903a3014a673` |
-| App inventory | 19 passed / 18.795 | `d545bc4dd29e9dffc11459c104f652b1a68518da638d9a6b320538ed6a62c784` |
-| Locked render comparison | passed | `54d515b7b2ab8e70f73a100b4c13cff8e0b62d8e72fb04c9d6818671c73a26d1` |
+This pass updates this story with the hosted run links, source identities, push sample, barrier duration and outcome. The classifier, validator, global checks, Delivery workflow and tests were already implemented on `main`. The four local suites passed all 153 tests, alongside locked render, configured actionlint and whitespace checks. The review logged seven evidence findings and their dispositions. It applied zero implementation patches at all severities, deferred zero code findings and recommends no follow-up code review.
