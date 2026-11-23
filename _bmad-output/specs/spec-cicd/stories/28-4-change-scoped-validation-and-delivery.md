@@ -29,6 +29,8 @@ deferred: []
 
 **Never:** Use push `before` as acceptance; hide a cancelled/red tools change behind a later prose push; narrow delivery or module checks to just affected modules; alter the immutable bootstrap, nightly barrier, token permissions or repository selections; read module checkouts to classify; weaken audits, skip tests or switch credentials. No raw output or new evidence bundle under the spec; record hosted links and identities in this story. Work stays in this superproject.
 
+**Hosted acceptance:** Keep 28-4 blocked and its loop run paused until both outstanding observations are available. An authorized actor opens the prose-only qualification PR against `main`, and its hosted Delivery run must pass the prose PR criteria. The next normal scheduled Nightly on `main` after rollout that executes `Wait for hourly delivery barrier` must supply that step's timing and outcome. Retain the read-only barrier measurements as supporting observations.
+
 ## I/O & Edge-Case Matrix
 
 | Scenario | Input / State | Expected Output / Behavior | Error Handling |
@@ -69,9 +71,11 @@ deferred: []
 - Given module inputs, when validation runs, then render, schemas, immutable bootstrap/publication proofs, caller interfaces, online workflow audits and every per-module check run, tool suites do not, and the existing `{global,modules}` contract still drives delivery.
 - Given a shared/tools change or an unknown/unreadable baseline, when Delivery runs, then every check runs even if the previous push failed or was cancelled.
 - Given scheduled repair with none scope, when Delivery runs, then only tool suites are skipped and accepted renders are reapplied with freshness, acceptable-tag and lint checks intact.
-- Given deployed changes, when hosted qualification completes, then this story records jobs/verdicts/accepted refs/durations/contacted repositories for prose PR, prose push, module setup push, tools push, shared-template run and scheduled repair, plus post-rollout push sample runner-minutes and nightly barrier measurements using the proposal's method. Unexecuted or refused evidence stays explicitly unproven.
+- Given deployed changes, when hosted qualification completes, then this story records jobs/verdicts/accepted refs/durations/contacted repositories for prose PR, prose push, module setup push, tools push, shared-template run and scheduled repair, plus post-rollout push sample runner-minutes and the scheduled Nightly barrier step's run link, attempt, source commit, start and end timestamps, duration, and outcome using the proposal's method. Both the passing hosted prose PR and the scheduled Nightly step record are required before re-arming 28-4. Unexecuted or refused evidence stays explicitly unproven.
 
 ## Spec Change Log
+
+- 2026-11-23 — Resolution decision. The hosted prose PR and normal scheduled Nightly barrier timing both gate acceptance. The loop stays paused while either observation is outstanding.
 
 ## Review Triage Log
 
@@ -285,11 +289,23 @@ Total was **59.7833 runner-minutes** across six pushes, with 3 of 6 in the prose
 
 The live production barrier function cleared in **1.690 s** at 06:48:44 UTC with five Actions API reads and no sleep. The exact nightly controller and runtime blobs match the two earlier read-only measurements above. This measures an idle delivery queue. Hosted Nightly's most recent barrier is still the pre-rollout 1,350 s step on run `45009181227`. The Actions API returned zero Nightly runs created from rollout through this observation, so the post-rollout hosted nightly step is unmeasured.
 
-### Prose PR qualification branch — authorization blocked
+### Prose PR preparation and authorization attempts
 
-The earlier branch merged independently through `df5803634b98af3ad2f24c8d133289637136f24d`. A fresh candidate on that exact main base changes only `docs/28-4-scope-qualification.md`. The remote branch `qualify/28-4-prose-pr` names commit `e338ede595fc3ca47e9202e5775f3192f30a6306`, tree `02ef17dd67013dbb7fea52e5482be2d39fc489f3`. [Open the draft PR from this branch](https://github.com/Hexalith/Hexalith.CiCd/compare/main...qualify/28-4-prose-pr?expand=1).
+The earlier branch merged independently through `df5803634b98af3ad2f24c8d133289637136f24d`. The replacement candidate on that exact main base changed only `docs/28-4-scope-qualification.md`. The remote branch `qualify/28-4-prose-pr` named commit `e338ede595fc3ca47e9202e5775f3192f30a6306`, tree `02ef17dd67013dbb7fea52e5482be2d39fc489f3`.
 
 The intended CiCd-agent profile at `/home/administrator/.config/gh-cicd-agent` authenticated as `jpiquot` for `Hexalith/Hexalith.CiCd`, with both token overrides absent. The REST create-PR request returned **HTTP 403**, `Resource not accessible by personal access token`, with `X-Accepted-GitHub-Permissions: pull_requests=write`, request `C866:A5B75:B13EAD:146AC0C:6B03E305`. The read-only PR inventory returned no matching PR. Completing this case requires a PR opened by an authorized actor or Pull requests write under the intended profile.
+
+The replacement branch reached `main` through [direct merge `10b0af1090f64d31c7c7d36ca8c24b7c6397e4c0`](https://github.com/Hexalith/Hexalith.CiCd/commit/10b0af1090f64d31c7c7d36ca8c24b7c6397e4c0), with the same tree as the candidate. [Delivery run 45128585863](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45128585863) succeeded on the `push` event. GitHub's PR inventory and Actions run queries found zero matching PRs or `pull_request` runs. The outstanding hosted prose PR therefore requires a fresh prose-only candidate against `main`.
+
+The [new qualification branch `qualify/28-4-prose-pr-hosted`](https://github.com/Hexalith/Hexalith.CiCd/compare/main...qualify/28-4-prose-pr-hosted?expand=1) was published as `b334b2f2ce1d662f503039fc6f181c91bd247976`, tree `1240827c2da96795edd7b0edbfd46a198467a57e`, from main `10b0af1090f64d31c7c7d36ca8c24b7c6397e4c0`. GitHub's compare API showed one commit ahead, zero behind, with only `docs/28-4-scope-qualification.md` changed. The CiCd-agent draft PR request returned HTTP 403, `Resource not accessible by personal access token`, with `X-Accepted-GitHub-Permissions: pull_requests=write`, request `D25D:3A5501:B03E16:146B014:6B03E87C`. The subsequent PR inventory found zero matching PRs.
+
+### Hosted prose PR — accepted
+
+[PR #6](https://github.com/Hexalith/Hexalith.CiCd/pull/6) opened the prepared branch against `main`. Its [Delivery run 45130253426](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45130253426), attempt 1, passed on the `pull_request` event. The classifier compared GitHub's PR merge commit `ff0a87c710dea047393442534a41b11782817f93`, tree `1240827c2da96795edd7b0edbfd46a198467a57e`, against the exact PR base `10b0af1090f64d31c7c7d36ca8c24b7c6397e4c0` and selected `none`. The deployed workflow blob was `ba2c774d1eb6ad0cf8f195b00b3bbce9dd2cb357`.
+
+[Validate job 137543872692](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45130253426/job/137543872692) passed in **11 s** (07:19:36–07:19:47 UTC), with verdict `{"global":true,"modules":[]}`. It skipped Builds checkout, module reads and tool suites, and contacted only CiCd. The `deliver` job skipped with zero steps and the run emitted no artifacts. Anonymous readback found all seven accepted refs still at the recorded `f9a184f44fd1d16c35afca132991b87d0761a106`. Wall time was **14 s** (07:19:33–07:19:47 UTC) and job time was **11 runner-seconds**. Validate log SHA-256 `1f3fe2b887429e99c55365299650cf9b8fc06439350c178aba37339c48180cf9` (20,554 bytes).
+
+The scheduled Nightly barrier step is the remaining hosted observation. A fresh Actions API query while verifying this PR found zero Nightly runs on `main` since rollout.
 
 ## Auto Run Result
 
