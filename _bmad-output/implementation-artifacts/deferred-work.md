@@ -127,7 +127,8 @@ location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/StartupRe
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: StartupReadinessTests uses --manifest unused and asserts only UsageOrManifest, the same exit code returned when manifest resolution fails. A valid manifest plus parse diagnostic and no-start observation would distinguish the intended refusal. This test was introduced by the preserved upstream merge, outside this story's changes.
-status: open
+status: done 2026-11-23
+resolution: The CLI regression uses a declared verification suite and checks HXC001 plus the absence of a startup workspace and state.
 
 ### DW-14: Complete and retain focused .NET verification for the incoming endpoint and attached-routing changes.
 origin: spec-deferred 9b8d2c86e776
@@ -160,7 +161,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runti
 source_spec: `3-4-the-publish-composite.md`
 severity: low
 reason: Incoming AllocateOwned throws SocketException for an unmanaged occupied explicit port and CompositionEngine maps this to generic HXR020 text without the requested endpoint. The request remains available to the caller, so this is a diagnostic usability issue.
-status: open
+status: done 2026-11-23
+resolution: HXR020 names the requested loopback endpoint when its pre-launch bind probe fails. The regression verifies that teardown removes the workspace and releases the claims.
 
 ### DW-18: Move the upstream explicit-endpoint README section out of License and update the stale attached-routing and claim-retry text.
 origin: spec-deferred f697010b556c
@@ -176,7 +178,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Module.Cli/Mo
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: ModuleCommandApplication refuses --attach-to combined with --eventstore-port through generic HXC001 "The command line is invalid." ModuleCommandExecutionService:119-122 throws for Down, runId or out-of-range ports. Searching test/ for eventstore-port/EventStorePort finds only StartupReadinessTests, none with --attach-to, and the guard message appears in no test. Removing either guard fails no test, although the README promises "Attachments cannot request owner ports". Arrived with upstream merge e588605c.
-status: open
+status: done 2026-11-23
+resolution: HXC001 names both incompatible flags. The live-owner test verifies that the request creates no attachment or child. The direct service guard is covered separately.
 
 ### DW-20: Make the explicit-port exclusion from independent allocation observable in a test.
 origin: spec-deferred fc5d41ad69ba
@@ -184,7 +187,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runti
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: CompositionPortAllocator adds the requested port to the excluded set before Allocate, then overwrites EventStoreHttp. The existing distinctness test requests a port already handed out in-process, which _handedOut skips anyway. The other tests take OS-ephemeral ports outside the Linux candidate range. Deleting excluded.Add(requested) fails no test, even though an in-range request (such as the README's 18080) could then be given to a second endpoint. A deterministic test likely needs an injectable candidate source. Upstream change.
-status: open
+status: done 2026-11-23
+resolution: The regression observes the explicit port in the exclusion set passed to the independent allocator and verifies it occurs once in the claimed result.
 
 ### DW-21: Remove the ephemeral-port reuse race from the upstream explicit-port tests.
 origin: spec-deferred 873dc1ab4adc
@@ -192,7 +196,8 @@ location: references/Hexalith.Builds/test/Hexalith.Builds.Module.Tests/StartupRe
 source_spec: `3-4-the-publish-composite.md`
 severity: low
 reason: StartupReadinessTests:66-69 binds an OS-assigned loopback port, stops the listener and then requests that port for the owner. CompositionResourceClaimStoreTests:67 reallocates the same way. Any parallel test or outbound connection can take the released port in between, which makes failures intermittent. Upstream test code.
-status: open
+status: done 2026-11-23
+resolution: The successful CLI fixture selects a port from the normal allocator. The occupied-port fixtures keep their listeners bound through refusal and verify claim rollback.
 
 ### DW-22: Confirm whether attached children can rewrite the owner's routing-catalog proofs that later attachments capture.
 origin: spec-deferred d10c03683eda
