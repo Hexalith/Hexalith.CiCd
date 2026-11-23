@@ -1,0 +1,31 @@
+{
+  "artifacts": [
+    {
+      "digest": "sha256:2dabefdfd085e8a997cf09039409b4a3ad64bccf18ebb382c5f55ea5ac70ca95",
+      "id": 14869501497,
+      "name": "hexalith-nightly-nightly-1"
+    },
+    {
+      "digest": "sha256:d066b1ac5c43c3578e63b42e9be28aa28aab99332c7edde7a2e04ea3b3002d6f",
+      "id": 14868790288,
+      "name": "hexalith-nightly-scan-1"
+    }
+  ],
+  "checkpoint": null,
+  "modules": {
+    "Hexalith.AI.Tools": {
+      "reasons": [
+        "release outcome source is not the dispatched head",
+        "ready release was not published by this run (publication failed)"
+      ],
+      "verdict": "fail"
+    }
+  },
+  "run": {
+    "attempt": 1,
+    "event": "workflow_dispatch",
+    "head": "2df38b66a14b72002a4339e58060905e5df843e2",
+    "id": 45276260491
+  },
+  "schema": "hexalith.nightly-acceptance-receipt.v1"
+}
