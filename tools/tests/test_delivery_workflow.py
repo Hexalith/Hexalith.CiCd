@@ -26,6 +26,7 @@ import io
 from types import SimpleNamespace
 import unittest
 from unittest import mock
+from datetime import datetime, timezone
 
 import yaml
 from delivery_support import ROOT, Workspace, bootstrap_source, git, load
@@ -284,8 +285,8 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual([], workflow.commands + workflow.actions + workflow.mints + workflow.uploads)
         self.assertEqual(before, git(w.remote, "for-each-ref", "refs/heads/delivered/"))
 
-    def test_missing_or_unknown_scope_keeps_failure_repair(self):
-        for scope in (None, "", "unknown", "NONE"):
+    def test_failed_validation_keeps_repair_regardless_of_scope(self):
+        for scope in (None, "", "unknown", "NONE", "none"):
             with self.subTest(scope=scope):
                 w = self.fixture()
                 w.ref("Hexalith.Alpha")
@@ -298,11 +299,26 @@ class WorkflowTests(unittest.TestCase):
         w = self.fixture()
         for name in w.modules:
             w.ref(name)
+        (w.candidate / "README.md").write_text("Prose candidate only.\n")
+        w.commit()
+        prefix = "/repos/Hexalith/Hexalith.CiCd/actions/"
+        w.config["api"][prefix + "workflows"] = [{"path": ".github/workflows/nightly.yml", "id": 1}]
+        w.config["api"][prefix + "workflows/1/runs?branch=main&per_page=1&page=1"] = {
+            "total_count": 1, "workflow_runs": [{
+                "path": ".github/workflows/nightly.yml", "id": 2, "head_branch": "main",
+                "created_at": datetime.now(timezone.utc).isoformat(), "conclusion": "success",
+            }],
+        }
         workflow, report = self.run_workflow(w, scope="none", event="schedule",
                                              verdict={"global": True, "modules": w.modules})
         self.assertFalse(report["failed"], report)
-        self.assertTrue(all(row["application"] == "pushed" for row in report["modules"]))
-        self.assertTrue(any(command[3:4] == ["initialize"] for command in workflow.commands))
+        self.assertEqual("fresh", report["freshness"]["status"])
+        for row in report["modules"]:
+            self.assertEqual(("advanced", "pushed", w.sha),
+                             (row["advancement"], row["application"], row["accepted_sha"]))
+            module = row["repository"]
+            self.assertEqual(git(w.candidate, "show", f"{w.accepted}:rendered/{module}/.github/workflows/ci.yml"),
+                             git(w.remotes[module], "show", "main:.github/workflows/ci.yml"))
         self.assertEqual(["Hexalith.CiCd", *w.modules], [inputs["repositories"] for _, inputs in workflow.mints])
 
     def test_validation_classifies_before_builds_and_only_pr_push_none_omit_it(self):
@@ -504,11 +520,22 @@ class WorkflowBoundaryTests(unittest.TestCase):
             fixture.module("Hexalith.Beta")
             fixture.commit()
             baseline = git(fixture.root, "rev-parse", "HEAD")
-            cases = (("pull_request", "README.md", "none"), ("push", "README.md", "none"),
-                     ("push", "setup/Hexalith.Alpha.yml", "module"), ("push", "tools/shared.py", "full"),
-                     ("schedule", "README.md", "none"), ("workflow_dispatch", "README.md", "full"))
-            for event, path, expected in cases:
-                with self.subTest(event=event, path=path):
+            accepted_input = fixture.root / "tools/accepted.py"
+            accepted_input.parent.mkdir(exist_ok=True)
+            accepted_input.write_text("# Only the accepted branch has this shared input.\n")
+            git(fixture.root, "add", "--", str(accepted_input))
+            git(fixture.root, "commit", "--quiet", "-m", "Different accepted baseline")
+            different_accepted = git(fixture.root, "rev-parse", "HEAD")
+            cases = (("pull_request", "README.md", "none", "complete"),
+                     ("push", "README.md", "none", "complete"),
+                     ("push", "setup/Hexalith.Alpha.yml", "module", "complete"),
+                     ("push", "tools/shared.py", "full", "complete"),
+                     ("schedule", "README.md", "none", "complete"),
+                     ("workflow_dispatch", "README.md", "full", "complete"),
+                     ("push", "README.md", "full", "missing"),
+                     ("push", "README.md", "full", "missing-skip"))
+            for event, path, expected, output_shape in cases:
+                with self.subTest(event=event, path=path, output_shape=output_shape):
                     git(fixture.root, "reset", "--hard", baseline)
                     changed = fixture.root / path
                     changed.parent.mkdir(parents=True, exist_ok=True)
@@ -530,20 +557,35 @@ class WorkflowBoundaryTests(unittest.TestCase):
                     self.assertEqual(["python3", "-I"], command[:2])
                     classifier = load(ROOT / command[2], "_boundary_scope")
                     original_git = classifier.git
+                    baseline_calls = []
+
                     def anonymous(project, *arguments):
                         if arguments[0] == "ls-remote":
-                            return f"{baseline}\trefs/heads/delivered/Hexalith.Alpha\n".encode()
+                            baseline_calls.append(("ls-remote",))
+                            discovered = different_accepted if event == "pull_request" else baseline
+                            return f"{discovered}\trefs/heads/delivered/Hexalith.Alpha\n".encode()
                         if arguments[0] == "fetch":
+                            baseline_calls.append(("fetch", arguments[-1]))
                             return fixtures.git(project, "fetch", "--quiet", "--no-tags", "--depth=1", str(fixture.root), arguments[-1])
                         return original_git(project, *arguments)
                     with (mock.patch.object(classifier, "git", side_effect=anonymous),
                           mock.patch.dict(os.environ, scope_env, clear=True), redirect_stdout(io.StringIO()) as stdout,
                           redirect_stderr(io.StringIO())):
                         self.assertEqual(0, classifier.main([*command[3:], "--project-root", str(fixture.root)]))
-                    self.assertEqual(expected + "\n", stdout.getvalue())
+                    classify_expected = expected if output_shape == "complete" else "none"
+                    self.assertEqual(classify_expected + "\n", stdout.getvalue())
+                    if event == "pull_request":
+                        self.assertEqual([("fetch", baseline)], baseline_calls)
                     outputs = dict(line.split("=", 1) for line in output.read_text().splitlines())
-                    self.assertEqual(str(int(expected == "none" and event in ("push", "pull_request"))), outputs["skip_checks"])
-                    workflow.context["steps"]["scope"] = {"outputs": outputs}
+                    self.assertEqual(str(int(classify_expected == "none" and event in ("push", "pull_request"))),
+                                     outputs["skip_checks"])
+                    if output_shape == "missing":
+                        outputs = {}
+                    elif output_shape == "missing-skip":
+                        del outputs["skip_checks"]
+                    workflow.context["steps"]["scope"] = {
+                        "outputs": outputs, "outcome": "failure" if output_shape == "missing" else "success",
+                    }
                     validate_env = environment | {key: workflow.expand(value) for key, value in steps["validate"]["env"].items()}
                     # Let a real shell expand the actual quoted CLI argument,
                     # including the empty-string behavior when wiring is lost.

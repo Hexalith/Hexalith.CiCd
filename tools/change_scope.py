@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REMOTE = "https://github.com/Hexalith/Hexalith.CiCd.git"
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 NAME = re.compile(r"[A-Za-z0-9._-]{1,100}\Z")
+EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 SCOPES = ("none", "module", "full")
 FAILURES = (OSError, ValueError, UnicodeError, subprocess.SubprocessError)
 
@@ -60,20 +61,29 @@ def tree(project: Path, revision: str) -> dict:
     if actual != revision:
         raise ValueError("commit identity differs")
     result = {}
-    for record in git(project, "ls-tree", "-r", "-z", revision).split(b"\0"):
+    for record in git(project, "ls-tree", "-r", "-t", "-z", revision).split(b"\0"):
         if not record:
             continue
         header, raw_path = record.split(b"\t", 1)
         mode, kind, oid = header.decode("ascii").split()
+        # Nonempty directories are represented by their children. Explicit
+        # empty trees can occur in commits constructed outside the index.
+        if (mode, kind) == ("040000", "tree") and oid != EMPTY_TREE:
+            continue
         path = raw_path.decode("utf-8")
         relative = PurePosixPath(path)
         if (path in result or relative.is_absolute() or ".." in relative.parts
                 or relative.as_posix() != path or SHA.fullmatch(oid) is None
                 or (mode, kind) not in (("100644", "blob"), ("100755", "blob"),
-                                        ("120000", "blob"), ("160000", "commit"))):
+                                        ("120000", "blob"), ("160000", "commit"),
+                                        ("040000", "tree"))):
             raise ValueError("unknown tree entry")
         result[path] = (mode, kind, oid)
     return result
+
+
+def valid_module_name(name: str) -> bool:
+    return NAME.fullmatch(name) is not None and name.casefold() not in (".", "..", "hexalith.builds")
 
 
 def registrations(entries: dict) -> set[str]:
@@ -82,8 +92,7 @@ def registrations(entries: dict) -> set[str]:
         relative = PurePosixPath(path)
         if relative.parent == PurePosixPath("setup") and relative.suffix == ".yml":
             name = relative.stem
-            if (NAME.fullmatch(name) is None or name in (".", "..")
-                    or name.casefold() == "hexalith.builds" or entry[0] not in ("100644", "100755")
+            if (not valid_module_name(name) or entry[0] not in ("100644", "100755")
                     or name.casefold() in {item.casefold() for item in result}):
                 raise ValueError("ambiguous setup registry")
             result.add(name)
@@ -122,12 +131,15 @@ def compare(candidate: dict, baseline: dict) -> str:
 
 def accepted_commits(project: Path) -> list[str]:
     identities = set()
+    seen_names = set()
+    prefix = "refs/heads/delivered/"
     for line in git(project, "ls-remote", "--refs", REMOTE, "refs/heads/delivered/*").splitlines():
         oid, ref = line.decode("ascii").split("\t")
-        prefix = "refs/heads/delivered/"
+        name = ref.removeprefix(prefix)
         if (SHA.fullmatch(oid) is None or not ref.startswith(prefix)
-                or NAME.fullmatch(ref[len(prefix):]) is None):
+                or not valid_module_name(name) or name.casefold() in seen_names):
             raise ValueError("malformed accepted ref")
+        seen_names.add(name.casefold())
         identities.add(oid)
     if not identities:
         raise ValueError("no accepted commit")

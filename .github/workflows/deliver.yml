@@ -56,7 +56,7 @@ jobs:
           enable-cache: false
 
       - name: Checkout Builds objects and tags
-        if: ${{ !cancelled() && steps.cicd.outcome == 'success' && inputs.delivery != 'projects-g6-catalog' && (steps.scope.outputs.skip_checks != '1' || (github.event_name != 'push' && github.event_name != 'pull_request')) }}
+        if: ${{ !cancelled() && steps.cicd.outcome == 'success' && inputs.delivery != 'projects-g6-catalog' && (steps.scope.outcome != 'success' || steps.scope.outputs.scope != 'none' || steps.scope.outputs.skip_checks != '1' || (github.event_name != 'push' && github.event_name != 'pull_request')) }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: Hexalith/Hexalith.Builds
@@ -87,7 +87,7 @@ jobs:
         if: ${{ !cancelled() && inputs.delivery != 'projects-g6-catalog' && steps.cicd.outcome == 'success' && steps.uv.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          CICD_CHANGE_SCOPE: ${{ steps.scope.outputs.scope }}
+          CICD_CHANGE_SCOPE: ${{ steps.scope.outcome == 'success' && (steps.scope.outputs.scope != 'none' || github.event_name == 'schedule' || steps.scope.outputs.skip_checks == '1') && steps.scope.outputs.scope || 'full' }}
         run: uv run --locked --script tools/validate.py --scope "$CICD_CHANGE_SCOPE"
 
       - name: Qualify narrow catalog delivery behavior without secrets
@@ -120,7 +120,7 @@ jobs:
     concurrency:
       group: deliver-owned-writes
       cancel-in-progress: false
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (github.event_name != 'push' || needs.validate.outputs.skip_checks != '1') && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (github.event_name != 'push' || needs.validate.result != 'success' || needs.validate.outputs.scope != 'none' || needs.validate.outputs.skip_checks != '1') && (inputs.delivery != 'projects-g6-catalog' || (github.event_name == 'workflow_dispatch' && needs.validate.result == 'success' && needs.validate.outputs.g6_plan != '')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: cicd-app

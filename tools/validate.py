@@ -24,13 +24,12 @@ checks = importlib.util.module_from_spec(_spec)
 sys.modules[_spec.name] = checks
 _spec.loader.exec_module(checks)
 renderer = checks.renderer
-scope_checks = checks.load_module("_cicd_change_scope", Path(__file__).with_name("change_scope.py"))
 
 
 def global_checks(project: Path, scope="full") -> bool:
     """The same locked global entry point is invoked exactly once per verdict."""
     try:
-        scope = scope_checks.normalize_scope(scope)
+        scope = checks.normalize_scope(scope)
         arguments = ["uv", "run", "--locked", "--script", "--python", sys.executable,
                      Path(__file__).with_name("check_global.py"), "--project-root", project]
         if scope != "full":
@@ -155,7 +154,7 @@ def check_module(project: Path, repository: str, contract) -> None:
 
 def validate(project: Path, scope="full", event_name=None) -> tuple[dict, int]:
     project = project.resolve()
-    scope = scope_checks.normalize_scope(scope)
+    scope = checks.normalize_scope(scope)
     if event_name not in (None, "", "pull_request", "push", "schedule"):
         scope = "full"
     if scope == "none" and event_name in ("pull_request", "push"):

@@ -486,6 +486,10 @@ def lint_workflows(project: Path, contract) -> None:
             f"{len(paths)} explicit workflows passed online audits")
 
 
+def normalize_scope(scope) -> str:
+    return scope if isinstance(scope, str) and scope in ("none", "module") else "full"
+
+
 def run(project: Path, scope="full") -> bool:
     project = project.resolve()
     failures = []
@@ -513,7 +517,7 @@ def run(project: Path, scope="full") -> bool:
         log(f"global selected contract/prerequisite: {error}")
     # Only the two explicit narrow classes exclude suites. All other inputs,
     # including missing, misspelled or non-string scopes, retain full checks.
-    if not isinstance(scope, str) or scope not in ("none", "module"):
+    if normalize_scope(scope) == "full":
         check("tool suites", lambda: run_tool_tests(project))
     return not failures
 

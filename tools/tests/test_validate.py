@@ -44,7 +44,7 @@ def load(name, path):
 render_tests = load("_validate_render_fixtures", ROOT / "tools/tests/test_render.py")
 global_check = load("_validate_global_checks", ROOT / "tools/check_global.py")
 validator = load("_validate_orchestrator", ROOT / "tools/validate.py")
-scope_check = validator.scope_checks
+scope_check = load("_validate_change_scope", ROOT / "tools/change_scope.py")
 renderer = global_check.renderer
 git = render_tests.git
 run = render_tests.run
@@ -759,13 +759,20 @@ class GlobalTests(unittest.TestCase):
                     "sys.dont_write_bytecode = True\n"
                     f"spec=importlib.util.spec_from_file_location('global_cli', {str(ROOT / 'tools/check_global.py')!r})\n"
                     "module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module; spec.loader.exec_module(module)\n"
-                    "module.run_tool_tests = module.lint_workflows = module.check_release = module.check_bootstrap = module.check_app_inventory = lambda *arguments: None\n"
+                    "module.lint_workflows = module.check_release = module.check_bootstrap = module.check_app_inventory = lambda *arguments: None\n"
+                    "def fail_suite(*arguments):\n"
+                    "    raise module.CheckError('sentinel suite ran')\n"
+                    "module.run_tool_tests = fail_suite\n"
                     "raise SystemExit(module.main())\n")
-                result = run([sys.executable, "-I", harness, "--project-root", fixture.root], check=False)
-                self.assertEqual(result.returncode, int(failing))
-                self.assertEqual(result.stdout, b"")
-                self.assertIn(b"global committed render: " + (b"uncommitted" if failing else b"passed"), result.stderr)
-                self.assertNotIn(b"Traceback", result.stderr)
+                for arguments, suites in (([], True), (["--scope", "unknown"], True),
+                                          (["--scope", "module"], False), (["--scope", "none"], False)):
+                    with self.subTest(arguments=arguments):
+                        result = run([sys.executable, "-I", harness, "--project-root", fixture.root, *arguments], check=False)
+                        self.assertEqual(result.returncode, int(failing or suites))
+                        self.assertEqual(result.stdout, b"")
+                        self.assertIn(b"global committed render: " + (b"uncommitted" if failing else b"passed"), result.stderr)
+                        self.assertEqual(suites, b"sentinel suite ran" in result.stderr)
+                        self.assertNotIn(b"Traceback", result.stderr)
 
     def test_unexpected_http_exception_is_collected_and_later_checks_run(self):
         with workspace() as fixture:
@@ -1199,6 +1206,8 @@ class ScopeTests(unittest.TestCase):
         self.external_calls = []
         def call(project, *arguments):
             if arguments[0] == "ls-remote":
+                self.assertNotEqual(self.root, project)
+                self.assertEqual(b"true", git(project, "rev-parse", "--is-bare-repository").strip())
                 self.external_calls.append(arguments)
                 if isinstance(discovery, Exception):
                     raise discovery
@@ -1312,8 +1321,19 @@ class ScopeTests(unittest.TestCase):
             with self.subTest(event=event), self.external_git([self.base, accepted, accepted]):
                 self.assertEqual("none", scope_check.classify(self.root, event))
                 self.assertEqual(2, sum(call[0] == "fetch" for call in self.external_calls))
-        with self.external_git([accepted, self.base], failed_fetch=self.base), redirect_stderr(io.StringIO()):
+        unreadable = "f" * 40
+        with self.external_git([accepted, unreadable], failed_fetch=unreadable), redirect_stderr(io.StringIO()):
             self.assertEqual("full", scope_check.classify(self.root, "push"))
+        self.assertEqual([accepted, unreadable], [call[-1] for call in self.external_calls if call[0] == "fetch"])
+
+    def test_explicit_empty_tree_is_a_shared_change(self):
+        entries = git(self.root, "ls-tree", self.base)
+        empty = git(self.root, "mktree", input=b"").strip()
+        record = b"040000 tree " + empty + b"\tunknown\n"
+        candidate_tree = git(self.root, "mktree", input=entries + record).decode().strip()
+        candidate = git(self.root, "commit-tree", candidate_tree, "-p", self.base, "-m", "Empty subtree").decode().strip()
+        self.assertEqual("full", scope_check.compare(scope_check.tree(self.root, candidate),
+                                                    scope_check.tree(self.root, self.base)))
 
     def test_pr_uses_exact_base_without_accepted_ref_discovery(self):
         self.write("README.md", "prose\n")
@@ -1329,7 +1349,11 @@ class ScopeTests(unittest.TestCase):
             external.assert_not_called()
 
     def test_missing_malformed_unreadable_discovery_and_fetch_take_full_path(self):
+        def refs(*names):
+            return b"".join(f"{self.base}\trefs/heads/delivered/{name}\n".encode() for name in names)
+
         for discovery in (b"", b"malformed\n", b"bad\trefs/heads/delivered/Alpha\n",
+                          refs("Hexalith.Builds"), refs("Hexalith.Alpha", "hexalith.alpha"),
                           (self.base + "\trefs/heads/other/Alpha\n").encode(), OSError("discovery refused")):
             with self.subTest(discovery=discovery), self.external_git([], discovery=discovery), redirect_stderr(io.StringIO()):
                 self.assertEqual("full", scope_check.classify(self.root, "push"))
@@ -1429,6 +1453,22 @@ class ScopeSelectionTests(unittest.TestCase):
                   mock.patch.object(validator.checks, "selected_contract")):
                 self.assertEqual(0, validator.validate(self.project, scope, event)[1])
                 checks.assert_called_once_with(self.project)
+
+    def test_validator_can_fall_back_when_classifier_cannot_be_loaded(self):
+        locate = importlib.util.spec_from_file_location
+
+        def without_classifier(name, path):
+            if Path(path).name == "change_scope.py":
+                raise FileNotFoundError(path)
+            return locate(name, path)
+
+        with mock.patch.object(importlib.util, "spec_from_file_location", side_effect=without_classifier):
+            isolated = load("_validate_without_classifier", ROOT / "tools/validate.py")
+        with (mock.patch.object(isolated, "global_checks", return_value=True) as checks,
+              mock.patch.object(isolated.renderer, "registry", return_value=[]),
+              mock.patch.object(isolated.checks, "selected_contract")):
+            self.assertEqual(({"global": True, "modules": []}, 0), isolated.validate(self.project, "", "push"))
+        checks.assert_called_once_with(self.project)
 
     def test_only_suites_depend_on_scope_and_online_proofs_remain(self):
         callbacks = ("check_app_inventory", "check_committed_inputs", "check_committed_render", "check_bootstrap",
