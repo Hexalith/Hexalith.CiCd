@@ -18,7 +18,7 @@ import unittest
 import yaml
 from delivery_support import ROOT, git, load
 from test_delivery_workflow import Workflow as Expressions
-from nightly_support import Workspace, metadata, zip_document
+from nightly_support import TAG, Workspace, metadata, zip_document
 
 controller = load(ROOT / "tools/nightly.py", "_nightly_workflow_controller")
 NIGHTLY_WORKFLOW = ROOT / ".github/workflows/nightly.yml"
@@ -376,7 +376,7 @@ class NightlyWorkflowTests(unittest.TestCase):
                         and item["path"].startswith("/repos/Hexalith/Hexalith.Builds/")]
         self.assertEqual(len(builds_reads), 12)
         self.assertTrue(all(item["method"] == "GET" for item in builds_reads))
-        self.assertEqual(sum(item["path"].endswith("/releases/tags/v5.1.0") for item in builds_reads), 3)
+        self.assertEqual(sum(item["path"].endswith("/releases/tags/" + TAG) for item in builds_reads), 3)
 
     def test_delivery_barrier_limits_mints_and_blocks_dispatch_on_failure(self):
         endpoint = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=in_progress&per_page=100&page=1"

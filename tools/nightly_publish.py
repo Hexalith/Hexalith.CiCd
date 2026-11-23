@@ -6,6 +6,7 @@ objects and JSON data, never executable code.
 """
 from __future__ import annotations
 
+import hashlib
 import html
 from pathlib import Path
 import re
@@ -14,15 +15,19 @@ from types import SimpleNamespace
 
 from nightly_runtime import Git, NightlyError, clean, name, run_identity
 
+PACKAGE_PUBLICATION = "hexalith-package-publication.v1.json"
+
 
 class _ReleaseApi:
     """Adapt the bounded nightly API to the tagged release helper interface."""
 
-    def __init__(self, api, repository, token, budget):
+    def __init__(self, api, repository, token, budget, row):
         self.api = api
         self.repository = "Hexalith/" + name(repository, module=False)
         self.token = token
         self.clock = budget.clock
+        self.row = row
+        self.publication_asset = None
 
     def _path(self, path):
         if not isinstance(path, str) or not path.startswith("/repos/" + self.repository + "/"):
@@ -46,7 +51,27 @@ class _ReleaseApi:
         return self.api.pages(path, self.token, deadline=deadline)
 
     def publish_draft(self, identity, document):
-        return self.api.publish_draft(self.repository.split("/", 1)[1], identity, document, self.token)
+        _current_completion(self, self.row)
+        released = self.api.publish_draft(self.repository.split("/", 1)[1], identity, document, self.token)
+        if not isinstance(released, dict) or released.get("immutable") is not True:
+            raise NightlyError("published release was not verified as immutable")
+        if self.publication_asset is not None:
+            assets = self.pages(f"/repos/{self.repository}/releases/{identity}/assets", deadline=self.clock() + 120)
+            matches = [asset for asset in assets if asset.get("name") == PACKAGE_PUBLICATION]
+            if (len(matches) != 1 or matches[0].get("state") != "uploaded"
+                    or any(type(matches[0].get(key)) is not type(expected) or matches[0][key] != expected
+                           for key, expected in self.publication_asset.items())):
+                raise NightlyError("immutable release does not retain the verified package publication asset")
+        return released
+
+    def publication_bytes(self, identity):
+        data = self.api.publication_bytes(self.repository.split("/", 1)[1], identity, self.token)
+        self.publication_asset = {"id": identity, "size": len(data),
+                                  "digest": "sha256:" + hashlib.sha256(data).hexdigest()}
+        return data
+
+    def upload_publication(self, identity, data):
+        raise NightlyError("existing package publication asset is missing")
 
 
 class _ReleaseGit:
@@ -107,7 +132,7 @@ def publish_target(row, helpers, transport, scratch, budget, token):
         workflow = ".github/workflows/" + ("builds-release.yml" if repository == "Hexalith.Builds" else "release.yml")
         if row.get("workflow") != workflow:
             raise NightlyError("publication caller workflow identity mismatch")
-        api = _ReleaseApi(transport.api, repository, token, budget)
+        api = _ReleaseApi(transport.api, repository, token, budget, row)
         _current_completion(api, row)
         values = {"sha": outcome["sha"], "version": outcome["version"],
                   "draft-id": str(int(outcome["draftId"])), "last-tag": outcome["lastTag"]}
@@ -127,13 +152,27 @@ def publish_target(row, helpers, transport, scratch, budget, token):
                                deadline=api.clock() + 120)
             helpers.draft.artifact_metadata(metadata, artifact_id=int(values["artifact-id"]),
                 run_id=int(values["artifact-run"]), digest=values["artifact-digest"], sha=values["sha"])
+            if values["inventory"] == {"packages": [], "containers": []}:
+                payload = transport.api.artifact_bytes(repository, metadata, token)
+                inventory = helpers.draft.artifact_inventory(payload, sha=values["sha"],
+                    version=values["version"], digest=values["artifact-digest"], repository=api.repository)
+                if inventory != values["inventory"]:
+                    raise NightlyError("original artifact inventory differs from draft release trailers")
+                # With no packages, this derives the canonical publication
+                # document without external reads. Finalize checks the draft
+                # already carries those exact bytes through this read-only adapter.
+                values.update(repository=api.repository, **{"package-payloads": {}})
+                helpers.publish.verify_packages(values)
+                if "package-publication" not in values:
+                    raise NightlyError("pinned publisher cannot verify the empty publication asset")
             values["body"] = live["body"]
             helpers.publish.version_tag(api, values)
             # Repeat unique-draft/body/source checks immediately before the
             # helper's final live-body/tag checks and its single publish PATCH.
             helpers.complete.selected_draft(git, api, values, body=values["body"])
             _refresh(objects, transport, repository)
-            _current_completion(api, row)
+            if not git.ancestor(values["sha"], row["dispatchHead"]):
+                raise NightlyError("release source is not an ancestor of the dispatch head")
             document = helpers.publish.finalize_release(git, api, values, refresh=lambda *_args: True)
             helpers.outcome.validate_outcome(document)
             if (document.get("outcome") != "published" or document.get("sha") != values["sha"]

@@ -455,6 +455,23 @@ class RuntimeTests(unittest.TestCase):
             api.artifact_member("Hexalith.Alpha", info, "outcome.json", "inert")
         self.assertEqual(len(opener.requests), 1)
 
+    def test_release_asset_accepts_binary_and_limits_its_credential_free_redirect(self):
+        target = "https://release-assets.githubusercontent.com/download?sig=inert"
+        for responses in ([b"asset"], [(302, {}, {"Location": target}), b"asset"]):
+            api, opener, _ = self.api(responses)
+            self.assertEqual(api.publication_bytes("Hexalith.Alpha", 10, "inert"), b"asset")
+            request = opener.requests[0][0]
+            self.assertEqual(request.full_url, "https://api.github.com/repos/Hexalith/Hexalith.Alpha/releases/assets/10")
+            self.assertEqual(request.get_header("Accept"), "application/octet-stream")
+            self.assertEqual(request.get_header("Authorization"), "Bearer inert")
+            if len(responses) == 2:
+                self.assertIsNone(opener.requests[1][0].get_header("Authorization"))
+        for location in ("https://example.invalid/asset", "https://release-assets.githubusercontent.com:444/asset"):
+            api, opener, _ = self.api([(302, {}, {"Location": location})])
+            with self.assertRaisesRegex(rt.NightlyError, "redirect destination refused"):
+                api.publication_bytes("Hexalith.Alpha", 10, "inert")
+            self.assertEqual(len(opener.requests), 1)
+
     def test_transport_reset_retries_reads_but_never_writes(self):
         api, opener, clock = self.api([URLError("connection reset"), TimeoutError("read timeout"), {"enabled": True}])
         self.assertEqual(api.get("/repos/Hexalith/Hexalith.Alpha/immutable-releases", "inert"), {"enabled": True})

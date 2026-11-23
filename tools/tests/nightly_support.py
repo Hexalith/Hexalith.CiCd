@@ -16,11 +16,13 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from delivery_support import (ROOT, RELEASE, TAG, Workspace as DeliveryWorkspace,
+from delivery_support import (ROOT, Workspace as DeliveryWorkspace,
                               filtered_remote, git, load)
 
 NOW = 1_795_000_000.0
 STAMP = "2026-11-14T02:17:00Z"
+RELEASE_FIXTURE = {"tag": "v6.7.0", "commit": "763fc0e937413cb44e533391e573c43640263b40"}
+TAG, RELEASE = RELEASE_FIXTURE["tag"], RELEASE_FIXTURE["commit"]
 
 
 def zip_document(member, document):
@@ -85,7 +87,7 @@ class Opener:
 
 class Workspace(DeliveryWorkspace):
     def __init__(self, root, modules=("Hexalith.Alpha",)):
-        super().__init__(root, modules)
+        super().__init__(root, modules, release=RELEASE_FIXTURE)
         for repository in modules:
             rendered = self.candidate / "rendered" / repository / ".github"
             (rendered / "workflows/release.yml").write_text("name: Release fixture\n")
@@ -102,7 +104,8 @@ class Workspace(DeliveryWorkspace):
         self.directory = self.root / "nightly-dispatch"
         git(self.builds, "update-ref", "refs/heads/main", RELEASE)
         self.config.update(responses={}, dispatch_fail=[], status_fail=[], run_get_404s={}, pending=[], outcomes={},
-                           ready_releases={}, original_runs={}, original_artifacts={}, publication_fail=[],
+                           ready_releases={}, original_runs={}, original_artifacts={}, publication_assets={},
+                           publication_fail=[],
                            publications=str(self.root / "publications.jsonl"),
                            handoffs={}, run_attempts={}, run_started={}, clock=NOW, cancelled=False,
                            dispatches=str(self.root / "dispatches.jsonl"), scopes=str(self.root / "scopes.jsonl"))
@@ -161,8 +164,11 @@ class Workspace(DeliveryWorkspace):
             git(remote, "fetch", "--quiet", "--unshallow", ROOT / "references/Hexalith.Builds",
                 f"refs/tags/{TAG}:refs/tags/{TAG}")
         if repository == "Hexalith.Builds" and version == "1.0.0" and not last_tag:
-            version, last_tag = "5.2.0", TAG
-        digest = "sha256:" + "a" * 64
+            version, last_tag = "6.8.0", TAG
+        payload = zip_document("release-manifest.json", {
+            "sha": sha, "version": version, "packages": [], "containers": []})
+        info = metadata(artifact_id, "release", payload, producer_id, sha)
+        digest = info["digest"]
         body = ("Fixture release notes\n\n" + "\n".join((
             "hexalith-release: " + sha, "hexalith-release-run: " + str(producer_id),
             "hexalith-release-artifact: " + str(artifact_id) + " " + digest,
@@ -175,9 +181,18 @@ class Workspace(DeliveryWorkspace):
                 "builds-release.yml" if repository == "Hexalith.Builds" else "release.yml"),
             "event": "workflow_dispatch", "head_branch": "main", "head_sha": sha,
             "repository": {"full_name": "Hexalith/" + repository}}
+        original_path = self.root / f"{repository}-original-build.zip"
+        original_path.write_bytes(payload)
         self.config["original_artifacts"].setdefault(repository, {})[str(artifact_id)] = {
-            "id": artifact_id, "name": "release", "expired": False, "digest": digest,
-            "expires_at": "2099-01-01T00:00:00Z", "workflow_run": {"id": producer_id, "head_sha": sha}}
+            "metadata": info, "path": str(original_path)}
+        publication = (json.dumps({"schema": "hexalith.package-publication.v1", "repository": "Hexalith/" + repository,
+                                   "sha": sha, "version": version, "artifactRun": producer_id,
+                                   "artifactId": artifact_id, "artifactDigest": digest, "packages": []},
+                                  sort_keys=True, separators=(",", ":"), ensure_ascii=True) + "\n")
+        self.config["publication_assets"][repository] = {"releaseId": release_id, "metadata": {
+            "id": artifact_id + 1, "name": "hexalith-package-publication.v1.json", "state": "uploaded",
+            "digest": "sha256:" + hashlib.sha256(publication.encode()).hexdigest(), "size": len(publication)},
+            "text": publication}
         self.config["outcomes"][repository] = {"schema": "hexalith.release-outcome.v1", "sha": sha,
             "version": version, "outcome": "ready", "draftId": release_id, "lastTag": last_tag}
         return live
@@ -253,6 +268,13 @@ def fixture_transport(rt, config):
             if suffix == "releases":
                 size, page = int(query.get("per_page", [100])[0]), int(query.get("page", [1])[0])
                 return 200, releases[(page - 1) * size:page * size]
+            asset = config["publication_assets"].get(repository)
+            if asset and suffix == f"releases/{asset['releaseId']}/assets":
+                return 200, [asset["metadata"]]
+            if asset and suffix == f"releases/assets/{asset['metadata']['id']}":
+                if request.get_header("Accept") != "application/octet-stream":
+                    raise AssertionError("expected a binary release asset request")
+                return 200, asset["text"].encode()
             if suffix.startswith("releases/") and suffix.split("/")[-1].isdigit():
                 selected = [item for item in releases if item["id"] == int(suffix.split("/")[-1])]
                 if len(selected) != 1:
@@ -270,16 +292,16 @@ def fixture_transport(rt, config):
                     if previous and previous != document["target_commitish"]:
                         return 422, {}
                     git(remote, "update-ref", tag, document["target_commitish"])
-                    selected[0].update(document)
+                    selected[0].update(document, immutable=True)
                 return 200, selected[0]
             if suffix.startswith("actions/runs/") and suffix.split("/")[-1].isdigit():
                 original = config.get("original_runs", {}).get(repository, {}).get(suffix.split("/")[-1])
                 if original is not None:
                     return 200, original
-            if suffix.startswith("actions/artifacts/") and suffix.split("/")[-1].isdigit():
-                original = config.get("original_artifacts", {}).get(repository, {}).get(suffix.split("/")[-1])
+            if suffix.startswith("actions/artifacts/"):
+                original = config.get("original_artifacts", {}).get(repository, {}).get(parts[6])
                 if original is not None:
-                    return 200, original
+                    return 200, Path(original["path"]).read_bytes() if suffix.endswith("/zip") else original["metadata"]
             if suffix.startswith("git/matching-refs/tags/"):
                 tag = suffix.removeprefix("git/matching-refs/tags/")
                 remote = Path(config["builds"] if repository == rt.BUILDS else config["modules"][repository])

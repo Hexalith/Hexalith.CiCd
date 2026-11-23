@@ -3,14 +3,21 @@ title: 'Migrate AI.Tools'
 type: 'chore'
 created: '2026-11-23'
 status: blocked
-baseline_revision: '2df38b66a14b72002a4339e58060905e5df843e2'
+baseline_revision: 1b566fc3b8fc97784d79f842cfb5531f09c350b2
 implementation_repository: 'references/Hexalith.AI.Tools'
 implementation_baseline_revision: '91fd549794c72e99d22b69d33ff24e403aede938'
 review_loop_iteration: 0
-followup_review_recommended: false
+followup_review_recommended: true
 context: []
 warnings: [oversized]
-deferred: []
+deferred:
+  - summary: >-
+      Preserve a verifiable dispatch-head identity on the stale-draft no-op outcome.
+    evidence: |-
+      The existing Builds reducer returns the selected draft SHA for the AD-17 stale-draft-deleted no-op. The acceptance reader requires the dispatch SHA for nothing outcomes. The current AI.Tools draft has a valid original artifact and follows the ready path.
+    location: >-
+      references/Hexalith.Builds/Github/lib/release_outcome.py
+    severity: medium
 ---
 
 <intent-contract>
@@ -47,7 +54,7 @@ Use the module-agent credential for any product preparation and CiCd-agent for r
 - [x] Check AD-21 with the maintainer profile. Story 11 was accepted on November 22. Live readback confirms the active CiCd App `179966090` covers all repositories, exact no-bypass `main` and `v*` protections (`27440691`, `27440693`), main-only release environment, publish switch `true`, 90-day Actions retention, read-default workflow permissions, approval for all external fork contributors, push protection, disabled Dependabot security updates and unconfigured default code scanning. The API reports no code scanning analysis (HTTP 404). The only draft is the marked `v1.0.0` draft `449697813`; the tag list is empty. [Pilot acceptance](11-pilot-migration-commons-and-polymorphicserializations.md#maintainer-acceptance--2026-11-22) · [GitHub release environment](https://github.com/Hexalith/Hexalith.AI.Tools/settings/environments)
 - [x] Verify published preparation, registration and application. The module preparation `cfd1ebea92587cdea41b9aa2cff47358bf2f32f6` (tree `660ea16a129113d510b931cf91a6472955820989`) is the parent of the App adoption `180ca5692637a018c3f5547daf657e2a90bd5288` (tree `0fa5b0693699362a2358e4630f5d788d267b15c6`). The adoption artifact digest matches `34748d07f843d605163650ab1c844820663bcbfc61108c7d68165efe1d67f95c` for CiCd source `cc4b8cc46f4e254e20518c46726fc5a57ed1164f`. Scheduled delivery at current accepted ref `211d8a5f90afee49deab4bc428429e6592e385c5` reports AI.Tools unchanged with no reasons (artifact SHA-256 `b8acadd3cd90d7b8329552d4a096d403c6e9c175011fef8fb43423a760f7df68`). [Product publication record](../evidence/12/publication.md) · [Adoption artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44040325762/artifacts/14309624943) · [Current delivery artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45205145141/artifacts/14834872679)
 - [x] Check applicable post-adoption GitHub settings. Immutable releases are enabled. The only inherited Actions secrets are the two registry pull secrets, both also granted for Dependabot. `HEXALITH_NUGET_USER` is granted. Repo and release-environment secret inventories are empty. This establishes absence from the legacy GitHub org secret grants. The approved package-free disposition requires no package-ID or registry-repository revocation. External NuGet policy/key and Zot ACL inventories were not verified in this run. [Historical cleanup readback](../evidence/12/live-run-20261117.md)
-- [ ] Repair the GitHub-only `publish-ready` handoff and complete-mode nightly acceptance. Verify the package-free ready path and older-source proof, including refusal with missing or conflicting publication evidence, unproven ancestry or a mismatched release or tag. Record the repaired source revisions.
+- [x] Repair the GitHub-only `publish-ready` handoff and complete-mode nightly acceptance. Verify the package-free ready path and older-source proof, including refusal with missing or conflicting publication evidence, unproven ancestry or a mismatched release or tag. Record the repaired source revisions.
 - [ ] Record the maintainer's authenticated settings reload and exact 49-repository comparison after restoring the Codex connector's approved AD-7 selection. At the pause, the installation API reported `all` with Workflows and Contents write.
 - [ ] Record the immutable Builds tag and full source commit containing the required fixes, its delivery to AI.Tools, and the authenticated acceptance receipt for a fresh nightly that dispatched AI.Tools against that pin after the shared repairs landed.
 
@@ -76,9 +83,84 @@ Use the module-agent credential for any product preparation and CiCd-agent for r
 - The unmodified `tools/nightly_acceptance.py` blob `afa017ecb81c78fd3bb6437c72c69fdcb0be57f7` exited 1 for `--run 45276260491 --module Hexalith.AI.Tools`. It accepted the scan row and reported both failed `ready` publication and a source mismatch. The authenticated original draft source is an ancestor 15 commits behind the dispatch head, and the reader requires equality. The report SHA-256 is `72852fd38e56591c724da9e6810e787257fdb07d63d3d6c52c04b19c4677e91f`. The compact receipt SHA-256 is `de998f30c77a2620bce923b675873f0bdb9e717e992cc69eb723be16ee97b97c`. The release acceptance gate remains open. [Acceptance receipt](../evidence/12/nightly-receipt-45276260491.json) · [Final nightly artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45276260491/artifacts/14869501497)
 - Fresh AD-21 readback confirmed the active CiCd App is set to `all`, the release environment permits only `main` and contains zero secrets, and immutable releases are enabled. AI.Tools has 90-day Actions retention and receives only the two registry pull secrets through Actions and Dependabot. The exact delivered AI.Tools tree has no package, container, .NET, tool-only npm or custom action files. The approved package-free scope applies to the requested Zot push pair, NuGet policy and waiver transfer. [AD-21 applicability decision](../../../planning-artifacts/architecture/architecture-cicd-2026-11-07/ARCHITECTURE-SPINE.md#ad-21--onboarding-sequence)
 - At `2026-11-23T22:38:09Z`, the authenticated Codex connector settings page showed the saved `all` mode with Save disabled. The exact comparison with the 48 unrelated repository names from the Story 11 receipt plus `Hexalith.EventStore` failed. The compact readback SHA-256 is `c64569da8297b261fb972be9d7676424df139c488fd113282b8f1e4b422c0fe5`. The maintainer profile's `GET /user/installations/77847816/repositories` returned HTTP 403 and reported the missing `read:user` OAuth scope. [Connector settings](https://github.com/organizations/Hexalith/settings/installations/77847816) · [Expected repository inventory](../evidence/11/ad-7-ad-21-maintainer-repair-20261122.json)
+- The interactive maintainer readback for this re-drive again found the CiCd App set to `all`, exact active no-bypass rulesets, a main-only `hexalith-release` environment with zero secrets, immutable releases enabled, a `true` publish switch and 90-day retention. AI.Tools receives both pull secrets through Actions and Dependabot and has access to `HEXALITH_NUGET_USER`. The live tree at `d299ce98bfb60189a2f724d573e74bd25f7cf88d` selects the immutable `v6.7.0` Builds release at `763fc0e937413cb44e533391e573c43640263b40`. Its standalone checker passed again with output SHA-256 `7abbc37921cb15ec007c157b0036da245fd917d2cbecf7848e7c2f3a431c45ee`. The connector API still reports `all`. The repository-list API returned HTTP 403 and reported the missing `read:user` scope. [Repository environment](https://github.com/Hexalith/Hexalith.AI.Tools/settings/environments) · [Connector settings](https://github.com/organizations/Hexalith/settings/installations/77847816)
+- The original producer `44266698194` had an overall failed conclusion and a valid build artifact `14410252741`. The archive contains only `release-manifest.json` and authenticates to SHA-256 `e34869ffcbfdcc701d16ea4e375d8a46d3b24bc9c9ea97d1c23f4fd28cfc9033`. Draft `449697813` still has the uploaded 310-byte publication asset `784721641` with an empty package array and SHA-256 `163acdf2042c61ed9ce6d20721330291e23a230b25ec0edc9baa23b5bfdff270`. GitHub's authenticated compare identified the original source as an ancestor 15 commits behind the dispatch head. [Original run](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/44266698194) · [Original artifact](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/44266698194/artifacts/14410252741)
+- The repaired reader rejected historical nightly `45276260491` with exit 1 and reason `ready release was not published by this run (publication failed)`. Initial verification output SHA-256 `eea140f8d3231b89939d6cefec7932d313b3949046c5a0430ea831bb66f4e377`. The next pre-fix nightly `45283314675` also failed `publish-ready` and made no pin bump. [Historical nightly](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45276260491) · [Pre-fix follow-up](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45283314675)
+
+## Review Triage Log
+
+### 2026-11-24 — Review pass
+
+- Verdicts cover 20 findings — high 4, medium 11, low 0, false 5, maybe-false 0.
+- Findings
+  - `[false]` `[reject]` The fixture could stand in for a released Builds publisher — the tag is authenticated for the existing ready contract and the additive published contract is tested at its own source. The required release, delivery and hosted gate stay open.
+  - `[high]` `[patch]` A rerun can supersede acceptance proof reads — confirm the run and attempt after reading the outcome and publication evidence.
+  - `[high]` `[patch]` The pre-finalizer run check leaves time for a rerun — repeat it at the publish adapter immediately before PATCH.
+  - `[medium]` `[patch]` Historical exact-head ready acceptance required a newer asset contract — use the authenticated nightly's publication verdict for that existing path.
+  - `[false]` `[reject]` Editable release notes weaken proof — the immutable asset anchors producer and artifact identity. Missing or conflicting markers fail the row as required. [GitHub release editing rules](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#editing-a-release)
+  - `[medium]` `[patch]` Acceptance accepted invalid payload paths and coerced hashes — apply the v1 package record rules, including exact digest types and case-folding checks.
+  - `[medium]` `[defer]` The stale-draft no-op carries the old source SHA — the existing reducer and exact-head outcome rule predate this repair. The current live draft follows the ready path.
+  - `[medium]` `[patch]` The fixture did not exercise the archive-to-draft inventory check — test matching archive metadata and an empty draft with an incompatible original inventory.
+  - `[medium]` `[patch]` The receipt did not connect an outcome artifact to its module — record the outcome ID and digest with the module proof.
+  - `[false]` `[reject]` The review transition closed the hosted blockers — the checklist retains them and the terminal result records each open gate.
+  - `[high]` `[patch]` A draft asset may change before publication — verify the immutable release retains the same uploaded asset ID, byte count and digest after PATCH.
+  - `[medium]` `[patch]` A numeric 40-digit tag object caused an exception — require a string SHA before walking a tag object.
+  - `[medium]` `[patch]` Invalid payload map values could be treated as evidence — test matching byte metadata with malformed package records.
+  - `[high]` `[patch]` A newer rerun's outcome may be attributed to an earlier attempt — add the post-proof run readback with a dedicated rerun case.
+  - `[medium]` `[defer]` A stale-draft deletion may fail the exact-head check — retain the same deferred producer issue above.
+  - `[medium]` `[patch]` The acceptance binary request was not proven through the GitHub adapter — execute the older-source verdict with a fixture that serves asset bytes only for the binary header.
+  - `[medium]` `[patch]` The refusal test only corrupted bytes — add a conflicting artifact identity with correctly recomputed byte metadata.
+  - `[medium]` `[patch]` The published artifact test could lose the added outcome fields — assert the draft ID and last tag in a successful upload from the composite path.
+  - `[false]` `[reject]` The installed-tag producer does not yet emit the local patch's fields — this is a verified rollout dependency. The story already requires the newer immutable pin and an eligible hosted run.
+  - `[false]` `[reject]` The local diff has no new package provisioning or registration — authenticated live state confirms the approved package-free registration and adoption. This re-drive repairs the shared release path and retains the live acceptance requirements.
 
 ## Auto Run Result
 
 Status: blocked
 
-Blocking condition: implementation verification failed. `python3 tools/nightly_acceptance.py --run 45276260491 --module Hexalith.AI.Tools` reproducibly exits 1. The central publisher requires package evidence for the GitHub-only draft, and the acceptance tool rejects the authenticated older draft source because it differs from the dispatch head. The maintainer's exact connector allowlist is also pending. The authenticated settings page still shows `all`.
+Blocking condition: hosted acceptance requires an authenticated settings
+reload showing the exact 49-repository Codex connector selection and an
+eligible nightly pass against the immutable Builds release containing the
+repair, delivered to AI.Tools. The connector still reports `all`. The
+maintainer profile's repository-list API refused the read with HTTP 403
+and reported `read:user`. The newest released and delivered pin at this
+check is `v6.7.0`. This unattended build-auto run produces local commits.
+
+The CiCd publisher authenticates the original empty build archive and the
+existing publication asset. It rechecks the correlated attempt before
+publishing the same draft and verifies asset retention on the immutable
+release. Nightly acceptance verifies the older source against the exact
+correlated attempt, original producer, archive digest, ancestor relation,
+immutable release and peeled tag. Existing exact-head checks cover dispatch,
+CodeQL and scan.
+
+- `tools/nightly_publish.py` blob `a54a0c617585a1a0b6914859b7566b3de94d2d25` enforces the draft publication checks.
+- `tools/nightly_runtime.py` blob `92d4025f64153afe92a779f42914f9d3d31dad66` supplies bounded, scoped archive and asset reads.
+- `tools/nightly_acceptance.py` blob `a0e8b452c35a05af0e09ee4919c2dcc8836a9053` records verified older-source provenance in the module receipt.
+- Builds commit `52e6ad6e9c36bd03014b59298e3af3e9c6735262`, tree `7629fa25d7ffa049ea5dee4d9db10c943e28f0bf`, preserves draft identity in published outcomes. The publisher blob is `49febc747d26bf27ef3729b0892f2c37e8e907a0`.
+- CiCd and Builds tests cover the historical compatible path and refusal for wrong archive or asset identities, missing proof, reruns, ancestry and release/tag mismatches. The clean-checkout instructions include the authentic `v6.7.0` nightly fixture.
+
+Review applied three high and eight medium patches after grouping. The
+deferred stale-draft no-op case predates this re-drive. The triage log records
+the rejected findings. A follow-up review is recommended because GitHub's
+post-publication asset readback and the corrected older-source acceptance
+still need to pass together in a fresh hosted run.
+
+Verification used Python 3.12. The locked renderer check exited 0 with
+empty output. The acceptance suite passed 47 tests (output SHA-256
+`76aec28fc969fd9a7ce4fddd33dc244df8a5a9cfc9998d7f6ede9bb204201077`)
+and the runtime suite passed 42
+(`f084e33402cd004c6366a7676bfa7d6e327441627e929b5c9b4cb2e19ad3c1b1`).
+The nightly controller passed 58
+(`24fc2748ee47b6be69b53fe236232899890ff92721aed26e395191e36f8b406b`),
+the nightly workflow suite passed 34
+(`bb964b60013a8ae156bef9586eb27e65bc99cfe2b068da5867219ee1cb17b241`),
+and the delivery workflow suite passed 26
+(`f9b96ee57b5285ba87467475de915d24d42844231b125e188b188ab7a35b65f6`).
+The Builds publisher passed 22, including the composite upload
+(`b8f626d03500f1afdadb04f2819e24c10d22d42b42e09c630b449fe5a8bfe9f7`),
+and the Builds outcome suite passed 38
+(`db1166ad39d94b2a527309f20f3dbf162c1f1c30dca1b3eb397c6b37714d2f47`).
+The final reader still rejects pre-fix run `45276260491` for unverified
+publication (receipt SHA-256
+`27e64f5fd09d4255b955bc098cda2c80ad964093ec9116f06893c5734fc7ba74`).

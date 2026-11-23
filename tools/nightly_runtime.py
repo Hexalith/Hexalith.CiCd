@@ -34,6 +34,7 @@ from delivery_runtime import (BUILDS, CAPACITY, CICD, MAX_JSON, SHA, TAG, Git,
 
 NightlyError = delivery.DeliveryError
 MAX_ZIP = 8 * 1024 * 1024
+MAX_PUBLICATION = 2 * 1024 * 1024
 MAX_CALLS = 4096
 MAX_PAGES = 20
 API_VERSION = "2026-03-10"
@@ -209,7 +210,8 @@ class API:
             r"actions/runs/[1-9][0-9]*(?:/artifacts|/attempts/[1-9][0-9]*/jobs)?",
             r"actions/artifacts/[1-9][0-9]*(?:/zip)?",
             r"actions/workflows/(?:ci|deliver|nightly|release|builds-release)\.yml/runs",
-            r"immutable-releases", r"releases(?:/[1-9][0-9]*|/tags/v[0-9]+\.[0-9]+\.[0-9]+)?",
+            r"immutable-releases",
+            r"releases(?:/[1-9][0-9]*(?:/assets)?|/assets/[1-9][0-9]*|/tags/v[0-9]+\.[0-9]+\.[0-9]+)?",
             r"git/ref/(?:heads/main|tags/v[0-9]+\.[0-9]+\.[0-9]+)",
             r"git/matching-refs/tags/v[0-9]+\.[0-9]+\.[0-9]+",
             r"git/tags/[0-9a-f]{40}", r"compare/[0-9a-f]{40}\.\.\.[0-9a-f]{40}")
@@ -489,51 +491,75 @@ class API:
     def publish_draft(self, repository, identity, document, token):
         return self.patch(f"/repos/Hexalith/{repository}/releases/{positive(identity)}", document, token)
 
-    def _artifact_payload(self, path, token):
-        """One authenticated download attempt: (payload, None) or (None, transient reason)."""
+    def _download_attempt(self, path, token, *, release_asset):
+        """Read once, returning bytes or a transient failure with retry headers if present."""
+        label = "release asset" if release_asset else "artifact"
         self.calls += 1
         if self.calls > MAX_CALLS:
             raise NightlyError("GitHub API call limit exceeded")
         try:
             timeout = self.budget.timeout(token=True, max_seconds=30)
             with whole_operation(timeout):
-                request = Request("https://api.github.com" + path, headers=self._headers(token))
+                headers = self._headers(token)
+                if release_asset:
+                    headers["Accept"] = "application/octet-stream"
+                request = Request("https://api.github.com" + path, headers=headers)
                 try:
                     response = self.opener.open(request, timeout=timeout)
                 except HTTPError as redirect:
                     try:
                         if redirect.code != 302:
                             if self._limited(redirect.code, redirect.headers):
-                                return None, f"artifact download returned HTTP {redirect.code}", redirect.headers or {}
+                                return None, f"{label} download returned HTTP {redirect.code}", redirect.headers or {}
                             if redirect.code in {500, 502, 503, 504}:
-                                return None, f"artifact download returned HTTP {redirect.code}", None
-                            raise NightlyError(f"artifact download returned HTTP {redirect.code}")
+                                return None, f"{label} download returned HTTP {redirect.code}", None
+                            raise NightlyError(f"{label} download returned HTTP {redirect.code}")
                         location = redirect.headers.get("Location", "")
                         parsed = urlsplit(location)
+                        host_pattern = (r"(?:release-assets|objects)\.githubusercontent\.com" if release_asset
+                                        else r"[a-z0-9-]+\.(?:blob\.core\.windows\.net|actions\.githubusercontent\.com)")
                         if (parsed.scheme != "https" or parsed.port not in {None, 443}
                                 or parsed.username is not None or parsed.password is not None or parsed.fragment
                                 or not parsed.hostname or len(location) > 8192
-                                or not re.fullmatch(r"[a-z0-9-]+\.(?:blob\.core\.windows\.net|actions\.githubusercontent\.com)", parsed.hostname)
+                                or not re.fullmatch(host_pattern, parsed.hostname)
                                 or any(ord(c) < 32 for c in location)):
-                            raise NightlyError("artifact redirect destination refused")
+                            raise NightlyError(f"{label} redirect destination refused")
                     finally:
                         redirect.close()
-                    # The signed artifact URL gets no installation Authorization header.
+                    # The signed download URL gets no installation Authorization header.
                     self.budget.check(token=True)
                     response = self.opener.open(Request(location, headers={"User-Agent": "Hexalith-CiCd-nightly"}),
                                                 timeout=self.budget.timeout(token=True, max_seconds=30))
                 with response:
                     if response.status != 200:
-                        raise NightlyError("artifact download returned unexpected status")
-                    payload = response.read(MAX_ZIP + 1)
+                        raise NightlyError(f"{label} download returned unexpected status")
+                    limit = MAX_PUBLICATION if release_asset else MAX_ZIP
+                    payload = response.read(limit + 1)
+                    if len(payload) > limit:
+                        raise NightlyError("GitHub download exceeds its size limit")
                 self.budget.check(token=True)
                 return payload, None, None
         except (HTTPError, URLError, OSError, http.client.HTTPException, ValueError) as error:
             if isinstance(error, NightlyError):
                 raise
-            return None, "artifact download transport failed", None
+            return None, f"{label} download transport failed", None
 
-    def artifact_member(self, repository, metadata, member, token):
+    def _download(self, path, token, *, release_asset=False):
+        self._path(path)
+        for attempt in range(3):
+            payload, transient, limited = self._download_attempt(path, token, release_asset=release_asset)
+            if transient is None:
+                return payload
+            delay = self._retry_delay(limited, attempt) if limited is not None else attempt + 1
+            if attempt == 2 or self.budget.remaining(token=True) < delay + 2:
+                raise NightlyError(transient)
+            self.sleep(delay)
+
+    def publication_bytes(self, repository, identity, token):
+        return self._download(f"/repos/Hexalith/{repository}/releases/assets/{positive(identity)}", token,
+                              release_asset=True)
+
+    def artifact_bytes(self, repository, metadata, token):
         if (not isinstance(metadata, dict) or metadata.get("expired") is not False
                 or not isinstance(metadata.get("digest"), str) or not DIGEST.fullmatch(metadata["digest"])
                 or type(metadata.get("size_in_bytes")) is not int or not 1 <= metadata["size_in_bytes"] <= MAX_ZIP):
@@ -542,24 +568,17 @@ class API:
         if expires.timestamp() <= self.budget.clock():
             raise NightlyError("artifact expiry could not be validated")
         identity = positive(metadata.get("id"))
-        if member not in {"dispatch.json", "wait.json", "nightly.json", "outcome.json", "candidate.json", "delivery.json"}:
-            raise NightlyError("artifact member outside nightly contract")
         path = f"/repos/Hexalith/{repository}/actions/artifacts/{identity}/zip"
-        self._path(path)
-        # Downloads are idempotent GETs: a transient API/storage failure is
-        # retried boundedly with a freshly signed redirect, never forever.
-        for attempt in range(3):
-            payload, transient, limited = self._artifact_payload(path, token)
-            if transient is None:
-                break
-            # Rate limits keep the service-directed minimum used by API reads.
-            delay = self._retry_delay(limited, attempt) if limited is not None else attempt + 1
-            if attempt == 2 or self.budget.remaining(token=True) < delay + 2:
-                raise NightlyError(transient)
-            self.sleep(delay)
+        payload = self._download(path, token)
         if (len(payload) > MAX_ZIP or len(payload) != metadata["size_in_bytes"]
                 or "sha256:" + hashlib.sha256(payload).hexdigest() != metadata["digest"]):
             raise NightlyError("artifact ZIP size or digest mismatch")
+        return payload
+
+    def artifact_member(self, repository, metadata, member, token):
+        if member not in {"dispatch.json", "wait.json", "nightly.json", "outcome.json", "candidate.json", "delivery.json"}:
+            raise NightlyError("artifact member outside nightly contract")
+        payload = self.artifact_bytes(repository, metadata, token)
         try:
             with zipfile.ZipFile(io.BytesIO(payload)) as archive:
                 members = archive.infolist()

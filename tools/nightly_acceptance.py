@@ -46,6 +46,9 @@ SCAN_WORKFLOW = ".github/workflows/scan.yml"
 EVENTS = ("schedule", "workflow_dispatch")
 NIGHTLY_SCHEMA = "hexalith.nightly.v1"
 OUTCOME_SCHEMA = "hexalith.release-outcome.v1"
+PACKAGE_PUBLICATION = "hexalith-package-publication.v1.json"
+PACKAGE_SCHEMA = "hexalith.package-publication.v1"
+RELEASE_OUTCOME = "hexalith-release-outcome"
 SCAN_SCHEMA = "hexalith.duplicate-scan.v1"
 BUMP_SCHEMA = "hexalith.nightly-bump-report.v1"
 PUSH_SCHEMA = "hexalith.nightly-bump-push.v1"
@@ -68,6 +71,12 @@ ROW_VALUES = {"eligibility": {"pending", "eligible", "not-adopted", "failed"},
 OUTCOMES = frozenset(("published", "ready", "nothing", "disabled", "failed"))
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
+SHA256 = re.compile(r"[0-9a-f]{64}\Z")
+VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\Z")
+PACKAGE_ID = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,99}\Z")
+CONTAINER_NAME = re.compile(r"[a-z0-9]+(?:(?:[._]|__|-+)[a-z0-9]+)*(?:/[a-z0-9]+(?:(?:[._]|__|-+)[a-z0-9]+)*)*\Z")
+RELEASE_MARKERS = ("hexalith-release", "hexalith-release-run", "hexalith-release-artifact",
+                   "hexalith-release-packages", "hexalith-release-containers")
 REPOSITORY = re.compile(r"Hexalith\.[A-Za-z0-9_.-]{1,91}\Z")
 ENDPOINT = re.compile(r"repos/Hexalith/[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_./%=&?:+-]{1,1000}\Z")
 STAMP = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?Z\Z")
@@ -165,11 +174,12 @@ class GitHub:
     def __init__(self, run=subprocess.run, timeout=300):
         self._run, self.timeout = run, timeout
 
-    def _get(self, endpoint):
+    def _get(self, endpoint, *, binary=False):
         if not isinstance(endpoint, str) or not ENDPOINT.fullmatch(endpoint):
             raise TransportError("refused a read outside the Hexalith repositories")
         try:
-            completed = self._run(["gh", "api", "--method", "GET", endpoint], stdin=subprocess.DEVNULL,
+            headers = ["-H", "Accept: application/octet-stream"] if binary else []
+            completed = self._run(["gh", "api", "--method", "GET", *headers, endpoint], stdin=subprocess.DEVNULL,
                                   capture_output=True, timeout=self.timeout, check=False)
         except (OSError, subprocess.SubprocessError) as error:
             raise TransportError(endpoint + ": " + clean(error)) from None
@@ -185,8 +195,8 @@ class GitHub:
         except ValueError as error:
             raise TransportError(endpoint + ": " + clean(error)) from None
 
-    def blob(self, endpoint):
-        return self._get(endpoint)
+    def blob(self, endpoint, *, binary=False):
+        return self._get(endpoint, binary=binary)
 
 
 def listing(github, endpoint, field):
@@ -239,7 +249,7 @@ def authenticate_run(github, run_id):
     return run
 
 
-def download(github, metadata, run, members, clock):
+def download(github, metadata, run, members, clock, *, repository=CICD):
     """Authenticate one listed artifact of ``run`` and return its exact members, or reject."""
     name = clean(metadata.get("name"))
     if metadata.get("expired") is not False:
@@ -259,7 +269,7 @@ def download(github, metadata, run, members, clock):
         raise Rejected(f"artifact {name} id or digest is malformed")
     if not positive(size) or size > MAX_ZIP:
         raise Rejected(f"artifact {name} size is malformed or over 8 MiB")
-    payload = github.blob(f"repos/{OWNER}/{CICD}/actions/artifacts/{metadata['id']}/zip")
+    payload = github.blob(f"repos/{OWNER}/{repository}/actions/artifacts/{metadata['id']}/zip")
     if len(payload) != size:
         raise Rejected(f"artifact {name} downloaded {len(payload)} bytes, API size is {size}")
     if "sha256:" + hashlib.sha256(payload).hexdigest() != digest:
@@ -415,7 +425,9 @@ def release_problems(row):
             or outcome.get("outcome") not in OUTCOMES):
         problems.append("release outcome is missing or malformed")
         return problems
-    if outcome.get("sha") != row["dispatchHead"]:
+    if not isinstance(outcome.get("sha"), str) or not SHA.fullmatch(outcome["sha"]):
+        problems.append("release outcome source is malformed")
+    elif outcome["sha"] != row["dispatchHead"] and outcome["outcome"] not in {"ready", "published"}:
         problems.append("release outcome source is not the dispatched head")
     result = outcome["outcome"]
     if result == "ready" and row["publication"] != "published":
@@ -427,14 +439,9 @@ def release_problems(row):
     return problems
 
 
-def remote_release(github, name, row):
-    """The linked release run must be the row's run, attempt, head and conclusion."""
-    try:
-        run = github.json(f"repos/{OWNER}/{name}/actions/runs/{row['runId']}")
-    except NotFound:
-        return ["release run is not found"], {}
+def release_run_problems(run, name, row):
     if not isinstance(run, dict):
-        return ["release run is unreadable"], {}
+        return ["release run is unreadable"]
     expected = {"id": row["runId"], "path": row["workflow"], "event": "workflow_dispatch", "head_branch": "main",
                 "head_sha": row["dispatchHead"], "run_attempt": row["runAttempt"], "status": "completed",
                 "conclusion": row["conclusion"]}
@@ -443,8 +450,183 @@ def remote_release(github, name, row):
     repository = run.get("repository")
     if not isinstance(repository, dict) or repository.get("full_name") != OWNER + "/" + name:
         problems.append("release run belongs to another repository")
-    return problems, {"runId": row["runId"], "attempt": row["runAttempt"], "link": row["link"],
-                      "conclusion": run.get("conclusion")}
+    return problems
+
+
+def remote_release(github, name, row, artifacts, *, check_publication):
+    """The linked release run must be the row's run, attempt, head and conclusion."""
+    endpoint = f"repos/{OWNER}/{name}/actions/runs/{row['runId']}"
+    try:
+        run = github.json(endpoint)
+    except NotFound:
+        return ["release run is not found"], {}
+    problems = release_run_problems(run, name, row)
+    if not isinstance(run, dict):
+        return problems, {}
+    detail = {"runId": row["runId"], "attempt": row["runAttempt"], "link": row["link"],
+              "conclusion": run.get("conclusion")}
+    if not problems and check_publication:
+        try:
+            proof = publication_proof(github, name, row, run, artifacts.clock)
+            current = github.json(endpoint)
+            if release_run_problems(current, name, row) or current.get("run_started_at") != run["run_started_at"]:
+                raise Unproven("correlated completion attempt changed during publication verification")
+            detail["publicationProof"] = proof
+            artifacts.used.append(proof["outcomeArtifact"])
+        except (Unproven, Rejected, NotFound, ValueError) as error:
+            problems.append("release source is unproven: " + clean(error))
+    return problems, detail
+
+
+def published_trailers(release, source):
+    """Require the five draft trailers, with no case or indentation aliases."""
+    body = release.get("body")
+    if not isinstance(body, str) or len(body) > 120000:
+        raise Unproven("immutable release is missing its original draft markers")
+    markers = "|".join(RELEASE_MARKERS)
+    if len(re.findall(r"^[ \t]*(?:" + markers + r")[ \t]*:", body, re.I | re.M)) != len(RELEASE_MARKERS):
+        raise Unproven("immutable release has missing or conflicting draft markers")
+    values = [re.findall(r"^" + marker + r":[ \t]*(.*?)\r?$", body, re.M) for marker in RELEASE_MARKERS]
+    if any(len(matches) != 1 for matches in values):
+        raise Unproven("immutable release has missing or conflicting draft markers")
+    sha, producer, artifact, packages, containers = (matches[0] for matches in values)
+    match = re.fullmatch(r"([1-9][0-9]*) (sha256:[0-9a-f]{64})", artifact)
+    package_ids = packages.split(",") if packages else []
+    container_names = containers.split(",") if containers else []
+    if (sha != source or not re.fullmatch(r"[1-9][0-9]*", producer) or match is None
+            or any(not PACKAGE_ID.fullmatch(package) for package in package_ids)
+            or len({package.casefold() for package in package_ids}) != len(package_ids)
+            or any(not CONTAINER_NAME.fullmatch(container) for container in container_names)
+            or len(set(container_names)) != len(container_names)):
+        raise Unproven("immutable release has invalid original source, artifact or inventory markers")
+    return int(producer), int(match[1]), match[2], sorted(package_ids)
+
+
+def peeled_tag(github, prefix, tag):
+    reference = github.json(prefix + "/git/ref/tags/" + tag)
+    if not isinstance(reference, dict) or reference.get("ref") != "refs/tags/" + tag:
+        raise Unproven("version tag identity mismatch")
+    target = reference.get("object")
+    seen = set()
+    for _ in range(16):
+        identity = target.get("sha") if isinstance(target, dict) else None
+        if not isinstance(identity, str) or not SHA.fullmatch(identity):
+            break
+        if target.get("type") == "commit":
+            return identity
+        if target.get("type") != "tag" or identity in seen:
+            break
+        seen.add(identity)
+        annotated = github.json(prefix + "/git/tags/" + identity)
+        if not isinstance(annotated, dict) or annotated.get("sha") != identity:
+            break
+        target = annotated.get("object")
+    raise Unproven("version tag could not be peeled to a commit")
+
+
+def package_publication_record(package):
+    """Mirror the tagged Builds v1 validator's package and payload-map contract."""
+    if (not isinstance(package, dict) or set(package) != {"id", "archiveSha256", "files"}
+            or not isinstance(package["id"], str) or not PACKAGE_ID.fullmatch(package["id"])
+            or not isinstance(package["archiveSha256"], str) or not SHA256.fullmatch(package["archiveSha256"])
+            or not isinstance(package["files"], dict) or not package["files"]):
+        return False
+    paths = set()
+    for path, digest in package["files"].items():
+        if (not isinstance(path, str) or not path or path.startswith("/") or "\\" in path or ":" in path
+                or any(part in ("", ".", "..") for part in path.split("/"))
+                or any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in path)
+                or path == ".signature.p7s" or path.casefold() in paths
+                or not isinstance(digest, str) or not SHA256.fullmatch(digest)):
+            return False
+        paths.add(path.casefold())
+    return True
+
+
+def authenticate_publication_asset(github, prefix, release, expected, package_ids):
+    assets = release.get("assets")
+    if not isinstance(assets, list) or any(not isinstance(asset, dict) for asset in assets):
+        raise Unproven("immutable release assets are unreadable")
+    matches = [asset for asset in assets if asset.get("name") == PACKAGE_PUBLICATION]
+    if len(matches) != 1:
+        raise Unproven("immutable release must have exactly one package publication asset")
+    asset = matches[0]
+    identity, size, digest = (asset.get(key) for key in ("id", "size", "digest"))
+    if (not positive(identity) or not positive(size) or size > MAX_JSON or asset.get("state") != "uploaded"
+            or not isinstance(digest, str) or not DIGEST.fullmatch(digest)):
+        raise Unproven("package publication asset metadata is malformed")
+    content = github.blob(prefix + f"/releases/assets/{identity}", binary=True)
+    if len(content) != size or "sha256:" + hashlib.sha256(content).hexdigest() != digest:
+        raise Unproven("package publication asset size or digest mismatch")
+    document = parse_json(content)
+    if (not isinstance(document, dict) or set(document) != {*expected, "packages"}
+            or any(not same(document[key], value) for key, value in expected.items())
+            or not isinstance(document["packages"], list)
+            or any(not package_publication_record(package) for package in document["packages"])
+            or [package["id"] for package in document["packages"]] != package_ids):
+        raise Unproven("package publication asset conflicts with the original draft and build identity")
+    return {"id": identity, "digest": digest}
+
+
+def publication_proof(github, name, row, run, clock):
+    """Bind a successful completion attempt to its original draft, build and immutable release."""
+    outcome = row["outcome"]
+    source, version, draft, last_tag = (outcome.get(key) for key in ("sha", "version", "draftId", "lastTag"))
+    if (set(outcome) != {"schema", "outcome", "sha", "version", "draftId", "lastTag"}
+            or not VERSION.fullmatch(str(version)) or not positive(draft) or not isinstance(last_tag, str)
+            or (last_tag and (not last_tag.startswith("v") or not VERSION.fullmatch(last_tag[1:])))):
+        raise Unproven("outcome source is not the dispatched head or lacks a valid completion draft identity")
+    repository = f"{OWNER}/{name}"
+    prefix = "repos/" + repository
+    started = timestamp(run.get("run_started_at"))
+    listed = listing(github, prefix + f"/actions/runs/{row['runId']}/artifacts", "artifacts")
+    matches = [item for item in listed if item.get("name") == RELEASE_OUTCOME
+               and timestamp(item.get("created_at")) >= started]
+    if len(matches) != 1:
+        raise Unproven("completion attempt must have exactly one release outcome artifact")
+    metadata = matches[0]
+    document = download(github, metadata, run, ("outcome.json",), clock, repository=name)
+    if not same(parse_json(document["outcome.json"]), outcome):
+        raise Unproven("completion attempt outcome differs from the central nightly row")
+    # GitHub returns comparison totals on every page and large patch
+    # data only on the first page.
+    comparison = github.json(prefix + f"/compare/{source}...{row['dispatchHead']}?per_page=1&page=2")
+    if (not isinstance(comparison, dict) or comparison.get("status") != "ahead"
+            or not same(comparison.get("behind_by"), 0) or not positive(comparison.get("ahead_by"))
+            or any(not isinstance(comparison.get(key), dict) or comparison[key].get("sha") != source
+                   for key in ("base_commit", "merge_base_commit"))):
+        raise Unproven("original source is not a proven ancestor of the exact dispatch head")
+    tag = "v" + version
+    release = github.json(prefix + f"/releases/{draft}")
+    expected_release = {"id": draft, "immutable": True, "draft": False, "prerelease": False,
+                        "tag_name": tag, "target_commitish": source}
+    if (not isinstance(release, dict) or any(not same(release.get(key), value)
+                                            for key, value in expected_release.items())
+            or not isinstance(release.get("author"), dict) or release["author"].get("login") != "github-actions[bot]"):
+        raise Unproven("immutable release does not match the original bot-marked draft, version or source")
+    producer_id, artifact_id, digest, package_ids = published_trailers(release, source)
+    origin = github.json(prefix + f"/actions/runs/{producer_id}")
+    producer_run = {"id": producer_id, "path": row["workflow"], "event": "workflow_dispatch",
+                    "head_branch": "main", "head_sha": source}
+    if (not isinstance(origin, dict) or any(not same(origin.get(key), value) for key, value in producer_run.items())
+            or not isinstance(origin.get("repository"), dict) or origin["repository"].get("full_name") != repository):
+        raise Unproven("original producer run does not match the module release workflow, repository or source")
+    build = github.json(prefix + f"/actions/artifacts/{artifact_id}")
+    expected_build = {"id": artifact_id, "name": "release", "digest": digest}
+    if (not isinstance(build, dict) or any(not same(build.get(key), value) for key, value in expected_build.items())
+            or not isinstance(build.get("workflow_run"), dict)
+            or not same(build["workflow_run"].get("id"), producer_id)
+            or build["workflow_run"].get("head_sha") != source):
+        raise Unproven("original build artifact does not match the producer, source or digest")
+    asset = authenticate_publication_asset(github, prefix, release, {
+        "schema": PACKAGE_SCHEMA, "repository": repository, "sha": source, "version": version,
+        "artifactRun": producer_id, "artifactId": artifact_id, "artifactDigest": digest}, package_ids)
+    if peeled_tag(github, prefix, tag) != source:
+        raise Unproven("peeled version tag does not identify the original source")
+    return {"source": source, "dispatchHead": row["dispatchHead"], "completionRun": row["runId"],
+            "completionAttempt": row["runAttempt"], "draftId": draft, "tag": tag, "artifactRun": producer_id,
+            "artifactId": artifact_id, "artifactDigest": digest, "publicationAsset": asset,
+            "outcomeArtifact": {key: metadata[key] for key in ("name", "id", "digest")}}
 
 
 def codeql_languages(github, name, delivered):
@@ -666,7 +848,7 @@ def delivery_problems(name, push, delivery):
     return []
 
 
-def judge_module(github, name, row, scan, push, delivery):
+def judge_module(github, name, row, scan, push, delivery, artifacts):
     verdict = {"verdict": "fail", "reasons": []}
     if row is None:
         verdict["reasons"].append("not a target of this run's committed registry")
@@ -681,7 +863,8 @@ def judge_module(github, name, row, scan, push, delivery):
                           "version": clean(outcome.get("version", ""), 40),
                           "publication": row["publication"], "dispatchHead": row["dispatchHead"]}
     if row["dispatch"] == "dispatched":
-        problems, detail = remote_release(github, name, row)
+        check_publication = not reasons and outcome.get("sha") != row["dispatchHead"]
+        problems, detail = remote_release(github, name, row, artifacts, check_publication=check_publication)
         reasons.extend(problems)
         verdict["release"].update(detail)
         try:
@@ -776,7 +959,7 @@ def judge(run_id, modules, checkpoint=None, *, github, clock=time.time):
         except Unproven as error:
             delivery = error
     scan = ScanSource(github, run, jobs, artifacts, clock)
-    verdicts = {name: judge_module(github, name, targets.get(name), scan, push, delivery) for name in modules}
+    verdicts = {name: judge_module(github, name, targets.get(name), scan, push, delivery, artifacts) for name in modules}
     others = {name: {"verdict": clean(row.get("verdict"), 20), "reason": clean(row.get("reason"))}
               for name, row in targets.items() if name not in verdicts}
     report = {
@@ -808,6 +991,10 @@ def receipt(report):
              "checkpoint": None if checkpoint is None else {
                  "name": checkpoint["name"], "verdict": checkpoint["verdict"],
                  "reasons": [clean(reason) for reason in checkpoint["reasons"]]}}
+    for name, item in report["modules"].items():
+        proof = item.get("release", {}).get("publicationProof")
+        if proof is not None:
+            value["modules"][name]["publicationProof"] = proof
     data = (json.dumps(value, indent=2, sort_keys=True, ensure_ascii=True) + "\n").encode()
     if len(data) > MAX_RECEIPT:
         raise ReceiptTooLarge(f"receipt would be {len(data)} bytes, over the 16 KiB limit")

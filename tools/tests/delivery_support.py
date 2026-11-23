@@ -54,7 +54,9 @@ def bootstrap_source(source, path):
 
 
 class Workspace:
-    def __init__(self, root, modules=("Hexalith.Alpha",)):
+    def __init__(self, root, modules=("Hexalith.Alpha",), *, release=RELEASE_FIXTURE):
+        self.builds_tag = release["tag"]
+        builds_commit = release["commit"]
         self.root = Path(root)
         self.root.mkdir()
         self.candidate = self.root / "candidate"
@@ -62,7 +64,7 @@ class Workspace:
         git(self.candidate, "init", "--quiet", "--initial-branch=main")
         shutil.copytree(ROOT / "tools", self.candidate / "tools", ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
         (self.candidate / "setup").mkdir()
-        (self.candidate / "builds-version").write_text(TAG + "\n")
+        (self.candidate / "builds-version").write_text(self.builds_tag + "\n")
         self.remotes = {}
         self.modules = list(modules)
         for module in modules:
@@ -77,11 +79,12 @@ class Workspace:
         self.builds.mkdir()
         git(self.builds, "init", "--bare", "--quiet")
         filtered_remote(self.builds)
-        git(self.builds, "fetch", "--quiet", "--depth=1", ROOT / "references/Hexalith.Builds", f"refs/tags/{TAG}:refs/tags/{TAG}")
-        if git(self.builds, "rev-parse", f"refs/tags/{TAG}^{{commit}}") != RELEASE:
-            raise AssertionError("Delivery fixture must use the authentic released commit")
+        tag_ref = "refs/tags/" + self.builds_tag
+        git(self.builds, "fetch", "--quiet", "--depth=1", ROOT / "references/Hexalith.Builds", f"{tag_ref}:{tag_ref}")
+        if git(self.builds, "rev-parse", tag_ref + "^{commit}") != builds_commit:
+            raise AssertionError("Fixture must use the authentic released Builds commit")
         self.config = {"cicd": str(self.remote), "builds": str(self.builds), "modules": self.remotes,
-                       "release": RELEASE, "fail_app": [], "mint_fail": [], "push_fail": [], "races": {},
+                       "release": builds_commit, "fail_app": [], "mint_fail": [], "push_fail": [], "races": {},
                        "ref_races": {}, "api": {}, "bad_release": False,
                        "requests": str(self.root / "requests.jsonl"), "acquisitions": str(self.root / "acquisitions.jsonl")}
         self.config_path = self.root / "config.json"
@@ -125,7 +128,7 @@ class Workspace:
         entries = [
             {"kind": "whole-dir", "path": ".github/workflows"},
             {"kind": "whole", "path": ".github/hexalith-ci.json"},
-            {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": TAG},
+            {"kind": "gitlink", "path": "references/Hexalith.Builds", "buildsTag": self.builds_tag},
             {"kind": "gitmodules-section", "path": ".gitmodules", "submodulePath": "references/Hexalith.Builds", "url": "https://github.com/Hexalith/Hexalith.Builds.git"},
             {"kind": "json-superset", "path": ".claude/settings.json", "pointer": "/permissions/deny", "values": ["owned"]},
             {"kind": "marker-block", "path": "AGENTS.md", "text": "owned instructions\n"},

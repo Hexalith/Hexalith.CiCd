@@ -81,7 +81,7 @@ class FakeGitHub:
     def json(self, endpoint):
         return copy.deepcopy(self.answer(endpoint, self.routes))
 
-    def blob(self, endpoint):
+    def blob(self, endpoint, *, binary=False):
         return self.answer(endpoint, self.blobs)
 
 
@@ -394,6 +394,52 @@ class RunAuthenticationTests(Harness):
 
 
 class ModuleVerdictTests(Harness):
+    def publication_evidence(self, world):
+        module = MODULES[0]
+        row = world.rows[module]
+        outcome = row["outcome"]
+        source, dispatch = outcome["sha"], row["dispatchHead"]
+        github = world.github()
+        prefix = f"repos/Hexalith/{module}"
+        completion = github.routes[prefix + f"/actions/runs/{row['runId']}"]
+        completion["run_started_at"] = CREATED
+        outcome_payload = zip_bytes({"outcome.json": outcome})
+        digest = "sha256:" + "a" * 64
+        github.routes.update({
+            prefix + f"/actions/runs/{row['runId']}/artifacts?per_page=100": {
+                "total_count": 1, "artifacts": [{
+                    "id": 42, "name": tool.RELEASE_OUTCOME, "size_in_bytes": len(outcome_payload),
+                    "digest": "sha256:" + hashlib.sha256(outcome_payload).hexdigest(),
+                    "expired": False, "created_at": CREATED, "expires_at": "2027-02-16T08:05:37Z",
+                    "workflow_run": {"id": row["runId"], "head_sha": dispatch, "head_branch": "main"},
+                }]},
+            prefix + f"/compare/{source}...{dispatch}?per_page=1&page=2": {
+                "status": "ahead", "ahead_by": 15, "behind_by": 0,
+                "base_commit": {"sha": source}, "merge_base_commit": {"sha": source}},
+            prefix + "/releases/5": {"id": 5, "tag_name": "v1.2.3", "target_commitish": source,
+                "author": {"login": "github-actions[bot]"}, "immutable": True, "draft": False, "prerelease": False,
+                "body": f"notes\nhexalith-release: {source}\nhexalith-release-run: 10\n"
+                        f"hexalith-release-artifact: 20 {digest}\n"
+                        "hexalith-release-packages:\nhexalith-release-containers:\n"},
+            prefix + "/actions/runs/10": {"id": 10, "path": row["workflow"], "event": "workflow_dispatch",
+                "head_branch": "main", "head_sha": source, "repository": {"full_name": f"Hexalith/{module}"},
+                "status": "completed", "conclusion": "failure"},
+            prefix + "/actions/artifacts/20": {"id": 20, "name": "release", "digest": digest,
+                "workflow_run": {"id": 10, "head_sha": source}},
+            prefix + "/git/ref/tags/v1.2.3": {"ref": "refs/tags/v1.2.3", "object": {"sha": "d" * 40, "type": "tag"}},
+            prefix + "/git/tags/" + "d" * 40: {"sha": "d" * 40, "object": {"sha": source, "type": "commit"}},
+        })
+        publication = json.dumps({"schema": tool.PACKAGE_SCHEMA, "repository": f"Hexalith/{module}",
+                                  "sha": source, "version": "1.2.3", "artifactRun": 10, "artifactId": 20,
+                                  "artifactDigest": digest, "packages": []}).encode()
+        github.routes[prefix + "/releases/5"]["assets"] = [{
+            "id": 43, "name": tool.PACKAGE_PUBLICATION, "state": "uploaded", "size": len(publication),
+            "digest": "sha256:" + hashlib.sha256(publication).hexdigest(),
+        }]
+        github.blobs[prefix + "/releases/assets/43"] = publication
+        github.blobs[prefix + "/actions/artifacts/42/zip"] = outcome_payload
+        return github, prefix
+
     def test_published_and_nothing_pass(self):
         world = World()
         world.rows[MODULES[1]]["outcome"] = {"schema": "hexalith.release-outcome.v1", "sha": head(MODULES[1]),
@@ -411,8 +457,164 @@ class ModuleVerdictTests(Harness):
                 world.rows[MODULES[0]]["publication"] = publication
                 _, report = self.judge(world)
                 self.assertEqual(report["modules"][MODULES[0]]["verdict"], verdict)
+                self.assertFalse(any("/releases/" in call for call in self.github_calls))
                 if verdict == "fail":
                     self.assertIn("not published by this run", self.reasons(report, MODULES[0]))
+
+    def test_older_ready_and_directly_published_sources_have_complete_mode_proof(self):
+        for result in ("ready", "published"):
+            with self.subTest(outcome=result):
+                world = World()
+                row = world.rows[MODULES[0]]
+                row["outcome"].update(outcome=result, sha="a" * 40, draftId=5, lastTag="v1.2.2")
+                row["publication"] = "published" if result == "ready" else "pending"
+                github, prefix = self.publication_evidence(world)
+                code, report = self.judge(github)
+                self.assertEqual(code, 0)
+                proof = report["modules"][MODULES[0]]["release"]["publicationProof"]
+                self.assertEqual(proof["source"], "a" * 40)
+                self.assertEqual(proof["dispatchHead"], row["dispatchHead"])
+                self.assertEqual(proof["artifactRun"], 10)
+                self.assertEqual(proof["artifactId"], 20)
+                self.assertEqual(proof["draftId"], 5)
+                self.assertEqual(proof["completionRun"], row["runId"])
+                self.assertEqual(proof["outcomeArtifact"], {
+                    "name": tool.RELEASE_OUTCOME, "id": 42,
+                    "digest": "sha256:" + hashlib.sha256(github.blobs[prefix + "/actions/artifacts/42/zip"]).hexdigest()})
+                self.assertEqual(json.loads(tool.receipt(report))["modules"][MODULES[0]]["publicationProof"], proof)
+
+    def test_rerun_during_complete_mode_proof_does_not_pass(self):
+        world = World()
+        row = world.rows[MODULES[0]]
+        row["outcome"].update(outcome="ready", sha="a" * 40, draftId=5, lastTag="v1.2.2")
+        row["publication"] = "published"
+        github, prefix = self.publication_evidence(world)
+        completion = prefix + f"/actions/runs/{row['runId']}"
+        read = github.json
+
+        def rerun(endpoint):
+            data = read(endpoint)
+            if endpoint == prefix + "/git/tags/" + "d" * 40:
+                github.routes[completion].update(run_attempt=2, status="completed", conclusion="success")
+            return data
+
+        github.json = rerun
+        code, report = self.judge(github)
+        self.assertEqual(code, 1)
+        self.assertIn("completion attempt changed", self.reasons(report, MODULES[0]))
+        self.assertEqual(self.github_calls.count(completion), 2)
+        self.assertNotIn("publicationProof", report["modules"][MODULES[0]]["release"])
+        self.assertEqual(self.verdicts(report), {MODULES[0]: "fail", MODULES[1]: "pass", MODULES[2]: "pass"})
+
+    def test_asset_document_with_authentic_bytes_must_match_identity_and_payload_contract(self):
+        digest = "a" * 64
+        cases = {
+            "conflicting-identity": {"artifactId": 21},
+            "numeric-archive-digest": {"archiveSha256": int("1" * 64)},
+            "numeric-files-digest": {"files": {"lib/Fixture.dll": int("1" * 64)}},
+            "case-folded-path": {"files": {"lib/Fixture.dll": digest, "LIB/fixture.dll": digest}},
+            "traversal-path": {"files": {"lib/../Fixture.dll": digest}},
+            "absolute-path": {"files": {"/lib/Fixture.dll": digest}},
+            "backslash-path": {"files": {"lib\\Fixture.dll": digest}},
+            "colon-path": {"files": {"drive:Fixture.dll": digest}},
+            "empty-path-part": {"files": {"lib//Fixture.dll": digest}},
+            "control-character": {"files": {"lib/Fixture\x7f.dll": digest}},
+            "signature-payload": {"files": {".signature.p7s": digest}},
+        }
+        for case, change in cases.items():
+            with self.subTest(case=case):
+                world = World()
+                row = world.rows[MODULES[0]]
+                row["outcome"].update(outcome="ready", sha="a" * 40, draftId=5, lastTag="v1.2.2")
+                row["publication"] = "published"
+                github, prefix = self.publication_evidence(world)
+                release = github.routes[prefix + "/releases/5"]
+                endpoint = prefix + "/releases/assets/43"
+                document = json.loads(github.blobs[endpoint])
+                if case == "conflicting-identity":
+                    document.update(change)
+                else:
+                    release["body"] = release["body"].replace("hexalith-release-packages:",
+                                                              "hexalith-release-packages: Fixture.Package")
+                    document["packages"] = [{"id": "Fixture.Package", "archiveSha256": digest,
+                                             "files": {"lib/Fixture.dll": digest}, **change}]
+                payload = json.dumps(document).encode()
+                github.blobs[endpoint] = payload
+                release["assets"][0].update(size=len(payload), digest="sha256:" + hashlib.sha256(payload).hexdigest())
+                code, report = self.judge(github)
+                self.assertEqual(code, 1)
+                self.assertIn("publication asset conflicts", self.reasons(report, MODULES[0]))
+                self.assertEqual(self.verdicts(report), {MODULES[0]: "fail", MODULES[1]: "pass", MODULES[2]: "pass"})
+
+    def test_older_source_passes_through_the_real_binary_transport_adapter(self):
+        world = World()
+        row = world.rows[MODULES[0]]
+        row["outcome"].update(outcome="ready", sha="a" * 40, draftId=5, lastTag="v1.2.2")
+        row["publication"] = "published"
+        fake, prefix = self.publication_evidence(world)
+        asset = prefix + "/releases/assets/43"
+        observed = []
+
+        def runner(argv, **options):
+            endpoint = argv[-1]
+            if endpoint == asset:
+                observed.append(argv)
+            if endpoint in fake.blobs:
+                return subprocess.CompletedProcess(argv, 0, fake.blobs[endpoint], b"")
+            return subprocess.CompletedProcess(argv, 0, json.dumps(fake.routes[endpoint]).encode(), b"")
+
+        report = tool.judge(RUN, MODULES, github=tool.GitHub(run=runner), clock=lambda: NOW)
+        self.assertEqual(report["verdict"], "pass")
+        self.assertEqual(observed, [["gh", "api", "--method", "GET", "-H", "Accept: application/octet-stream", asset]])
+
+    def test_older_source_is_refused_when_complete_mode_evidence_is_missing_or_conflicting(self):
+        cases = (("ancestor", "proven ancestor"), ("release", "immutable release"),
+                 ("tag", "peeled version tag"), ("numeric-tag", "could not be peeled"), ("producer", "original producer"),
+                 ("artifact", "original build artifact"), ("asset", "publication asset"),
+                 ("outcome", "outcome artifact"), ("attempt", "outcome artifact"),
+                 ("conflicting-outcome", "outcome differs"),
+                 ("marker", "draft markers"), ("scan", "is not the dispatched head"))
+        for case, message in cases:
+            with self.subTest(case=case):
+                world = World()
+                row = world.rows[MODULES[0]]
+                row["outcome"].update(outcome="ready", sha="a" * 40, draftId=5, lastTag="v1.2.2")
+                row["publication"] = "published"
+                if case == "scan":
+                    world.scan["modules"][0]["revision"] = "a" * 40
+                github, prefix = self.publication_evidence(world)
+                if case == "ancestor":
+                    comparison = f"/compare/{'a' * 40}...{row['dispatchHead']}?per_page=1&page=2"
+                    github.routes[prefix + comparison]["status"] = "diverged"
+                elif case == "release":
+                    github.routes[prefix + "/releases/5"]["id"] = 6
+                elif case == "tag":
+                    github.routes[prefix + "/git/tags/" + "d" * 40]["object"]["sha"] = row["dispatchHead"]
+                elif case == "numeric-tag":
+                    github.routes[prefix + "/git/ref/tags/v1.2.3"]["object"]["sha"] = int("1" * 40)
+                elif case == "producer":
+                    github.routes[prefix + "/actions/runs/10"]["path"] = ".github/workflows/ci.yml"
+                elif case == "artifact":
+                    github.routes[prefix + "/actions/artifacts/20"]["digest"] = "sha256:" + "b" * 64
+                elif case == "asset":
+                    github.blobs[prefix + "/releases/assets/43"] += b"x"
+                elif case in {"outcome", "attempt", "conflicting-outcome"}:
+                    listing = github.routes[prefix + f"/actions/runs/{row['runId']}/artifacts?per_page=100"]
+                    if case == "outcome":
+                        listing.update(total_count=0, artifacts=[])
+                    elif case == "attempt":
+                        listing["artifacts"][0]["created_at"] = "2026-11-18T08:05:34Z"
+                    else:
+                        payload = zip_bytes({"outcome.json": row["outcome"] | {"draftId": 6}})
+                        github.blobs[prefix + "/actions/artifacts/42/zip"] = payload
+                        listing["artifacts"][0].update(size_in_bytes=len(payload),
+                            digest="sha256:" + hashlib.sha256(payload).hexdigest())
+                elif case == "marker":
+                    github.routes[prefix + "/releases/5"]["body"] += "HEXALITH-RELEASE-RUN: 11\n"
+                code, report = self.judge(github)
+                self.assertEqual(code, 1)
+                self.assertIn(message, self.reasons(report, MODULES[0]))
+                self.assertEqual(self.verdicts(report), {MODULES[0]: "fail", MODULES[1]: "pass", MODULES[2]: "pass"})
 
     def test_disabled_failed_and_unsuccessful_releases_fail(self):
         def outcome(value):
