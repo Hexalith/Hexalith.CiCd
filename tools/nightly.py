@@ -19,9 +19,18 @@ def load(filename, identity):
 
 rt = load("nightly_runtime.py", "_nightly_controller_runtime")
 
-# Controller budgets leave each 55/330-minute job its checkout, trailing mint,
+# Controller budgets leave each job its checkout, trailing mint,
 # finalization and upload reserve after the last controller-scheduled work.
-SECONDS = {"dispatch": 46 * 60, "wait": 320 * 60, "publish-ready": 46 * 60}
+SECONDS = {"dispatch": 95 * 60, "wait": 320 * 60, "publish-ready": 46 * 60}
+DELIVERY_BARRIER_SECONDS = 45 * 60
+TARGET_SELECTION_SECONDS = 20
+TARGET_MINT_SECONDS = 60
+TARGET_OPERATION_SECONDS = 60
+TARGET_REPORT_RESERVE = 120
+# Include the final 30 seconds already reserved by Budget.remaining().
+TARGET_DISPATCH_RESERVE = (
+    (rt.CAPACITY + 1) * (TARGET_MINT_SECONDS + TARGET_OPERATION_SECONDS) + TARGET_REPORT_RESERVE + 30
+)
 PHASES = {"dispatch": "dispatch", "wait": "wait", "publish-ready": "nightly"}
 STATUSES = {"queued", "requested", "waiting", "pending", "in_progress", "completed"}
 CONCLUSIONS = {"success", "failure", "neutral", "cancelled", "skipped", "timed_out", "action_required", "stale", "startup_failure"}
@@ -203,11 +212,18 @@ def permit(state, phase, slot, budget, clock):
 
 
 def delivery_barrier(state, transport, token, directory, clock, sleep):
-    deadline = min(clock() + 30 * 60, transport.budget.started + SECONDS["dispatch"] - 120)
-    previous = transport.budget.deadline
-    if previous is not None:
-        deadline = min(deadline, previous)
-    transport.budget.deadline = deadline
+    budget = transport.budget
+    started = clock()
+    selection_reserve = (rt.CAPACITY + 1) * TARGET_SELECTION_SECONDS
+    deadline, limit = min(
+        (started + DELIVERY_BARRIER_SECONDS, "maximum wait"),
+        (started + budget.remaining(token=True), "token or operation budget"),
+        (budget.started + budget.job_seconds - selection_reserve - TARGET_DISPATCH_RESERVE, "target dispatch reserve"),
+        key=lambda boundary: boundary[0],
+    )
+    expired = f"delivery barrier did not clear before its deadline ({limit})"
+    previous = budget.deadline
+    budget.deadline = deadline
     consecutive_idle = 0
     try:
         while True:
@@ -217,7 +233,7 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
             try:
                 for status in ("requested", "waiting", "pending", "queued", "in_progress"):
                     if clock() >= deadline:
-                        raise rt.NightlyError("delivery barrier exceeded 30 minutes")
+                        raise rt.NightlyError(expired)
                     runs.extend(transport.api.pages(
                         f"/repos/Hexalith/{rt.CICD}/actions/workflows/deliver.yml/runs?branch=main&status={status}",
                         token, field="workflow_runs", deadline=deadline))
@@ -234,7 +250,7 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
                         raise rt.NightlyError("delivery run status is unreadable")
                     busy |= run["status"] != "completed"
             if clock() >= deadline:
-                raise rt.NightlyError("delivery barrier exceeded 30 minutes")
+                raise rt.NightlyError(expired)
             # A run can move to waiting after we queried that status. Confirm
             # an empty scan on the next poll before allowing dispatch.
             consecutive_idle = 0 if busy else consecutive_idle + 1
@@ -242,10 +258,10 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
                 (directory / "barrier-cleared").write_text("cleared\n")
                 return
             if clock() + 60 >= deadline:
-                raise rt.NightlyError("delivery barrier did not clear within 30 minutes")
+                raise rt.NightlyError(expired)
             sleep(60)
     finally:
-        transport.budget.deadline = previous
+        budget.deadline = previous
 
 
 def select(state, transport, directory):
@@ -260,7 +276,8 @@ def select(state, transport, directory):
         parent_budget = transport.budget
         target_budget = rt.Budget(parent_budget.started, job_seconds=parent_budget.job_seconds,
             token_epoch=parent_budget.token_epoch,
-            deadline=min(parent_budget.clock() + 20, parent_budget.started + SECONDS["dispatch"] - 10 * 60),
+            deadline=min(parent_budget.clock() + TARGET_SELECTION_SECONDS,
+                         parent_budget.started + parent_budget.job_seconds - TARGET_DISPATCH_RESERVE),
             clock=parent_budget.clock)
         transport.budget = target_budget
         transport.api.budget = target_budget
@@ -460,12 +477,14 @@ def poll(state, transport, token, directory, persist, clock, sleep):
 def target_budget(parent, state, phase, slot):
     """Bound one target while keeping a fair share and report reserve for others."""
     later = state["targets"][slot:]
+    reserve = TARGET_REPORT_RESERVE
     if phase == "dispatch":
         remaining = sum(item["eligibility"] == "eligible" and item["dispatch"] == "pending" for item in later)
+        reserve += remaining * TARGET_MINT_SECONDS
     else:
         remaining = sum(publishable(item) for item in later)
-    share = max(1, (parent.remaining() - 120) / (remaining + 1))
-    deadline = parent.clock() + min(60, share)
+    share = max(1, (parent.remaining() - reserve) / (remaining + 1))
+    deadline = parent.clock() + min(TARGET_OPERATION_SECONDS, share)
     if parent.deadline is not None:
         deadline = min(deadline, parent.deadline)
     return rt.Budget(parent.started, job_seconds=parent.job_seconds, token_epoch=parent.token_epoch,

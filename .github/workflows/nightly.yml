@@ -23,7 +23,7 @@ jobs:
   dispatch:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.qualify-bump != true }}
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 105
     environment: cicd-app
     permissions:
       contents: read
