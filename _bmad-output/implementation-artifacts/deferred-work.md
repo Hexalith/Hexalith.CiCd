@@ -265,7 +265,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Works
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: medium
 reason: Review EC1/BH2: MSBuildProjectName.Equals selectors are case-sensitive, but CatalogVersionMaterializer stores project views with OrdinalIgnoreCase and CompositionDeclarationOptions.ReadRecordedPackageVersion uses OrdinalIgnoreCase. A clean Hexalith.Parties.Tests view selects SDK4.2/OpenAPI2; hexalith.Parties.Tests selects SDK5/OpenAPI3 but can reuse the recorded retained view. Both paths were traced and disposable MSBuild evaluations confirmed the selection difference. This is present in upstream integration cae351e20093634483afad16aca3bfd90845eda8, before the story follow-up commit; fix exact-name materialization/lookup and add a case-varied consumer test in the catalog workstream.
-status: open
+status: done 2026-11-23
+resolution: Builds records exact project names in materialized and on-demand views and resolves them by exact name. A real MSBuild regression keeps three case variants distinct through materialization, composition lookup and validation. Package IDs remain case-insensitive. [Verification](spec-deferred-catalog-authority.md)
 
 ### DW-28: The no-snapshot catalog package reader selects conditional EventStore4.2 instead of the default SDK5 view.
 origin: spec-deferred db73a849f2fd
@@ -273,7 +274,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runti
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: medium
 reason: Review BH1: CompositionDeclarationOptions.ReadCatalogPackageVersion resolves $(HexalithEventStoreVersion) using the first XML descendant without evaluating its condition. The integrated catalog now declares the retained conditional 4.2.0 before the default 5.0.0, while the first OpenAPI declarations remain 11.0.0/3.11.0. This yields a crossed default tuple through the public no-snapshot overload. The implementation and declaration order are present unchanged in integration cae351e20093634483afad16aca3bfd90845eda8; this story changes neither file. Use an evaluated default view or require the materialized snapshot in that owning catalog change.
-status: open
+status: done 2026-11-23
+resolution: Builds selects default properties in source order, skipping consumer-conditioned assignments. The existing regression cases verify the no-snapshot owner and package lookup against MSBuild's default view. Conditional package inclusion is tracked separately. [Verification](spec-deferred-catalog-authority.md)
 
 ### DW-29: The Python catalog selector reader omits the new Equals-based consumer views from runtime inventory.
 origin: spec-deferred 499534893948
@@ -281,7 +283,8 @@ location: references/Hexalith.Builds/Tools/evaluated_catalog.py:96; Tools/runtim
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: medium
 reason: Review BH3: Tools/evaluated_catalog.py.conditioned_catalog_project_names recognizes quoted == expressions only. Tools/runtime_toolchain_v2.py.inventory evaluates a consumer-specific catalog only when the project stem is in that returned set. The integrated MSBuildProjectName.Equals selectors are therefore omitted and affected projects receive the default SDK5 inventory. The C# selector reader was updated upstream but this Python reader was not; both the new selectors and this omission already exist in integration cae351e20093634483afad16aca3bfd90845eda8. Extend the Python selector extraction and behavioral inventory tests in that catalog workstream.
-status: open
+status: done 2026-11-23
+resolution: Python inventory discovers literal Equals selectors in preprocessed package-mode imports and passes the actual project name to MSBuild. The inventory regression verifies exact Equals selection, case-insensitive quoted equality and default selection. [Verification](spec-deferred-catalog-authority.md)
 
 ### DW-30: Current toolchain defaults and some tests remain coupled to newly frozen v1 runtime pins.
 origin: spec-deferred 4a73d8a5fd2b
@@ -289,7 +292,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runti
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: low
 reason: Review BH4/BH9: SupportedPlatformPins now returns immutable v1 literals, but CompositionToolchainPins.DaprRuntimeVersion still delegates to that facade and CompositionPrerequisiteProbe uses it for its documented catalog default. SupportedPlatformPinsCatalogTests also retains current-versus-frozen equality for FrontComposer and Dapr. Values currently agree, so no current hosted failure exists; a future approved current-catalog update would leave the default probe on the frozen runtime and reject the otherwise independent catalog update in tests. This authority split was introduced by the preserved upstream frozen-pin work and is present at integration cae351e20093634483afad16aca3bfd90845eda8. Reconcile the intended current/frozen facade and test authorities in that workstream.
-status: open
+status: done 2026-11-23
+resolution: Builds already reads the current Dapr runtime pin for composition prerequisites. The follow-up checks the frozen v1 Dapr SDK against its own literal, alongside independent current catalog assertions. [Verification](spec-deferred-catalog-authority.md)
 
 ### DW-31: Active retained compatibility package selections have no current conditional-selection audit records.
 origin: spec-deferred a5740c625d89
@@ -297,7 +301,8 @@ location: references/Hexalith.Builds/Tools/package-version-audit.json; Props/Dir
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: medium
 reason: Review BH5: The current package audit rows bind EventStore.Gateway5.0.0, ASP.NET OpenAPI11.0.0, OpenAPI3.11.0 and OpenIdConnect11.0.0. The active named views select 4.2.0, 10.0.15, 2.13.0 and 10.0.15, respectively, but any old observations are labeled historical and do not bind the current conditional selections. This leaves current listing/retention provenance incomplete for those consumers. The audit and selectors are unchanged from upstream integration cae351e20093634483afad16aca3bfd90845eda8; extend current view-bound audit evidence in the owning package-audit workstream.
-status: open
+status: done 2026-11-23
+resolution: The remaining SDK 4.2 selectors were retired by Builds 286ed438367e9dbb9a0a0ab65a1538f8806bf191. The four current default selections have matching listed audit rows. The verification record identifies the exact catalog and audit inputs. [Verification](spec-deferred-catalog-authority.md)
 
 ### DW-32: Automatic response-file isolation lacks a real consumer-authority regression test.
 origin: spec-deferred ac138a90e03b
@@ -575,3 +580,11 @@ severity: medium
 reason: An evidence-only failure can make an otherwise qualifying post-bump Delivery run red to the propagation observer. The pre-dispatch barrier also waits for the aggregate run to finish.
 status: done 2026-11-23
 resolution: Both Nightly observers continue to query Delivery. Evidence runs in a separate workflow and has its own status and conclusion. [Verification](spec-deferred-cicd-qualification.md)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-deferred-catalog-authority.md`
+  summary: Account for catalog imports whose inclusion depends on MSBuildProjectName when discovering Python inventory views.
+  evidence: In a real .NET 11.0.100 probe, a StartsWith condition on an import hid Nested.Legacy from default preprocessing. Evaluating Nested.Legacy directly selected 4.2.0 from the imported Equals selector, while inventory used 5.0.0. Discover the relevant views without dropping package-mode evaluation or replacing actual MSBuild selection.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-deferred-catalog-authority.md`
+  summary: Honor conditional package inclusion in the C# default catalog lookup when there is no materialized snapshot.
+  evidence: The current catalog makes Hexalith.Platform.TestExtension 2.2.5 available only to Hexalith.Platform.EventStoreHost. MSBuild excludes the package in the default view. CompositionDeclarationOptions can still return the item by reading the raw XML without evaluating its enclosing ItemGroup condition.
