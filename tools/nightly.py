@@ -424,12 +424,13 @@ def poll(state, transport, token, directory, persist, clock, sleep):
                         status=run["status"], conclusion=run.get("conclusion") or "")
             persist()
             if run["status"] == "completed":
+                document = None
+                outcome_error = ""
                 try:
                     document = outcome(item, run, transport, token, helpers)
                 except Exception as error:
-                    if not ending():
-                        item["outcomeError"] = rt.clean(error)
-                    persist()
+                    outcome_error = rt.clean(error)
+                if ending():
                     continue
                 try:
                     current = transport.api.get(f"/repos/Hexalith/{item['repository']}/actions/runs/{item['runId']}", token)
@@ -437,16 +438,14 @@ def poll(state, transport, token, directory, persist, clock, sleep):
                     item.update(runAttempt=current["run_attempt"], status=current["status"], conclusion=current.get("conclusion") or "")
                     if current["run_attempt"] != run["run_attempt"] or current["status"] != "completed":
                         item["outcome"] = None
-                        item["outcomeError"] = "release run/attempt changed while reading outcome"
+                        item["outcomeError"] = ""
                     else:
                         item["outcome"] = document
-                        item["outcomeError"] = ""
+                        item["outcomeError"] = outcome_error
                 except Exception as error:
                     item["outcome"] = None
-                    if ending():
-                        item["outcomeError"] = ""
-                    else:
-                        item["outcomeError"] = rt.clean(error)
+                    item["outcomeError"] = ""
+                    if not ending():
                         fail(state, "run status recheck failed for " + item["repository"] + ": " + str(error))
                         unreadable = True
                 persist()

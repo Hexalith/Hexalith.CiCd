@@ -37,7 +37,10 @@ identities every 60 seconds. Its one five-hour deadline includes every polling
 slice and mint overhead. Wait ignores same-name artifacts created before the
 current attempt started. Each completed attempt must supply exactly one
 `hexalith-release-outcome` artifact. It must be unexpired, identify the
-correlated run and head, and contain only `outcome.json`. Complete-mode releases
+correlated run and head, and contain only `outcome.json`. Wait checks the run
+again after reading artifacts. If a rerun started during that read, polling
+continues with the newer attempt. An unreadable confirmation leaves the target
+eligible for another poll within the existing deadline. Complete-mode releases
 may intentionally publish a SHA older than the dispatched run's head.
 
 Successful `published`, `nothing` and `disabled` outcomes pass. A successful

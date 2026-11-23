@@ -551,7 +551,7 @@ class NightlyControllerTests(unittest.TestCase):
                 state = workspace.state("wait")
                 item = state["targets"][0]
                 self.assertIsNone(item["outcome"])
-                self.assertTrue(item["outcomeError"])
+                self.assertEqual(item["outcomeError"], "")
                 if result != "unreadable":
                     self.assertEqual((item["status"], item["runAttempt"]), ("in_progress", 2))
                 self.assertEqual(bool(state["errors"]), result == "unreadable")
@@ -647,6 +647,60 @@ class NightlyControllerTests(unittest.TestCase):
                     expected = "exactly one" if mode == "duplicate" else "invalid UTC timestamp"
                     self.assertIn(expected, item["outcomeError"])
                     self.assertEqual(downloads, [])
+
+    def test_attempt_change_during_outcome_read_leaves_new_attempt_pollable(self):
+        for first_artifact_visible in (False, True):
+            for next_status in ("in_progress", "completed", "unreadable"):
+                with self.subTest(first_artifact_visible=first_artifact_visible, next_status=next_status):
+                    workspace = self.fixture(())
+                    dispatched = self.dispatch(workspace)["targets"][0]
+                    head = dispatched["dispatchHead"]
+                    run_id = dispatched["runId"]
+                    path = f"/repos/Hexalith/Hexalith.Builds/actions/runs/{run_id}"
+                    first = {"id": run_id, "repository": {"full_name": "Hexalith/Hexalith.Builds"},
+                             "path": dispatched["workflow"], "event": "workflow_dispatch",
+                             "head_branch": "main", "head_sha": head, "html_url": dispatched["link"],
+                             "run_attempt": 1,
+                             "run_started_at": STAMP, "status": "completed", "conclusion": "success"}
+                    started = "2026-11-14T02:17:02Z"
+                    current = first | {"run_attempt": 2, "run_started_at": started}
+                    recheck = current
+                    if next_status == "in_progress":
+                        recheck = current | {"status": "in_progress", "conclusion": None}
+                    elif next_status == "unreadable":
+                        recheck = {"status": 404, "body": {}}
+                    old_document = {"schema": "hexalith.release-outcome.v1", "sha": head, "outcome": "nothing"}
+                    new_document = old_document | {"outcome": "disabled"}
+                    workspace.config["outcomes"]["Hexalith.Builds"] = old_document
+                    old_artifact = metadata(run_id + 2000, "hexalith-release-outcome",
+                                            zip_document("outcome.json", old_document), run_id, head)
+                    payload = zip_document("outcome.json", new_document)
+                    new_artifact = metadata(run_id + 2001, "hexalith-release-outcome", payload, run_id,
+                                            head, created=started)
+                    archive = workspace.root / "rerun.zip"
+                    archive.write_bytes(payload)
+                    workspace.config["handoffs"][str(new_artifact["id"])] = {"path": str(archive)}
+                    workspace.config["responses"][path] = [first, recheck, current]
+                    previous = [old_artifact] if first_artifact_visible else []
+                    workspace.config["responses"][f"{path}/artifacts"] = [
+                        {"total_count": len(previous), "artifacts": previous},
+                        {"total_count": 1, "artifacts": [new_artifact]},
+                    ]
+                    workspace.next_phase("wait", workspace.artifact("dispatch"))
+
+                    code = workspace.call("poll", phase="wait")
+                    state = workspace.state("wait")
+                    if next_status == "unreadable":
+                        self.assertEqual(code, 1)
+                        self.assertEqual(len(state["errors"]), 1)
+                        self.assertIn("run status recheck failed", state["errors"][0])
+                    else:
+                        self.assertEqual(code, 0)
+                        self.assertEqual(state["errors"], [])
+                    item = state["targets"][0]
+                    self.assertEqual((item["runAttempt"], item["status"]), (2, "completed"))
+                    self.assertEqual(item["outcome"], new_document)
+                    self.assertEqual(item["outcomeError"], "")
 
     def test_wait_deadline_survives_all_slices_and_timeout_is_a_failed_verdict(self):
         workspace = self.fixture(())
