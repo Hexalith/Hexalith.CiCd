@@ -292,11 +292,13 @@ def fixture_transport(rt, config):
                 if config.get("barrier_transition"):
                     clock_path = Path(config["requests"]).parent / "clock.json"
                     elapsed = json.loads(clock_path.read_bytes()) - config["clock"]
-                    status = config.setdefault("delivery_status", "queued") if elapsed < 120 else "completed"
+                    before, after = config["barrier_transition"]
+                    status = config.setdefault("delivery_status", before) if elapsed < 120 else "completed"
                     selected = query.get("status", [""])[0]
-                    if selected == "in_progress" and status == "queued":
-                        config["delivery_status"] = "in_progress"
-                        return 200, {"total_count": 0, "workflow_runs": []}
+                    # Transition immediately after the first of the two status
+                    # observations. Only later requests see the new status.
+                    if selected in (before, after) and status == before:
+                        config["delivery_status"] = after
                     runs = [{"id": 123, "head_branch": "main", "path": ".github/workflows/deliver.yml",
                              "status": status}] if selected == status else []
                     return 200, {"total_count": len(runs), "workflow_runs": runs}

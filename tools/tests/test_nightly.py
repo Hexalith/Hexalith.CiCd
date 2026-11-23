@@ -118,13 +118,16 @@ class NightlyControllerTests(unittest.TestCase):
                 else:
                     changed = {"total_count": 101, "workflow_runs": [pending | {"id": index, "status": "in_progress"} for index in range(100)]}
                     workspace.config["responses"][endpoint("in_progress", 2)] = {"total_count": 102, "workflow_runs": [queued]}
-                workspace.config["responses"][endpoint("in_progress")] = [changed, empty]
+                # After recovering from the initial drift and queued run,
+                # another incomplete scan interrupts the first idle streak.
+                workspace.config["responses"][endpoint("in_progress")] = [changed, empty, empty, changed, empty]
                 started = workspace.clock()
                 self.assertEqual(workspace.call("barrier"), 0)
-                self.assertEqual(workspace.clock() - started, 120)
+                self.assertEqual(workspace.clock() - started, 300)
                 self.assertTrue((workspace.directory / "barrier-cleared").is_file())
                 requests = [json.loads(line) for line in Path(workspace.config["requests"]).read_text().splitlines()]
-                for moment in (started, started + 60, started + 120):
+                for offset in range(0, 301, 60):
+                    moment = started + offset
                     scan = [item["path"] for item in requests if item["at"] == moment and item["path"].startswith(base) and item["path"].endswith("page=1")]
                     self.assertEqual(scan, [endpoint(status) for status in ("requested", "waiting", "pending", "queued", "in_progress")])
                 self.assertFalse(Path(workspace.config["dispatches"]).exists())
@@ -274,10 +277,10 @@ class NightlyControllerTests(unittest.TestCase):
 
     def test_barrier_observes_queued_to_running_transition_and_rejects_late_idle(self):
         workspace = self.fixture(())
-        workspace.config["barrier_transition"] = True
+        workspace.config["barrier_transition"] = ("queued", "in_progress")
         started = workspace.clock()
         self.assertEqual(workspace.call("barrier"), 0)
-        self.assertEqual(workspace.clock() - started, 120)
+        self.assertEqual(workspace.clock() - started, 180)
         requests = [json.loads(line)["path"] for line in Path(workspace.config["requests"]).read_text().splitlines()]
         scans = [path for path in requests if "/deliver.yml/runs?" in path]
         self.assertLess(next(index for index, path in enumerate(scans) if "status=queued" in path),
@@ -286,6 +289,28 @@ class NightlyControllerTests(unittest.TestCase):
         path = "/repos/Hexalith/Hexalith.CiCd/actions/workflows/deliver.yml/runs?branch=main&status=requested&per_page=100&page=1"
         workspace.config["delays"] = {"GET " + path: 1801}
         self.assertEqual(workspace.call("barrier"), 1)
+        self.assertFalse((workspace.directory / "barrier-cleared").exists())
+        self.assertEqual(workspace.call("select"), 1)
+        self.assertFalse(Path(workspace.config["dispatches"]).exists())
+
+    def test_barrier_confirms_idle_after_a_run_moves_to_waiting(self):
+        for previous in ("queued", "in_progress"):
+            with self.subTest(previous=previous):
+                workspace = self.fixture(())
+                workspace.config["barrier_transition"] = (previous, "waiting")
+                started = workspace.clock()
+                self.assertEqual(workspace.call("barrier"), 0)
+                # First scan misses the transition, second sees waiting,
+                # third and fourth see the completed run.
+                self.assertEqual(workspace.clock() - started, 180)
+                self.assertEqual(workspace.call("select"), 0)
+
+    def test_barrier_first_idle_without_time_to_confirm_refuses_dispatch(self):
+        workspace = self.fixture(())
+        workspace.advance(controller.SECONDS["dispatch"] - 120 - 60)
+        started = workspace.clock()
+        self.assertEqual(workspace.call("barrier"), 1)
+        self.assertEqual(workspace.clock(), started)
         self.assertFalse((workspace.directory / "barrier-cleared").exists())
         self.assertEqual(workspace.call("select"), 1)
         self.assertFalse(Path(workspace.config["dispatches"]).exists())

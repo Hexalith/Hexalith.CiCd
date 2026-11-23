@@ -205,7 +205,10 @@ def permit(state, phase, slot, budget, clock):
 def delivery_barrier(state, transport, token, directory, clock, sleep):
     deadline = min(clock() + 30 * 60, transport.budget.started + SECONDS["dispatch"] - 120)
     previous = transport.budget.deadline
-    transport.budget.deadline = min(deadline, previous) if previous is not None else deadline
+    if previous is not None:
+        deadline = min(deadline, previous)
+    transport.budget.deadline = deadline
+    consecutive_idle = 0
     try:
         while True:
             # Observe queued work before running work: a queued→in_progress
@@ -232,7 +235,10 @@ def delivery_barrier(state, transport, token, directory, clock, sleep):
                     busy |= run["status"] != "completed"
             if clock() >= deadline:
                 raise rt.NightlyError("delivery barrier exceeded 30 minutes")
-            if not busy:
+            # A run can move to waiting after we queried that status. Confirm
+            # an empty scan on the next poll before allowing dispatch.
+            consecutive_idle = 0 if busy else consecutive_idle + 1
+            if consecutive_idle == 2:
                 (directory / "barrier-cleared").write_text("cleared\n")
                 return
             if clock() + 60 >= deadline:
