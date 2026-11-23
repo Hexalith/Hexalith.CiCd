@@ -337,7 +337,7 @@ class API:
         return clean(json.dumps(details, ensure_ascii=False, separators=(",", ":")))
 
     def _request(self, method, path, token=None, document=None, *, deadline=None):
-        self._path(path, method)
+        endpoint = f"{method} {self._path(path, method)}"
         parsed = urlsplit(path)
         wire_path = parsed.path + ("?" + urlencode(parse_qsl(parsed.query)) if parsed.query else "")
         data = None if document is None else json.dumps(document, separators=(",", ":")).encode()
@@ -397,10 +397,10 @@ class API:
                             delay = self._retry_delay(response_headers, attempt) if limited else attempt + 1
                         except NightlyError as failure:
                             diagnostic = self._http_diagnostic(error, token, attempt, deadline)
-                            raise NightlyError(f"{clean(failure)}: HTTP {status}; {diagnostic}") from None
+                            raise NightlyError(f"{endpoint}: {clean(failure)}: HTTP {status}; {diagnostic}") from None
                         if self._remaining(token, deadline) < delay + 2:
                             diagnostic = self._http_diagnostic(error, token, attempt, deadline)
-                            raise NightlyError("GitHub API retry budget exhausted: "
+                            raise NightlyError(f"GitHub API {endpoint} retry budget exhausted: "
                                                f"HTTP {status}; {diagnostic}") from None
                         # Close before sleeping, without changing the retry or
                         # credential policy for any read or uncertain write.
@@ -409,7 +409,7 @@ class API:
                         continue
                     qualifier = "rejected" if method != "GET" and status in {400, 401, 403, 404, 409, 422} else "failed"
                     diagnostic = self._http_diagnostic(error, token, attempt, deadline)
-                    raise NightlyError(f"GitHub API {method} {self._path(path, method)} {qualifier}: "
+                    raise NightlyError(f"GitHub API {endpoint} {qualifier}: "
                                        f"HTTP {status}; {diagnostic}") from None
                 finally:
                     error.close()
@@ -417,7 +417,7 @@ class API:
                 # An idempotent read survives one transient reset or timeout.
                 if method == "GET" and attempt < 2:
                     if self._remaining(token, deadline) < attempt + 3:
-                        raise NightlyError("GitHub API retry budget exhausted") from None
+                        raise NightlyError(f"GitHub API {endpoint} retry budget exhausted") from None
                     self.sleep(attempt + 1)
                     continue
                 # A lost write response may already have dispatched/published. Never retry it.

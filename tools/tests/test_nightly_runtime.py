@@ -349,6 +349,37 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
                 self.assertTrue(error.closed)
 
+    def test_retry_refusals_identify_only_the_validated_endpoint(self):
+        path = "/repos/Hexalith/Hexalith.Builds/releases"
+        query = "?per_page=100&page=2"
+        token = "scoped-retry-test-token"
+        for delay, reason in (("9" * 21, "retry delay exceeds"), ("300", "retry budget exhausted")):
+            with self.subTest(reason=reason):
+                error = HTTPError("https://api.github.com" + path + query, 429, token,
+                    {"Retry-After": delay, "X-GitHub-Request-Id": "fixture"},
+                    io.BytesIO(json.dumps({"message": token + " https://example.invalid/private?sig=secret"}).encode()))
+                api, opener, clock = self.api([error])
+                api.budget.job_seconds = 60
+                with self.assertRaises(rt.NightlyError) as failure:
+                    api.get(path + query, token)
+                message, evidence = str(failure.exception).split("; ", 1)
+                self.assertIn("GET " + path, message)
+                self.assertIn(reason, message)
+                self.assertIn("HTTP 429", message)
+                self.assertNotIn("?", str(failure.exception))
+                self.assertNotIn(token, str(failure.exception))
+                details = json.loads(evidence)
+                self.assertEqual(details["message"], "[redacted] [URL omitted]")
+                self.assertEqual((details["x-github-request-id"], details["attempts"]), ("fixture", 1))
+                self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+                self.assertTrue(error.closed)
+
+        api, opener, clock = self.api([URLError("private transport error")])
+        with self.assertRaises(rt.NightlyError) as failure:
+            api.get(path + query, deadline=clock() + 2)
+        self.assertEqual(str(failure.exception), f"GitHub API GET {path} retry budget exhausted")
+        self.assertEqual((clock.sleeps, len(opener.requests)), ([], 1))
+
     def test_diagnostic_read_respects_short_job_token_and_caller_budgets(self):
         class Slow(io.BytesIO):
             def read(self, size):
