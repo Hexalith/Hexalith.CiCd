@@ -109,7 +109,8 @@ location: references/Hexalith.Builds/Github/release-build/release.targets:5-8
 source_spec: `3-3-create-mode-version-audited-build-marked-draft.md`
 severity: high
 reason: Real SDK 10.0.403 reproduction through release_build.build_release with the release flags and Newtonsoft.Json 9.0.1 (GHSA-5crp-9r3c-p9vr): `<NoWarn>$(NoWarn);NU1903</NoWarn>` in a module Directory.Build.targets, or `<PackageReference Include="Newtonsoft.Json" NoWarn="NU1903" />`, builds and packs with no "blocked by a vulnerable package" diagnostic. release.targets is imported through CustomAfterMicrosoftCommonTargets, before Directory.Build.targets, and rewrites only the NoWarn/WarningsNotAsErrors properties, not item metadata. Inherited Builds props exemptions (Hexalith.Build.props WarningsNotAsErrors NU1903;NU1904) and props-level module NoWarn are still blocked, for single-target and multi-target projects with TreatWarningsAsErrors true or unset. SPEC.md:120, enforcement.md and AD-8 assign rejection of module-file audit waivers (NoWarn under any parent or attribute, NuGetAuditSuppress, MSBuildWarningsAsMessages) to the guard audit lint, story 5-2 "Guard lints and commitlint", which
-status: open
+status: done 2026-11-23
+resolution: Story 5-2 shipped Stage 1 audit lint in Builds v6.6.2. At that tag, all 19 audit-lint tests passed and two real Git-tree probes independently rejected the exact NU1903 waivers in Directory.Build.targets and PackageReference metadata. The release resolver source requires successful CI on the exact proposed source for create-mode publication. [Verification](spec-deferred-release-verification.md)
 
 ### DW-12: Repair the incoming upstream routing-snapshot descriptor fixture and its four failing cases.
 origin: spec-deferred 1be219f5eebc
@@ -134,7 +135,8 @@ location: references/Hexalith.Builds/src/libraries/Hexalith.Builds.Tooling/Runti
 source_spec: `3-4-the-publish-composite.md`
 severity: medium
 reason: Story 3-4's required Python/workflow/API checks do not execute the unrelated incoming C# changes. A reviewer ran the routing-snapshot class and found four failures; the upstream changes need their own focused verification and repair rather than silently attributing Python success to them.
-status: open
+status: done 2026-11-23
+resolution: Builds `b74b467ac5ce5d9f9fc440f43e279b7093b539de` repaired the routing-snapshot descriptor fixture. Exact-source hosted Stage 3 at `2dc16bba3053c1efc871a221a4e782a8c3da72ab` ran the unfiltered Linux Module.Tests assembly containing StartupReadinessTests, NativeTestExecutorTests and SelectedRoutingCatalogSnapshotTests. It passed 3,094 tests with zero failures and four named skips in other classes. The corresponding source identities and log digest are retained in the verification spec. [Hosted job](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43519435001/job/132209687921) · [Verification](spec-deferred-release-verification.md)
 
 ### DW-15: Add independent attached-routing identity refusal cases for attached run, environment, role and hold bindings.
 origin: spec-deferred b0bd6a702108
@@ -247,7 +249,8 @@ location: references/Hexalith.Builds package catalog contracts job; test/Hexalit
 source_spec: `5-1-guard-drift-detection-and-the-release-drift-check.md`
 severity: medium
 reason: Follow-up review BH14. Both failures reproduce on integration revision 05a75b626fb73c6e386d16c41e885f193d3cff16 (run 43387068103), before this story's source. They come from upstream dependency/catalog changes: Props/Directory.Packages.props moved HexalithEventStoreVersion to 5.0.0 while the catalog assertions still require 4.2.0. The story-5-1 verification exception tolerates them for story verification only. The deferred-work ledger has no entry for either failure. While they persist, Builds' own release green-CI gate cannot pass. Settle by reconciling the catalog validator with the EventStore 5.0.0 pin, and by triaging the 44 Evidence.Tests failures in their owning upstream change.
-status: open
+status: done 2026-11-23
+resolution: The story 5-1 follow-up at Builds `185e3a4e695f392e114eacffbdecd2a23da32c9b` passed catalog validation and all 191 Evidence.Tests without the historical exception. The later exact-source run 43519435001 independently passed both lanes. [Catalog job](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43440467144/job/131936449710) · [.NET job](https://github.com/Hexalith/Hexalith.Builds/actions/runs/43440467144/job/131936450342)
 
 ### DW-27: Exact-name catalog snapshots accept case-varied consumer names.
 origin: spec-deferred a3d95c73af72
@@ -340,6 +343,8 @@ status: open
 - source_spec: `_bmad-output/specs/spec-cicd/stories/8-2-nightly-builds-bump.md`
   summary: Confirm that the bump-push and keepalive GITHUB_TOKEN fast-forward pushes to CiCd `main` are not blocked by classic branch protection; the hosted probe only pushed a disposable ref.
   evidence: Story 8-2 review B1 (maybe-false; medium if true). Ruleset 26812262 has only `deletion` and `non_fast_forward`, so fast-forwards pass it, but classic protection on `main` (`protected: true`) was unreadable with the agent token (HTTP 403). To settle it, read `branches/main/protection` with an admin token, or watch the first production bump or keepalive push. A GH006 rejection would fail every bump night loudly.
+  status: done 2026-11-23
+  resolution: Scheduled run 44715684274 used the repository job token and confirmed the exact validated fast-forward `634fe40ef3f0f1e8aba55251ed8ca574db41fc1d` on CiCd main. This exercised the same repository, job-token Contents write and fast-forward branch policy used by keepalive. An idle-branch keepalive write remains unobserved. [Hosted bump-push job](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44715684274/job/136236963286)
 - source_spec: `_bmad-output/specs/spec-cicd/stories/8-2-nightly-builds-bump.md`
   summary: Add a parity test showing that the writer's `bump_runtime.add_defaults` gives the same additions as `render.defaults` on a real tagged Builds CI schema that introduces new defaults.
   evidence: Story 8-2 review B9 (maybe-false; medium if true). The v5.1.0 and v5.2.2 `hexalith.ci.v1.json` schemas are byte-identical, so the writer's default-addition path is not reached yet, and every test uses a synthetic schema. If the two traversals drift, the writer either blocks valid bumps or accepts additions the renderer would not produce. The first Builds release that adds a CI default settles it: run both functions on that schema with the registered setups.
@@ -541,6 +546,8 @@ status: open
 - source_spec: `_bmad-output/implementation-artifacts/spec-deferred-validation-findings.md`
   summary: Recheck the release run attempt before recording a terminal outcome error if the artifact read fails.
   evidence: Nightly already rechecks attempt identity after a successful artifact download. The baseline error path stores a terminal outcome error immediately, so a rerun that changes the artifact listing before the status recheck can be missed. Add a controlled attempt change during the listing and verify that the next attempt remains pollable.
+  status: done 2026-11-23
+  resolution: Wait revalidates the correlated attempt after either result of an artifact read. A newer or temporarily unconfirmed attempt remains pollable. The regression covers running and completed replacements and a transient confirmation failure after missing and readable previous-attempt artifacts. [Verification](spec-deferred-release-verification.md)
 
 ### DW-45: Delivery's shared concurrency group can replace a pending main push before its evidence check runs.
 origin: spec-deferred 85628a2803d3
