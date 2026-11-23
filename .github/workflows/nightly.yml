@@ -50,6 +50,8 @@ jobs:
         id: initialize
         if: ${{ !cancelled() }}
         continue-on-error: true
+        env:
+          HANDOFF_TOKEN: ${{ github.token }}
         run: python3 -I tools/nightly.py initialize --phase dispatch
       - name: Record delivery barrier mint boundary
         id: barrier_budget

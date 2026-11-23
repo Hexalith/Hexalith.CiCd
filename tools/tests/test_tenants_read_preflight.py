@@ -12,7 +12,9 @@ import unittest
 from unittest import mock
 from urllib.parse import parse_qs, urlsplit
 
-SPEC = importlib.util.spec_from_file_location('tenants_preflight', Path(__file__).with_name('read-preflight.py'))
+ROOT = Path(__file__).resolve().parents[2]
+SPEC = importlib.util.spec_from_file_location(
+    'tenants_preflight', ROOT / 'tools/qualification/pre-adoption/tenants/read-preflight.py')
 PREFLIGHT = importlib.util.module_from_spec(SPEC)
 # A regression to import-time execution must also fail without contacting GitHub.
 with mock.patch.object(subprocess, 'run', side_effect=AssertionError('unexpected external command during import')):
@@ -30,6 +32,9 @@ def link(endpoint, page=2):
 
 
 class PreflightTests(unittest.TestCase):
+    def test_default_root_resolves_to_the_cicd_repository(self):
+        self.assertEqual(ROOT, PREFLIGHT.ROOT)
+
     def setUp(self):
         guard = mock.patch.object(subprocess, 'run', side_effect=AssertionError('unexpected external command'))
         guard.start()

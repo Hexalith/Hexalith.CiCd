@@ -206,7 +206,11 @@ def fixture_transport(rt, config):
                 # Workflow tests give every mint a distinct token: a token used
                 # outside its minted repository is refused as GitHub would.
                 repository = path.split("/")[3] if path.startswith("/repos/Hexalith/") else ""
-                if repository not in scopes.get(authorization.removeprefix("Bearer "), ()):
+                public_builds_read = (
+                    authorization == "Bearer inert-handoff-token" and method == "GET" and repository == rt.BUILDS
+                    and path.split("/", 4)[4].startswith(("releases/tags/", "git/ref/", "git/tags/", "compare/"))
+                )
+                if repository not in scopes.get(authorization.removeprefix("Bearer "), ()) and not public_builds_read:
                     raise HTTPError(request.full_url, 404, "fixture", {}, io.BytesIO(b"private response"))
             override = config.get("responses", {}).get(method + " " + exact,
                 config.get("responses", {}).get(exact, config.get("responses", {}).get(path)))

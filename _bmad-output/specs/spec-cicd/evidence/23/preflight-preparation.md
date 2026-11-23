@@ -4,7 +4,8 @@ The next preflight is prepared locally. No GitHub requests, provisioning,
 product changes, release, pin update or delivery ran during this preparation.
 Historical `preflight.json` and `maintainer-preflight.json` remain unchanged.
 
-`read-preflight.py` now follows GitHub pagination for every collection it reads,
+The [preflight tool](../../../../../tools/qualification/pre-adoption/tenants/read-preflight.py)
+now follows GitHub pagination for every collection it reads,
 including ruleset details and the release environment discovered on later pages.
 It includes release-environment branch policies and inventories every observed
 selected organization grant, alongside known prerequisites. The paired legacy
@@ -25,16 +26,15 @@ the product checker as part of a configuration inventory.
 
 ## Verification
 
-Both commands used `run-with-temp`, with all disposable test directories beneath
-the wrapper's private `TMPDIR`. All subprocess execution is forbidden by the
-offline tests, including at import time. Eleven tests passed on each interpreter:
+The current suite runs with `run-with-temp`. The offline tests forbid all
+subprocess execution, including at import time.
 
 ```text
-run-with-temp python3.12 -B _bmad-output/specs/spec-cicd/evidence/23/test_read_preflight.py -v
-run-with-temp python3.14 -B _bmad-output/specs/spec-cicd/evidence/23/test_read_preflight.py -v
+run-with-temp python3.12 -B tools/tests/test_tenants_read_preflight.py -v
 ```
 
-The retained logs are `preflight-offline-python312.log` and
+The earlier eleven-test run passed on Python 3.12 and 3.14. The retained logs are
+`preflight-offline-python312.log` and
 `preflight-offline-python314.log`. Coverage includes complete two-page inventory
 execution, later-page discovery and refusal, malformed/timeout responses,
 untrusted pagination, incomplete or changing counts, duplicate records,
@@ -59,7 +59,7 @@ During a later authorized remote phase, refresh through the existing maintainer
 profile without changing the default profile. The output path below must be new:
 
 ```bash
-GH_CONFIG_DIR=/home/administrator/.config/gh python3 -B _bmad-output/specs/spec-cicd/evidence/23/read-preflight.py --output _bmad-output/specs/spec-cicd/evidence/23/maintainer-preflight-next.json
+GH_CONFIG_DIR=/home/administrator/.config/gh python3 -B tools/qualification/pre-adoption/tenants/read-preflight.py --output /absolute/path/to/maintainer-preflight-next.json
 ```
 
 Exit 2 retains the packet and reports failed requests or incomplete collections.
@@ -70,3 +70,7 @@ Inspect the fresh packet before executing the ordered AD-21 provisioning steps;
 retain existing publication policies until actual adoption. The compatible
 Builds release/pin, Tenants product work, registration, adoption cleanup, green
 adopted CI and next scheduled nightly outcome remain incomplete.
+
+The dated qualification driver and provisioning capture belong to the
+historical packet at `97538b46caec91945d25b496ff1135bab475f2b0`. That
+revision retains their adjacent inputs at the original paths.

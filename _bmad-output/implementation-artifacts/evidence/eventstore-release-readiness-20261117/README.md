@@ -107,7 +107,8 @@ interrupted inspection receipts and primary-error preservation when graph captur
 also fails. The foreign orphans survive each job and remain waitable by their
 fixture owner. No process environment is inspected.
 
-[Executable audit](audit_evidence.py) replays historical and new receipts, logs,
+[Historical audit source](https://github.com/Hexalith/Hexalith.CiCd/blob/97538b46caec91945d25b496ff1135bab475f2b0/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/audit_evidence.py)
+replayed historical and new receipts, logs,
 committed inputs, package/project/nuspec manifests, active graphs, installed tool
 payload and aggregation. It rejects changed suite inventories, missing required
 cases, mutated inputs and substituted readiness identities/counters/acceptance
@@ -161,22 +162,14 @@ identities, original blob/byte hashes, native failures/skips and all publication
 gates remain unchanged. The controls create only a disposable Git fixture; no
 producer or CiCd source commit was made.
 
-## Reproduce
+## Historical replay record
 
-From the CiCd root, use a fresh output directory for each invocation:
-
-```sh
-run-with-temp python3 -O -B _bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/iteration2_controls.py --output /absolute/path/outside-scratch/fresh-controls
-run-with-temp python3 -O -B _bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/audit_evidence.py --output /absolute/path/outside-scratch/fresh-audit
-run-with-temp python3 -B _bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/verify.py --query-api-package-probe --output /absolute/path/outside-scratch/fresh-query-probe
-run-with-temp python3 -B _bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/inspect_public_api.py --output /absolute/path/outside-scratch/fresh-public-inspection
-```
-
-The audit replays the named retained receipts and invokes only read-only frozen
-policy inspection. It does not run producer tests. The original baseline,
-`--local-package-probes` and `--authority-probe` CLI modes remain available; none
-was rerun during this revision. All disposable work uses `run-with-temp`, and
-useful results survive outside its cleaned scratch directory.
+The dated replay commands and their script bytes are retained in the
+[original packet revision](https://github.com/Hexalith/Hexalith.CiCd/blob/97538b46caec91945d25b496ff1135bab475f2b0/_bmad-output/implementation-artifacts/evidence/eventstore-release-readiness-20261117/README.md#reproduce).
+That audit replayed the retained receipts and read-only frozen policy
+inspection. For current work, see the
+[adoption order](../../../../docs/ordered-module-adoption.md) and
+[pre-adoption publication procedure](../../../../docs/pre-adoption-publication.md).
 
 ## Remaining gates
 

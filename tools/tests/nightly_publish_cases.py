@@ -375,7 +375,8 @@ class TestNightlyPublication(unittest.TestCase):
         class HandoffTransport:
             api = HandoffApi()
 
-            def helpers(_self, tag, directory):
+            def helpers(_self, tag, directory, *, token):
+                self.assertEqual(token, "inert")
                 return self.helpers
         directory = Path(self.temp.name) / "handoff"
         controller.initialize("publish-ready", directory, project, expected, {"NIGHTLY_ARTIFACT_ID": "123"},

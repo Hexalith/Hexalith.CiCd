@@ -582,14 +582,21 @@ class Transport(delivery.Transport):
         self.budget = budget or Budget()
         self.api = api or API(self.budget)
 
-    def helpers(self, tag, destination):
-        """Authenticate release/tag/source, then import only committed tagged helpers."""
-        git, exported = self.builds(tag, destination)
+    def helpers(self, tag, destination, *, token):
+        """Verify Builds over authenticated REST and import its tagged helpers."""
+        if not token:
+            raise NightlyError("nightly job token unavailable for trusted Builds verification")
+        delivery.remember_token(token)
+        self.builds_token = token
+        try:
+            git, exported = self.builds(tag, destination)
+        finally:
+            del self.builds_token
         source = git.resolve("refs/tags/" + tag + "^{commit}")
         return self._helpers(git, source, exported)
 
     def cached_helpers(self, tag, source, destination):
-        """Reuse this job's authenticated objects, never another anonymous lookup."""
+        """Reuse this job's verified objects without another REST lookup."""
         if not isinstance(tag, str) or not TAG.fullmatch(tag):
             raise NightlyError("cached Builds tag identity malformed")
         source = sha(source)

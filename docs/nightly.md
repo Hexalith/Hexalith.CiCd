@@ -86,6 +86,9 @@ Upstream artifact IDs are carried through job outputs; downloads authenticate
 the current nightly run, attempt, source, phase, registry and exact JSON member.
 ZIPs are bounded and read in memory. Tokens and keys never enter these files.
 Missing outputs or downloads produce explicit orchestration failures.
+Dispatch, wait and publish-ready use their existing job token for the Builds
+release and tag REST checks during initialization. Git object fetches are
+credential-free and must match the verified tag and source identities.
 Terminal JSON API request failures retain bounded, credential-redacted response
 messages, request IDs, rate-limit/required-permission headers, attempt counts
 and anonymous/scoped authentication context. Clipped fields and unreadable
@@ -98,6 +101,12 @@ Each job seeds a conservative failure document before checkout, outside its
 cleanup directory, so unavailable controllers still leave a failed artifact
 and summary. Normal initialization replaces that seed with the committed
 registry and available observations.
+
+The separate Evidence workflow checks pull requests and eligible pushes to
+`main`. Nightly's pre-dispatch and post-bump checks observe Delivery.
+GitHub suppresses push workflows for job-token writes. The nightly bump can
+update only the Builds pin and existing rendered files, and keepalive is an
+empty commit.
 
 Open the nightly Actions summary for every target's verdict and available run
 link, or download `nightly.json` for the same observations and short reasons.

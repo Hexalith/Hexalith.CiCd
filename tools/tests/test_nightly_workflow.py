@@ -89,7 +89,7 @@ class Workflow(Expressions):
         self.failed, self.cancelled = False, False
         self.mints, self.uploads, self.commands, self.results, self.post_actions = [], [], [], {}, []
         self.tokens, self.elapsed = {}, {}
-        # Only the job's own GITHUB_TOKEN exists before a mint; it reads CiCd handoffs.
+        # The job's own GITHUB_TOKEN reads CiCd handoffs and public Builds proofs.
         self.w.config["token_scopes"] = {"inert-handoff-token": ["Hexalith.CiCd"]}
 
     def execute(self):
@@ -211,6 +211,8 @@ class Workflow(Expressions):
                     operation = command[3]
                     env = base | {key: str(self.expand(value)).lower() if isinstance(self.expand(value), bool) else self.expand(value)
                                   for key, value in step.get("env", {}).items()}
+                    if env.get("HANDOFF_TOKEN") != (self.context["github"]["token"] if operation == "initialize" else None):
+                        raise AssertionError("job token must be limited to nightly initialization")
                     self.w.outputs.unlink(missing_ok=True)
                     args = command[4:]
                     slot = int(args[args.index("--slot") + 1]) if "--slot" in args else None
@@ -354,9 +356,12 @@ class NightlyWorkflowTests(unittest.TestCase):
         self.assertTrue(all(item["publication"] == "published" for item in report["targets"]))
         # Every job authenticates the immutable release/tag/source once. None
         # of the 18 publication slots or polling slices reacquires it.
-        anonymous = [item for item in requests if item["authorization"] is None]
-        self.assertEqual(len(anonymous), 12)
-        self.assertEqual(sum(item["path"].endswith("/releases/tags/v5.1.0") for item in anonymous), 3)
+        self.assertTrue(all(item["authorization"] for item in requests))
+        builds_reads = [item for item in requests if item["authorization"] == "Bearer inert-handoff-token"
+                        and item["path"].startswith("/repos/Hexalith/Hexalith.Builds/")]
+        self.assertEqual(len(builds_reads), 12)
+        self.assertTrue(all(item["method"] == "GET" for item in builds_reads))
+        self.assertEqual(sum(item["path"].endswith("/releases/tags/v5.1.0") for item in builds_reads), 3)
 
     def test_mint_failure_and_failed_upstream_still_collect_and_finalize(self):
         workflow = Workflow(self.fixture(), mint_fail=("Hexalith.Alpha",))

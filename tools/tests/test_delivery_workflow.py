@@ -621,42 +621,42 @@ class WorkflowBoundaryTests(unittest.TestCase):
 
 
 class EvidenceWorkflowTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.document = yaml.safe_load((ROOT / ".github/workflows/evidence.yml").read_bytes())
+        cls.evidence = cls.document["jobs"]["evidence"]
+
     def test_evidence_runs_only_on_pull_requests_and_main_pushes_with_exact_event_inputs(self):
+        self.assertEqual({"push": {"branches": ["main"]}, "pull_request": None},
+                         self.document.get("on", self.document.get(True)))
         fixture = SimpleNamespace(root=ROOT, sha="a" * 40)
-        for event, ref, runs in (("pull_request", "refs/pull/1/merge", True),
-                                 ("push", "refs/heads/main", True),
-                                 ("schedule", "refs/heads/main", False),
-                                 ("workflow_dispatch", "refs/heads/main", False)):
+        for event, ref in (("pull_request", "refs/pull/1/merge"), ("push", "refs/heads/main")):
             with self.subTest(event=event):
-                workflow = Workflow(fixture, event=event, ref=ref, validation="failure", job="evidence")
-                self.assertEqual(runs, workflow.condition(workflow.job["if"]))
-                if not runs:
-                    self.assertEqual("skipped", workflow.execute())
-                    self.assertEqual([], workflow.actions + workflow.commands)
-                    continue
+                workflow = Workflow(fixture, event=event, ref=ref)
                 pr_base = "b" * 40 if event == "pull_request" else ""
                 push_before = "c" * 40 if event == "push" else ""
                 workflow.context["github"]["event"] = {"pull_request": {"base": {"sha": pr_base}},
                                                           "before": push_before}
-                step = workflow.job["steps"][1]
+                step = self.evidence["steps"][1]
                 self.assertEqual({"EVIDENCE_PR_BASE": pr_base, "EVIDENCE_PUSH_BEFORE": push_before},
                                  {key: workflow.expand(value) for key, value in step["env"].items()})
                 self.assertEqual(["python3", "-I", "tools/check_evidence.py"], shlex.split(step["run"]))
-        feature = Workflow(fixture, event="push", ref="refs/heads/feature", job="evidence")
-        self.assertEqual("not-triggered", feature.execute())
 
     def test_evidence_read_only_checkout_and_independence_from_the_writer(self):
-        workflow = Workflow(SimpleNamespace(root=ROOT, sha="a" * 40), job="evidence")
-        evidence = workflow.job
-        self.assertEqual({"contents": "read"}, evidence["permissions"])
-        self.assertEqual({"if", "runs-on", "timeout-minutes", "permissions", "steps"}, set(evidence))
-        checkout, check = evidence["steps"]
+        workflow = Workflow(SimpleNamespace(root=ROOT, sha="a" * 40))
+        self.assertEqual({"evidence"}, set(self.document["jobs"]))
+        self.assertEqual({}, self.document["permissions"])
+        self.assertNotIn("concurrency", self.document)
+        self.assertEqual({"contents": "read"}, self.evidence["permissions"])
+        self.assertEqual({"runs-on", "timeout-minutes", "permissions", "steps"}, set(self.evidence))
+        checkout, check = self.evidence["steps"]
         self.assertEqual({"name", "uses", "with"}, set(checkout))
         self.assertEqual(workflow.document["jobs"]["validate"]["steps"][0]["uses"], checkout["uses"])
         self.assertEqual({"fetch-depth": 1, "fetch-tags": False, "sparse-checkout": "/tools/check_evidence.py",
                           "sparse-checkout-cone-mode": False, "submodules": False, "persist-credentials": False},
                          checkout["with"])
         self.assertEqual({"name", "env", "run"}, set(check))
+        self.assertEqual({"validate", "deliver"}, set(workflow.document["jobs"]))
         self.assertEqual("validate", workflow.document["jobs"]["deliver"]["needs"])
         self.assertNotIn("needs", workflow.document["jobs"]["validate"])
 

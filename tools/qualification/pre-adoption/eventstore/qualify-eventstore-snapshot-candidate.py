@@ -22,7 +22,7 @@ import tarfile
 
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[4]
+ROOT = HERE.parents[3]
 MODULE = "Hexalith.EventStore"
 CI_PROFILE = "/home/administrator/.config/gh-cicd-agent"
 MODULE_TOKEN_FILE = Path("/home/administrator/.config/gh-module-agent/token")
@@ -169,7 +169,12 @@ def main() -> int:
               "builds_tag": args.builds_tag, "builds_sha": args.builds_sha, "result": "failed",
               "started_at": datetime.now(timezone.utc).isoformat(), "push_performed": False,
               "nested_submodule_initialization": False, "azure_executed": False, "operations": []}
-    report["qualificationSource"] = {"derivedFrom": "../20/pre-adoption-verify.py", "sourceSha256": "5786daecdec77e924d5b79586b0367f976fcc9ce9cf68f454d1132a5414db763", "scope": "exact17 new product paths only; source ownership, released package-mode checks and offline product obligations retained"}
+    report["qualificationSource"] = {
+        "derivedFrom": "_bmad-output/specs/spec-cicd/evidence/20/pre-adoption-verify.py",
+        "sourceRevision": "166350673f5eb57555ed4a1aaf501f8828cfa32d",
+        "sourceSha256": "5786daecdec77e924d5b79586b0367f976fcc9ce9cf68f454d1132a5414db763",
+        "scope": "17 exact new product paths with source ownership, released package-mode and offline product checks",
+    }
     args.report = args.report.resolve()
 
     def save():
@@ -310,7 +315,7 @@ def main() -> int:
         git(module, "remote", "set-url", "origin", git(args.module, "config", "--get", "remote.origin.url"))
         # Export only already available direct repositories, never initialize
         # the module's nested gitlinks. Missing source is a blocking prerequisite.
-        plan = json.loads((HERE.parent / "20" / "planned-configuration.json").read_text())
+        plan = json.loads((HERE / "fixtures" / "planned-configuration.json").read_text())
         configuration, projection = preparation_stage_configuration(plan, args.builds_tag, command, module)
         ci_pipeline.validate_config(configuration, repository="Hexalith/" + MODULE)
         stage_configuration = workspace / "eventstore-preparation-stages-1-3.json"

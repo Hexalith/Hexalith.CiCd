@@ -1,6 +1,6 @@
 """Read-only story-23 inventory; imports never contact GitHub.
 
-Run only during an authorized remote phase, with --output naming new evidence.
+Run only during an authorized remote phase, with --output naming a new file.
 Collections follow Link headers; refused/malformed pages remain incomplete.
 """
 from __future__ import annotations
@@ -15,7 +15,7 @@ import subprocess
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[4]
+ROOT = HERE.parents[3]
 PREFIX = 'repos/Hexalith/Hexalith.Tenants'
 TENANTS_REPOSITORY_ID = 1174267565
 MAINTAINER_PROFILE = '/home/administrator/.config/gh'

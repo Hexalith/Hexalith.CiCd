@@ -860,8 +860,8 @@ class RuntimeTests(unittest.TestCase):
                 return result
             destination = Path(temporary) / "trusted"
             with mock.patch.object(rt.delivery, "environment", environment):
-                transport = fixture_transport(rt, work.config)(rt.Budget())
-                acquired = transport.helpers(TAG, destination)
+                transport = fixture_transport(rt, work.config)(rt.Budget(token_epoch=time.time()))
+                acquired = transport.helpers(TAG, destination, token="inert-builds-read-token")
                 calls = transport.api.calls
                 # Mutable exported bytes are replaced by committed objects.
                 (acquired.root / "Github/lib/release_outcome.py").write_text("raise RuntimeError('mutable export')\n")
@@ -891,15 +891,29 @@ class RuntimeTests(unittest.TestCase):
                 result[f"GIT_CONFIG_VALUE_{i}"] = "always"
                 return result
             with mock.patch.object(rt.delivery, "environment", environment):
-                transport = fixture_transport(rt, work.config)(rt.Budget())
-                helpers = transport.helpers(TAG, Path(temporary) / "trusted")
+                transport = fixture_transport(rt, work.config)(rt.Budget(token_epoch=time.time()))
+                original_run = rt.Git.run
+
+                def credential_free(instance, *args, **kwargs):
+                    self.assertFalse(kwargs.get("token"))
+                    return original_run(instance, *args, **kwargs)
+
+                with mock.patch.object(rt.Git, "run", credential_free):
+                    helpers = transport.helpers(TAG, Path(temporary) / "trusted", token="inert-builds-read-token")
+                requests = [json.loads(line) for line in Path(work.config["requests"]).read_text().splitlines()]
+                self.assertEqual(len(requests), 4)
+                for request in requests:
+                    self.assertEqual(request["method"], "GET")
+                    self.assertTrue(request["path"].startswith("/repos/Hexalith/Hexalith.Builds/"))
+                    self.assertEqual(request["authorization"], "Bearer inert-builds-read-token")
+                self.assertFalse(hasattr(transport, "builds_token"))
                 self.assertEqual(helpers.source, RELEASE)
                 self.assertTrue(str(helpers.outcome.__file__).startswith(str(Path(temporary) / "trusted")))
                 self.assertEqual(helpers.outcome.validate_outcome({"schema": "hexalith.release-outcome.v1", "sha": "a" * 40,
                                                                   "outcome": "disabled"})["outcome"], "disabled")
                 work.config["bad_release"] = True
                 with self.assertRaisesRegex(rt.NightlyError, "immutable"):
-                    fixture_transport(rt, work.config)(rt.Budget()).helpers(TAG, Path(temporary) / "refused")
+                    transport.helpers(TAG, Path(temporary) / "refused", token="inert-builds-read-token")
                 self.assertFalse((Path(temporary) / "refused/source").exists())
                 # Missing release capabilities fail before any imported top-level code.
                 root = Path(temporary) / "incomplete"
@@ -909,6 +923,21 @@ class RuntimeTests(unittest.TestCase):
                 with self.assertRaisesRegex(rt.NightlyError, "capability"):
                     rt.load_helpers(root)
                 self.assertFalse(marker.exists())
+
+    def test_trusted_acquisition_never_falls_back_to_anonymous_reads(self):
+        api, opener, _ = self.api([(403, {})])
+        transport = rt.Transport(api.budget, api)
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "builds"
+            with self.assertRaisesRegex(rt.NightlyError, "job token unavailable"):
+                transport.helpers(TAG, destination, token="")
+            self.assertEqual([], opener.requests)
+            with self.assertRaisesRegex(rt.NightlyError, "HTTP 403"):
+                transport.helpers(TAG, destination, token="inert-builds-read-token")
+            self.assertFalse(destination.exists())
+        self.assertEqual(1, len(opener.requests))
+        self.assertEqual(opener.requests[0][0].get_header("Authorization"), "Bearer inert-builds-read-token")
+        self.assertFalse(hasattr(transport, "builds_token"))
 
 
 if __name__ == "__main__":

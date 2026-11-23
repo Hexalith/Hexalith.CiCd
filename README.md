@@ -11,6 +11,11 @@ Start with Bash, Git, curl and the usual Linux command-line utilities. Bootstrap
 needs HTTPS access to Astral, GitHub (including release downloads), PyPI and its
 package files. No GitHub credential or product module checkout is needed here.
 
+Use Git 2.41 or later for Builds perimeter repair. It uses `GIT_ATTR_SOURCE`
+to hash repaired entries with attributes from the selected index. Older Git
+can pick up a conversion filter from a dirty worktree during repair.
+[Git 2.41 release notes](https://github.com/git/git/blob/v2.41.0/Documentation/RelNotes/2.41.0.txt)
+
 Use the installed `run-with-temp` wrapper when available. On a new machine,
 define this Bash function in the current shell; it creates private scratch,
 preserves the command's exit status and removes scratch on exit. Run foreground

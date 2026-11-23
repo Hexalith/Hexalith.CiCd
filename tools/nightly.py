@@ -152,7 +152,8 @@ def initialize(phase, directory, project, expected, environment, transport, toke
             if not rt.TAG.fullmatch(tag):
                 raise rt.NightlyError("builds-version is not an exact stable tag")
             state["builds"]["tag"] = tag
-        helpers = transport.helpers(state["builds"]["tag"], directory / "trusted")
+        helpers = transport.helpers(state["builds"]["tag"], directory / "trusted",
+                                    token=tokens.get("HANDOFF_TOKEN", ""))
         if state["builds"]["sha"] and state["builds"]["sha"] != helpers.source:
             raise rt.NightlyError("trusted Builds source changed across nightly handoff")
         state["builds"]["sha"] = helpers.source

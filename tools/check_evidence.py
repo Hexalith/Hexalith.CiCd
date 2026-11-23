@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Enforce the evidence policy for committed changes in a Delivery event."""
+"""Enforce the evidence policy for committed changes in a PR or main push."""
 from __future__ import annotations
 
 import os
