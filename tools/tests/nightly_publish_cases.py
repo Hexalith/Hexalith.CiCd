@@ -405,21 +405,23 @@ class TestNightlyPublication(unittest.TestCase):
         self.assertIn("correlated completion run changed", fixture.run["reason"])
         self.assertEqual(fixture.writes, [])
 
-    def test_replaced_asset_after_finalizer_read_prevents_patch(self):
-        fixture = self.fixture
-        fixture.set_original_inventory(("Fixture.Package",))
-        read = fixture.publication_bytes
+    def test_changed_asset_metadata_after_finalizer_read_prevents_patch(self):
+        for field, value in (("id", 91), ("size", 1), ("digest", "sha256:" + "1" * 64)):
+            with self.subTest(field=field), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
+                fixture = PublicationFixture(Path(directory), self.helpers)
+                fixture.set_original_inventory(("Fixture.Package",))
+                read = fixture.publication_bytes
 
-        def replace(*args):
-            data = read(*args)
-            if fixture.requests.count("releases/assets/90") == 2:
-                fixture.assets[0]["id"] = 91
-            return data
+                def replace(*args):
+                    data = read(*args)
+                    if fixture.requests.count("releases/assets/90") == 2:
+                        fixture.assets[0][field] = value
+                    return data
 
-        fixture.publication_bytes = replace
-        self.assertFalse(fixture.publish(), fixture.run)
-        self.assertIn("asset changed before publication", fixture.run["reason"])
-        self.assertEqual(fixture.writes, [])
+                fixture.publication_bytes = replace
+                self.assertFalse(fixture.publish(), fixture.run)
+                self.assertIn("asset changed before publication", fixture.run["reason"])
+                self.assertEqual(fixture.writes, [])
 
     def test_late_draft_or_tag_change_prevents_patch(self):
         for change in ("draft", "tag"):

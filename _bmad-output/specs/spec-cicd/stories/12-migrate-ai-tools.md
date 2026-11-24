@@ -32,6 +32,20 @@ deferred:
     location: >-
       tools/check_app_inventory.py:253
     severity: medium
+  - summary: >-
+      Align the shared publication slot with the supported original archive sizes.
+    evidence: |-
+      The pre-existing 60-second target slot includes Git acquisition, archive authentication and finalization, so it caps the new downloader below its own 120-second ceiling. The hosted Builds archive completed within the shared slot.
+    location: >-
+      tools/nightly.py:499
+    severity: medium
+  - summary: >-
+      Reserve time to verify the immutable release after sending the publication write.
+    evidence: |-
+      The pre-existing request budget can permit a PATCH when only one second remains. The write can finish while the required release, asset and tag readbacks time out.
+    location: >-
+      tools/nightly_publish.py:54
+    severity: medium
 ---
 
 <intent-contract>
@@ -130,6 +144,12 @@ Under the approved `solution: none` scope, keep the main-only `hexalith-release`
 - Delivery `45366350850` attempt 1 passed global validation, advanced `delivered/Hexalith.AI.Tools` to `9405c50501e7a587b677fa890700e12363f00b66`, and verified the already matching `v6.7.0` perimeter. Authenticated artifact `14910410346` matched SHA-256 `268882ae16f58e1f3c210bdb5a07c6340040671a063d86c64fdb706a61064b0b` and reported no AI.Tools reasons. With Delivery and Nightly idle, the CiCd profile dispatched rollout Nightly `45371422912` attempt 1 on exact `main` at `2026-11-24T10:05:38Z` with `qualify-bump` false. [Delivery artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45366350850/artifacts/14910410346) · [Rollout Nightly](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45371422912)
 - Rollout dispatch artifact `14909860627` (SHA-256 `01cad527d5a743df1a88d250fa23599b11bc06a66cfdaf7eeaf4b4aa40ac5a1e`) bound Builds run `45371889178` to `bf8a28b4bbcec619e8d9764d335f786f2bafb69e` and AI.Tools run `45371830783` to its then-current `main` at `01e64857ab73bde74be137c675a8376c4da8cbee`. AI.Tools had advanced only in three foreign skill files from `d299ce98bfb60189a2f724d573e74bd25f7cf88d`, and exact-source CI passed. This rollout still dispatched on Builds `v6.7.0`. [Dispatch artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45371422912/artifacts/14909860627) · [Builds release run](https://github.com/Hexalith/Hexalith.Builds/actions/runs/45371889178) · [AI.Tools CI](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/45371136090)
 - Both exact target attempts succeeded. Builds passed its C# and Python release CodeQL jobs and returned `ready` for unchanged draft `456476166` and original source `5f72ffe5eea5b65729602d6c10e5c015d553a1b6` (outcome artifact `14909397787`, SHA-256 `dd5c708994b9cf76d78462c00a968fba375b7fc2249c56c6686320c41759fb19`). AI.Tools returned `published` for `v1.0.1` on exact rollout dispatch SHA `01e64857ab73bde74be137c675a8376c4da8cbee` (outcome artifact `14909253098`, SHA-256 `bc62b5c465441528b163ab9f980944f2cf0b5a1b54e4093673287267e7a52600`). [Builds outcome](https://github.com/Hexalith/Hexalith.Builds/actions/runs/45371889178/artifacts/14909397787) · [AI.Tools outcome](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/45371830783/artifacts/14909253098)
+- The authenticated final archive `14911542048` from Nightly `45371422912` matched SHA-256 `602572b8a77cfadbcfc87c2b7bd0ffba97c6c58cd3f51e2cea3fa76e72288521`. Its Builds row recorded `ready` then verified publication. GitHub confirms immutable `v6.8.0` retained release ID `456476166` and the same 48,078-byte asset `786379182` with the recorded digest. The tag points to the older original source `5f72ffe5eea5b65729602d6c10e5c015d553a1b6`, tree `70cf883e0ffb70cc252e82025755ac9570d5eb6a`. Git ancestry confirms both first-release fixes and the draft identity repair are included. Three sibling release failures affected the aggregate nightly conclusion. [Nightly artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45371422912/artifacts/14911542048) · [Immutable Builds release](https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.8.0)
+- The bump candidate passed shared global checks. The writer refused to push when CiCd `main` advanced beyond candidate base `9405c50501e7a587b677fa890700e12363f00b66`. Its authenticated report archive `14912786728` matched SHA-256 `aefb0648a63e420b6f463468ed195784261f3f5aa18b71f3506d3b1e613aa9d0`. With Nightly and Delivery idle, the CiCd profile dispatched rollout retry `45379385705` on `b57b3464a260b779bf04d13c8ff3b75955711d8b` at `2026-11-24T10:55:44Z` with `qualify-bump` false. Its dispatch archive `14913072131` matched SHA-256 `d51bf8c12588793e10ffdd3a30aa6515dc395ec94512104eaf67b8f0051046a2` and selected the then-delivered `v6.7.0` pin. [Bump writer report](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45371422912/artifacts/14912786728) · [Rollout retry](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45379385705)
+- Fresh maintainer readback at `2026-11-24T10:57:32Z` confirmed both Apps are active with saved `all` selection. The release environment permits only `main`, GitHub publishing and immutable releases are enabled, and the repository and release environment have no secrets. Both organization registry pull secrets are granted to Actions and Dependabot. The organization `HEXALITH_NUGET_USER` variable is granted to Actions. The compact readback SHA-256 is `bd80f541c61227693386907639f6d4048da69e731345e49d4b855f3179ab05ef`. [Connector settings](https://github.com/organizations/Hexalith/settings/installations/77847816) · [Release environment](https://github.com/Hexalith/Hexalith.AI.Tools/settings/environments)
+- Reauthenticated adoption archive `14309624943` against its recorded GitHub digest. Replayed the exact adoption and `v6.7.0` delivery from their respective module parents and reproduced both complete trees, including foreign content. The adoption used Builds `v6.1.0` at `a1e0c310b1f1a50d78e6132890fae6bcba769f6d`. Both manifests select `solution: none`. Replay summary SHA-256 `0101ddbf3783c441718c8aa2ef05b065f59445741be6fd336425ac600329243e`. The standalone checker and hosted CI passed on adopted `main` `01e64857ab73bde74be137c675a8376c4da8cbee` with the old pin. Standalone output SHA-256 `7abbc37921cb15ec007c157b0036da245fd917d2cbecf7848e7c2f3a431c45ee`. [Adoption artifact](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44040325762/artifacts/14309624943) · [Hosted CI](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/45371136090)
+- The current acceptance reader reran against Nightly `45293737629` and authenticated older-source publication, the original artifact and immutable release asset. It confirmed the empty CodeQL language set and returned exit 1 solely for missing exact-head duplicate scan coverage. The report SHA-256 is `3e91117a14cecb1cca65f57f3d155c28d59d59fe39e385b12aec61168422d379`. [Nightly](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45293737629) · [Original-source AI.Tools release](https://github.com/Hexalith/Hexalith.AI.Tools/releases/tag/v1.0.0)
+- The locked controller, runtime, acceptance, App inventory, Nightly workflow, Delivery workflow and validation suites passed with 66, 44, 47, 21, 34, 26 and 78 tests respectively. Renderer verification passed. The focused late asset metadata and ZIP central directory checks passed after the verification coverage changes. Their log SHA-256 values are `dc3665474c4bede866bcbd9ef6b770dbf4c43446a8f5e55d78980741e09a44fb` and `ab529a6d83a0e9500496558f134c1e13a7781fa042ffbaf89e1a9dcafae11a36`.
 
 ## Review Triage Log
 
@@ -198,3 +218,26 @@ The intent audit found that this re-drive refreshes the policy for the already-r
   - `[high]` `[patch]` The verification reviewer reproduced a PATCH after asset replacement in the final run GET. The same replacement now fails at the immediately following metadata check.
 
 The intent audit identifies the nonempty Builds handoff as necessary for rollout. The local verification exercises the publication boundary. The hosted pin delivery and fresh AI.Tools acceptance remain the completion evidence.
+
+### 2026-11-24 — Rollout verification review
+
+- Verdicts cover 16 findings. High 5, medium 7, low 2, false 2, maybe-false 0.
+- Findings
+  - `[medium]` `[defer]` The shared per-target budget can expire before the archive downloader's own ceiling. The pre-existing slot cap also covers Git reads and verification. The authenticated Builds archive fit within the cap on the hosted run.
+  - `[medium]` `[defer]` A write begun at the end of the slot can leave too little time for publication readback. This is a pre-existing budgeting issue. The existing failure verdict applies when readback cannot finish.
+  - `[high]` `[bad_spec]` The original draft can change during the final completion lookup and reach PATCH before the post-write check reports failure. Existing sequential reads leave a window between the draft check and write.
+  - `[high]` `[bad_spec]` A rerun can start during the asset lookup after the final completion check. The fixture published and recorded success for the superseded attempt.
+  - `[high]` `[bad_spec]` The correlated outcome does not carry the original producer or archive identity. The publisher derives both from the mutable draft, so the outcome alone does not authenticate that earlier inventory.
+  - `[medium]` `[bad_spec]` The streamed manifest path can accept a package ID with no ZIP member or path. The pinned inventory validator refuses the same fixture. Binding the exact target-validated original artifact is required to rely on the target's validation.
+  - `[false]` `[reject]` Central publication must compare every package payload digest against the build archive. The frozen handoff assigns package publishing and verification to the target and requires canonical asset and exact package-ID checks centrally. The open provenance gap concerns connecting that asset and archive to the exact target attempt.
+  - `[low]` `[reject]` A clean early EOF fails a streamed artifact read without retry. The reported size is authenticated and a short read fails closed. There was no short read on the rollout.
+  - `[low]` `[reject]` The helper loader could name the publication contract functions separately. Current versions export the contract and a missing interface fails the publication row before a write. The selected immutable release and hosted producer exercised the interface.
+  - `[medium]` `[defer]` Carried. Removing the publisher entry can bypass its App inventory hash check. The production policy retains the reviewed entry and exact digest.
+  - `[false]` `[reject]` The exact-head acceptance reader has to reconstruct the central asset proof. The authenticated nightly artifact supplies that attempt's required publication verdict. The original-source proof remains required for older-source outcomes.
+  - `[high]` `[bad_spec]` An attempt change during the final asset lookup escaped the last run read. The fixture returned success after writing for the earlier attempt.
+  - `[medium]` `[bad_spec]` A manifest package with no archive member reached central PATCH in a fixture. The pinned target archive validator rejected those same bytes.
+  - `[high]` `[bad_spec]` The exact attempt identifies a draft and source but omits authenticated original inventory. The mutable trailers and asset cannot supply proof of what the earlier attempt authenticated.
+  - `[medium]` `[patch]` Extended pre-PATCH coverage to verify that changes to the asset size or digest under the same ID also leave zero writes.
+  - `[medium]` `[patch]` The archive metadata cap lacked a direct regression check. Added a valid ZIP with an oversized central directory and verified refusal.
+
+The intent audit confirmed that the latest recorded human decision governs the Story 12 connector gate. It also found that the disk-backed archive reader uses private scratch while canonical AD-7 calls for bounded in-memory reads in App jobs.

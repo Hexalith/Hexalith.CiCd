@@ -879,6 +879,10 @@ class RuntimeTests(unittest.TestCase):
                     with self.assertRaisesRegex(rt.NightlyError, reason):
                         api.release_manifest("Hexalith.Alpha", metadata(8, "release", wire, 9, "a" * 40),
                                              "inert", scratch)
+            with mock.patch.object(rt, "MAX_RELEASE_ZIP_INDEX", 64):
+                api, _, _ = self.api([payload])
+                with self.assertRaisesRegex(rt.NightlyError, "ZIP metadata exceeds size limit"):
+                    api.release_manifest("Hexalith.Alpha", info, "inert", scratch)
             self.assertEqual(list(Path(scratch).iterdir()), [])
 
     def test_closed_state_is_bound_to_registry_run_attempt_source_and_phase(self):
