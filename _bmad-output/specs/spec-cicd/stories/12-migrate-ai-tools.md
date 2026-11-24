@@ -2,11 +2,11 @@
 title: 'Migrate AI.Tools'
 type: 'chore'
 created: '2026-11-23'
-status: in-review
+status: done
 baseline_revision: 4838d334a8811eb69e24fd1f86675157f75927ff
 implementation_repository: 'references/Hexalith.AI.Tools'
 implementation_baseline_revision: '91fd549794c72e99d22b69d33ff24e403aede938'
-review_loop_iteration: 0
+review_loop_iteration: 1
 followup_review_recommended: false
 context: []
 warnings: [oversized]
@@ -75,6 +75,16 @@ Under the approved `solution: none` scope, keep the main-only `hexalith-release`
 
 </intent-contract>
 
+## Maintainer acceptance — 2026-11-24
+
+The maintainer accepted the AI.Tools migration on the verified delivery of
+immutable Builds `v6.8.1` and the passing AI.Tools verdict in Nightly
+`45392867520`. Its exact release attempt reported `nothing`, and its duplicate
+scan passed at the dispatch SHA. The recorded Codex connector readback also
+passed. A read-only replay at closure returned exit 0 and reproduced the
+recorded receipt and full verdict digests. This decision moves the remaining
+shared publication work from the original re-drive scope to Story 29-2. [Nightly](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45392867520) · [Story 29-2](29-2-harden-nightly-ready-publication.md)
+
 ## Code Map
 
 - `references/Hexalith.AI.Tools` is a documentation and skills repository. The published preparation removed the private commitlint npm package and lockfile. Its `commitlint.config.mjs` blob `0616fb937bb77b75355c94334276f9aa337b7c1f` and mode `100644` survived preparation and were removed by delivery. The current inventory has no `.husky/`, custom actions, workflow YAML tests, package or container targets, or NuGet waivers to move to `Props/`.
@@ -90,7 +100,7 @@ Under the approved `solution: none` scope, keep the main-only `hexalith-release`
 - [x] Repair the GitHub-only `publish-ready` handoff and complete-mode nightly acceptance. Verify the package-free ready path and older-source proof, including refusal with missing or conflicting publication evidence, unproven ancestry or a mismatched release or tag. Record the repaired source revisions.
 - [x] Record a fresh authenticated readback of the Codex connector's approved `all` selection.
 - [x] Repair the central `publish-ready` handoff for nonempty inventories. Verify successful finalization with existing evidence and refusal before the GitHub publish PATCH when asset, draft, original artifact, package inventory or correlated attempt checks fail.
-- [ ] Record the immutable Builds tag and full source commit containing the required fixes, its delivery to AI.Tools, and the authenticated acceptance receipt for a fresh nightly that dispatched AI.Tools against that pin after the shared repairs landed.
+- [x] Record immutable Builds `v6.8.1` and its full source commit, its delivery to AI.Tools, and the authenticated acceptance receipt for the fresh nightly that dispatched AI.Tools against that pin.
 
 ### Acceptance Criteria
 
@@ -98,10 +108,17 @@ Under the approved `solution: none` scope, keep the main-only `hexalith-release`
 - Given the existing App adoption and an authenticated `solution: none` source inventory with zero package and container targets, when the re-drive checks AD-21, then verify the main-only release environment, enabled GitHub publishing, immutable releases and applicable organization grants. Treat module Zot push credentials, a scoped nuget.org publishing policy and their associated legacy publishing revocations as inapplicable for this inventory.
 - Given adopted `main`, when the CI workflow and standalone Builds checker run for it, then both pass with `solution: none`.
 - Given the saved Codex connector selection, when authenticated organization installation metadata or a fresh settings reload identifies Hexalith installation `77847816`, then its saved repository selection is `all`.
+- Given the verified immutable Builds pin delivered to AI.Tools, when a fresh eligible central nightly dispatches AI.Tools against that pin, then the authenticated acceptance receipt records a successful release or an authentic nothing-to-release outcome and passing associated rows, including the duplicate scan for the exact AI.Tools dispatch SHA.
+
+### Original shared publication criteria
+
+These criteria document the original re-drive and its verification below. The
+maintainer acceptance assigns the remaining shared findings and the final
+concurrency guarantee to [Story 29-2](29-2-harden-nightly-ready-publication.md).
+
 - Given a successful package-free `ready` outcome and its verified empty publication asset, when central `publish-ready` completes the original draft, then the immutable release retains the same draft identity and its version tag resolves to the original source. Missing or conflicting proof fails the row.
 - Given a successful `ready` outcome from the exact correlated attempt for a package-bearing or container-only draft, when central `publish-ready` verifies its existing publication asset and the original artifact identity, then it completes the same draft with the existing finalizer and verifies the immutable release, retained asset and original-source tag. Missing, duplicate, malformed, replaced or mismatched publication evidence fails the row before any publish PATCH. Failure to verify the immutable result also fails the row.
 - Given an older release source, when the acceptance reader authenticates complete-mode provenance and verifies publication at the original SHA, then the source check passes while the dispatch-run, CodeQL and scan checks still use the exact dispatch head. An older source without that proof fails the row.
-- Given the repaired central pipeline and the verified immutable Builds pin delivered to AI.Tools, when a fresh eligible central nightly dispatches AI.Tools against that pin, then the authenticated acceptance receipt records a successful release or an authentic nothing-to-release outcome and passing associated rows, including the duplicate scan for the exact AI.Tools dispatch SHA.
 
 ## Verification
 
@@ -161,6 +178,9 @@ Under the approved `solution: none` scope, keep the main-only `hexalith-release`
 - After Delivery and Nightly were idle, the CiCd profile started manual Nightly `45392867520` attempt 1 with `qualify-bump` false on `191369dfdd7b385856f40e4d373ce872b653ccf8` at `2026-11-24T12:22:24Z`. Authenticated dispatch archive `14918698840` matched SHA-256 `76ad42df750423f5dc2c700efefeb926758f53d43403e9cf673e02e62aa00511` and selected `v6.8.1` at `bf8a28b4bbcec619e8d9764d335f786f2bafb69e`. Its AI.Tools row was eligible and dispatched release run `45393389185` at `44140342fcd7ba9cbdcf7d989ff7c95aa75209d9`. After confirming that module `main` still matched the dispatch, the CiCd profile started independent scan `45393501667`. [Dispatch archive](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45392867520/artifacts/14918698840) · [AI.Tools release run](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/45393389185) · [Duplicate scan](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45393501667)
 - Independent scan `45393501667` attempt 1 authenticated `hexalith-nightly-scan-1` archive `14920691739` with SHA-256 `8a798f6bbde2bbca371ad09cf84ccb95c025e5b469d5fa688dbbd31b80cefd65`. The AI.Tools row passed for exact dispatch SHA `44140342fcd7ba9cbdcf7d989ff7c95aa75209d9` with zero custom action files, zero errors and zero associated duplicates. The report had no run-level errors. Other modules' coverage errors explain the overall scan failure. [Deciding scan archive](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45393501667/artifacts/14920691739)
 - AI.Tools release run `45393389185` attempt 1 succeeded on exact dispatch SHA `44140342fcd7ba9cbdcf7d989ff7c95aa75209d9`. Its authenticated `hexalith-release-outcome` archive `14920423546`, SHA-256 `6d157747ce93ad9ec38703d68ee34265cbf05315c3574d43bfb763fbdc255135`, reports `nothing` on that SHA. [Target outcome archive](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/45393389185/artifacts/14920423546)
+- `python3 tools/nightly_acceptance.py --run 45392867520 --module Hexalith.AI.Tools --receipt "$TMPDIR/receipt.json"` exited 0 using the CiCd profile and reader blob `a0e8b452c35a05af0e09ee4919c2dcc8836a9053`. The reader authenticated final archive `hexalith-nightly-nightly-1` (`14922634992`, SHA-256 `1f3945de26d59fced064e5d55f58514892e23be1232f4e61a2d882086db8b33f`) and the exact-head scan archive above. AI.Tools passed with an empty CodeQL language set, `nothing`, and no reasons. Four sibling release failures caused the aggregate nightly failure. The receipt SHA-256 is `0412b990eb46e70e130b555832cebb04d9c84f37148a7da06929f0a5269704d2` and the full verdict SHA-256 is `a1cd1d50619cce296028f91148d34e33bce34a97c86e72705cba835a6dea7508`. [Nightly](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45392867520) · [Final archive](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45392867520/artifacts/14922634992)
+- Authenticated GitHub readback confirmed AI.Tools `main` still at the dispatch SHA, the delivered ref at `191369dfdd7b385856f40e4d373ce872b653ccf8` and the module tree's Builds gitlink at `bf8a28b4bbcec619e8d9764d335f786f2bafb69e`, which is the commit of the immutable release tag `v6.8.1`. The module CI and exact-source CiCd Delivery runs still report success. The locked acceptance suite passed all 47 tests (log SHA-256 `8f0dd0c1f9a0807b731991e5543d0660db119f17c7e6e1bedab78905a23b0545`). [Exact-source CI](https://github.com/Hexalith/Hexalith.AI.Tools/actions/runs/45387416470) · [Delivery](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/45384538023) · [Immutable release](https://github.com/Hexalith/Hexalith.Builds/releases/tag/v6.8.1)
+- An isolated fixture used the exact `v6.8.1` helpers and CiCd `0568740e8995bc99131e6fef84355cdf6c20f03d` (tree `88fd7932bff99839d9513795d4b140cf0fd40896`). It began attempt 2 during the final asset lookup for attempt 1. The publisher made one fixture write and returned `published`. Result SHA-256 `bec9cc8da0f823c863450ded319fa144818fbe1a1fa06d1d556d5a8f685a1382`.
 
 ## Review Triage Log
 
@@ -279,3 +299,48 @@ The intent audit confirmed that the latest recorded human decision governs the S
   - `[medium]` `[patch]` The streaming fixtures missed a connection reset after a partial write. The verification reviewer demonstrated recovery with a fresh redirect and a mutation that removed the recovery without failing the runtime suite. Coverage remains pending the handoff repair.
 
 The intent audit confirmed that the hosted acceptance gate is specific to AI.Tools and its delivered pin. The shared repair's code and fixtures demonstrate the package-free and nonempty handoffs for stable evidence. The findings above concern exact-attempt provenance and changes during finalization.
+
+### 2026-11-24 — Hosted acceptance and finalizer re-review
+
+Blind hunter
+
+- `[high]` `[bad_spec]` Carried. The ready outcome omits the target-validated producer and artifact identity. The mutable draft can select a different archive at the same source.
+- `[medium]` `[bad_spec]` Carried. The manifest reader can accept a listed package with no corresponding ZIP member.
+- `[high]` `[bad_spec]` Carried. Draft or tag state can change during the final completion and asset reads.
+- `[high]` `[bad_spec]` Carried. A rerun that starts during the final asset read can supersede a completion that still receives a successful publication verdict.
+- `[medium]` `[bad_spec]` Carried. An asset replacement after its final metadata snapshot can reach PATCH and fail only during readback.
+- `[high]` `[bad_spec]` Carried. The App job stores the original archive on disk despite AD-7's in-memory rule.
+- `[medium]` `[defer]` Carried. The inventory checker does not require the publisher hash binding independently of the policy list.
+- `[medium]` `[defer]` Carried. The shared 60-second slot caps the archive transfer and finalization regardless of the downloader's own budget.
+- `[medium]` `[defer]` Carried. PATCH can start too late to finish the required readback.
+- `[medium]` `[patch]` Carried. The streaming fixtures lack a correctly hashed ZIP with duplicate manifests.
+- `[medium]` `[patch]` Carried. The streaming fixtures lack a reset after a successful first chunk followed by a fresh redirect and recovery.
+- `[low]` `[reject]` The fixed older fixture preserves compatibility coverage. Verification also records a run of the same cases with the exact authenticated deployed pin.
+- `[low]` `[reject]` The checklist observation concerns the story document. This pass records the completed hosted gate alongside the open finalizer work.
+
+Edge case hunter
+
+- `[high]` `[bad_spec]` Carried. A rerun during asset enumeration escapes the preceding attempt read.
+- `[high]` `[bad_spec]` Carried. Later preflight requests permit changes to the marked draft or version tag after validation.
+- `[medium]` `[bad_spec]` Carried. Asset readback can detect replacement only after an immutable release has been created.
+- `[medium]` `[bad_spec]` Carried. A matching manifest can name a payload that the pinned archive validator refuses as missing.
+- `[medium]` `[defer]` Carried. A supported archive size can exceed the available transfer time within the existing slot.
+- `[medium]` `[defer]` Carried. The existing slot leaves no separate budget for publication readback after a late write.
+- `[high]` `[bad_spec]` Carried. The exact attempt does not authenticate the inventory and producer fields that Nightly obtains from the draft.
+- `[medium]` `[bad_spec]` Carried. Separate snapshots leave a write window even when each individual response is valid.
+- `[medium]` `[reject]` The runbook defines a compact receipt plus the full report's outcome and scan identities. Verification records all of them for this run.
+
+Verification gap reviewer
+
+- `[medium]` `[patch]` Reducing the archive cap to 32 MiB passed all 44 runtime and 27 publication tests in a disposable copy. That cap refused a synthetic archive of 44,905,956 bytes, the size of the hosted Builds archive, while the production cap accepted it.
+- `[medium]` `[patch]` Carried. Removing the duplicate-manifest rejection passed the suites. A repeated manifest can then supply an ambiguous inventory.
+- `[medium]` `[patch]` Carried. Disabling retry for streaming downloads passed the suites. A separate fixture verified recovery following a reset after the first chunk.
+- `[high]` `[bad_spec]` Carried. The original archive's producer, ID and digest are read from mutable trailers instead of evidence from the successful attempt.
+- `[high]` `[bad_spec]` Carried. An attempt change during the last asset lookup can reach PATCH.
+
+**Review disposition.** The maintainer approved central pre-write checks and
+immutable readback for the shared follow-up. Conflicts observed before the
+write prevent publication. Readback must fail the verdict if a concurrent
+change escapes those checks. GitHub's release update has no documented atomic
+precondition for the draft, asset, tag and workflow attempt. An immutable
+release may exist when readback detects a conflict. [Story 29-2](29-2-harden-nightly-ready-publication.md) · [Release update API](https://docs.github.com/en/rest/releases/releases#update-a-release)

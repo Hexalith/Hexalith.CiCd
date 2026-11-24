@@ -579,7 +579,7 @@
   title: "Migrate AI.Tools"
   description: >-
     Complete the CAP-16 migration for adopted, package-free AI.Tools by
-    verifying the repaired shared release pipeline and its nightly outcome.
+    verifying its delivered Builds pin and its own nightly outcome.
   invoke_dev_with: >-
     Follow the frozen Story 12 contract and the approved AI.Tools-specific
     AD-21 scope. Verify the existing delivery adoption and continue from
@@ -587,9 +587,9 @@
     environment, GitHub publishing, immutable releases and applicable
     organization grants. The package-free inventory makes module Zot push
     credentials, scoped nuget.org policy, associated legacy publishing
-    revocations and NuGet waiver transfer inapplicable. Verify the shared
-    pipeline repairs, delivery of the immutable Builds pin containing them,
-    and a fresh eligible central nightly acceptance for AI.Tools.
+    revocations and NuGet waiver transfer inapplicable. Verify the delivered
+    immutable Builds pin and a fresh eligible central nightly for AI.Tools.
+    The acceptance decision assigns remaining shared publication work to 29-2.
 - id: "13"
   title: "Migrate Works"
   description: >-
@@ -895,3 +895,14 @@
   invoke_dev_with: >-
     The standard: references/Hexalith.Builds, commit and push there. The
     measurement: gh run list over each repo's last 200 runs.
+- id: "29-2"
+  title: "Harden nightly ready publication"
+  description: >-
+    Bind central ready publication to the original archive and inventory
+    verified by the exact target attempt. Check immediately before publishing
+    and verify the immutable result and attempt afterward (CAP-13; AD-18).
+  invoke_dev_with: >-
+    Follow stories/29-2-harden-nightly-ready-publication.md and the Story 12
+    maintainer decision. Keep the existing central finalizer and scoped App
+    access. Qualify the resulting handoff with a hosted package-bearing ready
+    release and exact-attempt and mismatched-archive regressions.

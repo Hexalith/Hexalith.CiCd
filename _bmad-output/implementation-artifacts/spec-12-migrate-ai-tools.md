@@ -2,7 +2,7 @@
 title: '12 — Migrate AI.Tools'
 type: 'chore'
 created: '2026-11-16'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '7d32df03405c876df6f098aec4036207bf35af1d'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -10,6 +10,10 @@ context:
   - '{project-root}/_bmad-output/specs/spec-cicd/evidence/12/planning.md'
   - '{project-root}/_bmad-output/specs/spec-cicd/evidence/12/execution.md'
 ---
+
+The maintainer accepted the migration on 2026-11-24. The canonical Story 12
+record contains the final delivery, nightly receipt, and scope decision. The
+checklist below records this earlier implementation phase. [Story 12 acceptance](../specs/spec-cicd/stories/12-migrate-ai-tools.md#maintainer-acceptance--2026-11-24)
 
 <frozen-after-approval reason="human-owned intent — do not modify unless human renegotiates">
 
