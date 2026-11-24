@@ -1,6 +1,6 @@
 {
   "schema": "hexalith.cicd-app-inventory.v1",
-  "reviewed_revision": "682416fac3ed91c095619de89015f2a989ead727",
+  "reviewed_revision": "3362e70cfc0632c3f42afeb9a590c7e763960281",
   "selector_sources": {
     "tools/delivery_bootstrap.py": {
       "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
@@ -19,12 +19,12 @@
       "bound": "At most three CiCd Actions-read barrier slices within two hours. At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
     },
     "tools/nightly_runtime.py": {
-      "sha256": "21911394151bf21b2ebe4199308800fe1d7a6eb3f65ea9826a354bc6a342deb5",
-      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. Publication evidence reads use the selected target scope, size limits and credential-free storage redirects. The job token is used only for initialization handoffs and fixed, public Builds REST reads. Workflow enable is limited to CiCd's nightly.yml, deliver.yml and scan.yml."
+      "sha256": "a43f22c3a9509416534830236702aeb0b72a774552b24fd37db3265c239bed46",
+      "bound": "Only CiCd, Builds and validated registered module identities. Publication evidence reads use the selected target scope, controller and token budgets, and credential-free storage redirects. Ordinary artifact ZIPs remain capped at 8 MiB. Original release ZIPs stream to private scratch in at most 1 MiB chunks with a 2 GiB archive limit, bounded ZIP metadata and a 1 MiB manifest limit. The job token is used only for initialization handoffs and fixed, public Builds REST reads. Workflow enable is limited to CiCd's nightly.yml, deliver.yml and scan.yml."
     },
     "tools/nightly_publish.py": {
-      "sha256": "117149ffaff2c1916500a93885dcec2163d9da3a2ab173143fb5819f7caf17f3",
-      "bound": "Only authenticated successful nightly targets can publish their original ready draft with the selected per-target token. GitHub-only publication requires the verified empty original inventory and existing publication asset, which must remain on the immutable release."
+      "sha256": "f2a4454e333ae4f455d0c78eabbe2c314444c00542e51922224ad15714464665",
+      "bound": "Only authenticated successful nightly target attempts can finalize their original ready draft with the selected per-target token. The original archive inventory must match the draft, and exactly one existing canonical publication asset must match the original artifact and package inventory. After the final asset download, live draft, tag, attempt and asset identity checks precede the single PATCH. The immutable release must retain the verified asset ID, size and digest."
     },
     "tools/nightly_delivery_wait.py": {
       "sha256": "5d656c8d861ae019efbc06ecf20c921d16734add776f3ed7a458846d271b070d",
