@@ -1,6 +1,6 @@
 {
   "schema": "hexalith.cicd-app-inventory.v1",
-  "reviewed_revision": "f0d19e1054c9f25da4e0fe0e27a227a2b1d5e48e",
+  "reviewed_revision": "682416fac3ed91c095619de89015f2a989ead727",
   "selector_sources": {
     "tools/delivery_bootstrap.py": {
       "sha256": "4432b135997e953c18d86e5ae249fb3fbe28514fcc75ca543847e4b1773b3beb",
@@ -19,12 +19,12 @@
       "bound": "At most three CiCd Actions-read barrier slices within two hours. At most 17 committed registry modules plus fixed Builds; slots, polls and handoff inventories validated against those identities."
     },
     "tools/nightly_runtime.py": {
-      "sha256": "26f9d4ca7b1b9e749b99f7d74cbe0e8bed4b3b18819d5909e4b9dccf334827e3",
-      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. The job token is used only for initialization handoffs and fixed, public Builds REST reads. Workflow enable is limited to CiCd's nightly.yml, deliver.yml and scan.yml."
+      "sha256": "21911394151bf21b2ebe4199308800fe1d7a6eb3f65ea9826a354bc6a342deb5",
+      "bound": "Only CiCd, Builds and validated registered module identities; bounded API, state and token use. Publication evidence reads use the selected target scope, size limits and credential-free storage redirects. The job token is used only for initialization handoffs and fixed, public Builds REST reads. Workflow enable is limited to CiCd's nightly.yml, deliver.yml and scan.yml."
     },
     "tools/nightly_publish.py": {
-      "sha256": "9679abb0eb186f2fa8cfa4ee0a58ee8f39198f5518c2875d053707762f1de82d",
-      "bound": "Only authenticated successful nightly targets can be published with the selected per-target token."
+      "sha256": "117149ffaff2c1916500a93885dcec2163d9da3a2ab173143fb5819f7caf17f3",
+      "bound": "Only authenticated successful nightly targets can publish their original ready draft with the selected per-target token. GitHub-only publication requires the verified empty original inventory and existing publication asset, which must remain on the immutable release."
     },
     "tools/nightly_delivery_wait.py": {
       "sha256": "5d656c8d861ae019efbc06ecf20c921d16734add776f3ed7a458846d271b070d",
