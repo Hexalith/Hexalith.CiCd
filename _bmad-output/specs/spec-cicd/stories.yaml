@@ -578,21 +578,18 @@
 - id: "12"
   title: "Migrate AI.Tools"
   description: >-
-    Bring AI.Tools under management (CAP-16). It has no workflows today, so
-    this is onboarding only: setup file, rendered files, and baseline.
+    Complete the CAP-16 migration for adopted, package-free AI.Tools by
+    verifying the repaired shared release pipeline and its nightly outcome.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first, including the
-    hexalith-release environment with this module's own Zot push identity and
-    a nuget.org policy scoped to its package IDs, added beside the existing
-    one. Product-side changes (custom actions, gate-rule deletions, deleting
-    module NuGet audit waivers and a tool-only root package.json, its lockfile
-    and .husky/) go in references/Hexalith.AI.Tools with the module-agent
-    token; never edit owned files there. A CiCd agent adds the waivers to
-    Builds' Props/, and adoption waits for a builds-version that contains
-    them. Then commit submodule + setup file + render here; delivery adopts
-    the module. Right after adoption, the maintainer turns on immutable
-    releases, deletes the other nuget.org policies, and removes the repo from
-    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
+    Follow the frozen Story 12 contract and the approved AI.Tools-specific
+    AD-21 scope. Verify the existing delivery adoption and continue from
+    adopted main with solution none. Verify the main-only hexalith-release
+    environment, GitHub publishing, immutable releases and applicable
+    organization grants. The package-free inventory makes module Zot push
+    credentials, scoped nuget.org policy, associated legacy publishing
+    revocations and NuGet waiver transfer inapplicable. Verify the shared
+    pipeline repairs, delivery of the immutable Builds pin containing them,
+    and a fresh eligible central nightly acceptance for AI.Tools.
 - id: "13"
   title: "Migrate Works"
   description: >-
