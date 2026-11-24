@@ -827,6 +827,60 @@ class RuntimeTests(unittest.TestCase):
                 api.artifact_member("Hexalith.Alpha", info, "outcome.json", "inert")
             self.assertEqual(len(opener.requests), 1)
 
+    def test_original_release_archive_streams_beyond_the_ordinary_zip_bound(self):
+        manifest = {"sha": "a" * 40, "version": "1.0.0", "packages": [], "containers": []}
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, "w") as archive:
+            archive.writestr("release-manifest.json", json.dumps(manifest))
+            archive.writestr("packages/unread.nupkg", b"x" * rt.MAX_ZIP)
+        payload = buffer.getvalue()
+        info = metadata(8, "release", payload, 9, manifest["sha"])
+        api, opener, clock = self.api([(302, {}, {"Location": "https://fixture.blob.core.windows.net/archive"}), payload])
+        api.budget.deadline = clock() + 12
+        with self.assertRaisesRegex(rt.NightlyError, "oversized"):
+            api.artifact_bytes("Hexalith.Alpha", info, "inert")
+        self.assertFalse(opener.requests)
+
+        read = nightly_support.Response.read
+        amounts = []
+
+        def bounded(response, size):
+            amounts.append(size)
+            self.assertLessEqual(size, rt.DOWNLOAD_CHUNK)
+            return read(response, size)
+
+        with tempfile.TemporaryDirectory() as scratch, mock.patch.object(nightly_support.Response, "read", bounded):
+            self.assertEqual(api.release_manifest("Hexalith.Alpha", info, "inert", scratch), manifest)
+            self.assertEqual(list(Path(scratch).iterdir()), [])
+        self.assertGreater(len(amounts), 8)
+        self.assertEqual(opener.requests[0][0].get_header("Authorization"), "Bearer inert")
+        self.assertIsNone(opener.requests[1][0].get_header("Authorization"))
+        self.assertEqual([timeout for _request, timeout in opener.requests], [12, 12])
+
+    def test_original_release_archive_checks_download_and_manifest_bounds(self):
+        payload = zip_document("release-manifest.json", {})
+        info = metadata(8, "release", payload, 9, "a" * 40)
+        cases = ((payload[:-1], info, "ZIP size or digest mismatch"),
+                 (payload + b"x", info, "ZIP size or digest mismatch"),
+                 (payload, info | {"digest": "sha256:" + "b" * 64}, "ZIP size or digest mismatch"),
+                 (payload, info | {"size_in_bytes": rt.MAX_RELEASE_ZIP + 1}, "oversized"))
+        with tempfile.TemporaryDirectory() as scratch:
+            for wire, observed, reason in cases:
+                with self.subTest(reason=reason, size=observed["size_in_bytes"], length=len(wire)):
+                    api, _, _ = self.api([wire])
+                    with self.assertRaisesRegex(rt.NightlyError, reason):
+                        api.release_manifest("Hexalith.Alpha", observed, "inert", scratch)
+            for member, value, reason in (("other.json", {}, "exactly one release manifest"),
+                                          ("release-manifest.json", b" " * (rt.MAX_RELEASE_MANIFEST + 1),
+                                           "manifest metadata refused")):
+                with self.subTest(member=member):
+                    wire = zip_document(member, value)
+                    api, _, _ = self.api([wire])
+                    with self.assertRaisesRegex(rt.NightlyError, reason):
+                        api.release_manifest("Hexalith.Alpha", metadata(8, "release", wire, 9, "a" * 40),
+                                             "inert", scratch)
+            self.assertEqual(list(Path(scratch).iterdir()), [])
+
     def test_closed_state_is_bound_to_registry_run_attempt_source_and_phase(self):
         original = state()
         self.assertEqual(rt.validate_state(original, original["registry"], identity=original["identity"], phase="dispatch"), original)

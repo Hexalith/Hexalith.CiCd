@@ -20,6 +20,7 @@ import re
 import signal
 import stat
 import sys
+import tempfile
 import time
 from types import SimpleNamespace
 from urllib.error import HTTPError, URLError
@@ -34,6 +35,10 @@ from delivery_runtime import (BUILDS, CAPACITY, CICD, MAX_JSON, SHA, TAG, Git,
 
 NightlyError = delivery.DeliveryError
 MAX_ZIP = 8 * 1024 * 1024
+MAX_RELEASE_ZIP = 2 * 1024 ** 3
+MAX_RELEASE_MANIFEST = 1024 * 1024
+MAX_RELEASE_ZIP_INDEX = 8 * 1024 * 1024
+DOWNLOAD_CHUNK = 1024 * 1024
 MAX_PUBLICATION = 2 * 1024 * 1024
 MAX_CALLS = 4096
 MAX_PAGES = 20
@@ -46,6 +51,18 @@ KEEPALIVE_WORKFLOWS = ("nightly.yml", "deliver.yml", "scan.yml")
 
 class InventoryChanged(NightlyError):
     """A well-formed paginated inventory changed while it was being read."""
+
+
+class _ReleaseZipReader(io.BufferedReader):
+    """Bound zipfile's in-memory central directory and other metadata reads."""
+
+    def read(self, size=-1):
+        if size > MAX_RELEASE_ZIP_INDEX:
+            raise NightlyError("release archive ZIP metadata exceeds size limit")
+        data = super().read(MAX_RELEASE_ZIP_INDEX + 1 if size < 0 else size)
+        if len(data) > MAX_RELEASE_ZIP_INDEX:
+            raise NightlyError("release archive ZIP metadata exceeds size limit")
+        return data
 
 
 @contextmanager
@@ -491,14 +508,14 @@ class API:
     def publish_draft(self, repository, identity, document, token):
         return self.patch(f"/repos/Hexalith/{repository}/releases/{positive(identity)}", document, token)
 
-    def _download_attempt(self, path, token, *, release_asset):
-        """Read once, returning bytes or a transient failure with retry headers if present."""
+    def _download_attempt(self, path, token, *, release_asset, reader, max_seconds):
+        """Read once, returning the result or a transient failure with retry headers."""
         label = "release asset" if release_asset else "artifact"
         self.calls += 1
         if self.calls > MAX_CALLS:
             raise NightlyError("GitHub API call limit exceeded")
         try:
-            timeout = self.budget.timeout(token=True, max_seconds=30)
+            timeout = self.budget.timeout(token=True, max_seconds=max_seconds)
             with whole_operation(timeout):
                 headers = self._headers(token)
                 if release_asset:
@@ -533,10 +550,13 @@ class API:
                 with response:
                     if response.status != 200:
                         raise NightlyError(f"{label} download returned unexpected status")
-                    limit = MAX_PUBLICATION if release_asset else MAX_ZIP
-                    payload = response.read(limit + 1)
-                    if len(payload) > limit:
-                        raise NightlyError("GitHub download exceeds its size limit")
+                    if reader is not None:
+                        payload = reader(response)
+                    else:
+                        limit = MAX_PUBLICATION if release_asset else MAX_ZIP
+                        payload = response.read(limit + 1)
+                        if len(payload) > limit:
+                            raise NightlyError("GitHub download exceeds its size limit")
                 self.budget.check(token=True)
                 return payload, None, None
         except (HTTPError, URLError, OSError, http.client.HTTPException, ValueError) as error:
@@ -544,10 +564,11 @@ class API:
                 raise
             return None, f"{label} download transport failed", None
 
-    def _download(self, path, token, *, release_asset=False):
+    def _download(self, path, token, *, release_asset=False, reader=None, max_seconds=30):
         self._path(path)
         for attempt in range(3):
-            payload, transient, limited = self._download_attempt(path, token, release_asset=release_asset)
+            payload, transient, limited = self._download_attempt(path, token, release_asset=release_asset,
+                                                                reader=reader, max_seconds=max_seconds)
             if transient is None:
                 return payload
             delay = self._retry_delay(limited, attempt) if limited is not None else attempt + 1
@@ -559,21 +580,64 @@ class API:
         return self._download(f"/repos/Hexalith/{repository}/releases/assets/{positive(identity)}", token,
                               release_asset=True)
 
-    def artifact_bytes(self, repository, metadata, token):
+    def _artifact_download(self, repository, metadata, limit):
         if (not isinstance(metadata, dict) or metadata.get("expired") is not False
                 or not isinstance(metadata.get("digest"), str) or not DIGEST.fullmatch(metadata["digest"])
-                or type(metadata.get("size_in_bytes")) is not int or not 1 <= metadata["size_in_bytes"] <= MAX_ZIP):
+                or type(metadata.get("size_in_bytes")) is not int or not 1 <= metadata["size_in_bytes"] <= limit):
             raise NightlyError("artifact metadata is malformed, expired, or oversized")
         expires = timestamp(metadata.get("expires_at"))
         if expires.timestamp() <= self.budget.clock():
             raise NightlyError("artifact expiry could not be validated")
         identity = positive(metadata.get("id"))
-        path = f"/repos/Hexalith/{repository}/actions/artifacts/{identity}/zip"
+        return (f"/repos/Hexalith/{repository}/actions/artifacts/{identity}/zip",
+                metadata["size_in_bytes"], metadata["digest"])
+
+    def artifact_bytes(self, repository, metadata, token):
+        path, size, digest = self._artifact_download(repository, metadata, MAX_ZIP)
         payload = self._download(path, token)
-        if (len(payload) > MAX_ZIP or len(payload) != metadata["size_in_bytes"]
-                or "sha256:" + hashlib.sha256(payload).hexdigest() != metadata["digest"]):
+        if len(payload) != size or "sha256:" + hashlib.sha256(payload).hexdigest() != digest:
             raise NightlyError("artifact ZIP size or digest mismatch")
         return payload
+
+    def release_manifest(self, repository, metadata, token, scratch):
+        """Authenticate an original release ZIP on disk and read only its manifest."""
+        path, size, digest = self._artifact_download(repository, metadata, MAX_RELEASE_ZIP)
+        with tempfile.TemporaryFile(dir=scratch, buffering=0) as archive:
+            def save(response):
+                archive.seek(0)
+                archive.truncate(0)
+                checksum, remaining = hashlib.sha256(), size
+                while chunk := response.read(min(DOWNLOAD_CHUNK, remaining + 1)):
+                    self.budget.check(token=True)
+                    remaining -= len(chunk)
+                    if remaining < 0:
+                        raise NightlyError("artifact ZIP size or digest mismatch")
+                    if archive.write(chunk) != len(chunk):
+                        raise NightlyError("release archive scratch write was incomplete")
+                    checksum.update(chunk)
+                if remaining or "sha256:" + checksum.hexdigest() != digest:
+                    raise NightlyError("artifact ZIP size or digest mismatch")
+
+            self._download(path, token, reader=save, max_seconds=120)
+            try:
+                with whole_operation(self.budget.timeout(token=True)), _ReleaseZipReader(archive) as source, \
+                        zipfile.ZipFile(source) as release:
+                    matches = [item for item in release.infolist() if item.filename == "release-manifest.json"]
+                    if len(matches) != 1:
+                        raise NightlyError("original release archive must have exactly one release manifest")
+                    item = matches[0]
+                    if (item.orig_filename != item.filename or item.flag_bits & 1
+                            or not 1 <= item.file_size <= MAX_RELEASE_MANIFEST
+                            or item.compress_type not in {zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED}
+                            or stat.S_IFMT(item.external_attr >> 16) not in {0, stat.S_IFREG}):
+                        raise NightlyError("original release manifest metadata refused")
+                    with release.open(item) as stream:
+                        data = stream.read(MAX_RELEASE_MANIFEST + 1)
+                    if len(data) != item.file_size:
+                        raise NightlyError("original release manifest size mismatch")
+                    return json_read(data)
+            except (zipfile.BadZipFile, RuntimeError, OSError, NotImplementedError):
+                raise NightlyError("original release archive is unreadable") from None
 
     def artifact_member(self, repository, metadata, member, token):
         if member not in {"dispatch.json", "wait.json", "nightly.json", "outcome.json", "candidate.json", "delivery.json"}:

@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -18,7 +19,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import delivery_runtime
 import nightly_runtime as runtime
 import nightly_publish as publisher
-from nightly_support import RELEASE as BUILDS_SOURCE, TAG as BUILDS_TAG
+from nightly_support import Opener, RELEASE as BUILDS_SOURCE, TAG as BUILDS_TAG
 
 
 def git(root, *arguments, data=None):
@@ -74,27 +75,13 @@ class PublicationFixture:
         git(self.source, "add", ".")
         git(self.source, "commit", "--quiet", "-m", "Bump")
         self.head = git(self.source, "rev-parse", "HEAD").decode().strip()
-        archive = io.BytesIO()
-        with zipfile.ZipFile(archive, "w") as output:
-            output.writestr("release-manifest.json", json.dumps(
-                {"sha": self.sha, "version": "1.1.0", "packages": [], "containers": []}))
-        self.build_archive = archive.getvalue()
-        self.digest = "sha256:" + hashlib.sha256(self.build_archive).hexdigest()
         self.live = {"id": 88, "author": {"login": "github-actions[bot]"}, "draft": True,
-                     "prerelease": False, "tag_name": "v1.1.0", "target_commitish": self.sha,
-                     "body": helpers.draft.release_body("Release notes", sha=self.sha, run_id=10,
-                         artifact_id=20, digest=self.digest, inventory={"packages": [], "containers": []})}
+                     "prerelease": False, "tag_name": "v1.1.0", "target_commitish": self.sha}
         self.producer = {"id": 10, "path": self.workflow, "event": "workflow_dispatch", "head_branch": "main",
                          "head_sha": self.sha, "repository": {"full_name": "Hexalith/" + self.repository}}
-        self.metadata = {"id": 20, "name": "release", "expired": False, "digest": self.digest,
-                         "size_in_bytes": len(self.build_archive),
+        self.metadata = {"id": 20, "name": "release", "expired": False,
                          "expires_at": "2100-01-01T00:00:00Z", "workflow_run": {"id": 10, "head_sha": self.sha}}
-        publication = helpers.publish.publication
-        self.publication = publication.serialize({"schema": publication.SCHEMA, "repository": "Hexalith/" + self.repository,
-            "sha": self.sha, "version": "1.1.0", "artifactRun": 10, "artifactId": 20,
-            "artifactDigest": self.digest, "packages": []})
-        self.assets = [{"id": 90, "name": publication.ASSET_NAME, "state": "uploaded",
-                        "size": len(self.publication), "digest": "sha256:" + hashlib.sha256(self.publication).hexdigest()}]
+        self.set_original_inventory()
         self.run = {"repository": self.repository, "workflow": self.workflow, "deliveredSha": "b" * 40,
                     "dispatchHead": self.head, "runId": 99, "runAttempt": 1,
                     "link": "https://github.com/Hexalith/" + self.repository + "/actions/runs/99",
@@ -118,6 +105,43 @@ class PublicationFixture:
         self.api = self
         self.budget = runtime.Budget(1000, 3300, token_epoch=1000, clock=lambda: 1001)
         delivery_runtime._SECRETS.append(self.token)
+
+    def set_original_inventory(self, packages=(), *, image=None):
+        publication = self.helpers.publish.publication
+        repository = "Hexalith/" + self.repository
+        manifest = {"sha": self.sha, "version": "1.1.0", "packages": [], "containers": []}
+        archive, records = io.BytesIO(), []
+        with zipfile.ZipFile(archive, "w") as output:
+            for package_id in sorted(packages):
+                path = "packages/" + package_id + ".nupkg"
+                package = io.BytesIO()
+                with zipfile.ZipFile(package, "w") as nupkg:
+                    nupkg.writestr(package_id + ".nuspec", f"<package><metadata><id>{package_id}</id>"
+                        f"<version>1.1.0</version><repository commit='{self.sha}'/></metadata></package>")
+                data = package.getvalue()
+                output.writestr(path, data)
+                manifest["packages"].append({"id": package_id, "path": path})
+                records.append(publication.record(package_id, data, publication.payload_map(data)))
+            if image is not None:
+                path = "containers/image.tar"
+                output.writestr(path, image)
+                manifest["containers"].append({"name": "product/image", "path": path})
+            output.writestr("release-manifest.json", json.dumps(manifest))
+        self.build_archive = archive.getvalue()
+        self.digest = "sha256:" + hashlib.sha256(self.build_archive).hexdigest()
+        self.metadata.update(digest=self.digest, size_in_bytes=len(self.build_archive))
+        inventory = self.helpers.draft.artifact_inventory(self.build_archive, sha=self.sha,
+            version="1.1.0", digest=self.digest, repository=repository)
+        self.live["body"] = self.helpers.draft.release_body("Release notes", sha=self.sha, run_id=10,
+            artifact_id=20, digest=self.digest, inventory=inventory)
+        self.set_publication(publication.serialize({"schema": publication.SCHEMA, "repository": repository,
+            "sha": self.sha, "version": "1.1.0", "artifactRun": 10, "artifactId": 20,
+            "artifactDigest": self.digest, "packages": records}))
+
+    def set_publication(self, data):
+        self.publication = data
+        self.assets = [{"id": 90, "name": self.helpers.publish.publication.ASSET_NAME, "state": "uploaded",
+                        "size": len(data), "digest": "sha256:" + hashlib.sha256(data).hexdigest()}]
 
     def remote(self, repository):
         if repository != self.repository:
@@ -178,6 +202,13 @@ class PublicationFixture:
         self.requests.append("actions/artifacts/20/zip")
         return self.build_archive
 
+    def release_manifest(self, repository, metadata, token, scratch):
+        if (repository, metadata, token) != (self.repository, self.metadata, self.token):
+            raise AssertionError("wrong original build artifact")
+        self.requests.append("actions/artifacts/20/release-manifest")
+        api = runtime.API(self.budget, repositories=(self.repository,), opener=Opener([self.build_archive]))
+        return api.release_manifest(repository, metadata, token, scratch)
+
     def publish_draft(self, repository, identity, document, token):
         if repository != self.repository or identity != 88 or token != self.token:
             raise AssertionError("unexpected publication identity")
@@ -194,6 +225,11 @@ class PublicationFixture:
 
     def publish(self):
         return publisher.publish_target(self.run, self.helpers, self, self.root / "scratch", self.budget, self.token)
+
+
+class BuildsPublicationFixture(PublicationFixture):
+    repository = "Hexalith.Builds"
+    workflow = ".github/workflows/builds-release.yml"
 
 
 class TestNightlyPublication(unittest.TestCase):
@@ -221,6 +257,113 @@ class TestNightlyPublication(unittest.TestCase):
         self.assertIn("releases/assets/90", fixture.requests)
         self.assertFalse((fixture.root / "scratch").joinpath("product.txt").exists())
 
+    def test_builds_packages_are_finalized_from_the_correlated_run_asset(self):
+        fixture = BuildsPublicationFixture(Path(self.temp.name) / "builds", self.helpers)
+        fixture.set_original_inventory(("Fixture.Two", "Fixture.One"))
+        with patch.object(self.helpers.publish, "verify_packages", side_effect=AssertionError("unexpected feed read")):
+            self.assertTrue(fixture.publish(), fixture.run)
+        self.assertEqual(fixture.run["publication"], "published")
+        self.assertEqual(len(fixture.writes), 1)
+        self.assertIn("/repos/Hexalith/Hexalith.Builds/actions/artifacts/20", fixture.requests)
+        self.assertIn("actions/artifacts/20/release-manifest", fixture.requests)
+        self.assertIn("releases/assets/90", fixture.requests)
+        self.assertNotIn("actions/artifacts/20/zip", fixture.requests)
+
+    def test_container_only_draft_uses_the_existing_empty_publication_asset(self):
+        fixture = self.fixture
+        fixture_path = self.helpers.root / "Github/lib/tests/test_release_oci.py"
+        spec = importlib.util.spec_from_file_location("_nightly_oci_fixture", fixture_path)
+        oci_fixture = importlib.util.module_from_spec(spec)
+        with patch.object(sys, "path", sys.path.copy()):
+            spec.loader.exec_module(oci_fixture)
+        sources = []
+        repository = "Hexalith/" + fixture.repository
+        with patch.object(oci_fixture, "SHA", fixture.sha), patch.object(oci_fixture, "REPOSITORY", repository):
+            for architecture in ("amd64", "arm64"):
+                source = fixture.root / (architecture + ".tar")
+                oci_fixture.sdk_archive(source, architecture, version="1.1.0")
+                sources.append((source, {"os": "linux", "architecture": architecture}))
+        image = fixture.root / "image.tar"
+        oci_fixture.oci.combine_archives(sources, image, revision=fixture.sha, version="1.1.0",
+                                         repository=repository, name="product/image")
+        fixture.set_original_inventory(image=image.read_bytes())
+        self.assertTrue(fixture.publish(), fixture.run)
+        self.assertEqual(len(fixture.writes), 1)
+        self.assertIn("actions/artifacts/20/release-manifest", fixture.requests)
+        self.assertIn("releases/assets/90", fixture.requests)
+        self.assertNotIn("actions/artifacts/20/zip", fixture.requests)
+
+    def test_nonempty_publication_refuses_missing_or_conflicting_evidence_before_patch(self):
+        contract = self.helpers.publish.publication
+        identity = "package publication asset differs from the original artifact identity or inventory"
+        cases = {"missing": "expected exactly one existing package publication asset",
+                 "duplicate": "expected exactly one existing package publication asset",
+                 "state": "package publication asset metadata is invalid",
+                 "malformed": "invalid package publication fields/schema",
+                 "canonical": "package publication asset is not in canonical v1 form",
+                 "body": "draft changed during publication", "artifact": "artifact ID/name/run/digest/source identity mismatch",
+                 "attempt": "correlated completion run changed", "files": "invalid package publication payload map",
+                 "repository": identity, "sha": identity, "version": identity, "artifactRun": identity,
+                 "artifactId": identity, "artifactDigest": identity, "packages": identity}
+        for change, expected in cases.items():
+            with self.subTest(change=change), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
+                fixture = PublicationFixture(Path(directory), self.helpers)
+                fixture.set_original_inventory(("Fixture.Package",))
+                document = contract.read(fixture.publication)
+                if change == "missing":
+                    fixture.assets.clear()
+                elif change == "duplicate":
+                    fixture.assets.append(fixture.assets[0] | {"id": 91})
+                elif change == "state":
+                    fixture.assets[0]["state"] = "new"
+                elif change == "malformed":
+                    fixture.set_publication(b"{}")
+                elif change == "canonical":
+                    fixture.set_publication(json.dumps(document).encode())
+                elif change == "body":
+                    fixture.change_body = True
+                elif change == "artifact":
+                    fixture.metadata["digest"] = "sha256:" + "c" * 64
+                elif change == "attempt":
+                    fixture.current_change_on_repeat = {"run_attempt": 2}
+                elif change == "files":
+                    document["packages"][0]["files"] = {"../unsafe": "d" * 64}
+                    fixture.set_publication((json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n").encode())
+                else:
+                    values = {"repository": "Hexalith/Other", "sha": "f" * 40, "version": "1.2.0",
+                              "artifactRun": 11, "artifactId": 21, "artifactDigest": "sha256:" + "c" * 64,
+                              "packages": [document["packages"][0] | {"id": "fixture.Package"}]}
+                    fixture.set_publication(contract.serialize(document | {change: values[change]}))
+                self.assertFalse(fixture.publish(), fixture.run)
+                self.assertEqual(fixture.writes, [])
+                self.assertIn(expected, fixture.run["reason"])
+
+    def test_draft_and_publication_asset_cannot_agree_on_a_different_inventory(self):
+        fixture = self.fixture
+        fixture.set_original_inventory(("Fixture.Package",))
+        fixture.live["body"] = fixture.live["body"].replace("Fixture.Package", "Fixture.Other")
+        contract = self.helpers.publish.publication
+        document = contract.read(fixture.publication)
+        document["packages"][0]["id"] = "Fixture.Other"
+        fixture.set_publication(contract.serialize(document))
+        self.assertFalse(fixture.publish(), fixture.run)
+        self.assertIn("original artifact inventory differs from draft release trailers", fixture.run["reason"])
+        self.assertEqual(fixture.writes, [])
+
+    def test_original_manifest_source_version_and_container_inventory_are_checked(self):
+        cases = ({"sha": "c" * 40}, {"version": "1.2.0"}, {"containers": [{"name": "product/other"}]})
+        for changed in cases:
+            with self.subTest(changed=changed), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
+                fixture = PublicationFixture(Path(directory), self.helpers)
+                fixture.set_original_inventory(("Fixture.Package",))
+                manifest = {"sha": fixture.sha, "version": "1.1.0", "packages": [{"id": "Fixture.Package"}],
+                            "containers": []} | changed
+                with patch.object(fixture, "release_manifest", return_value=manifest):
+                    self.assertFalse(fixture.publish(), fixture.run)
+                self.assertIn("inventory differs" if "containers" in changed else "manifest source or version mismatch",
+                              fixture.run["reason"])
+                self.assertEqual(fixture.writes, [])
+
     def test_github_only_publication_requires_the_original_empty_asset(self):
         for change in ("missing", "duplicate", "metadata", "bytes", "build-archive"):
             with self.subTest(change=change), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
@@ -241,20 +384,9 @@ class TestNightlyPublication(unittest.TestCase):
 
     def test_authenticated_nonempty_build_cannot_use_an_empty_draft_inventory(self):
         fixture = self.fixture
-        package = io.BytesIO()
-        with zipfile.ZipFile(package, "w") as output:
-            output.writestr("Fixture.Package.nuspec", "<package><metadata><id>Fixture.Package</id>"
-                f"<version>1.1.0</version><repository commit='{fixture.sha}'/></metadata></package>")
-        archive = io.BytesIO()
-        path = "packages/Fixture.Package.nupkg"
-        with zipfile.ZipFile(archive, "w") as output:
-            output.writestr("release-manifest.json", json.dumps({"sha": fixture.sha, "version": "1.1.0",
-                "packages": [{"id": "Fixture.Package", "path": path}], "containers": []}))
-            output.writestr(path, package.getvalue())
-        fixture.build_archive = archive.getvalue()
-        digest = "sha256:" + hashlib.sha256(fixture.build_archive).hexdigest()
-        fixture.metadata.update(digest=digest, size_in_bytes=len(fixture.build_archive))
-        fixture.live["body"] = fixture.live["body"].replace(fixture.digest, digest)
+        body, old_digest = fixture.live["body"], fixture.digest
+        fixture.set_original_inventory(("Fixture.Package",))
+        fixture.live["body"] = body.replace(old_digest, fixture.digest)
         self.assertFalse(fixture.publish(), fixture.run)
         self.assertIn("original artifact inventory differs", fixture.run["reason"])
         self.assertEqual(fixture.writes, [])
@@ -273,18 +405,73 @@ class TestNightlyPublication(unittest.TestCase):
         self.assertIn("correlated completion run changed", fixture.run["reason"])
         self.assertEqual(fixture.writes, [])
 
-    def test_replaced_asset_after_read_prevents_a_verified_publication(self):
-        for field, value in (("id", 91), ("size", 1), ("digest", "sha256:" + "1" * 64)):
-            with self.subTest(field=field), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
+    def test_replaced_asset_after_finalizer_read_prevents_patch(self):
+        fixture = self.fixture
+        fixture.set_original_inventory(("Fixture.Package",))
+        read = fixture.publication_bytes
+
+        def replace(*args):
+            data = read(*args)
+            if fixture.requests.count("releases/assets/90") == 2:
+                fixture.assets[0]["id"] = 91
+            return data
+
+        fixture.publication_bytes = replace
+        self.assertFalse(fixture.publish(), fixture.run)
+        self.assertIn("asset changed before publication", fixture.run["reason"])
+        self.assertEqual(fixture.writes, [])
+
+    def test_late_draft_or_tag_change_prevents_patch(self):
+        for change in ("draft", "tag"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
                 fixture = PublicationFixture(Path(directory), self.helpers)
+                fixture.set_original_inventory(("Fixture.Package",))
                 read = fixture.publication_bytes
 
                 def replace(*args):
                     data = read(*args)
-                    fixture.assets[0][field] = value
+                    if fixture.requests.count("releases/assets/90") == 2:
+                        if change == "draft":
+                            fixture.live["body"] += "\nchanged notes"
+                        else:
+                            fixture.tags = [{"ref": "refs/tags/v1.1.0", "object": {"type": "commit", "sha": fixture.base}}]
                     return data
 
                 fixture.publication_bytes = replace
+                self.assertFalse(fixture.publish(), fixture.run)
+                self.assertIn("draft changed during publication" if change == "draft" else "does not point at the built commit",
+                              fixture.run["reason"])
+                self.assertEqual(fixture.writes, [])
+
+    def test_asset_replaced_during_final_completion_lookup_prevents_patch(self):
+        fixture = self.fixture
+        fixture.set_original_inventory(("Fixture.Package",))
+        get = fixture.get
+
+        def replace(path, *args, **kwargs):
+            data = get(path, *args, **kwargs)
+            if path.endswith("/actions/runs/99") and fixture.current_gets == 2:
+                fixture.assets[0]["id"] = 91
+            return data
+
+        fixture.get = replace
+        self.assertFalse(fixture.publish(), fixture.run)
+        self.assertIn("asset changed before publication", fixture.run["reason"])
+        self.assertEqual(fixture.writes, [])
+
+    def test_replaced_asset_after_patch_prevents_a_verified_publication(self):
+        for field, value in (("id", 91), ("size", 1), ("digest", "sha256:" + "1" * 64)):
+            with self.subTest(field=field), tempfile.TemporaryDirectory(dir=self.temp.name) as directory:
+                fixture = PublicationFixture(Path(directory), self.helpers)
+                fixture.set_original_inventory(("Fixture.Package",))
+                publish = fixture.publish_draft
+
+                def replace(*args):
+                    release = publish(*args)
+                    fixture.assets[0][field] = value
+                    return release
+
+                fixture.publish_draft = replace
                 self.assertFalse(fixture.publish(), fixture.run)
                 self.assertIn("does not retain the verified package publication asset", fixture.run["reason"])
                 self.assertEqual(len(fixture.writes), 1)
