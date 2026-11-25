@@ -81,6 +81,7 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - 2026-11-25 — Human decision for run `20261124-144406-c3cd`. Continue static proof first. Allow one dedicated Works prerequisite PR if a behavior-preserving Works source change is required to clear base discovery failures. Keep exact candidate qualification and exact-base hosted CI mandatory, and require clean hosted discovery on the resulting Works `main` and AD-21 cleanup before acceptance Nightly. [Discovery checkpoint](../evidence/13/computed-platform-checkpoint-20261125.md)
 - 2026-11-25 — Human decision. NuGet API keys are obsolete and Works publishes through trusted publishing only. Drop the readback of the legacy NuGet key's identity and package scope. The scoped Works policy and the verified exclusion of Works from the legacy `NUGET_API_KEY` grant cover NuGet under AD-21. The story stays blocked until the Platform owner corrects the Builds tag-to-gitlink pairing and the maintainer completes the legacy Zot cleanup.
 - 2026-11-25 — Human decision (option A). Re-arm story 13 for a scanner increment. Scheduled scan `45615203576` showed that the Platform commit allowlist and the exact `ci.yml` fingerprint fail Works after every Platform update and every Builds release. Prove the Platform boundary by the reviewed export implementation bytes at the exact committed gitlink, and mask only immutable Builds tags in the workflow fingerprint. Read back the Platform pairing on current Works `main`. Then stop at the remaining Platform, Works source-identity and maintainer handoffs.
+- 2026-11-25 — Human decision (recommended plan). Fix the CiCd validation failure from the scanner increment by removing the test's read of the live `rendered/` registry. Record the hosted scan from the next scheduled run on the fixed scanner. Check Platform reachability before any further scanner change, then settle the next scanner increment through a spec update. [Validation fix and reachability](../evidence/13/validation-fix-and-reachability-20261125.md)
 
 ## Review Triage Log
 
@@ -88,6 +89,7 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 
 - Verdicts cover 21 findings — high 0, medium 3, low 7, false 5, maybe-false 1, rejected as edits to this spec 5.
 - The six patch findings were applied. The two focused tests, the 137-test locked scanner suite and the renderer check passed afterwards. Nothing was deferred.
+- Follow-up: the patch for the two medium workflow-digest findings read the live `rendered/` registry and failed Delivery `45652152586`. It was withdrawn. Workflow drift outside the Builds tags still fails the hosted Works row.
 - Findings
   - `[medium]` `[patch]` No test binds the production workflow fingerprint to the rendered Works `ci.yml` (verification gap). A renderer or Builds-contract change outside the two tags would fail every hosted Works scan with no CiCd check flagging it first.
   - `[medium]` `[patch]` Nothing ties the hand-copied workflow digest to the renderer. Same root cause as the row above.
@@ -122,7 +124,9 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - [Latest AD-21, adopted perimeter and hosted verification](../evidence/13/ad21-and-hosted-readback-20261125.md)
 - [Latest exact base and candidate discovery with owner diagnostics](../evidence/13/platform-boundary-qualification-20261125.md)
 - [Export-byte Platform proof, current pairing and AD-21 readback](../evidence/13/export-byte-proof-20261125.md)
+- [CiCd validation fix, current Works readback and Platform reachability](../evidence/13/validation-fix-and-reachability-20261125.md)
 - `run-with-temp uv run --locked --script tools/render.py --check` from CiCd.
+- `run-with-temp uv run --locked --script tools/validate.py --scope full` from CiCd, the gate that Delivery runs.
 - `run-with-temp python3 references/Hexalith.Builds/check.py` from a standalone exact Works checkout with the declared direct submodules.
 - `python3 tools/nightly_acceptance.py --run <run-id> --module Hexalith.Works` against an actual scheduled or eligible dispatched Nightly run.
 
@@ -130,17 +134,19 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 
 **Status** `blocked`
 
-**Blocking condition** The scanner increment is complete locally. Platform
-parity, scanner publication and AD-21 cleanup belong to other owners.
+**Blocking condition** The scanner increment is on CiCd `main`. Platform
+parity and AD-21 cleanup belong to other owners. The 128 reachable Platform
+diagnostics need a further scanner decision.
 
 The scanner now proves the Works Platform boundary at any committed gitlink
 whose tree holds the reviewed `eng/works_host_snapshot.py` bytes. The Works
 workflow fingerprint masks only immutable Builds `vX.Y.Z` tags. A missing or
 non-commit gitlink, or any other proof-input change, still fails with the
 exact `unproved` diagnostic, and so does a bytecode cache beside the export
-implementation. A new test binds the production workflow digest to the
-rendered Works `ci.yml`. After the review patches, both focused tests, all
-137 tests in the locked scanner suite and the renderer check passed.
+implementation. After the review patches, both focused tests, all 137 tests
+in the locked scanner suite and the renderer check passed. One patch read the
+live `rendered/` registry and failed CiCd's repository-inputs rule in Delivery
+`45652152586`. The follow-up fix removes that read.
 
 On Works `main` `96d231d54bc0a8b33004e828ebdeb1becb3bd15e`, the normal
 production controller now records Platform
@@ -149,7 +155,8 @@ production controller now records Platform
 controller stopped at 6 files. Works discovery still fails on 128 Platform
 diagnostics and the two Works source-identity diagnostics. Their compact
 diagnostic array is unchanged from Platform `616e2778`.
-Hosted requalification needs the scanner published on CiCd `main`.
+The scanner is on CiCd `main`. Hosted requalification waits for the next
+scheduled scan.
 
 Shared CI job `139251312243` passed in run `45627444691`, attempt 1. Its Platform parity
 job resolved the Builds tag-to-gitlink pairing and reached the canonical gate.
@@ -157,11 +164,14 @@ The gate failed the `platform-recovery` lane with an
 `ObjectDisposedException` for `RSAOpenSsl` in Works
 `WorksAppHostSmokeHarness.MintToken` at line 1018. Works commit
 `1ce938a4` introduced that code. This is a Works test defect for a separate
-Works PR.
+Works PR. On Works `main` `2e4f9a23818d51747bb21bc3e233703774602220` that
+failure is gone. The same two recovery tests now time out after repeated
+`ProcessEvidenceUnavailableException` from `WorksSourceStreamReader`.
 
 The AD-21 readback found Works excluded from all eight legacy grants,
 including `NUGET_API_KEY`. It also confirmed immutable releases and the
 scoped release environment. The legacy Zot owner and pair are unchanged, so
 the maintainer cleanup remains open. Nightly `45603058797` fails Works
 acceptance.
-[Increment evidence and owner handoffs](../evidence/13/export-byte-proof-20261125.md)
+[Increment evidence and owner handoffs](../evidence/13/export-byte-proof-20261125.md) ·
+[Validation fix and reachability](../evidence/13/validation-fix-and-reachability-20261125.md)

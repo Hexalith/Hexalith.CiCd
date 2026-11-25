@@ -12,7 +12,6 @@ import io
 import json
 import os
 from pathlib import Path
-import re
 import shutil
 import sys
 import tempfile
@@ -1896,18 +1895,9 @@ class ScanTests(acceptance_tests.Harness):
                           row["errors"])
             self.assertFalse(any("unproved" in error for error in row["errors"]), row)
 
-    def test_works_platform_production_inputs_bind_rendered_workflow_and_loaded_export(self):
+    def test_works_platform_production_export_is_a_loaded_entry_target(self):
         import scan_discovery as discovery
 
-        workflow = discovery.WORKS_PLATFORM_WORKFLOW
-        rendered = (ROOT / "rendered/Hexalith.Works" / workflow).read_bytes()
-        reviewed = discovery.WORKS_PLATFORM_INPUTS[workflow]
-        self.assertEqual(reviewed, discovery.works_fingerprint(workflow, rendered))
-        retagged, count = re.subn(rb"(Hexalith/Hexalith\.Builds/[^@\s\"']+@)v[0-9]+\.[0-9]+\.[0-9]+",
-                                  rb"\g<1>v99.0.1", rendered)
-        self.assertGreater(count, 0)
-        self.assertNotEqual(rendered, retagged)
-        self.assertEqual(reviewed, discovery.works_fingerprint(workflow, retagged))
         targets = {target for target, _ in discovery.WORKS_PLATFORM_ENTRIES.values()}
         self.assertTrue(discovery.WORKS_PLATFORM_EXPORT)
         self.assertLessEqual(set(discovery.WORKS_PLATFORM_EXPORT), targets)
