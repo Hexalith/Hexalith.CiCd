@@ -114,6 +114,58 @@ By kind, the diagnostics are:
 
 Narrowing traversal clears none of them without changing the detection policy.
 
+## Discovery partition
+
+Paths are under `references/Hexalith.Platform/` at `3bcac63c`. They come from
+the owner table in [the boundary qualification](platform-boundary-qualification-20261125.md#remaining-discovery-owners),
+whose diagnostic array is unchanged at that commit.
+
+| Group | Diagnostics |
+| --- | ---: |
+| Only behind `eng/verify_works_host.py` lines 1443–1454 or its `VERIFIER_HELPERS` list, lines 32–44 | 109 |
+| On the verifier's main path: the imports at lines 18–26 and the Works entry targets | 19 |
+| Works `scripts/verify-source-debug.py` | 2 |
+
+The 109 are in these files:
+
+- `eng/verify-agents-host.sh` (48)
+- Platform test modules (39)
+- `eng/ext-host-1/*` (21)
+- `eng/ext-secrets-1/local-transport/run.py` (1)
+
+The path to `run.py` was not traced.
+
+Of the 19, 13 are Git calls that take a literal subcommand and a computed
+directory or operands:
+
+| File | Lines |
+| --- | --- |
+| `eng/bound_builds.py` | 31, 41, 46, 71 |
+| `eng/builds_tuple.py` | 72, 86, 93 |
+| `eng/prepare_builds_artifacts.py` | 22 |
+| `eng/retained_works_host.py` | 30 |
+| `eng/verify_works_host.py` | 1029, 1049, 1149 |
+| `eng/works_host_snapshot.py` | 65 |
+
+Each of the four wrappers in `bound_builds.py`, `builds_tuple.py`,
+`prepare_builds_artifacts.py` and `works_host_snapshot.py` receives only
+literal subcommands from its callers. The `bound_builds.py` wrapper also
+clones, fetches and checks out. The `builds_tuple.py` calls pass a conditional
+`env` keyword. Line 1049 expands the constant tuple `BUILD_FILES`.
+
+The remaining 8 sites:
+
+| Site | Call |
+| --- | --- |
+| `eng/builds_tool_lock.py:104` | `dotnet nuget verify <path>` |
+| `eng/current_catalog_view.py:126` | `dotnet msbuild <driver>` with a computed `cwd` |
+| `eng/prepare_builds_artifacts.py:122` | `dotnet <tool>/Hexalith.Builds.Module.Cli.dll --version` |
+| `eng/works_toolchain.py:77` | the installed `daprd` binary, from a computed path |
+| `eng/isolated_daprd.py:50` | `executor=os.execv` as a default parameter |
+| `eng/works_verifier_command.py:87` | `subprocess.Popen(command, cwd=cwd, env=env)` |
+| Works `scripts/verify-source-debug.py:67` | `subprocess.Popen(command, cwd=root, …)` |
+| Works `scripts/verify-source-debug.py:78` | `taskkill /PID <pid> /T /F` |
+
 ## Remaining owners
 
 - **CiCd.** Record the hosted scan from the next scheduled run on the fixed

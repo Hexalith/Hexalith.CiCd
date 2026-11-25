@@ -95,6 +95,7 @@ The list is maintained by hand, and occasional false positives are accepted.
 
 - A copy-paste detector, `jscpd`, scans every module's custom actions and the scripts they call. It covers YAML, shell, PowerShell, and Python. It reads each module's current `main`, never this repository's submodule checkouts. It uses this repository's committed config, never one from the scanned module.
 - It runs in its own workflow, `scan.yml`, on a daily schedule and by hand. A fragment found in two or more modules, or a construct its discovery can't follow, fails that run and names the code to move. It never blocks a release or the Builds bump.
+- Discovery treats a literal read-only Git subcommand (`rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`, `diff`, `show`, `archive`, `remote get-url`) with literal flags as running no tracked source, whatever its computed directory, revisions or paths, including through a wrapper whose every caller passes a literal subcommand. Local `clone`, `fetch` and `checkout --detach` qualify only with literal flags and `--`. Computed subcommands, `-c` overrides, `config`, `hook`, `submodule foreach` and aliases still fail, and a literal operand that names a tracked script still enters discovery.
 - The detection threshold needs tuning. Expect early noise from the Python tooling in Memories and Tenants until the gate rule removes it.
 - The scan misses the same logic written differently. Agent review covers that, but runs only when a new custom action is enabled or the scan flags something.
 

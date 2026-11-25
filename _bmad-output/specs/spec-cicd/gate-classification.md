@@ -127,6 +127,14 @@ sampled names. This classification does not adopt the module or enable registrat
   (`timeoutMinutes: 180`, own Dapr). Shared CI submodule list stays Platform + Parties;
   the action keeps initializing the gitlinks it needs. Do not put R1–R11 on the shared
   CI job or the nightly hook.
+- **Platform verifier self-tests and Agents host lanes:** remove from the Works R1–R11
+  action. `evidence-gate-tests` and `component-evidence-gate-tests` test the verifier
+  itself, which is CI tooling. `agents-full-refusal` and `agents-local-scaffold` qualify
+  Platform's Agents host, and the verifier records them as not a Works prerequisite.
+  Platform owns the change: it moves the lanes and their Agents context out of
+  `eng/verify_works_host.py` into its own CI and drops files that no longer run in Works
+  CI from `VERIFIER_HELPERS`. A branch guard is not enough, because discovery follows
+  literals on every branch.
 
 Shared stage 3 replaces late "Fail on blocking test failures". Shared package-mode
 build replaces the two failing setup steps except published Builds artifacts still
