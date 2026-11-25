@@ -1641,8 +1641,8 @@ class ScanTests(acceptance_tests.Harness):
             self.assertIn("  - " + error + "\n", (w.output / "summary.md").read_text())
 
     def pinned_workspace(self, command, *, declaration=True, origin=None, duplicate=False, configured=True,
-                         gitlink=True, symlink=False, check_source="import helper\n"):
-        module, repository = "Hexalith.Alpha", "Hexalith.Dependency"
+                         gitlink=True, symlink=False, check_source="import helper\n",
+                         module="Hexalith.Alpha", repository="Hexalith.Dependency"):
         path = "references/" + repository
         workspace = self.workspace((module,))
         dependency = workspace.root / repository
@@ -1727,6 +1727,68 @@ class ScanTests(acceptance_tests.Harness):
         self.assertEqual("fail", row["result"], report)
         self.assertTrue(any("unresolved computed Python script invocation" in error for error in row["errors"]), report)
         self.assertNotIn("outside/check.py", {item["path"] for item in row["files"]})
+
+    def test_works_platform_boundary_follows_only_the_reviewed_inputs(self):
+        import scan_discovery as discovery
+
+        module = "Hexalith.Works"
+        repository = "Hexalith.Platform"
+        path = discovery.WORKS_PLATFORM_ROOT
+        action = discovery.WORKS_PLATFORM_ACTION
+        coordinator = "scripts/coordinator.py"
+        workspace, pin = self.pinned_workspace("echo dormant", module=module, repository=repository)
+        remote = workspace.paths[module]
+        script = workspace.write(module, coordinator, "print('coordinator')\n")
+        action_source = workspace.write(module, action, steps(("bash", "python3 " + coordinator, "")))
+        git(remote, "add", "--", action, coordinator)
+        git(remote, "commit", "--quiet", "-m", "record parity entry point")
+        inputs = {action: hashlib.sha256(action_source.read_bytes()).hexdigest(),
+                  coordinator: hashlib.sha256(script.read_bytes()).hexdigest()}
+        with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_PIN=pin,
+                                 WORKS_PLATFORM_ENTRIES=("eng/launcher.sh",)):
+            report = workspace.scan(self.factory)
+            row = report["modules"][0]
+            self.assertEqual("pass", row["result"], report)
+            self.assertEqual(row["pinnedSources"], {path: {"repository": repository, "revision": pin}})
+            helper = next(item for item in row["files"] if item["path"] == path + "/eng/helper.py")
+            self.assertEqual(hashlib.sha256(b"print('pinned helper')\n").hexdigest(), helper["sha256"])
+
+            script.write_text("print('different computed source')\n")
+            git(remote, "add", "--", coordinator)
+            git(remote, "commit", "--quiet", "-m", "substitute computed source")
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertNotIn("pinnedSources", row)
+            self.assertIn(f"{action}:1: local-script discovery: unproved computed Platform source: {coordinator}",
+                          row["errors"])
+            git(remote, "revert", "--no-edit", "HEAD")
+
+            replacement = git(workspace.transport.pins[repository], "rev-parse", "HEAD")
+            git(remote, "update-index", "--cacheinfo", "160000", replacement, path)
+            git(remote, "commit", "--quiet", "-m", "substitute Platform pin")
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertNotIn("pinnedSources", row)
+            self.assertIn(f"{action}:1: local-script discovery: unproved Platform gitlink for computed checkout/export: {path}",
+                          row["errors"])
+            git(remote, "revert", "--no-edit", "HEAD")
+            with mock.patch.object(discovery, "WORKS_PLATFORM_ENTRIES", ("eng/../eng/launcher.sh",)):
+                row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertTrue(any("unsafe source path within pinned source" in error for error in row["errors"]), row)
+
+            dependency = workspace.transport.pins[repository]
+            (dependency / "eng/check.py").write_text(
+                "import subprocess\nimport os\nsubprocess.run([os.getenv('UNPROVED_PROGRAM')])\n")
+            unresolved = workspace.commit(dependency)
+            git(remote, "update-index", "--cacheinfo", "160000", unresolved, path)
+            git(remote, "commit", "--quiet", "-m", "record unresolved descendant")
+            with mock.patch.object(discovery, "WORKS_PLATFORM_PIN", unresolved):
+                row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertEqual(row["pinnedSources"], {path: {"repository": repository, "revision": unresolved}})
+            self.assertIn(f"{path}/eng/check.py:3: local-script discovery: unresolved computed Python script invocation",
+                          row["errors"])
 
     def test_nonexecuting_git_and_anonymous_transport_environment(self):
         w = self.workspace(("Hexalith.Alpha",))

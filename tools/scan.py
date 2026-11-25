@@ -334,7 +334,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                     pinned = PinnedSources(trusted, revision, module, git, row["revision"],
                                            scratch / "pins" / str(index), transport, git_factory)
                     selected, row["errors"] = Discovery(git, row["revision"],
-                        javascript_parser=getattr(detector, "javascript", None), pinned_source=pinned).discover()
+                        javascript_parser=getattr(detector, "javascript", None), pinned_source=pinned,
+                        module=module).discover()
                     if pinned.acquired:
                         row["pinnedSources"] = pinned.acquired
                     root = scratch / "sources" / module

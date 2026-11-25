@@ -16,6 +16,7 @@ from __future__ import annotations
 import ast
 from collections import deque
 from functools import lru_cache
+import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import posixpath
@@ -105,6 +106,24 @@ NODE_FLAGS = {"--ignore-scripts", "--offline", "--foreground-scripts", "--silent
               "--json", "--no-audit", "--no-fund", "--global", "-g"}
 PYTHON_RUNNERS = {"uv", "poetry", "pipenv", "pdm", "hatch"}
 REDIRECTION = re.compile(r"(\d*|&|\*)(>>|>\||>&|>|<<<|<<-|<<|<>|<&|<)(.*)", re.S)
+
+# These committed sources prove the computed checkouts used by the registered
+# Works parity job. A changed materializer must establish provenance again.
+WORKS_PLATFORM_ACTION = ".github/actions/platform-parity/action.yml"
+WORKS_PLATFORM_ROOT = "references/Hexalith.Platform"
+WORKS_PLATFORM_PIN = "99a17baaf6de626d5f59311544a6aa8f9865b695"
+WORKS_PLATFORM_INPUTS = {
+    ".github/workflows/ci.yml": "489af3156c4404594cc585efbd556c306c89934baceff872b03b620549ffc252",
+    WORKS_PLATFORM_ACTION: "83b29524bf654025ce4260f0ab1917272b406750621a9212dfb7c2c559fcf8a2",
+    "scripts/prepare-platform-builds.py": "5fa6f5012381e6d64154c10999396a35a2f21a96d6cce0245d8b19f82d01cddf",
+    "scripts/verify-platform-parity-ci.py": "4e84e8280841785b694c3d22cb951a0e492e08e25a846a2d52d165bd0f34f127",
+}
+WORKS_PLATFORM_ENTRIES = (
+    "eng/bound_builds.py",
+    "eng/prepare_builds_artifacts.py",
+    "eng/works_host_snapshot.py",
+    "eng/verify-works-host.sh",
+)
 
 
 def environment_names(word):
@@ -509,8 +528,9 @@ def scalars(value, skip=()):
 
 
 class Discovery:
-    def __init__(self, git, revision, *, javascript_parser=None, pinned_source=None):
+    def __init__(self, git, revision, *, javascript_parser=None, pinned_source=None, module=None):
         self.git, self.revision = git, revision
+        self.module = module
         self.items = git.items(revision)
         self.directories = set()
         self.index_directories(self.items)
@@ -858,6 +878,28 @@ class Discovery:
             if "build-system" in project or self.recipe(("setup.py", "setup.cfg"), bases):
                 raise DeliveryError("unsupported local project preparation with tracked build backend: " + name)
 
+    def discover_works_platform(self, path, action):
+        """Traverse the known checkout/export from its committed Platform tree.
+
+        The action initializes the recorded direct gitlink and supplies no
+        Works/SDK root overrides. The preparation clone detaches at that
+        checkout's HEAD, then calls the two fixed preparation scripts. The
+        coordinator loads the snapshot module from the initialized checkout,
+        copies ordinary source bytes from that checkout into the detached
+        clone, and uses the pinned snapshot implementation to export them.
+        Its shell verifier runs from those exported source bytes. Queue every
+        entry for ordinary discovery so unresolved descendants still fail.
+        """
+        for source, digest in WORKS_PLATFORM_INPUTS.items():
+            if not self.regular(source) or hashlib.sha256(self.blob(source)).hexdigest() != digest:
+                raise DeliveryError("unproved computed Platform source: " + clean(source))
+        if self.items.get(WORKS_PLATFORM_ROOT) != ("160000", "commit", WORKS_PLATFORM_PIN):
+            raise DeliveryError("unproved Platform gitlink for computed checkout/export: " + WORKS_PLATFORM_ROOT)
+        for entry in WORKS_PLATFORM_ENTRIES:
+            target = self.resolve("$GITHUB_WORKSPACE/" + WORKS_PLATFORM_ROOT + "/" + entry,
+                                  path=path, cwd=".", action=action)
+            self.add(target, action=action)
+
     def action(self, path, text):
         try:
             value = yaml.load(text, Loader=ActionLoader)
@@ -871,6 +913,11 @@ class Discovery:
             self.error(path, 1, "invalid action/discovery: " + clean(error))
             return
         parent = str(PurePosixPath(path).parent)
+        if self.module == "Hexalith.Works" and path == WORKS_PLATFORM_ACTION:
+            try:
+                self.discover_works_platform(path, parent)
+            except (ValueError, UnicodeError) as error:
+                self.error(path, 1, "local-script discovery: " + clean(error))
         literals, cwds = [(1, item) for key, item in value.items() if key != "runs" for item in scalars(item)], ["."]
         # Each step is discovered independently and anchored at its own line.
         for step in value["runs"]["steps"]:

@@ -2,10 +2,11 @@
 title: 'Migrate Works'
 type: 'feature'
 created: '2026-11-24'
-status: ready-for-dev
-baseline_revision: 923726709cccb6bf8e56ec8a96ee105d49b8764d
+status: blocked
+baseline_revision: 117d19c0488bf3855763c0c3bf3270fc04a78fd2
+baseline_commit: 117d19c0488bf3855763c0c3bf3270fc04a78fd2
 implementation_repository: 'references/Hexalith.Works'
-implementation_baseline_revision: 'd55cda77c2a42bc523aa3664647cdafb87c87be5'
+implementation_baseline_revision: '6dc406e07e64e7f4d2b79851b56ba67d25f76300'
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
@@ -81,7 +82,36 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - [Live AD-21 readback, hosted CI triage and refreshed candidate](../evidence/13/hosted-ci-triage-20261124.md)
 - [Exact Works candidate and shared scanner prerequisite](../evidence/13/platform-scanner-prerequisite.md)
 - [Pinned source discovery and current hosted CI evidence](../evidence/13/scanner-increment-20261125.md)
+- [Computed Platform discovery checkpoint and owner handoffs](../evidence/13/computed-platform-checkpoint-20261125.md)
 - `run-with-temp uv run --locked --script tools/render.py --check` from CiCd.
 - `run-with-temp python3 references/Hexalith.Builds/check.py` from a standalone exact Works checkout with the declared direct submodules.
 - `python3 tools/nightly_acceptance.py --run <run-id> --module Hexalith.Works` against an actual scheduled or eligible dispatched Nightly run.
+
+## Auto Run Result
+
+**Status** `blocked`
+
+**Blocking condition** Implementation verification failed. The production
+scanner followed the computed checkout and sealed export at Platform pin
+`99a17baaf6de626d5f59311544a6aa8f9865b695`. It selected 43 files from
+Works `6dc406e07e64e7f4d2b79851b56ba67d25f76300` with zero run-level
+errors and zero duplicates involving Works. The Works row failed discovery
+on 15 Works and 128 Platform diagnostics. The latest hosted scan predates
+this scanner revision. The scheduled Nightly acceptance check for run
+`45394054346` exited 1 on the earlier Works dispatch commit. The checkpoint
+records exact source locations and ownership for the remaining diagnostics.
+[Checkpoint](../evidence/13/computed-platform-checkpoint-20261125.md)
+
+The renderer, all 136 scanner tests and the standalone Works Builds
+`v6.8.1` checker passed. Shared CI passed on current Works `main` in
+run `45575363008`, attempt 1. Platform parity was still running at the
+2026-11-25 08:44 UTC readback. The earlier Works discovery candidate had
+already been merged into `main` by an independent `/pushall`.
+[Hosted CI](https://github.com/Hexalith/Hexalith.Works/actions/runs/45575363008)
+
+The remaining AD-21 handoff is with the maintainer. Qualify scoped Zot
+replacements for EventStore, Memories, Parties and Tenants and verify
+retirement of the shared key and loss of Works write access. Bind the
+historical `NUGET_API_KEY` grant to the actual credential and verify loss
+of Works publishing access.
 
