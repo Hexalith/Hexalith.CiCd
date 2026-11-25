@@ -67,6 +67,11 @@ jscpd 5.4.3 signatures and recorded policy SHA-256
 | `tools/scan_discovery.py` | `02b8a465a1102e2e45f129a52f1d1f1ead0da09a` |
 | `tools/tests/test_scan.py` | `b0aea9d2ad78b5be46b8d141255016b70c365bec` |
 
+CiCd `main` published all four exact source blobs at
+`98f9430be01b50985ef5adb8466989548f2f479c`, tree
+`813df3ebfb3d2faeaf55bf72ef1d64c95b0888df`.
+[Published scanner](https://github.com/Hexalith/Hexalith.CiCd/commit/98f9430be01b50985ef5adb8466989548f2f479c)
+
 | Works input | Commit | Report SHA-256 |
 | --- | --- | --- |
 | Live `main` | `f934f53682fb6f8250370289103a19df65e9480e` | `6a679a7c86e758b6ef40673d94fdcdc117591784ab87053317336e3fbc21b039` |

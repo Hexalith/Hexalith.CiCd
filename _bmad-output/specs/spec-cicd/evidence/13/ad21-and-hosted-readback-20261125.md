@@ -125,10 +125,13 @@ manifest now match EventStore `70e1f765d21ec93f1461c21e4a460b4b14dc7b66`
 and PolymorphicSerializations `a8093f273cd095a3cb86bf59e6042c1843f4d086`.
 The delivered Builds pin, Platform pin and all parity and source-identity
 entry blobs stayed identical. PR 26 was closed as superseded to preserve
-the reconciled source records. The exact successor has hosted run
-`45592491388`. Its own acceptance checks remain open.
+the reconciled source records. Exact successor run `45592491388`,
+attempt 1, passed shared Stages 1–4 and source identity in job
+`139130009115`. Its independent parity job `139135384855` reproduced
+the same tag-to-gitlink mismatch before the canonical gate. Log SHA-256
+was `931dfa1c16b14fb9841dc1c876179d98774de23b954c3dfd8fc7ce53dd891875`.
 [Works successor](https://github.com/Hexalith/Hexalith.Works/commit/0f7963233e721cd758e56000c1bff4da76706756) ·
-[Successor CI](https://github.com/Hexalith/Hexalith.Works/actions/runs/45592491388)
+[Successor parity](https://github.com/Hexalith/Hexalith.Works/actions/runs/45592491388/job/139135384855)
 
 On the preceding Works base `6dc406e07e64e7f4d2b79851b56ba67d25f76300`,
 shared CI passed and Platform parity failed in run `45575363008`,
