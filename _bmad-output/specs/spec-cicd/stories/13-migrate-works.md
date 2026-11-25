@@ -2,7 +2,7 @@
 title: 'Migrate Works'
 type: 'feature'
 created: '2026-11-24'
-status: ready-for-dev
+status: blocked
 baseline_revision: 'eba76b2d4680eab1a02b7a88df6021a5f4cb3b5f'
 implementation_repository: 'references/Hexalith.Works'
 implementation_baseline_revision: 'd55cda77c2a42bc523aa3664647cdafb87c87be5'
@@ -78,7 +78,17 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - [Follow-up AD-21 and hosted acceptance readbacks](../evidence/13/auto-run-20261124.md#follow-up-verification)
 - [Live AD-21 readback, hosted CI triage and refreshed candidate](../evidence/13/hosted-ci-triage-20261124.md)
 - [Exact Works candidate and shared scanner prerequisite](../evidence/13/platform-scanner-prerequisite.md)
+- [Pinned source discovery and current hosted CI evidence](../evidence/13/scanner-increment-20261125.md)
 - `run-with-temp uv run --locked --script tools/render.py --check` from CiCd.
 - `run-with-temp python3 references/Hexalith.Builds/check.py` from a standalone exact Works checkout with the declared direct submodules.
 - `python3 tools/nightly_acceptance.py --run <run-id> --module Hexalith.Works` against an actual scheduled or eligible dispatched Nightly run.
 
+## Auto Run Result
+
+Status: blocked
+
+Blocking condition: implementation verification failed. Exact production-policy scans failed Works discovery on current `main` with 24 diagnostics and on the local candidate with 15. CiCd still needs committed-source resolution for the computed Platform checkout and sealed export and complete discovery of their reachable paths. The hosted scan has yet to qualify the fixed scanner on the publication base.
+
+Hosted CI attempt 2 passed shared CI and failed Platform parity during the Works recovery restart. Works and Platform own that investigation. Builds owns the recurring Stage 4 Dapr scheduler port conflict observed in attempt 1 and an earlier run. Both jobs need to pass on the same Works `main` and delivered Builds pin.
+
+Live GitHub and Zot readbacks confirm the existing adoption and scoped Works publisher. Maintainer acceptance still requires authenticated legacy NuGet credential disposition and scoped publishing continuity for EventStore, Memories, Parties and Tenants before the shared Zot key is retired. The local Works candidate remains on `fix/works-parity-discovery-8c40da78`. Nightly acceptance remains open.

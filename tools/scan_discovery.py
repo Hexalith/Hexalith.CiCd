@@ -509,19 +509,53 @@ def scalars(value, skip=()):
 
 
 class Discovery:
-    def __init__(self, git, revision, *, javascript_parser=None):
+    def __init__(self, git, revision, *, javascript_parser=None, pinned_source=None):
         self.git, self.revision = git, revision
         self.items = git.items(revision)
         self.directories = set()
-        for item in self.items:
-            parts = item.split("/")
-            self.directories.update("/".join(parts[:index]) for index in range(1, len(parts)))
+        self.index_directories(self.items)
+        self.pinned_source = pinned_source
+        self.pins, self.pin_errors = {}, {}
         self.files, self.errors, self.queue, self.visited = {}, [], deque(), set()
         self.headers, self.recipes = {}, {}
         self.total = 0
         self.javascript_parser = javascript_parser
         self.npm_seen = set()
         self.npm_roots = set()
+
+    def index_directories(self, paths):
+        for item in paths:
+            parts = item.split("/")
+            self.directories.update("/".join(parts[:index]) for index in range(1, len(parts)))
+
+    def acquire(self, path):
+        if path in self.pins:
+            return
+        if path in self.pin_errors:
+            raise DeliveryError(self.pin_errors[path])
+        try:
+            mode, kind, revision = self.items[path]
+            if self.pinned_source is None or (mode, kind) != ("160000", "commit"):
+                raise DeliveryError("unsafe non-directory source path component: " + clean(path))
+            source = self.pinned_source(path, revision)
+            entries = {path + "/" + safe_path(item): value for item, value in source.items(revision).items()}
+            self.items.update(entries)
+            self.index_directories(entries)
+            self.directories.add(path)
+            self.pins[path] = (source, revision)
+        except (ValueError, UnicodeError) as error:
+            self.pin_errors[path] = str(error)
+            raise
+
+    def source_root(self, path):
+        return next((root for root in self.pins if path == root or path.startswith(root + "/")), None)
+
+    def blob(self, path):
+        root = self.source_root(path)
+        if root is not None:
+            git, revision = self.pins[root]
+            return git.blob(revision, path.removeprefix(root + "/"))
+        return self.git.blob(self.revision, path)
 
     def error(self, path, line, message):
         self.errors.append(f"{clean(path)}:{line}: {clean(message)}")
@@ -532,7 +566,7 @@ class Discovery:
 
     def header(self, path):
         if path not in self.headers:
-            self.headers[path] = shebang(self.git.blob(self.revision, path).split(b"\n", 1)[0])
+            self.headers[path] = shebang(self.blob(path).split(b"\n", 1)[0])
         return self.headers[path]
 
     def script_format(self, path):
@@ -552,7 +586,7 @@ class Discovery:
         if path not in self.files:
             if len(self.files) >= MAX_FILES:
                 raise DeliveryError("module selected-file limit exceeded")
-            raw = self.git.blob(self.revision, path)
+            raw = self.blob(path)
             self.total += len(raw)
             if self.total > MAX_BYTES:
                 raise DeliveryError("module selected-source byte limit exceeded")
@@ -603,13 +637,22 @@ class Discovery:
             if component in {"", "."}:
                 continue
             if component == "..":
-                if not traversed:
+                if not traversed or "/".join(traversed) in self.pins:
                     raise DeliveryError("source path escapes module")
                 traversed.pop()
             else:
                 traversed.append(component)
                 prefix = "/".join(traversed)
-                if index < len(components) - 1 and prefix in self.items:
+                item = self.items.get(prefix)
+                if item is None:
+                    continue
+                remaining = components[index + 1:]
+                if (item[:2] == ("160000", "commit") and self.pinned_source is not None and (remaining or allow_root)
+                        and prefix.startswith("references/") and prefix.count("/") == 1):
+                    if any(item in {"", ".", "..", ".git"} for item in remaining):
+                        raise DeliveryError("unsafe source path within pinned source: " + clean(value))
+                    self.acquire(prefix)
+                elif remaining:
                     raise DeliveryError("unsafe non-directory source path component: " + clean(prefix))
         value = posixpath.normpath(joined)
         if allow_root and value == ".":
@@ -632,7 +675,7 @@ class Discovery:
         if precise in self.items:
             return [precise]
         expanded, anchored = self.expand(value, path, action)
-        matches = [] if anchored else self.candidates(expanded, bases)
+        matches = [] if anchored or self.source_root(precise) else self.candidates(expanded, bases)
         if not matches:
             raise DeliveryError("missing or unsafe regular script/action: " + clean(precise))
         return matches
@@ -656,9 +699,10 @@ class Discovery:
                 result.append((match, fmt))
         return result
 
-    @staticmethod
-    def bases(path, action, cwds):
-        return list(dict.fromkeys([".", str(PurePosixPath(path).parent), *([action] if action else []), *cwds]))
+    def bases(self, path, action, cwds):
+        root = self.source_root(path)
+        return list(dict.fromkeys([".", str(PurePosixPath(path).parent), *([root] if root else []),
+                                   *([action] if action else []), *cwds]))
 
     def include(self, literals, path, cwd, action, bases):
         """Traverse literal references in every supplied invocation context."""
@@ -750,7 +794,7 @@ class Discovery:
                     continue
                 if candidate not in self.recipes:
                     try:
-                        data = tomllib.loads(self.git.blob(self.revision, candidate).decode("utf-8"))
+                        data = tomllib.loads(self.blob(candidate).decode("utf-8"))
                     except (ValueError, UnicodeError):
                         raise DeliveryError("unreadable task runner recipe: " + clean(candidate)) from None
                     found = set()
@@ -808,7 +852,7 @@ class Discovery:
             if candidate not in self.items:
                 continue
             try:
-                project = tomllib.loads(self.git.blob(self.revision, candidate).decode("utf-8"))
+                project = tomllib.loads(self.blob(candidate).decode("utf-8"))
             except (ValueError, UnicodeError):
                 raise DeliveryError("unreadable task runner recipe: " + clean(candidate)) from None
             if "build-system" in project or self.recipe(("setup.py", "setup.cfg"), bases):
@@ -936,6 +980,44 @@ class Discovery:
                         data.append((body_number, body, expands))
             yield number, line, data
 
+    def source_relative_launcher(self, path, text, cwd, action):
+        """Follow a standalone Bash trampoline that derives its child from BASH_SOURCE."""
+        if not text.startswith("#!/usr/bin/env bash\n"):
+            return False
+        lines = [(number, line.strip(" \t")) for number, line in enumerate(text.split("\n"), 1)
+                 if line.strip(" \t") and not line.lstrip(" \t").startswith("#")]
+        if not lines or lines[0][1] != "set -euo pipefail":
+            return False
+        body = "\n".join(line for _, line in lines[1:])
+        root = re.fullmatch(
+            r'(?P<anchor>root|ROOT)="\$\(cd "\$\(dirname "\$\{BASH_SOURCE\[0\]\}"\)/\.\." && pwd\)"'
+            r'\nexec python3 "\$(?P=anchor)/(?P<child>[A-Za-z0-9_./-]+\.py)"'
+            r'(?: --works-root "\$(?P=anchor)")?(?: "\$@")?', body)
+        sibling = re.fullmatch(
+            r'script="\$\{BASH_SOURCE\[0\]\}"\nif \[\[ "\$script" != \*/\* \]\]; then'
+            r'\nscript="\./\$script"\nfi\nexec python3 -- "\$\{script%/\*\}/(?P<child>[A-Za-z0-9_.-]+\.py)"'
+            r'(?: --works-root "\$\{script%/\*\}/\.\.")?(?: "\$@")?', body)
+        basename = re.fullmatch(
+            r'script="\$\{BASH_SOURCE\[0\]\}"\nif \[\[ "\$script" == \*/\* \]\]; then'
+            r'\nexec python3 -- "\$\{script%/\*\}/(?P<child>[A-Za-z0-9_.-]+\.py)"\nfi'
+            r'\nexec python3 \./(?P=child)', body)
+        match = root or sibling or basename
+        if match is None:
+            return False
+        try:
+            child = safe_path(match["child"])
+            parent = PurePosixPath(path).parent
+            if root:
+                if str(parent) == "." or str(parent) in self.pins:
+                    raise DeliveryError("source-relative launcher escapes its source root")
+                parent = parent.parent
+            target = self.resolve(str(parent / child), path=path, cwd=".", action=None)
+            self.language(target, "python")
+            self.add(target, "python", cwd=cwd, action=action)
+        except DeliveryError as error:
+            self.error(path, lines[-1][0], "local-script discovery: " + clean(error))
+        return True
+
     def commands(self, path, text, cwd, action, *, offset=0, powershell=False, sourced=False):
         # Recognized calls carry the literal working directory. Literal words
         # naming tracked scripts are included afterwards from every base.
@@ -945,6 +1027,9 @@ class Discovery:
                       lambda m: "$GITHUB_WORKSPACE" if m[1] == "workspace" else "$GITHUB_ACTION_PATH", text)
         if powershell:
             self.powershell(path, text, cwd, action, offset=offset, sourced=sourced)
+            return
+        if (not sourced and not offset and self.files.get(path, {}).get("text") == text
+                and self.source_relative_launcher(path, text, cwd, action)):
             return
         cwds, literals, modules = [cwd], [], []
         for number, line, data in self.logical(text, offset, powershell, path):
@@ -1522,7 +1607,7 @@ class Discovery:
                     raise DeliveryError("duplicate npm/config JSON key: " + clean(path))
                 result[key] = value
             return result
-        return json.loads(self.git.blob(self.revision, path), object_pairs_hook=pairs,
+        return json.loads(self.blob(path), object_pairs_hook=pairs,
                           parse_constant=lambda _: (_ for _ in ()).throw(DeliveryError("non-JSON constant")))
 
     def npm_workspace(self, directory, path, number, action):
@@ -1852,7 +1937,7 @@ class Discovery:
         parts = path.split("/")
         for index in range(1, len(parts) + 1):
             prefix = "/".join(parts[:index])
-            if prefix in self.items:
+            if prefix in self.items and prefix not in self.pins:
                 raise DeliveryError("unsafe non-directory Python import path component: " + clean(prefix))
 
     def add_module(self, target, cwd, action, roots):
@@ -2223,6 +2308,11 @@ class Discovery:
                 raise ValueError("unsupported source-path component")
             return self.resolve(value, path=path, cwd=base, action=None, allow_root=True)
 
+        def source_parent(value):
+            if value == "." or value in self.pins:
+                raise ValueError("source path escapes its committed root")
+            return str(PurePosixPath(value).parent)
+
         def resolve(node, stack=()):
             if len(stack) > 8:
                 raise ValueError("source-path expansion limit exceeded")
@@ -2258,21 +2348,19 @@ class Discovery:
                 if (not node.args and isinstance(node.func, ast.Attribute) and node.func.attr == "resolve"):
                     value, anchored = resolve(node.func.value, stack)
                     if anchored:
-                        if value in self.items and not self.regular(value):
+                        if value in self.items and value not in self.pins and not self.regular(value):
                             raise ValueError("unsafe resolved source-path component")
                         return value, True
             if isinstance(node, ast.Attribute) and node.attr == "parent":
                 value, anchored = resolve(node.value, stack)
                 if anchored and value != ".":
-                    return str(PurePosixPath(value).parent), True
+                    return source_parent(value), True
             if (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute) and node.value.attr == "parents"
                     and isinstance(node.slice, ast.Constant) and type(node.slice.value) is int and 0 <= node.slice.value <= 8):
                 value, anchored = resolve(node.value.value, stack)
                 if anchored:
                     for _ in range(node.slice.value + 1):
-                        if value == ".":
-                            raise ValueError("source path escapes module")
-                        value = str(PurePosixPath(value).parent)
+                        value = source_parent(value)
                     return value, True
             if (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)
                     and isinstance(node.right, ast.Constant) and isinstance(node.right.value, str)
@@ -2681,7 +2769,7 @@ class Discovery:
                         except DeliveryError as error:
                             raise DeliveryError("unsafe subprocess cwd: " + clean(error)) from None
                         for component in (PurePosixPath(target_cwd), *PurePosixPath(target_cwd).parents):
-                            if str(component) in self.items:
+                            if str(component) in self.items and str(component) not in self.pins:
                                 raise DeliveryError("unsafe subprocess working directory: " + clean(option))
                         if target_cwd != "." and target_cwd not in self.directories:
                             raise DeliveryError("missing committed subprocess working directory: " + clean(option))
@@ -2818,7 +2906,7 @@ class Discovery:
                     fmt = FORMATS.get(PurePosixPath(path).suffix.lower())
                     if fmt:
                         self.add(path, fmt, action=self.owner(path))
-                    elif self.git.blob(self.revision, path).split(b"\n", 1)[0].startswith(b"#!"):
+                    elif self.blob(path).split(b"\n", 1)[0].startswith(b"#!"):
                         self.add(path, action=self.owner(path))
                 except (ValueError, UnicodeError) as error:
                     self.error(path, 1, str(error))

@@ -38,12 +38,17 @@ class FixtureGit(rt.Git):
 class Remotes:
     def __init__(self, paths):
         self.paths, self.seen = paths, []
+        self.pins = {}
 
     def module(self, target, module):
         self.seen.append(module)
         target.run("fetch", "--quiet", "--depth=1", "--no-tags", "--no-recurse-submodules",
                    self.paths[module], "+refs/heads/main:refs/heads/main")
         return target.resolve("refs/heads/main^{commit}")
+
+    def pinned_source(self, target, repository, revision):
+        target.run("fetch", "--quiet", "--depth=1", "--no-tags", "--no-recurse-submodules",
+                   self.pins[repository], revision)
 
 
 class Workspace:
@@ -1634,6 +1639,94 @@ class ScanTests(acceptance_tests.Harness):
             self.assertIn("action.yml:", error)
             self.assertIn("local-script", error)
             self.assertIn("  - " + error + "\n", (w.output / "summary.md").read_text())
+
+    def pinned_workspace(self, command, *, declaration=True, origin=None, duplicate=False, configured=True,
+                         gitlink=True, symlink=False, check_source="import helper\n"):
+        module, repository = "Hexalith.Alpha", "Hexalith.Dependency"
+        path = "references/" + repository
+        workspace = self.workspace((module,))
+        dependency = workspace.root / repository
+        dependency.mkdir()
+        git(dependency, "init", "--quiet", "--initial-branch=main")
+        (dependency / "eng").mkdir()
+        (dependency / "eng/launcher.sh").write_text(
+            '#!/usr/bin/env bash\nset -euo pipefail\nROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"\n'
+            'exec python3 "$ROOT/eng/check.py" "$@"\n')
+        check = dependency / "eng/check.py"
+        (dependency / "eng/helper.py").write_text("print('pinned helper')\n")
+        if symlink:
+            check.symlink_to("helper.py")
+        else:
+            check.write_text(check_source)
+        pin = workspace.commit(dependency)
+        (dependency / "eng/helper.py").write_text("print('mutable branch replacement')\n")
+        workspace.commit(dependency)
+        workspace.transport.pins[repository] = dependency
+        if configured:
+            (workspace.cicd / ("setup/" + module + ".yml")).write_text(
+                "solution: none\nsubmodules:\n  - " + path + "\n")
+            workspace.commit(workspace.cicd)
+        if declaration:
+            url = origin or rt.Transport().remote(repository)
+            section = f'\tpath = {path}\n\turl = {url}\n'
+            workspace.write(module, ".gitmodules", f'[submodule "{repository}"]\n' + section
+                            + ('[submodule "duplicate"]\n' + section if duplicate else ""))
+        workspace.action(module, command)
+        workspace.commit(workspace.paths[module])
+        if gitlink:
+            git(workspace.paths[module], "update-index", "--add", "--cacheinfo", "160000", pin, path)
+            git(workspace.paths[module], "commit", "--quiet", "-m", "record dependency")
+        return workspace, pin
+
+    def test_pinned_source_launcher_and_import_follow_recorded_commit(self):
+        path = "references/Hexalith.Dependency"
+        workspace, pin = self.pinned_workspace("bash " + path + "/eng/launcher.sh")
+        report = workspace.scan(self.factory)
+        self.assertEqual("pass", report["result"], report)
+        row = report["modules"][0]
+        self.assertEqual(row["pinnedSources"], {path: {"repository": "Hexalith.Dependency", "revision": pin}})
+        self.assertEqual({item["path"] for item in row["files"]}, {
+            ".github/actions/dormant/action.yml", path + "/eng/launcher.sh", path + "/eng/check.py",
+            path + "/eng/helper.py",
+        })
+        helper = next(item for item in row["files"] if item["path"].endswith("/helper.py"))
+        self.assertEqual(hashlib.sha256(b"print('pinned helper')\n").hexdigest(), helper["sha256"])
+
+    def test_pinned_source_unknown_and_substituted_execution_targets_fail(self):
+        path = "references/Hexalith.Dependency"
+        launcher = path + "/eng/launcher.sh"
+        for command, options, diagnostic in (
+            (f'bash "$UNKNOWN"/eng/launcher.sh', {}, "unresolved local-script target"),
+            (f'bash {path}/eng/missing.sh', {}, "missing or unsafe regular script"),
+            (f'bash {path}/../{launcher}', {}, "unsafe source path within pinned source"),
+            (f'bash {launcher}', {"declaration": False}, "missing regular committed .gitmodules"),
+            (f'bash {launcher}', {"duplicate": True}, "ambiguous committed submodule declaration"),
+            (f'bash {launcher}', {"origin": "https://example.com/Substitute"}, "origin or path mismatch"),
+            (f'bash {launcher}', {"configured": False}, "not authorized by committed setup"),
+            (f'bash {launcher}', {"gitlink": False}, "missing or unsafe regular script"),
+            (f'bash {launcher}', {"symlink": True}, "missing or unsafe regular script"),
+        ):
+            with self.subTest(command=command, options=options):
+                workspace, _ = self.pinned_workspace(command, **options)
+                report = workspace.scan(self.factory)
+                self.assertEqual("fail", report["result"], report)
+                self.assertTrue(any(diagnostic in error for error in report["modules"][0]["errors"]), report)
+
+    def test_pinned_python_source_relative_parent_cannot_escape_dependency(self):
+        launcher = "references/Hexalith.Dependency/eng/launcher.sh"
+        workspace, _ = self.pinned_workspace("bash " + launcher, check_source=(
+            "from pathlib import Path\nimport subprocess\n"
+            "subprocess.run(['python3', Path(__file__).resolve().parents[3] / 'outside' / 'check.py'])\n"
+        ))
+        workspace.write("Hexalith.Alpha", "outside/check.py", "print('outside the dependency')\n")
+        module = workspace.paths["Hexalith.Alpha"]
+        git(module, "add", "outside/check.py")
+        git(module, "commit", "--quiet", "-m", "record adjacent source")
+        report = workspace.scan(self.factory)
+        row = report["modules"][0]
+        self.assertEqual("fail", row["result"], report)
+        self.assertTrue(any("unresolved computed Python script invocation" in error for error in row["errors"]), report)
+        self.assertNotIn("outside/check.py", {item["path"] for item in row["files"]})
 
     def test_nonexecuting_git_and_anonymous_transport_environment(self):
         w = self.workspace(("Hexalith.Alpha",))

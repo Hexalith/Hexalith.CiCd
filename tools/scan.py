@@ -16,8 +16,10 @@ import shutil
 import subprocess
 import tempfile
 
+import yaml
+
 import delivery_runtime as rt
-from scan_discovery import Discovery, FORMATS
+from scan_discovery import ActionLoader, Discovery, FORMATS
 
 SCHEMA = "hexalith.duplicate-scan.v1"
 MAX_REPORT = 16 * 1024 * 1024
@@ -247,6 +249,56 @@ def persist(directory, report):
         temporary.replace(destination)
 
 
+class PinnedSources:
+    """Acquire only direct gitlinks authorized by the controller's module setup."""
+
+    def __init__(self, trusted, controller, module, git, revision, scratch, transport, git_factory):
+        self.trusted, self.controller, self.module = trusted, controller, module
+        self.git, self.revision = git, revision
+        self.scratch, self.transport, self.git_factory = scratch, transport, git_factory
+        self.acquired = {}
+
+    def __call__(self, path, revision):
+        parts = path.split("/")
+        if len(parts) != 2 or parts[0] != "references":
+            raise rt.DeliveryError("unsupported pinned source root: " + rt.clean(path))
+        repository = rt.name(parts[1])
+        setup_path = "setup/" + self.module + ".yml"
+        try:
+            setup = yaml.load(self.trusted.blob(self.controller, setup_path), Loader=ActionLoader)
+        except (yaml.YAMLError, UnicodeError, RecursionError) as error:
+            raise rt.DeliveryError("invalid pinned source setup: " + rt.clean(error)) from None
+        allowed = setup.get("submodules") if isinstance(setup, dict) else None
+        if not isinstance(allowed, list) or allowed.count(path) != 1:
+            raise rt.DeliveryError("pinned source not authorized by committed setup: " + rt.clean(path))
+
+        item = self.git.items(self.revision, ".gitmodules").get(".gitmodules")
+        if item is None or item[:2] not in (("100644", "blob"), ("100755", "blob")):
+            raise rt.DeliveryError("missing regular committed .gitmodules declaration")
+        # Ask Git to apply its own config grammar to the blob, without includes.
+        self.git.blob(self.revision, ".gitmodules")
+        config = self.git.run("config", "--blob", item[2], "--no-includes", "--null", "--list").decode()
+        entries = [entry.split("\n", 1) for entry in config.split("\0") if entry]
+        paths = [key.removesuffix(".path") for key, *value in entries
+                 if key.startswith("submodule.") and key.endswith(".path") and value == [path]]
+        if len(paths) != 1 or any(key.startswith(("include.", "includeif.")) for key, *_ in entries):
+            raise rt.DeliveryError("missing or ambiguous committed submodule declaration: " + rt.clean(path))
+        section = paths[0]
+        declared = [value for key, *value in entries if key == section + ".path"]
+        urls = [value for key, *value in entries if key == section + ".url"]
+        if declared != [[path]] or urls != [[rt.Transport().remote(repository)]]:
+            raise rt.DeliveryError("submodule declaration origin or path mismatch: " + rt.clean(path))
+
+        git = self.git_factory(self.scratch / str(len(self.acquired)))
+        git.init()
+        self.transport.pinned_source(git, repository, revision)
+        source = git.resolve(revision + "^{commit}")
+        if source != revision:
+            raise rt.DeliveryError("pinned source revision mismatch")
+        self.acquired[path] = {"repository": repository, "revision": source}
+        return git
+
+
 def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_factory=Detector):
     project, directory = Path(project).resolve(), Path(directory).resolve()
     report = {"schema": SCHEMA, "result": "fail", "controllerRevision": "", "modules": [], "findings": [],
@@ -261,6 +313,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
         modules = rt.registry(trusted, revision)
         if len(modules) > rt.CAPACITY:
             raise rt.DeliveryError("committed registry exceeds 17-module capacity")
+        transport = transport or rt.Transport()
         with tempfile.TemporaryDirectory(prefix="hexalith-duplicate-scan-") as temporary:
             scratch = Path(temporary)
             manifest, roots, total = {}, [], 0
@@ -277,9 +330,13 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                 try:
                     git = git_factory(scratch / "git" / str(index))
                     git.init()
-                    row["revision"] = rt.sha((transport or rt.Transport()).module(git, module))
+                    row["revision"] = rt.sha(transport.module(git, module))
+                    pinned = PinnedSources(trusted, revision, module, git, row["revision"],
+                                           scratch / "pins" / str(index), transport, git_factory)
                     selected, row["errors"] = Discovery(git, row["revision"],
-                        javascript_parser=getattr(detector, "javascript", None)).discover()
+                        javascript_parser=getattr(detector, "javascript", None), pinned_source=pinned).discover()
+                    if pinned.acquired:
+                        row["pinnedSources"] = pinned.acquired
                     root = scratch / "sources" / module
                     for path, item in sorted(selected.items()):
                         data = item["text"].encode()

@@ -17,13 +17,21 @@ The registry is the committed [`setup/*.yml` tree](../setup/) at the controller'
 revision, capped at 17 modules. Invalid names, case collisions, symlinks and a
 Builds registration fail. Registration includes modules awaiting adoption;
 `delivered/*`, enabled hooks and local submodule checkouts do not determine scope.
-Builds and unregistered repositories are never scanned.
+Every scan root is a registered module.
 
 Each module is fetched anonymously from its fixed GitHub `main` origin into a
 private Git object store. Reports record the full canonical commit SHA. The
 controller reads tracked regular blobs without checking out or executing module
-code, applying filters, running Git hooks or initializing submodules. A source
-blob is capped at 2 MiB; a module selects at most 2,000 files and 32 MiB; aggregate
+code, applying filters, running Git hooks or initializing submodules. When a
+literal execution path enters a direct submodule, its path must appear in the
+controller's committed module setup and have one matching committed
+`.gitmodules` declaration with the official origin. The controller fetches the
+gitlink's exact commit into a separate private object store, follows reachable
+sources under the dependency path, and records its revision in the module's
+`pinnedSources` field. Nested gitlinks, symlinks and traversal through the
+dependency path fail discovery.
+
+A source blob is capped at 2 MiB; a module selects at most 2,000 files and 32 MiB; aggregate
 staging is capped at 128 MiB, reports at 16 MiB and findings at 1,000. Fetch, parsing, discovery, unsafe
 path, symlink, gitlink and capacity failures are explicit. A failed module cannot
 prevent healthy siblings from contributing files and findings.
@@ -66,7 +74,9 @@ Recognized forms supply the exact working directory, import roots and language:
   Literal local modules in PowerShell `#requires -Modules` are traversed too.
   Literal attached parameter values such as `-Command:` retain their AST type.
   Interpreter options are read positionally, so later words are script
-  arguments. Versioned and `.exe` interpreter spellings are recognized.
+  arguments. Versioned and `.exe` interpreter spellings are recognized. A
+  standalone Bash launcher can resolve a fixed Python script from
+  `BASH_SOURCE[0]` through its own directory or the parent directory.
 - The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
   `sudo`, `doas`, `setsid`, `stdbuf`, `ionice`, `unbuffer` and `xargs` wrappers,
   plus `timeout DURATION`, `flock FILE` and `chrt PRIORITY`, also when called by
