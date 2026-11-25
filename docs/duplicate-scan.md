@@ -99,19 +99,30 @@ Recognized forms supply the exact working directory, import roots and language:
 - Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
   `tool run NAME` prefix consumes project, output and property data at the
   compiled-language boundary. The executable, operation and tool name must be
-  literal, with no argv expansion. Fixed `git -C DIRECTORY rev-parse HEAD` is
-  a provenance read. Literal script references in these data operands still
-  enter discovery. Computed executable/operation, shell, working-directory or
-  resolution-environment changes remain failures.
+  literal, with no argv expansion. Literal script references in these data
+  operands still enter discovery. Computed executable, operation, shell,
+  working-directory or resolution-environment changes remain failures.
+- Python subprocess argv using the standard Git executable can read metadata
+  with literal `rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`,
+  `diff`, `show`, `archive` and `remote get-url` and supported literal flags.
+  A computed `cwd` or `-C` operand is directory data. Computed paths after
+  `--` are data. Modes with execution-sensitive options require proof that a
+  computed operand cannot be treated as one of those options. Use
+  `--end-of-options` before computed revisions in `diff` and `show`. A local
+  `clone`, `fetch` or `checkout --detach` requires safe literal flags and
+  `--`. Computed verbs, Git aliases, `-c`, `config`, `hook`, and
+  `submodule foreach` fail. Literal tracked scripts remain in scope, including
+  those under a proved literal working directory or `-C` path.
 - Direct Python `*args` wrappers and finite literal tuple loops are expanded
   within fixed depth, argument and variant budgets. Aliased or replaced
   callables, reflective namespace changes, unknown callers and computed
   process options fail. Copied `os.environ` mappings permit only proved
   resolution-preserving mutations and cannot escape through aliases/callbacks.
-  Forwarded Git metadata/acquisition operations require literal modes and
-  operands. A regex guard does not certify opaque data: repeated computed
-  reads and string-subclass operations may differ from the validated value.
-  Such operands remain failures, including in otherwise legitimate scripts.
+  Git wrappers must meet the same rules at every call site. A constant tuple
+  can supply literal operands. A conditional `**` mapping may supply only
+  the subprocess `env` keyword, and the environment must preserve executable
+  resolution in each branch. Git mode proof does not permit a shell,
+  alternate executable, pre-execution callback or unresolved environment.
 
 ### Rule 1: literal references are included
 

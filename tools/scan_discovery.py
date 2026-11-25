@@ -146,15 +146,34 @@ WORKS_PLATFORM_ENTRIES = {
 # Their arguments are data from the review-bound files above: paths rooted in
 # the job and revision data from Git or the stable numeric SDK version.
 WORKS_PLATFORM_GIT_CALLS = {
-    (WORKS_PLATFORM_PREPARE, 25, "subprocess.check_output"),  # Platform HEAD
-    (WORKS_PLATFORM_PREPARE, 29, "subprocess.check_output"),  # Platform status
-    (WORKS_PLATFORM_PREPARE, 33, "subprocess.check_output"),  # Platform index
     (WORKS_PLATFORM_PREPARE, 48, "subprocess.run"),  # clone local Platform owner
     (WORKS_PLATFORM_PREPARE, 50, "subprocess.run"),  # detach at the recorded HEAD
-    (WORKS_PLATFORM_COORDINATOR, 44, "subprocess.check_output"),  # SDK rev-parse/archive/show
+    (WORKS_PLATFORM_COORDINATOR, 44, "subprocess.check_output"),  # SDK archive/show with verified revision
     (WORKS_PLATFORM_COORDINATOR, 118, "subprocess.run"),  # clone local Platform owner
     (WORKS_PLATFORM_COORDINATOR, 119, "subprocess.run"),  # detach at the snapshot's revision
 }
+GIT_READ_FLAGS = {
+    "rev-parse": {"--verify", "-q", "--quiet", "--show-toplevel", "--show-prefix", "--show-cdup", "--git-dir",
+                  "--absolute-git-dir", "--is-inside-work-tree", "--is-bare-repository", "--short", "--end-of-options"},
+    "ls-files": {"-v", "-z", "-c", "-o", "-s", "-t", "--cached", "--others", "--stage", "--exclude-standard",
+                 "--full-name", "--error-unmatch", "--modified", "--deleted", "--directory"},
+    "ls-tree": {"-r", "-t", "-d", "-z", "-l", "--name-only", "--name-status", "--full-name", "--full-tree"},
+    "status": {"-s", "-b", "-z", "--short", "--branch", "--porcelain", "--untracked-files", "--ignore-submodules"},
+    "cat-file": {"-t", "-s", "-e", "-p", "--batch-check"},
+    "diff": {"-z", "--exit-code", "--quiet", "--name-only", "--name-status", "--stat", "--raw", "--cached",
+             "--staged", "--no-index", "--no-ext-diff", "--no-textconv", "--end-of-options"},
+    "show": {"-s", "--no-patch", "--format=", "--pretty=", "--no-ext-diff", "--no-textconv", "--name-only",
+             "--name-status", "--end-of-options"},
+    "archive": {"--format=tar", "--format=zip", "--prefix=", "--worktree-attributes"},
+    "remote": {"--all", "--push"},
+}
+GIT_LOCAL_FLAGS = {
+    "clone": {"-q", "--quiet", "--shared", "--local", "--no-hardlinks", "--no-checkout", "--no-tags"},
+    "fetch": {"-q", "--quiet", "--depth", "--no-auto-maintenance", "--no-recurse-submodules", "--no-tags",
+              "--no-write-fetch-head", "--refmap"},
+    "checkout": {"-q", "--quiet", "--detach", "--no-recurse-submodules"},
+}
+GIT_ENV_PREFIXES = ("GIT_", "LD_", "DYLD_")
 
 
 def works_fingerprint(path, data):
@@ -2548,7 +2567,7 @@ class Discovery:
         raise DeliveryError("unsupported reflective use of a process/import API: " + clean(sorted(candidates)[0]))
 
     @staticmethod
-    def copied_environment(value, invocation, parents, all_nodes, names):
+    def copied_environment(value, invocation, parents, all_nodes, names, *, protected_process_prefixes=()):
         """Prove an unaliased local environment copy leaves interpreter lookup unchanged."""
         if not isinstance(value, ast.Name) or len(all_nodes) > 4096:
             return False
@@ -2629,7 +2648,7 @@ class Discovery:
             return False
 
         protected = RESOLUTION | {"PATH", "BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS", "ZDOTDIR", "FPATH"}
-        protected_prefixes = ("PYTHON", "NODE", "NPM_CONFIG_", "PS", "POWERSHELL")
+        protected_prefixes = ("PYTHON", "NODE", "NPM_CONFIG_", "PS", "POWERSHELL", *protected_process_prefixes)
         def safe_key(key):
             return isinstance(key, str) and key.upper() not in protected and not key.upper().startswith(protected_prefixes)
         def safe_prefix(prefix):
@@ -2713,10 +2732,10 @@ class Discovery:
             for entry in nodes)
 
     @staticmethod
-    def proof_function(name, nodes, parents):
+    def proof_function(name, nodes, parents, *, nested=False):
         bindings = Discovery.proof_bindings(name, nodes)
         if (len(bindings) != 1 or not isinstance(bindings[0], ast.FunctionDef) or bindings[0].decorator_list
-                or not isinstance(parents.get(bindings[0]), ast.Module)):
+                or not isinstance(parents.get(bindings[0]), (ast.Module, ast.FunctionDef) if nested else ast.Module)):
             return None
         if any(isinstance(entry, ast.Name) and isinstance(entry.ctx, ast.Load) and entry.id == name
                and (not isinstance(parents.get(entry), ast.Call) or parents[entry].func is not entry) for entry in nodes):
@@ -2768,8 +2787,18 @@ class Discovery:
                     raise ValueError("forwarded argv expansion limit exceeded")
             return choices
         def variable(item, at, stack):
+            if (isinstance(item, ast.Tuple) and len(item.elts) <= 256
+                    and all(isinstance(value, ast.Constant) and isinstance(value.value, str) for value in item.elts)):
+                return [item.elts]
             if not isinstance(item, ast.Name):
                 raise ValueError("unresolved forwarded argv")
+            bindings = Discovery.proof_bindings(item.id, nodes)
+            if len(bindings) == 1 and isinstance(bindings[0], ast.Name):
+                definition = parents.get(bindings[0])
+                if (isinstance(definition, ast.Assign) and len(definition.targets) == 1
+                        and isinstance(parents.get(definition), ast.Module)
+                        and isinstance(definition.value, ast.Tuple)):
+                    return variable(definition.value, at, stack)
             scope = owner(at)
             cursor = at
             while cursor is not None and cursor is not scope:
@@ -2785,7 +2814,7 @@ class Discovery:
                 cursor = parents.get(cursor)
             if (scope is None or scope.decorator_list or scope.args.vararg is None or scope.args.vararg.arg != item.id
                     or len(functions.get(scope.name, [])) != 1 or scope.name in stack
-                    or Discovery.proof_function(scope.name, nodes, parents) is not scope
+                    or Discovery.proof_function(scope.name, nodes, parents, nested=True) is not scope
                     or Discovery.proof_bindings(item.id, list(ast.walk(scope))) != [scope.args.vararg]):
                 raise ValueError("unresolved forwarded argv")
             # A wrapper alias, callback, shadowed callable or **kwargs cannot
@@ -2815,54 +2844,137 @@ class Discovery:
 
     @staticmethod
     def git_data_argv(arguments):
-        """Accept literal Git data operations; opaque values require stronger provenance."""
+        """Prove the Git operation and its option boundaries without running Git."""
         literal = lambda item: item.value if isinstance(item, ast.Constant) and isinstance(item.value, str) else None
         if not arguments or literal(arguments[0]) != "git":
             return False
-        values = list(arguments[1:])
-        while values and literal(values[0]) in {"-C", "-c"}:
-            option = literal(values.pop(0))
-            if not values:
-                return False
-            operand = values.pop(0)
-            if option == "-c" and literal(operand) not in {"submodule.recurse=false", "core.hooksPath=/dev/null"}:
-                return False
-        if not values:
+        index = 1
+        while index + 1 < len(arguments) and literal(arguments[index]) == "-C":
+            index += 2
+        if index >= len(arguments):
             return False
-        verb = literal(values.pop(0))
-        if verb not in {"rev-parse", "ls-tree", "ls-files", "for-each-ref", "cat-file", "show", "config", "remote", "fetch"}:
+        verb = literal(arguments[index])
+        flags = GIT_READ_FLAGS.get(verb, GIT_LOCAL_FLAGS.get(verb))
+        if flags is None:
             return False
-        # A regex guard alone does not prove that a repeated subscript read or
-        # concatenation returns the validated native string. Refuse every opaque
-        # operand until that provenance is proved, including metadata options.
-        if any(literal(item) is None for item in values):
-            return False
-        operands = [literal(item) for item in values]
-        forbidden = {"--exec", "--upload-pack", "--receive-pack", "--ext-diff", "--textconv", "--filters", "--edit", "-e", "-c", "--config-env"}
-        if any(item.split("=", 1)[0] in forbidden for item in operands):
-            return False
-        if verb == "config":
-            return bool(operands) and (operands[0] in {"--get", "--get-all", "--get-regexp"}
-                or len(operands) > 2 and operands[0] == "--blob" and operands[2] in {"--get", "--get-all", "--get-regexp"})
+        words = [literal(item) for item in arguments[index + 1:]]
         if verb == "remote":
-            return bool(operands) and operands[0] == "get-url"
-        if verb == "cat-file" and (not operands or operands[0] not in {"-t", "-s", "-e", "--batch-check"}
-                                   and not operands[0].startswith("--batch-check=")):
+            if words[:1] != ["get-url"]:
+                return False
+            words = words[1:]
+        separator = "--" in words
+        stop = words.index("--") if separator else len(words)
+        before, after = words[:stop], words[stop + 1:]
+        before_flags = [word for word in before if word is not None and word.startswith("-")]
+        if any(word not in flags and word.split("=", 1)[0] not in flags
+               and not any(option.endswith("=") and word.startswith(option) for option in flags)
+               for word in before_flags):
             return False
-        if verb == "fetch":
-            if not {"--no-auto-maintenance", "--no-recurse-submodules"} <= set(operands):
+        if verb in GIT_LOCAL_FLAGS:
+            if not separator or None in before:
                 return False
-            options = {"--no-auto-maintenance", "--no-recurse-submodules", "--no-tags", "--depth=1",
-                       "--no-write-fetch-head", "--refmap="}
-            while operands and operands[0] in options:
-                operands.pop(0)
-            if len(operands) != 2:
+            if verb == "checkout":
+                return "--detach" in before_flags and len(before) == len(before_flags) + 1 and not after
+            if len(before) != len(before_flags) or not after or not after[0]:
                 return False
-            remote, identity = operands
-            return (bool(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", remote)
-                         or re.fullmatch(r"https://[^\s]+", remote))
-                    and re.fullmatch(r"[0-9a-f]{40}", identity) is not None)
+            if not re.fullmatch(r"(?:\./|\.\./|/(?!/))[^:\\]+", after[0]):
+                return False
+            if verb == "clone":
+                return "--no-checkout" in before_flags and len(after) == 2
+            return ({"--no-auto-maintenance", "--no-recurse-submodules"} <= set(before_flags)
+                    and len(after) >= 2)
+        # These modes can interpret an opaque revision as an option. An
+        # explicit terminator keeps it in the operand portion of the argv.
+        if verb in {"diff", "show"} and "--end-of-options" in before:
+            before = before[:before.index("--end-of-options")]
+        if verb in {"archive", "diff", "show"} and None in before:
+            return False
+        if verb == "cat-file" and None in before:
+            return (len(before) == 2 and before[0] in {"-t", "-s", "-e", "-p", "blob", "tree", "commit", "tag"}
+                    and before[1] is None)
         return True
+
+    @staticmethod
+    def conditional_env_keywords(keywords):
+        """Expand conditional mappings that supply only the subprocess env keyword."""
+        result = []
+        for keyword in keywords:
+            if keyword.arg is not None:
+                result.append(keyword)
+                continue
+            if not isinstance(keyword.value, ast.IfExp):
+                raise DeliveryError("unresolved subprocess positional/options expansion")
+            for branch in (keyword.value.body, keyword.value.orelse):
+                if not isinstance(branch, ast.Dict) or (branch.keys and (
+                        len(branch.keys) != 1 or not isinstance(branch.keys[0], ast.Constant)
+                        or branch.keys[0].value != "env")):
+                    raise DeliveryError("unresolved subprocess positional/options expansion")
+                result.extend(ast.keyword(arg="env", value=value) for value in branch.values)
+        return result
+
+    def git_subprocess_argv(self, first, node, call, path, cwd, action, roots, parents, nodes):
+        """Return the finite argv forms of a literal subprocess Git operation."""
+        if call in {"subprocess.getoutput", "subprocess.getstatusoutput"}:
+            return ()
+        sequence = isinstance(first, (ast.List, ast.Tuple))
+        if sequence and (not first.elts or isinstance(first.elts[0], ast.Constant)
+                         and first.elts[0].value != "git"):
+            return ()
+        expanded = sequence and any(isinstance(item, ast.Starred) for item in first.elts)
+        if not isinstance(first, ast.Name) and not expanded and (
+                not sequence or not isinstance(first.elts[0], ast.Constant)):
+            return ()
+        standard_api = (isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name)
+                        and self.proof_import(node.func.value.id, "subprocess", nodes, parents))
+        if isinstance(node.func, ast.Name):
+            bindings = self.proof_bindings(node.func.id, nodes)
+            declaration = parents.get(bindings[0]) if len(bindings) == 1 else None
+            standard_api = (isinstance(declaration, ast.ImportFrom) and declaration.module == "subprocess"
+                            and declaration.level == 0 and isinstance(parents.get(declaration), ast.Module))
+        if sequence and not expanded:
+            variants = [first.elts]
+        else:
+            if not standard_api:
+                return ()
+            try:
+                variants = self.forwarded_argv(first, node, parents, nodes)
+            except (ValueError, TypeError, SyntaxError):
+                return ()
+        if not any(variant and isinstance(variant[0], ast.Constant) and variant[0].value == "git"
+                   for variant in variants):
+            return ()
+        if not standard_api or self.import_module("subprocess", path, cwd, action, roots=roots):
+            raise DeliveryError("unproved subprocess API for Git discovery")
+        if any(posixpath.basename(item).lower() in {"git", "git.exe", "git.cmd", "git.bat", "git.com"}
+               for item in self.items):
+            raise DeliveryError("unproved Git executable: tracked Git command")
+        if not all(self.git_data_argv(variant) for variant in variants):
+            raise DeliveryError("unsupported Git mode or unresolved Git options")
+        return variants
+
+    def include_git_operands(self, variants, path, cwd, action, line):
+        """Include ordinary literal references below proved literal Git directories."""
+        for variant in variants:
+            words = [item.value if isinstance(item, ast.Constant) and isinstance(item.value, str) else None
+                     for item in variant]
+            index, directory = 1, cwd
+            while words[index:index + 1] == ["-C"] and words[index + 1] is not None:
+                if words[index + 1]:
+                    operand = words[index + 1]
+                    expanded, anchored = self.expand(operand, path, action)
+                    candidate = posixpath.normpath(posixpath.join("." if anchored else directory, expanded))
+                    if (candidate == ".." or candidate.startswith(("/", "../"))
+                            or re.match(r"^[A-Za-z]:/", candidate) or any(char in expanded for char in "$`*?{}~")):
+                        break
+                    try:
+                        directory = self.resolve(operand, path=path, cwd=directory, action=action, allow_root=True)
+                    except DeliveryError as error:
+                        raise DeliveryError("unsafe Git -C working directory: " + clean(error)) from None
+                    if directory in self.items and directory not in self.pins:
+                        raise DeliveryError("unsafe Git -C working directory: " + clean(directory))
+                index += 2
+            self.include([(line, word) for word in words if word is not None], path, directory, action,
+                         self.bases(path, action, [cwd, directory]))
 
     def python_call(self, call, node, path, cwd, action, roots, offset, names, parents, nodes):
         if self.works_platform_context(path, cwd, action, offset):
@@ -2881,15 +2993,28 @@ class Discovery:
                 raise DeliveryError("unresolved computed Python import")
             self.import_module(node.args[0].value, path, cwd, action, roots=roots)
         if call in COMMAND_APIS:
+            if not node.args:
+                raise DeliveryError("unresolved Python script invocation")
+            first = node.args[0]
+            git_argv = ()
             target_cwd = cwd
             if call.startswith("subprocess."):
-                if len(node.args) > 1 or any(keyword.arg is None for keyword in node.keywords):
+                if len(node.args) > 1:
                     raise DeliveryError("unresolved subprocess positional/options expansion")
-                for keyword in node.keywords:
+                git_argv = self.git_subprocess_argv(first, node, call, path, cwd, action, roots, parents, nodes)
+                keywords = self.conditional_env_keywords(node.keywords) if git_argv else node.keywords
+                if any(keyword.arg is None for keyword in keywords):
+                    raise DeliveryError("unresolved subprocess positional/options expansion")
+                for keyword in keywords:
                     if keyword.arg not in {"cwd", "executable", "shell", "env"}:
                         continue
-                    if keyword.arg == "env" and self.copied_environment(keyword.value, node, parents, nodes, names):
-                        continue
+                    if keyword.arg == "env":
+                        if git_argv and self.works_platform_context(path, cwd, action, offset):
+                            # The reviewed materializers preserve the job's executable lookup.
+                            continue
+                        if self.copied_environment(keyword.value, node, parents, nodes, names,
+                                                   protected_process_prefixes=GIT_ENV_PREFIXES if git_argv else ()):
+                            continue
                     try:
                         option = ast.literal_eval(keyword.value)
                     except (ValueError, TypeError):
@@ -2899,6 +3024,8 @@ class Discovery:
                             option = "$GITHUB_WORKSPACE/" + self.python_source_path(
                                 keyword.value, path, cwd, action, nodes, parents, roots=roots)
                         except (ValueError, TypeError):
+                            if git_argv and keyword.arg == "cwd":
+                                continue
                             raise DeliveryError("unresolved computed subprocess " + keyword.arg) from None
                     if keyword.arg == "cwd" and option is not None:
                         if not isinstance(option, str):
@@ -2917,13 +3044,21 @@ class Discovery:
                     elif keyword.arg == "env" and option is not None:
                         if (not isinstance(option, dict) or any(not isinstance(key, str) or not isinstance(value, str)
                                                               for key, value in option.items())
-                                or any(key.upper() in RESOLUTION | {"PATH"} for key in option)):
+                                or any(key.upper() in RESOLUTION | {"PATH"} or
+                                       git_argv and key.upper().startswith(GIT_ENV_PREFIXES)
+                                       for key in option)):
                             raise DeliveryError("unsupported subprocess environment affecting resolution")
                     elif keyword.arg == "shell" and option not in (None, False, True):
                         raise DeliveryError("unresolved subprocess shell option")
-            if not node.args:
-                raise DeliveryError("unresolved Python script invocation")
-            first = node.args[0]
+                if git_argv:
+                    if any(keyword.arg == "shell" and not (isinstance(keyword.value, ast.Constant)
+                           and keyword.value.value in (None, False)) for keyword in keywords):
+                        raise DeliveryError("unsupported shell execution of a Git operation")
+                    if any(keyword.arg == "preexec_fn" and not (isinstance(keyword.value, ast.Constant)
+                           and keyword.value.value is None) for keyword in keywords):
+                        raise DeliveryError("unsupported subprocess pre-execution callback")
+                    self.include_git_operands(git_argv, path, target_cwd, action, node.lineno + offset)
+                    return
             if (isinstance(first, ast.Name) or isinstance(first, (ast.List, ast.Tuple))
                     and any(isinstance(item, ast.Starred) for item in first.elts)):
                 try:
@@ -2937,11 +3072,6 @@ class Discovery:
                         raise ValueError("unsupported forwarded shell option")
                     variants = self.forwarded_argv(first, node, parents, nodes)
                     for variant in variants:
-                        if self.git_data_argv(variant):
-                            if any(keyword.arg == "shell" and not isinstance(keyword.value, ast.Constant)
-                                   or keyword.arg == "shell" and keyword.value.value not in (None, False) for keyword in node.keywords):
-                                raise ValueError("unsupported shell execution of a metadata operation")
-                            continue
                         if variant and isinstance(variant[0], ast.Constant) and variant[0].value == "git":
                             raise ValueError("unsupported forwarded Git mode or operands")
                         command = [ast.literal_eval(item) for item in variant]
@@ -2954,16 +3084,12 @@ class Discovery:
             # Fixed .NET SDK operations consume project/output/property data.
             # Their C#/MSBuild graph is outside this source-language perimeter;
             # dynamic executable/verb/options expansion still cannot be certified.
-            # The fixed read-only Git provenance operation likewise executes no
-            # repository script. Every literal in the operands is still visited
-            # by the enclosing AST traversal's normal literal-reference rule.
             if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
                 fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
                 compiler = (fixed[:1] == ["dotnet"] and (
                     fixed[1:2] in (["build"], ["pack"], ["restore"], ["msbuild"])
                     or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
-                provenance = len(fixed) == 5 and fixed[:2] == ["git", "-C"] and fixed[-2:] == ["rev-parse", "HEAD"]
-                if compiler or provenance:
+                if compiler:
                     if any(keyword.arg == "shell" and not (
                             isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
                            for keyword in node.keywords):

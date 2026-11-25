@@ -2,7 +2,8 @@
 title: 'Migrate Works'
 type: 'feature'
 created: '2026-11-24'
-status: ready-for-dev
+status: blocked
+baseline_commit: '4556ddb1e190c2e093e2c71fa09d727cf4f9afdf'
 baseline_revision: 0279c0fb4fbb8d4ef2ad8c5b72e84815cd8e0c31
 implementation_repository: 'references/Hexalith.Works'
 implementation_baseline_revision: '2e4f9a23818d51747bb21bc3e233703774602220'
@@ -131,12 +132,38 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - [Latest exact base and candidate discovery with owner diagnostics](../evidence/13/platform-boundary-qualification-20261125.md)
 - [Export-byte Platform proof, current pairing and AD-21 readback](../evidence/13/export-byte-proof-20261125.md)
 - [CiCd validation fix, current Works readback and Platform reachability](../evidence/13/validation-fix-and-reachability-20261125.md)
+- [Literal Git discovery, exact Works checker, and Platform handoff](../evidence/13/literal-git-discovery-20261125.md)
 - `run-with-temp uv run --locked --script tools/render.py --check` from CiCd.
 - `run-with-temp uv run --locked --script tools/validate.py --scope full` from CiCd, the gate that Delivery runs.
 - `run-with-temp python3 references/Hexalith.Builds/check.py` from a standalone exact Works checkout with the declared direct submodules.
 - `python3 tools/nightly_acceptance.py --run <run-id> --module Hexalith.Works` against an actual scheduled or eligible dispatched Nightly run.
 
+## Build Result
+
+**Status** `blocked`
+
+The local scanner recognizes the approved Python Git operations where it can
+prove the command and option boundaries. Production-policy discovery on Works
+`e6e4d1928c09bbde2f8f05c6a6a0211ddce89035` and its Platform pin
+`3bcac63c6fe20b46687b6e0bb7a333ea8c66fb4d` reduced Platform diagnostics from
+128 to 124, against the estimate of 115. The same 43 files were selected. Two
+Works source-identity diagnostics remain. Both runs reported zero run-level
+errors and no duplicates. The standalone Builds `v6.8.3` checker passed on the
+exact Works commit.
+
+Seven focused scanner tests and the renderer check passed. All 12 scanner
+test methods affected by PowerShell timeouts passed on retry. The full global
+gate still reported its 600-second scanner-suite timeout and three GitHub
+checks that require a read-only token. The other 33 tool suites passed.
+
+The Platform handoff records 107 diagnostics behind the four lanes to move
+and 17 on the main verifier path. The resulting Platform commit and Works
+gitlink, hosted scanner and exact-source CI qualification, and legacy Zot
+cutover remain open. [Scanner and owner evidence](../evidence/13/literal-git-discovery-20261125.md)
+
 ## Auto Run Result
+
+This result records the earlier export-byte proof and validation fix.
 
 **Status** `blocked`
 

@@ -725,7 +725,7 @@ class ScanTests(acceptance_tests.Harness):
         source = self.guarded_git_source()
         literal = ("import subprocess\ndef launch(root, *parts):\n"
                    "    return subprocess.run(['git', '-C', str(root), *parts])\n"
-                   "for parts in (('rev-parse', 'HEAD'), ('config', '--get', 'remote.origin.url')):\n"
+                   "for parts in (('rev-parse', 'HEAD'), ('remote', 'get-url', 'origin')):\n"
                    "    launch('.', *parts)\n")
         self.assert_coverage(self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
                                                {"entry.py": literal, "leaf.py": COPY}), "leaf.py", None)
@@ -735,7 +735,7 @@ class ScanTests(acceptance_tests.Harness):
             "string_subclass": source.replace("identity = checked(supplied)",
                 "class Identity(str):\n    def __add__(self, other):\n        return '--ext-diff'\n"
                 "identity = checked([Identity('a' * 40)])"),
-            "opaque_metadata_options": literal.replace("'HEAD'", "unknown()"),
+            "computed_subcommand": literal.replace("'rev-parse'", "unknown()"),
             "fake_module": source.replace("IDENTITY =", "re = replacement\nIDENTITY =", 1),
             "class_module": source.replace("IDENTITY =", "class re:\n    pass\nIDENTITY =", 1),
             "imported_module": source.replace("IDENTITY =", "import collections as re\nIDENTITY =", 1),
@@ -769,6 +769,111 @@ class ScanTests(acceptance_tests.Harness):
                 report = self.coverage_case([("bash", "python3 entry.py\npython3 leaf.py", "")],
                                             {"entry.py": source, "leaf.py": COPY, filename: "pass\n"})
                 self.assertTrue(all(row["errors"] for row in report["modules"]), report)
+
+    def test_literal_git_operations_follow_literal_references(self):
+        source = (
+            "import subprocess\n"
+            "PATHS = ('input.txt',)\n"
+            "subprocess.run(['git', '-C', root, 'rev-parse', '--verify', revision])\n"
+            "subprocess.run(['git', '-C', '/outside/read-only', 'status'])\n"
+            "subprocess.run(['git', 'ls-tree', '-r', revision, '--', path], cwd=root)\n"
+            "subprocess.run(['git', 'ls-files', '-z', '--', path], cwd=root)\n"
+            "subprocess.run(['git', 'status', '--porcelain'], cwd=root)\n"
+            "subprocess.run(['git', 'cat-file', 'blob', oid], cwd=root)\n"
+            "subprocess.run(['git', 'diff', '--exit-code', '--end-of-options', revision, '--', path], cwd=root)\n"
+            "subprocess.run(['git', 'show', '--end-of-options', revision, '--', path], cwd=root)\n"
+            "subprocess.run(['git', 'archive', '--format=tar', '--', revision, *PATHS], cwd=root)\n"
+            "subprocess.run(['git', 'remote', 'get-url', remote], cwd=root)\n"
+            "subprocess.run(['git', 'clone', '--no-checkout', '--', './origin', destination], cwd=root)\n"
+            "subprocess.run(['git', 'fetch', '--no-auto-maintenance', '--no-recurse-submodules', '--', './origin', revision], cwd=root)\n"
+            "subprocess.run(['git', 'checkout', '--detach', 'HEAD', '--'], cwd=root)\n"
+            "def inspect(root):\n"
+            "    def git(*arguments):\n"
+            "        return subprocess.check_output(['git', '-C', root, *arguments],"
+            " **({'env': {'LANG': 'C'}} if enabled else {}))\n"
+            "    git('rev-parse', revision)\n"
+            "    git('ls-tree', revision, '--', path)\n"
+            "inspect(root)\n"
+            "subprocess.run(['git', 'show', 'HEAD', '--', 'leaf.py'], cwd='cwd-only')\n"
+            "subprocess.run(['git', '-C', 'first', '-C', 'second', 'show', 'HEAD', '--', 'other.py'])\n"
+        )
+        report = self.coverage_case([("bash", "python3 entry.py", "")],
+                                    {"entry.py": source, "cwd-only/leaf.py": COPY,
+                                     "first/second/other.py": "print('unique')\n"})
+        self.assert_coverage(report, "cwd-only/leaf.py", None)
+        self.assertTrue(all("first/second/other.py" in {file["path"] for file in row["files"]}
+                            for row in report["modules"]), report)
+
+    def test_git_invocations_reject_unproved_modes_options_and_environment(self):
+        cases = (
+            ("['git', operation, 'HEAD']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', '-c', 'submodule.recurse=false', 'rev-parse', 'HEAD']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'config', '--get', 'remote.origin.url']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'hook', 'run', 'pre-commit']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'submodule', 'foreach', supplied]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'custom-alias']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'diff', '--ext-diff', '--', path]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'diff', computed_option, 'HEAD', '--', path]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'show', '--textconv', 'HEAD:leaf.py']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'show', '--format', '--end-of-options', revision]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'archive', '--format=custom', 'HEAD']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'archive', '--prefix', '--', revision]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'clone', '--no-checkout', './origin', destination]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'clone', '--no-checkout', '--', source, destination]", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'fetch', dynamic_flag, '--', './origin', 'HEAD']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'checkout', '--detach', 'HEAD']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'checkout', '--detach', revision, '--']", "", "unsupported Git mode or unresolved Git options"),
+            ("['git', 'status']", ", shell=True", "unsupported shell execution of a Git operation"),
+            ("['git', 'status']", ", preexec_fn=callback", "unsupported subprocess pre-execution callback"),
+            ("['git', 'status']", ", **({'executable': target} if enabled else {})", "unresolved subprocess positional/options expansion"),
+            ("['git', 'status']", ", **({'env': {'PATH': '.'}} if enabled else {})", "unsupported subprocess environment affecting resolution"),
+            ("['git', 'status']", ", env={'GIT_CONFIG_COUNT': '1'}", "unsupported subprocess environment affecting resolution"),
+        )
+        for argv, options, diagnostic in cases:
+            with self.subTest(argv=argv, options=options):
+                source = f"import subprocess\nsubprocess.run({argv}{options})\n"
+                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": source})
+                self.assertTrue(all(f"entry.py:2: local-script discovery: {diagnostic}" in row["errors"]
+                                    for row in report["modules"]), report)
+
+    def test_git_operation_requires_standard_process_and_git_executables(self):
+        entry = "subprocess.run(['git', 'status'], cwd=root)\n"
+        for changed, files, diagnostic in (
+            ("subprocess.run = replacement\n", {}, "unproved subprocess API for Git discovery"),
+            ("", {"subprocess.py": "pass\n"}, "unproved subprocess API for Git discovery"),
+            ("", {"support/git": "#!/bin/bash\necho shadow\n"}, "unproved Git executable: tracked Git command"),
+        ):
+            with self.subTest(changed=changed, files=files):
+                report = self.coverage_case([("bash", "python3 entry.py", "")],
+                                            {"entry.py": "import subprocess\n" + changed + entry, **files})
+                self.assertTrue(all(any(diagnostic in error for error in row["errors"])
+                                    for row in report["modules"]), report)
+
+    def test_git_copied_environment_guards_git_and_loader_settings(self):
+        for setting in ("GIT_CONFIG_COUNT", "LD_LIBRARY_PATH", "DYLD_LIBRARY_PATH"):
+            with self.subTest(setting=setting):
+                source = ("import os, subprocess\n"
+                          "env = os.environ.copy()\n"
+                          f"env.update({setting}='1')\n"
+                          "subprocess.run(['git', 'status'], env=env)\n")
+                report = self.coverage_case([("bash", "python3 entry.py", "")], {"entry.py": source})
+                self.assertTrue(all("entry.py:4: local-script discovery: unresolved computed subprocess env" in row["errors"]
+                                    for row in report["modules"]), report)
+
+    def test_git_literal_directory_rejects_committed_non_directory_components(self):
+        for directory in ("linked", "linked/nested"):
+            with self.subTest(directory=directory):
+                workspace = self.workspace()
+                for module in workspace.paths:
+                    workspace.action(module, "python3 entry.py")
+                    workspace.write(module, "entry.py", "import subprocess\n"
+                                    f"subprocess.run(['git', '-C', {directory!r}, 'status'])\n")
+                    workspace.write(module, "support/nested/leaf.py", block("python"))
+                    (workspace.paths[module] / "linked").symlink_to("support", target_is_directory=True)
+                    workspace.commit(workspace.paths[module])
+                report = workspace.scan(self.factory)
+                self.assertTrue(all(any(error.startswith("entry.py:2: local-script discovery: unsafe Git -C working directory:")
+                                        for error in row["errors"]) for row in report["modules"]), report)
 
     def test_forwarding_recursion_and_expansion_are_bounded(self):
         cases = {
