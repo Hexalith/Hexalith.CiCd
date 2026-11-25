@@ -1,19 +1,71 @@
 {
-  "recorded_at": "2026-11-17T21:16:00+00:00",
+  "recorded_at": "2026-11-26T00:36:26+01:00",
+  "initial_recorded_at": "2026-11-17T21:16:00+00:00",
   "status": "incomplete",
   "adopted": true,
   "builds_release": "v6.2.0",
   "product_preparation_sha": "aad8894e24b28b254d1ffa69c16b7353a70452fa",
+  "product_preparation_tree": "a1e91d4f73b15756576454a6b9cd020756c91889",
+  "product_preparation_verification": {
+    "base": "97511d77aeb8fd7759bc5f14a32d2550ec5c0cb5",
+    "receipt": "qualify-current-product.json",
+    "sha256": "75c852e7f7ef7effd685c3bd387f44432c1a0f607556a1aa2bcda69d5d298ef6",
+    "packable_projects": [
+      "Hexalith.McpCli.Abstractions",
+      "Hexalith.McpCli"
+    ],
+    "result": "pass"
+  },
   "cicd_registration_sha": "060ab6e0812e2279e2c2ed0ebdd4c4c7bc3f1778",
+  "cicd_registration_tree": "a4e7a19769b95e9c7fa82bfc98ae35420d2726de",
   "delivery_run": 44171668132,
   "delivery_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44171668132",
+  "delivery_artifact": {
+    "id": 14369282888,
+    "name": "hexalith-delivery",
+    "sha256": "4d6153cf27d15136f78c8ddf5ad93390a52620af75eb2083071bfea32b5330ad",
+    "global_validation": true,
+    "source": "authenticated-adoption.json"
+  },
   "adopted_sha": "c4046ab713f45c8619669adfef793aba7138279a",
+  "adopted_tree": "76ad1ef25b679de50829a07299322667a3ef782c",
   "adopted_ci_run": 44175925587,
   "adopted_ci_url": "https://github.com/Hexalith/Hexalith.McpCli/actions/runs/44175925587",
-  "adopted_ci_status": "in_progress",
-  "next_genuine_nightly": null,
+  "adopted_ci_status": "completed",
+  "adopted_ci_conclusion": "failure",
+  "adopted_ci_failure": {
+    "stage": "Linux native source preparation",
+    "diagnostic": "MSB4019: isolated Hexalith.Tenants could not import references/Hexalith.Builds/Props/ContainerProvenance.targets",
+    "diagnostic_path": "Hexalith.Tenants-eventstore-version.stdout.txt",
+    "diagnostic_sha256": "0f3cb6e999bf25c5734c89b1e1cae1f964fd0203d767d82606af32bdd75a89e4",
+    "job_log_sha256": "892f60d7683436c2cd8f7092449dc8220b5eb3671dcf63edd7c188892dfff95d",
+    "import_fix_sha": "70014769c58593d738e979a65c3e71d093fcea0b"
+  },
+  "next_genuine_nightly": 44282863616,
   "nightly_schedule": "17 2 * * *",
-  "nightly_note": "Do not dispatch. Wait for the next genuine scheduled Nightly releases run after adoption.",
+  "nightly_note": "The 2026-11-18 approved change accepts a scheduled run on main or a main workflow_dispatch with qualify-bump false, judged on McpCli's own rows.",
+  "nightly_observation": {
+    "event": "schedule",
+    "head_branch": "main",
+    "controller_sha": "81e10620d4b4442b741d5c4a7420d1c8eb33ff4c",
+    "run_url": "https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44282863616",
+    "release_run": 44282959436,
+    "release_url": "https://github.com/Hexalith/Hexalith.McpCli/actions/runs/44282959436",
+    "release_sha": "c4046ab713f45c8619669adfef793aba7138279a",
+    "release_outcome": "failed",
+    "release_report": "../11/scheduled-20261118-hexalith-nightly-nightly-1-nightly.json",
+    "release_report_sha256": "ee9f9bda0c5cd82aef2e3161e3bf69acdc72ac687c984de724c30ede0de1d45e",
+    "scan_outcome": "fail",
+    "scan_error_count": 100,
+    "scan_report": "../11/scheduled-20261118-hexalith-nightly-scan-1-report.json",
+    "scan_report_sha256": "c5c7ebbed003e2fd5d4eb331e39fed75a4d8b8b6a42b1b6ab30bca1b1f627ec8",
+    "other_recorded_failure": {
+      "run": 44264031228,
+      "event": "workflow_dispatch",
+      "source": "../../stories/29-1-on-demand-nightly-acceptance.md",
+      "reason": "McpCli release failure and module scan discovery errors"
+    }
+  },
   "platform_live_acceptance": {
     "linux": false,
     "windows": false,
@@ -25,11 +77,53 @@
   "expired_nuget_key_954800_preserved": true,
   "perimeter_match": true,
   "sole_parent": "aad8894e24b28b254d1ffa69c16b7353a70452fa",
-  "note": "App delivery, perimeter match, immutable releases and exact NuGet policy 20113 deletion are authenticated. Adopted CI is still running (unit tests passed; after-unit-tests live hook in progress). Windows/macOS product jobs wait on that Linux job. The next genuine nightly has not run.",
+  "note": "App delivery, perimeter match, immutable releases and exact NuGet policy 20113 deletion are authenticated. The adopted CI and recorded nightly failed. Follow-up platform, live and release results are unverified.",
   "shared_builds_source_sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
   "ordered_provisioning": "complete; post-adoption immutable releases enabled and policy 20113 deleted with 27180 and unrelated policies retained",
+  "local_verification": {
+    "cicd_sha": "3ff573241a6c0d6968be4b12273a1b90f05fc3b9",
+    "cicd_tree": "13da3829f8faa19ef091d6a8544924df25806832",
+    "rendered_builds_tag": "v6.8.3",
+    "rendered_builds_sha": "62876129eaa035e78bd0324419231f07d43a07b8",
+    "pinned_mcpcli_sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "inspected_mcpcli_sha": "7e3f3a77661288bbedf083adbe11a5e698294cbc",
+    "inspected_mcpcli_tree": "95fbbe8ebfe5efe144d328e751fa9016357c5f24",
+    "builds_test_sha": "80928033b28e7a9726e93c8850389a081d3a2cb6",
+    "builds_test_tree": "26d036172b16a731f2d3076be62d628f3f5fa89a",
+    "locked_render_check": "pass",
+    "renderer_tests_passed_each": 52,
+    "local_committed_candidate_checks": "pass: App inventory, committed inputs and renders, repeated render equality, schema and caller interfaces, McpCli direct gitlink",
+    "local_committed_candidate_checks_sha256": "8b26b1746ed86fb2149a3cc7480f7ca37a82e786439340acd43b31867d689ebc",
+    "builds_focused_tests_passed_each": 32,
+    "builds_focused_test_output_sha256": {
+      "3.12": "5b9ec005702c0b7a23e2bb3d2c029957119dd6ada141ca6861dcbc8b58784c60",
+      "3.14": "2619c50f5c9f728083c1c7ef5fffc1060f572a8c457ecd7c647e6ca3c4dbeaf1"
+    },
+    "mcpcli_matrix": {
+      "python": "3.12",
+      "tests_passed": 9,
+      "output_sha256": "d78edff2a1c6ea364c2a46c1fb65c0faa90f6f4060e8ce130212e59e747f8a2c"
+    },
+    "perimeter_comparison": {
+      "accepted_cicd_sha": "0279c0fb4fbb8d4ef2ad8c5b72e84815cd8e0c31",
+      "accepted_cicd_tree": "6c5886518adb5e537192483187a640d06d3cdd9a",
+      "drift_at_adoption": 0,
+      "drift_at_inspected_mcpcli_sha": 0,
+      "output_sha256": "060d93f25a6e78e27fcc41d492b8d7b29161e266f353757f3da8b09ea422fb8a"
+    },
+    "scan_discovery_probe": {
+      "scanner_blob": "f9e5fa4637b4d45faeb8c681a9a88859ae12bd7b",
+      "scope": "local Discovery against inspected_mcpcli_sha",
+      "files_discovered": 30,
+      "discovery_errors": 89,
+      "first_error": ".github/actions/after-unit-tests/action.yml:8: local-script discovery: unsupported shell wrapper options",
+      "output_sha256": "35ca1d8481dfd7cb1d6ac652af5d5460a9e0300362e3157aa8d1a25867bc9547"
+    },
+    "hosted_refresh": "unverified in the local-only dispatch"
+  },
   "blockers": [
-    "Adopted CI 44175925587 is still in progress; do not infer platform/live success",
-    "Next genuine scheduled nightly after 060ab6e/c4046ab has not run; do not dispatch"
+    "Resolve CiCd scan discovery errors for McpCli's Linux product hook and the scripts it reaches.",
+    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
+    "Verify a qualifying CAP-13 nightly for the same green SHA, including McpCli's scan and the approved pair publication or a valid nothing-to-release outcome."
   ]
 }
