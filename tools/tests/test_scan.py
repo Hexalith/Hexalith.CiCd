@@ -12,6 +12,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import sys
 import tempfile
@@ -1642,7 +1643,7 @@ class ScanTests(acceptance_tests.Harness):
 
     def pinned_workspace(self, command, *, declaration=True, origin=None, duplicate=False, configured=True,
                          gitlink=True, symlink=False, check_source="import helper\n",
-                         module="Hexalith.Alpha", repository="Hexalith.Dependency"):
+                         module="Hexalith.Alpha", repository="Hexalith.Dependency", dependency_files=None):
         path = "references/" + repository
         workspace = self.workspace((module,))
         dependency = workspace.root / repository
@@ -1654,6 +1655,8 @@ class ScanTests(acceptance_tests.Harness):
             'exec python3 "$ROOT/eng/check.py" "$@"\n')
         check = dependency / "eng/check.py"
         (dependency / "eng/helper.py").write_text("print('pinned helper')\n")
+        for name, text in (dependency_files or {}).items():
+            (dependency / name).write_text(text)
         if symlink:
             check.symlink_to("helper.py")
         else:
@@ -1735,20 +1738,69 @@ class ScanTests(acceptance_tests.Harness):
         repository = "Hexalith.Platform"
         path = discovery.WORKS_PLATFORM_ROOT
         action = discovery.WORKS_PLATFORM_ACTION
+        workflow = discovery.WORKS_PLATFORM_WORKFLOW
         coordinator = "scripts/coordinator.py"
-        workspace, pin = self.pinned_workspace("echo dormant", module=module, repository=repository)
+        export = "eng/export.py"
+        export_source = "import shutil\n\n\ndef create(origin, root):\n    shutil.copytree(origin, root)\n"
+        workspace, pin = self.pinned_workspace("echo dormant", module=module, repository=repository,
+                                               dependency_files={export: export_source})
         remote = workspace.paths[module]
+        dependency = workspace.transport.pins[repository]
         script = workspace.write(module, coordinator,
                                  "import subprocess\n"
                                  "subprocess.run(['bash', sealed_export / 'eng/launcher.sh'])\n")
         action_source = workspace.write(module, action, steps(("bash", "python3 " + coordinator, "")))
-        git(remote, "add", "--", action, coordinator)
+        reviewed = ("jobs:\n  ci:\n    uses: \"Hexalith/Hexalith.Builds/.github/workflows/ci.yml@v6.8.1\"\n"
+                    "  parity:\n    steps:\n    - uses: Hexalith/Hexalith.Builds/Github/prepare@v6.8.1\n"
+                    "    - uses: Hexalith/Hexalith.Builds.Extra/prepare@v1.0.0\n"
+                    "    - uses: OtherHexalith/Hexalith.Builds/Github/prepare@v1.0.0\n"
+                    "    - uses: ./.github/actions/platform-parity\n    timeout-minutes: 180\n")
+        workspace.write(module, workflow, reviewed)
+        git(remote, "add", "--", action, coordinator, workflow)
         git(remote, "commit", "--quiet", "-m", "record parity entry point")
-        inputs = {action: hashlib.sha256(action_source.read_bytes()).hexdigest(),
+        base = git(remote, "rev-parse", "HEAD")
+        # Like the production constant, the digest fingerprints the reviewed bytes.
+        inputs = {workflow: discovery.works_fingerprint(workflow, reviewed.encode()),
+                  action: hashlib.sha256(action_source.read_bytes()).hexdigest(),
                   coordinator: hashlib.sha256(script.read_bytes()).hexdigest()}
+        exports = {export: hashlib.sha256(export_source.encode()).hexdigest()}
         entrypoint = (coordinator, 2, "subprocess.run")
         entries = {entrypoint: ("eng/launcher.sh", "bash")}
-        with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_PINS={pin},
+
+        def record(message, *changes, gitlink=None):
+            git(remote, "reset", "--quiet", "--hard", base)
+            for target, text in changes:
+                workspace.write(module, target, text)
+                git(remote, "add", "--", target)
+            if gitlink is not None:
+                git(remote, "update-index", "--cacheinfo", "160000", gitlink, path)
+            git(remote, "commit", "--quiet", "--allow-empty", "-m", message)
+
+        def platform(message, files, links=None):
+            # A new Platform commit beyond the original pin; None deletes a file.
+            git(dependency, "reset", "--quiet", "--hard", pin)
+            for name, text in files.items():
+                target = dependency / name
+                if text is None:
+                    target.unlink()
+                else:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text(text)
+            for name, target in (links or {}).items():
+                (dependency / name).symlink_to(target)
+            git(dependency, "add", "--force", "--all")
+            git(dependency, "commit", "--quiet", "-m", message)
+            return git(dependency, "rev-parse", "HEAD")
+
+        def unproved(row, diagnostic, *, revision=None):
+            self.assertEqual("fail", row["result"], row)
+            if revision is None:
+                self.assertNotIn("pinnedSources", row)
+            else:
+                self.assertEqual(row["pinnedSources"], {path: {"repository": repository, "revision": revision}})
+            self.assertIn(f"{action}:1: local-script discovery: {diagnostic}", row["errors"])
+
+        with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_EXPORT=exports,
                                  WORKS_PLATFORM_ENTRIES=entries):
             report = workspace.scan(self.factory)
             row = report["modules"][0]
@@ -1757,56 +1809,108 @@ class ScanTests(acceptance_tests.Harness):
             helper = next(item for item in row["files"] if item["path"] == path + "/eng/helper.py")
             self.assertEqual(hashlib.sha256(b"print('pinned helper')\n").hexdigest(), helper["sha256"])
 
-            script.write_text(script.read_text().replace("eng/launcher.sh", "eng/unproved.sh"))
-            git(remote, "add", "--", coordinator)
-            git(remote, "commit", "--quiet", "-m", "substitute computed source")
+            # Any Platform commit holding the reviewed export bytes is proved, and
+            # the workflow may differ from its reviewed bytes only in immutable
+            # Builds release tags. Traversal still follows the recorded commit.
+            updated = platform("unrelated Platform update", {"eng/helper.py": "print('updated helper')\n"})
+            record("advance Platform and Builds", (workflow, reviewed.replace("@v6.8.1", "@v6.8.3", 1)
+                                                   .replace("@v6.8.1", "@v6.10.0")), gitlink=updated)
             row = workspace.scan(self.factory)["modules"][0]
-            self.assertEqual("fail", row["result"], row)
-            self.assertNotIn("pinnedSources", row)
-            self.assertIn(f"{action}:1: local-script discovery: unproved computed Platform source: {coordinator}",
-                          row["errors"])
-            self.assertIn(f"{coordinator}:2: local-script discovery: unresolved computed Python script invocation",
-                          row["errors"])
-            git(remote, "revert", "--no-edit", "HEAD")
+            self.assertEqual("pass", row["result"], row)
+            self.assertEqual(row["pinnedSources"], {path: {"repository": repository, "revision": updated}})
+            helper = next(item for item in row["files"] if item["path"] == path + "/eng/helper.py")
+            self.assertEqual(hashlib.sha256(b"print('updated helper')\n").hexdigest(), helper["sha256"])
 
-            shadow = "scripts/subprocess.py"
-            workspace.write(module, shadow, "# Shadow the checked interpreter namespace\n")
-            git(remote, "add", "--", shadow)
-            git(remote, "commit", "--quiet", "-m", "substitute interpreter namespace")
-            row = workspace.scan(self.factory)["modules"][0]
-            self.assertEqual("fail", row["result"], row)
-            self.assertNotIn("pinnedSources", row)
-            self.assertIn(f"{action}:1: local-script discovery: unproved computed Platform import shadow: {shadow}",
-                          row["errors"])
-            git(remote, "revert", "--no-edit", "HEAD")
+            for label, text in (
+                ("workflow outside the tags", reviewed.replace("timeout-minutes: 180", "timeout-minutes: 170")),
+                ("mutable Builds branch", reviewed.replace("ci.yml@v6.8.1", "ci.yml@main")),
+                ("Builds prerelease", reviewed.replace("prepare@v6.8.1", "prepare@v6.8.2-rc.1")),
+                ("Builds tag-like branch", reviewed.replace("prepare@v6.8.1", "prepare@v6.8.1/next")),
+                ("literal tag mask", reviewed.replace("prepare@v6.8.1", "prepare@vX.Y.Z")),
+                ("lookalike repository tag", reviewed.replace("Extra/prepare@v1.0.0", "Extra/prepare@v1.0.1")),
+                ("lookalike owner tag", reviewed.replace("OtherHexalith/Hexalith.Builds/Github/prepare@v1.0.0",
+                                                         "OtherHexalith/Hexalith.Builds/Github/prepare@v1.0.1")),
+            ):
+                with self.subTest(case=label):
+                    record("substitute workflow", (workflow, text))
+                    unproved(workspace.scan(self.factory)["modules"][0],
+                             "unproved computed Platform source: " + workflow)
 
-            replacement = git(workspace.transport.pins[repository], "rev-parse", "HEAD")
-            git(remote, "update-index", "--cacheinfo", "160000", replacement, path)
-            git(remote, "commit", "--quiet", "-m", "substitute Platform pin")
-            row = workspace.scan(self.factory)["modules"][0]
-            self.assertEqual("fail", row["result"], row)
-            self.assertNotIn("pinnedSources", row)
-            self.assertIn(f"{action}:1: local-script discovery: unproved Platform gitlink for computed checkout/export: {path}",
-                          row["errors"])
-            git(remote, "revert", "--no-edit", "HEAD")
+            with self.subTest(case="action"):
+                record("substitute action", (action, action_source.read_text() + "# changed\n"))
+                unproved(workspace.scan(self.factory)["modules"][0], "unproved computed Platform source: " + action)
+
+            with self.subTest(case="materializer"):
+                record("substitute computed source", (coordinator, script.read_text().replace(
+                    "eng/launcher.sh", "eng/unproved.sh")))
+                row = workspace.scan(self.factory)["modules"][0]
+                unproved(row, "unproved computed Platform source: " + coordinator)
+                self.assertIn(f"{coordinator}:2: local-script discovery: unresolved computed Python script invocation",
+                              row["errors"])
+
+            with self.subTest(case="import shadow"):
+                shadow = "scripts/subprocess.py"
+                record("substitute interpreter namespace", (shadow, "# Shadow the checked interpreter namespace\n"))
+                unproved(workspace.scan(self.factory)["modules"][0],
+                         "unproved computed Platform import shadow: " + shadow)
+
+            cache = "eng/__pycache__"
+            bytecode = "export.cpython-312.pyc"
+            for label, files, links, source in (
+                    ("changed export", {export: export_source + "# changed\n"}, None, export),
+                    ("missing export", {export: None}, None, export),
+                    ("cached export bytecode", {cache + "/" + bytecode: "substituted\n"}, None, cache + "/" + bytecode),
+                    ("linked bytecode cache", {"eng/bytecode/" + bytecode: "substituted\n"}, {cache: "bytecode"},
+                     cache)):
+                with self.subTest(case=label):
+                    substituted = platform(label, files, links)
+                    record("record " + label, gitlink=substituted)
+                    unproved(workspace.scan(self.factory)["modules"][0],
+                             "unproved computed Platform source: " + path + "/" + source, revision=substituted)
+
+            blob = git(remote, "hash-object", "-w", "--stdin", data=b"not a commit\n")
+            for label, arguments in (("missing gitlink", ("--force-remove", path)),
+                                     ("blob gitlink", ("--cacheinfo", "100644", blob, path)),
+                                     ("symlink gitlink", ("--cacheinfo", "120000", blob, path))):
+                with self.subTest(case=label):
+                    git(remote, "reset", "--quiet", "--hard", base)
+                    git(remote, "update-index", *arguments)
+                    git(remote, "commit", "--quiet", "-m", "substitute " + label)
+                    unproved(workspace.scan(self.factory)["modules"][0],
+                             "unproved Platform gitlink for computed checkout/export: " + path)
+
+            git(remote, "reset", "--quiet", "--hard", base)
             with mock.patch.object(discovery, "WORKS_PLATFORM_ENTRIES",
                                    {entrypoint: ("eng/../eng/launcher.sh", "bash")}):
                 row = workspace.scan(self.factory)["modules"][0]
             self.assertEqual("fail", row["result"], row)
             self.assertTrue(any("unsafe source path within pinned source" in error for error in row["errors"]), row)
 
-            dependency = workspace.transport.pins[repository]
-            (dependency / "eng/check.py").write_text(
-                "import subprocess\nimport os\nsubprocess.run([os.getenv('UNPROVED_PROGRAM')])\n")
-            unresolved = workspace.commit(dependency)
-            git(remote, "update-index", "--cacheinfo", "160000", unresolved, path)
-            git(remote, "commit", "--quiet", "-m", "record unresolved descendant")
-            with mock.patch.object(discovery, "WORKS_PLATFORM_PINS", {unresolved}):
-                row = workspace.scan(self.factory)["modules"][0]
+            unresolved = platform("record unresolved descendant", {"eng/check.py": (
+                "import subprocess\nimport os\nsubprocess.run([os.getenv('UNPROVED_PROGRAM')])\n")})
+            record("record unresolved descendant", gitlink=unresolved)
+            row = workspace.scan(self.factory)["modules"][0]
             self.assertEqual("fail", row["result"], row)
             self.assertEqual(row["pinnedSources"], {path: {"repository": repository, "revision": unresolved}})
             self.assertIn(f"{path}/eng/check.py:3: local-script discovery: unresolved computed Python script invocation",
                           row["errors"])
+            self.assertFalse(any("unproved" in error for error in row["errors"]), row)
+
+    def test_works_platform_production_inputs_bind_rendered_workflow_and_loaded_export(self):
+        import scan_discovery as discovery
+
+        workflow = discovery.WORKS_PLATFORM_WORKFLOW
+        rendered = (ROOT / "rendered/Hexalith.Works" / workflow).read_bytes()
+        reviewed = discovery.WORKS_PLATFORM_INPUTS[workflow]
+        self.assertEqual(reviewed, discovery.works_fingerprint(workflow, rendered))
+        retagged, count = re.subn(rb"(Hexalith/Hexalith\.Builds/[^@\s\"']+@)v[0-9]+\.[0-9]+\.[0-9]+",
+                                  rb"\g<1>v99.0.1", rendered)
+        self.assertGreater(count, 0)
+        self.assertNotEqual(rendered, retagged)
+        self.assertEqual(reviewed, discovery.works_fingerprint(workflow, retagged))
+        targets = {target for target, _ in discovery.WORKS_PLATFORM_ENTRIES.values()}
+        self.assertTrue(discovery.WORKS_PLATFORM_EXPORT)
+        self.assertLessEqual(set(discovery.WORKS_PLATFORM_EXPORT), targets)
 
     def test_nonexecuting_git_and_anonymous_transport_environment(self):
         w = self.workspace(("Hexalith.Alpha",))

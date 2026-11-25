@@ -110,20 +110,32 @@ REDIRECTION = re.compile(r"(\d*|&|\*)(>>|>\||>&|>|<<<|<<-|<<|<>|<&|<)(.*)", re.S
 
 # These committed sources prove the computed checkouts used by the registered
 # Works parity job. A changed materializer must establish provenance again.
+WORKS_PLATFORM_WORKFLOW = ".github/workflows/ci.yml"
 WORKS_PLATFORM_ACTION = ".github/actions/platform-parity/action.yml"
 WORKS_PLATFORM_ROOT = "references/Hexalith.Platform"
-WORKS_PLATFORM_PINS = {
-    "99a17baaf6de626d5f59311544a6aa8f9865b695",
-    "616e27789f935ebb7f7f33406150ecf2dc9913a2",
-}
 WORKS_PLATFORM_PREPARE = "scripts/prepare-platform-builds.py"
 WORKS_PLATFORM_COORDINATOR = "scripts/verify-platform-parity-ci.py"
 WORKS_PLATFORM_INPUTS = {
-    ".github/workflows/ci.yml": "489af3156c4404594cc585efbd556c306c89934baceff872b03b620549ffc252",
+    # The reviewed v6.8.1 rendering (SHA-256 489af315...) with each immutable
+    # Builds release tag masked; see works_fingerprint.
+    WORKS_PLATFORM_WORKFLOW: "528c2bb1cafa7a77df61731089671981b4e791fb7b02bafed0341f0cc485502e",
     WORKS_PLATFORM_ACTION: "83b29524bf654025ce4260f0ab1917272b406750621a9212dfb7c2c559fcf8a2",
     WORKS_PLATFORM_PREPARE: "5fa6f5012381e6d64154c10999396a35a2f21a96d6cce0245d8b19f82d01cddf",
     WORKS_PLATFORM_COORDINATOR: "4e84e8280841785b694c3d22cb951a0e492e08e25a846a2d52d165bd0f34f127",
 }
+# The coordinator loads this standard-library-only Platform implementation
+# from the initialized checkout and executes its sealed export. The proof
+# assumes, rather than traces, that the export reproduces the committed
+# bytes, so it binds these reviewed bytes (Git blob 52dfe0ea...) in the tree
+# of whatever commit the Works gitlink records, not a list of Platform commits.
+WORKS_PLATFORM_EXPORT = {
+    "eng/works_host_snapshot.py": "a80fb6fa9be866236fed99bd337eeee716440ea5f36ee5615033e0e5260a8a77",
+}
+# A Builds reference at an immutable vX.Y.Z release tag. Builds releases are
+# delivered and qualified through CiCd, so only these tags may vary.
+BUILDS_RELEASE = re.compile(rb"(?<![A-Za-z0-9_./-])(Hexalith/Hexalith\.Builds(?:/[A-Za-z0-9_.-]+)*@)"
+                            rb"v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?![A-Za-z0-9_.+/-])")
+BUILDS_RELEASE_MASK = b"vX.Y.Z"
 WORKS_PLATFORM_ENTRIES = {
     (WORKS_PLATFORM_PREPARE, 52, "subprocess.run"): ("eng/bound_builds.py", "python"),
     (WORKS_PLATFORM_PREPARE, 55, "subprocess.check_output"): ("eng/prepare_builds_artifacts.py", "python"),
@@ -143,6 +155,19 @@ WORKS_PLATFORM_GIT_CALLS = {
     (WORKS_PLATFORM_COORDINATOR, 118, "subprocess.run"),  # clone local Platform owner
     (WORKS_PLATFORM_COORDINATOR, 119, "subprocess.run"),  # detach at the snapshot's revision
 }
+
+
+def works_fingerprint(path, data):
+    """SHA-256 of a reviewed Works proof input.
+
+    Only the workflow masks its Builds release tags. Input that already holds
+    the mask is never proved, so the mask cannot stand in for a tag.
+    """
+    if path == WORKS_PLATFORM_WORKFLOW:
+        if BUILDS_RELEASE_MASK in data:
+            return None
+        data = BUILDS_RELEASE.sub(rb"\1" + BUILDS_RELEASE_MASK, data)
+    return hashlib.sha256(data).hexdigest()
 
 
 def environment_names(word):
@@ -907,12 +932,14 @@ class Discovery:
         coordinator loads the snapshot module from the initialized checkout,
         copies ordinary source bytes from that checkout into the detached
         clone, and uses the pinned snapshot implementation to export them.
-        Its shell verifier runs from those exported source bytes. Resolve
-        each executable within the committed source; the Python callsites
-        enter ordinary discovery so unresolved descendants still fail.
+        Its shell verifier runs from those exported source bytes. Any
+        committed gitlink commit is acceptable when its tree holds the
+        reviewed export implementation. Resolve each executable within the
+        committed source; the Python callsites enter ordinary discovery so
+        unresolved descendants still fail.
         """
         for source, digest in WORKS_PLATFORM_INPUTS.items():
-            if not self.regular(source) or hashlib.sha256(self.blob(source)).hexdigest() != digest:
+            if not self.regular(source) or works_fingerprint(source, self.blob(source)) != digest:
                 raise DeliveryError("unproved computed Platform source: " + clean(source))
         import_roots = {"", *(posixpath.dirname(source) for source in WORKS_PLATFORM_INPUTS
                               if source.endswith(".py"))}
@@ -922,9 +949,21 @@ class Discovery:
             if parent in import_roots and name.split(".", 1)[0] in protected_imports and (
                     "." not in name or name.endswith((".py", ".pyc", ".so", ".pyd"))):
                 raise DeliveryError("unproved computed Platform import shadow: " + clean(candidate))
-        mode, kind, pin = self.items.get(WORKS_PLATFORM_ROOT, (None, None, None))
-        if (mode, kind) != ("160000", "commit") or pin not in WORKS_PLATFORM_PINS:
+        if self.items.get(WORKS_PLATFORM_ROOT, (None, None))[:2] != ("160000", "commit"):
             raise DeliveryError("unproved Platform gitlink for computed checkout/export: " + WORKS_PLATFORM_ROOT)
+        self.acquire(WORKS_PLATFORM_ROOT)
+        for source, digest in WORKS_PLATFORM_EXPORT.items():
+            source = WORKS_PLATFORM_ROOT + "/" + source
+            if not self.regular(source) or hashlib.sha256(self.blob(source)).hexdigest() != digest:
+                raise DeliveryError("unproved computed Platform source: " + clean(source))
+            # The loader may run committed bytecode for this module instead of
+            # the reviewed source, including through a non-directory cache.
+            directory, name = posixpath.split(source)
+            cache, stem = directory + "/__pycache__", posixpath.splitext(name)[0] + "."
+            for item in sorted(self.items):
+                if item == cache or (item.startswith(cache + "/")
+                                     and item[len(cache) + 1:].split("/", 1)[0].startswith(stem)):
+                    raise DeliveryError("unproved computed Platform source: " + clean(item))
         targets = {}
         for callsite, (entry, language) in WORKS_PLATFORM_ENTRIES.items():
             target = self.resolve("$GITHUB_WORKSPACE/" + WORKS_PLATFORM_ROOT + "/" + entry,
