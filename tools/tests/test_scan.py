@@ -1738,14 +1738,18 @@ class ScanTests(acceptance_tests.Harness):
         coordinator = "scripts/coordinator.py"
         workspace, pin = self.pinned_workspace("echo dormant", module=module, repository=repository)
         remote = workspace.paths[module]
-        script = workspace.write(module, coordinator, "print('coordinator')\n")
+        script = workspace.write(module, coordinator,
+                                 "import subprocess\n"
+                                 "subprocess.run(['bash', sealed_export / 'eng/launcher.sh'])\n")
         action_source = workspace.write(module, action, steps(("bash", "python3 " + coordinator, "")))
         git(remote, "add", "--", action, coordinator)
         git(remote, "commit", "--quiet", "-m", "record parity entry point")
         inputs = {action: hashlib.sha256(action_source.read_bytes()).hexdigest(),
                   coordinator: hashlib.sha256(script.read_bytes()).hexdigest()}
-        with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_PIN=pin,
-                                 WORKS_PLATFORM_ENTRIES=("eng/launcher.sh",)):
+        entrypoint = (coordinator, 2, "subprocess.run")
+        entries = {entrypoint: ("eng/launcher.sh", "bash")}
+        with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_PINS={pin},
+                                 WORKS_PLATFORM_ENTRIES=entries):
             report = workspace.scan(self.factory)
             row = report["modules"][0]
             self.assertEqual("pass", row["result"], report)
@@ -1753,13 +1757,26 @@ class ScanTests(acceptance_tests.Harness):
             helper = next(item for item in row["files"] if item["path"] == path + "/eng/helper.py")
             self.assertEqual(hashlib.sha256(b"print('pinned helper')\n").hexdigest(), helper["sha256"])
 
-            script.write_text("print('different computed source')\n")
+            script.write_text(script.read_text().replace("eng/launcher.sh", "eng/unproved.sh"))
             git(remote, "add", "--", coordinator)
             git(remote, "commit", "--quiet", "-m", "substitute computed source")
             row = workspace.scan(self.factory)["modules"][0]
             self.assertEqual("fail", row["result"], row)
             self.assertNotIn("pinnedSources", row)
             self.assertIn(f"{action}:1: local-script discovery: unproved computed Platform source: {coordinator}",
+                          row["errors"])
+            self.assertIn(f"{coordinator}:2: local-script discovery: unresolved computed Python script invocation",
+                          row["errors"])
+            git(remote, "revert", "--no-edit", "HEAD")
+
+            shadow = "scripts/subprocess.py"
+            workspace.write(module, shadow, "# Shadow the checked interpreter namespace\n")
+            git(remote, "add", "--", shadow)
+            git(remote, "commit", "--quiet", "-m", "substitute interpreter namespace")
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertNotIn("pinnedSources", row)
+            self.assertIn(f"{action}:1: local-script discovery: unproved computed Platform import shadow: {shadow}",
                           row["errors"])
             git(remote, "revert", "--no-edit", "HEAD")
 
@@ -1772,7 +1789,8 @@ class ScanTests(acceptance_tests.Harness):
             self.assertIn(f"{action}:1: local-script discovery: unproved Platform gitlink for computed checkout/export: {path}",
                           row["errors"])
             git(remote, "revert", "--no-edit", "HEAD")
-            with mock.patch.object(discovery, "WORKS_PLATFORM_ENTRIES", ("eng/../eng/launcher.sh",)):
+            with mock.patch.object(discovery, "WORKS_PLATFORM_ENTRIES",
+                                   {entrypoint: ("eng/../eng/launcher.sh", "bash")}):
                 row = workspace.scan(self.factory)["modules"][0]
             self.assertEqual("fail", row["result"], row)
             self.assertTrue(any("unsafe source path within pinned source" in error for error in row["errors"]), row)
@@ -1783,7 +1801,7 @@ class ScanTests(acceptance_tests.Harness):
             unresolved = workspace.commit(dependency)
             git(remote, "update-index", "--cacheinfo", "160000", unresolved, path)
             git(remote, "commit", "--quiet", "-m", "record unresolved descendant")
-            with mock.patch.object(discovery, "WORKS_PLATFORM_PIN", unresolved):
+            with mock.patch.object(discovery, "WORKS_PLATFORM_PINS", {unresolved}):
                 row = workspace.scan(self.factory)["modules"][0]
             self.assertEqual("fail", row["result"], row)
             self.assertEqual(row["pinnedSources"], {path: {"repository": repository, "revision": unresolved}})

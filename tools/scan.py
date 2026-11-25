@@ -29,6 +29,18 @@ VERSION = "5.4.3"
 TYPESCRIPT_VERSION = "6.0.3"
 
 
+class ScanTransport(rt.Transport):
+    """Fetch committed dependencies for static scanning."""
+
+    def pinned_source(self, git, repository, revision):
+        repository, revision = rt.name(repository), rt.sha(revision)
+        self.configure(git, repository)
+        git.run("fetch", "--depth=1", "--filter=blob:none", "--no-tags", "--no-recurse-submodules",
+                self.remote(repository), revision)
+        if git.resolve("FETCH_HEAD^{commit}") != revision:
+            raise rt.DeliveryError("pinned source revision mismatch")
+
+
 def read_json(data):
     if len(data) > MAX_REPORT:
         raise rt.DeliveryError("detector report exceeds 16 MiB limit")
@@ -313,7 +325,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
         modules = rt.registry(trusted, revision)
         if len(modules) > rt.CAPACITY:
             raise rt.DeliveryError("committed registry exceeds 17-module capacity")
-        transport = transport or rt.Transport()
+        transport = transport or ScanTransport()
         with tempfile.TemporaryDirectory(prefix="hexalith-duplicate-scan-") as temporary:
             scratch = Path(temporary)
             manifest, roots, total = {}, [], 0

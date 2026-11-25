@@ -516,14 +516,6 @@ class Transport:
                 self.remote(name(repository)), "+refs/heads/main:refs/heads/main")
         return git.resolve("refs/heads/main^{commit}")
 
-    def pinned_source(self, git, repository, revision):
-        repository, revision = name(repository), sha(revision)
-        self.configure(git, repository)
-        git.run("fetch", "--depth=1", "--filter=blob:none", "--no-tags", "--no-recurse-submodules",
-                self.remote(repository), revision)
-        if git.resolve("FETCH_HEAD^{commit}") != revision:
-            raise DeliveryError("pinned source revision mismatch")
-
     def push(self, git, repository, commit, token):
         return git.run("push", "--porcelain", "--no-verify", "--no-recurse-submodules", self.remote(name(repository)),
                        sha(commit) + ":refs/heads/main", token=token, check=False)

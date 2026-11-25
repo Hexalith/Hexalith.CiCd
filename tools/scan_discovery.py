@@ -23,6 +23,7 @@ import posixpath
 import re
 import shlex
 import subprocess
+import sys
 import tomllib
 
 import yaml
@@ -111,19 +112,37 @@ REDIRECTION = re.compile(r"(\d*|&|\*)(>>|>\||>&|>|<<<|<<-|<<|<>|<&|<)(.*)", re.S
 # Works parity job. A changed materializer must establish provenance again.
 WORKS_PLATFORM_ACTION = ".github/actions/platform-parity/action.yml"
 WORKS_PLATFORM_ROOT = "references/Hexalith.Platform"
-WORKS_PLATFORM_PIN = "99a17baaf6de626d5f59311544a6aa8f9865b695"
+WORKS_PLATFORM_PINS = {
+    "99a17baaf6de626d5f59311544a6aa8f9865b695",
+    "616e27789f935ebb7f7f33406150ecf2dc9913a2",
+}
+WORKS_PLATFORM_PREPARE = "scripts/prepare-platform-builds.py"
+WORKS_PLATFORM_COORDINATOR = "scripts/verify-platform-parity-ci.py"
 WORKS_PLATFORM_INPUTS = {
     ".github/workflows/ci.yml": "489af3156c4404594cc585efbd556c306c89934baceff872b03b620549ffc252",
     WORKS_PLATFORM_ACTION: "83b29524bf654025ce4260f0ab1917272b406750621a9212dfb7c2c559fcf8a2",
-    "scripts/prepare-platform-builds.py": "5fa6f5012381e6d64154c10999396a35a2f21a96d6cce0245d8b19f82d01cddf",
-    "scripts/verify-platform-parity-ci.py": "4e84e8280841785b694c3d22cb951a0e492e08e25a846a2d52d165bd0f34f127",
+    WORKS_PLATFORM_PREPARE: "5fa6f5012381e6d64154c10999396a35a2f21a96d6cce0245d8b19f82d01cddf",
+    WORKS_PLATFORM_COORDINATOR: "4e84e8280841785b694c3d22cb951a0e492e08e25a846a2d52d165bd0f34f127",
 }
-WORKS_PLATFORM_ENTRIES = (
-    "eng/bound_builds.py",
-    "eng/prepare_builds_artifacts.py",
-    "eng/works_host_snapshot.py",
-    "eng/verify-works-host.sh",
-)
+WORKS_PLATFORM_ENTRIES = {
+    (WORKS_PLATFORM_PREPARE, 52, "subprocess.run"): ("eng/bound_builds.py", "python"),
+    (WORKS_PLATFORM_PREPARE, 55, "subprocess.check_output"): ("eng/prepare_builds_artifacts.py", "python"),
+    (WORKS_PLATFORM_COORDINATOR, 69, "importlib.util.spec_from_file_location"): ("eng/works_host_snapshot.py", "python"),
+    (WORKS_PLATFORM_COORDINATOR, 201, "subprocess.run"): ("eng/verify-works-host.sh", "bash"),
+}
+# These fixed Git calls read metadata/archives or materialize a local checkout.
+# Their arguments are data from the review-bound files above: paths rooted in
+# the job and revision data from Git or the stable numeric SDK version.
+WORKS_PLATFORM_GIT_CALLS = {
+    (WORKS_PLATFORM_PREPARE, 25, "subprocess.check_output"),  # Platform HEAD
+    (WORKS_PLATFORM_PREPARE, 29, "subprocess.check_output"),  # Platform status
+    (WORKS_PLATFORM_PREPARE, 33, "subprocess.check_output"),  # Platform index
+    (WORKS_PLATFORM_PREPARE, 48, "subprocess.run"),  # clone local Platform owner
+    (WORKS_PLATFORM_PREPARE, 50, "subprocess.run"),  # detach at the recorded HEAD
+    (WORKS_PLATFORM_COORDINATOR, 44, "subprocess.check_output"),  # SDK rev-parse/archive/show
+    (WORKS_PLATFORM_COORDINATOR, 118, "subprocess.run"),  # clone local Platform owner
+    (WORKS_PLATFORM_COORDINATOR, 119, "subprocess.run"),  # detach at the snapshot's revision
+}
 
 
 def environment_names(word):
@@ -542,6 +561,7 @@ class Discovery:
         self.javascript_parser = javascript_parser
         self.npm_seen = set()
         self.npm_roots = set()
+        self.works_platform_targets = None
 
     def index_directories(self, paths):
         for item in paths:
@@ -887,18 +907,38 @@ class Discovery:
         coordinator loads the snapshot module from the initialized checkout,
         copies ordinary source bytes from that checkout into the detached
         clone, and uses the pinned snapshot implementation to export them.
-        Its shell verifier runs from those exported source bytes. Queue every
-        entry for ordinary discovery so unresolved descendants still fail.
+        Its shell verifier runs from those exported source bytes. Resolve
+        each executable within the committed source; the Python callsites
+        enter ordinary discovery so unresolved descendants still fail.
         """
         for source, digest in WORKS_PLATFORM_INPUTS.items():
             if not self.regular(source) or hashlib.sha256(self.blob(source)).hexdigest() != digest:
                 raise DeliveryError("unproved computed Platform source: " + clean(source))
-        if self.items.get(WORKS_PLATFORM_ROOT) != ("160000", "commit", WORKS_PLATFORM_PIN):
+        import_roots = {"", *(posixpath.dirname(source) for source in WORKS_PLATFORM_INPUTS
+                              if source.endswith(".py"))}
+        protected_imports = sys.stdlib_module_names | {"sitecustomize", "usercustomize"}
+        for candidate in sorted(self.items.keys() | self.directories):
+            parent, name = posixpath.split(candidate)
+            if parent in import_roots and name.split(".", 1)[0] in protected_imports and (
+                    "." not in name or name.endswith((".py", ".pyc", ".so", ".pyd"))):
+                raise DeliveryError("unproved computed Platform import shadow: " + clean(candidate))
+        mode, kind, pin = self.items.get(WORKS_PLATFORM_ROOT, (None, None, None))
+        if (mode, kind) != ("160000", "commit") or pin not in WORKS_PLATFORM_PINS:
             raise DeliveryError("unproved Platform gitlink for computed checkout/export: " + WORKS_PLATFORM_ROOT)
-        for entry in WORKS_PLATFORM_ENTRIES:
+        targets = {}
+        for callsite, (entry, language) in WORKS_PLATFORM_ENTRIES.items():
             target = self.resolve("$GITHUB_WORKSPACE/" + WORKS_PLATFORM_ROOT + "/" + entry,
                                   path=path, cwd=".", action=action)
-            self.add(target, action=action)
+            if not self.regular(target):
+                raise DeliveryError("missing or unsafe regular script/action: " + clean(target))
+            self.language(target, language)
+            targets[callsite] = (target, language)
+        self.works_platform_targets = targets
+
+    def works_platform_context(self, path, cwd, action, offset):
+        # Both locked steps run from the default workspace without path overrides.
+        return (self.works_platform_targets is not None and path in WORKS_PLATFORM_INPUTS and cwd == "." and offset == 0
+                and action == posixpath.dirname(WORKS_PLATFORM_ACTION))
 
     def action(self, path, text):
         try:
@@ -2188,7 +2228,11 @@ class Discovery:
             try:
                 if isinstance(node, ast.Constant) and isinstance(node.value, str):
                     literals.append((getattr(node, "lineno", 1) + offset, node.value))
-                    if node.value in {"GITHUB_ENV", "GITHUB_PATH"}:
+                    # The pinned writer exports one fixed variable and rejects
+                    # CR/LF before writing its verified tool-directory value.
+                    platform_export = (node.value == "GITHUB_ENV" and path == WORKS_PLATFORM_PREPARE
+                                       and node.lineno == 65 and self.works_platform_context(path, cwd, action, offset))
+                    if node.value in {"GITHUB_ENV", "GITHUB_PATH"} and not platform_export:
                         raise DeliveryError("unsupported Python access to " + node.value + "; coverage unsupported")
                 elif isinstance(node, (ast.Name, ast.Attribute)) and isinstance(node.ctx, ast.Load):
                     if proven_paths and any(search_path(candidate) for candidate in names(ast.unparse(node))):
@@ -2782,6 +2826,15 @@ class Discovery:
         return True
 
     def python_call(self, call, node, path, cwd, action, roots, offset, names, parents, nodes):
+        if self.works_platform_context(path, cwd, action, offset):
+            callsite = (path, node.lineno, call)
+            target = self.works_platform_targets.get(callsite)
+            if target is not None:
+                source, language = target
+                self.add(source, language, cwd, action)
+                return
+            if callsite in WORKS_PLATFORM_GIT_CALLS:
+                return
         if call.startswith(UNSUPPORTED_PREFIXES) or call in UNSUPPORTED_CALLS:
             raise DeliveryError("unsupported Python process/import API: " + clean(call))
         if call in {"importlib.import_module", "__import__"}:
