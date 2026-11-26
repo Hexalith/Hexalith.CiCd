@@ -120,7 +120,15 @@ Recognized forms supply the exact working directory, import roots and language:
   package initializer below that directory, and fails for unsafe sources.
   A Python argv list or tuple that passes `sys.executable -m unittest discover`
   to a wrapper is subject to the same discovery rules. A direct subprocess
-  call still uses its own working directory.
+  call still uses its own working directory. `python -m unittest` can also
+  name literal tests after the `-v`, `-q`, `-f`, `-c` and `-b` flags, their
+  long forms and `--locals`. A dotted name selects the module of its longest
+  local prefix, which must be a module file because a package runs its own
+  `load_tests`. A name with no local prefix is an installed test module. A
+  `.py` operand under the working directory selects its file, which rule 1
+  also includes as a literal reference. Other unittest options and operands
+  fail. The selected modules are test sources; see
+  [the test boundary](#test-boundary).
   A standalone Bash `python -` command on one line can read a closed, fully quoted heredoc.
   Its LF-delimited body is traversed as Python from every candidate working
   directory. Only literal words and quoted simple parameter expansions can
@@ -128,7 +136,10 @@ Recognized forms supply the exact working directory, import roots and language:
   An early top-level Python import-path insertion can prove its source root
   from the imports, source-relative assignments and previously proved
   insertions that precede it.
-  Source-relative `Path.with_name` can name a literal sibling. A direct
+  Source-relative `Path.with_name` can name a literal sibling. A
+  source-relative path proof refuses class reflection anywhere in its
+  source (`type(...)`, `__class__`, `__mro__` and `__subclasses__`), except
+  a read of builtin `type(VALUE).__name__`, which yields a string. A direct
   `subprocess` call through `sys.executable` with a proved Python file operand
   can forward computed data after the file operand. Computed executable or
   script operands, shell invocation and pre-execution callbacks remain failures.
@@ -138,10 +149,48 @@ Recognized forms supply the exact working directory, import roots and language:
   literal. Build, pack, restore and msbuild may expand one trailing immutable
   tuple made of `-p:Name=Value` operands with fixed property names. Other argv
   expansion remains unsupported. Literal script references in these data
-  operands still enter discovery. Computed executable, operation, shell,
-  working-directory or resolution-environment changes remain failures.
+  operands still enter discovery. The executable can also be
+  `shutil.which('dotnet')` from the standard module. The argv can be a
+  function-local list bound once and only passed to standard subprocess calls,
+  alone or concatenated with a literal list. A computed working directory for build, pack, restore and
+  msbuild is directory data, as for Git. The .NET host reads `global.json`
+  from that directory and its parents, and a relative PATH entry or lookup
+  result resolves inside it. So every tracked `global.json` must be strict
+  JSON without duplicate keys and must not declare SDK search `paths`; SDK
+  version and roll-forward settings only choose installed SDKs. A tracked
+  `dotnet` host, an unproved subprocess API, a shell, a pre-execution
+  callback and `DOTNET_`, `MSBuild`, `NUGET_`, host or loader variables in
+  the environment fail. Pinned sources acquired later are checked again.
+  `dotnet tool run` still needs a literal working directory because tool
+  manifests are found from it. Computed executable, operation, shell or
+  resolution-environment changes remain failures.
   Bash calls to the same fixed build, pack, restore and msbuild operations
   also accept simple shell parameter expansion in the data operands.
+- Python argv `['dotnet', ASSEMBLY, *data]` that literal evaluation cannot
+  read launches a managed application when the executable is the literal
+  `dotnet` or the proved `shutil.which('dotnet')` lookup and ASSEMBLY's
+  final literal text ends in `.dll`. ASSEMBLY is such a string, an f-string
+  whose last part is that literal, or a proved source-relative pathlib path
+  joined with it, optionally through builtin `str`. The argv forms are those
+  of the fixed operations above, without starred operands. The .NET host
+  (hostfxr, checked at `v11.0.0` in `src/native/corehost/fxr/command_line.cpp`
+  and locally with host 11.0.0) runs an existing operand ending in `.dll` as
+  an application, with no SDK resolution or command lookup, and the other
+  operands are application data. Literal script references in them still
+  enter discovery. A missing operand is routed to the SDK instead. The host
+  selects that SDK through `global.json` in the working directory and its
+  parents, and the SDK resolves the operand as a `dotnet-`-prefixed command
+  on `PATH`, where a relative entry resolves in the working directory, or as
+  a local tool. So the launch keeps a literal or inherited working directory,
+  every tracked `global.json` must meet the SDK selection rule above, and the
+  module may not track a `dotnet` host, a `dotnet-tools.json` manifest or a
+  file with a path component starting with `dotnet-` whose name ends in
+  `.dll`, alone or before one more extension such as a Windows `PATHEXT`
+  suffix. Names compare case-insensitively. The safeguards for the
+  subprocess API, shell, pre-execution callback and environment of the
+  fixed operations apply, and pinned sources acquired later are checked
+  again. A computed working directory, other suffixes, `dotnet exec` and
+  computed executables fail.
   Bash `grep` accepts simple parameter expansion in its data operands and a
   literal trailing dollar in its pattern.
 - Python subprocess argv can pass data to four literal Docker forms used to
@@ -162,16 +211,47 @@ Recognized forms supply the exact working directory, import roots and language:
   `--`. Computed verbs, Git aliases, `-c`, `config`, `hook`, and
   `submodule foreach` fail. Literal tracked scripts remain in scope, including
   those under a proved literal working directory or `-C` path.
-- Direct Python `*args` wrappers and finite literal tuple loops are expanded
-  within fixed depth, argument and variant budgets. Aliased or replaced
+- Direct Python `*args` wrappers and finite literal loops are expanded
+  within fixed depth, argument and variant budgets. A loop row is a tuple, or
+  a list whose loop name only reaches that process argv. Aliased or replaced
   callables, reflective namespace changes, unknown callers and computed
-  process options fail. Copied `os.environ` mappings permit only proved
-  resolution-preserving mutations and cannot escape through aliases/callbacks.
+  process options fail. A wrapper whose subprocess argv, `cwd` or `env` is
+  one of its parameters is checked at each direct call site in the same
+  source, with that call's arguments in place of the parameters, up to 8
+  levels and 128 variants. The wrapper may only read its argv parameter and
+  may use its env parameter only as a proved copy. A wrapper without callers
+  in its source, or one that is passed on, decorated or a method, still fails.
+  These proofs see only their own source, so a module-level wrapper fails when
+  other discovered code imports that source, unless every importer is a
+  test source that keeps [the test boundary](#test-boundary).
   Git wrappers must meet the same rules at every call site. A constant tuple
   can supply literal operands. A conditional `**` mapping may supply only
   the subprocess `env` keyword, and the environment must preserve executable
   resolution in each branch. Git mode proof does not permit a shell,
   alternate executable, pre-execution callback or unresolved environment.
+- A subprocess `env` can be `os.environ.copy()`, `dict(os.environ, ...)` or
+  `{**os.environ, ...}`: inline, in a local bound once, through a proved
+  wrapper parameter, or in one instance attribute. Changes use literal keys or
+  a loop over literal keys. Added values are built only from names, reads,
+  literals, f-strings, `+`, `/`, `%` and builtin `str`; other calls fail.
+  Keys can also be removed through a `startswith` filter over a `list` or
+  `tuple` of the keys. Keys and removal prefixes cannot name resolution
+  variables (`PATH`, `PYTHON*`, `NODE*`, `NPM_CONFIG_*`, `PS*`,
+  `POWERSHELL*`, `BASH_ENV` and similar) or the Git and .NET variables
+  above for those children. Home and configuration roots need literal values.
+  Other references may only read the copy, pass it as the `env` of a proved
+  standard `subprocess` call or pass it to a proved local function. An
+  instance attribute is assigned only copies, in methods of one module-level
+  class based on `object` or `unittest.TestCase`. Every reference to that
+  attribute name in the source must be one of those uses. A module-level copy
+  or an instance attribute fails when other discovered code imports its
+  source, unless every importer is a test source that keeps the test
+  boundary. The source may not replace or write
+  `os.environ`, or pass it or `os` to unknown code. `patch.dict(os.environ,
+  ...)` from `unittest.mock` is allowed because it changes the process
+  environment through the public mapping API. Aliases, unknown mutations,
+  reflection and other escapes fail. Each scope proof is limited to 4,096
+  nodes.
 
 ### Rule 1: literal references are included
 
@@ -331,9 +411,9 @@ These fail coverage with a diagnostic naming the source file and line:
   - `make`/`gmake` with a tracked Makefile;
   - `just`, `task`, `invoke`, `nox`, `tox`, `poe`, `rake` or `pre-commit` with
     its tracked recipe file, also as `python -m tox` or `python -m pre_commit`;
-  - `pytest`, `py.test`, `python -m pytest`, `python -m unittest` or
-    `python -m nose2` when the module tracks `conftest.py` or a file named
-    `test*.py` or `*_test.py`;
+  - `pytest`, `py.test`, `python -m pytest`, `python -m nose2` or another
+    `python -m unittest` form when the module tracks `conftest.py` or a file
+    named `test*.py` or `*_test.py`;
   - unmodeled `npm` execution forms, or `pnpm`, `yarn` or `bun` with a tracked
     `package.json`, unless the subcommand runs no scripts. Supported literal npm
     recipes are described below. `--ignore-scripts` disables lifecycle hooks for
@@ -357,6 +437,62 @@ These fail coverage with a diagnostic naming the source file and line:
   mistaken for a safe subcommand. This includes leading selectors in module
   forms such as `python -m poetry --directory tools run lint`. Plain
   nonexecuting npm info/version/audit and runner version probes remain supported.
+
+### Test boundary
+
+A test source is a module that a reached unittest selection names: a file
+matching a discovery pattern or the module of a literal test name, whose file
+name also matches `test*.py` exactly. Other files that a broader pattern or a
+literal test name selects keep full rules. Package
+initializers are not test sources, and a file name alone never makes one. A test
+source keeps full rules when anything else reaches it, such as an action or
+script that runs it, a launch, a literal reference or a static import from other
+code. Only static imports between test sources keep the boundary.
+
+In a test source that only unittest selection and other test sources reach,
+rule 2 diagnostics at process launches, execution literals and dynamic loads are
+boundary observations instead. These sites are calls to `subprocess`,
+`os.system`, `os.popen`, `runpy`, `os.exec*`, `os.spawn*`, `os.posix_spawn*`,
+`asyncio.create_subprocess_*` and `pty.spawn`; `exec`, `eval` and `compile`;
+the file-location import loaders; computed
+`importlib.import_module` and `__import__` targets; and Python literal
+sequences over the execution-literal limit. Every diagnostic such a call
+produces counts, including those in the inline program or command line it
+starts. The module's report row records each observation's file, line and
+reason, and observations never fail the row. The test source stays selected and
+duplicate-scanned. Its resolvable launches, literal references and static
+imports are still followed, and what they reach keeps full rules. A test source
+still fails for its other rule 2 forms, such as environment, search-path or
+working-directory changes, `GITHUB_ENV` or `GITHUB_PATH` access and reflective
+use of a process or import API. When a module exceeds its file, byte or
+traversal limit, every observation fails again.
+
+A test source keeps its boundary sites as errors when its literal text names a
+GitHub workflow command file or form: `GITHUB_ENV`, `GITHUB_PATH`,
+`GITHUB_OUTPUT`, `GITHUB_STATE`, `GITHUB_STEP_SUMMARY`, `::set-env`,
+`::add-path`, `::set-output` or `::save-state`, compared case-insensitively
+in every string or bytes constant. That text includes each command line,
+argument and inline program the source spells, wherever it is bound, so any
+site in that source could launch it. These errors end with `no test boundary:
+the source names a GitHub workflow command file`.
+
+Wrapper and environment-copy proofs see only their own source. When every
+importer of a product source is a test source that keeps the boundary, those
+proofs are observations at the proof site, because the calls those test
+sources make through them are boundary sites too. A product importer, an
+importer that names a workflow command file, or a coverage limit keeps the
+error.
+
+Each observation is a coverage loss. Discovery does not follow the process,
+inline program or module that the site starts. Code reached only that way is
+neither selected nor duplicate-scanned, and changes such a child makes to its
+own or the job's environment are unchecked. The workflow command check reads
+only the test source's own literal text. A fully computed child, such as a
+script path, command line or program read from a file, assembled from
+fragments, imported from another module or produced at run time, can still
+write those files through the inherited `GITHUB_*` variables without a
+diagnostic, and so can a product function that a test source calls with
+computed arguments.
 
 ### Lines, comments and data
 
@@ -418,13 +554,15 @@ The durable output directory contains:
 
 - `report.json`: schema `hexalith.duplicate-scan.v1`, `result` (`pass` or `fail`),
   detector and policy observations, top-level errors, module names, full source
-  revisions, selected original paths and per-module errors, and findings with
-  format, lines, tokens, fragment and both original module/path/line endpoints.
-- `summary.md`: the readable verdict, source coverage, diagnostics and copied
-  fragments with the original locations of code to move into Builds. Each
-  fragment is a top-level fenced block longer than any backtick run it contains,
-  so module text stays inert Markdown. Fragment lines follow the detector's
-  LF-only line numbering.
+  revisions, selected original paths, per-module errors and test boundary
+  `observations` (`path`, `line` and `reason`), and findings with format,
+  lines, tokens, fragment and both original module/path/line endpoints. Readers
+  that ignore `observations` keep their verdict: an observation is never an error.
+- `summary.md`: the readable verdict, source coverage, diagnostics, boundary
+  observations and copied fragments with the original locations of code to move
+  into Builds. Each fragment is a top-level fenced block longer than any backtick
+  run it contains, so module text stays inert Markdown. Fragment lines follow
+  the detector's LF-only line numbering.
 
 The scan job seeds both files before checkout, writes the Markdown to the
 Actions summary and attempts to upload the two files even after an ordinary

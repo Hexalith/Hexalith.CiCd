@@ -49,7 +49,7 @@ context:
 
 **Execution:**
 
-- [ ] `evidence/18/` — refresh revisions and verify/provision AD-21 in order: App selection, stale analyses/drafts/orphans, rulesets, main-only environment, scoped Zot/NuGet, disabled scans, publish switch, retention and grants. Adopt only after pilot acceptance.
+- [x] `evidence/18/` — refresh revisions and verify/provision AD-21 in order: App selection, stale analyses/drafts/orphans, rulesets, main-only environment, scoped Zot/NuGet, disabled scans, publish switch, retention and grants. Adopt only after pilot acceptance.
 - [ ] Projects `tests/Hexalith.Projects.PackageFixtures{,.AppHost}/`, `Hexalith.Projects.CI.slnx` — add nonpackable prebuilt fixture/driver; seed through authenticated product commands, verify independent durable state and complete browser phases. Test readiness/output/cleanup failures and production isolation.
 - [ ] Folders `src/Hexalith.Folders.Server/{Hexalith.Folders.Server.csproj,FolderServerCatalogAdapterSource.cs}`, shared `src/Hexalith.Folders.EventStore/{FoldersCatalogAdapterSource,FoldersCatalogAdapters}.cs`, and `tests/Hexalith.Folders.Server.Tests/` — expose the actual owner's existing compiled command policies through the public SDK catalog seam from one module implementation; retain all Debug guards. Qualify exact declarations and all 36 retained canonical-intent cases, owner/server/gateway product suites and available required checks. Require the independently qualified corrected remote owner commit before delivered gitlinks or Projects adoption; this nonpackable executable repair needs no new Folder adapter NuGet package/version. Normal Folder checker/push prerequisites apply; no Folder push/publication is authorized by the Projects preparation exception.
 - [ ] Projects `src/Hexalith.Projects.UI.Contracts/*.csproj`, `tests/tools/run-*-gate.ps1`, `scripts/`, `.config/dotnet-tools.json`, `.github/actions/{after-unit-tests,nightly}/action.yml`, `tests/e2e/package.json` — retain generator output, use inspector 6.0.0 and no-rebuild package checks; run browser driver nightly. Preserve C# suites, OpenAPI assertions and owning cross-module tests. Delete workflow assertions and tool-only root npm files.
@@ -143,12 +143,142 @@ context:
   intent cases, all 124 gateway tests, and 1,451 Server tests. Eleven explicit
   Keycloak component cases and authenticated remote and hosted check evidence
   remain outstanding for the owner prerequisite.
+- 2026-11-26: Resumed adoption for [CiCd issue #9](https://github.com/Hexalith/Hexalith.CiCd/issues/9).
+  Story 11 passed in [nightly run 44566082537](https://github.com/Hexalith/Hexalith.CiCd/actions/runs/44566082537).
+  Projects main `46568b4509d896372129b51f5c8719dfd493d3e8`, tree
+  `5146e66b7499c362a94d09b0d2be094585b6885b`, passed its
+  [legacy CI run](https://github.com/Hexalith/Hexalith.Projects/actions/runs/45838436409).
+  Both product actions and their lockfiles are on main. The G-6 deterministic
+  support and PostgreSQL replay assertions already run in their EventStore owner
+  suites. The Projects catalog preparation action remains until delivery
+  replaces the legacy caller.
+- The maintainer readback confirms CiCd App installation `179966090` covers all
+  repositories. Projects has no rulesets or `hexalith-release` environment.
+  Default CodeQL and Dependabot security updates are off, push protection is
+  enabled, retention is 90 days, and the publish switch is `true`. There are
+  seven published releases, zero drafts, and 414 analyses from the legacy
+  CodeQL caller. The sorted analysis ID list SHA-256 is
+  `9678dca7adfac1851c38eb61bf67e785c7cf47fc567c2383bbd29d4194a4bd32`.
+  Tag `v1.1.0` points to `66b7e1bd12eade0f43b464744d3ddc588d858f19`
+  and is reachable from later release tags. GitHub returns 404 for its release,
+  and nuget.org returns 404 for the corresponding five package IDs in its
+  release manifest. The selected Actions and Dependabot pull grants and
+  `HEXALITH_NUGET_USER` initially excluded Projects. NuGet Trusted Publishing
+  required an interactive package-owner sign-in before policy readback.
+- The approved cleanup removed all 414 legacy analyses and `v1.1.0` through
+  the maintainer profile. The first six analysis deletions succeeded. GitHub
+  returned no continuation URLs, so a verified remaining inventory was
+  processed by ref in reverse creation order. The final 408-request ledger has
+  SHA-256 `c5d55bb50a214206f9319b58c5fd0bda32cebaf5c6e46ee57f86692058004ee0`.
+  Readback shows an empty CodeQL analysis inventory and HTTP 404 for the old
+  tag ref and release.
+- The maintainer created and verified `Protect main` ruleset `28175414` and
+  `v tags` ruleset `28175416`, with their precise branch/tag conditions and
+  empty bypass lists. Environment `hexalith-release` (`28663748343`) has the
+  single `main` deployment branch policy `68387800`. The legacy `production`
+  environment remains present under ID `22314003854` through cutover.
+- The approved Zot restart at 16:06 UTC moved `distribution-registry` to
+  generation 27 with one ready replica. ConfigMap `51624342` (configuration
+  SHA-256 `ddfa2175a59b741ccd41facf2cc372d2a687ee4eb1486f51554d9be6fbe78527`)
+  grants the Projects publisher read/create/update on `projects` and
+  `projects/**`. Registry authentication returned HTTP 200 and a foreign
+  repository read returned HTTP 403. The Projects release environment now
+  contains the two scoped registry secret names. The deployed Zot binary
+  verified the proposed configuration, and readback preserved all previous
+  registry ACL entries and authentication rows.
+- After the package-owner sign-in, NuGet created active policy `29361` for
+  owner `Hexalith`, organization ID `80614290`, and Projects repository ID
+  `871087402`. The policy permits new packages and versions matching
+  `Hexalith.Projects*` through `release.yml` in `hexalith-release`. Reloaded
+  readback confirmed the scoped policy and all 23 prior policies, including
+  the `production` policy `20857`. Projected readback SHA-256
+  `6e7caa73da12969da804be08618bd64ef2d5e7e162b46416a720ac2f554d1174`.
+- The maintainer added Projects to the Actions and Dependabot registry pull
+  grants and to the `HEXALITH_NUGET_USER` Actions variable. Each selected
+  repository list grew from nine to ten and preserved every prior entry.
+  Maintainer readback also confirmed default CodeQL off, Dependabot security
+  updates off, 90-day retention, push protection enabled, `main`-only
+  deployment and publish switch `true`. Receipt SHA-256
+  `ea700f3080822e836fdeb25518228353f672afed67d91b28cdc7da6d4297347e`.
+- The registration preview combines the original four direct checkouts and
+  hooks with `aspire: true` for the Aspire 17 package fixture. The disposable
+  CiCd tree `caa60de49dc62ed6ed739079ad9acc6429f41097` at Builds `v6.8.5`
+  passed render and render check. All eight per-module validation checks passed.
+  Global validation returned false after `tools/tests/test_scan.py` hit the
+  existing 600-second suite limit (log SHA-256
+  `c425089912436046635ce8401d56e7712937e46376b1ee3ee887d63ffc3016ec`). An
+  isolated rerun of the committed scanner suite with a 1,800-second diagnostic
+  deadline also timed out in the final `ScanTests` cases. The local PowerShell
+  tool took 20.79 seconds for a simple startup probe. Diagnostic SHA-256
+  `0a55329aa9e1636f6e3ecb5bb2c66f4f893d75cf019578bed587b800e8aa76b1`.
+  The Folders pin `c00bad4d364dc25800cf9dc41220c1eba512fed9`
+  has [failed hosted CI](https://github.com/Hexalith/Hexalith.Folders/actions/runs/45826937192).
+  Folders successor `2791d7a82825238da15a1bfb77c544079a7f7d09` passed its
+  [contract-spine run](https://github.com/Hexalith/Hexalith.Folders/actions/runs/45844093834)
+  and [hosted CI](https://github.com/Hexalith/Hexalith.Folders/actions/runs/45844094422).
+  The Projects fixture still needs qualification against the successor pin.
+- The committed CiCd scanner selected 54 Projects files after the planned
+  removal of the legacy G-6 action. It still refused the package hook's direct
+  computed assembly invocation at `scripts/_consumer_packages.py:161`
+  (scope and error digest `ac53ecdbe07f2607b9ef52da9f45c996620b70fccd91b692ace578fc66a27fc9`).
+  A disposable probe launched the same prebuilt consumer using the SDK's
+  `Run` target and the installed package manifest. It opened the manifest from
+  a private path containing spaces and propagated the failure of an invalid
+  manifest. The committed scanner then traced the same 54 files with no
+  Projects diagnostics. The revised package tooling passed all 46 tests
+  (SHA-256 `fa3b0ef7c7f275c23f9df52377312d40fe5c53e143b3c604ae40fd19f330b6db`).
+  The retained hook ran all six API consumers, including the actual package
+  extension's healthy readiness and wrong-major refusal (SHA-256
+  `08973f749d7d2e790ca4fe6d259497b666ea52a63b66b9a407055f0171737a01`).
+- The full audited Release build against the four-checkout projection and
+  Folders `2791d7a8` passed. All eight suites ran and passed 3,315 cases. The
+  standalone Server suite skipped one Dapr-gated restart control that the
+  retained nightly compatibility phase explicitly exercises. Aggregate SHA-256
+  `81498c28966bbac2ec00b0a640e8bdb98e1e437202f28f316744f6e57e412a78`.
+  The real browser fixture initially enrolled `Folders.Server.dll` as both
+  owner and adapter. It now uses the Folders Contracts and EventStoreExtensions
+  assemblies from the selected executable's Release directory, which passes
+  catalog construction. The actual Gateway at EventStore `df6a96ab` refuses 45
+  command operation digests at activation because its `SubmitCommandResponse`
+  includes `ResultPayloadOmissionReason`, absent from the published `5.6.0`
+  Contracts used by the AppHost. All query and projection operation digests
+  match (diagnostic SHA-256
+  `4d45b865ebc619f7a78f60039d2de95a53038801963e0c942a6cc2c08e0f1980`).
+  The disposable tree `914d27541e16f94a077b465bcd413b47f8df3b43` selects the
+  released EventStore source `295b5a6ba584167f21cfef40787477b8814e32da` and
+  Folders `2791d7a8`. Audited restore/build, all eight C# suites, FrontComposer
+  inspection and all six package consumers passed. Six actual owners and
+  workers committed the catalog. Duplicate delivery, full replay and the
+  compatibility SDK host/store restart passed. The full browser hook failed
+  the audit-storage ordinary-read control, the stale tenant-access assertion,
+  Chromium creation read-model convergence, and the final actual-owner browser
+  phase. The bounded output records an `InvalidOperationException` for the
+  last phase. Full native log SHA-256
+  `36b081ac91148cc6f8e6b45d246c7f8b6eb864a784d3fac0587bb5afd56c01e3`.
+- Projects main advanced to `8faccc8d87f60abd47b1eed0b45b80418b6a0455`, tree
+  `34962406848424e06095191f2332369a01d3d62b`, with a documentation-only commit
+  recording the approved durable-task source-mode tuple at EventStore
+  `df6a96ab`. The `5.6.0` Gateway alignment belongs to the disposable package
+  rehearsal. The published SDK still ends at `5.6.0`. Adoption remains pending
+  a compatible package-mode source selection and successful retained
+  qualification.
+- [Legacy CI for the new Projects main](https://github.com/Hexalith/Hexalith.Projects/actions/runs/45855546456)
+  succeeded. A refreshed CiCd registration preview selecting that revision
+  passed render check and authenticated `tools/validate.py --scope module` on
+  preview commit `fa8ebd2fc3398a704603fcfd92837436c048fba7`, tree
+  `3ac566088b9cf0ad5cb2271345fa4f4b65387982`. All eight module checks and the
+  online audits for 25 workflows passed. The scoped run excludes the full
+  scanner test suite. Validation SHA-256
+  `ff83b256f90ec8e88e16d752252b18a630158c84a5ffc11ec7e5833471a0cff4`.
 
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
 - 2026-11-18 — Human chose how to clear the scanner refusal at `.github/actions/prepare-g6-catalog/prepare.py:47`: delete that legacy G-6 action in a module-agent Projects commit after adoption, before the first post-adoption nightly scan, instead of extending the scanner to prove the computed call. The legacy `ci.yml` uses it until adoption. Added this to the last execution task. The scanner stays fail-closed and no exclusion is added. No other constraint changed.
 - 2026-11-19 — Human split the 2026-11-18 resume condition. The Projects product push waits only for a Conversations release with the five symbols; story 11 acceptance still gates adoption. No other constraint changed.
+- 2026-11-26 — The user approved resuming this adoption alongside the package release and V2 qualification required by CiCd issue #9. Existing acceptance conditions apply.
+- 2026-11-26 — The user approved removing the 414 identified legacy CodeQL analyses and the orphan Projects tag `v1.1.0` after the GitHub and NuGet release checks.
+- 2026-11-26 — The user approved the shared Zot restart to establish the Projects-specific publishing scope. The rollout targets the existing deployment and the `projects` and `projects/**` policies.
 
 ## Review Triage Log
 

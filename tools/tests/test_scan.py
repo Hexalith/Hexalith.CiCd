@@ -722,6 +722,681 @@ fi"""
         self.assertIn("scripts/probe.py", selected)
 
 
+def discover_python(files, command="python3 entry.py"):
+    """Discover one module directly, without the detector."""
+    with tempfile.TemporaryDirectory(prefix="python-discovery-") as temp:
+        module = "Hexalith.Alpha"
+        w = Workspace(Path(temp) / "workspace", (module,))
+        w.write(module, ".github/actions/dormant/action.yml", steps(("bash", command, "")))
+        for path, source in files.items():
+            w.write(module, path, source)
+        revision = w.commit(w.paths[module])
+        return sc.Discovery(rt.Git(w.paths[module]), revision).discover()
+
+
+def discover_boundary(commands, files):
+    """Discover one module directly; return its selection, errors and test boundary observations."""
+    with tempfile.TemporaryDirectory(prefix="boundary-discovery-") as temp:
+        module = "Hexalith.Alpha"
+        w = Workspace(Path(temp) / "workspace", (module,))
+        w.write(module, ".github/actions/dormant/action.yml", steps(*commands))
+        for path, source in files.items():
+            w.write(module, path, source)
+        revision = w.commit(w.paths[module])
+        discovery = sc.Discovery(rt.Git(w.paths[module]), revision)
+        selected, errors = discovery.discover()
+        observations = [f"{item['path']}:{item['line']}: {item['reason']}" for item in discovery.observations]
+        return set(selected), errors, observations
+
+
+def sites(diagnostics):
+    """The path:line prefix of each diagnostic or observation."""
+    return {":".join(entry.split(":", 2)[:2]) for entry in diagnostics}
+
+
+class TestBoundaryTests(unittest.TestCase):
+    """A test source reached only through unittest selection records its unresolved launches."""
+
+    DISCOVER = ("bash", "python -m unittest discover -s tests -p 'test_*.py'", "")
+    UNRESOLVED = "import subprocess\nsubprocess.run(command)\n"
+    # Lines 2-10: computed argv, cwd and env, an unfollowed process API, exec
+    # text, a computed import, a file loader, an oversized execution literal and
+    # an unresolved command inside a literal inline shell program.
+    LAUNCHES = ("import importlib, importlib.util, os, subprocess, sys\n"
+                "subprocess.run(command)\n"
+                "subprocess.run(['python', 'tools/helper.py'], cwd=directory)\n"
+                "subprocess.run(['tool', '--check'], env=environment)\n"
+                "os.execv(sys.executable, [sys.executable])\n"
+                "exec(code)\n"
+                "importlib.import_module(name)\n"
+                "importlib.util.spec_from_file_location('fixture', location)\n"
+                "PROGRAM = 'python3 -c pass  # " + "x" * 5000 + "'\n"
+                "subprocess.run(['bash', '-c', 'set -e; \"$TOOL\" --check'])\n")
+    LAUNCH_LINES = range(2, 11)
+
+    def test_unresolved_launches_in_test_sources_are_observations(self):
+        files = {"tests/test_launch.py": self.LAUNCHES + "subprocess.run([sys.executable, 'tools/runner.py'])\n"
+                                         "import support\nimport test_peer\n",
+                 "tests/test_peer.py": self.UNRESOLVED, "tests/support.py": self.UNRESOLVED,
+                 "tools/helper.py": self.UNRESOLVED, "tools/runner.py": self.UNRESOLVED}
+        selected, errors, observations = discover_boundary([self.DISCOVER], files)
+        # Test sources stay selected; what they launch, name or import from
+        # product code keeps full rules. Another test source keeps the boundary.
+        self.assertTrue(set(files) <= selected, selected)
+        self.assertEqual(sites(errors), {"tests/support.py:2", "tools/helper.py:2", "tools/runner.py:2"}, errors)
+        self.assertEqual(sites(observations), {f"tests/test_launch.py:{line}" for line in self.LAUNCH_LINES}
+                         | {"tests/test_peer.py:2"}, observations)
+        self.assertTrue(all("local-script discovery: " in entry for entry in observations), observations)
+        self.assertIn("tests/test_launch.py:3: local-script discovery: unresolved computed subprocess cwd", observations)
+        self.assertIn("tests/test_launch.py:9: local-script discovery: execution literal coverage limit exceeded",
+                      observations)
+
+    def test_literal_unittest_names_select_test_sources(self):
+        files = {"tests/test_named.py": self.UNRESOLVED, "tests/helper.py": "pass\n"}
+        for command in ("python -m unittest tests.test_named", "python -m unittest -v tests.test_named.Case.test_x",
+                        "python3 -m unittest --failfast --buffer tests.test_named json.tests"):
+            with self.subTest(command=command):
+                selected, errors, observations = discover_boundary([("bash", command, "")], files)
+                self.assertEqual(errors, [])
+                self.assertIn("tests/test_named.py", selected)
+                self.assertNotIn("tests/helper.py", selected)
+                self.assertEqual(sites(observations), {"tests/test_named.py:2"})
+
+    def test_unmodeled_unittest_invocations_still_fail(self):
+        files = {"tests/test_named.py": "pass\n", "tests/pkg/__init__.py": "pass\n"}
+        for command in ("python -m unittest", "python -m unittest -v", "python -m unittest tests",
+                        "python -m unittest tests.pkg.test_x", "python -m unittest tests.test_missing",
+                        'python -m unittest "$NAME"', "python -m unittest -k fast tests.test_named",
+                        "python -m unittest tests/test_missing.py", "python -m unittest ../outside/test_x.py"):
+            with self.subTest(command=command):
+                _, errors, observations = discover_boundary([("bash", command, "")], files)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertTrue(".github/actions/dormant/action.yml:" in errors[0], errors)
+                self.assertEqual(observations, [])
+
+    def test_unittest_file_operand_is_also_a_literal_reference(self):
+        # Rule 1 includes the operand from the action itself, a non-test path.
+        selected, errors, observations = discover_boundary(
+            [("bash", "python -m unittest tests/test_named.py", "")], {"tests/test_named.py": self.UNRESOLVED})
+        self.assertIn("tests/test_named.py", selected)
+        self.assertEqual(sites(errors), {"tests/test_named.py:2"}, errors)
+        self.assertEqual(observations, [])
+
+    def test_test_named_files_outside_the_selection_keep_full_rules(self):
+        files = {"tests/check_entry.py": "import subprocess, sys\nimport test_unselected\n"
+                                         "subprocess.run([sys.executable, 'tools/test_outside.py'])\n",
+                 "tests/test_unselected.py": self.UNRESOLVED, "tools/test_outside.py": self.UNRESOLVED,
+                 "elsewhere/test_unreached.py": self.UNRESOLVED}
+        selected, errors, observations = discover_boundary(
+            [("bash", "python -m unittest discover -s tests -p 'check_*.py'", "")], files)
+        self.assertNotIn("elsewhere/test_unreached.py", selected)
+        self.assertEqual(sites(errors), {"tests/test_unselected.py:2", "tools/test_outside.py:2"}, errors)
+        self.assertEqual(observations, [])
+
+    def test_product_imports_and_direct_runs_keep_full_rules_in_selected_tests(self):
+        files = {"tests/test_shared.py": self.UNRESOLVED, "tests/test_direct.py": self.UNRESOLVED,
+                 "tests/test_only.py": self.UNRESOLVED,
+                 "tools/check.py": "from tests import test_shared\n"}
+        selected, errors, observations = discover_boundary(
+            [self.DISCOVER, ("bash", "python tools/check.py", ""), ("bash", "python tests/test_direct.py", "")], files)
+        self.assertTrue(set(files) <= selected, selected)
+        self.assertEqual(sites(errors), {"tests/test_shared.py:2", "tests/test_direct.py:2"}, errors)
+        self.assertEqual(sites(observations), {"tests/test_only.py:2"}, observations)
+
+    def test_nested_and_recursive_discovery_keep_full_rules_outside_tests(self):
+        outer = ("import subprocess, sys\n"
+                 "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_*.py'])\n"
+                 "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'nested', '-p', 'test_*.py'])\n"
+                 "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py'])\n")
+        files = {"tests/test_outer.py": outer, "nested/__init__.py": self.UNRESOLVED,
+                 "nested/empty/__init__.py": self.UNRESOLVED,
+                 "nested/test_inner.py": "import helper\n" + self.UNRESOLVED, "nested/helper.py": self.UNRESOLVED,
+                 "tools/test_cli.py": self.UNRESOLVED}
+        selected, errors, observations = discover_boundary(
+            [self.DISCOVER, ("bash", "python tools/test_cli.py", "")], files)
+        self.assertTrue(set(files) <= selected, selected)
+        # Initializers, imported helpers and action-run files keep full rules.
+        self.assertEqual(sites(errors), {"nested/__init__.py:2", "nested/empty/__init__.py:2", "nested/helper.py:2",
+                                         "tools/test_cli.py:2"}, errors)
+        self.assertEqual(sites(observations), {"nested/test_inner.py:3"}, observations)
+
+    def test_wrapper_proofs_imported_only_by_tests_stay_observations(self):
+        files = {"tests/test_wrapper.py": "import subprocess\ndef launch(argv):\n    subprocess.run(argv)\n"
+                                          "launch(['tool', '--check'])\n",
+                 "tests/test_user.py": "import test_wrapper\n", "tools/check.py": "from tests import test_wrapper\n"}
+        message = "tests/test_wrapper.py:3: local-script discovery: unresolved forwarded wrapper: its source is imported by other code"
+        _, errors, observations = discover_boundary([self.DISCOVER], files)
+        self.assertEqual((errors, observations), ([], [message]))
+        _, errors, observations = discover_boundary([self.DISCOVER, ("bash", "python tools/check.py", "")], files)
+        self.assertEqual((errors, observations), ([message], []))
+
+    def test_boundary_site_in_a_file_reached_both_ways_stays_an_error(self):
+        files = {"tests/test_both.py": self.UNRESOLVED, "tests/test_peer.py": "import test_both\n" + self.UNRESOLVED,
+                 "tools/check.py": "import subprocess, sys\nsubprocess.run([sys.executable, 'tests/test_both.py'])\n"}
+        for command in ("python tools/check.py", "echo tests/test_both.py"):
+            with self.subTest(command=command):
+                _, errors, observations = discover_boundary([self.DISCOVER, ("bash", command, "")], files)
+                self.assertEqual(sites(errors), {"tests/test_both.py:2"}, errors)
+                self.assertEqual(sites(observations), {"tests/test_peer.py:3"}, observations)
+
+    def test_unsafe_forms_in_product_code_still_fail(self):
+        files = {"tools/check.py": self.LAUNCHES, "tests/test_launch.py": self.LAUNCHES}
+        _, errors, observations = discover_boundary(
+            [self.DISCOVER, ("bash", "python tools/check.py", ""), ("bash", "python tests/test_launch.py", "")], files)
+        self.assertEqual(sites(errors), {f"{path}:{line}" for path in files for line in self.LAUNCH_LINES}, errors)
+        self.assertEqual(observations, [])
+
+    def test_other_test_source_rules_and_global_limits_still_fail(self):
+        rules = ("import os, subprocess, sys\n"
+                 "os.environ['PYTHONPATH'] = 'tools'\n"
+                 "sys.path.append('tools')\n"
+                 "open(os.environ['GITHUB_ENV'], 'a')\n"
+                 "runner = getattr(subprocess, 'run')\n"
+                 "os.chdir('tools')\n")
+        _, errors, observations = discover_boundary([self.DISCOVER], {"tests/test_rules.py": rules})
+        self.assertEqual(sites(errors), {f"tests/test_rules.py:{line}" for line in range(2, 7)}, errors)
+        self.assertEqual(observations, [])
+        files = {"tests/test_limit.py": self.UNRESOLVED + "print('tools/extra.py')\n", "tools/extra.py": "pass\n"}
+        with mock.patch.object(sys.modules[sc.Discovery.__module__], "MAX_FILES", 2):
+            _, errors, observations = discover_boundary([self.DISCOVER], files)
+        self.assertEqual(sites(errors), {"tests/test_limit.py:2", "tests/test_limit.py:3"}, errors)
+        self.assertIn("module selected-file limit exceeded", " ".join(errors))
+        self.assertEqual(observations, [])
+
+    PRODUCT = ("import os, subprocess\n"
+               "def launch(argv):\n"
+               "    subprocess.run(argv)\n"
+               "ENVIRONMENT = os.environ.copy()\n"
+               "ENVIRONMENT['MODE'] = 'x'\n"
+               "launch(['python3', 'tools/leaf.py'])\n"
+               "subprocess.run(['python3', 'tools/leaf.py'], env=ENVIRONMENT)\n")
+    PROOFS = ["tools/run.py:3: local-script discovery: unresolved forwarded wrapper: its source is imported by other code",
+              "tools/run.py:7: local-script discovery: unresolved module-level environment copy: its source is imported "
+              "by other code"]
+
+    def test_product_proofs_imported_only_by_test_sources_are_observations(self):
+        files = {"tools/run.py": self.PRODUCT, "tools/leaf.py": "pass\n", "tests/test_run.py": "from tools import run\n"}
+        product = ("bash", "python tools/run.py", "")
+        selected, errors, observations = discover_boundary([self.DISCOVER, product], files)
+        self.assertEqual((errors, observations), ([], self.PROOFS))
+        self.assertTrue(set(files) <= selected, selected)
+        cases = {
+            "product_importer": ([self.DISCOVER, product, ("bash", "python tools/check.py", "")],
+                                 {"tools/check.py": "from tools import run\n"}),
+            "importer_run_by_product": ([self.DISCOVER, product, ("bash", "python tests/test_run.py", "")], {}),
+            "importer_names_workflow_file": ([self.DISCOVER, product], {
+                "tests/test_run.py": "from tools import run\nSUMMARY = 'echo done >> \"$GITHUB_STEP_SUMMARY\"'\n"}),
+            "importer_not_test_named": ([("bash", "python -m unittest discover -s tests -p 'check_*.py'", ""), product],
+                                        {"tests/test_run.py": "pass\n", "tests/check_run.py": "from tools import run\n"}),
+        }
+        for label, (commands, changes) in cases.items():
+            with self.subTest(case=label):
+                _, errors, observations = discover_boundary(commands, {**files, **changes})
+                self.assertEqual((errors, observations), (self.PROOFS, []))
+        limited = {**files, "tools/leaf.py": "print('tools/extra.py')\n", "tools/extra.py": "pass\n"}
+        with mock.patch.object(sys.modules[sc.Discovery.__module__], "MAX_FILES", 4):
+            _, errors, observations = discover_boundary([self.DISCOVER, product], limited)
+        self.assertTrue(set(self.PROOFS) <= set(errors), errors)
+        self.assertIn("module selected-file limit exceeded", " ".join(errors))
+        self.assertEqual(observations, [])
+
+    def test_boundary_sites_that_could_write_workflow_command_files_stay_errors(self):
+        launch = "import os, subprocess, sys\nsubprocess.run(command)\n"
+        _, errors, observations = discover_boundary([self.DISCOVER], {"tests/test_rules.py": launch})
+        self.assertEqual((errors, sites(observations)), ([], {"tests/test_rules.py:2"}))
+        refused = ("tests/test_rules.py:2: local-script discovery: unresolved computed Python script invocation; "
+                   "unsafe or unresolved forwarding; no test boundary: the source names a GitHub workflow command file")
+        texts = {
+            "env_file": "TEXT = 'echo MODE=x >> \"$GITHUB_ENV\"'\n",
+            "path_file": "TEXT = 'echo /opt/bin >> $github_path'\n",
+            "output_file": "TEXT = 'print(1, file=open(os.environ[\"GITHUB_OUTPUT\"], \"a\"))'\n",
+            "state_file": "TEXT = f'{value} >> $GITHUB_STATE'\n",
+            "summary_file": "TEXT = b'Github_Step_Summary'\n",
+            "set_env": "TEXT = 'echo \"::set-env name=MODE::x\"'\n",
+            "add_path": "TEXT = '::ADD-PATH::/opt/bin'\n",
+            "set_output": "TEXT = '::set-output name=mode::x'\n",
+            "save_state": "TEXT = '::save-state name=mode::x'\n",
+            "shell_program": "subprocess.run(['bash', '-c', 'echo x >> \"$GITHUB_OUTPUT\"'], env=environment)\n",
+            "inline_program": "subprocess.run([sys.executable, '-c', 'import os\\nopen(os.environ[\"GITHUB_STATE\"])'],"
+                              " cwd=directory)\n",
+        }
+        for label, text in texts.items():
+            with self.subTest(case=label):
+                _, errors, observations = discover_boundary([self.DISCOVER], {"tests/test_rules.py": launch + text})
+                self.assertIn(refused, errors)
+                self.assertTrue(all(error.endswith("names a GitHub workflow command file") for error in errors), errors)
+                self.assertEqual(observations, [])
+
+    def test_only_selected_test_named_sources_keep_the_boundary(self):
+        files = {"tests/test_named.py": self.UNRESOLVED, "tests/helper_named.py": self.UNRESOLVED,
+                 "tests/Test_upper.py": self.UNRESOLVED, "tests/check_named.py": self.UNRESOLVED}
+        _, errors, observations = discover_boundary(
+            [("bash", "python -m unittest discover -s tests -p '*.py'", "")], files)
+        self.assertEqual(sites(errors), {"tests/helper_named.py:2", "tests/Test_upper.py:2", "tests/check_named.py:2"},
+                         errors)
+        self.assertEqual(sites(observations), {"tests/test_named.py:2"}, observations)
+        for command, path in (("python -m unittest tests.check_named", "tests/check_named.py"),
+                              ("python -m unittest tests.helper_named.Case", "tests/helper_named.py")):
+            with self.subTest(command=command):
+                _, errors, observations = discover_boundary([("bash", command, "")], files)
+                self.assertEqual((sites(errors), observations), ({path + ":2"}, []))
+
+
+class ComputedProcessContextTests(unittest.TestCase):
+    """Computed directories, copied environments and wrapper parameters need explicit proofs."""
+
+    def assert_refused(self, cases, files=None):
+        for label, (source, diagnostic, *extra) in cases.items():
+            with self.subTest(case=label):
+                selected, errors = discover_python({**(files or {}), "entry.py": source, **(extra[0] if extra else {})})
+                self.assertTrue(any(diagnostic in error for error in errors), (label, errors))
+
+    DOTNET = (
+        "import os, shutil, subprocess\n"
+        "def build(directory, project):\n"
+        "    dotnet = shutil.which('dotnet')\n"
+        "    targets = [dotnet, 'msbuild', project, '-nologo', 'tools/leaf.py']\n"
+        "    subprocess.run(targets, cwd=directory, env=os.environ.copy(), check=True)\n"
+        "    environment = dict(os.environ, CustomAfterDirectoryBuildTargets=str(project))\n"
+        "    subprocess.run(targets + ['-p:Extra=' + str(project)], cwd=directory, env=environment)\n"
+        "    subprocess.run(['dotnet', 'build', project], cwd=directory)\n"
+        "    subprocess.run([shutil.which('dotnet'), 'restore', project], cwd=directory, env=environment)\n"
+        "def evaluate(directory, project):\n"
+        "    import subprocess\n"
+        "    subprocess.run(['dotnet', 'pack', project], cwd=directory, capture_output=True)\n"
+        "build(root, project)\n"
+    )
+    INSTALLED_SDK = '{"sdk": {"version": "11.0.100", "rollForward": "latestPatch"}, "test": {"runner": "x"}}\n'
+
+    def test_fixed_dotnet_operation_treats_computed_cwd_as_directory_data(self):
+        selected, errors = discover_python({"entry.py": self.DOTNET, "tools/leaf.py": "pass\n",
+                                            "global.json": self.INSTALLED_SDK, "src/global.json": "{}\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("tools/leaf.py", selected)
+
+    def test_fixed_dotnet_computed_cwd_refuses_host_sdk_and_process_indirection(self):
+        call = "subprocess.run(['dotnet', 'build', project], cwd=directory)"
+        base = "import os, shutil, subprocess\n" + call + "\n"
+        lookup = "subprocess.run([shutil.which('dotnet'), 'build', project])"
+        which = "import shutil, subprocess\n" + lookup + "\n"
+        self.assertEqual(discover_python({"entry.py": which})[1], [])
+        paths = '{"sdk": {"version": "11.0.100", "paths": [".dotnet", "$host$"]}}'
+        cases = {
+            "sdk_paths": (base, "global.json declares SDK search paths", {"global.json": paths}),
+            "nested_sdk_paths": (base, "global.json declares SDK search paths", {"tests/fixture/global.json": paths}),
+            "case_variant_name": (base, "global.json declares SDK search paths", {"tools/GLOBAL.JSON": paths}),
+            "case_variant_key": (base, "global.json declares SDK search paths",
+                                 {"global.json": '{"SDK": {"Paths": ["sdk"]}}'}),
+            "duplicate_keys": (base, "unreadable global.json", {"global.json": '{"sdk": {}, "Sdk": {"paths": ["x"]}}'}),
+            "commented": (base, "unreadable global.json", {"global.json": '// pinned\n{"sdk": {}}'}),
+            "tracked_host": (base, "unproved .NET executable: tracked dotnet command", {"tools/dotnet": "#!/bin/sh\n"}),
+            "tracked_windows_host": (base, "tracked dotnet command", {"tools/DotNet.cmd": "@echo off\n"}),
+            "shell": (base.replace("cwd=directory)", "cwd=directory, shell=True)"), "shell execution"),
+            "callback": (base.replace("cwd=directory)", "cwd=directory, preexec_fn=callback)"), "pre-execution callback"),
+            "executable": (base.replace("cwd=directory)", "cwd=directory, executable=tool)"), "computed subprocess executable"),
+            "replaced_api": (base.replace(call, "subprocess.run = replacement\n" + call), "unproved subprocess API for .NET"),
+            "escaped_api": (base.replace(call, "register(subprocess)\n" + call), "unproved subprocess API for .NET"),
+            "local_api": (base, "unproved subprocess API for .NET", {"subprocess.py": "pass\n"}),
+            "tool_manifest": (base.replace("'build', project", "'tool', 'run', 'fixture'"), "computed subprocess cwd"),
+            "other_operation": (base.replace("'build'", "'test'"), "computed subprocess cwd"),
+            "computed_operation": (base.replace("'build'", "operation"), "computed subprocess cwd"),
+            "computed_host": (base.replace("'dotnet'", "host"), "computed subprocess cwd"),
+            "forwarded_data": (base.replace("project]", "*options]"), "computed subprocess cwd"),
+            "host_environment": (base.replace("cwd=directory)", "cwd=directory, env=dict(os.environ, DOTNET_ROOT=root))"),
+                                 "computed subprocess env"),
+            "sdk_environment": (base.replace("cwd=directory)", "cwd=directory, env={**os.environ, 'MSBuildSDKsPath': 'sdk'})"),
+                                "computed subprocess env"),
+            "plugin_environment": (base.replace("cwd=directory)", "cwd=directory, env=dict(os.environ, NUGET_PLUGIN_PATHS=root))"),
+                                   "computed subprocess env"),
+            "literal_host_environment": (base.replace("cwd=directory)", "cwd=directory, env={'DOTNET_ROOT': 'sdk'})"),
+                                         "environment affecting resolution"),
+            "literal_path": (base.replace("cwd=directory)", "cwd=directory, env={'PATH': 'tools'})"),
+                             "environment affecting resolution"),
+            "which_tracked_host": (which, "tracked dotnet command", {"tools/dotnet.exe": "MZ\n"}),
+            "which_path": (which.replace("'dotnet')", "'dotnet', path=root)"), "computed Python script invocation"),
+            "which_tool": (which.replace("'dotnet')", "tool)"), "computed Python script invocation"),
+            "which_replaced": (which.replace(lookup, "shutil.which = finder\n" + lookup), "computed Python script invocation"),
+            "which_patched": (which.replace(lookup, "patch('shutil.which', finder)\n" + lookup),
+                              "computed Python script invocation"),
+            "which_escaped": (which.replace(lookup, "patch.object(shutil, 'which')\n" + lookup),
+                              "computed Python script invocation"),
+            "which_local": (which, "computed Python script invocation", {"shutil.py": "pass\n"}),
+            "which_rebound": (which.replace(lookup, "dotnet = shutil.which('dotnet')\ndotnet = other\n"
+                                            "subprocess.run([dotnet, 'build', project])"), "computed Python script invocation"),
+        }
+        listed = ("import subprocess\ndef build(directory, project):\n    targets = ['dotnet', 'build', project]\n"
+                  "    MUTATION\n    subprocess.run(targets, cwd=directory)\n")
+        for label, mutation in {"append": "targets.append(option)", "store": "targets[0] = host",
+                                "alias": "alias = targets", "escape": "register(targets)", "rebound": "targets = other",
+                                "extend": "targets += options"}.items():
+            cases["list_" + label] = (listed.replace("MUTATION", mutation), "computed subprocess cwd")
+        self.assert_refused(cases)
+
+    ASSEMBLY = (
+        "import os, shutil, subprocess\n"
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parent\n"
+        "def run_suite(name, output, port):\n"
+        "    env = os.environ.copy()\n"
+        "    for key in tuple(env):\n"
+        "        if key.startswith(('FIXTURE_', 'OTHER_')):\n"
+        "            env.pop(key)\n"
+        "    env['FIXTURE_HOME'] = str(output / 'home')\n"
+        "    def command(arguments):\n"
+        "        result = subprocess.run(arguments, env=env, capture_output=True)\n"
+        "        record({'argv': list(arguments), 'exit': result.returncode})\n"
+        "        return result\n"
+        "    command(['dotnet', f'tests/{name}/bin/Release/{name}.dll', '-xml', str(output / 'x.xml')])\n"
+        "    subprocess.run(['dotnet', str(ROOT / 'tests/fixture.dll'), output], check=True)\n"
+        "    subprocess.run([shutil.which('dotnet'), f'{name}.dll', '--port', str(port)], cwd='tools')\n"
+        "    subprocess.run(('dotnet', 'tests/literal.dll', name), env={'MODE': 'x'})\n"
+        "    subprocess.run(['dotnet', f'{name}.dll', 'tools/leaf.py'])\n"
+        "run_suite('Fixture', Path(out), 8080)\n"
+    )
+
+    def test_managed_assembly_launch_runs_an_application_dll_as_data(self):
+        # hostfxr runs an existing first operand ending in .dll as an application.
+        selected, errors = discover_python({"entry.py": self.ASSEMBLY, "tools/leaf.py": "pass\n",
+                                            "global.json": self.INSTALLED_SDK, "docs/dotnet-notes.txt": "notes\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("tools/leaf.py", selected)
+
+    def test_managed_assembly_launch_refuses_other_operands_and_the_sdk_fallback(self):
+        call = "subprocess.run(['dotnet', f'{name}.dll', '-xml', output])"
+        base = "import os, shutil, subprocess\n" + call + "\n"
+        self.assertEqual(discover_python({"entry.py": base})[1], [])
+        computed = "computed Python script invocation"
+        paths = '{"sdk": {"version": "11.0.100", "paths": [".dotnet", "$host$"]}}'
+        custom = "class Fake:\n    def __truediv__(self, other):\n        return 'build'\n"
+        cases = {
+            "other_suffix": (base.replace("{name}.dll", "{name}.exe"), computed),
+            "upper_suffix": (base.replace("{name}.dll", "{name}.DLL"), computed),
+            "computed_suffix": (base.replace("{name}.dll", "{name}{suffix}"), computed),
+            "trailing_value": (base.replace("{name}.dll", "{name}.dll{suffix}"), computed),
+            "plain_value": (base.replace("f'{name}.dll'", "name"), computed),
+            "concatenation": (base.replace("f'{name}.dll'", "name + '.dll'"), computed),
+            "unproved_division": (base.replace("f'{name}.dll'", "root / 'fixture.dll'"), computed),
+            "custom_division": (custom + base.replace("f'{name}.dll'", "Fake() / 'fixture.dll'"), computed),
+            "exec_verb": (base.replace("'dotnet', ", "'dotnet', 'exec', "), computed),
+            "computed_host": (base.replace("'dotnet'", "host"), computed),
+            "which_path": (base.replace("'dotnet'", "shutil.which('dotnet', path=root)"), computed),
+            "starred": (base.replace("output]", "*options]"), "unsafe or unresolved forwarding"),
+            "computed_cwd": (base.replace("output])", "output], cwd=directory)"), "computed subprocess cwd"),
+            "startup_hook": (base.replace("output])", "output], env=dict(os.environ, DOTNET_STARTUP_HOOKS=hook))"),
+                             "computed subprocess env"),
+            "host_trace": (base.replace("output])", "output], env={**os.environ, 'COREHOST_TRACE': '1'})"),
+                           "computed subprocess env"),
+            "msbuild": (base.replace("output])", "output], env=dict(os.environ, MSBuildExtensionsPath=root))"),
+                        "computed subprocess env"),
+            "profiler": (base.replace(call, "environment = os.environ.copy()\nenvironment['CORECLR_PROFILER'] = 'x'\n"
+                                      + call.replace("output])", "output], env=environment)")), "computed subprocess env"),
+            "literal_host_environment": (base.replace("output])", "output], env={'DOTNET_ROOT': 'sdk'})"),
+                                         "environment affecting resolution"),
+            "literal_loader_environment": (base.replace("output])", "output], env={'LD_PRELOAD': 'x.so'})"),
+                                           "environment affecting resolution"),
+            "shell": (base.replace("output])", "output], shell=True)"), "shell execution"),
+            "callback": (base.replace("output])", "output], preexec_fn=callback)"), "pre-execution callback"),
+            "executable": (base.replace("output])", "output], executable=tool)"), "computed subprocess executable"),
+            "replaced_api": (base.replace(call, "subprocess.run = replacement\n" + call), "unproved subprocess API for .NET"),
+            "local_api": (base, "unproved subprocess API for .NET", {"subprocess.py": "pass\n"}),
+            "tracked_host": (base, "unproved .NET executable: tracked dotnet command", {"tools/dotnet": "#!/bin/sh\n"}),
+            # A missing application .dll is routed to the SDK, which reads global.json
+            # and resolves the operand as a dotnet-prefixed command or a local tool.
+            "sdk_paths": (base, "global.json declares SDK search paths", {"global.json": paths}),
+            "unreadable_global": (base, "unreadable global.json", {"tests/global.json": '// pinned\n{"sdk": {}}'}),
+            "tracked_command": (base, "tracked dotnet-prefixed command: tools/dotnet-fixture.dll",
+                                {"tools/dotnet-fixture.dll": "#!/bin/sh\n"}),
+            "tracked_windows_command": (base, "tracked dotnet-prefixed command: bin/DotNet-Tests/fixture.DLL.CMD",
+                                        {"bin/DotNet-Tests/fixture.DLL.CMD": "@echo off\n"}),
+            "tool_manifest": (base, "tracked local tool manifest: .config/dotnet-tools.json",
+                              {".config/dotnet-tools.json": "{}\n"}),
+        }
+        self.assert_refused(cases)
+
+    TYPE_NAME = (
+        "import subprocess\n"
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parent\n"
+        "def main():\n"
+        "    try:\n"
+        "        subprocess.run(['python3', 'leaf.py'], cwd=ROOT / 'work', check=True)\n"
+        "    except OSError as error:\n"
+        "        print(f'{type(error).__name__}: {error}', type(error).__name__.lower())\n"
+        "main()\n"
+    )
+
+    def test_type_name_reads_are_not_source_path_class_reflection(self):
+        files = {"work/leaf.py": "pass\n"}
+        selected, errors = discover_python({"entry.py": self.TYPE_NAME, **files})
+        self.assertEqual(errors, [])
+        self.assertIn("work/leaf.py", selected)
+        read = "type(error).__name__.lower()"
+        source = self.TYPE_NAME
+        cases = {
+            "class_object": source.replace(read, "type(error)"),
+            "other_attribute": source.replace(read, "type(ROOT).__truediv__"),
+            "name_store": source.replace("def main():\n", "def main():\n    type(ROOT).__name__ = 'Other'\n"),
+            "method_store": source.replace("def main():\n", "def main():\n    type(ROOT).resolve = replacement\n"),
+            "deletion": source.replace("def main():\n", "def main():\n    del type(ROOT).__name__\n"),
+            "class_call": source.replace(read, "type(ROOT)('elsewhere')"),
+            "class_creation": source.replace(read, "type('Fake', (), {}).__name__"),
+            "starred": source.replace(read, "type(*values).__name__"),
+            "keyword": source.replace(read, "type(error, extra=1).__name__"),
+            "shadowed": source.replace("ROOT = ", "type = replacement\nROOT = "),
+            "imported": source.replace("import subprocess\n", "import subprocess\nfrom fixture import type\n"),
+            "dunder_class": source.replace(read, "error.__class__.__name__"),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": unsafe, **files})
+                self.assertTrue(any("computed subprocess cwd" in error for error in errors), (label, errors))
+
+    COPIES = (
+        "import os, subprocess\n"
+        "from unittest.mock import patch\n"
+        "def invoke(mode):\n"
+        "    environment = os.environ.copy()\n"
+        "    environment.pop('MODE', None)\n"
+        "    if mode:\n"
+        "        environment['MODE'] = str(mode)\n"
+        "        environment['HOME'] = '/fixture/home'\n"
+        "    for name in ('FIXTURE_A', 'FIXTURE_B'):\n"
+        "        environment.pop(name, None)\n"
+        "    for key in list(environment):\n"
+        "        if key.startswith(('FIXTURE_', 'OTHER_')):\n"
+        "            del environment[key]\n"
+        "    if 'X' in environment and environment.get('Y') and os.environ['Z'] and 'Z' in os.environ:\n"
+        "        print(environment['X'], len(environment))\n"
+        "    subprocess.run(['python3', 'leaf.py'], env=environment)\n"
+        "    subprocess.run(['python3', 'leaf.py'], env={**os.environ, 'MODE': f'{mode}-x'})\n"
+        "    subprocess.run(['python3', 'leaf.py'], env=dict(os.environ, MODE=mode, ROOT=os.devnull))\n"
+        "    with patch.dict(os.environ, {'FIXTURE_A': '1'}):\n"
+        "        subprocess.run(['python3', 'leaf.py'], env=os.environ.copy())\n"
+        "invoke('x')\n"
+    )
+
+    def test_copied_environments_accept_only_literal_safe_key_changes(self):
+        selected, errors = discover_python({"entry.py": self.COPIES, "leaf.py": "pass\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("leaf.py", selected)
+        source = self.COPIES
+        cases = {
+            "resolution_store": source.replace("environment['MODE'] = str(mode)", "environment['PATH'] = str(mode)"),
+            "python_store": source.replace("environment['MODE'] = str(mode)", "environment['PYTHONPATH'] = 'x'"),
+            "resolution_removal": source.replace("environment.pop('MODE', None)", "environment.pop('PATH', None)"),
+            "resolution_deletion": source.replace("environment.pop('MODE', None)", "del environment['PYTHONHOME']"),
+            "loop_removal": source.replace("('FIXTURE_A', 'FIXTURE_B')", "('FIXTURE_A', 'PATH')"),
+            "prefix_removal": source.replace("('FIXTURE_', 'OTHER_')", "('FIXTURE_', 'PYTH')"),
+            "dict_resolution": source.replace("MODE=mode, ROOT", "PATH=mode, ROOT"),
+            "display_resolution": source.replace("'MODE': f'{mode}-x'", "'NODE_OPTIONS': f'{mode}-x'"),
+            "display_expansion": source.replace("'MODE': f'{mode}-x'", "**extra"),
+            "dict_expansion": source.replace("MODE=mode, ROOT=os.devnull", "**extra"),
+            "computed_key": source.replace("environment['MODE'] = str(mode)", "environment[mode] = 'x'"),
+            "computed_update": source.replace("environment.pop('MODE', None)", "environment.update(extra)"),
+            "unknown_value": source.replace("environment['MODE'] = str(mode)", "environment['MODE'] = unknown()"),
+            "method_value": source.replace("environment['MODE'] = str(mode)", "environment['MODE'] = mode.strip()"),
+            "computed_home": source.replace("environment['HOME'] = '/fixture/home'", "environment['HOME'] = mode"),
+            "alias": source.replace("    environment.pop('MODE', None)", "    alias = environment"),
+            "callback": source.replace("    environment.pop('MODE', None)", "    mutate(environment)"),
+            "value_escape": source.replace("environment['MODE'] = str(mode)", "environment['MODE'] = str(environment)"),
+            "clear": source.replace("environment.pop('MODE', None)", "environment.clear()"),
+            "dunder": source.replace("environment.pop('MODE', None)", "environment.__setitem__('PATH', '.')"),
+            "rebound": source.replace("    environment.pop('MODE', None)", "    environment = supplied"),
+            "global": source.replace("def invoke(mode):\n", "def invoke(mode):\n    global environment\n"),
+            "loop_rebinding": source.replace("        environment.pop(name, None)", "        name = 'PATH'\n        environment.pop(name, None)"),
+            "replaced_source": source.replace("def invoke", "os.environ = {}\ndef invoke"),
+            "source_alias": source.replace("def invoke", "mapping = os.environ\ndef invoke"),
+            "source_clear": source.replace("def invoke", "os.environ.clear()\ndef invoke"),
+            "source_store": source.replace("def invoke", "os.environ['MODE'] = 'x'\ndef invoke"),
+            "module_escape": source.replace("def invoke", "patch.object(os, 'environ', {})\ndef invoke"),
+            "unknown_patch": source.replace("from unittest.mock import patch", "from injected import patch"),
+            "patched_patch": source.replace("def invoke", "patch.dict = replacement\ndef invoke"),
+            "shadowed_dict": source.replace("def invoke", "def dict(*args, **kwargs):\n    return {'PATH': '.'}\ndef invoke"),
+            "shadowed_str": source.replace("def invoke", "str = replacement\ndef invoke"),
+            "shadowed_list": source.replace("def invoke", "from injected import list\ndef invoke"),
+            "fake_consumer": source.replace("    subprocess.run(['python3', 'leaf.py'], env=environment)",
+                                            "    fake.run(['python3', 'leaf.py'], env=environment)\n"
+                                            "    subprocess.run(['python3', 'leaf.py'], env=environment)").replace(
+                "import os, subprocess", "import os, subprocess, fixture as fake"),
+            "local_api": source.replace("def invoke", "class subprocess:\n    pass\ndef invoke"),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": unsafe, "leaf.py": "pass\n"})
+                self.assertTrue(any("computed subprocess env" in error or "affecting resolution" in error
+                                    for error in errors), (label, errors))
+
+    INSTANCE = (
+        "import os, subprocess, unittest\n"
+        "class Fixture(unittest.TestCase):\n"
+        "    def setUp(self):\n"
+        "        self.env = os.environ.copy()\n"
+        "        self.env.pop('MODE', None)\n"
+        "    def invoke(self, mode):\n"
+        "        self.env['MODE'] = mode\n"
+        "        return subprocess.run(['python3', 'leaf.py'], env=self.env)\n"
+    )
+
+    def test_instance_environment_requires_every_assignment_and_reference_proved(self):
+        for variant in (self.INSTANCE, self.INSTANCE.replace("(unittest.TestCase)", "(object)"),
+                        self.INSTANCE.replace("(unittest.TestCase)", "(TestCase)").replace(
+                            "import os, subprocess, unittest", "import os, subprocess\nfrom unittest import TestCase")):
+            selected, errors = discover_python({"entry.py": variant, "leaf.py": "pass\n"})
+            self.assertEqual(errors, [])
+            self.assertIn("leaf.py", selected)
+        source = self.INSTANCE
+        cases = {
+            "resolution_store": source.replace("self.env['MODE'] = mode", "self.env['PATH'] = mode"),
+            "foreign_store": source + "def replace(other):\n    other.env = {'PATH': '.'}\n",
+            "foreign_mutation": source + "def replace(other):\n    other.env['PATH'] = '.'\n",
+            "class_default": source.replace("    def setUp", "    env = {'PATH': '.'}\n    def setUp"),
+            "property": source.replace("    def setUp", "    def env(self):\n        return {}\n    def setUp"),
+            "setattr": source + "setattr(Fixture, 'env', {})\n",
+            "computed_getattr": source + "getattr(Fixture(), name)\n",
+            "vars": source + "vars(Fixture())\n",
+            "dict_access": source.replace("self.env.pop('MODE', None)", "self.__dict__.update(env={})"),
+            "subclass_store": source + "class Child(Fixture):\n    def setUp(self):\n        self.env = os.environ.copy()\n",
+            "unknown_base": source.replace("(unittest.TestCase)", "(Base)"),
+            "rebound_unittest": source.replace("class Fixture", "unittest = fake\nclass Fixture"),
+            "foreign_testcase": source.replace("(unittest.TestCase)", "(TestCase)").replace(
+                "import os, subprocess, unittest", "import os, subprocess\nfrom fixtures import TestCase"),
+            "shadowed_object": source.replace("(unittest.TestCase)", "(object)").replace("class Fixture", "object = Base\nclass Fixture"),
+            "metaclass": source.replace("(unittest.TestCase)", "(unittest.TestCase, metaclass=Meta)"),
+            "decorated": source.replace("class Fixture", "@decorate\nclass Fixture"),
+            "not_a_copy": source.replace("os.environ.copy()", "dict(supplied)"),
+            "escape": source.replace("self.env.pop('MODE', None)", "register(self.env)"),
+            "static_receiver": source.replace("    def invoke", "    @staticmethod\n    def invoke"),
+            "rebound_receiver": source.replace("        self.env['MODE'] = mode", "        self = other"),
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": unsafe, "leaf.py": "pass\n"})
+                self.assertTrue(any("computed subprocess env" in error for error in errors), (label, errors))
+        _, errors = discover_python({"entry.py": source, "leaf.py": "pass\n", "unittest/__init__.py": "pass\n"})
+        self.assertTrue(any("computed subprocess env" in error for error in errors), errors)
+        _, errors = discover_python({"entry.py": "import fixture\n", "fixture.py": source, "leaf.py": "pass\n"})
+        self.assertIn("fixture.py:8: local-script discovery: unresolved instance environment copy: its source is "
+                      "imported by other code", errors)
+
+    WRAPPER = (
+        "import os, subprocess\n"
+        "def run(command, cwd=None, env=None):\n"
+        "    print(' '.join(map(str, command)), len(command), command[0])\n"
+        "    return subprocess.run(list(map(str, command)), cwd=cwd, env=env, check=True)\n"
+        "def launch(command, overrides):\n"
+        "    return run(command, 'work', overrides)\n"
+        "environment = os.environ.copy()\n"
+        "environment['MODE'] = 'x'\n"
+        "run(['python3', 'leaf.py'], 'work', environment)\n"
+        "run(['python3', 'other.py'])\n"
+        "run(['git', 'status'], cwd=supplied)\n"
+        "launch(['python3', 'deep.py'], os.environ.copy())\n"
+    )
+
+    def test_wrapper_parameters_are_proved_at_every_direct_call_site(self):
+        files = {"leaf.py": "pass\n", "work/leaf.py": "import helper\n", "work/helper.py": "pass\n", "other.py": "pass\n",
+                 "work/deep.py": "pass\n"}
+        selected, errors = discover_python({"entry.py": self.WRAPPER, **files})
+        self.assertEqual(errors, [])
+        for path in ("work/leaf.py", "work/helper.py", "other.py", "work/deep.py"):
+            self.assertIn(path, selected)
+        source = self.WRAPPER
+        cases = {
+            "computed_argv": source.replace("run(['python3', 'other.py'])", "run([sys.executable, script])"),
+            "computed_cwd": source.replace("run(['python3', 'other.py'])", "run(['python3', 'other.py'], directory)"),
+            "resolution_env": source.replace("run(['python3', 'other.py'])", "run(['python3', 'other.py'], 'work', {'PATH': '.'})"),
+            "unknown_env": source.replace("run(['python3', 'other.py'])", "run(['python3', 'other.py'], 'work', supplied)"),
+            "caller_env_store": source.replace("environment['MODE'] = 'x'", "environment['PATH'] = 'x'"),
+            "argv_mutation": source.replace("    print(", "    command.append('-c')\n    print("),
+            "argv_escape": source.replace("    print(", "    register(command)\n    print("),
+            "argv_rebound": source.replace("    print(", "    command = other\n    print("),
+            "env_mutation": source.replace("    print(", "    env['PATH'] = '.'\n    print("),
+            "alias": source + "alias = run\n",
+            "callback": source + "register(run)\n",
+            "keyword_expansion": source + "run(['python3', 'leaf.py'], **options)\n",
+            "positional_expansion": source + "run(*arguments)\n",
+            "recursion": source.replace("    return subprocess.run", "    run(command)\n    return subprocess.run"),
+            "decorated": source.replace("def run(", "@decorate\ndef run("),
+            "computed_default": source.replace("cwd=None", "cwd=DIRECTORY"),
+            "missing_argument": source + "run()\n",
+            "split_string": source + "run('python3 leaf.py')\n",
+            "callers": source + "run(['python3', 'leaf.py'])\n" * 129,
+            "depth": "import subprocess\ndef run0(command):\n    subprocess.run(command)\n" + "".join(
+                f"def run{index}(command):\n    return run{index - 1}(command)\n" for index in range(1, 10))
+                + "run9(['python3', 'leaf.py'])\n",
+        }
+        for label, unsafe in cases.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": unsafe, **files})
+                self.assertTrue(errors and all("entry.py:" in error for error in errors), (label, errors))
+        # Callers and mutations in an importing source are not visible to the proof.
+        _, errors = discover_python({"entry.py": "import tooling\n", "tooling.py": source, **files})
+        self.assertIn("tooling.py:4: local-script discovery: unresolved forwarded wrapper: its source is imported by "
+                      "other code", errors)
+        self.assertTrue(any("module-level environment copy: its source is imported" in error for error in errors), errors)
+        method = ("import subprocess\nclass Runner:\n    def run(self, command):\n        return subprocess.run(command)\n"
+                  "Runner().run(['python3', 'leaf.py'])\n")
+        _, errors = discover_python({"entry.py": method, **files})
+        self.assertTrue(any("unresolved computed Python script invocation" in error for error in errors), errors)
+
+    def test_finite_list_rows_reach_only_their_own_argv(self):
+        loop = ("import subprocess\ndef main():\n    for arguments in (['python3', 'leaf.py'], ['python3', 'other.py']):\n"
+                "        subprocess.run(arguments, check=True)\nmain()\n")
+        selected, errors = discover_python({"entry.py": loop, "leaf.py": "pass\n", "other.py": "pass\n"})
+        self.assertEqual(errors, [])
+        self.assertTrue({"leaf.py", "other.py"} <= set(selected))
+        for label, unsafe in {
+            "append": loop.replace("        subprocess.run", "        arguments.append('-c')\n        subprocess.run"),
+            "escape": loop.replace("        subprocess.run", "        register(arguments)\n        subprocess.run"),
+            "nonlocal": loop.replace("def main():\n", "def main():\n    def swap():\n        nonlocal arguments\n"
+                                     "        arguments = ['bash', 'hidden.sh']\n    arguments = None\n"),
+            "global": loop + "def swap():\n    global arguments\n    arguments = ['bash', 'hidden.sh']\n",
+        }.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": unsafe, "leaf.py": "pass\n", "other.py": "pass\n"})
+                self.assertTrue(any("unsafe or unresolved forwarding" in error for error in errors), (label, errors))
+
+
 class ScanTests(acceptance_tests.Harness):
     @classmethod
     def setUpClass(cls):
@@ -2154,6 +2829,35 @@ class ScanTests(acceptance_tests.Harness):
             self.assertIn("local-script", error)
             self.assertIn("  - " + error + "\n", (w.output / "summary.md").read_text())
 
+    def test_test_boundary_observations_pass_the_row_summary_and_acceptance(self):
+        alpha = acceptance_tests.MODULES[0]
+        w = self.workspace((alpha,))
+        w.action(alpha, "python -m unittest discover -s tests -p 'test_*.py'")
+        w.write(alpha, "tests/test_launch.py", "import subprocess\nsubprocess.run(command)\n")
+        head = w.commit(w.paths[alpha])
+        report = w.scan(self.factory)
+        row = report["modules"][0]
+        self.assertEqual((report["result"], row["result"], row["errors"]), ("pass", "pass", []), report)
+        self.assertIn("tests/test_launch.py", {item["path"] for item in row["files"]})
+        self.assertEqual([(item["path"], item["line"]) for item in row["observations"]], [("tests/test_launch.py", 2)])
+        self.assertIn("local-script discovery: unresolved computed Python script invocation",
+                      row["observations"][0]["reason"])
+        summary = (w.output / "summary.md").read_text()
+        self.assertIn("; 1 test boundary observation\n", summary)
+        self.assertIn("  - boundary: tests/test_launch.py:2: local-script discovery: ", summary)
+        source = git(w.cicd, "rev-parse", "HEAD")
+        world = acceptance_tests.World((alpha,))
+        world.run["head_sha"] = source
+        world.nightly_overrides["identity"] = {"runId": world.run["id"], "attempt": world.run["run_attempt"],
+                                               "source": source}
+        world.rows[alpha].update(dispatchHead=head, deliveredSha=source)
+        world.rows[alpha]["outcome"]["sha"] = head
+        world.scan = (w.output / "report.json").read_bytes()
+        world.scan_summary = summary.encode()
+        code, verdicts = self.judge(world, alpha)
+        self.assertEqual(code, 0, verdicts)
+        self.assertEqual(self.verdicts(verdicts), {alpha: "pass"})
+
     def pinned_workspace(self, command, *, declaration=True, origin=None, duplicate=False, configured=True,
                          gitlink=True, symlink=False, check_source="import helper\n",
                          module="Hexalith.Alpha", repository="Hexalith.Dependency", dependency_files=None):
@@ -2243,6 +2947,40 @@ class ScanTests(acceptance_tests.Harness):
         self.assertEqual("fail", row["result"], report)
         self.assertTrue(any("unresolved computed Python script invocation" in error for error in row["errors"]), report)
         self.assertNotIn("outside/check.py", {item["path"] for item in row["files"]})
+
+    def test_computed_dotnet_directory_rechecks_sdk_selection_in_later_pinned_sources(self):
+        launcher = "references/Hexalith.Dependency/eng/launcher.sh"
+        workspace, _ = self.pinned_workspace("python3 entry.py", dependency_files={
+            "global.json": '{"sdk": {"version": "11.0.100", "paths": ["eng"]}}\n'})
+        # The .NET call is examined before the later process call acquires the pinned source.
+        workspace.write("Hexalith.Alpha", "entry.py", "import subprocess\n"
+                        "subprocess.run(['dotnet', 'build', project], cwd=directory)\n"
+                        f"subprocess.run(['bash', {launcher!r}])\n")
+        module = workspace.paths["Hexalith.Alpha"]
+        git(module, "add", "entry.py")
+        git(module, "commit", "--quiet", "-m", "record computed .NET directory")
+        report = workspace.scan(self.factory)
+        row = report["modules"][0]
+        self.assertEqual("fail", row["result"], report)
+        self.assertIn("entry.py:2: local-script discovery: unproved .NET SDK selection: global.json declares SDK search "
+                      "paths: references/Hexalith.Dependency/global.json", row["errors"], report)
+
+    def test_managed_assembly_launch_rechecks_command_lookup_in_later_pinned_sources(self):
+        launcher = "references/Hexalith.Dependency/eng/launcher.sh"
+        entry = ("import subprocess\nsubprocess.run(['dotnet', f'{name}.dll', '-xml', output])\n"
+                 f"subprocess.run(['bash', {launcher!r}])\n")
+        for files, expected in (({}, []), ({"eng/dotnet-fixture.dll": "#!/bin/sh\n"}, [
+                "entry.py:2: local-script discovery: unproved .NET command lookup: tracked dotnet-prefixed command: "
+                "references/Hexalith.Dependency/eng/dotnet-fixture.dll"])):
+            with self.subTest(files=files):
+                # The launch is examined before the later process call acquires the pinned source.
+                workspace, _ = self.pinned_workspace("python3 entry.py", dependency_files=files)
+                workspace.write("Hexalith.Alpha", "entry.py", entry)
+                module = workspace.paths["Hexalith.Alpha"]
+                git(module, "add", "entry.py")
+                git(module, "commit", "--quiet", "-m", "record managed-assembly launch")
+                report = workspace.scan(self.factory)
+                self.assertEqual(report["modules"][0]["errors"], expected, report)
 
     def test_works_platform_boundary_follows_only_the_reviewed_inputs(self):
         import scan_discovery as discovery
@@ -3553,7 +4291,8 @@ class ScanTests(acceptance_tests.Harness):
                 ("subprocess.run(['dotnet', operation, project])", "computed Python script invocation"),
                 ("subprocess.run([executable, 'build', project])", "computed Python script invocation"),
                 ("subprocess.run(['dotnet', 'build', project], shell=True)", "shell execution"),
-                ("subprocess.run(['dotnet', 'build', project], cwd=directory)", "subprocess cwd"),
+                ("subprocess.run(['dotnet', 'tool', 'run', 'fixture'], cwd=directory)", "subprocess cwd"),
+                ("subprocess.run(['dotnet', 'build', project], cwd=directory, preexec_fn=callback)", "pre-execution callback"),
                 ("subprocess.run(['dotnet', 'build', project], env={'PATH':'scripts'})", "environment affecting resolution")):
             with self.subTest(command=command):
                 self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {

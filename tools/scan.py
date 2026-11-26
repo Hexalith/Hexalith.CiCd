@@ -222,9 +222,13 @@ def summary(report):
     lines = ["# Nightly cross-module duplicate scan: " + report["result"].upper(), "",
              "Detector: jscpd " + VERSION + ". Cross-module copies belong in Builds.", ""]
     for module in report["modules"]:
+        observations = module.get("observations", [])
+        boundary = (f"; {len(observations)} test boundary observation{'' if len(observations) == 1 else 's'}"
+                    if observations else "")
         lines.append(f"- {module['module']}: {module['result']}; main `{module['revision'] or 'unavailable'}`; "
-                     f"{len(module['files'])} selected files")
+                     f"{len(module['files'])} selected files{boundary}")
         lines.extend("  - " + error for error in module["errors"])
+        lines.extend(f"  - boundary: {item['path']}:{item['line']}: {item['reason']}" for item in observations)
     if not report["modules"]:
         lines.append("Empty committed registry: successful zero scope." if not report["errors"]
                      else "No registered module was scanned.")
@@ -337,7 +341,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
             except Exception as error:
                 report["errors"].append(rt.clean(error))
             for index, module in enumerate(modules):
-                row = {"module": module, "revision": "", "result": "fail", "files": [], "errors": []}
+                row = {"module": module, "revision": "", "result": "fail", "files": [], "errors": [], "observations": []}
                 report["modules"].append(row)
                 try:
                     git = git_factory(scratch / "git" / str(index))
@@ -345,9 +349,11 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                     row["revision"] = rt.sha(transport.module(git, module))
                     pinned = PinnedSources(trusted, revision, module, git, row["revision"],
                                            scratch / "pins" / str(index), transport, git_factory)
-                    selected, row["errors"] = Discovery(git, row["revision"],
-                        javascript_parser=getattr(detector, "javascript", None), pinned_source=pinned,
-                        module=module).discover()
+                    discovery = Discovery(git, row["revision"], javascript_parser=getattr(detector, "javascript", None),
+                                          pinned_source=pinned, module=module)
+                    selected, row["errors"] = discovery.discover()
+                    # Test boundary sites record coverage loss without failing the row.
+                    row["observations"] = discovery.observations
                     if pinned.acquired:
                         row["pinnedSources"] = pinned.acquired
                     root = scratch / "sources" / module
@@ -394,6 +400,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
         report["findings"] = []
         for module in report["modules"]:
             module["files"] = []
+            module["observations"] = []
         persist(directory, report)
     return report
 
