@@ -6,6 +6,7 @@
 """Fixture runs for the read-only per-module nightly acceptance tool."""
 import ast
 import base64
+import contextlib
 import copy
 from datetime import datetime, timezone
 import hashlib
@@ -62,6 +63,49 @@ def corrupt_deflate(members):
 
 def head(module):
     return hashlib.sha1(module.encode()).hexdigest()
+
+
+def contents(path, data):
+    """GitHub's contents response for one committed file."""
+    encoded = base64.b64encode(data).decode()
+    return {"type": "file", "path": path, "encoding": "base64", "size": len(data),
+            "sha": hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest(),
+            "content": "\n".join(encoded[i:i + 60] for i in range(0, len(encoded), 60)) + "\n"}
+
+
+DECISION = {"story": "15", "date": "2026-11-26"}
+LAUNCH = "    subprocess.run(argv, cwd=directory, check=True)"
+COMPUTED = "subprocess.run(os.environ['TOOL'])"
+WRAPPER = "local-script discovery: forwarded wrapper call at line {}: unresolved computed subprocess cwd"
+INVOCATION = "local-script discovery: unresolved computed Python script invocation"
+CALLER = "run(['python3', 'scripts/other.py'], os.environ['WORK'])"
+SCAN_HEAD = "5" * 40
+
+
+def line_digest(text):
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+def located(path, line, diagnostic, text, callers=()):
+    """A located scan error and the source details tools/scan.py reports for it.
+
+    Each caller is the (line, statement text) of a ``line N`` that the diagnostic names.
+    """
+    return (f"{path}:{line}: {diagnostic}",
+            {"path": path, "line": line, "span": [line, line], "diagnostic": diagnostic,
+             "lineSha256": line_digest(text), "callers": [
+                 {"line": number, "span": [number, number], "sha256": line_digest(caller)}
+                 for number, caller in callers]})
+
+
+def gap(module, path, diagnostic, text, occurrences=1, callers=()):
+    return {"module": module, "path": path, "diagnostic": diagnostic, "line_sha256": line_digest(text),
+            "caller_sha256": [line_digest(caller) for caller in callers], "occurrences": occurrences,
+            "decision": dict(DECISION)}
+
+
+def gap_record(*gaps):
+    return {"schema": "hexalith.scan-coverage-gaps.v1", "gaps": list(gaps)}
 
 
 class FakeGitHub:
@@ -123,6 +167,8 @@ class World:
         self.scan_runs = []
         self.scan_producers = []
         self.extra_routes = {}
+        # CiCd's committed reviewed-gap record by revision: a document or exact bytes.
+        self.gap_records = {}
 
     def bump_identity(self):
         return {"runId": RUN, "attempt": 1, "source": SOURCE, "night": "2026-11-18"}
@@ -207,18 +253,20 @@ class World:
                    "?per_page=100"] = {"total_count": len(jobs), "jobs": jobs}
             if module in self.languages:
                 data = json.dumps({"schema": "hexalith.ci.v1", "codeql": self.languages[module]}, indent=2).encode()
-                encoded = base64.b64encode(data).decode()
                 path = f"rendered/{module}/.github/hexalith-ci.json"
-                routes[API + f"contents/{path}?ref={row['deliveredSha']}"] = {
-                    "type": "file", "path": path, "encoding": "base64", "size": len(data),
-                    "sha": hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest(),
-                    "content": "\n".join(encoded[i:i + 60] for i in range(0, len(encoded), 60)) + "\n"}
+                routes[API + f"contents/{path}?ref={row['deliveredSha']}"] = contents(path, data)
+        for revision, record in self.gap_records.items():
+            data = record if isinstance(record, bytes) else json.dumps(record, indent=2).encode()
+            routes[API + f"contents/tools/scan-coverage-gaps.json?ref={revision}"] = contents(
+                "tools/scan-coverage-gaps.json", data)
         if self.scan_runs or self.scan_producers:
             producers = list(self.scan_producers)
-            for index, (created, report, *event) in enumerate(self.scan_runs, 1):
+            # Each entry is (created, report[, event[, head]]); the head defaults to the nightly's.
+            for index, (created, report, *rest) in enumerate(self.scan_runs, 1):
+                event, head = (*rest, None, None)[:2]
                 run = {"id": 60000 + index, "path": ".github/workflows/scan.yml", "head_branch": "main",
-                       "head_sha": SOURCE, "status": "completed", "conclusion": "success", "run_attempt": 1,
-                       "event": (event or ["schedule"])[0], "created_at": created,
+                       "head_sha": head or SOURCE, "status": "completed", "conclusion": "success", "run_attempt": 1,
+                       "event": event or "schedule", "created_at": created,
                        "repository": {"full_name": "Hexalith/Hexalith.CiCd"}}
                 documents = {} if report is None else {"scan": {"report.json": report, "summary.md": b"# scan\n"}}
                 producers.append((run, documents))
@@ -873,6 +921,389 @@ class ScanTests(Harness):
         code, _ = self.judge(github, *MODULES)
         self.assertEqual(code, 2)
         self.assertIn("API size", self.stderr)
+
+
+class ReviewedGapTests(Harness):
+    """A failed own scan row passes only when each error is a gap CiCd recorded at the scan's revision."""
+
+    PATH = "scripts/start.py"
+
+    def errors(self, wrapper=6, invocation=10, caller=CALLER):
+        return [located(self.PATH, wrapper, WRAPPER.format(wrapper + 3), LAUNCH, [(wrapper + 3, caller)]),
+                located(self.PATH, invocation, INVOCATION, COMPUTED)]
+
+    def gaps(self, module=MODULES[0]):
+        return [gap(module, self.PATH, WRAPPER.format("N"), LAUNCH, callers=[CALLER]),
+                gap(module, self.PATH, INVOCATION, COMPUTED)]
+
+    def world(self, errors=None, gaps=None):
+        world = World()
+        errors = self.errors() if errors is None else errors
+        world.scan["modules"][0].update(result="fail", errors=[error for error, _ in errors],
+                                        errorSources=[source for _, source in errors])
+        world.scan["result"] = "fail"
+        world.gap_records[SOURCE] = gap_record(*(self.gaps() if gaps is None else gaps))
+        return world
+
+    def endpoint(self, revision=SOURCE):
+        return API + f"contents/tools/scan-coverage-gaps.json?ref={revision}"
+
+    def test_recorded_gaps_accept_only_the_failed_row_and_are_reported(self):
+        world = self.world()
+        github = world.github()
+        blob = github.routes[self.endpoint()]["sha"]
+        with tempfile.TemporaryDirectory() as directory:
+            receipt = Path(directory) / "receipt.json"
+            code, report = self.judge(github, receipt=receipt)
+            value = json.loads(receipt.read_bytes())
+        self.assertEqual(code, 0, report)
+        self.assertEqual(self.verdicts(report), dict.fromkeys(MODULES, "pass"))
+        accepted = report["modules"][MODULES[0]]["scan"]["reviewedGaps"]
+        self.assertEqual((accepted["revision"], accepted["blob"]), (SOURCE, blob))
+        self.assertEqual(accepted["accepted"], [
+            {"path": self.PATH, "line": 6, "diagnostic": WRAPPER.format(9), "lineSha256": line_digest(LAUNCH),
+             "callerSha256": [line_digest(CALLER)], "decision": DECISION},
+            {"path": self.PATH, "line": 10, "diagnostic": INVOCATION, "lineSha256": line_digest(COMPUTED),
+             "callerSha256": [], "decision": DECISION}])
+        self.assertEqual(accepted["unused"], [])
+        self.assertEqual(report["modules"][MODULES[1]]["scan"], {"source": "scan job", "runId": RUN})
+        self.assertEqual(value["modules"][MODULES[0]]["reviewedGaps"],
+                         {"revision": SOURCE, "blob": blob, "accepted": 2, "unused": 0})
+        self.assertEqual(set(value["modules"][MODULES[1]]), {"verdict", "reasons"})
+        self.assertEqual(self.github_calls.count(self.endpoint()), 1)
+
+    def test_moved_lines_match_by_unchanged_text_and_any_embedded_line(self):
+        world = self.world(self.errors(wrapper=17, invocation=21))
+        code, report = self.judge(world, MODULES[0])
+        self.assertEqual(code, 0, report)
+        self.assertEqual([(item["line"], item["diagnostic"])
+                          for item in report["modules"][MODULES[0]]["scan"]["reviewedGaps"]["accepted"]],
+                         [(17, WRAPPER.format(20)), (21, INVOCATION)])
+
+    def test_repeated_errors_need_recorded_occurrences(self):
+        errors = [*self.errors(), located(self.PATH, 30, INVOCATION, COMPUTED)]
+        code, report = self.judge(self.world(errors), MODULES[0])
+        self.assertEqual(code, 1)
+        self.assertIn("scan error is not a recorded coverage gap: scripts/start.py:30:", self.reasons(report, MODULES[0]))
+        gaps = self.gaps()
+        gaps[1]["occurrences"] = 2
+        code, report = self.judge(self.world(errors, gaps), MODULES[0])
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report["modules"][MODULES[0]]["scan"]["reviewedGaps"]["accepted"]), 3)
+
+    def test_unused_entries_and_occurrences_are_reported(self):
+        gaps = self.gaps()
+        gaps[1]["occurrences"] = 3
+        extra = gap(MODULES[0], "scripts/fixed.py", INVOCATION, "subprocess.run(command)")
+        with tempfile.TemporaryDirectory() as directory:
+            receipt = Path(directory) / "receipt.json"
+            code, report = self.judge(self.world(gaps=[*gaps, extra]), MODULES[0], receipt=receipt)
+            value = json.loads(receipt.read_bytes())
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report["modules"][MODULES[0]]["scan"]["reviewedGaps"]["unused"], [
+            {"path": self.PATH, "diagnostic": INVOCATION, "line_sha256": line_digest(COMPUTED), "caller_sha256": [],
+             "unused": 2},
+            {"path": "scripts/fixed.py", "diagnostic": INVOCATION, "line_sha256": extra["line_sha256"],
+             "caller_sha256": [], "unused": 1}])
+        self.assertEqual(value["modules"][MODULES[0]]["reviewedGaps"]["unused"], 3)
+
+    def test_entries_for_unregistered_modules_do_not_block_registered_ones(self):
+        other = gap("Hexalith.Unregistered", self.PATH, INVOCATION, COMPUTED)
+        code, report = self.judge(self.world(gaps=[*self.gaps(), other]), MODULES[0])
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report["modules"][MODULES[0]]["scan"]["reviewedGaps"]["accepted"]), 2)
+
+    def test_observation_counts_are_acceptance_evidence(self):
+        world = self.world()
+        observation = {"path": "tests/test_a.py", "line": 3, "reason": "local-script discovery: x"}
+        world.scan["modules"][0]["observations"] = [observation, dict(observation, line=4)]
+        world.scan["modules"][1]["observations"] = [observation]
+        with tempfile.TemporaryDirectory() as directory:
+            receipt = Path(directory) / "receipt.json"
+            code, report = self.judge(world, receipt=receipt)
+            value = json.loads(receipt.read_bytes())
+        self.assertEqual(code, 0, report)
+        self.assertEqual([report["modules"][module]["scan"].get("observations") for module in MODULES], [2, 1, None])
+        self.assertEqual([value["modules"][module].get("scanObservations") for module in MODULES], [2, 1, None])
+
+    def test_independent_scan_uses_its_own_head_and_controller_revision(self):
+        world = self.world()
+        del world.jobs["scan"]
+        world.omit.add("scan")
+        report = dict(copy.deepcopy(world.scan), controllerRevision=SCAN_HEAD)
+        world.scan_runs = [("2026-11-18T09:00:00Z", report, "schedule", SCAN_HEAD)]
+        world.gap_records = {SCAN_HEAD: world.gap_records[SOURCE]}
+        code, verdicts = self.judge(world, MODULES[0])
+        self.assertEqual(code, 0, verdicts)
+        self.assertEqual(verdicts["modules"][MODULES[0]]["scan"]["reviewedGaps"]["revision"], SCAN_HEAD)
+        # The nightly's own head records gaps that the scan's controller revision does not.
+        world.gap_records = {SOURCE: world.gap_records[SCAN_HEAD]}
+        code, verdicts = self.judge(world, MODULES[0])
+        self.assertEqual(code, 1, verdicts)
+        self.assertIn("own scan row failed: ", self.reasons(verdicts, MODULES[0]))
+        self.assertIn(self.endpoint(SCAN_HEAD), self.github_calls)
+        self.assertNotIn(self.endpoint(SOURCE), self.github_calls)
+
+    def test_unmatched_unlocated_or_unsafe_rows_still_fail(self):
+        finding = {"format": "python", "lines": 12, "tokens": 80, "fragment": "x",
+                   "first": {"module": MODULES[0], "path": "a.py", "start": 1, "end": 12},
+                   "second": {"module": MODULES[1], "path": "b.py", "start": 1, "end": 12}}
+        def errors(change):
+            def apply(world):
+                values = self.errors()
+                change(values)
+                row = world.scan["modules"][0]
+                row.update(errors=[error for error, _ in values], errorSources=[source for _, source in values])
+            return apply
+        def changed_line(values):
+            values[1] = (values[1][0], dict(values[1][1], lineSha256=line_digest(COMPUTED + "  # reviewed?")))
+        def mismatched(values):
+            values[1] = (values[1][0], dict(values[1][1], line=11))
+        def caller(**change):
+            return errors(lambda values: values[0][1]["callers"][0].update(change))
+        cases = {
+            "changed line digest": (errors(changed_line), "is not a recorded coverage gap: scripts/start.py:10:"),
+            "changed caller digest": (caller(sha256=line_digest(CALLER.replace("WORK", "OTHER"))),
+                                      "is not a recorded coverage gap: scripts/start.py:6:"),
+            "missing caller digest": (caller(sha256=None), "has no source statement digest: scripts/start.py:6:"),
+            "missing caller details": (errors(lambda values: values[0][1].update(callers=[])),
+                                       "names no located discovery source: scripts/start.py:6:"),
+            "other caller line": (caller(line=8), "names no located discovery source: scripts/start.py:6:"),
+            "span without the line": (errors(lambda values: values[1][1].update(span=[11, 12])),
+                                      "has no source statement digest: scripts/start.py:10:"),
+            "no span": (errors(lambda values: values[1][1].update(span=None)),
+                        "has no source statement digest: scripts/start.py:10:"),
+            "pre-statement report": (errors(lambda values: [values[1][1].pop(key) for key in ("span", "callers")]),
+                                     "names no located discovery source: scripts/start.py:10:"),
+            "unlisted extra error": (errors(lambda values: values.append(located(
+                "scripts/other.py", 3, "local-script discovery: unresolved computed subprocess env", "run(env)"))),
+                "is not a recorded coverage gap: scripts/other.py:3:"),
+            "missing source digest": (errors(lambda values: values[1][1].update(lineSha256=None)),
+                                      "has no source statement digest"),
+            "non-discovery error": (errors(lambda values: values.append(("aggregate selected-source limit exceeded", None))),
+                                    "names no located discovery source: aggregate"),
+            "mismatched details": (errors(mismatched), "names no located discovery source: scripts/start.py:10:"),
+            "no source details": (lambda world: world.scan["modules"][0].pop("errorSources"),
+                                  "no per-error source details"),
+            "short source details": (lambda world: world.scan["modules"][0]["errorSources"].pop(),
+                                     "no per-error source details"),
+            "gaps only for another module": (
+                lambda world: world.gap_records.update({SOURCE: gap_record(*self.gaps(MODULES[1]))}), None),
+            "matching gaps under another module": (lambda world: world.gap_records.update({SOURCE: gap_record(
+                gap(MODULES[0], "scripts/unrelated.py", INVOCATION, "x"), *self.gaps(MODULES[1]))}),
+                "is not a recorded coverage gap: scripts/start.py:6:"),
+            "record absent": (lambda world: world.gap_records.clear(), None),
+            "record at another revision": (lambda world: world.gap_records.update({"d" * 40: world.gap_records.pop(SOURCE)}),
+                                           None),
+            "finding": (lambda world: world.scan["findings"].append(finding), "cross-module duplicate findings"),
+            "run-level errors": (lambda world: world.scan["errors"].append("detector unavailable"), "run-level errors"),
+            "revision mismatch": (lambda world: world.scan["modules"][0].update(revision="f" * 40),
+                                  "is not the dispatched head"),
+            "passing result with errors": (lambda world: world.scan["modules"][0].update(result="pass"), None),
+        }
+        for name, (change, message) in cases.items():
+            with self.subTest(case=name):
+                world = self.world()
+                change(world)
+                code, report = self.judge(world)
+                self.assertEqual(code, 1, report)
+                self.assertEqual(self.verdicts(report)[MODULES[0]], "fail")
+                reasons = self.reasons(report, MODULES[0])
+                self.assertIn("own scan row failed: ", reasons)
+                if message:
+                    self.assertIn(message, reasons)
+                else:
+                    self.assertNotIn("coverage gap", reasons)
+                self.assertNotIn("reviewedGaps", report["modules"][MODULES[0]]["scan"])
+                if name in ("finding", "run-level errors", "revision mismatch", "passing result with errors"):
+                    # Rows that fail for any other reason never consult the record.
+                    self.assertNotIn(self.endpoint(), self.github_calls)
+                if name != "finding":
+                    self.assertEqual(self.verdicts(report)[MODULES[2]], "fail" if name == "run-level errors" else "pass")
+
+    def test_malformed_records_fail_closed(self):
+        def entry(**values):
+            def change(world):
+                gaps = self.gaps()
+                gaps[0].update(values)
+                world.gap_records[SOURCE] = gap_record(*gaps)
+            return change
+        def document(value):
+            return lambda world: world.gap_records.update({SOURCE: value})
+        def without(key):
+            def change(world):
+                gaps = self.gaps()
+                del gaps[0][key]
+                world.gap_records[SOURCE] = gap_record(*gaps)
+            return change
+        cases = {
+            "unknown entry key": entry(note="reviewed"),
+            "missing entry key": without("occurrences"),
+            "unknown record key": document(dict(gap_record(*self.gaps()), reviewed_revision=SOURCE)),
+            "wrong schema": document(dict(gap_record(*self.gaps()), schema="hexalith.scan-coverage-gaps.v2")),
+            "duplicate entry": document(gap_record(*self.gaps(), self.gaps()[0])),
+            "uppercase digest": entry(line_sha256=line_digest(LAUNCH).upper()),
+            "short digest": entry(line_sha256="0" * 63),
+            "invalid module name": entry(module="Hexalith/McpCli"),
+            "Builds module": entry(module="Hexalith.Builds"),
+            "missing caller digests": without("caller_sha256"),
+            "caller digests for no caller": entry(caller_sha256=[line_digest(CALLER)], diagnostic=INVOCATION),
+            "too few caller digests": entry(caller_sha256=[]),
+            "bad caller digest": entry(caller_sha256=["0" * 63]),
+            "embedded line number": entry(diagnostic=WRAPPER.format(9)),
+            "zero occurrences": entry(occurrences=0),
+            "boolean occurrences": entry(occurrences=True),
+            "parent path": entry(path="../scripts/start.py"),
+            "absolute path": entry(path="/scripts/start.py"),
+            "decision path": entry(decision={"story": "../15", "date": "2026-11-26"}),
+            "decision file name": entry(decision={"story": "spec-15-migrate-mcpcli.md", "date": "2026-11-26"}),
+            "empty story": entry(decision={"story": "", "date": "2026-11-26"}),
+            "impossible decision date": entry(decision={"story": "15", "date": "2026-02-30"}),
+            "unpadded decision date": entry(decision={"story": "15", "date": "2026-11-6"}),
+            "extra decision key": entry(decision=dict(DECISION, by="agent")),
+            "decision string": entry(decision="story 15 2026-11-26"),
+            "not JSON": document(b"{\"schema\": "),
+            "duplicate JSON key": document(b'{"schema": "hexalith.scan-coverage-gaps.v1", "gaps": [], "gaps": []}'),
+        }
+        for name, change in cases.items():
+            with self.subTest(case=name):
+                world = self.world()
+                change(world)
+                code, report = self.judge(world, MODULES[0])
+                self.assertEqual(code, 1, report)
+                reasons = self.reasons(report, MODULES[0])
+                self.assertIn("own scan row failed: ", reasons)
+                self.assertIn("reviewed coverage gaps are unusable: ", reasons)
+        for name, change in {"blob id": lambda response: response.update(sha="0" * 40),
+                             "size": lambda response: response.update(size=response["size"] + 1),
+                             "base64": lambda response: response.update(content="%%%"),
+                             "path": lambda response: response.update(path="tools/other.json")}.items():
+            with self.subTest(response=name):
+                github = self.world().github()
+                change(github.routes[self.endpoint()])
+                code, report = self.judge(github, MODULES[0])
+                self.assertEqual(code, 1, report)
+                self.assertIn("reviewed coverage gaps are unusable: reviewed coverage gaps ", self.reasons(report, MODULES[0]))
+
+    def test_record_read_failure_gives_no_verdict(self):
+        github = self.world().github()
+        github.failing.add(self.endpoint())
+        code, _ = self.judge(github, MODULES[0])
+        self.assertEqual(code, 2)
+        self.assertIn("HTTP 502", self.stderr)
+
+    def test_record_validation_and_normalization(self):
+        recorded = tool.coverage_gaps(gap_record(*self.gaps()))
+        self.assertEqual(set(recorded), {MODULES[0]})
+        self.assertEqual(recorded[MODULES[0]][self.PATH, WRAPPER.format("N"), line_digest(LAUNCH),
+                                              (line_digest(CALLER),)],
+                         {"occurrences": 1, "decision": DECISION})
+        self.assertEqual(tool.coverage_gaps(gap_record()), {})
+        self.assertEqual(tool.normalized_diagnostic("call at line 83: and line 9; inline 7; lines 3"),
+                         "call at line N: and line N; inline 7; lines 3")
+        for value in (None, [], {"schema": "hexalith.scan-coverage-gaps.v1"},
+                      gap_record(*[gap(MODULES[0], f"a{index}.py", INVOCATION, "x") for index in range(1001)])):
+            with self.subTest(value=str(value)[:40]), self.assertRaises(ValueError):
+                tool.coverage_gaps(value)
+
+    def test_committed_record_is_strict_and_canonical(self):
+        data = (ROOT / tool.GAPS_PATH).read_bytes()
+        value = tool.parse_json(data)
+        # tools/check_global.py checks registration against setup/; an empty record is valid.
+        tool.coverage_gaps(value)
+        self.assertEqual(data, (json.dumps(value, indent=2, ensure_ascii=True) + "\n").encode())
+        keys = [tuple(item[key] for key in ("module", "path", "diagnostic", "line_sha256")) for item in value["gaps"]]
+        self.assertEqual(keys, sorted(keys))
+
+
+class GapCandidateTests(unittest.TestCase):
+    """tools/scan_gap_candidates.py prints reviewable entries and never writes the record."""
+
+    generator = load(ROOT / "tools/scan_gap_candidates.py", "_scan_gap_candidates_tests")
+
+    def run_generator(self, report, *arguments):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            path.write_bytes(report if isinstance(report, bytes) else json.dumps(report).encode())
+            record = (ROOT / tool.GAPS_PATH).read_bytes()
+            stdout, stderr = io.StringIO(), io.StringIO()
+            code = self.generator.main([str(path), *arguments], stdout=stdout, stderr=stderr)
+            self.assertEqual([item.name for item in Path(directory).iterdir()], ["report.json"])
+            self.assertEqual((ROOT / tool.GAPS_PATH).read_bytes(), record)
+        return code, stdout.getvalue(), stderr.getvalue()
+
+    def report(self, errors):
+        world = World()
+        world.scan["modules"][0].update(result="fail", errors=[error for error, _ in errors],
+                                        errorSources=[source for _, source in errors])
+        world.scan["result"] = "fail"
+        return world.scan
+
+    def options(self, *modules):
+        return [argument for module in modules or (MODULES[0],) for argument in ("--module", module)] + [
+            "--story", "15", "--date", "2026-11-26"]
+
+    def test_located_errors_become_one_canonical_entry_each(self):
+        path = ReviewedGapTests.PATH
+        errors = [located(path, 6, WRAPPER.format(9), LAUNCH, [(9, CALLER)]), located(path, 10, INVOCATION, COMPUTED),
+                  located(path, 30, INVOCATION, COMPUTED)]
+        code, out, err = self.run_generator(self.report(errors), *self.options(MODULES[0], MODULES[1]))
+        self.assertEqual((code, err), (0, ""))
+        document = json.loads(out)
+        self.assertEqual(document, gap_record(gap(MODULES[0], path, WRAPPER.format("N"), LAUNCH, callers=[CALLER]),
+                                              gap(MODULES[0], path, INVOCATION, COMPUTED, occurrences=2)))
+        self.assertEqual(out, json.dumps(document, indent=2, ensure_ascii=True) + "\n")
+        tool.coverage_gaps(document)
+
+    def test_errors_acceptance_cannot_match_are_listed_and_fail(self):
+        errors = [located("scripts/start.py", 10, INVOCATION, COMPUTED),
+                  ("aggregate selected-source limit exceeded", None),
+                  ("scripts/start.py:99: " + INVOCATION, dict(located("scripts/start.py", 99, INVOCATION, "")[1],
+                                                               lineSha256=None))]
+        report = self.report(errors)
+        report["errors"].append("detector unavailable")
+        report["findings"].append({"first": {"module": MODULES[0]}, "second": {"module": MODULES[1]}})
+        code, out, err = self.run_generator(report, *self.options())
+        self.assertEqual(code, 1)
+        self.assertEqual(json.loads(out), gap_record(gap(MODULES[0], "scripts/start.py", INVOCATION, COMPUTED)))
+        for message in ("run-level errors fail acceptance: detector unavailable",
+                        "1 cross-module duplicate findings fail acceptance",
+                        "names no located discovery source: aggregate selected-source limit exceeded",
+                        "has no source statement digest: scripts/start.py:99:"):
+            self.assertIn("not a candidate: ", err)
+            self.assertIn(message, err)
+
+    def test_unrecordable_diagnostics_are_notes_beside_the_other_candidates(self):
+        long = INVOCATION + "; " + "x" * tool.MAX_DIAGNOSTIC
+        errors = [located("scripts/start.py", 10, INVOCATION, COMPUTED), located("scripts/start.py", 12, long, "y"),
+                  located("scripts/a:b.py", 1, INVOCATION, "z")]
+        code, out, err = self.run_generator(self.report(errors), *self.options())
+        self.assertEqual(code, 1)
+        self.assertEqual(json.loads(out), gap_record(gap(MODULES[0], "scripts/start.py", INVOCATION, COMPUTED)))
+        self.assertEqual(err.count("not a candidate: Hexalith.Alpha: error path or diagnostic cannot be recorded: "), 2)
+
+    def test_usage_and_unreadable_reports_exit_2(self):
+        report = self.report([located("scripts/start.py", 10, INVOCATION, COMPUTED)])
+        for name, (value, arguments) in {
+            "missing decision": (report, ["--module", MODULES[0]]),
+            "bad story": (report, ["--module", MODULES[0], "--story", "Story 15", "--date", "2026-11-26"]),
+            "bad date": (report, ["--module", MODULES[0], "--story", "15", "--date", "2026-13-01"]),
+            "not JSON": (b"{", self.options()),
+            "other schema": (dict(report, schema="other"), self.options()),
+            "no row": (report, self.options("Hexalith.Missing")),
+        }.items():
+            with self.subTest(case=name), contextlib.redirect_stderr(io.StringIO()):
+                code, out, _ = self.run_generator(value, *arguments)
+                self.assertEqual((code, out), (2, ""))
+
+    def test_runs_isolated_from_its_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            path.write_text(json.dumps(self.report([located("scripts/start.py", 10, INVOCATION, COMPUTED)])))
+            result = subprocess.run([sys.executable, "-I", str(ROOT / "tools/scan_gap_candidates.py"), str(path),
+                                     *self.options()], cwd=directory, capture_output=True, text=True, check=False)
+        self.assertEqual((result.returncode, result.stderr), (0, ""))
+        self.assertEqual(json.loads(result.stdout)["gaps"][0]["occurrences"], 1)
 
 
 class DeliveryAndCheckpointTests(Harness):

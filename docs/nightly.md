@@ -155,7 +155,9 @@ qualifying run, ordered by creation time and run ID, decides coverage for each
 module with an exact dispatch-commit row. An absent or stale row leaves
 coverage unproven. A failing row, a run-level error in the selected report, or
 a duplicate involving the module fails acceptance even if a later scan is
-clean. Findings confined to other modules can fail the scan run while this
+clean. A failing row passes only when each of its errors is a
+[reviewed coverage gap](duplicate-scan.md#reviewed-coverage-gaps) recorded for
+the module. Findings confined to other modules can fail the scan run while this
 module passes acceptance. Scan coverage can be pending after a successful
 Nightly run. `--checkpoint pilot` also checks the bump and keepalive.
 Dispatching Nightly again without a fix only reports nothing to release.

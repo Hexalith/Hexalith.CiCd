@@ -528,6 +528,43 @@ class ValidateTests(unittest.TestCase):
 
 
 class GlobalTests(unittest.TestCase):
+    def test_reviewed_coverage_gaps_must_be_strict_and_name_setup_modules(self):
+        acceptance = load("_validate_nightly_acceptance", ROOT / "tools/nightly_acceptance.py")
+        entry = {"module": "Hexalith.Alpha", "path": "scripts/start.py", "diagnostic": "local-script discovery: x",
+                 "line_sha256": "0" * 64, "caller_sha256": [], "occurrences": 1,
+                 "decision": {"story": "15", "date": "2026-11-26"}}
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            (project / "setup").mkdir()
+            (project / "setup/Hexalith.Alpha.yml").write_text("solution: none\n")
+            # An absent record means no reviewed gaps.
+            global_check.check_coverage_gaps(project)
+            record = project / acceptance.GAPS_PATH
+            record.parent.mkdir()
+            for gaps in ([entry], []):
+                record.write_text(json.dumps({"schema": acceptance.GAPS_SCHEMA, "gaps": gaps}))
+                global_check.check_coverage_gaps(project)
+            for gaps, message in (([entry, dict(entry, module="Hexalith.Beta")], "unregistered modules: Hexalith.Beta"),
+                                  ([dict(entry, note="x")], "fields are not"),
+                                  ([dict(entry, line_sha256="0")], "line_sha256")):
+                with self.subTest(message=message):
+                    record.write_text(json.dumps({"schema": acceptance.GAPS_SCHEMA, "gaps": gaps}))
+                    with self.assertRaisesRegex(global_check.CheckError, message):
+                        global_check.check_coverage_gaps(project)
+            record.write_text("{")
+            with self.assertRaisesRegex(global_check.CheckError, "invalid JSON"):
+                global_check.check_coverage_gaps(project)
+            callbacks = ("check_app_inventory", "check_committed_inputs", "check_committed_render", "check_bootstrap",
+                         "check_render", "check_documents", "check_release", "lint_workflows", "run_tool_tests")
+            from contextlib import ExitStack
+            with ExitStack() as stack:
+                for name in callbacks:
+                    stack.enter_context(mock.patch.object(global_check, name))
+                stack.enter_context(mock.patch.object(global_check, "selected_contract"))
+                diagnostic = stack.enter_context(redirect_stderr(io.StringIO()))
+                self.assertFalse(global_check.run(project))
+            self.assertIn(f"global reviewed coverage gaps: {acceptance.GAPS_PATH}: invalid JSON", diagnostic.getvalue())
+
     def test_bootstrap_digest_failure_fails_actual_global_runner(self):
         with (workspace() as fixture,
               mock.patch.object(global_check, "run_tool_tests"),
