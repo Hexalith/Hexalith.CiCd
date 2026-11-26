@@ -60,12 +60,22 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
 TIMEOUT_DURATION = r"[0-9]+(?:\.[0-9]+)?[smhd]?"
 DOTNET_BUILD_OPERATIONS = ("build", "pack", "restore", "msbuild")
 SIMPLE_SHELL_PARAMETER = r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)"
+BASH_ENUM_ARGUMENT_GUARD = (
+    r'(?P<option>[a-z][a-z0-9_]*)="\$\{1-[A-Za-z0-9_-]+\}"\n'
+    r'if \(\( \$# > 1 \)\) \|\| \[\[ "\$(?P=option)" != [A-Za-z0-9_-]+'
+    r' && "\$(?P=option)" != [A-Za-z0-9_-]+ \]\]; then\n'
+    r'[ \t]+echo "[A-Za-z0-9_./: |\[\]-]+" >&2\n'
+    r'[ \t]+exit [1-9][0-9]?\nfi\n'
+)
 SOURCE_RELATIVE_PROLOGUE = re.compile(
     r'\A#!/usr/bin/env bash\nset -euo pipefail\n(?:[ \t]*(?:#[^\n]*)?\n)*'
+    rf'(?:(?P<guard>{BASH_ENUM_ARGUMENT_GUARD})(?:[ \t]*(?:#[^\n]*)?\n)*)?'
     r'(?P<assignment>(?P<root>[a-z][a-z0-9_]*)="\$\(cd "\$\(dirname "\$\{BASH_SOURCE\[0\]\}"\)'
     r'(?P<parents>(?:/\.\.){1,8})" && pwd\)")\n'
     r'(?P<scratch>[a-z][a-z0-9_]*)="\$\(mktemp -d\)"\n'
     r'''trap 'rm -rf "\$(?P=scratch)"' EXIT\ncd "\$(?P=root)"$''', re.M)
+BASH_LITERAL_ARRAY_START = re.compile(r"[ \t]*(?P<name>[a-z][a-z0-9_]*)=\(")
+BASH_LITERAL_ARRAY_LINE = re.compile(r"[A-Za-z0-9_./ \t-]*(?P<close>\)[ \t]*)?")
 # After the stdin marker Python treats these words as arguments to the body.
 # Quoted parameter expansion cannot add shell words or redirect the input.
 PYTHON_HEREDOC = re.compile(
@@ -1167,8 +1177,27 @@ class Discovery:
             self.include_modules([(number, module) for number, item in literals
                                   for module in self.references([item], path, number)], path, candidate_cwd, parent, bases)
 
+    @staticmethod
+    def literal_bash_array(physical, start):
+        """Return the end of a plain literal array assignment, if present."""
+        opening = BASH_LITERAL_ARRAY_START.match(physical[start])
+        if not opening or opening["name"] in {"auto_resume", "histchars"}:
+            return None
+        size = opening.end()
+        for index in range(start, min(start + 128, len(physical))):
+            line = physical[index][opening.end():] if index == start else physical[index]
+            size += len(line) + 1
+            if size > MAX_LITERAL:
+                return None
+            item = BASH_LITERAL_ARRAY_LINE.fullmatch(line)
+            if not item:
+                return None
+            if item["close"]:
+                return index + 1
+        return None
+
     def logical(self, text, offset, powershell, path):
-        """Yield a logical line, its data lines and a literal heredoc boundary flag.
+        """Yield logical commands and data, including closed literal forms.
 
         Lines split only on LF with a trailing CR dropped. The continuation
         character is a backslash in shell and a backtick in PowerShell, and a
@@ -1177,10 +1206,17 @@ class Discovery:
         """
         physical = [line.removesuffix("\r") for line in text.split("\n")]
         continuation = "`" if powershell else "\\"
+        bash_literal_arrays = not powershell and "\r" not in text
         index = 0
         while index < len(physical):
             number, line, data = index + 1 + offset, physical[index], []
             literal_heredoc_closed = False
+            if bash_literal_arrays:
+                end = self.literal_bash_array(physical, index)
+                if end is not None:
+                    yield number, "\n".join(physical[index:end]), data, False, True
+                    index = end
+                    continue
             index += 1
             first_body_index = index
             while (line.endswith(continuation) and (len(line) - len(line.rstrip(continuation))) % 2
@@ -1221,7 +1257,7 @@ class Discovery:
                             literal_heredoc_closed = single_line_opener and not expands
                             break
                         data.append((body_number, body, expands))
-            yield number, line, data, literal_heredoc_closed
+            yield number, line, data, literal_heredoc_closed, False
 
     def source_relative_launcher(self, path, text, cwd, action):
         """Follow a standalone Bash launcher that derives its child from BASH_SOURCE."""
@@ -1293,19 +1329,22 @@ class Discovery:
         if powershell:
             self.powershell(path, text, cwd, action, offset=offset, sourced=sourced)
             return
-        prologue, first = None, None
+        prologue, first, guard_lines = None, None, range(0)
         if not sourced and not offset and self.files.get(path, {}).get("text") == text:
             if self.source_relative_launcher(path, text, cwd, action):
                 return
             prologue = SOURCE_RELATIVE_PROLOGUE.match(text)
             if prologue and prologue["root"] != prologue["scratch"]:
                 first = text.count("\n", 0, prologue.start("assignment")) + 1
+                if prologue["guard"]:
+                    guard_start = text.count("\n", 0, prologue.start("guard")) + 1
+                    guard_lines = range(guard_start, guard_start + prologue["guard"].count("\n"))
         # The shell treats CR as part of the delimiter. Do not use the
         # normalized logical lines to prove the boundary in mixed input.
         literal_heredoc = "\r" not in text
         cwds, literals, modules = [cwd], [], []
         source_directory_set = False
-        for number, line, data, literal_heredoc_closed in self.logical(text, offset, powershell, path):
+        for number, line, data, literal_heredoc_closed, literal_array in self.logical(text, offset, powershell, path):
             for body_number, body, expands in data:
                 words = shell_words(body, powershell)
                 literals.extend((body_number, word) for word in words)
@@ -1319,6 +1358,8 @@ class Discovery:
             literals.extend((number, word) for word in words)
             modules.extend((number, module) for module in self.references(words, path, number))
             try:
+                if literal_array or number in guard_lines:
+                    continue
                 if first == number and line == prologue["assignment"]:
                     # The contiguous prologue assigns the fixed source-relative
                     # directory before a prior cd can change what a relative

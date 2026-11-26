@@ -315,8 +315,68 @@
       "output_sha256": "bf8d1814d7ee7e811299e842346d1046c6570a30f68b2794c6db91b1adcd9f52"
     }
   },
+  "current_pin_verification": {
+    "recorded_at": "2026-11-26T09:05:18+01:00",
+    "python": "3.15.2",
+    "uv": "0.13.7",
+    "cicd_base_sha": "50df68f58aa6b230f7ed0c0874297ffe5c8a1f9f",
+    "cicd_base_tree": "f28c5448eb26733dd3e55ec3a3a02dcc3e8ab01d",
+    "scanner_candidate_blob": "b7007f2f20177c5bd1ce19a572ae4a9275c29835",
+    "scanner_tests_candidate_blob": "a120075c20111e70c4e316f92439e99d9d732e51",
+    "scanner_docs_candidate_blob": "8b489a0b76b52f8bed93746c1013e9bdc5627344",
+    "mcpcli_sha": "66ccf751831d06ee36c893876db9f6169f247099",
+    "mcpcli_tree": "07356ba9492b7e006d14471cd39dfb9bafdad8c3",
+    "builds_tag": "v6.8.4",
+    "builds_sha": "a6abb7908ec38dcb3fbd99d69e7ed29ae25794d2",
+    "builds_tree": "3f492eb11a8f532302d24b6c551f8e9a34b1f9cb",
+    "source_discovery": {
+      "result": "fail",
+      "scope": "Offline action and script discovery against the committed McpCli pin with both scanner versions",
+      "files_discovered": 34,
+      "baseline_errors": 64,
+      "discovery_errors": 56,
+      "baseline_report_sha256": "faac9c6ad61220e9eee06e3501ac8a5e2023acf52afe52a599d6ef236b085eee",
+      "report_sha256": "8b729038aab3540f8eabcc73b2d9c1c097a211accfba8a91a92308d331b16eb7",
+      "report_encoding": "UTF-8 JSON with sorted keys for revision, sorted files and sorted unique errors, without a trailing newline",
+      "leading_paths": {
+        "scripts/smoke-bootstrap-consumer.sh": 23,
+        "tools/live-topology/ci.py": 5,
+        "tools/live-topology/run-isolated.py": 5,
+        "tools/live-topology/bootstrap-runtime.py": 4
+      }
+    },
+    "scanner_tests": {
+      "passed": 15,
+      "output_sha256": "02dfe88f6fdb9640fe3713b079a8c145df440da0b3191b0517d949f3fb41a45e"
+    },
+    "renderer_tests": {
+      "passed": 52,
+      "output_sha256": "589846be7259ddf44c87c464d56a967d3bf99f89b280e1a99187ad185685e278"
+    },
+    "builds_tests": {
+      "passed": 32,
+      "output_sha256": "5832463568bcd5a6c1116bfefd985e40aef577c3260dbfca9c76b7b2d561d7df"
+    },
+    "controlled_mcpcli_tests": {
+      "passed": 9,
+      "output_sha256": "8fa17a766c3e073356ef186ab1a35325051542b5a9d0f8ac67f40de9c780171a"
+    },
+    "locked_render_check": {
+      "result": "pass",
+      "output_sha256": "e215821c32266b776ada75616006777e1b263117ee0ee9ae22646a7d789879af"
+    },
+    "local_committed_candidate_checks": {
+      "result": "pass for App workflow inventory, committed render inputs and outputs, repeated render equality, schemas and caller interfaces, and the McpCli direct gitlink",
+      "output_sha256": "adfa22ad43506eeca528f021e845f6e9e6c1b1d5d57c269f97e9c95f56a215c2"
+    },
+    "perimeter_comparison": {
+      "drift_records": 0,
+      "output_sha256": "25796a53eb63aa5fcd0fd25d6655b5586f4fec2a71f4acec1db810611344d8a5"
+    },
+    "hosted_verification": "Unverified in the local-only build step"
+  },
   "blockers": [
-    "Resolve the 64 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
+    "Resolve the 56 remaining local discovery diagnostics at the committed McpCli pin, including computed shell interpreter invocations and Python process and import resolution. Verify a passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, including McpCli's scan and the approved pair publication or a valid nothing-to-release outcome."
   ]

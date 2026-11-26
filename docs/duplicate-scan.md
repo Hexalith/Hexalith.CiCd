@@ -79,9 +79,14 @@ Recognized forms supply the exact working directory, import roots and language:
   `BASH_SOURCE[0]`. A bounded launcher that changes to an ancestor of its
   source directory before running a fixed Python script uses that directory
   for the child's working directory. A standalone Bash script can establish
-  the same ancestor immediately after `set -euo pipefail` in a contiguous
-  prologue that allocates a private scratch directory with `mktemp -d`,
-  installs its cleanup trap, and changes directory.
+  the same ancestor in a contiguous prologue that allocates a private scratch
+  directory with `mktemp -d`, installs its cleanup trap, and changes directory.
+  The prologue follows `set -euo pipefail` and may begin with a check for
+  one optional argument from two literal values. The rejection branch can
+  only print literal usage text and exit with a nonzero status.
+  Plain indexed array assignments containing only literal words are read
+  as data, including multiline lists. Each literal script reference in the
+  array remains in scope.
 - The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
   `sudo`, `doas`, `setsid`, `stdbuf`, `ionice`, `unbuffer` and `xargs` wrappers,
   plus `timeout DURATION`, `flock FILE` and `chrt PRIORITY`, also when called by

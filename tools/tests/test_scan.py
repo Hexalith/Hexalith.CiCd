@@ -553,6 +553,55 @@ python3 -m check
                 _, errors, _ = self.discover(steps, files | {launcher_path: altered})
                 self.assertTrue(any(diagnostic in error for error in errors), errors)
 
+    def test_source_relative_scratch_prologue_accepts_inert_option_validation(self):
+        launcher = """#!/usr/bin/env bash
+set -euo pipefail
+
+configuration="${1-Debug}"
+if (( $# > 1 )) || [[ "$configuration" != Debug && "$configuration" != Release ]]; then
+    echo "Usage: bash tools/checks/start.sh [Debug|Release]" >&2
+    exit 2
+fi
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+task_dir="$(mktemp -d)"
+trap 'rm -rf "$task_dir"' EXIT
+cd "$repo_root"
+python3 -m check
+"""
+        path = "tools/checks/start.sh"
+        files = {"check.py": "pass\n", "jobs/README.md": "Job cwd.", path: launcher}
+        steps = [("bash", "bash ../tools/checks/start.sh", "      working-directory: jobs\n")]
+        selected, errors, visited = self.discover(steps, files)
+        self.assertEqual(errors, [])
+        self.assertIn("check.py", selected)
+        self.assertIn(".", {cwd for name, cwd, *_ in visited if name == "check.py"})
+        for unsafe in (
+            launcher.replace("exit 2", 'cd "$GITHUB_WORKSPACE/tools"\n    exit 2'),
+            launcher.replace("$# > 1", "count = 1"),
+            launcher.replace('start.sh [Debug|Release]', 'start.sh $(hidden)'),
+        ):
+            with self.subTest(unsafe=unsafe):
+                _, errors, _ = self.discover(steps, files | {path: unsafe})
+                self.assertTrue(any("unsupported shell command substitution" in error for error in errors), errors)
+
+    def test_literal_bash_array_keeps_its_script_references(self):
+        command = "vectors=(tools/input.json\n         tools/helper.py)\npython tools/next.py"
+        files = {"tools/helper.py": "pass\n", "tools/next.py": "pass\n"}
+        selected, errors, _ = self.discover([("bash", command, "")], files)
+        self.assertEqual(errors, [])
+        self.assertTrue(files.keys() <= selected.keys(), selected)
+        for unsafe in (
+            command.replace("tools/input.json", '$(python tools/hidden.py)'),
+            command.replace("vectors", "BASH_ALIASES"),
+            command.replace("tools/helper.py)", 'tools/helper.py); "$COMMAND"'),
+            command.replace("tools/input.json", '[index]=tools/input.json'),
+        ):
+            with self.subTest(unsafe=unsafe):
+                selected, errors, _ = self.discover([("bash", unsafe, "")], files)
+                self.assertTrue(errors)
+                self.assertIn("tools/next.py", selected)
+
     def test_grep_literal_pattern_and_simple_path_remain_data(self):
         command = """if ! grep -Eq '^[[:space:]]*1 Warning\\(s\\)$' "$directory/build.log"; then
   grep -q found tools/probe.py
