@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-26T10:24:39+01:00",
+  "recorded_at": "2026-11-26T11:54:00+01:00",
   "initial_recorded_at": "2026-11-17T21:16:00+00:00",
   "status": "incomplete",
   "adopted": true,
@@ -615,9 +615,116 @@
     },
     "hosted_verification": "Pending. This implementation step used local checks."
   },
+  "source_fixture_tenants_cohort": {
+    "recorded_at": "2026-11-26T11:54:00+01:00",
+    "python": "3.14.4",
+    "hosted_failure": {
+      "runs": [
+        45780768883,
+        45782594353,
+        45784661793,
+        45786591484
+      ],
+      "shas": [
+        "b9901766ef3a71ff554ff72e210b1db07e4fa115",
+        "7e9379a9a423b9e159fe4c947510c379bfa88629",
+        "f7908f80125dd627989729fb2a326646a1d00333",
+        "39dc7d07e6e864cd7a54811e948d56206834a342"
+      ],
+      "stage": "Linux native source preparation, after the product launcher and unittest steps passed",
+      "diagnostic": "NU1109 in the isolated Hexalith.Parties restore: Tenants.Client 8.1.0 requires EventStore.Contracts 5.6.0 and Commons.UniqueIds 3.0.4 against the 5.5.2 cohort and UniqueIds 3.0.2",
+      "diagnostics_artifact": 15102573025,
+      "diagnostics_artifact_sha256": "4b0d072e39b5b9b5004b19768b170154084ac8f14dfa7fbbdee94600bab09db8"
+    },
+    "cause": "Builds v6.8.4 defaults HexalithTenantsVersion to 8.1.0. The private source overlay imported that catalog without the native Tenants cohort, so both isolated owners also selected Tenants 8.1.0 packages.",
+    "fix": {
+      "base_sha": "d4fcb4ee15344948f4bcaee7d78983241b65d0d1",
+      "sha": "56da5c38163638da9c311fd51abb6f6067b75e40",
+      "tree": "b11d0e67cbda4a54ddf01be7abc77464eccfb8ce",
+      "url": "https://github.com/Hexalith/Hexalith.McpCli/commit/56da5c38163638da9c311fd51abb6f6067b75e40",
+      "blobs": {
+        "tools/live-topology/ci.py": "6c372b6dcd9927defe81b2ef63d5a8317f58fa1c",
+        "tools/live-topology/test_ci.py": "78ea204f59c583fa0d8370363323f6038d6a9c0f",
+        "tools/live-topology/README.md": "45b56a0577587148ec33dca9ec87747045de3e08"
+      },
+      "change": "The overlay sets HexalithTenantsVersion to TENANT_COHORTS[5.5.2] = 8.0.2 before importing the catalog, and preparation refuses a root Tenants pin that differs from that cohort."
+    },
+    "local_reproduction": {
+      "method": "The private overlay, overrides and restore configuration were generated from the committed ci.py source and used for the actual pinned Tenants 30b23302 and Parties 7639a5d2 source restores and builds under run-with-temp.",
+      "baseline": {
+        "result": "fail: Parties restore exit 1 with the hosted NU1109 diagnostics; both owners selected Tenants 8.1.0",
+        "results_sha256": "c312259428f4aaa60e4245af9dfe1eedcd581a1cffec7bc5896f7a1fd2a16aa6",
+        "parties_restore_log_sha256": "52b0df5ef131786ee87f6a274d8cb4a1002818341f969b2a3494582133f9415c"
+      },
+      "fixed": {
+        "result": "pass: Tenants, Parties and adapter restore and -warnaserror Release builds; both owners select EventStore 5.5.2, Tenants 8.0.2 and UniqueIds 3.0.2; restored_cohort accepts the Tenants, Parties and adapter EventStore archives against the native selection",
+        "results_sha256": "f16e93aef2458bda038eabec26f3f3f00995afc82044becd1302771b8659fe4f"
+      }
+    },
+    "tests": {
+      "targeted_passed": 6,
+      "mutation_controls": "Removing the root pin check or the overlay property fails the new and existing preparation tests.",
+      "full_test_ci": {
+        "passed": 120,
+        "skipped": 0,
+        "seconds": 879,
+        "output_sha256": "1c902b75f71efbb47321f8a33cfafb99e73064a53a69f33d3e006a1cade61bcf"
+      }
+    },
+    "checker": {
+      "command": "python3 references/Hexalith.Builds/check.py",
+      "scope": "Standalone clone of the exact commit with direct Builds v6.8.4, EventStore, Tenants, Parties and Platform checkouts at their committed pins; origin/main d4fcb4ee",
+      "result": "pass: guard and commit policy, Release build and six unit test projects (20, 19, 712, 954, 403 and 105 tests, 0 failed)",
+      "seconds": 252,
+      "output_sha256": "a5ce786dc046ed35630959a9082a2bc5901cfe1601066da1ddeb00db9d6cb8a9"
+    },
+    "publication": {
+      "credential": "module-agent",
+      "pre_push_main": "d4fcb4ee15344948f4bcaee7d78983241b65d0d1",
+      "readback_main": "56da5c38163638da9c311fd51abb6f6067b75e40",
+      "completed_at": "2026-11-26T09:48:54+00:00",
+      "record_sha256": "083814fcc53c456b24813d5bfe117237d6f192485f7e43b0db62f598f3863d12"
+    },
+    "hosted_ci_run": 45795458696,
+    "hosted_ci_url": "https://github.com/Hexalith/Hexalith.McpCli/actions/runs/45795458696",
+    "later_main": {
+      "sha": "4e13fbe382244479cc4a77a6c43b6b51cf90e337",
+      "parent": "56da5c38163638da9c311fd51abb6f6067b75e40",
+      "run": 45797258656,
+      "note": "Independent Story 5.11 evidence commit on top of the fix."
+    },
+    "source_discovery": {
+      "files_discovered": 53,
+      "discovery_errors": 69,
+      "note": "Unchanged from d4fcb4ee; the fix adds no discovery diagnostics."
+    },
+    "published_candidate": {
+      "sha": "4d5bcf08122152385d4e6d3cf02e5ab0bb0ed3e2",
+      "tree": "f261ac50f1c1e363aaacf2bcce10de4a37d700c2",
+      "note": "The earlier local bootstrap discovery candidate tree was committed and published on main before this fix; its hosted run 45793223794 failed at the same Parties restore."
+    },
+    "pre_fix_runs_after_publication": [
+      {
+        "run": 45793223794,
+        "sha": "4d5bcf08122152385d4e6d3cf02e5ab0bb0ed3e2",
+        "result": "failure at the Parties source restore after 45 minutes"
+      },
+      {
+        "run": 45793430209,
+        "sha": "d4fcb4ee15344948f4bcaee7d78983241b65d0d1",
+        "result": "failure at the Parties source restore after 39 minutes"
+      }
+    ],
+    "hosted_ci_observation": {
+      "observed_at": "2026-11-26T10:53:51Z",
+      "status": "in_progress",
+      "minutes_since_created": 65,
+      "note": "The six recorded pre-fix runs failed at this restore within 39 to 61 minutes. Job logs become readable only after completion, so this establishes no stage result."
+    }
+  },
   "blockers": [
-    "Complete source discovery through the native runner and product test helpers. The local candidate reaches 53 files and reports 69 diagnostics, including 31 computed subprocess directories and 20 computed environments. Verify an independent passing scan for the adopted main SHA.",
-    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
+    "Complete source discovery through the native runner and product test helpers. Main at 56da5c38 reaches 53 files and reports 69 diagnostics, including 31 computed subprocess working directories and 20 computed environments. Verify an independent passing scan for the adopted main SHA.",
+    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA. Run 45795458696 for 56da5c38 carries the Tenants cohort fix and was still running when recorded.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, with the approved pair publication or a valid nothing-to-release outcome."
   ]
 }
