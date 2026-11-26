@@ -92,6 +92,7 @@ For McpCli product-preparation pushes before actual App adoption only, authorize
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
+- 2026-11-26 — Use one Python version for local Story 15 verification. Run on the current stable Python release and record the exact interpreter version with the results.
 
 ## Review Triage Log
 
@@ -109,6 +110,8 @@ For McpCli product-preparation pushes before actual App adoption only, authorize
 
 - 2026-11-26 — The scanner resolves the shared prepared Python interpreter in the committed native hook, supported Bash scratch setup, and early source-relative Python imports. The Bash proof starts immediately after shell setup so earlier commands cannot change its source or working directory. Thirteen scanner tests and 52 renderer tests passed on both Python versions. The locked offline render check and nine controlled McpCli acceptance tests at `700c1f1fc9fa4a36425bc53a28885d9027338356` also passed. Discovery selected 34 files and reported 64 errors, down from 78. The bootstrap consumer and native process launchers account for most remaining errors. The passing scan, hosted Linux and Windows/macOS jobs, and a qualifying CAP-13 result are pending for the same SHA. See the [acceptance record](../specs/spec-cicd/evidence/15/acceptance.json).
 
-- Run meaningful shared schema/environment/prepare regressions on Python 3.12 and runner Python; qualify actual Windows/macOS product jobs and Linux namespace/live execution.
-- Run renderer regressions, `uv run --locked --script tools/render.py --check`, committed-candidate `tools/check_global.py` and `tools/validate.py` under `run-with-temp`.
+- 2026-11-26 — Python 3.15.2 passed 13 scanner tests, 52 renderer tests, the locked render check and nine controlled McpCli tests. The renderer fixture used Builds `v6.8.4`. See the [acceptance record](../specs/spec-cicd/evidence/15/acceptance.json).
+
+- Run local Python verification on the current stable release. Exercise the applicable shared schema, environment and prepare tests, McpCli controlled tests, scanner and renderer regressions, the locked render check, and the committed-candidate `tools/check_global.py` and `tools/validate.py` checks under `run-with-temp`.
+- Qualify actual Windows/macOS product jobs and Linux namespace/live execution.
 - Before every module push, apply the approved pre-adoption resolution or normal `python3 references/Hexalith.Builds/check.py` after adoption; retain exact revisions and outcomes.

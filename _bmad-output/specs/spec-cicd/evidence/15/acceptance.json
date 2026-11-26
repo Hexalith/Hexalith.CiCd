@@ -289,6 +289,32 @@
     "result": "pass",
     "method": "Offline controlled tests from an archive of the pinned Git tree with the committed conformance requirements. The cases cover prerequisite refusal, namespace isolation, failure and timeout handling, skipped cases, detached-process cleanup, extra packages and package changes during consumer validation."
   },
+  "latest_stable_python_verification": {
+    "python": "3.15.2",
+    "uv": "0.13.7",
+    "cicd_sha": "9803ffe746a5d07c9eab613d910f4d30d697fae2",
+    "cicd_tree": "a4f3ab525c2736b94f80d2180c827c5d914d227b",
+    "mcpcli_sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "mcpcli_tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
+    "renderer_builds_tag": "v6.8.4",
+    "renderer_builds_sha": "a6abb7908ec38dcb3fbd99d69e7ed29ae25794d2",
+    "scanner_tests": {
+      "passed": 13,
+      "output_sha256": "3603273cd167795c302d3a5e378439de192c6ef4aab6acb20ce987e02d99e435"
+    },
+    "renderer_tests": {
+      "passed": 52,
+      "output_sha256": "d81a38f6628d7b7acc0dd89b9ec5c3dcd62696e70dc9a6e8ac121f80b47f6be5"
+    },
+    "locked_render_check": {
+      "result": "pass",
+      "output_sha256": "c67cb121bbae9b713cd6100517688ab6c3213075a7dfd04f4437ee1455101762"
+    },
+    "controlled_mcpcli_tests": {
+      "passed": 9,
+      "output_sha256": "bf8d1814d7ee7e811299e842346d1046c6570a30f68b2794c6db91b1adcd9f52"
+    }
+  },
   "blockers": [
     "Resolve the 64 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
