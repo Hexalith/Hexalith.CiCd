@@ -2567,8 +2567,8 @@ class ScanTests(acceptance_tests.Harness):
              "unsupported test runner with tracked module tests: pytest"),
             ("uv run pytest", {"helper_test.py": "import helper\n"},
              "unsupported test runner with tracked module tests: pytest"),
-            ("python -m unittest discover -s tests", {"tests/test_helper.py": "import helper\n"},
-             "unsupported test runner with tracked module tests: unittest"),
+            ("python -m unittest discover -s tests -p \"$PATTERN\"", {"tests/test_helper.py": "import helper\n"},
+             "unresolved unittest discovery filename pattern"),
         )
         for command, files, diagnostic in cases:
             with self.subTest(command=command):
@@ -2581,6 +2581,13 @@ class ScanTests(acceptance_tests.Harness):
                 w.action("Hexalith.Alpha", command)
                 w.commit(w.paths["Hexalith.Alpha"])
                 self.assertEqual(w.scan(self.factory)["result"], "pass")
+
+    def test_unittest_discovery_detects_duplicates_in_imported_helpers(self):
+        report = self.coverage_case(
+            [("bash", "python -m unittest discover -s tests", "")],
+            {"tests/test_helper.py": "import helper\n", "helper.py": COPY},
+        )
+        self.assert_coverage(report, "helper.py", None)
 
     def test_module_user_and_directory_search_paths_fail(self):
         # PSModulePath, PYTHONUSERBASE and CDPATH redirect name-based lookup.
