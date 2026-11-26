@@ -51,7 +51,7 @@ context:
 
 - [x] `evidence/18/` — refresh revisions and verify/provision AD-21 in order: App selection, stale analyses/drafts/orphans, rulesets, main-only environment, scoped Zot/NuGet, disabled scans, publish switch, retention and grants. Adopt only after pilot acceptance.
 - [ ] Projects `tests/Hexalith.Projects.PackageFixtures{,.AppHost}/`, `Hexalith.Projects.CI.slnx` — add nonpackable prebuilt fixture/driver; seed through authenticated product commands, verify independent durable state and complete browser phases. Test readiness/output/cleanup failures and production isolation.
-- [ ] Folders `src/Hexalith.Folders.Server/{Hexalith.Folders.Server.csproj,FolderServerCatalogAdapterSource.cs}`, shared `src/Hexalith.Folders.EventStore/{FoldersCatalogAdapterSource,FoldersCatalogAdapters}.cs`, and `tests/Hexalith.Folders.Server.Tests/` — expose the actual owner's existing compiled command policies through the public SDK catalog seam from one module implementation; retain all Debug guards. Qualify exact declarations and all 36 retained canonical-intent cases, owner/server/gateway product suites and available required checks. Require the independently qualified corrected remote owner commit before delivered gitlinks or Projects adoption; this nonpackable executable repair needs no new Folder adapter NuGet package/version. Normal Folder checker/push prerequisites apply; no Folder push/publication is authorized by the Projects preparation exception.
+- [x] Folders `src/Hexalith.Folders.Server/{Hexalith.Folders.Server.csproj,FolderServerCatalogAdapterSource.cs}`, shared `src/Hexalith.Folders.EventStore/{FoldersCatalogAdapterSource,FoldersCatalogAdapters}.cs`, and `tests/Hexalith.Folders.Server.Tests/` — expose the actual owner's existing compiled command policies through the public SDK catalog seam from one module implementation; retain all Debug guards. Qualify exact declarations and all 36 retained canonical-intent cases, owner/server/gateway product suites and available required checks. Require the independently qualified corrected remote owner commit before delivered gitlinks or Projects adoption; this nonpackable executable repair needs no new Folder adapter NuGet package/version. Normal Folder checker/push prerequisites apply; no Folder push/publication is authorized by the Projects preparation exception.
 - [ ] Projects `src/Hexalith.Projects.UI.Contracts/*.csproj`, `tests/tools/run-*-gate.ps1`, `scripts/`, `.config/dotnet-tools.json`, `.github/actions/{after-unit-tests,nightly}/action.yml`, `tests/e2e/package.json` — retain generator output, use inspector 6.0.0 and no-rebuild package checks; run browser driver nightly. Preserve C# suites, OpenAPI assertions and owning cross-module tests. Delete workflow assertions and tool-only root npm files.
 - [x] Builds `schemas/hexalith.ci.v1.json`, `Github/lib/{ci_config,ci_environment,ci_pipeline}.py`, CI/environment/prepare composites and configurations — add default `npmWorkspaces: []`, `dotnetTools: false`; prepare locked tools/npm/browsers once. Cover defaults, strict readers, unsafe/missing inputs and install failures in existing contract/environment/prepare suites; qualify an acceptable release.
 - [x] CiCd `tools/{scan,scan_discovery}.py`, `tools/jscpd/`, `.jscpd.json`, `tools/tests/`, `docs/duplicate-scan.md`, SPEC/spine — add static JS/TS/npm/import reachability and document additive contract; test complete scope and fail-closed indirection. Preserve thresholds and cross-module semantics.
@@ -551,6 +551,91 @@ context:
   `d15f3a39c071dde7e342d1ac37313df149fa1dd8d3a306f6c3244baca5ceb103`).
   Projects still needs complete browser qualification before active registration,
   App delivery and post-adoption CI/nightly acceptance.
+
+### Browser prerequisites, 2026-11-27
+
+- The [Projects read cutover runbook](../../references/Hexalith.Projects/docs/read-cutover.md)
+  requires a v4 packet for the intended revision and a rollback proof using
+  its hash. The source-mode fixture produces native receipts for 77 cells
+  and exercises seven authenticated retained reads. Projects' Epic 6
+  retrospective assigns requalification to its maintainer and Test Architect.
+- EventStore v5.6.0 `295b5a6ba584167f21cfef40787477b8814e32da` gates scoped
+  decode and held metadata dispatch on its Debug build. The exact
+  `src/Hexalith.EventStore.ServiceDefaults/Routing/RouteCatalogAuthority.cs`
+  blob is `1e7f43a1337573c6a7035700f81128dab1f1965e`. The Projects fixture
+  already requests these options. The Release advisory journey needs a
+  qualified transport that completes the retained authorization observations
+  within two seconds.
+
+### Scanner diagnostic, 2026-11-27
+
+On CiCd `554f61708709fc6d708064fd7a528d3b8d84a026`, tree
+`a04d1849bc90589619912522f0567ce04f7fe5ee`, the locked `tools/tests/test_scan.py`
+suite (blob `66be99bef05b3cc19dc5c7394f38446972bb1c35`) ran offline on Python
+3.14.4. The diagnostic was stopped after 141 seconds, with 46 passing cases,
+while the next PowerShell discovery case was executing. Exit 143, log SHA-256
+`68dd4d796e6d6668ac6c9f44b0a20dbfb6704884ed5d1e5fc3845fa445cf4b8f`.
+A simple noninteractive PowerShell 7.6.2 startup took 15.166 seconds with its
+update check and telemetry disabled for that process. The full scanner and
+global validation results remain pending.
+
+### Folders owner qualification, 2026-11-27
+
+Folders `2791d7a82825238da15a1bfb77c544079a7f7d09`, tree
+`772b58e3cb751fab352c5b8c4aa6f64b7cbf49a5`, is reachable from cached
+`origin/main` and has the previously recorded hosted CI and contract-spine
+passes. The actual Server supplies the catalog through `FolderServerCatalogAdapterSource`
+and the shared implementation in the `Hexalith.Folders.EventStoreExtensions` project.
+Both focused tests passed, covering all 19 declarations and all 36 golden
+cases for the 18 retained commands. The golden fixture blob is
+`4f3030f2b5d9fe25b51c997736274da9a9a64dac`.
+
+A standalone local clone with its released Builds `v6.8.1`
+`bf8a28b4bbcec619e8d9764d335f786f2bafb69e` passed trusted audited restore and
+both analyzer-enabled Release/package builds without warnings or errors.
+The gateway suite passed 128 tests. The ordinary Server suite passed 1,564,
+with eleven explicit Keycloak cases delegated to the separate component
+wrapper. Both suites had zero failures and zero skips. The ordinary run
+exited 0 with log SHA-256
+`dd5633f0d262e9fef21dfb526089dcfe379baac1f4fc79d98261603d3a67739f`.
+
+The separate complete Server run used the Folders-pinned Platform
+`3848af49f9afc91b174b4c716751fe49cb15dbba`, tree
+`82497215aa4b3cdacdd96ace2c4dfdd8bc9ff5f1`. The provider built and passed
+all 23 Maven tests. The existing `run-complete-project-tests.ps1` wrapper
+ran the full Release assembly against private Keycloak 26.6.4 and passed all
+1,575 tests, including the eleven explicit cases, with zero failures, errors,
+skips or not-run results. The verifier observed zero remaining containers and
+temporary paths. The run exited 0 with log SHA-256
+`bb9ccd5f42bf1c5b6f7ee0d3a47de478dc7b253adfbb246e9bc49745536552fb` and
+sanitized xUnit XML SHA-256
+`49d879685ce3359d1695d797d0d6867c39553c9b78a30e7d74da51f3a5600610`.
+
+### Projects cutover inventory
+
+On cached Projects main `2067b57d8c72af9f83a404eefd80d33033d51268`, legacy
+`ci.yml` blob `52a6ddda4139380c6e9d50d1fc95f5282d0ebd7c` and `release.yml`
+blob `e91973d9d3c62c2114d3c5ef7ee6b9e551e185d8` still use the paths below.
+Apply the cleanup after authenticated delivery replaces those callers, from
+current adopted main and with the normal Builds checker before push.
+
+| Legacy caller | Cutover |
+| --- | --- |
+| `ci.yml` jobs `workflow-gates` and `g6-current` | Remove `tests/tools/run-ci-workflow-gates.ps1`, `tests/tools/test_release_workflow.py`, and the workflow-reading portions of `test_run_ci_workflow_gates.py`, `test_run_g6_candidate_gate.py`, `test_run_g6_ci_gate.py` and `test_g6_mapper_build.py` in the same directory. Retire the jobs' story-evidence and agent-tooling checks. Keep unrelated local tooling and its behavioral tests. |
+| `ci.yml` job `project-gates` | Retire `tests/tools/run-openapi-fingerprint-gate.ps1` once the shared unit stage runs the full `Client.Tests` suite, including `ClientGenerationTests`. The adopted `after-unit-tests` action calls `scripts/check-frontcomposer-output.py` against the prepared Release output. Keep generator-warning refusal and the actual package inventory, dependency, payload and isolated-consumer checks in the retained package hook. |
+| `ci.yml` job `g6-current` and `release.yml` step `Acquire reviewed G-6 catalog` | Remove `.github/actions/prepare-g6-catalog/` before the first post-adoption scan. The 21 deterministic support methods and `IdempotencyAdmissionOq8PostgresqlTests.ProductionMatrix_IndependentProcessesPreserveAuthorityReplayExpiryAndLeakageInvariants` belong to EventStore's product suites. |
+| `release.yml` steps `Install npm dependencies`, `Verify npm dependency provenance and signatures` and the `semantic-release` invocation | Remove the root `package.json` and `package-lock.json` after shared release takes over. Keep `tests/e2e/package.json` and its lockfile for the nightly fixture. |
+
+The qualified product hook uses FrontComposer Inspector 6.0.1 from Projects
+commit `7a9237b8b1f15015ffb996a7a01523a52ee7bf76`. The original design names
+6.0.0. The adopted hook depends on Builds for tool restoration and inspects
+the retained generator output without a build flag.
+
+A fresh offline render and render check in scratch reproduced the Projects
+registration preview using CiCd `554f61708709fc6d708064fd7a528d3b8d84a026`
+and Builds v6.8.5 `deccbc3bcf4ed687ecf4d556ebe356fe57148777`. The rendered
+Projects CI configuration SHA-256 is
+`d15f3a39c071dde7e342d1ac37313df149fa1dd8d3a306f6c3244baca5ceb103`.
 
 ## Spec Change Log
 

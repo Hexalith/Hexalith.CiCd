@@ -360,6 +360,25 @@ class RepositoryInputsTests(unittest.TestCase):
                               "(ROOT / 'templates/workflow.yml.j2').read_text()\n")
         self.assertEqual([], failures)
 
+    def test_reused_helper_evaluations_keep_their_call_context(self):
+        # Each pair calls one helper with equal arguments in two contexts; only the second reads setup/.
+        chain = "".join(f"def d{index}(root):\n    d{index + 1}(root)\n" for index in range(1, 11))
+        cases = (
+            ("recursion", "def first(root, name):\n    open(root / name)\n    second(root, name)\n"
+                          "def second(root, name):\n    first(root, 'setup')\n"
+                          "def test_read():\n    first(ROOT, 'fixture')\n    second(ROOT, 'fixture')\n", 4),
+            ("depth", "def leaf(root):\n    open(root)\ndef step(root):\n    leaf(root)\n" + chain
+                      + "def d11(root):\n    step(root)\n"
+                      "def test_read():\n    d1(ROOT / 'setup')\n    step(ROOT / 'setup')\n", 4),
+            ("boolean", "NAMES = {'True': 'setup', '1': 'fixture'}\ndef read(flag):\n    open(ROOT / NAMES[f'{flag}'])\n"
+                        "def test_read():\n    read(1)\n    read(True)\n", 5),
+            ("loading", "NAME = 'fixture'\ndef read(root):\n    open(root / NAME)\nread(ROOT)\nNAME = 'setup'\nread(ROOT)\n", 5),
+        )
+        for name, body, line in cases:
+            with self.subTest(case=name):
+                self.assertEqual([f"tools/tests/test_candidate.py:{line}: suite reads repository-root setup/"],
+                                 self.suite(body))
+
 
 if __name__ == "__main__":
     unittest.main()

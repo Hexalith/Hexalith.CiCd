@@ -50,6 +50,8 @@ SINKS = {"open", "io.open", "os.listdir", "os.scandir", "os.walk", "os.stat", "o
 PROCESSES = {"subprocess.run", "subprocess.Popen", "subprocess.call", "subprocess.check_call", "subprocess.check_output"}
 LOADERS = {"importlib.util.spec_from_file_location"}
 STANDARD = {"pathlib", "io", "os", "os.path", "shutil", "runpy", "subprocess", "importlib", "importlib.util"}
+# Helper calls nested deeper than this are not followed.
+CALL_DEPTH = 12
 
 
 def tracked_paths(root: Path) -> list[str]:
@@ -122,6 +124,98 @@ def values(*items):
     return frozenset(item for item in items if item is not None)
 
 
+class Scope(dict):
+    """An environment that records the names written since it was copied.
+
+    A copied branch still holds the enclosing value for every other name, and
+    that value's union with itself is unchanged, so a merge visits only these.
+    """
+    __slots__ = ("written",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.written = set(self)
+
+    def __setitem__(self, key, value):
+        self.written.add(key)
+        dict.__setitem__(self, key, value)
+
+    def update(self, *args, **kwargs):
+        changes = dict(*args, **kwargs)
+        self.written.update(changes)
+        dict.update(self, changes)
+
+    def copy(self):
+        branch = Scope.__new__(Scope)
+        dict.update(branch, self)
+        branch.written = set()
+        return branch
+
+
+def exact(value):
+    """Return a memo key that keeps True and False apart from 1 and 0.
+
+    They are equal members of a set, but an f-string formats them differently.
+    """
+    if value.__class__ is bool:
+        return (bool, value)
+    if isinstance(value, (frozenset, tuple)):
+        return value.__class__(exact(item) for item in value)
+    if isinstance(value, (Sequence, Mapping)):
+        return (value.__class__, exact(value.items))
+    return value
+
+
+class Frame:
+    """The calls one evaluation tried, including those of its nested calls."""
+    __slots__ = ("depth", "epoch", "consulted", "deepest", "tainted")
+
+    def __init__(self, depth, epoch):
+        self.depth = depth
+        self.epoch = epoch
+        self.consulted = set()
+        self.deepest = None
+        self.tainted = False
+
+    def observe(self, function, depth):
+        self.consulted.add(function)
+        self.reached(depth)
+
+    def reached(self, depth):
+        if self.deepest is None or depth > self.deepest:
+            self.deepest = depth
+
+    def absorb(self, entry, depth):
+        self.consulted |= entry.consulted
+        if entry.reach is not None:
+            self.reached(depth + entry.reach)
+
+
+class Entry:
+    """A call evaluation and the stack conditions under which it repeats."""
+    __slots__ = ("consulted", "outer", "depth", "reach", "epoch", "returned", "state")
+
+    def __init__(self, frame, active, returned, state):
+        self.consulted = frozenset(frame.consulted)
+        self.outer = frozenset(function for function in active if function in self.consulted)
+        self.depth = frame.depth
+        self.reach = None if frame.deepest is None else frame.deepest - frame.depth
+        self.epoch = frame.epoch
+        self.returned = returned
+        self.state = state
+
+    def applies(self, active, depth, epoch):
+        # Each tried call must again be skipped exactly when it was skipped:
+        # for being on the stack, or for exceeding the depth limit.
+        if epoch != self.epoch or frozenset(function for function in active if function in self.consulted) != self.outer:
+            return False
+        if self.reach is None:
+            return True
+        if self.depth + self.reach < CALL_DEPTH:
+            return depth + self.reach < CALL_DEPTH
+        return depth == self.depth
+
+
 class PathReads:
     """Bounded Python path flow for evidence and suite input reads.
 
@@ -138,13 +232,24 @@ class PathReads:
         self.failures = set()
         self.active = set()
         self.imported_classes = set()
+        # Reusable call evaluations, the evaluations in progress, and each
+        # loading module with the number of evaluations begun before its load.
+        self.memo = {}
+        self.frames = []
+        self.loading = {}
+        self.sealed = set()
+        self.epoch = 0
 
     def module(self, source):
         if source in self.modules:
+            if source in self.loading:
+                # Evaluations begun during this load see partial globals.
+                for frame in self.frames[self.loading[source]:]:
+                    frame.tainted = True
             return self.modules[source]
         path = self.root / source
         tree = ast.parse(path.read_text(), filename=source)
-        env = {"__file__": values(str(path))}
+        env = Scope({"__file__": values(str(path))})
         functions = {node.name: node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))}
         for node in tree.body:
             if isinstance(node, ast.ClassDef):
@@ -152,7 +257,11 @@ class PathReads:
                                   if isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef))})
         self.modules[source] = (tree, env, functions)
         env.update({name: values(Function(source, name)) for name in functions})
+        self.loading[source] = len(self.frames)
         self.statements(tree.body, env, source, top=True)
+        del self.loading[source]
+        # Loaded globals stay fixed unless a call merges self./cls. state into them.
+        self.sealed.add(id(env))
         return self.modules[source]
 
     def local_module(self, name, source):
@@ -198,9 +307,12 @@ class PathReads:
 
     @staticmethod
     def merge(env, branch):
-        for key, value in branch.items():
+        for key in branch.written if isinstance(branch, Scope) else branch:
+            value = branch[key]
             if isinstance(value, frozenset):
-                env[key] = env.get(key, frozenset()) | value
+                current = env.get(key, frozenset())
+                if current is not value:
+                    env[key] = current | value
 
     @staticmethod
     def join(arguments):
@@ -446,35 +558,79 @@ class PathReads:
         for function in self.expression(node.func, env, source):
             if not isinstance(function, Function):
                 continue
-            signature = (function, tuple(arguments), tuple(keywords.items()))
-            if any(active[0] == function for active in self.active) or len(self.active) >= 12:
+            if self.frames:
+                self.frames[-1].observe(function, len(self.active))
+            if function in self.active or len(self.active) >= CALL_DEPTH:
                 continue
             _, globals_, functions = self.module(function.source)
             if function.name not in functions:
                 continue
-            definition = functions[function.name]
-            local = globals_.copy()
+            shared = ({key: value for key, value in env.items() if key.startswith(("self.", "cls."))}
+                      if function.bound else {})
+            returned, state = self.invoke(function, functions[function.name], globals_, shared, arguments, keywords)
+            results.update(returned)
             if function.bound:
-                local.update({key: value for key, value in env.items() if key.startswith(("self.", "cls."))})
-            positional = [*definition.args.posonlyargs, *definition.args.args]
-            parameters = positional[1:] if function.bound else positional
-            for parameter in (*parameters, *definition.args.kwonlyargs):
-                local[parameter.arg] = frozenset()
-            for parameter, default in zip(positional[-len(definition.args.defaults):], definition.args.defaults):
-                local[parameter.arg] = self.expression(default, globals_, function.source)
-            for parameter, default in zip(definition.args.kwonlyargs, definition.args.kw_defaults):
-                local[parameter.arg] = self.expression(default, globals_, function.source)
-            for parameter, argument in zip(parameters, arguments):
-                local[parameter.arg] = argument
-            if self.pin_suite and definition.args.vararg:
-                local[definition.args.vararg.arg] = values(Sequence(tuple(arguments[len(parameters):])))
-            local.update(keywords)
-            self.active.add(signature)
-            results.update(self.statements(definition.body, local, function.source))
-            self.active.remove(signature)
-            if function.bound:
-                self.merge(env, {key: value for key, value in local.items() if key.startswith(("self.", "cls."))})
+                if id(env) in self.sealed:
+                    # A default expression's bound call changed loaded globals: kept evaluations no longer apply.
+                    self.epoch += 1
+                self.merge(env, state)
         return frozenset(results)
+
+    def invoke(self, function, definition, globals_, shared, arguments, keywords):
+        """Evaluate a call body, reusing an earlier evaluation of identical inputs.
+
+        The body sees only its module globals, the arguments and the caller's
+        self./cls. state. Module globals are fixed once loaded, so calls into a
+        loading module and evaluations that read its partial globals are not
+        kept. Everything else an evaluation adds (failures, loaded modules,
+        nested helpers, scanned classes) is idempotent. The active call stack is
+        the remaining input: an entry keeps the functions its evaluation tried
+        to call and how deep it went, and is reused only where each of those
+        calls is allowed or skipped alike.
+        """
+        if function.source in self.loading:
+            return self.evaluate(function, definition, globals_, shared, arguments, keywords)
+        key = exact((function, tuple(arguments), frozenset(keywords.items()), frozenset(shared.items())))
+        depth = len(self.active)
+        for entry in self.memo.get(key, ()):
+            if entry.applies(self.active, depth, self.epoch):
+                if self.frames:
+                    self.frames[-1].absorb(entry, depth)
+                return entry.returned, entry.state
+        frame = Frame(depth, self.epoch)
+        self.frames.append(frame)
+        returned, state = self.evaluate(function, definition, globals_, shared, arguments, keywords)
+        self.frames.pop()
+        entry = Entry(frame, self.active, returned, state)
+        if not frame.tainted and frame.epoch == self.epoch:
+            self.memo.setdefault(key, []).append(entry)
+        if self.frames:
+            self.frames[-1].absorb(entry, depth)
+        return returned, state
+
+    def evaluate(self, function, definition, globals_, shared, arguments, keywords):
+        local = globals_.copy()
+        if function.bound:
+            local.update(shared)
+        positional = [*definition.args.posonlyargs, *definition.args.args]
+        parameters = positional[1:] if function.bound else positional
+        for parameter in (*parameters, *definition.args.kwonlyargs):
+            local[parameter.arg] = frozenset()
+        for parameter, default in zip(positional[-len(definition.args.defaults):], definition.args.defaults):
+            local[parameter.arg] = self.expression(default, globals_, function.source)
+        for parameter, default in zip(definition.args.kwonlyargs, definition.args.kw_defaults):
+            local[parameter.arg] = self.expression(default, globals_, function.source)
+        for parameter, argument in zip(parameters, arguments):
+            local[parameter.arg] = argument
+        if self.pin_suite and definition.args.vararg:
+            local[definition.args.vararg.arg] = values(Sequence(tuple(arguments[len(parameters):])))
+        local.update(keywords)
+        self.active.add(function)
+        returned = self.statements(definition.body, local, function.source)
+        self.active.remove(function)
+        state = ({key: value for key, value in local.items() if key.startswith(("self.", "cls."))}
+                 if function.bound else None)
+        return returned, state
 
     def statements(self, body, env, source, top=False):
         returned = set()
@@ -580,7 +736,7 @@ class PathReads:
                 if test_class and not any(method.name.startswith("test_") for item in chain for method in item.body
                                           if isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef))):
                     continue
-                state = {}
+                state = Scope()
                 for item in chain:
                     state.update(env.get("@class:" + item.name, env))
                 for setup in ("setUpClass", "setUp"):
