@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from threading import Barrier
 import unittest
 from unittest import mock
 import urllib.error
@@ -965,10 +966,26 @@ class GlobalTests(unittest.TestCase):
             ] + [[sys.executable, "-B", eventstore]]
             with mock.patch.object(global_check, "command", return_value=b"") as command:
                 global_check.run_tool_tests(fixture.root)
-            self.assertEqual(expected, [call.args[0] for call in command.call_args_list])
+            self.assertCountEqual(expected, [call.args[0] for call in command.call_args_list])
             for call in command.call_args_list:
                 self.assertEqual(call.kwargs["cwd"], fixture.root)
-                self.assertGreater(call.kwargs["timeout"], 0)
+                self.assertEqual(call.kwargs["timeout"], 600)
+
+    def test_independent_tool_suites_can_run_concurrently(self):
+        with workspace() as fixture:
+            directory = fixture.root / "tools/tests"
+            directory.mkdir(parents=True)
+            for name in ("test_render.py", "test_validate.py"):
+                (directory / name).touch()
+            ready = Barrier(2)
+
+            def run_suite(arguments, **kwargs):
+                if arguments[0] == "uv":
+                    ready.wait(timeout=10)
+                return b""
+
+            with mock.patch.object(global_check, "command", side_effect=run_suite):
+                global_check.run_tool_tests(fixture.root)
 
     def test_workflow_lints_receive_actual_explicit_paths_and_reject_incomplete_results(self):
         with workspace() as fixture:
@@ -1581,7 +1598,7 @@ class ScopeSelectionTests(unittest.TestCase):
         with (mock.patch.object(global_check, "command", side_effect=suite),
               redirect_stderr(io.StringIO()) as diagnostic):
             global_check.run_tool_tests(self.project, "pin")
-            self.assertEqual([tests / name for name in names], visited)
+            self.assertCountEqual([tests / name for name in names], visited)
             self.assertIn("tool suite selection: pin", diagnostic.getvalue())
             self.assertNotIn(independent.name, diagnostic.getvalue())
             visited.clear()
@@ -1590,7 +1607,7 @@ class ScopeSelectionTests(unittest.TestCase):
                     with self.assertRaisesRegex(global_check.CheckError,
                                                 "tools/tests/test_maintenance.py: injected independent failure"):
                         global_check.run_tool_tests(self.project, *arguments)
-                    self.assertEqual([*sorted([*(tests / name for name in names), independent]), eventstore], visited)
+                    self.assertCountEqual([*(tests / name for name in names), independent, eventstore], visited)
                     visited.clear()
             (tests / names[0]).unlink()
             with self.assertRaisesRegex(global_check.CheckError, f"missing pin suites: {names[0]}"):

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from datetime import datetime
 import http.client
@@ -422,8 +423,9 @@ def run_tool_tests(project: Path, selection="all") -> None:
         commands.append((eventstore, [sys.executable, "-B", eventstore]))
     labels = ", ".join(suite.relative_to(project).as_posix() for suite, _ in commands)
     log(f"tool suite selection: {selection} [{labels}]")
-    failures = []
-    for suite, arguments in commands:
+
+    def run_suite(entry):
+        suite, arguments = entry
         label = suite.relative_to(project).as_posix()
         log(f"tool suite {label}: running")
         try:
@@ -431,7 +433,12 @@ def run_tool_tests(project: Path, selection="all") -> None:
             if output:
                 log(output.decode("utf-8", "backslashreplace").rstrip())
         except FAILURES as error:
-            failures.append(f"{label}: {error}")
+            return f"{label}: {error}"
+        return None
+
+    # Each suite owns its fixtures and deadline. Collect failures in registry order.
+    with ThreadPoolExecutor(max_workers=2) as workers:
+        failures = [failure for failure in workers.map(run_suite, commands) if failure is not None]
     if failures:
         raise CheckError("; ".join(failures))
 
