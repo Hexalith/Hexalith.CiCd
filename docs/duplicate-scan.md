@@ -111,7 +111,8 @@ Recognized forms supply the exact working directory, import roots and language:
   `import`/`from` imports, namespace packages and every enclosing `__init__.py`.
   Literal `subprocess`, `os.system`, `os.popen`, `runpy`, `importlib.import_module`
   and `__import__` calls are followed too. So are static name aliases of these
-  APIs, and `sys.executable` (or an alias of it) as argv[0]. A literal subprocess
+  APIs, and `sys.executable` (or an alias of it) as argv[0]. Literal module
+  names supplied by string may include dashes. A literal subprocess
   `cwd` applies to its child. File invocations keep the script's import root;
   `-m`, `-c` and inline Python action shells start from the working directory.
   `python -m unittest discover` accepts an explicit literal start directory
@@ -127,10 +128,16 @@ Recognized forms supply the exact working directory, import roots and language:
   An early top-level Python import-path insertion can prove its source root
   from the imports, source-relative assignments and previously proved
   insertions that precede it.
+  Source-relative `Path.with_name` can name a literal sibling. A direct
+  `subprocess` call through `sys.executable` with a proved Python file operand
+  can forward computed data after the file operand. Computed executable or
+  script operands, shell invocation and pre-execution callbacks remain failures.
 - Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
   `tool run NAME` prefix consumes project, output and property data at the
   compiled-language boundary. The executable, operation and tool name must be
-  literal, with no argv expansion. Literal script references in these data
+  literal. Build, pack, restore and msbuild may expand one trailing immutable
+  tuple made of `-p:Name=Value` operands with fixed property names. Other argv
+  expansion remains unsupported. Literal script references in these data
   operands still enter discovery. Computed executable, operation, shell,
   working-directory or resolution-environment changes remain failures.
   Bash calls to the same fixed build, pack, restore and msbuild operations

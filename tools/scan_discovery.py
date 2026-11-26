@@ -50,7 +50,7 @@ RESOLUTION = {"PYTHONPATH", "PYTHONHOME", "PYTHONSAFEPATH", "PYTHONUSERBASE", "U
               "HEXALITH_CI_PYTHON"}
 ENVIRON = {"os.environ", "os.environb"}
 ENVIRON_WRITES = {"setdefault", "update", "__setitem__", "__ior__"}
-MODULE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
+MODULE = re.compile(r"[A-Za-z_][\w-]*(?:\.[A-Za-z_][\w-]*)*")
 # Python modules that run tracked module files by convention: test discovery.
 TEST_RUNNERS = {"pytest": "pytest", "py.test": "pytest", "unittest": "unittest", "nose2": "nose2"}
 # Commands that execute their operand after this many fixed positional values.
@@ -2334,7 +2334,7 @@ class Discovery:
                 self.add(init, "python", cwd=cwd, action=action, python_roots=roots)
 
     def import_module(self, module, path, cwd, action, *, roots=None, required=False, relative=0, execute=False):
-        if not isinstance(module, str) or not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*", module):
+        if not isinstance(module, str) or not MODULE.fullmatch(module):
             raise DeliveryError("unresolved local Python module")
         parent = str(PurePosixPath(path).parent)
         import_roots = roots if roots is not None else (parent,)
@@ -2539,7 +2539,8 @@ class Discovery:
         # unknown consumer. Include it without using that consumer to limit
         # reachability, just as we do for ordinary script string literals.
         for node in nodes:
-            if not isinstance(node, ast.BinOp) or not isinstance(node.op, ast.Div):
+            if not (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)
+                    or isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "with_name"):
                 continue
             try:
                 value = path_value(node)
@@ -2776,6 +2777,15 @@ class Discovery:
             if isinstance(node, ast.Call) and not node.keywords:
                 if len(node.args) == 1 and (factory(node.func) or native_str(node.func)):
                     return resolve(node.args[0], stack)
+                if (isinstance(node.func, ast.Attribute) and node.func.attr == "with_name"
+                        and len(node.args) == 1 and isinstance(node.args[0], ast.Constant)
+                        and isinstance(node.args[0].value, str)):
+                    name = node.args[0].value
+                    if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]*", name) or len(name) > MAX_LITERAL:
+                        raise ValueError("unsupported source-relative sibling name")
+                    value, anchored = resolve(node.func.value, stack)
+                    if anchored:
+                        return literal_path(name, source_parent(value)), True
                 if (not node.args and isinstance(node.func, ast.Attribute) and node.func.attr == "resolve"):
                     value, anchored = resolve(node.func.value, stack)
                     if anchored:
@@ -3258,6 +3268,88 @@ class Discovery:
             self.include([(line, word) for word in words if word is not None], path, directory, action,
                          self.bases(path, action, [cwd, directory]))
 
+    def discover_python_file_argv(self, first, node, call, path, cwd, action, roots, names, parents, nodes):
+        """Find a direct Python file operand before inspecting its data arguments."""
+        if (not isinstance(first, (ast.List, ast.Tuple)) or len(first.elts) < 3
+                or call in {"subprocess.getoutput", "subprocess.getstatusoutput"}
+                or not isinstance(node.func, ast.Attribute) or not isinstance(node.func.value, ast.Name)):
+            return False
+        interpreter, *arguments = first.elts
+        if (not isinstance(interpreter, ast.Attribute) or not isinstance(interpreter.value, ast.Name)
+                or names(ast.unparse(interpreter)) != {"sys.executable"}):
+            return False
+
+        position = 0
+        switches = {"-B", "-E", "-I", "-O", "-OO", "-P", "-s", "-S", "-u", "--"}
+        for value in arguments:
+            if not isinstance(value, ast.Constant) or value.value not in switches:
+                break
+            position += 1
+            if value.value == "--":
+                break
+        # Existing parsing handles all-literal argv and cases with no trailing
+        # data. A computed value before the file operand cannot be forwarded.
+        if position >= len(arguments) - 1 or all(isinstance(value, ast.Constant) for value in arguments[position + 1:]):
+            return False
+        if (not self.proof_namespace_safe(nodes) or not self.proof_import(interpreter.value.id, "sys", nodes, parents)
+                or not self.proof_import(node.func.value.id, "subprocess", nodes, parents)
+                or self.import_module("subprocess", path, cwd, action, roots=roots)):
+            return False
+        source = arguments[position]
+        bases = self.bases(path, action, [cwd, *roots])
+        if isinstance(source, ast.Constant):
+            target = source.value
+            if (not isinstance(target, str) or not target or target.startswith("-") or len(target) > MAX_LITERAL
+                    or any(character in target for character in "$`*?{}~\\")):
+                return False
+        else:
+            try:
+                target = "$GITHUB_WORKSPACE/" + self.python_source_path(source, path, cwd, action, nodes, parents, roots=roots)
+            except (ValueError, TypeError):
+                return False
+        if any(keyword.arg in {"shell", "preexec_fn"} and not (
+                isinstance(keyword.value, ast.Constant) and (keyword.value.value is None
+                                                           or keyword.arg == "shell" and keyword.value.value is False))
+               for keyword in node.keywords):
+            raise DeliveryError("unsupported shell or pre-execution callback for Python file invocation")
+        for resolved in self.targets(target, path=path, cwd=cwd, action=action, bases=bases):
+            self.language(resolved, "python")
+            self.add(resolved, "python", cwd, action)
+        return True
+
+    @staticmethod
+    def fixed_msbuild_properties(arguments, invocation, parents, nodes):
+        """Approve a trailing expansion of an immutable tuple of MSBuild properties."""
+        expanded = [argument for argument in arguments if isinstance(argument, ast.Starred)]
+        if not expanded:
+            return True
+        if expanded != [arguments[-1]] or not isinstance(expanded[0].value, ast.Name):
+            return False
+        if not Discovery.proof_namespace_safe(nodes):
+            return False
+        bindings = Discovery.proof_bindings(expanded[0].value.id, nodes)
+        if len(bindings) != 1 or not isinstance(bindings[0], ast.Name):
+            return False
+        definition = parents.get(bindings[0])
+        if (not isinstance(definition, ast.Assign) or len(definition.targets) != 1
+                or not isinstance(definition.value, ast.Tuple) or len(definition.value.elts) > 256
+                or definition.lineno >= invocation.lineno):
+            return False
+        scope = parents[definition]
+        if not isinstance(scope, (ast.Module, ast.FunctionDef)):
+            return False
+        container = invocation
+        while container is not None and container is not scope:
+            container = parents.get(container)
+        if container is None:
+            return False
+        for item in definition.value.elts:
+            prefix = item.values[0] if isinstance(item, ast.JoinedStr) and item.values else item
+            if (not isinstance(prefix, ast.Constant) or not isinstance(prefix.value, str)
+                    or not re.match(r"^-p:[A-Za-z_][A-Za-z0-9_]*=", prefix.value)):
+                return False
+        return True
+
     def python_call(self, call, node, path, cwd, action, roots, offset, names, parents, nodes):
         if self.works_platform_context(path, cwd, action, offset):
             callsite = (path, node.lineno, call)
@@ -3341,6 +3433,33 @@ class Discovery:
                         raise DeliveryError("unsupported subprocess pre-execution callback")
                     self.include_git_operands(git_argv, path, target_cwd, action, node.lineno + offset)
                     return
+                if self.discover_python_file_argv(first, node, call, path, target_cwd, action, roots, names, parents, nodes):
+                    return
+            if isinstance(first, (ast.List, ast.Tuple)) and first.elts:
+                fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
+                if fixed[:1] == ["dotnet"] and len(fixed) > 1:
+                    compiler = fixed[1] in DOTNET_BUILD_OPERATIONS
+                    named_tool = fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str)
+                    expanded = any(isinstance(item, ast.Starred) for item in first.elts)
+                    properties = (compiler and expanded and call.startswith("subprocess.")
+                                  and call not in {"subprocess.getoutput", "subprocess.getstatusoutput"}
+                                  and isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name)
+                                  and self.proof_import(node.func.value.id, "subprocess", nodes, parents)
+                                  and not self.import_module("subprocess", path, cwd, action, roots=roots)
+                                  and self.fixed_msbuild_properties(first.elts, node, parents, nodes))
+                    if ((compiler or named_tool) and not expanded) or properties:
+                        if any(keyword.arg == "shell" and not (
+                                isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
+                               for keyword in node.keywords):
+                            raise DeliveryError("unsupported shell execution of a fixed tool operation")
+                        if properties and any(keyword.arg == "preexec_fn" and not (
+                                isinstance(keyword.value, ast.Constant) and keyword.value.value is None)
+                               for keyword in node.keywords):
+                            raise DeliveryError("unsupported subprocess pre-execution callback")
+                        if properties and any(posixpath.basename(item).lower() in {
+                                "dotnet", "dotnet.exe", "dotnet.cmd", "dotnet.bat", "dotnet.com"} for item in self.items):
+                            raise DeliveryError("unproved .NET executable: tracked dotnet command")
+                        return
             if (isinstance(first, ast.Name) or isinstance(first, (ast.List, ast.Tuple))
                     and any(isinstance(item, ast.Starred) for item in first.elts)):
                 try:
@@ -3365,33 +3484,28 @@ class Discovery:
                     raise DeliveryError("unresolved computed Python script invocation; unsafe or unresolved forwarding") from None
             if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
                 fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
-                # The C#/MSBuild graph is outside this source-language perimeter.
-                compiler = (fixed[:1] == ["dotnet"] and len(fixed) > 1 and (
-                    fixed[1] in DOTNET_BUILD_OPERATIONS
-                    or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
                 docker_data = fixed[:1] == ["docker"] and any(
                     len(fixed) == len(pattern) and all(word is None or actual == word
                                                        for actual, word in zip(fixed, pattern))
                     for pattern in DOCKER_DATA_OPERATIONS)
-                if compiler or docker_data:
+                if docker_data:
                     if any(keyword.arg == "shell" and not (
                             isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
                            for keyword in node.keywords):
                         raise DeliveryError("unsupported shell execution of a fixed tool operation")
-                    if docker_data:
-                        if call in {"subprocess.getoutput", "subprocess.getstatusoutput"}:
-                            raise DeliveryError("unsupported shell execution of a fixed tool operation")
-                        if (not isinstance(node.func, ast.Attribute) or not isinstance(node.func.value, ast.Name)
-                                or not self.proof_import(node.func.value.id, "subprocess", nodes, parents)
-                                or self.import_module("subprocess", path, cwd, action, roots=roots)):
-                            raise DeliveryError("unproved subprocess API for Docker discovery")
-                        if any(posixpath.basename(item).lower() in {"docker", "docker.exe", "docker.cmd", "docker.bat", "docker.com"}
-                               for item in self.items):
-                            raise DeliveryError("unproved Docker executable: tracked Docker command")
-                        if any(keyword.arg == "preexec_fn" and not (
-                                isinstance(keyword.value, ast.Constant) and keyword.value.value is None)
-                               for keyword in node.keywords):
-                            raise DeliveryError("unsupported subprocess pre-execution callback")
+                    if call in {"subprocess.getoutput", "subprocess.getstatusoutput"}:
+                        raise DeliveryError("unsupported shell execution of a fixed tool operation")
+                    if (not isinstance(node.func, ast.Attribute) or not isinstance(node.func.value, ast.Name)
+                            or not self.proof_import(node.func.value.id, "subprocess", nodes, parents)
+                            or self.import_module("subprocess", path, cwd, action, roots=roots)):
+                        raise DeliveryError("unproved subprocess API for Docker discovery")
+                    if any(posixpath.basename(item).lower() in {"docker", "docker.exe", "docker.cmd", "docker.bat", "docker.com"}
+                           for item in self.items):
+                        raise DeliveryError("unproved Docker executable: tracked Docker command")
+                    if any(keyword.arg == "preexec_fn" and not (
+                            isinstance(keyword.value, ast.Constant) and keyword.value.value is None)
+                           for keyword in node.keywords):
+                        raise DeliveryError("unsupported subprocess pre-execution callback")
                     return
             try:
                 if (isinstance(first, (ast.List, ast.Tuple)) and first.elts

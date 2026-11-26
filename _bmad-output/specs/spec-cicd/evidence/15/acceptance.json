@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-26T09:42:34+01:00",
+  "recorded_at": "2026-11-26T10:24:39+01:00",
   "initial_recorded_at": "2026-11-17T21:16:00+00:00",
   "status": "incomplete",
   "adopted": true,
@@ -497,8 +497,126 @@
     },
     "hosted_acceptance": "Unverified at publication"
   },
+  "local_bootstrap_discovery_candidate": {
+    "recorded_at": "2026-11-26T10:24:39+01:00",
+    "python": "3.14.4",
+    "uv": "0.11.16",
+    "toolchain_note": "The interpreter used in the earlier Python 3.15.2 receipt was unavailable locally.",
+    "cicd_base_sha": "2df3f5c48dfcfe3c592020dc82314c1de1d4c80a",
+    "cicd_base_tree": "b825a7671497ecebfeca6273611cb57a9cbff658",
+    "cicd_candidate_blobs": {
+      "docs/duplicate-scan.md": "5d3dc40e181b5558fc30321f2af9bc194ed98d61",
+      "tools/scan_discovery.py": "27312910753c4b4fd3e7647efa1cf50c2b18c1f1",
+      "tools/tests/test_scan.py": "32856ce20db3ba935be10b1b27968cebd95863b7"
+    },
+    "mcpcli_base_sha": "39dc7d07e6e864cd7a54811e948d56206834a342",
+    "mcpcli_base_tree": "9163e1ebab82574a66ff1b452f547981d9687adf",
+    "mcpcli_candidate_tree": "f261ac50f1c1e363aaacf2bcce10de4a37d700c2",
+    "mcpcli_candidate_blobs": {
+      "scripts/product_ci.py": "7434765b737444744f69f16c4d1aa5bbee62171f",
+      "scripts/product_packages.py": "50b3c78a9531ed89daeadac793634663bf8d8b85",
+      "scripts/run-paired-platform-tests.py": "12bf6804f156b4a51f41c47e04e02551c577d480",
+      "scripts/smoke-bootstrap-consumer.sh": "63efd5b1e2e8acad495ddcc265d635684bb30405",
+      "scripts/smoke-paired-tool.py": "e497c15f26ec737a1c62b73bd7d6c7050a069fa3",
+      "scripts/smoke_bootstrap_consumer.py": "738279f6dc72a6e6d58c561f9ccb868eda06d0d8",
+      "scripts/tests/test_paired_smoke.py": "611d249bc408dbf596ff2cb10093511032e600d3",
+      "scripts/tests/test_product_ci.py": "428ea4afb3f8c718b0e289a0038d13006ccba4b3",
+      "scripts/tests/test_product_packages.py": "c9505ab808cd68567ed7c72bb4b2f99dbe5fd2e3",
+      "scripts/validate-release-packages.py": "a45f11334448879e876e22ed3d31034987f13637",
+      "tools/conformance-vectors/v1/prepare_sample_fixture.py": "3f31a0ab0b01cdbe1a6889122d74e8f452217d74",
+      "tools/conformance-vectors/v1/run-sample-loopback.sh": "bc760a13375575f85822fbfd2c1c1e157c5969ee",
+      "tools/live-topology/test_ci.py": "3bb66c543f58b0160cc5548af55636e5b97ac63b",
+      "tools/live-topology/test_lane.py": "219d62762f6b5c5b1347c6c751c0fb252ac1c2f3",
+      "tools/live-topology/test_runtime.py": "e3664bf4c984fd296a1bc5913077fac763bda634"
+    },
+    "cicd_builds_tag": "v6.8.5",
+    "cicd_builds_sha": "deccbc3bcf4ed687ecf4d556ebe356fe57148777",
+    "cicd_builds_tree": "0285a6dfb4360675021418da2033ffcaf3b4cdf0",
+    "mcpcli_builds_sha": "a6abb7908ec38dcb3fbd99d69e7ed29ae25794d2",
+    "source_discovery": {
+      "result": "fail",
+      "scope": "Offline static discovery against the committed McpCli pin and the disposable index candidate",
+      "committed": {
+        "files_discovered": 51,
+        "discovery_errors": 101,
+        "report_sha256": "22e40caada6ef9cc8b52224e6ca06af1745092bf75d997e9cddac8656d82ae47"
+      },
+      "candidate": {
+        "files_discovered": 53,
+        "retained_files": 51,
+        "discovery_errors": 69,
+        "report_sha256": "c5aa354f5f1b2e292a2c9356ad2033185e6af904195d1f8513f3e11ecfa004f7",
+        "diagnostics": {
+          "computed_subprocess_working_directory": 31,
+          "computed_subprocess_environment": 20,
+          "forwarded_or_computed_python_calls": 6,
+          "subprocess_option_expansion": 4,
+          "git_modes_or_options": 3,
+          "large_inline_code": 2,
+          "github_env": 2,
+          "scratch_fixture_loader": 1
+        }
+      }
+    },
+    "perimeter_comparison": {
+      "delivered_cicd_sha": "6ccbe64eb4daa29f5d06b031ba6bc666adf28521",
+      "committed_drift_records": 0,
+      "candidate_drift_records": 0
+    },
+    "scanner_tests": {
+      "passed": 15,
+      "output_sha256": "68b65f95e71cf8158748a747113ea33891cf4b9939517ca47bae4bc48dfe7499"
+    },
+    "renderer_tests": {
+      "passed": 52,
+      "output_sha256": "a9f8650684071bdc5c2b59ea234241a483533991beefb6199fd185dabc72836b"
+    },
+    "builds_tests": {
+      "passed": 20,
+      "scope": "Schema and loader contract, Native Aspire setup, and macOS preparation at the released CiCd Builds pin",
+      "output_sha256": "c50650be85a4bcba28f34939f39baaf0738d1539abe8834fd9e8b4740a06029e"
+    },
+    "broader_builds_suite_attempt": {
+      "result": "Stopped during the additional platform restore failure fixture and reran the story-specific selection.",
+      "exit_code": 130,
+      "output_sha256": "664c5c5f8d15cb61d2b3d169e0438e1648d9a35f9b0620daf7ef98c3c62f2054"
+    },
+    "locked_render_check": {
+      "result": "pass",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "local_committed_candidate_checks": {
+      "result": "pass for App workflow inventory, committed renderer inputs and outputs, repeated renders, schemas and caller interfaces, and the McpCli direct gitlink",
+      "output_sha256": "e26a537a22609e2074faceb4586cf1d5941a85c73449f829a39e9c3d5f5d0e98"
+    },
+    "mcpcli_product_script_tests": {
+      "passed": 70,
+      "output_sha256": "7afaa37edda84cf601e67ba3783c03d756534f3ebb238cb17d2e7f17f2a12389"
+    },
+    "mcpcli_conformance_tests": {
+      "passed": 207,
+      "output_sha256": "45710b1d3665ac4c6292bbe1fb0443b8448507f85a4ff2d36a5149048ae55797"
+    },
+    "mcpcli_manual_release_tests": {
+      "passed": 24,
+      "output_sha256": "e2e2443e291fa9c66865e487c8c64bc33658645fc2a56da9899a929bff0817be"
+    },
+    "mcpcli_controlled_native_tests": {
+      "passed": 31,
+      "output_sha256": "947b1f2a7716c516cd9cac555a34add548d3dc1032e1eb8ce2779b102dacd259"
+    },
+    "bootstrap_consumer": {
+      "sdk": "11.0.100",
+      "package": "Cached published Hexalith.McpCli.Abstractions 3.0.0",
+      "result": "Isolated restore and build passed with one expected MCPCLI001 warning and zero errors. Package bytes matched before and after.",
+      "package_sha256": "86e42c528f9eda27919e9bd1c9ded01d92fd0c9c177c2a637281d1462373f03a",
+      "output_sha256": "3b87a77339a44811492f71934ddbdf13c6ed2484713f307fe6048203278f8869",
+      "build_log_sha256": "815ba8287853c541324fb67ae796f0576fee055f1981413cfe9f56bf59cb38b9"
+    },
+    "hosted_verification": "Pending. This implementation step used local checks."
+  },
   "blockers": [
-    "Resolve incomplete discovery of the McpCli consumer shell, native launchers and product test helpers. The committed pin reports 121 diagnostics across 60 discovered files, and the local candidate reports 101 across 51. Verify an independent passing scan for the adopted main SHA.",
+    "Complete source discovery through the native runner and product test helpers. The local candidate reaches 53 files and reports 69 diagnostics, including 31 computed subprocess directories and 20 computed environments. Verify an independent passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, with the approved pair publication or a valid nothing-to-release outcome."
   ]

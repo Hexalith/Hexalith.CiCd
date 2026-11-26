@@ -937,6 +937,61 @@ class ScanTests(acceptance_tests.Harness):
                     "nested/marker.txt": "directory\n"})
                 self.assert_coverage(report, "support/leaf.py", None)
 
+    def test_literal_importlib_dashed_module_keeps_package_and_child_scope(self):
+        scripts = {
+            "scripts/start.py": "import importlib\nimportlib.import_module('fixtures.run-check')\n",
+            "scripts/fixtures/__init__.py": "from . import setup\n" + block("python", "package initializer"),
+            "scripts/fixtures/setup.py": COPY,
+            "scripts/fixtures/run-check.py": ("import importlib\nimportlib.import_module(target)\n"
+                                              + block("python", "dashed module")),
+        }
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], scripts)
+        for target in ("scripts/fixtures/__init__.py", "scripts/fixtures/setup.py", "scripts/fixtures/run-check.py"):
+            self.assert_coverage(report, target, "unresolved computed Python import")
+        scripts["scripts/start.py"] = "import importlib\nimportlib.import_module('../fixtures/run-check')\n"
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], scripts)
+        self.assert_coverage(report, None, "unresolved local Python module")
+
+    def test_python_file_argv_follows_the_script_before_forwarding_data(self):
+        scripts = {
+            "scripts/start.py": ("from pathlib import Path\nimport subprocess, sys\n"
+                                 "launch = Path(__file__).with_name('leaf.py')\n"
+                                 "subprocess.run([sys.executable, '-B', '--', launch, value, *items])\n"),
+            "scripts/leaf.py": "import helper\n",
+            "scripts/helper.py": COPY,
+        }
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], scripts)
+        self.assert_coverage(report, "scripts/helper.py", None)
+
+        scripts["scripts/start.py"] = ("import subprocess, sys\n"
+                                       "subprocess.run([sys.executable, 'leaf.py', value, 'literal.py'], cwd='work')\n")
+        scripts.update({"work/leaf.py": "import helper\n", "work/helper.py": COPY, "work/literal.py": COPY})
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], scripts)
+        for child in ("work/helper.py", "work/literal.py"):
+            self.assert_coverage(report, child, None)
+
+    def test_python_file_argv_refuses_indirection_before_the_script(self):
+        prefix = "from pathlib import Path\nimport subprocess, sys\n"
+        for arguments, options, diagnostic in (
+                ("sys.executable, *options, 'leaf.py', value", "", "unsafe or unresolved forwarding"),
+                ("sys.executable, '-m', module, value", "", "unresolved computed Python script invocation"),
+                ("sys.executable, '-X', flag, 'leaf.py', value", "", "unresolved computed Python script invocation"),
+                ("sys.executable, Path(__file__).with_name(name), value", "", "unresolved computed Python script invocation"),
+                ("sys.executable, Path(__file__).with_name('../leaf.py'), value", "", "unresolved computed Python script invocation"),
+                ("sys.executable, 'leaf.py', value", ", shell=True", "unsupported shell or pre-execution callback"),
+                ("sys.executable, 'leaf.py', value", ", preexec_fn=callback", "unsupported shell or pre-execution callback"),
+                ("sys.executable, 'unknown.py', value", "", "missing or unsafe regular script")):
+            with self.subTest(arguments=arguments, options=options):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": prefix + f"subprocess.run([{arguments}]{options})\n", "scripts/leaf.py": COPY,
+                })
+                self.assert_coverage(report, None, diagnostic)
+
+        scripts = {"scripts/start.py": prefix + "subprocess.run([sys.executable, 'leaf.py', value])\n",
+                   "scripts/leaf.py": "import runpy, sys\nrunpy.run_path(sys.argv[1])\n"}
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], scripts)
+        self.assert_coverage(report, None, "unresolved computed Python script invocation")
+
     def test_source_relative_path_proofs_refuse_shadowing_mutation_and_escape(self):
         source = ("from pathlib import Path\nimport subprocess\nROOT = Path(__file__).resolve().parents[1]\n"
                   "def invoke():\n    subprocess.run(['python', 'leaf.py'], cwd=ROOT / 'support')\ninvoke()\n")
@@ -3504,6 +3559,31 @@ class ScanTests(acceptance_tests.Harness):
                 self.assert_coverage(self.coverage_case([("bash", "python scripts/start.py", "")], {
                     "scripts/start.py": "import subprocess\n" + command + "\n",
                 }), None, diagnostic)
+
+    def test_fixed_msbuild_property_tuple_preserves_discovery_boundary(self):
+        prefix = "import subprocess\ndef invoke(source, project):\n"
+        prepare = "    properties = (f'-p:RestoreSources={source}', '-p:RestoreFallbackFolders=')\n"
+        command = "    subprocess.run(['dotnet', 'restore', project, 'scripts/leaf.py', *properties])\n"
+        report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+            "scripts/start.py": prefix + prepare + command, "scripts/leaf.py": COPY,
+        })
+        self.assert_coverage(report, "scripts/leaf.py", None)
+
+        diagnostics = (
+            (prefix + "    properties = source\n" + command, "unsafe or unresolved forwarding"),
+            (prefix + prepare.replace("RestoreSources", "{source}") + command, "unsafe or unresolved forwarding"),
+            (prefix + prepare + "    properties = source\n" + command, "unsafe or unresolved forwarding"),
+            (prefix + prepare + command.replace("'restore'", "operation"), "unsafe or unresolved forwarding"),
+            (prefix + prepare + command.replace("*properties]", "*properties, 'x']"), "unsafe or unresolved forwarding"),
+            (prefix + prepare + command.replace("*properties])", "*properties], shell=True)"), "shell execution"),
+            (prefix + prepare + command.replace("*properties])", "*properties], preexec_fn=callback)"), "pre-execution callback"),
+        )
+        for source, diagnostic in diagnostics:
+            with self.subTest(source=source):
+                report = self.coverage_case([("bash", "python scripts/start.py", "")], {
+                    "scripts/start.py": source, "scripts/leaf.py": COPY,
+                })
+                self.assert_coverage(report, None, diagnostic)
 
     def test_each_central_policy_rule_fails_alone(self):
         # C16: one single-violation subtest per central-policy rule.
