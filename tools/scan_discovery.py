@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import ast
 from collections import deque
+from fnmatch import fnmatchcase
 from functools import lru_cache
 import hashlib
 import json
@@ -53,7 +54,8 @@ TEST_RUNNERS = {"pytest": "pytest", "py.test": "pytest", "unittest": "unittest",
 # Commands that execute their operand after this many fixed positional values.
 WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time": 0, "nohup": 0, "nice": 0,
             "sudo": 0, "doas": 0, "setsid": 0, "stdbuf": 0, "ionice": 0, "unbuffer": 0, "xargs": 0,
-            "timeout": 1, "flock": 1, "chrt": 1}
+            "timeout": 0, "flock": 1, "chrt": 1}
+TIMEOUT_DURATION = r"[0-9]+(?:\.[0-9]+)?[smhd]?"
 # Words that only introduce the next command of a list, condition or block.
 KEYWORDS = {"then", "do", "else", "if", "elif", "while", "until", "!", "&", "{", "}", "try", "catch", "finally"}
 SHELLS = {"bash": "bash", "sh": "bash", "dash": "bash", "zsh": "bash", "ksh": "bash",
@@ -154,7 +156,8 @@ WORKS_PLATFORM_GIT_CALLS = {
 }
 GIT_READ_FLAGS = {
     "rev-parse": {"--verify", "-q", "--quiet", "--show-toplevel", "--show-prefix", "--show-cdup", "--git-dir",
-                  "--absolute-git-dir", "--is-inside-work-tree", "--is-bare-repository", "--short", "--end-of-options"},
+                  "--absolute-git-dir", "--is-inside-work-tree", "--is-bare-repository", "--short", "--end-of-options",
+                  "--show-superproject-working-tree"},
     "ls-files": {"-v", "-z", "-c", "-o", "-s", "-t", "--cached", "--others", "--stage", "--exclude-standard",
                  "--full-name", "--error-unmatch", "--modified", "--deleted", "--directory"},
     "ls-tree": {"-r", "-t", "-d", "-z", "-l", "--name-only", "--name-status", "--full-name", "--full-tree"},
@@ -860,6 +863,38 @@ class Discovery:
         if name in RECIPES and self.recipe(RECIPES[name], bases):
             raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(name))
 
+    def unittest_discovery(self, args, path, cwd, action):
+        """Follow unittest discover with an explicit directory and a literal filename pattern."""
+        options, index = {}, 1
+        while index < len(args):
+            argument = args[index]
+            index += 1
+            if argument in {"-v", "--verbose", "-q", "--quiet"}:
+                continue
+            key = {"-s": "start", "--start-directory": "start", "-p": "pattern", "--pattern": "pattern"}.get(argument)
+            if key is None or key in options or index >= len(args) or args[index].startswith("-"):
+                raise DeliveryError("unsupported unittest discovery options")
+            options[key] = args[index]
+            index += 1
+        if "start" not in options:
+            raise DeliveryError("unsupported test runner with tracked module tests: unittest")
+        pattern = options.get("pattern", "test*.py")
+        if not re.fullmatch(r"[A-Za-z0-9_*?]+\.py", pattern):
+            raise DeliveryError("unresolved unittest discovery filename pattern")
+        start = self.resolve(options["start"], path=path, cwd=cwd, action=action, allow_root=True)
+        if start != "." and start not in self.directories:
+            raise DeliveryError("missing committed unittest discovery directory: " + clean(start))
+        prefix = start + "/" if start != "." else ""
+        for item in sorted(self.items):
+            if item.startswith(prefix):
+                if not self.regular(item) or PurePosixPath(item).suffix.lower() in {".pyc", ".pyo", ".pyd", ".so"}:
+                    raise DeliveryError("unsafe unittest discovery source: " + clean(item))
+                name = posixpath.basename(item).lower()
+                # Include initializers for load_tests and every filename
+                # matching the pattern on either Windows or POSIX.
+                if name == "__init__.py" or fnmatchcase(name, pattern.lower()):
+                    self.add_module(item, cwd, action, (start,))
+
     def recipe(self, names, bases):
         for base in bases:
             for name in names:
@@ -1126,7 +1161,7 @@ class Discovery:
             yield number, line, data
 
     def source_relative_launcher(self, path, text, cwd, action):
-        """Follow a standalone Bash trampoline that derives its child from BASH_SOURCE."""
+        """Follow a standalone Bash launcher that derives its child from BASH_SOURCE."""
         if not text.startswith("#!/usr/bin/env bash\n"):
             return False
         lines = [(number, line.strip(" \t")) for number, line in enumerate(text.split("\n"), 1)
@@ -1134,6 +1169,28 @@ class Discovery:
         if not lines or lines[0][1] != "set -euo pipefail":
             return False
         body = "\n".join(line for _, line in lines[1:])
+        timed = re.fullmatch(
+            r'cd -- "\$\(dirname -- "\$\{BASH_SOURCE\[0\]\}"\)(?P<parents>(?:/\.\.)+)"'
+            r'\n(?P<command>exec timeout --signal=TERM --kill-after=30s [0-9]+ python3 '
+            r'(?P<child>[A-Za-z0-9_./-]+\.py) [A-Za-z0-9_-]+)', body)
+        if timed:
+            source = self.source_root(path) or "."
+            parent = PurePosixPath(path).parent
+            number, target_cwd = lines[-1][0], cwd
+            try:
+                for _ in range(timed["parents"].count("/")):
+                    if str(parent) == source:
+                        raise DeliveryError("source-relative launcher escapes its source root")
+                    parent = parent.parent
+                target_cwd = str(parent)
+                target = self.resolve(str(parent / safe_path(timed["child"])), path=path, cwd=".", action=None)
+                self.language(target, "python")
+                self.add(target, "python", cwd=target_cwd, action=action)
+            except DeliveryError as error:
+                self.error(path, number, "local-script discovery: " + clean(error))
+            self.include([(number, timed["command"])], path, target_cwd, action,
+                         self.bases(path, action, [cwd, target_cwd]))
+            return True
         root = re.fullmatch(
             r'(?P<anchor>root|ROOT)="\$\(cd "\$\(dirname "\$\{BASH_SOURCE\[0\]\}"\)/\.\." && pwd\)"'
             r'\nexec python3 "\$(?P=anchor)/(?P<child>[A-Za-z0-9_./-]+\.py)"'
@@ -1442,6 +1499,25 @@ class Discovery:
                         if match and match[1].upper() in RESOLUTION | {"PATH"}:
                             raise DeliveryError("unsupported environment assignment affecting script resolution")
 
+    @staticmethod
+    def timeout_command(words):
+        """Take a literal GNU timeout duration and its following command."""
+        index = 0
+        for word in words:
+            if word == "--":
+                index += 1
+                break
+            if not word.startswith("-"):
+                break
+            if not (word in {"--foreground", "--preserve-status", "--verbose"}
+                    or re.fullmatch(r"--signal=[A-Z0-9]+", word)
+                    or re.fullmatch(r"--kill-after=" + TIMEOUT_DURATION, word)):
+                raise DeliveryError("unsupported timeout options")
+            index += 1
+        if index >= len(words) or not re.fullmatch(TIMEOUT_DURATION, words[index]):
+            raise DeliveryError("unresolved timeout duration")
+        return words[index + 1:]
+
     def segment(self, words, path, cwd, action, cwds, number, powershell, sourced):
         """Discover one simple command; return the working directory after it."""
         words, stdin = redirections(words)
@@ -1473,6 +1549,9 @@ class Discovery:
             if name == "command" and words[:1] in (["-v"], ["-V"]):
                 # A non-executing lookup probe.
                 return cwd
+            if name == "timeout":
+                words = self.timeout_command(words)
+                continue
             if words and words[0].startswith("-"):
                 raise DeliveryError("unsupported shell wrapper options")
             words = words[WRAPPERS[name]:]
@@ -1650,6 +1729,9 @@ class Discovery:
                     name = value.split(".", 1)[0].replace("_", "-")
                     if name in PYTHON_RUNNERS:
                         self.segment([name, *remaining], path, cwd, action, cwds, number, powershell, sourced)
+                    elif (value == "unittest" and remaining[:1] == ["discover"]
+                          and {"-s", "--start-directory"}.intersection(remaining[1:])):
+                        self.unittest_discovery(remaining, path, cwd, action)
                     else:
                         self.task_runner(name, remaining, bases)
                 return cwd

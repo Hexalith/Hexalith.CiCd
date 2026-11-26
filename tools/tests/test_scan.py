@@ -369,6 +369,89 @@ pwsh -Command:"& ./scripts/direct.ps1"
             self.assertFalse(marker.exists())
 
 
+class LauncherDiscoveryTests(unittest.TestCase):
+    def discover(self, commands, files):
+        with tempfile.TemporaryDirectory(prefix="shell-discovery-") as temp:
+            module = "Hexalith.Alpha"
+            w = Workspace(Path(temp) / "workspace", (module,))
+            w.write(module, ".github/actions/dormant/action.yml", steps(*commands))
+            for path, source in files.items():
+                w.write(module, path, source)
+            revision = w.commit(w.paths[module])
+            discovery = sc.Discovery(rt.Git(w.paths[module]), revision)
+            selected, errors = discovery.discover()
+            return selected, errors, discovery.visited
+
+    def test_timeout_options_keep_the_child_in_scope(self):
+        files = {"tools/helper.py": "import child\n", "tools/child.py": "print('child')\n"}
+        commands = [("bash", "timeout --signal=TERM --kill-after=30s -- 1.5m python tools/helper.py", "")]
+        selected, errors, _ = self.discover(commands, files)
+        self.assertEqual(errors, [])
+        self.assertIn("tools/child.py", selected)
+
+    def test_timeout_refuses_an_unresolved_option_or_duration(self):
+        commands = [("bash", command, "") for command in (
+            "timeout --unknown 60 python -m helper",
+            "timeout --kill-after=$GRACE 60 python -m helper",
+            "timeout $DURATION python -m helper",
+            "timeout -- --signal=TERM 60 python -m helper",
+        )]
+        selected, errors, _ = self.discover(commands, {"helper.py": "print('helper')\n"})
+        self.assertEqual(len(errors), len(commands), errors)
+        self.assertTrue(all("timeout " in error for error in errors), errors)
+        self.assertIn("helper.py", selected)
+
+    def test_bounded_source_relative_launcher_preserves_child_cwd(self):
+        launcher = """#!/usr/bin/env bash
+set -euo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.."
+exec timeout --signal=TERM --kill-after=30s 2280 python3 tools/live-topology/driver.py prepare
+"""
+        launcher_path = "tools/live-topology/start.sh"
+        driver = "tools/live-topology/driver.py"
+        files = {launcher_path: launcher, driver: "pass\n", "jobs/README.md": "Job launch directory.\n"}
+        commands = [("bash", "bash ../tools/live-topology/start.sh", "      working-directory: jobs\n")]
+        selected, errors, visited = self.discover(commands, files)
+        self.assertEqual(errors, [])
+        self.assertIn(driver, selected)
+        self.assertEqual({cwd for path, cwd, *_ in visited if path == driver}, {"."})
+        selected, errors, _ = self.discover(commands, files | {launcher_path: launcher.replace("/../..", "/../../..")})
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("source-relative launcher escapes", errors[0])
+        self.assertIn(driver, selected)
+
+    def test_unittest_discovers_package_sources_and_refuses_dynamic_selection(self):
+        files = {
+            "checks/test_suite.py": "import case_helper\n",
+            "checks/case_helper.py": "print('helper')\n",
+            "checks/nested/__init__.py": "from . import load\n",
+            "checks/nested/load.py": "print('load_tests helper')\n",
+            "checks/ignored.py": "raise RuntimeError('out of scope')\n",
+        }
+        commands = [("bash", "python -m unittest discover -v -s checks -p 'test_*.py'", "")]
+        selected, errors, _ = self.discover(commands, files)
+        self.assertEqual(errors, [])
+        self.assertEqual({file for file in selected if file.startswith("checks/")},
+                         set(files) - {"checks/ignored.py"})
+        commands = [("bash", "python -m unittest discover -s checks -p \"$PATTERN\"", "")]
+        _, errors, _ = self.discover(commands, files)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unresolved unittest discovery filename pattern", errors[0])
+        commands = [("bash", "python -m unittest discover -s checks", "")]
+        _, errors, _ = self.discover(commands, files | {"checks/__pycache__/test_suite.cpython-312.pyc": "bytecode"})
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unsafe unittest discovery source", errors[0])
+        _, errors, _ = self.discover([("bash", "python -m unittest discover", "")], {})
+        self.assertEqual(errors, [])
+
+    def test_git_can_read_the_superproject_directory(self):
+        files = {"scripts/probe.py": "import subprocess\n"
+                 "subprocess.check_output(['git', '-C', directory, 'rev-parse', '--show-superproject-working-tree'])\n"}
+        selected, errors, _ = self.discover([("bash", "python scripts/probe.py", "")], files)
+        self.assertEqual(errors, [])
+        self.assertIn("scripts/probe.py", selected)
+
+
 class ScanTests(acceptance_tests.Harness):
     @classmethod
     def setUpClass(cls):
@@ -1247,6 +1330,7 @@ class ScanTests(acceptance_tests.Harness):
     def test_wrapped_option_positioned_and_spelled_interpreter_calls_reach_actual_scripts(self):
         cases = (
             ("timeout 60 ./scripts/helper.sh", "bash", "scripts/helper.sh"),
+            ("timeout --signal=TERM --kill-after=30s 1.5m ./scripts/helper.sh", "bash", "scripts/helper.sh"),
             ("nohup ./scripts/helper.sh", "bash", "scripts/helper.sh"),
             ("time ./scripts/helper.sh", "bash", "scripts/helper.sh"),
             ("sudo ./scripts/helper.sh", "bash", "scripts/helper.sh"),

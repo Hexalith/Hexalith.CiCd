@@ -121,8 +121,65 @@
     },
     "hosted_refresh": "unverified in the local-only dispatch"
   },
+  "local_discovery_continuation": {
+    "recorded_at": "2026-11-26T00:56:59+01:00",
+    "cicd_base_sha": "2cca9a0abd33b5b25178b1ab38b1cfa2e6035bfb",
+    "cicd_base_tree": "c474cbe198c67cdc16d7e00c8e1b00ebaec8b31c",
+    "scanner_candidate_blob": "0d8e5eab62011e67b47975eaa4751335ab1fc10e",
+    "scanner_tests_candidate_blob": "64bf07a5a68e8b706cbbdd0a76427ba5093b9efe",
+    "module_sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "module_tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
+    "scope": "Offline Discovery against the local pinned McpCli Git tree",
+    "source_discovery": {
+      "result": "fail",
+      "python": "3.14.4",
+      "baseline_files": 30,
+      "baseline_errors": 89,
+      "candidate_files": 34,
+      "candidate_errors": 84,
+      "report_sha256": "09dd979c12e5dc1d048fa905d35a1f8fcc42be4b6a55a86511c0d20801506542",
+      "report_encoding": "UTF-8 JSON with sorted keys for revision, sorted files and sorted unique errors",
+      "diagnostics_by_family": {
+        "shell or composite action": 46,
+        "Python process arguments/options": 27,
+        "Python import or search path": 7,
+        "Python environment mutation": 3,
+        "Git command mode/options": 1
+      },
+      "leading_paths": {
+        "scripts/smoke-bootstrap-consumer.sh": 26,
+        "tools/conformance-vectors/v1/run-sample-loopback.sh": 12,
+        "tools/conformance-vectors/v1/run-sample-validation.sh": 7,
+        "tools/live-topology/ci.py": 7,
+        "tools/live-topology/live_plans.py": 5,
+        "tools/live-topology/run-isolated.py": 5,
+        "tools/conformance-vectors/v1/run_loopback.py": 4,
+        "tools/live-topology/bootstrap-runtime.py": 4
+      },
+      "first_error": ".github/actions/after-unit-tests/action.yml:8: unresolved computed command for the prepared Python interpreter"
+    },
+    "launcher_discovery_tests": {
+      "result": "pass",
+      "tests_passed_each": 5,
+      "output_sha256": {
+        "3.12": "b6ffacdea75bc9a40029873252c791dfc0bbf7c7b433ad379b1b3c9d8934d76d",
+        "3.14": "8e0b17eda72909ae1132b3987e2b098a5522f823fdaf1ad95c94931778d3553e"
+      }
+    },
+    "locked_offline_render_check": "pass",
+    "broader_wrapper_test": "An earlier real-detector run passed its Bash timeout cases and did not complete cleanly because three PowerShell cases hit the existing 30-second parser timeout. The initial malformed Bash fixture was corrected and passed in the focused suite.",
+    "hosted_checks": "unverified in this local-only implementation"
+  },
+  "mcpcli_matrix_at_pin": {
+    "sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
+    "python": "3.12",
+    "tests_passed": 9,
+    "output_sha256": "48d3be94c0edd972e6726a78d24479ee01a530317fbe68bd1674ce5ac4193c60",
+    "result": "pass: controlled checks for prerequisite refusal, live failure and skips, timeout and process cleanup, independent isolation, extra packages, and mutated package bytes"
+  },
   "blockers": [
-    "Resolve CiCd scan discovery errors for McpCli's Linux product hook and the scripts it reaches.",
+    "Resolve the 84 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, including McpCli's scan and the approved pair publication or a valid nothing-to-release outcome."
   ]

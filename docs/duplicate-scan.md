@@ -76,11 +76,16 @@ Recognized forms supply the exact working directory, import roots and language:
   Interpreter options are read positionally, so later words are script
   arguments. Versioned and `.exe` interpreter spellings are recognized. A
   standalone Bash launcher can resolve a fixed Python script from
-  `BASH_SOURCE[0]` through its own directory or the parent directory.
+  `BASH_SOURCE[0]`. A bounded launcher that changes to an ancestor of its
+  source directory before running a fixed Python script uses that directory
+  for the child's working directory.
 - The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
   `sudo`, `doas`, `setsid`, `stdbuf`, `ionice`, `unbuffer` and `xargs` wrappers,
   plus `timeout DURATION`, `flock FILE` and `chrt PRIORITY`, also when called by
-  absolute path. `command -v` and `command -V` are non-executing probes. Leading
+  absolute path. GNU `timeout` accepts literal durations and the supported
+  literal options `--signal=SIGNAL`, `--kill-after=DURATION`, `--foreground`,
+  `--preserve-status` and `--verbose`. `command -v` and `command -V` are
+  non-executing probes. Leading
   list and block words (`then`, `do`, `else`, `{`, `}`, `try`, `catch`,
   `finally` and similar), redirections and `NAME=value` or `NAME+=value` prefixes
   are skipped.
@@ -96,6 +101,9 @@ Recognized forms supply the exact working directory, import roots and language:
   APIs, and `sys.executable` (or an alias of it) as argv[0]. A literal subprocess
   `cwd` applies to its child. File invocations keep the script's import root;
   `-m`, `-c` and inline Python action shells start from the working directory.
+  `python -m unittest discover` accepts an explicit literal start directory
+  and a literal filename pattern. It includes every matching test source and
+  package initializer below that directory, and fails for unsafe sources.
 - Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
   `tool run NAME` prefix consumes project, output and property data at the
   compiled-language boundary. The executable, operation and tool name must be
