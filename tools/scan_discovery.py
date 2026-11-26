@@ -56,6 +56,14 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
             "sudo": 0, "doas": 0, "setsid": 0, "stdbuf": 0, "ionice": 0, "unbuffer": 0, "xargs": 0,
             "timeout": 0, "flock": 1, "chrt": 1}
 TIMEOUT_DURATION = r"[0-9]+(?:\.[0-9]+)?[smhd]?"
+DOTNET_BUILD_OPERATIONS = ("build", "pack", "restore", "msbuild")
+SIMPLE_SHELL_PARAMETER = r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)"
+# After the stdin marker Python treats these words as arguments to the body.
+# Quoted parameter expansion cannot add shell words or redirect the input.
+PYTHON_HEREDOC = re.compile(
+    r"""[ \t]*python(?:3(?:\.\d+)?)?[ \t]+-"""
+    rf"""(?:[ \t]+(?:[A-Za-z0-9_./-]+|"{SIMPLE_SHELL_PARAMETER}"))*"""
+    r"""[ \t]+<<[ \t]*(?P<quote>['"])[A-Za-z_]\w*(?P=quote)[ \t]*""")
 # Words that only introduce the next command of a list, condition or block.
 KEYWORDS = {"then", "do", "else", "if", "elif", "while", "until", "!", "&", "{", "}", "try", "catch", "finally"}
 SHELLS = {"bash": "bash", "sh": "bash", "dash": "bash", "zsh": "bash", "ksh": "bash",
@@ -1109,7 +1117,7 @@ class Discovery:
                                   for module in self.references([item], path, number)], path, candidate_cwd, parent, bases)
 
     def logical(self, text, offset, powershell, path):
-        """Yield (first physical line number, logical line, data lines).
+        """Yield a logical line, its data lines and a literal heredoc boundary flag.
 
         Lines split only on LF with a trailing CR dropped. The continuation
         character is a backslash in shell and a backtick in PowerShell, and a
@@ -1121,7 +1129,9 @@ class Discovery:
         index = 0
         while index < len(physical):
             number, line, data = index + 1 + offset, physical[index], []
+            literal_heredoc_closed = False
             index += 1
+            first_body_index = index
             while (line.endswith(continuation) and (len(line) - len(line.rstrip(continuation))) % 2
                    and index < len(physical)):
                 line = line[:-1] + " " + physical[index]
@@ -1137,6 +1147,7 @@ class Discovery:
                             break
                         data.append((index + offset, body, opener[1] == '"'))
             else:
+                single_line_opener = index == first_body_index
                 cut, structure, _ = lexical(line, powershell)
                 for match in re.finditer(r"<<(-?)[ \t]*", line[:cut]):
                     start = match.start()
@@ -1156,9 +1167,10 @@ class Discovery:
                                and index < len(physical)):
                             body, index = body[:-1] + physical[index], index + 1
                         if (body.lstrip("\t") if match[1] else body) == delimiter:
+                            literal_heredoc_closed = single_line_opener and not expands
                             break
                         data.append((body_number, body, expands))
-            yield number, line, data
+            yield number, line, data, literal_heredoc_closed
 
     def source_relative_launcher(self, path, text, cwd, action):
         """Follow a standalone Bash launcher that derives its child from BASH_SOURCE."""
@@ -1233,8 +1245,11 @@ class Discovery:
         if (not sourced and not offset and self.files.get(path, {}).get("text") == text
                 and self.source_relative_launcher(path, text, cwd, action)):
             return
+        # The shell treats CR as part of the delimiter. Do not use the
+        # normalized logical lines to prove the boundary in mixed input.
+        literal_heredoc = "\r" not in text
         cwds, literals, modules = [cwd], [], []
-        for number, line, data in self.logical(text, offset, powershell, path):
+        for number, line, data, literal_heredoc_closed in self.logical(text, offset, powershell, path):
             for body_number, body, expands in data:
                 words = shell_words(body, powershell)
                 literals.extend((body_number, word) for word in words)
@@ -1248,6 +1263,15 @@ class Discovery:
             literals.extend((number, word) for word in words)
             modules.extend((number, module) for module in self.references(words, path, number))
             try:
+                if literal_heredoc and literal_heredoc_closed and PYTHON_HEREDOC.fullmatch(line[:cut]):
+                    # Every candidate cwd can also be a Python import root.
+                    body = "\n".join(word for _, word, _ in data)
+                    if len(body) > MAX_LITERAL:
+                        raise DeliveryError("execution literal coverage limit exceeded")
+                    body_offset = data[0][0] - 1 if data else number
+                    for candidate in dict.fromkeys(cwds):
+                        self.python(path, body, candidate, action, roots=(candidate,), offset=body_offset)
+                    continue
                 # Reject execution syntax outside literal quotes before shlex
                 # can discard its structure and certify the wrong scope.
                 if substitution:
@@ -1779,6 +1803,13 @@ class Discovery:
             target = cmd
         elif "$" in cmd or "`" in cmd:
             raise DeliveryError("unresolved computed command: " + clean(cmd))
+        elif not powershell and cmd == "dotnet" and args and args[0] in DOTNET_BUILD_OPERATIONS:
+            # The shell already rejected substitutions. Allow only simple
+            # parameter expansion in fixed SDK operations' data arguments.
+            for word in args:
+                remaining = re.sub(SIMPLE_SHELL_PARAMETER, "", word)
+                if "$" in remaining or "`" in remaining:
+                    raise DeliveryError("unsupported .NET shell substitution or computed operand")
         elif not powershell and cmd == "mkdir":
             # mkdir consumes directory data. Simple parameter expansion cannot
             # turn that operand into a program; substitution and computed flags
@@ -1787,7 +1818,7 @@ class Discovery:
                 if word.startswith("-") and word not in {"-p", "--parents", "-v", "--verbose", "--"}:
                     raise DeliveryError("unsupported mkdir option")
                 expanded, _ = self.expand(word, path, action)
-                remaining = re.sub(r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)", "", expanded)
+                remaining = re.sub(SIMPLE_SHELL_PARAMETER, "", expanded)
                 if any(value in remaining for value in ("$", "`", "<(", ">(")):
                     raise DeliveryError("unsupported mkdir shell substitution or computed operand")
         elif builtin not in {"echo", "printf", "write-output", "write-host", "cat", "get-content", "[", "[[", "test"}:
@@ -3168,8 +3199,8 @@ class Discovery:
             # dynamic executable/verb/options expansion still cannot be certified.
             if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
                 fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
-                compiler = (fixed[:1] == ["dotnet"] and (
-                    fixed[1:2] in (["build"], ["pack"], ["restore"], ["msbuild"])
+                compiler = (fixed[:1] == ["dotnet"] and len(fixed) > 1 and (
+                    fixed[1] in DOTNET_BUILD_OPERATIONS
                     or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
                 if compiler:
                     if any(keyword.arg == "shell" and not (

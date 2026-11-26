@@ -104,12 +104,18 @@ Recognized forms supply the exact working directory, import roots and language:
   `python -m unittest discover` accepts an explicit literal start directory
   and a literal filename pattern. It includes every matching test source and
   package initializer below that directory, and fails for unsafe sources.
+  A standalone Bash `python -` command on one line can read a closed, fully quoted heredoc.
+  Its LF-delimited body is traversed as Python from every candidate working
+  directory. Only literal words and quoted simple parameter expansions can
+  follow the stdin marker.
 - Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
   `tool run NAME` prefix consumes project, output and property data at the
   compiled-language boundary. The executable, operation and tool name must be
   literal, with no argv expansion. Literal script references in these data
   operands still enter discovery. Computed executable, operation, shell,
   working-directory or resolution-environment changes remain failures.
+  Bash calls to the same fixed build, pack, restore and msbuild operations
+  also accept simple shell parameter expansion in the data operands.
 - Python subprocess argv using the standard Git executable can read metadata
   with literal `rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`,
   `diff`, `show`, `archive` and `remote get-url` and supported literal flags.
@@ -225,9 +231,9 @@ These fail coverage with a diagnostic naming the source file and line:
   and `printf` stays data. An execution-bearing inline
   literal over the 4,096-character discovery limit fails visibly, including
   `-c` programs in literal sequences behind unrecognized Python consumers.
-- An interpreter fed from stdin or a heredoc, such as `bash <<EOF`,
-  `python - <<'EOF'`, `pwsh -Command -`, `bash -s`, `python -` or
-  `cat x.py | python`.
+- An interpreter fed from stdin or a heredoc outside the closed, quoted Python
+  form, such as `bash <<EOF`, `python - <<EOF`, `pwsh -Command -`,
+  `bash -s`, `python -` or `cat x.py | python`.
 - `PYTHONPATH`, `PYTHONHOME`, `PYTHONSAFEPATH`, `PYTHONUSERBASE` or `UV_ENV_FILE`,
   or the name-based lookup paths `PSModulePath` and `CDPATH`, set by any means:
   - a shell assignment, including `+=`, or `export`/`declare`;

@@ -175,11 +175,52 @@
     "tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
     "python": "3.12",
     "tests_passed": 9,
-    "output_sha256": "48d3be94c0edd972e6726a78d24479ee01a530317fbe68bd1674ce5ac4193c60",
+    "output_sha256": "b635a1593afd02b76f6bdf6bbc593e34a53e1fbb3218ba945b3e2a8ed314f75e",
+    "method": "Offline rerun from a Git archive of the pinned commit, using the recorded conformance requirements for the live-topology tests.",
     "result": "pass: controlled checks for prerequisite refusal, live failure and skips, timeout and process cleanup, independent isolation, extra packages, and mutated package bytes"
   },
+  "local_shell_discovery": {
+    "recorded_at": "2026-11-26T01:41:52+01:00",
+    "cicd_base_sha": "ab27041c2e6ff07e228606310d1e9569f15590aa",
+    "cicd_base_tree": "b787718ef824d509682e63e93cc78a53238fef67",
+    "scanner_candidate_blob": "b6321ea8e192394889752d9c48f9c6054d78450e",
+    "scanner_tests_candidate_blob": "8d3f347bcd5ae43de753ae35f0b1f939ae08aac0",
+    "module_sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "module_tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
+    "source_discovery": {
+      "result": "fail",
+      "python": "3.14.4",
+      "files_discovered": 34,
+      "baseline_errors": 84,
+      "discovery_errors": 78,
+      "report_sha256": "c0c9ca81ec1d9f9bf3a3666e1f326b5ee8557d53956b4b0d030f8f1e5da2a137",
+      "report_encoding": "UTF-8 JSON with sorted keys for revision, sorted files and sorted unique errors",
+      "first_error": ".github/actions/after-unit-tests/action.yml:8: local-script discovery: unresolved computed command: ${HEXALITH_CI_PYTHON:?Shared prepared Python is required}",
+      "leading_paths": {
+        "scripts/smoke-bootstrap-consumer.sh": 26,
+        "tools/conformance-vectors/v1/run-sample-loopback.sh": 8,
+        "tools/live-topology/ci.py": 7,
+        "tools/conformance-vectors/v1/run-sample-validation.sh": 5,
+        "tools/live-topology/live_plans.py": 5,
+        "tools/live-topology/run-isolated.py": 5,
+        "tools/conformance-vectors/v1/run_loopback.py": 4,
+        "tools/live-topology/bootstrap-runtime.py": 4
+      }
+    },
+    "launcher_discovery_tests": {
+      "result": "pass",
+      "tests_passed_each": 9,
+      "output_sha256": {
+        "3.12": "af63c137fa1bbb14afa582217b9349d6a4e22df8225ab4bbf415b816ee5c435f",
+        "3.14": "ced9b05175d046bca1a36b53a94e8cfd67c681c2fee3c59661641b00721a0ce3"
+      }
+    },
+    "locked_offline_render_check": "pass",
+    "renderer_tests_passed_each": 52,
+    "broader_scanner_tests": "The PowerShell suite reported three passing tests before its process group was terminated for the implementation handoff (exit 143). The full detector suite requires online npm signature verification and was outside the local-only execution."
+  },
   "blockers": [
-    "Resolve the 84 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
+    "Resolve the 78 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, including McpCli's scan and the approved pair publication or a valid nothing-to-release outcome."
   ]

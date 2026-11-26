@@ -206,7 +206,7 @@ A1 = (
      "scripts/x.ps1", "unsupported stdin-fed interpreter"),
     ("bash-heredoc", [("bash", "bash <<EOF\n./scripts/x.sh\nEOF", "")], {"scripts/x.sh": COPY},
      "scripts/x.sh", "unsupported heredoc-fed interpreter"),
-    ("python-heredoc", [("bash", "python - <<'EOF'\nimport helper\nEOF", "")], {"helper.py": COPY},
+    ("python-dynamic-heredoc", [("bash", "python - <<EOF\nimport helper\nEOF", "")], {"helper.py": COPY},
      None, "unsupported heredoc-fed interpreter"),
     ("make-recipe", [("bash", "make lint", "")], {"Makefile": "lint:\n\tpython -m helper\n", "helper.py": COPY},
      None, "unsupported task runner with tracked module recipes: make"),
@@ -388,6 +388,47 @@ class LauncherDiscoveryTests(unittest.TestCase):
         selected, errors, _ = self.discover(commands, files)
         self.assertEqual(errors, [])
         self.assertIn("tools/child.py", selected)
+
+    def test_quoted_python_heredoc_traverses_imports_and_preserves_line_numbers(self):
+        commands = [("bash", "cd checks\npython3 - \"$RECEIPT\" <<'PY'\n"
+                    "import helper\nimport subprocess\nsubprocess.run([target])\nPY", "")]
+        files = {"helper.py": "pass\n", "checks/helper.py": "pass\n"}
+        selected, errors, _ = self.discover(commands, files)
+        self.assertTrue(files.keys() <= selected.keys(), selected)
+        self.assertEqual(errors, [".github/actions/dormant/action.yml:10: local-script discovery: "
+                                  "unresolved computed Python script invocation"], errors)
+
+    def test_quoted_python_heredoc_refuses_unproved_shell_forms(self):
+        for command, diagnostic in (
+            ('python3 - \"$(hidden)\" <<\'PY\'\nimport helper\nPY', "unsupported shell command substitution"),
+            ("python3 - <<'PY' < \"$SOURCE\"\nimport helper\nPY", "unsupported heredoc-fed interpreter"),
+            ("python3 - <<'PY'\nimport helper", "unsupported heredoc-fed interpreter"),
+            ("python3 - <<'PY'\r\nimport helper\nPY", "unsupported heredoc-fed interpreter"),
+            ("python3\\\n- <<'PY'\nimport helper\nPY", "unsupported heredoc-fed interpreter"),
+        ):
+            with self.subTest(command=command):
+                selected, errors, _ = self.discover([("bash", command, "")], {"helper.py": "pass\n"})
+                self.assertNotIn("helper.py", selected)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn(diagnostic, errors[0])
+
+    def test_literal_dotnet_build_operation_keeps_script_references(self):
+        commands = [("bash", 'dotnet pack "$PROJECT" --output "${ARTIFACTS}" -p:Fixture=tools/check.py', "")]
+        selected, errors, _ = self.discover(commands, {"tools/check.py": "pass\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("tools/check.py", selected)
+
+    def test_dotnet_build_operation_refuses_unproved_shell_forms(self):
+        for command, diagnostic in (
+            ('dotnet "$OPERATION" "$PROJECT"', "unresolved computed operand of unknown command"),
+            ('dotnet build "$(hidden)"', "unsupported shell command substitution"),
+            ('dotnet pack "${NAME@P}"', "unsupported .NET shell substitution"),
+            ('dotnet tool run "$TOOL"', "unresolved computed operand of unknown command"),
+        ):
+            with self.subTest(command=command):
+                _, errors, _ = self.discover([("bash", command, "")], {})
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn(diagnostic, errors[0])
 
     def test_timeout_refuses_an_unresolved_option_or_duration(self):
         commands = [("bash", command, "") for command in (

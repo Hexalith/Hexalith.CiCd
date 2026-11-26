@@ -105,6 +105,8 @@ For McpCli product-preparation pushes before actual App adoption only, authorize
 
 - 2026-11-26 — All nine controlled acceptance-matrix tests passed on Python 3.12 at pinned McpCli `700c1f1fc9fa4a36425bc53a28885d9027338356`. They exercised prerequisite refusal, live failure and skips, timeout and detached-process cleanup, independent runtime isolation, extra packages, and mutated package bytes. The [acceptance record](../specs/spec-cicd/evidence/15/acceptance.json) binds the test digest to that commit and tree.
 
+- 2026-11-26 — Static discovery now follows closed, quoted Python heredocs and accepts simple shell parameter operands in fixed .NET build, pack, restore and MSBuild calls. Nine focused scanner tests and 52 renderer tests passed on both Python 3.12 and 3.14. The locked offline render check passed. Discovery at the same McpCli pin selected 34 files and reduced the error count from 84 to 78. The computed interpreter in the Linux product action still fails discovery. Hosted platform, live and CAP-13 results remain unverified. See the [acceptance record](../specs/spec-cicd/evidence/15/acceptance.json).
+
 - Run meaningful shared schema/environment/prepare regressions on Python 3.12 and runner Python; qualify actual Windows/macOS product jobs and Linux namespace/live execution.
 - Run renderer regressions, `uv run --locked --script tools/render.py --check`, committed-candidate `tools/check_global.py` and `tools/validate.py` under `run-with-temp`.
 - Before every module push, apply the approved pre-adoption resolution or normal `python3 references/Hexalith.Builds/check.py` after adoption; retain exact revisions and outcomes.
