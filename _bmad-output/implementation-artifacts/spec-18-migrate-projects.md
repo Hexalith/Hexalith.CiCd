@@ -271,6 +271,229 @@ context:
   scanner test suite. Validation SHA-256
   `ff83b256f90ec8e88e16d752252b18a630158c84a5ffc11ec7e5833471a0cff4`.
 
+- The local Projects Story 5.21 worktree had been removed. Recovered its
+  29-path backup patch (SHA-256
+  `b0693fa0d06f64ae8bd7f0f2e613d4d77c075b17212de64d1344d1184cc86cc9`)
+  with a clean three-way apply on freshly fetched Projects main
+  `84e29c39460511e34b022b6b5cac1c19e70538e6`, tree
+  `8bd46b5b5d83b61d1aa5359b933e7ae068a7af03`. One overlapping Folders
+  test change was already on main. The recovered candidate tree was
+  `0548e7b7aeecf55a44dce5e4c0f486a7494a9b13`.
+- The isolated audit reproduction selected EventStore Gateway v5.6.0
+  `295b5a6ba584167f21cfef40787477b8814e32da`, tree
+  `32c0e679697bcaaea104e21477b3aec6555b9a73`, with published Contracts,
+  DomainService and Aspire 5.6.0. The Contracts archive names the same commit
+  and has SHA-256
+  `e08f653c0b1ec0b10f283969c8acaf5ab5d4dbf094cfcdb6a033133a1bf660a5`.
+  Other checkouts were Builds `deccbc3bcf4ed687ecf4d556ebe356fe57148777`,
+  Tenants `d34f353abb59213ac021e81da6885b78ee3231fd`, Folders
+  `2791d7a82825238da15a1bfb77c544079a7f7d09` and Platform
+  `80a60039b46ea6bdccd9eeac5091551bc59643fa`. Their trees in that order were
+  `0285a6dfb4360675021418da2033ffcaf3b4cdf0`,
+  `1679d29778073c9527aedccdc919dc18cdc20315`,
+  `772b58e3cb751fab352c5b8c4aa6f64b7cbf49a5`, and
+  `4b4d0838ccc1bd62fdf71dd7e7ee159d819cdbf5`. Audited restore passed
+  (SHA-256 `33b75ca14a8cc6ea9f6f6915d9fe20c32465d0c3a19e5e3193d4abe99302560a`).
+  Release build passed with zero warnings and errors (SHA-256
+  `f238f55f774289e26a7cc999fd855ff0f54b06e77b9a5c8bc09804f13b349fc0`).
+- Five native controls passed through audited inspection. The ordinary-list
+  assertion in `WaitForNonDescriptiveControlAsync` failed first with “The
+  active audit fault did not recover a Complete non-descriptive control within
+  its budget.”
+  Attempts 1 and 15 returned HTTP 404, with response SHA-256 values
+  `2ca48a99ed739d6e27fcad69dc7420489f8d54729cb3bd2cec8dc114b02fc592` and
+  `5c86cb761b0b4dbe0e4e78b64d9a27d95392edf27e9ebf7e182d5be462c3f712`.
+  The owned Redis ACL had 82 allowed key patterns and its bounded log showed
+  five denial groups, all on new audit keys. The persisted tenant projection
+  was enabled at version 2 with one principal and was 358.8 seconds old
+  during the fault. Supported reads require current evidence within the
+  300-second freshness budget. The native driver exited 1 (runtime SHA-256
+  `583a072231296407864f6138c6459b895299d8fdb112025e6a1f3f87b95c99a1`).
+  The package AppHost now budgets one hour for ordinary fixture phases, which
+  have a 45-minute lifetime, and retains 90 seconds for the stale-access proof.
+  The audit ACL and ordinary-read assertions are unchanged.
+- The full driver on candidate tree `ec6ffb862f7a607644c9e79ebe0a820c5669efa1`
+  passed the audit-storage row. Both ordinary list and open returned Complete
+  HTTP 200 on the first attempt before the inspected refusals, and authorized
+  recovery returned HTTP 200 after restoration. The row result SHA-256 is
+  `df64987fc6e88ac4b179e332958b7980a00195dd5ae2e818792041fa0268b09a`.
+  The next persisted-state row reached a Complete retained cursor before the
+  real `RevokeFolderAccess` command returned HTTP 500 (response SHA-256
+  `82dfd5e55a2e35dba8e464059c03f69f78f3bcdd877eedf90b7a4361a66a9aed`).
+  Duplicate delivery passed. Full replay reached the rebuilt read-truth
+  comparison and a positive open returned HTTP 404. The unchanged 90-second
+  recovery configuration also exposed a seed-time HTTP 500 on `SetProjectFolder`
+  in the full run (response SHA-256
+  `3a26c10ee955c1120cf8a19c6454fe48541964ec751b25e7aaf95c62f0f695e7`).
+  The follow-up gives the disposable Folders host the same one-hour freshness
+  window and retains the Projects recovery deadline.
+  The full driver ran all six named phases and exited 1 (runtime SHA-256
+  `5204b3f3d0a54863e0f8b31e3f0f63cb07de203c1bae310a9def0d04cb1d728e`).
+- The recovery fixture now uses the retained v1 read's required
+  `inspectDescriptiveMetadata=true` opt-in with its existing scoped OIDC
+  credential. The Chromium name-only lifecycle test checks the persisted Active
+  result through authorized quarantine inspection, checks Pending Folder and
+  ordinary-read refusal, and still requires the ordinary Archived read after
+  archive. Cleanup can observe the same quarantined project before archiving.
+- The package build of candidate tree `a25acecc015da85712deb02427a21ee7dbaecde3`
+  passed with zero warnings and errors (SHA-256
+  `1eceaf57036373ec0ac65a4ee48f8c0aab5dab9fa59e085925c64211fbc5fab3`).
+  Eight C# suites recorded 3,315 passes, zero failures, and one skipped Dapr-gated
+  restart case (SHA-256
+  `574420733d24e8f511c5d55a7dec6059b83f5846f8d6fa689c30d303e56aa150`).
+  That case passed separately in the live compatibility fixture. All 46 package
+  tooling tests passed (SHA-256
+  `b403e4ab476ab612dfe6d48965133ad2b3c1aa3b6369d4cf8095af6c84684d63`).
+  FrontComposer 6.0.1 inspection passed (SHA-256
+  `a20b6d929d735029327274d9e4169a44c971fdde73fa024983dc397eabebe661`), as did
+  all six isolated consumers (SHA-256
+  `202ea75a70c9f6034608a59a445247d62e85dfe811482f12674f274afc79db27`).
+  TypeScript caught the local helper's missing `references` type before the
+  driver could start. With the existing reference summary type added, the
+  locked `tsc --noEmit` passed (SHA-256
+  `7c9d1fd4106c42b1dc2d3fe817493910eb1bf28e39e82213b1901e2a440861e9`).
+- The initial Chromium smoke collected eight tests and passed seven with zero
+  skips. `renders protected Project data through server-side token relay only`
+  failed during seed convergence after HTTP 202. Shared active-project seeds
+  now wait for the quarantined projection, bind the owned sibling Folder
+  through the supported command, and wait for the ordinary active read.
+- The diagnostic run on tree `9e2ca21271f72adddd4b6e045ff5fa950a98e60f`
+  passed the complete stale-access recovery phase. Pre-recovery HTTP 404 was
+  observed at 104.4 seconds against the unchanged projection and the configured
+  90-second budget. The same scoped token, both independent refresh writes,
+  unchanged membership and roles, and source/projection watermarks passed.
+  The four-line result SHA-256 is
+  `6523cbd7ac69a37f6287d7edd8399dc69a498117cbc939efec0e1e78062d8054`.
+- A follow-up recovery diagnostic on tree `b116721a08f0eaacd6effdeabd3f03d803f236d8`
+  reached the stale denial at 90.0 seconds against the unchanged projection
+  and then failed a recovery assertion. A follow-up with only Tenant membership
+  and no initialized Project list returned an unexpected status before staleness
+  on tree `2b4ea8f4a6ee92426a2ed8b2c40de2dd3b0a9f5d` (runtime SHA-256
+  `e92b89381e3570e7d3872cc314df2c00091499de70aab7252cf6fb15df4e306f`).
+  The recovery seed includes both genuine Tenant memberships and one bound
+  primary Project to initialize the list. It keeps the existing status and
+  persisted-authority assertions. The exact list contents, ordinary open and
+  replay assertions run in their respective phases.
+- The same diagnostic tree passed all nine native main controls with zero
+  skips after the Folders fixture received the ordinary freshness window.
+  This includes the audit-storage fault, the real Folder revocation and old
+  cursor refusal, the Folder outage, and authenticated projection compatibility.
+  The ten main case and scenario result lines have SHA-256
+  `a966060fdd6b8d67ac0d75b224bb5acabcc205ebf4066812bb5a82c4df3ea920`.
+  Full replay also passed with zero skips, including both tenants' rebuilt
+  list/open truth and the invalidated pre-rebuild cursor. The two passes and
+  the recovery retry's assertion failure are in the same diagnostic runtime
+  SHA-256 `b115f94a09c950870ff5f758af729884d671f701c35661cbafd292c15bd63205`.
+  Audited restore and Release build SHA-256 were
+  `5ba34d83fc0521868bd5c244b000906451eec1e5821dc4bd64eb16410ab470b0` and
+  `cb6147efa857a4b2681ee3fd4cbf9a65cc99ed3b04b75aece21f327d88303a6c`.
+- The browser-fix candidate tree before the separate package checkout was
+  `a93fe8c3b9e641c271acd4375599f6704e77c1d3` on the same refreshed Projects main.
+  Audited restore SHA-256 is
+  `a36ce3fbdceb6f08f32fdf6b9bbe110d9f77a735159c1bb0c1294357d5d2147b`.
+  Release build passed with zero warnings and errors (SHA-256
+  `a171030ceb573cf51c079f93f57534aaa65a6052ef4a082bfdaa15b1edcdc701`).
+  The live stale-access diagnostic passed 1/1 with zero skips. The unchanged
+  OIDC token progressed from HTTP 404 at a projection age of 90.67 seconds
+  against the 90-second limit to HTTP 200. Eight retries produced one refresh
+  and a distinct operation produced the second refresh. The persisted source,
+  projection and snapshot watermarks all reached 5. The runtime and the two
+  receipts generated inside that run's private fixture have SHA-256 values
+  `8f652f4c759b99482f98bb1344bd65a582608aabf37bddc61d20b4a5e37f4f6a`,
+  `379d8e29e538d3d45eb004c4e47a8002f3bb55622453fd584b7aee1298a79535`
+  (observations) and
+  `0d113515b61782bcd7b41d408261ab7c8bcea29e0db6a65dfd5c7a3cfb41219c`
+  (result). An earlier receipt read from a tracked historical file is excluded
+  from these run results.
+- On browser candidate tree `ec6ffb862f7a607644c9e79ebe0a820c5669efa1`, the
+  Chromium minimal-create control passed with zero skips, including Pending,
+  ordinary refusal and Archived convergence (SHA-256
+  `38900a2d6a51c02a44949b754f352ea5a4d45f975d44771f58a2bba1309f9912`). The
+  compatibility smoke again passed seven of eight. Its seeded Project now
+  converges and is archived successfully. The actual browser then shows
+  `Project reads are unavailable` at `/projects/{id}` and cannot find
+  `project-detail-name` (browser observation SHA-256
+  `d90299b6e7c626ac8a19205a1e534ad9708641ee4b017cd335cbb5ace29361d3`).
+  Compatibility exercises the retained UI, whose `LegacyRollback` selection
+  requires exact-source Story 6.7 v4 evidence for all seven retained routes,
+  verified native receipts and Projects maintainer/Test Architect acceptance.
+  The previous local acceptance candidate was based on Projects `928f66f5`
+  and its owner acceptance is pending. The product selector remains guarded.
+  A diagnostic driver ran each compatibility browser phase after smoke failure.
+  Full Chromium collected 146 cases, with 102 passes, 44 failures and zero
+  skips. Repeat passed 14/14 and the expected-failure retry control passed 2/2
+  with zero skips. Runtime SHA-256
+  `d899c5c022e28d7beaac96e8ad2ba6f133bd436d08ece34e6839d7b5e2f9d62d`.
+- The retained File Reference tests now opt in to descriptive inspection. The
+  no-Folder-replacement case uses its own Pending Project and explicit
+  quarantine view, preserving the before/after Folder assertion. All five
+  Chromium File Reference tests passed with zero skips on tree
+  `c39f49d551e01c6e8e24a3575105471fd47a0730` (runtime SHA-256
+  `8f6c7167317e332d880488fa9b19d5fe3a467bd9975d2eb9dc52ed1d1ea02b2e`).
+- The actual-owner browser control timed out at advisory seed readiness. Ten
+  sampled real responses were HTTP 200 with incomplete observations and zero
+  candidates, while the independent Project index, both details, both linked
+  Folders and owner projections were present. A representative timing sample
+  ranged from 3.79 to 4.07 seconds alongside a 168-second Tenant projection
+  age, inside the existing 300-second Folder budget. Partial diagnostic
+  observations SHA-256
+  `30d4cde45c85d37b0ff46a3f80abcd480ee3ee2d9869971a9004c3fd091f3ff8`.
+  A disposable trace of the aligned Gateway/SDK showed Accepted Folder owner
+  calls taking 1,050–1,372 ms, followed by `TaskCanceledException` in the
+  advisory executor. Two serial observations already exceed the unchanged
+  two-second dependency budget. The instrumented runtime SHA-256 is
+  `a84a385e37eb47a2ddb40460aa16c9913eacf6f3121b9b7a56b4df9f504bc326`.
+  The complete positive advisory assertion still requires a transport that
+  fits the existing budget with the initial and final owner checks intact.
+  The above timing used the installed Dapr 1.19.1 sidecar. The diagnostic
+  configured for the hosted Builds pin, 1.19.2, stopped at the bootstrap
+  authority check before it could measure advisory (runtime SHA-256
+  `696f7eec414c81f3db206c06bc16f493e588adbe069336e19581e3176b6a20e3`).
+- The user approved a separate package-mode Gateway checkout pinned to
+  EventStore v5.6.0 `295b5a6ba584167f21cfef40787477b8814e32da` and the published
+  SDK 5.6.0. The source-mode gitlink remains
+  `df6a96ab2a5bae24fe5951eee5429bda223cc675`. The source-mode Gateway's command
+  contract uses `SubmitCommandResponse.ResultPayloadOmissionReason` from
+  `360ed041d530d22f5c1f0fc8cd6bd9e8f3964a58`, which is absent from the public SDK
+  5.6.0 (Contracts index SHA-256
+  `628abeccc17a67457b6721471ecfec1bc141c39d463780a326696c4d7b3030c7`).
+  The approval covers the source selection. The browser acceptance gates still
+  apply before CiCd registration and Projects V2 publication.
+- The Projects candidate uses a distinct direct gitlink at
+  `references/Hexalith.EventStore.PackageMode` for the approved release. The
+  public v5.6.0 tag and the initialized checkout both resolved to the approved
+  commit. Both AppHosts resolved the new checkout in Release and the existing
+  gitlink in Debug source mode. With the package checkout withheld, Release
+  resolved no EventStore root. Mapping results SHA-256
+  `bea3934035d1ffa74620e65077227a29a1b42b4a7940c82cb5c7efd5f8e85e7a`.
+  Projects base `84e29c39460511e34b022b6b5cac1c19e70538e6`, candidate tree
+  `4b6269ecebd4b3711f58a92f85a6bfb1aa47e3c6`. Audited Release restore passed
+  (SHA-256 `ee5e4e6e0f0d21be3e12db2e6e31bc42275aaef902c2a2650ba6d9dd57ff70eb`).
+  The restore assets confirm published EventStore Aspire and Contracts 5.6.0
+  (SHA-256 `995823d106791ae2460475c77cf895a82f1722962d2b0b39b63fda34ad189a84`).
+  The first live run found a fixed source-checkout path in the writer-protocol
+  setup and stopped with `FileNotFoundException` (runtime SHA-256
+  `110a271c7775c891fb5c7590aee63055b3800ad40bf09eaf1e941bdf7dfc3dcb`). The
+  fixture now reads the Server assembly's source commit from the prebuilt
+  output directory of the Gateway resource it actually starts.
+  Candidate tree `375403ea5e74a5e915b764039b2e86aa54a784c6` passed audited
+  Release restore and build with zero warnings and errors (SHA-256
+  `c0e8f344a74249b75a31e124c0fef0110dba62e0f409355dc6b1e1da6dc5b5a1` and
+  `b9fc5c45ca276c913370ee37e01b378025988ee5d6c52af348d3e680f03cd6f6`).
+  The focused live recovery passed 1/1 with zero skips. The running Gateway's
+  prebuilt Server assembly reported the approved `295b5a6b` source and the
+  intended stale HTTP 404 occurred at 90.1 seconds. The complete recovery
+  assertions passed (runtime SHA-256
+  `35a1a9f74f75e266ebaed9941aaf4b4946fd46f67a65864a04a3c82ae91be93d`).
+  Projects main advanced during the run to `ce6fff0b8d27347eef989643c8ec4b64961e1976`,
+  tree `e3624bef60933897c009f05b60cd8da3f20a4260`, with a Story 7.1
+  documentation change. The local candidate was carried forward byte-for-byte
+  to that base. Its tree is `77f2628aa9f6c66607be06e41e92bdda7c2ba1ff` and its
+  patch SHA-256 is `1de84eaa222f34a58f260f69d8cea20be452e69ad3e2c6c45ee9e1e7a7cb518b`.
+  The run results above refer to the tested tree before the documentation update.
+  The eventual CiCd setup will select this explicit package-mode gitlink for
+  the dependency checkout after qualification.
+
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
@@ -279,6 +502,7 @@ context:
 - 2026-11-26 — The user approved resuming this adoption alongside the package release and V2 qualification required by CiCd issue #9. Existing acceptance conditions apply.
 - 2026-11-26 — The user approved removing the 414 identified legacy CodeQL analyses and the orphan Projects tag `v1.1.0` after the GitHub and NuGet release checks.
 - 2026-11-26 — The user approved the shared Zot restart to establish the Projects-specific publishing scope. The rollout targets the existing deployment and the `projects` and `projects/**` policies.
+- 2026-11-26 — The user approved the separate v5.6.0 Gateway pin for package mode and retained the existing EventStore source-mode pin.
 
 ## Review Triage Log
 
