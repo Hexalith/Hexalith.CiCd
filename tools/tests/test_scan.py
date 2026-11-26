@@ -370,11 +370,11 @@ pwsh -Command:"& ./scripts/direct.ps1"
 
 
 class LauncherDiscoveryTests(unittest.TestCase):
-    def discover(self, commands, files):
+    def discover(self, commands, files, *, action="dormant"):
         with tempfile.TemporaryDirectory(prefix="shell-discovery-") as temp:
             module = "Hexalith.Alpha"
             w = Workspace(Path(temp) / "workspace", (module,))
-            w.write(module, ".github/actions/dormant/action.yml", steps(*commands))
+            w.write(module, f".github/actions/{action}/action.yml", steps(*commands))
             for path, source in files.items():
                 w.write(module, path, source)
             revision = w.commit(w.paths[module])
@@ -388,6 +388,68 @@ class LauncherDiscoveryTests(unittest.TestCase):
         selected, errors, _ = self.discover(commands, files)
         self.assertEqual(errors, [])
         self.assertIn("tools/child.py", selected)
+
+    def test_native_hook_traverses_the_shared_prepared_python_target(self):
+        command = ('timeout --signal=TERM --kill-after=30s 3600 '
+                   '"${HEXALITH_CI_PYTHON:?Shared prepared Python is required}" tools/driver.py linux')
+        version = "v6.8.1"
+        checked_config = {"aspire": True, "hooks": ["after-unit-tests"], "buildsTag": version}
+        workflow = ("on: [push]\njobs:\n  ci:\n"
+                    f"    uses: Hexalith/Hexalith.Builds/.github/workflows/ci.yml@{version}\n"
+                    "    with:\n      job-timeout-minutes: 360\n")
+        files = {
+            ".github/hexalith-ci.json": json.dumps(checked_config),
+            ".github/workflows/ci.yml": workflow,
+            "tools/driver.py": "import helper\n",
+            "tools/helper.py": "pass\n",
+        }
+        selected, errors, _ = self.discover([("bash", command, "")], files, action="after-unit-tests")
+        self.assertEqual(errors, [])
+        self.assertIn("tools/helper.py", selected)
+        for supported in ("v6.2.0", "v6.8.4", "v6.11.2"):
+            with self.subTest(supported=supported):
+                selected, errors, _ = self.discover([("bash", command, "")], files | {
+                    ".github/workflows/ci.yml": workflow.replace(version, supported),
+                    ".github/hexalith-ci.json": json.dumps(checked_config | {"buildsTag": supported}),
+                }, action="after-unit-tests")
+                self.assertEqual(errors, [])
+                self.assertIn("tools/helper.py", selected)
+
+        for changes, extra, diagnostic in (
+            ({".github/hexalith-ci.json": json.dumps(checked_config | {"aspire": False})}, "",
+             "requires the enabled native CI hook"),
+            ({".github/workflows/ci.yml": workflow.replace(version, "v6.1.9"),
+              ".github/hexalith-ci.json": json.dumps(checked_config | {"buildsTag": "v6.1.9"})}, "",
+             "requires the committed managed CI workflow"),
+            ({".github/workflows/ci.yml": workflow + "      module-root: alternate\n"}, "",
+             "requires the committed managed CI workflow"),
+            ({}, "      env:\n        HEXALITH_CI_PYTHON: ./elsewhere\n",
+             "unsupported step environment affecting script resolution"),
+        ):
+            with self.subTest(diagnostic=diagnostic, changes=changes):
+                _, errors, _ = self.discover([("bash", command, extra)], files | changes, action="after-unit-tests")
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn(diagnostic, errors[0])
+        for alternation in (command.replace('"$', '$').replace('}"', '}'), command + ' > "$OUTPUT"'):
+            with self.subTest(alternation=alternation):
+                _, errors, _ = self.discover([("bash", alternation, "")], files, action="after-unit-tests")
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("unresolved computed command", errors[0])
+        _, errors, _ = self.discover([
+            ("bash", 'echo "HEXALITH_CI_PYTHON=/somewhere/python" >> "$GITHUB_ENV"', ""),
+            ("bash", command, ""),
+        ], files, action="after-unit-tests")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unsupported $GITHUB_ENV write affecting script resolution", errors[0])
+        _, errors, _ = self.discover([("bash", command, "")], files | {
+            ".github/actions/wrapper/action.yml": (
+                "name: wrapper\nruns:\n  using: composite\n  steps:\n"
+                "    - uses: ./.github/actions/after-unit-tests\n"
+                "      env:\n        HEXALITH_CI_PYTHON: ./elsewhere\n"
+            ),
+        }, action="after-unit-tests")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unsupported step environment affecting script resolution", errors[0])
 
     def test_quoted_python_heredoc_traverses_imports_and_preserves_line_numbers(self):
         commands = [("bash", "cd checks\npython3 - \"$RECEIPT\" <<'PY'\n"
@@ -460,6 +522,65 @@ exec timeout --signal=TERM --kill-after=30s 2280 python3 tools/live-topology/dri
         self.assertEqual(len(errors), 1, errors)
         self.assertIn("source-relative launcher escapes", errors[0])
         self.assertIn(driver, selected)
+
+    def test_source_relative_scratch_prologue_binds_the_later_working_directory(self):
+        launcher = """#!/usr/bin/env bash
+set -euo pipefail
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+task_dir="$(mktemp -d)"
+trap 'rm -rf "$task_dir"' EXIT
+cd "$repo_root"
+python3 -m check
+"""
+        launcher_path = "tools/checks/start.sh"
+        files = {
+            launcher_path: launcher, "check.py": "pass\n",
+            "jobs/README.md": "Job cwd.", "alternate/README.md": "Changed cwd.",
+        }
+        steps = [("bash", "bash ../tools/checks/start.sh", "      working-directory: jobs\n")]
+        selected, errors, visited = self.discover(steps, files)
+        self.assertEqual(errors, [])
+        self.assertIn("check.py", selected)
+        self.assertIn(".", {cwd for path, cwd, *_ in visited if path == "check.py"})
+        for altered, diagnostic in (
+            (launcher.replace("/../..", "/../../.."), "source-relative launcher escapes"),
+            (launcher.replace('cd "$repo_root"', 'cd "$fallback"'), "unsupported shell command substitution"),
+            (launcher.replace("repo_root=", "unset BASH_SOURCE\nrepo_root=", 1), "unsupported shell command substitution"),
+            (launcher.replace('repo_root=', 'cd "$GITHUB_WORKSPACE/alternate"\nrepo_root='),
+             "unsupported shell command substitution"),
+        ):
+            with self.subTest(diagnostic=diagnostic):
+                _, errors, _ = self.discover(steps, files | {launcher_path: altered})
+                self.assertTrue(any(diagnostic in error for error in errors), errors)
+
+    def test_grep_literal_pattern_and_simple_path_remain_data(self):
+        command = """if ! grep -Eq '^[[:space:]]*1 Warning\\(s\\)$' "$directory/build.log"; then
+  grep -q found tools/probe.py
+fi"""
+        files = {"tools/probe.py": "pass\n"}
+        selected, errors, _ = self.discover([("bash", command, "")], files)
+        self.assertEqual(errors, [])
+        self.assertIn("tools/probe.py", selected)
+        _, errors, _ = self.discover([("bash", 'grep -Eq pattern "$(hidden)"', "")], files)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unsupported shell command substitution", errors[0])
+
+    def test_early_python_search_path_keeps_its_source_root(self):
+        source = ("import sys\nfrom pathlib import Path\n"
+                  "ROOT = Path(__file__).resolve().parents[1]\n"
+                  "sys.path.insert(0, str(ROOT / 'support'))\n"
+                  "import helper\n"
+                  "def later():\n    return type(ROOT), Path\n")
+        command = [("bash", "python scripts/start.py", "")]
+        files = {"scripts/start.py": source, "support/helper.py": "pass\n"}
+        selected, errors, _ = self.discover(command, files)
+        self.assertEqual(errors, [])
+        self.assertIn("support/helper.py", selected)
+        _, errors, _ = self.discover(command, files | {
+            "scripts/start.py": source.replace("sys.path.insert", "modify(Path)\nsys.path.insert"),
+        })
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unsupported Python search-path mutation", errors[0])
 
     def test_unittest_discovers_package_sources_and_refuses_dynamic_selection(self):
         files = {

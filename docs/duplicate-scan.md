@@ -78,14 +78,22 @@ Recognized forms supply the exact working directory, import roots and language:
   standalone Bash launcher can resolve a fixed Python script from
   `BASH_SOURCE[0]`. A bounded launcher that changes to an ancestor of its
   source directory before running a fixed Python script uses that directory
-  for the child's working directory.
+  for the child's working directory. A standalone Bash script can establish
+  the same ancestor immediately after `set -euo pipefail` in a contiguous
+  prologue that allocates a private scratch directory with `mktemp -d`,
+  installs its cleanup trap, and changes directory.
 - The `env`, `exec`, `command`, `builtin`, `coproc`, `time`, `nohup`, `nice`,
   `sudo`, `doas`, `setsid`, `stdbuf`, `ionice`, `unbuffer` and `xargs` wrappers,
   plus `timeout DURATION`, `flock FILE` and `chrt PRIORITY`, also when called by
   absolute path. GNU `timeout` accepts literal durations and the supported
   literal options `--signal=SIGNAL`, `--kill-after=DURATION`, `--foreground`,
   `--preserve-status` and `--verbose`. `command -v` and `command -V` are
-  non-executing probes. Leading
+  non-executing probes. The Linux `after-unit-tests` hook may run a literal
+  Python script through the shared prepared virtual environment under a
+  literal `timeout`. Discovery requires native preparation and the enabled
+  hook in committed CI configuration, plus the matching official shared CI
+  workflow at an immutable Builds v6 release from v6.2.0 onward. Action
+  environment writes may not override `HEXALITH_CI_PYTHON`. Leading
   list and block words (`then`, `do`, `else`, `{`, `}`, `try`, `catch`,
   `finally` and similar), redirections and `NAME=value` or `NAME+=value` prefixes
   are skipped.
@@ -108,6 +116,9 @@ Recognized forms supply the exact working directory, import roots and language:
   Its LF-delimited body is traversed as Python from every candidate working
   directory. Only literal words and quoted simple parameter expansions can
   follow the stdin marker.
+  An early top-level Python import-path insertion can prove its source root
+  from the imports, source-relative assignments and previously proved
+  insertions that precede it.
 - Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
   `tool run NAME` prefix consumes project, output and property data at the
   compiled-language boundary. The executable, operation and tool name must be
@@ -116,6 +127,8 @@ Recognized forms supply the exact working directory, import roots and language:
   working-directory or resolution-environment changes remain failures.
   Bash calls to the same fixed build, pack, restore and msbuild operations
   also accept simple shell parameter expansion in the data operands.
+  Bash `grep` accepts simple parameter expansion in its data operands and a
+  literal trailing dollar in its pattern.
 - Python subprocess argv using the standard Git executable can read metadata
   with literal `rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`,
   `diff`, `show`, `archive` and `remote get-url` and supported literal flags.

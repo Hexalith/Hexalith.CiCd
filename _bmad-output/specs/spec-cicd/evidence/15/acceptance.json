@@ -219,8 +219,78 @@
     "renderer_tests_passed_each": 52,
     "broader_scanner_tests": "The PowerShell suite reported three passing tests before its process group was terminated for the implementation handoff (exit 143). The full detector suite requires online npm signature verification and was outside the local-only execution."
   },
+  "local_native_discovery": {
+    "recorded_at": "2026-11-26T08:36:08+01:00",
+    "cicd_base_sha": "233745c20b4c7a86f6b59a4cbac62edce595ad51",
+    "cicd_base_tree": "cf338faa3e98953b5e9de32f9cc66ceaac106fd5",
+    "scanner_candidate_blob": "fe994bf0e5b73ce9dc3798ea414454dab838466e",
+    "scanner_tests_candidate_blob": "92ac8534a0e95cbb90cedf51c50fa0927a21563d",
+    "scanner_docs_candidate_blob": "ca7bb90793f42cae134ba77ba7fda0f0100b3044",
+    "module_sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "module_tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
+    "prepared_python_contract": {
+      "first_supported_builds_release": "v6.2.0",
+      "release_sha": "0ccd12af6576a3aac601340dec7dba53e86768c3",
+      "ci_environment_blob": "71224b09969b5bfd3d1e924aec6430e2d9b43172",
+      "ci_workflow_blob": "c42f0d1801564cc2870d7bc5753bb25924396887",
+      "result": "Verified locally that the shared native setup exports the private Python interpreter before running the enabled Linux product hook."
+    },
+    "source_discovery": {
+      "result": "fail",
+      "scope": "Offline action/script discovery against the exact committed McpCli tree",
+      "python": "3.14.4",
+      "files_discovered": 34,
+      "baseline_errors": 78,
+      "discovery_errors": 64,
+      "report_sha256": "f48e96e930ec666d9d15f3a6b32ce5a6bfe31cb75d24305a41e6749f420a8e68",
+      "report_encoding": "UTF-8 JSON with sorted keys for revision, sorted files and sorted unique errors, without a trailing newline",
+      "first_error": "scripts/product_ci.py:161: local-script discovery: unsupported Python environment mutation affecting resolution",
+      "leading_paths": {
+        "scripts/smoke-bootstrap-consumer.sh": 23,
+        "tools/conformance-vectors/v1/run-sample-validation.sh": 5,
+        "tools/live-topology/ci.py": 5,
+        "tools/live-topology/run-isolated.py": 5,
+        "tools/conformance-vectors/v1/run-sample-loopback.sh": 4,
+        "tools/live-topology/bootstrap-runtime.py": 4,
+        "tools/conformance-vectors/v1/run_loopback.py": 3,
+        "tools/live-topology/live_plans.py": 3,
+        "scripts/product_packages.py": 2
+      }
+    },
+    "launcher_discovery_tests": {
+      "result": "pass",
+      "tests_passed_each": 13,
+      "output_sha256": {
+        "3.12": "67d3dc6b1608a54d4484cd75368dd718ae21ffdfa4be00ab4bf68015145639ab",
+        "3.14": "4746c189bcef5aa25ba910779473a8c73b243292eb5a18a78671a85cfbca660c"
+      }
+    },
+    "renderer_tests": {
+      "result": "pass",
+      "tests_passed_each": 52,
+      "output_sha256": {
+        "3.12": "51fc034ea492b123a5c59edf023430790974a1bc6c4dbae28862d8d3f465adbc",
+        "3.14": "e643b5e26312f32f8857ada73a87916e5605c126e69a9b9b90d8b6926fb8cb8b"
+      }
+    },
+    "locked_offline_render_check": "pass",
+    "local_committed_candidate_checks": {
+      "result": "pass: App workflow inventory, committed render inputs and outputs, repeat-render equality, schema and caller interfaces, McpCli direct gitlink",
+      "output_sha256": "c7a9a2718cdbbde4afa217f9f98c6a73a88754972118fdd62e86e87f89f1589e"
+    },
+    "hosted_verification": "unverified in this local-only implementation"
+  },
+  "controlled_acceptance_rerun": {
+    "module_sha": "700c1f1fc9fa4a36425bc53a28885d9027338356",
+    "module_tree": "1c224c80e29c73338e69ad86185cacd152bfc87b",
+    "python": "3.12",
+    "tests_passed": 9,
+    "output_sha256": "4f2b887659a25262df2da848ffa87217a53ea5ef80c92a781fbf8d226dd580a2",
+    "result": "pass",
+    "method": "Offline controlled tests from an archive of the pinned Git tree with the committed conformance requirements. The cases cover prerequisite refusal, namespace isolation, failure and timeout handling, skipped cases, detached-process cleanup, extra packages and package changes during consumer validation."
+  },
   "blockers": [
-    "Resolve the 78 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
+    "Resolve the 64 remaining local discovery diagnostics for the McpCli scanner candidate, then verify a passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, including McpCli's scan and the approved pair publication or a valid nothing-to-release outcome."
   ]

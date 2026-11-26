@@ -40,12 +40,14 @@ SCRIPTS = {"bash", "powershell", "python", "javascript", "typescript"}
 MAX_FILES = 2000
 MAX_BYTES = 32 * 1024 * 1024
 MAX_LITERAL = 4096
+MAX_PYTHON_PROOF_NODES = 4096
 # Environment variables that change which local Python sources are imported,
 # an environment-file selector that can set them, and the PowerShell module and
 # shell cd search paths, which redirect name-based module and directory lookup.
 RESOLUTION = {"PYTHONPATH", "PYTHONHOME", "PYTHONSAFEPATH", "PYTHONUSERBASE", "UV_ENV_FILE", "PSMODULEPATH",
               "CDPATH", "NODE_PATH", "NODE_OPTIONS", "NPM_CONFIG_SCRIPT_SHELL", "NPM_CONFIG_NODE_OPTIONS",
-              "NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG", "NPM_CONFIG_PREFIX", "NPM_CONFIG_WORKSPACE"}
+              "NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG", "NPM_CONFIG_PREFIX", "NPM_CONFIG_WORKSPACE",
+              "HEXALITH_CI_PYTHON"}
 ENVIRON = {"os.environ", "os.environb"}
 ENVIRON_WRITES = {"setdefault", "update", "__setitem__", "__ior__"}
 MODULE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
@@ -58,6 +60,12 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
 TIMEOUT_DURATION = r"[0-9]+(?:\.[0-9]+)?[smhd]?"
 DOTNET_BUILD_OPERATIONS = ("build", "pack", "restore", "msbuild")
 SIMPLE_SHELL_PARAMETER = r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)"
+SOURCE_RELATIVE_PROLOGUE = re.compile(
+    r'\A#!/usr/bin/env bash\nset -euo pipefail\n(?:[ \t]*(?:#[^\n]*)?\n)*'
+    r'(?P<assignment>(?P<root>[a-z][a-z0-9_]*)="\$\(cd "\$\(dirname "\$\{BASH_SOURCE\[0\]\}"\)'
+    r'(?P<parents>(?:/\.\.){1,8})" && pwd\)")\n'
+    r'(?P<scratch>[a-z][a-z0-9_]*)="\$\(mktemp -d\)"\n'
+    r'''trap 'rm -rf "\$(?P=scratch)"' EXIT\ncd "\$(?P=root)"$''', re.M)
 # After the stdin marker Python treats these words as arguments to the body.
 # Quoted parameter expansion cannot add shell words or redirect the input.
 PYTHON_HEREDOC = re.compile(
@@ -146,6 +154,14 @@ WORKS_PLATFORM_EXPORT = {
 BUILDS_RELEASE = re.compile(rb"(?<![A-Za-z0-9_./-])(Hexalith/Hexalith\.Builds(?:/[A-Za-z0-9_.-]+)*@)"
                             rb"v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?![A-Za-z0-9_.+/-])")
 BUILDS_RELEASE_MASK = b"vX.Y.Z"
+NATIVE_PYTHON_EXPANSION = '"${HEXALITH_CI_PYTHON:?Shared prepared Python is required}"'
+NATIVE_PYTHON_COMMAND = re.compile(
+    rf'[ \t]*(?P<timeout>timeout --signal=TERM --kill-after={TIMEOUT_DURATION} {TIMEOUT_DURATION} )'
+    rf'{re.escape(NATIVE_PYTHON_EXPANSION)}(?P<arguments> [A-Za-z0-9_./-]+\.py(?: [A-Za-z0-9_./-]+)*)[ \t]*\n?')
+NATIVE_PYTHON_HOOK = ".github/actions/after-unit-tests"
+# The immutable v6 Builds contract prepares the venv before this hook from
+# v6.2.0 onward. A new major release needs explicit qualification.
+NATIVE_PYTHON_RELEASE = re.compile(r"v6\.(?:[2-9]|[1-9][0-9]+)\.(?:0|[1-9][0-9]*)")
 WORKS_PLATFORM_ENTRIES = {
     (WORKS_PLATFORM_PREPARE, 52, "subprocess.run"): ("eng/bound_builds.py", "python"),
     (WORKS_PLATFORM_PREPARE, 55, "subprocess.check_output"): ("eng/prepare_builds_artifacts.py", "python"),
@@ -1041,6 +1057,38 @@ class Discovery:
         return (self.works_platform_targets is not None and path in WORKS_PLATFORM_INPUTS and cwd == "." and offset == 0
                 and action == posixpath.dirname(WORKS_PLATFORM_ACTION))
 
+    def native_python_command(self, command, path, cwd):
+        """Bind the shared CI's prepared venv in its default Linux hook."""
+        match = NATIVE_PYTHON_COMMAND.fullmatch(command)
+        if match is None or cwd != "." or path not in {
+            NATIVE_PYTHON_HOOK + "/action.yml", NATIVE_PYTHON_HOOK + "/action.yaml"
+        }:
+            return command
+        config = self.json(".github/hexalith-ci.json")
+        hooks = config.get("hooks")
+        if config.get("aspire") is not True or not isinstance(hooks, list) or hooks.count("after-unit-tests") != 1:
+            raise DeliveryError("shared prepared Python requires the enabled native CI hook")
+        workflow = ".github/workflows/ci.yml"
+        if not self.regular(workflow):
+            raise DeliveryError("shared prepared Python requires the committed managed CI workflow")
+        try:
+            # The renderer emits a literal GitHub Actions 'on' key. PyYAML's
+            # YAML 1.1 resolver would treat that plain key as a boolean.
+            source = re.sub(rb"^on:", b"'on':", self.blob(workflow), count=1, flags=re.M)
+            value = yaml.load(source, Loader=ActionLoader)
+            caller = value["jobs"]["ci"]
+            release = config.get("buildsTag")
+            arguments = caller.get("with", {})
+            if (not isinstance(release, str) or not NATIVE_PYTHON_RELEASE.fullmatch(release)
+                    or caller["uses"] != "Hexalith/Hexalith.Builds/.github/workflows/ci.yml@" + release
+                    or "env" in value or set(caller) - {"uses", "permissions", "secrets", "with"}
+                    or not isinstance(arguments, dict)
+                    or set(arguments) - {"job-timeout-minutes", "additional-sdk-version"}):
+                raise ValueError
+        except (KeyError, AttributeError, TypeError, ValueError, yaml.YAMLError, RecursionError):
+            raise DeliveryError("shared prepared Python requires the committed managed CI workflow") from None
+        return match["timeout"] + "python" + match["arguments"]
+
     def action(self, path, text):
         try:
             value = yaml.load(text, Loader=ActionLoader)
@@ -1067,11 +1115,21 @@ class Discovery:
                 if not isinstance(step, dict):
                     raise DeliveryError("invalid action step")
                 literals += [(line, item) for item in scalars(step, ("run", "shell"))]
+                target = step.get("uses")
+                local_uses = isinstance(target, str) and target.startswith("./")
+                if "env" in step and ("run" in step or local_uses):
+                    if not isinstance(step["env"], dict):
+                        raise DeliveryError("unsupported computed step environment affecting script resolution")
+                    for key, setting in step["env"].items():
+                        if str(key).upper() in RESOLUTION:
+                            raise DeliveryError("unsupported step environment affecting script resolution")
+                        if str(key).upper() == "PATH":
+                            check_path(str(setting),
+                                       message="unsupported step PATH environment affecting script resolution")
                 if "uses" in step:
-                    target = step["uses"]
                     if not isinstance(target, str):
                         raise DeliveryError("invalid action target")
-                    if target.startswith("./"):
+                    if local_uses:
                         directory = self.resolve(target, path=path, cwd=".", action=parent)
                         candidates = [directory + "/" + name for name in ("action.yml", "action.yaml")
                                       if directory + "/" + name in self.items]
@@ -1084,15 +1142,6 @@ class Discovery:
                     command, shell = step["run"], step.get("shell")
                     if not isinstance(command, str) or not isinstance(shell, str) or not shell.split():
                         raise DeliveryError("action run requires literal command and shell")
-                    if "env" in step:
-                        if not isinstance(step["env"], dict):
-                            raise DeliveryError("unsupported computed step environment affecting script resolution")
-                        for key, setting in step["env"].items():
-                            if str(key).upper() in RESOLUTION:
-                                raise DeliveryError("unsupported step environment affecting script resolution")
-                            if str(key).upper() == "PATH":
-                                check_path(str(setting),
-                                           message="unsupported step PATH environment affecting script resolution")
                     cwd = "."
                     if "working-directory" in step:
                         cwd = self.resolve(step["working-directory"], path=path, cwd=".", action=parent, allow_root=True)
@@ -1102,6 +1151,8 @@ class Discovery:
                     if interpreter in {"python", "python3"}:
                         self.python(path, command, cwd, parent, roots=(cwd,), offset=run - 1)
                     elif interpreter in {"bash", "sh", "pwsh", "powershell"}:
+                        if shell == "bash":
+                            command = self.native_python_command(command, path, cwd)
                         self.commands(path, command, cwd, parent, offset=run - 1,
                                       powershell=interpreter in {"pwsh", "powershell"})
                     else:
@@ -1242,13 +1293,18 @@ class Discovery:
         if powershell:
             self.powershell(path, text, cwd, action, offset=offset, sourced=sourced)
             return
-        if (not sourced and not offset and self.files.get(path, {}).get("text") == text
-                and self.source_relative_launcher(path, text, cwd, action)):
-            return
+        prologue, first = None, None
+        if not sourced and not offset and self.files.get(path, {}).get("text") == text:
+            if self.source_relative_launcher(path, text, cwd, action):
+                return
+            prologue = SOURCE_RELATIVE_PROLOGUE.match(text)
+            if prologue and prologue["root"] != prologue["scratch"]:
+                first = text.count("\n", 0, prologue.start("assignment")) + 1
         # The shell treats CR as part of the delimiter. Do not use the
         # normalized logical lines to prove the boundary in mixed input.
         literal_heredoc = "\r" not in text
         cwds, literals, modules = [cwd], [], []
+        source_directory_set = False
         for number, line, data, literal_heredoc_closed in self.logical(text, offset, powershell, path):
             for body_number, body, expands in data:
                 words = shell_words(body, powershell)
@@ -1263,6 +1319,25 @@ class Discovery:
             literals.extend((number, word) for word in words)
             modules.extend((number, module) for module in self.references(words, path, number))
             try:
+                if first == number and line == prologue["assignment"]:
+                    # The contiguous prologue assigns the fixed source-relative
+                    # directory before a prior cd can change what a relative
+                    # BASH_SOURCE means. It allocates scratch and installs cleanup.
+                    source_directory_set = True
+                    continue
+                if source_directory_set and number in (first + 1, first + 2):
+                    continue
+                if (source_directory_set and number == first + 3
+                        and line == prologue[0].rsplit("\n", 1)[1]):
+                    parent = PurePosixPath(path).parent
+                    source = self.source_root(path) or "."
+                    for _ in range(prologue["parents"].count("/")):
+                        if str(parent) == source:
+                            raise DeliveryError("source-relative launcher escapes its source root")
+                        parent = parent.parent
+                    cwd = self.segment(["cd", "$GITHUB_WORKSPACE/" + str(parent)],
+                                       path, cwd, action, cwds, number, False, False)
+                    continue
                 if literal_heredoc and literal_heredoc_closed and PYTHON_HEREDOC.fullmatch(line[:cut]):
                     # Every candidate cwd can also be a Python import root.
                     body = "\n".join(word for _, word, _ in data)
@@ -1810,17 +1885,18 @@ class Discovery:
                 remaining = re.sub(SIMPLE_SHELL_PARAMETER, "", word)
                 if "$" in remaining or "`" in remaining:
                     raise DeliveryError("unsupported .NET shell substitution or computed operand")
-        elif not powershell and cmd == "mkdir":
-            # mkdir consumes directory data. Simple parameter expansion cannot
-            # turn that operand into a program; substitution and computed flags
-            # still require execution analysis and are deliberately refused.
+        elif not powershell and cmd in {"mkdir", "grep"}:
+            # These fixed utilities consume file/regex data. Simple parameter
+            # expansion cannot make an operand a program or a shell command.
             for word in args:
-                if word.startswith("-") and word not in {"-p", "--parents", "-v", "--verbose", "--"}:
+                if cmd == "mkdir" and word.startswith("-") and word not in {"-p", "--parents", "-v", "--verbose", "--"}:
                     raise DeliveryError("unsupported mkdir option")
                 expanded, _ = self.expand(word, path, action)
                 remaining = re.sub(SIMPLE_SHELL_PARAMETER, "", expanded)
+                if cmd == "grep" and remaining.endswith("$") and not remaining.endswith("$$"):
+                    remaining = remaining[:-1]
                 if any(value in remaining for value in ("$", "`", "<(", ">(")):
-                    raise DeliveryError("unsupported mkdir shell substitution or computed operand")
+                    raise DeliveryError(f"unsupported {cmd} shell substitution or computed operand")
         elif builtin not in {"echo", "printf", "write-output", "write-host", "cat", "get-content", "[", "[[", "test"}:
             # An unknown consumer cannot certify an unresolved operand as
             # nonexecuting data. Follow a visible execution tool through the
@@ -2350,8 +2426,39 @@ class Discovery:
         # All imports are traversed in all proven roots, including imports that
         # precede the insertion or live in a different branch. This deliberately
         # overapproximates order rather than allowing a path change to hide code.
-        path_value = lambda expression: self.python_source_path(expression, path, cwd, action, nodes, parents, roots=roots)
+        def path_value(expression, visible=nodes):
+            return self.python_source_path(expression, path, cwd, action, visible, parents, roots=roots)
+
         proven_paths = set()
+
+        def path_preamble(call):
+            """Bound an early top-level insertion to statements already executed."""
+            statement = parents.get(call)
+            if not isinstance(statement, ast.Expr) or parents.get(statement) is not tree:
+                return nodes
+            prefix = [tree]
+            for entry in tree.body:
+                for node in ast.walk(entry):
+                    if len(prefix) >= MAX_PYTHON_PROOF_NODES:
+                        return nodes
+                    prefix.append(node)
+                if entry is statement:
+                    return prefix
+                if isinstance(entry, (ast.Import, ast.ImportFrom)):
+                    continue
+                if isinstance(entry, ast.Expr) and (entry.value in proven_paths
+                        or isinstance(entry.value, ast.Constant) and isinstance(entry.value.value, str)):
+                    continue
+                if (isinstance(entry, ast.Assign) and len(entry.targets) == 1
+                        and isinstance(entry.targets[0], ast.Name)):
+                    try:
+                        path_value(entry.value, prefix)
+                    except (ValueError, TypeError):
+                        return nodes
+                    continue
+                return nodes
+            return nodes
+
         for node in nodes:
             if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
                     and names(ast.unparse(node.func.value)) == {"sys.path"}
@@ -2364,14 +2471,15 @@ class Discovery:
                 if len(arguments) != 1:
                     continue
                 try:
-                    directory = path_value(arguments[0])
+                    visible = path_preamble(node)
+                    directory = path_value(arguments[0], visible)
                     self.import_path(directory)
                     if directory != "." and directory not in self.directories:
                         continue
                     if not isinstance(node.func.value, ast.Attribute):
                         continue
                     root = node.func.value.value
-                    if not isinstance(root, ast.Name) or not self.proof_import(root.id, "sys", nodes, parents):
+                    if not isinstance(root, ast.Name) or not self.proof_import(root.id, "sys", visible, parents):
                         continue
                 except (ValueError, TypeError):
                     continue
@@ -2837,7 +2945,7 @@ class Discovery:
         """Reflection can replace bindings without a visible assignment; refuse that subset."""
         reflective = {"globals", "locals", "vars", "getattr", "setattr", "delattr", "exec", "eval", "__import__"}
         attributes = reflective | {"__dict__", "__globals__", "__code__", "__closure__", "__setattr__", "f_globals", "f_locals", "modules"}
-        return len(nodes) <= 4096 and not any(
+        return len(nodes) <= MAX_PYTHON_PROOF_NODES and not any(
             isinstance(entry, ast.Call) and isinstance(entry.func, ast.Name) and entry.func.id in reflective
             or isinstance(entry, ast.Attribute) and entry.attr in attributes
             or isinstance(entry, ast.ImportFrom) and any(item.name == "*" or entry.module == "builtins"
