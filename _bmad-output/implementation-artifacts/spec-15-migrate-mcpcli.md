@@ -100,6 +100,41 @@ For McpCli product-preparation pushes before actual App adoption only, authorize
 
 ## Review Triage Log
 
+2026-11-26 — Review of the duplicate-scan work: CiCd changes since `c3622b8de2456726d2843f2258a669ad4707a1ad` (now on main through `b74d2e80b46896a51f72c32387b45163954afb1f`) and McpCli `62191cc8`, `29818f11` and `66532e6f`. Three layers ran: blind hunter, edge-case hunter and verification gap. Authors re-verified and fixed every finding routed to patch.
+
+| ID | Layer | Location | Finding | Verdict | Route | Evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+| B1 | blind | tools/scan_discovery.py forward_wrapper | stopped at the first failing caller, so a recorded gap accepted new failing callers | medium | patch — fixed | Reproduced by the reviewer; every failing caller is now reported and each caller line is pinned in the gap key. |
+| B2 | blind | tools/scan.py error_sources | only the reported physical line was digested, so continuation lines of a multi-line call could change | medium | patch — fixed | Confirmed at run_loopback.py:346/369/779 and run-isolated.py:247. The whole statement span is now digested. |
+| B3 | blind | tools/scan.py error_sources | whole-file diagnostics at line 1 could be accepted as gaps | medium | patch — fixed | Confirmed with a node-limit probe. Whole-file and limit diagnostics now get a null digest. |
+| B4 | blind | tools/nightly_acceptance.py match_gaps | unused entries and occurrences were never reported | low | patch — fixed | Unused entries and counts are now in the scan detail and receipt; the docs say 'at most'. |
+| B5 | blind | tools/nightly_acceptance.py decision_reference | the decision reference is only format-checked | low | rejected | Resolving it would need tools/ to read _bmad-output, which tools/repository_inputs.py forbids. Gap records change only through reviewed CiCd commits. |
+| B6 | blind | tools/nightly_acceptance.py reviewed | one entry for a module missing from the report failed acceptance for every module | medium | patch — fixed | Confirmed. Registration is now checked only for the judged module's entries, plus check_global against setup/*.yml. |
+| B7 | blind | tools/tests/test_nightly_acceptance.py | the committed-record test asserted a non-empty record | medium | patch — fixed | It would fail at the intended empty end state. The assertion was dropped and the canonical checks kept. |
+| B8 | blind | tools/scan_discovery.py unittest_invocation | a dotted unittest name with no local file selected nothing, where it used to be an error | high | patch — fixed | Confirmed at lines 1076-1091. It now fails closed when the name's first component matches a tracked module name. |
+| B9 | blind | tools/nightly_acceptance.py | test-boundary observations were missing from acceptance evidence | low | patch — fixed | Observation counts are now in the scan detail and receipt. |
+| B10 | blind | McpCli tools/live-topology/run-vectors.py | the child argv was spelled twice | low | patch — fixed | Commit 66532e6f launches and records from one argv. |
+| B11 | blind | McpCli tools/live-topology/run-vectors.py | type=lambda degraded argparse errors | low | patch — fixed | Replaced with a named path_argument function. |
+| B12 | blind | McpCli tools/live-topology/ci.py:127-131 | the new PATH dotnet refusal had no test | medium | patch — fixed | test_different_path_dotnet_refuses_live_before_any_dotnet_child added (test_ci.py 122 OK). |
+| B13 | blind | McpCli spec-4-14 and tools/live-topology/README.md | documentation still described the removed GITHUB_ENV export | low | patch — fixed | Change-log note added and the README line corrected in 66532e6f. |
+| V1 | verification-gap | tools/tests/test_nightly_acceptance.py ReviewedGapTests | no test separated the scan's controller revision from the nightly head | medium | patch — fixed | The reviewer's mutation passed 13 tests; the new pass and fail cases catch it. |
+| V2 | verification-gap | McpCli ci.py:127-131 | the PATH refusal had no test | medium | patch — fixed | Same root cause as B12. |
+| V3 | verification-gap | McpCli scripts/run-paired-platform-tests.py:46-50 | env filtering was untested | medium | patch — fixed | The stub now asserts kwargs['env'], including MCPCLI_HOME. |
+| V4 | verification-gap | tools/scan_discovery.py discover() | a wrapper in a boundary test source, reached by a test naming a workflow command file, became an observation | high | patch — fixed | Reproduced by the reviewer; contradicted the human decision. It is now an error. |
+| V5 | verification-gap | tools/scan.py error_sources | whole-file errors could become gaps | medium | patch — fixed | Same root cause as B3. |
+| E1 | edge-case | tools/scan_discovery.py:4591 forward_wrapper | extra positionals after argv (the Popen executable) were dropped | high | patch — fixed | Confirmed: only node.args[0] was read. Forwarding now declines when there is more than one positional. |
+| E2 | edge-case | tools/scan_discovery.py unittest_invocation | unresolved unittest names were trusted as installed | high | patch — fixed | Same root cause as B8. |
+| E3 | edge-case | tools/scan.py:241-247 | multi-line call digest | medium | patch — fixed | Same root cause as B2. |
+| E4 | edge-case | tools/nightly_acceptance.py gap key | the cause outside the reported line (a caller) was unpinned | medium | patch — fixed | Same root cause as B1. |
+| E5 | edge-case | tools/scan.py:236-248 | whole-file failures at line 1 | medium | patch — fixed | Same root cause as B3. |
+| E6 | edge-case | tools/scan.py:245-246 | embedded Python with a bare CR digested the wrong line | low | patch — fixed | Only Python sources get digests now; embedded-code diagnostics cannot become gaps. |
+| E7 | edge-case | tools/scan_discovery.py dotnet_lookup | a module-level DOTNET = shutil.which binding could be rebound by an importer | medium | patch — fixed | Module-scope bindings are refused; no McpCli source uses one. |
+| E8 | edge-case | tools/scan_discovery.py test boundary | an unresolved test child that inherits $GITHUB_ENV/$GITHUB_PATH can still write it without naming it | medium | intent_gap — human decision pending | Real and documented as residual risk. The decision's 'could write' wording needs a human reading before any code change. |
+| E9 | edge-case | tools/scan_discovery.py:4483 | a deeply nested global.json raised ValueError out of discover() | medium | patch — fixed | It now yields the 'unreadable global.json' diagnostic and the row keeps its files. |
+| E10 | edge-case | tools/scan_gap_candidates.py | an over-long diagnostic made the generator exit 2 | low | patch — fixed | Over-long diagnostics now go to the notes. |
+| E11 | edge-case | tools/scan_discovery.py around 3097 | os.sys.modules and import_module('sys').modules made no import record | medium | patch — fixed | These forms now count as an import that names no module. |
+| E12 | edge-case | McpCli ci.py:951, test_ci.py:686 | removing the GITHUB_ENV export dropped a receipt-location cross-check | false | rejected | The default and the old export are the same evidence/preparation.json from ASPIRE_EVIDENCE_PATH, and the run step still refuses any other override (alternate-receipt test). |
+
 ## Verification
 
 - 2026-11-26 — Locked offline render check passed at CiCd `3ff573241a6c0d6968be4b12273a1b90f05fc3b9`, with 52 renderer tests passing on both Python 3.12 and 3.14. The local global checks passed for App workflow inventory, committed render inputs and outputs, repeated renders, the selected schema and caller interfaces. The local `validate.py` direct gitlink check passed for McpCli. The authenticated registration run recorded a passing global verdict and successful McpCli delivery. Full current validation also requires remote reads.

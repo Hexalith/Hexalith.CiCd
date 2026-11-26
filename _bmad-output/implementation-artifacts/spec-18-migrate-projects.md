@@ -53,8 +53,8 @@ context:
 - [ ] Projects `tests/Hexalith.Projects.PackageFixtures{,.AppHost}/`, `Hexalith.Projects.CI.slnx` — add nonpackable prebuilt fixture/driver; seed through authenticated product commands, verify independent durable state and complete browser phases. Test readiness/output/cleanup failures and production isolation.
 - [ ] Folders `src/Hexalith.Folders.Server/{Hexalith.Folders.Server.csproj,FolderServerCatalogAdapterSource.cs}`, shared `src/Hexalith.Folders.EventStore/{FoldersCatalogAdapterSource,FoldersCatalogAdapters}.cs`, and `tests/Hexalith.Folders.Server.Tests/` — expose the actual owner's existing compiled command policies through the public SDK catalog seam from one module implementation; retain all Debug guards. Qualify exact declarations and all 36 retained canonical-intent cases, owner/server/gateway product suites and available required checks. Require the independently qualified corrected remote owner commit before delivered gitlinks or Projects adoption; this nonpackable executable repair needs no new Folder adapter NuGet package/version. Normal Folder checker/push prerequisites apply; no Folder push/publication is authorized by the Projects preparation exception.
 - [ ] Projects `src/Hexalith.Projects.UI.Contracts/*.csproj`, `tests/tools/run-*-gate.ps1`, `scripts/`, `.config/dotnet-tools.json`, `.github/actions/{after-unit-tests,nightly}/action.yml`, `tests/e2e/package.json` — retain generator output, use inspector 6.0.0 and no-rebuild package checks; run browser driver nightly. Preserve C# suites, OpenAPI assertions and owning cross-module tests. Delete workflow assertions and tool-only root npm files.
-- [ ] Builds `schemas/hexalith.ci.v1.json`, `Github/lib/{ci_config,ci_environment,ci_pipeline}.py`, CI/environment/prepare composites and configurations — add default `npmWorkspaces: []`, `dotnetTools: false`; prepare locked tools/npm/browsers once. Cover defaults, strict readers, unsafe/missing inputs and install failures in existing contract/environment/prepare suites; qualify an acceptable release.
-- [ ] CiCd `tools/{scan,scan_discovery}.py`, `tools/jscpd/`, `.jscpd.json`, `tools/tests/`, `docs/duplicate-scan.md`, SPEC/spine — add static JS/TS/npm/import reachability and document additive contract; test complete scope and fail-closed indirection. Preserve thresholds and cross-module semantics.
+- [x] Builds `schemas/hexalith.ci.v1.json`, `Github/lib/{ci_config,ci_environment,ci_pipeline}.py`, CI/environment/prepare composites and configurations — add default `npmWorkspaces: []`, `dotnetTools: false`; prepare locked tools/npm/browsers once. Cover defaults, strict readers, unsafe/missing inputs and install failures in existing contract/environment/prepare suites; qualify an acceptable release.
+- [x] CiCd `tools/{scan,scan_discovery}.py`, `tools/jscpd/`, `.jscpd.json`, `tools/tests/`, `docs/duplicate-scan.md`, SPEC/spine — add static JS/TS/npm/import reachability and document additive contract; test complete scope and fail-closed indirection. Preserve thresholds and cross-module semantics.
 - [ ] `setup/Hexalith.Projects.yml`, `rendered/`, `references/Hexalith.Projects`, `builds-version` — register the CI solution, four direct dependencies from the design, Dapr/browsers, tools/npm and two hooks. Commit prepared remote main plus cause/render together; fully validate before push.
 - [ ] `evidence/18/` — authenticate accepted ref/report/App commit and tree preservation; immediately enable immutability and remove only Projects' legacy scopes. Before the first post-adoption nightly scan, delete `.github/actions/prepare-g6-catalog/` in a module-agent Projects commit that passes the normal checker (gate rule; no scanner exclusion). Verify normal checker, green CI and genuine next-night outcomes.
 
@@ -493,6 +493,64 @@ context:
   The run results above refer to the tested tree before the documentation update.
   The eventual CiCd setup will select this explicit package-mode gitlink for
   the dependency checkout after qualification.
+
+### Local qualification on Projects `2067b57d`
+
+- The detached `projects-story-18-candidate` worktree holds staged tree
+  `6b5066ae7b1b6eaf267a6d22476b1d59362c83fd` on cached main
+  `2067b57d8c72af9f83a404eefd80d33033d51268`. The recovered package-mode and
+  Projects V2 changes were carried forward together for qualification. The
+  existing Story 5.21 worktree was preserved. Package-mode checkouts used the
+  following exact commits and trees.
+
+  | Checkout | Commit | Tree |
+  | --- | --- | --- |
+  | Builds v6.8.5 | `deccbc3bcf4ed687ecf4d556ebe356fe57148777` | `0285a6dfb4360675021418da2033ffcaf3b4cdf0` |
+  | EventStore.PackageMode v5.6.0 | `295b5a6ba584167f21cfef40787477b8814e32da` | `32c0e679697bcaaea104e21477b3aec6555b9a73` |
+  | Tenants | `d34f353abb59213ac021e81da6885b78ee3231fd` | `1679d29778073c9527aedccdc919dc18cdc20315` |
+  | Folders | `2791d7a82825238da15a1bfb77c544079a7f7d09` | `772b58e3cb751fab352c5b8c4aa6f64b7cbf49a5` |
+  | Platform | `80a60039b46ea6bdccd9eeac5091551bc59643fa` | `4b4d0838ccc1bd62fdf71dd7e7ee159d819cdbf5` |
+
+- Restore passed with NuGet audit enabled and the released trust configuration
+  (`6de945a18de26a7509d0b293b4eb1bd5f65896d2d42e2fcdacb6bb1aa8adafc1`).
+  The Release build passed without warnings or errors
+  (`8591aa7e93743e4ac76402f5fa3ad2116e918ba9ffd6bc4b25885a65f2563441`).
+  Eight C# suites recorded 3,315 passes, zero failures and one Dapr-gated skip
+  (`a9f9d726990c9b0d5e20ea794ccd0374a49f45875a5e1cc09858421c2820dc2c`).
+  That restart check passed in the live compatibility fixture. All 46 package
+  tooling tests and all six isolated consumers passed (consumer SHA-256
+  `2fb5abc51b47174cc91e0c86a4442d740a3b3b62c27faf657fecc90bbb1cb38f`).
+  FrontComposer 6.0.1 inspection passed
+  (`a20b6d929d735029327274d9e4169a44c971fdde73fa024983dc397eabebe661`).
+  Locked npm install, signature verification and TypeScript checking passed.
+- The browser driver on Dapr 1.19.1 passed the native main, duplicate-delivery,
+  full-replay and tenant-access recovery phases without skips. Compatibility
+  smoke passed seven of eight. The actual protected detail route remained
+  unavailable because the package AppHost has no `Projects:Reads` selection
+  and the local record has no Story 6.7 v4 acceptance for this source. The
+  selector requires seven validated security slices and hash-bound native
+  receipts for `LegacyRollback`. Full compatibility Chromium, repeat and retry
+  phases were not reached. The separate actual-owner phase stopped before
+  Chromium in `PackageReadAdvisoryReadiness.WaitAsync`. Projects `DW-80`
+  records the owner-path performance work required to fit the existing deadline
+  with all authorization observations intact. The driver exited 1 (SHA-256
+  `5fd78548be715e1b72905e5d1e4bf5b4bd678167a5c040a3fa8e2c6211d5350e`).
+  Hosted Dapr 1.19.2 parity remains open.
+- Builds v6.8.5 passed 22 focused contract, environment, pipeline and Linux
+  prepare tests (SHA-256
+  `1281a208b3446f366cd2d49b7589a36a739e2765fd6ff2b7f26e5acbb0aab697`).
+  Four npm and JavaScript reachability tests passed on CiCd
+  `b74d2e80b46896a51f72c32387b45163954afb1f` (SHA-256
+  `0256e7c2df542f507c389696f3bbe8853706cf6df6f014480b8b503d87771bdb`).
+  The post-adoption scanner rehearsal selected 54 Projects sources without
+  diagnostics after removing the legacy G-6 action in a private index.
+  Full global validation remains pending.
+- The [registration preview](../specs/spec-cicd/evidence/18/setup-candidate.yml)
+  selects the explicit package-mode checkout and passed render reproducibility
+  (rendered CI configuration SHA-256
+  `d15f3a39c071dde7e342d1ac37313df149fa1dd8d3a306f6c3244baca5ceb103`).
+  Projects still needs complete browser qualification before active registration,
+  App delivery and post-adoption CI/nightly acceptance.
 
 ## Spec Change Log
 
